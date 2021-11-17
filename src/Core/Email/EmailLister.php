@@ -43,7 +43,7 @@ class EmailLister
     /**
      * Return the list of available mails.
      *
-     * @param string $dir
+     * @param null $dir
      *
      * @return array|null
      */

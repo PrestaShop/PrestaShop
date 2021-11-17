@@ -20,6 +20,3 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
     arguments:
       - '@prestashop.adapter.data_provider.country'
-
-  prestashop.adapter.country.repository.country_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'

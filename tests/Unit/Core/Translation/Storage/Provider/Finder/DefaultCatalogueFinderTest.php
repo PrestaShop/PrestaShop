@@ -64,7 +64,7 @@ class DefaultCatalogueFinderTest extends TestCase
         ],
     ];
 
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'DefaultCatalogueFinderTest']);
 

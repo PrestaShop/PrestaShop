@@ -193,7 +193,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         $shopIds = [];
 
         foreach ($shopReferences as $shopReference) {
-            $shopIds[] = $this->getSharedStorage()->get($shopReference);
+            $shopIds[] = (int) ($this->getSharedStorage()->get($shopReference))->id;
         }
 
         return $shopIds;

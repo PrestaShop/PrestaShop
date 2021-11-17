@@ -4,9 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,6 +11,9 @@ const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const searchEnginesPage = require('@pages/BO/shopParameters/trafficAndSeo/searchEngines');
 const addSearchEnginePage = require('@pages/BO/shopParameters/trafficAndSeo/searchEngines/add');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_trafficAndSeo_searchEngines_bulkActions';
 
@@ -29,7 +29,7 @@ let numberOfSearchEngines = 0;
 Create 2 search engine
 Delete with bulk actions
  */
-describe('BO - Shop Parameters - Traffic & SEO : Bulk delete search engine', async () => {
+describe('Bulk delete search engine', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +44,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Bulk delete search engine', asy
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
+  it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

@@ -25,10 +25,10 @@
  */
 class OrderMessageCore extends ObjectModel
 {
-    /** @var string|array<int, string> Name */
+    /** @var array<string> Name */
     public $name;
 
-    /** @var string|array<int, string> Message content */
+    /** @var array<string> Message content */
     public $message;
 
     /** @var string Object creation date */

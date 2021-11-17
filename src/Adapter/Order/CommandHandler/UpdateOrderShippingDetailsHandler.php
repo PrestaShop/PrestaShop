@@ -109,6 +109,10 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
         //send mail only if tracking number is different AND not empty
         if (!empty($trackingNumber) && $oldTrackingNumber != $trackingNumber) {
+            if (!$orderCarrier->sendInTransitEmail($order)) {
+                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
+            }
+
             $customer = new Customer((int) $order->id_customer);
             $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
 
@@ -117,10 +121,6 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
                 'customer' => $customer,
                 'carrier' => $carrier,
             ], null, false, true, false, $order->id_shop);
-
-            if (!$orderCarrier->sendInTransitEmail($order)) {
-                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
-            }
         }
     }
 }

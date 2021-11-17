@@ -545,9 +545,9 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $product['name'],
             isset($product['attributes_small']) ? $product['attributes_small'] : '',
             $product['reference'],
-            (string) Tools::ps_round($product['price'], $currency->precision),
+            Tools::ps_round($product['price'], $currency->precision),
             $product['quantity'],
-            (string) Tools::ps_round($product['total'], $currency->precision),
+            Tools::ps_round($product['total'], $currency->precision),
             $this->contextLink->getImageLink($product['link_rewrite'], $product['id_image'], 'small_default'),
             $this->getProductCustomizedData($cart, $product),
             Product::getQuantity(

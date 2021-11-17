@@ -4,27 +4,25 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
-
-// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
 
 let browserContext;
 let page;
 
-describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout', async () => {
+describe('Enable guest checkout', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

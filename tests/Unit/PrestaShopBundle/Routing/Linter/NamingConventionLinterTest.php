@@ -27,8 +27,11 @@
 namespace Tests\Unit\PrestaShopBundle\Routing\Linter;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\PrestaShopBundle;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Route;
 use Tests\Resources\Controller\TestController;
 
@@ -39,9 +42,9 @@ class NamingConventionLinterTest extends TestCase
      */
     private $namingConventionLinter;
 
-    public function setUp(): void
+    public function setUp()
     {
-        $this->namingConventionLinter = new NamingConventionLinter();
+        $this->namingConventionLinter = new NamingConventionLinter($this->createControllerNameParser());
     }
 
     /**
@@ -96,5 +99,15 @@ class NamingConventionLinterTest extends TestCase
                 '_controller' => sprintf('%s::%s', TestController::class, 'doSomethingComplexAction'),
             ]),
         ];
+    }
+
+    public function createControllerNameParser()
+    {
+        $kernel = $this->createMock(KernelInterface::class);
+        $kernel->method('getBundles')->willReturn([
+            'prestashop' => $this->createMock(PrestaShopBundle::class),
+        ]);
+
+        return new ControllerNameParser($kernel);
     }
 }

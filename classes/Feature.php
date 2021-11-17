@@ -29,7 +29,7 @@
  */
 class FeatureCore extends ObjectModel
 {
-    /** @var string|array<int, string> Name */
+    /** @var array<string> Name */
     public $name;
 
     /** @var int */
@@ -278,8 +278,6 @@ class FeatureCore extends ObjectModel
 
             return (int) $rq['id_feature'];
         }
-
-        return 0;
     }
 
     /**
@@ -298,8 +296,7 @@ class FeatureCore extends ObjectModel
      * Move a feature.
      *
      * @param bool $way Up (1)  or Down (0)
-     * @param int|null $position
-     * @param int|null $idFeature
+     * @param int $position
      *
      * @return bool Update result
      */

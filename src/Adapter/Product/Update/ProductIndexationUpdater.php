@@ -28,11 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Adapter\CoreException;
 use PrestaShopException;
-use Product;
 use Search;
 
 /**
@@ -41,86 +38,18 @@ use Search;
 class ProductIndexationUpdater
 {
     /**
-     * @var bool
-     */
-    private $isSearchIndexationOn;
-
-    /**
-     * @param bool $isSearchIndexationOn
-     */
-    public function __construct(bool $isSearchIndexationOn)
-    {
-        $this->isSearchIndexationOn = $isSearchIndexationOn;
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return bool
-     */
-    public function isVisibleOnSearch(Product $product): bool
-    {
-        return in_array(
-            $product->visibility,
-            [ProductVisibility::VISIBLE_EVERYWHERE, ProductVisibility::VISIBLE_IN_SEARCH]
-        ) && $product->active;
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     * @throws CoreException
-     */
-    public function updateIndexation(Product $product): void
-    {
-        if (!$this->isSearchIndexationOn) {
-            return;
-        }
-
-        if ($this->isVisibleOnSearch($product)) {
-            $this->updateProductIndexes((int) $product->id);
-        } else {
-            $this->removeProductIndexes((int) $product->id);
-        }
-    }
-
-    /**
      * @param int $productId
-     *
-     * @throws CannotUpdateProductException
-     * @throws CoreException
      */
-    private function updateProductIndexes(int $productId): void
+    public function updateIndexation(int $productId): void
     {
         try {
-            if (!Search::indexation(false, $productId)) {
-                throw new CannotUpdateProductException(
-                    sprintf('Cannot update search indexes for product %d', $productId),
-                    CannotUpdateProductException::FAILED_UPDATE_SEARCH_INDEXATION
-                );
-            }
+            Search::indexation(false, $productId);
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred while updating search indexes for product %d', $productId),
-                0,
-                $e
-            );
-        }
-    }
-
-    /**
-     * @param int $productId
-     *
-     * @throws CoreException
-     */
-    private function removeProductIndexes(int $productId): void
-    {
-        try {
-            Search::removeProductsSearchIndex([$productId]);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred while removing search indexes for product %d', $productId),
+                sprintf(
+                    'An error occured while trying to update indexation data for product %d.',
+                    $productId
+                ),
                 0,
                 $e
             );

@@ -33,8 +33,8 @@ import Bloodhound from 'typeahead.js';
  * @returns {function(*=, ...[*]=): function(*): *[]}
  */
 function getObjTokenizer(tokenizer) {
-  return function setKey(...args) {
-    const tokenizerKeys = _.isArray(args[0]) ? args[0] : args;
+  return function setKey(keys, ...args) {
+    const tokenizerKeys = _.isArray(keys) ? keys : [].slice.call(args, 0);
 
     return function tokenize(val) {
       let tokens = [];

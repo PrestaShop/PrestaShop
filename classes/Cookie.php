@@ -28,17 +28,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 /**
- * @property bool $detect_language
- * @property int $id_customer
- * @property int $id_employee
- * @property int $id_lang
- * @property bool $is_guest
- * @property bool $logged
  * @property string $passwd
- * @property int $session_id
- * @property string $session_token
- * @property string $shopContext
- * @property int $last_activity
  */
 class CookieCore
 {
@@ -61,7 +51,7 @@ class CookieCore
     /** @var array expiration date for setcookie() */
     protected $_expire;
 
-    /** @var bool|string Website domain for setcookie() */
+    /** @var array Website domain for setcookie() */
     protected $_domain;
 
     /** @var string|bool SameSite for setcookie() */
@@ -70,7 +60,7 @@ class CookieCore
     /** @var array Path for setcookie() */
     protected $_path;
 
-    /** @var PhpEncryption cipher tool instance */
+    /** @var array cipher tool instance */
     protected $cipherTool;
 
     protected $_modified = false;
@@ -87,8 +77,8 @@ class CookieCore
     /**
      * Get data if the cookie exists and else initialize an new one.
      *
-     * @param string $name Cookie name before encrypting
-     * @param string $path
+     * @param $name string Cookie name before encrypting
+     * @param $path string
      */
     public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
     {
@@ -124,11 +114,6 @@ class CookieCore
         $this->_allow_writing = false;
     }
 
-    /**
-     * @param array|null $shared_urls
-     *
-     * @return bool|string
-     */
     protected function getDomain($shared_urls = null)
     {
         $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
@@ -604,7 +589,7 @@ class CookieCore
             $session = new CustomerSession($sessionId);
         }
 
-        if (isset($session) && Validate::isLoadedObject($session)) {
+        if (isset($session) && !empty($session->getId())) {
             return $session;
         }
 

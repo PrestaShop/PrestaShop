@@ -30,14 +30,13 @@ namespace Tests\Unit\PrestaShopBundle\Service\DataProvider\Admin\Marketplace;
 
 use AppKernel;
 use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Subscriber\Mock;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Tools;
 
-class ApiClientTest extends TestCase
+class ApiClientTests extends TestCase
 {
     /**
      * @var ApiClient
@@ -48,10 +47,11 @@ class ApiClientTest extends TestCase
     {
         parent::setUp();
 
-        $client = new Client(['handler' => HandlerStack::create(new MockHandler([
+        $client = new Client();
+        $client->getEmitter()->attach(new Mock([
             new Response(200),
             new Response(200),
-        ]))]);
+        ]));
 
         $this->apiClient = new ApiClient(
             $client,

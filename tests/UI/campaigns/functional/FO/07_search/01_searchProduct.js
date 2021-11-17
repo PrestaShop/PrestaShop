@@ -24,7 +24,7 @@ Go to FO
 Search Product
  */
 
-describe('FO - Search Page : Search product', async () => {
+describe('Search product', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

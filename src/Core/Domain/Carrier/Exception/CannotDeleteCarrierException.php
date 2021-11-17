@@ -36,10 +36,10 @@ class CannotDeleteCarrierException extends CarrierException
     /**
      * Thrown when cannot delete single carrier.
      */
-    public const SINGLE_DELETE = 10;
+    const SINGLE_DELETE = 10;
 
     /**
      * Thrown when cannot bulk delete carriers.
      */
-    public const BULK_DELETE = 20;
+    const BULK_DELETE = 20;
 }

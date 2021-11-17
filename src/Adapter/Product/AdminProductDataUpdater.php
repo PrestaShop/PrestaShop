@@ -39,7 +39,6 @@ use Product;
 use Search;
 use Shop;
 use ShopGroup;
-use StockAvailable;
 use Validate;
 
 /**
@@ -157,7 +156,7 @@ class AdminProductDataUpdater implements ProductInterface
         // Hooks: will trigger actionProductDelete
         $result = $product->delete();
 
-        if ($result === false) {
+        if ($result === 0) {
             throw new UpdateProductException('Cannot delete the requested product.', 5007);
         }
 
@@ -234,7 +233,6 @@ class AdminProductDataUpdater implements ProductInterface
                 if (in_array($product->visibility, ['both', 'search']) && Configuration::get('PS_SEARCH_INDEXATION')) {
                     Search::indexation(false, $product->id);
                 }
-                StockAvailable::setProductOutOfStock($product->id, StockAvailable::outOfStock($id_product_old));
 
                 return $product->id;
             }

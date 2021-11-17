@@ -57,21 +57,10 @@ class TranslationsFactory implements TranslationsFactoryInterface
     }
 
     /**
-     * @param string $domainIdentifier
-     * @param string $locale
-     * @param string|null $theme
-     * @param string|null $search
-     *
-     * @return array|mixed
-     *
-     * @throws ProviderNotFoundException
+     * {@inheritdoc}
      */
-    public function createTranslationsArray(
-        $domainIdentifier,
-        $locale = self::DEFAULT_LOCALE,
-        $theme = null,
-        $search = null
-    ) {
+    public function createTranslationsArray($domainIdentifier, $locale = self::DEFAULT_LOCALE, $theme = null, $search = null)
+    {
         foreach ($this->providers as $provider) {
             if ($domainIdentifier === $provider->getIdentifier()) {
                 $treeBuilder = new TreeBuilder($locale, $theme);

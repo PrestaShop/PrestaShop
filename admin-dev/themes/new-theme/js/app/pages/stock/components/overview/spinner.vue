@@ -55,13 +55,12 @@
   </form>
 </template>
 
-<script lang="ts">
-  import PSNumber from '@app/widgets/ps-number.vue';
-  import Vue from 'vue';
+<script>
+  import PSNumber from '@app/widgets/ps-number';
 
   const {$} = window;
 
-  export default Vue.extend({
+  export default {
     props: {
       product: {
         type: Object,
@@ -69,10 +68,10 @@
       },
     },
     computed: {
-      id(): string {
+      id() {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
-      classObject(): Record<string, any> {
+      classObject() {
         return {
           active: this.isActive,
           disabled: !this.isEnabled,
@@ -80,54 +79,54 @@
       },
     },
     methods: {
-      getQuantity(): number {
+      getQuantity() {
         if (!this.product.qty) {
           this.isEnabled = false;
           this.value = 0;
         }
-        return Math.round(<number> this.value);
+        return parseInt(this.value, 10);
       },
-      onChange(val: number): void {
+      onChange(val) {
         this.value = val;
         this.isEnabled = !!val;
       },
-      deActivate(): void {
+      deActivate() {
         this.isActive = false;
         this.isEnabled = false;
         this.value = null;
         this.product.qty = null;
       },
-      onKeyup(event: Event): void {
-        const val = (<HTMLInputElement>event.target).value;
+      onKeyup(event) {
+        const val = event.target.value;
 
-        if (parseInt(val, 10) === 0) {
+        if (val === 0) {
           this.deActivate();
         } else {
           this.isActive = true;
           this.isEnabled = true;
-          this.value = parseInt(val, 10);
+          this.value = val;
         }
       },
-      focusIn(): void {
+      focusIn() {
         this.isActive = true;
       },
-      focusOut(event: Event): void {
-        const value = Math.round(<number> this.value);
+      focusOut(event) {
+        const value = parseInt(this.value, 10);
 
         if (
-          !$(<HTMLElement>event.target).hasClass('ps-number')
+          !$(event.target).hasClass('ps-number')
           && (Number.isNaN(value) || value === 0)
         ) {
           this.isActive = false;
         }
         this.isEnabled = !!this.value;
       },
-      sendQty(): void {
+      sendQty() {
         const postUrl = this.product.edit_url;
 
         if (
           parseInt(this.product.qty, 10) !== 0
-          && !Number.isNaN(Math.round(<number> this.value))
+          && !Number.isNaN(parseInt(this.value, 10))
         ) {
           this.$store.dispatch('updateQtyByProductId', {
             url: postUrl,
@@ -138,7 +137,7 @@
       },
     },
     watch: {
-      value(val: number): void {
+      value(val) {
         this.$emit('updateProductQty', {
           product: this.product,
           delta: val,
@@ -148,27 +147,25 @@
     components: {
       PSNumber,
     },
-    data() {
-      return {
-        value: null as null | number,
-        isActive: false,
-        isEnabled: false,
-      };
-    },
-  });
+    data: () => ({
+      value: null,
+      isActive: false,
+      isEnabled: false,
+    }),
+  };
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-  @import "~jquery-ui-dist/jquery-ui.css";
-  * {
-    outline: none;
-  }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.2s ease;
-  }
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
+@import "~jquery-ui-dist/jquery-ui.css";
+* {
+  outline: none;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 </style>

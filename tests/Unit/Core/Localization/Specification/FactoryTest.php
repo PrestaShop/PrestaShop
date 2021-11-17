@@ -42,9 +42,8 @@ class FactoryTest extends TestCase
      */
     protected $factory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        parent::setUp();
         $this->factory = new FactorySpecification();
     }
 
@@ -56,7 +55,7 @@ class FactoryTest extends TestCase
      *
      * @dataProvider getNumberData
      */
-    public function testBuildNumberSpecification(array $data, array $expected): void
+    public function testBuildNumberSpecification($data, $expected)
     {
         $specification = $this->factory->buildNumberSpecification(
             $this->createLocale(
@@ -71,7 +70,7 @@ class FactoryTest extends TestCase
         );
     }
 
-    public function getNumberData(): array
+    public function getNumberData()
     {
         return [
             [
@@ -143,9 +142,9 @@ class FactoryTest extends TestCase
      * Given a boolean to define if we should group digits in a number's integer part
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceDataWithPrecisions
+     * @dataProvider getPriceData
      */
-    public function testBuildPriceSpecification(array $data, array $expected): void
+    public function testBuildPriceSpecification($data, $expected)
     {
         $specification = $this->factory->buildPriceSpecification(
             $data[0],
@@ -182,9 +181,9 @@ class FactoryTest extends TestCase
      * Given an integer to specify max fraction digits
      * Then calling buildPriceSpecification() should return an NumberSpecification
      *
-     * @dataProvider getPriceDataWithPrecisions
+     * @dataProvider getPriceData
      */
-    public function testBuildPriceSpecificationWithMax(array $data, array $expected): void
+    public function testBuildPriceSpecificationWithMax($data, $expected)
     {
         $maxFractionDigits = 3;
         $specification = $this->factory->buildPriceSpecification(
@@ -263,7 +262,7 @@ class FactoryTest extends TestCase
         self::assertEquals($specification->getMaxFractionDigits(), $maxFractionDigits);
     }
 
-    public function getPriceDataWithPrecisions(): array
+    public function getPriceDataWithPrecisions()
     {
         // if maxFractionDigits < minFractionDigits, minFractionDigits = maxFractionDigits
         // see PrestaShop\PrestaShop\Core\Localization\Specification\Number
@@ -724,14 +723,14 @@ class FactoryTest extends TestCase
      * @param string $percentPattern
      * @param string $decimalPattern
      *
-     * @return Locale
+     * @return LocaleData
      */
     private function createLocale(
-        string $code,
-        string $currencyPattern,
-        string $percentPattern,
-        string $decimalPattern
-    ): Locale {
+        $code,
+        $currencyPattern,
+        $percentPattern,
+        $decimalPattern
+    ) {
         $localeData = new LocaleData();
         $localeData->setLocaleCode($code);
         $localeData->setDefaultNumberingSystem('latn');

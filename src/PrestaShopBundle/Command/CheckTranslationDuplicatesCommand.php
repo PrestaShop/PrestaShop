@@ -27,25 +27,13 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Translation\Translator;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Translation\TranslatorBagInterface;
 
-class CheckTranslationDuplicatesCommand extends Command
+class CheckTranslationDuplicatesCommand extends ContainerAwareCommand
 {
-    /**
-     * @var TranslatorBagInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorBagInterface $translator)
-    {
-        parent::__construct();
-        $this->translator = $translator;
-    }
-
     protected function configure()
     {
         $this
@@ -56,10 +44,11 @@ class CheckTranslationDuplicatesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Get dependancies
-        $catalogue = $this->translator->getCatalogue()->all();
+        $translator = $this->getContainer()->get('translator');
+        $catalogue = $translator->getCatalogue()->all();
 
         // Init progress bar
-        $progress = new ProgressBar($output, count($catalogue, COUNT_RECURSIVE));
+        $progress = new ProgressBar($output, count($catalogue, true));
         $progress->start();
         $progress->setRedrawFrequency(20);
 
@@ -90,7 +79,7 @@ class CheckTranslationDuplicatesCommand extends Command
             $output->writeln('Duplicates found:');
             dump($duplicates);
 
-            return count($duplicates, COUNT_RECURSIVE);
+            return count($duplicates, true);
         }
 
         $output->writeln('Awww yisss! There is no duplicate in your translator catalog.');

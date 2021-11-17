@@ -43,7 +43,7 @@ class HookDispatcherTest extends TestCase
      */
     private $hookDispatcherMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -66,7 +66,7 @@ class HookDispatcherTest extends TestCase
      *
      * @param string $eventName
      */
-    public function testItCallsHookDispatcherWithCaseInsensitiveEventNames(string $eventName): void
+    public function testItCallsHookDispatcherWithCaseInsensitiveEventNames($eventName)
     {
         $lowerCasedEventName = strtolower($eventName);
 

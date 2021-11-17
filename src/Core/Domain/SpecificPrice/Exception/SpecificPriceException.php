@@ -26,20 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
-use DomainException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException as ProductSpecificPriceException;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        SpecificPriceException::class
-    ),
-    E_USER_DEPRECATED
-);
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see ProductSpecificPriceException
+ * Base exception for SpecificPrice subdomain
  */
 class SpecificPriceException extends DomainException
 {

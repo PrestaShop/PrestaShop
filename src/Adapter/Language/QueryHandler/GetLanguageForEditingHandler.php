@@ -67,7 +67,7 @@ final class GetLanguageForEditingHandler implements GetLanguageForEditingHandler
      *
      * @return Language
      */
-    private function getLegacyLanguageObject(LanguageId $languageId): Language
+    private function getLegacyLanguageObject(LanguageId $languageId)
     {
         $language = new Language($languageId->getValue());
 

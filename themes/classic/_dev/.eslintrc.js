@@ -16,8 +16,7 @@ module.exports = {
     prestashop: true,
   },
   parserOptions: {
-    parser: '@babel/eslint-parser',
-    requireConfigFile: false,
+    parser: 'babel-eslint',
   },
   extends: ['prestashop'],
   plugins: ['import'],

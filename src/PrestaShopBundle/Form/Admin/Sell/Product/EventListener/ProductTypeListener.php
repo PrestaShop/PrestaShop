@@ -72,13 +72,6 @@ class ProductTypeListener implements EventSubscriberInterface
                 if (ProductType::TYPE_VIRTUAL !== $productType) {
                     $stock->remove('virtual_product_file');
                 }
-
-                if ($stock->has('quantities')) {
-                    $quantities = $stock->get('quantities');
-                    if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
-                        $quantities->remove('stock_movements');
-                    }
-                }
             }
 
             if (ProductType::TYPE_VIRTUAL === $productType) {

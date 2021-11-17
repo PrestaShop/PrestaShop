@@ -161,7 +161,7 @@ table .column-filters {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: $gray-250;
+          background: #fafbfc;
 
           td {
             color: $white;
@@ -302,20 +302,6 @@ table {
         input,
         select {
           min-width: 6rem;
-        }
-      }
-
-      td[data-column-id^="id_"] {
-        max-width: 8rem;
-
-        input:only-child {
-          max-width: 6rem;
-        }
-      }
-
-      td[data-column-id^="name"] {
-        input:only-child {
-          max-width: 8rem;
         }
       }
     }

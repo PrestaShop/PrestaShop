@@ -31,10 +31,10 @@ namespace Tests\Unit\PrestaShopBundle;
 use PrestaShopBundle\Entity\Translation;
 use PrestaShopBundle\Translation\Constraints\PassVsprintf;
 use PrestaShopBundle\Translation\Constraints\PassVsprintfValidator;
-use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
+use Symfony\Component\Validator\Tests\Constraints\AbstractConstraintValidatorTest;
 use Symfony\Component\Validator\Validation;
 
-class PassVsprintfContraintTest extends ConstraintValidatorTestCase
+class PassVsprintfContraintTest extends AbstractConstraintValidatorTest
 {
     protected function getApiVersion()
     {

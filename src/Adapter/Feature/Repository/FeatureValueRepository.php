@@ -237,8 +237,6 @@ class FeatureValueRepository extends AbstractObjectModelRepository
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'feature_value', 'fv')
             ->leftJoin('fv', $this->dbPrefix . 'feature_product', 'fp', 'fp.id_feature_value = fv.id_feature_value')
-            ->leftJoin('fv', $this->dbPrefix . 'feature', 'f', 'f.id_feature = fv.id_feature')
-            ->orderBy('f.position,fv.id_feature_value', 'ASC')
         ;
 
         $availableFilters = [

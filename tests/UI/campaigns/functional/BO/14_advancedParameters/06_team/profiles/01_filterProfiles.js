@@ -4,15 +4,15 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_profiles_filterProfiles';
 
@@ -21,10 +21,7 @@ let page;
 
 let numberOfProfiles = 0;
 
-/*
-Filter profiles table by ID and Name
- */
-describe('BO - Advanced Parameters - Team : Filter profiles table', async () => {
+describe('Filter profiles', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -39,7 +36,7 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced Parameters > Team\' page', async function () {
+  it('should go to "Advanced parameters>Team" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -54,7 +51,7 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to \'Profiles\' page', async function () {
+  it('should go to "Profiles" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
     await employeesPage.goToProfilesPage(page);
@@ -70,7 +67,7 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
   });
 
   // 1 : Filter profiles table
-  describe('Filter profiles table in BO', async () => {
+  describe('Filter profile in BO', async () => {
     const tests = [
       {
         args: {
@@ -88,7 +85,12 @@ describe('BO - Advanced Parameters - Team : Filter profiles table', async () => 
       it(`should filter list by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await profilesPage.filterProfiles(page, test.args.filterType, test.args.filterBy, test.args.filterValue);
+        await profilesPage.filterProfiles(
+          page,
+          test.args.filterType,
+          test.args.filterBy,
+          test.args.filterValue,
+        );
 
         const numberOfProfilesAfterFilter = await profilesPage.getNumberOfElementInGrid(page);
         await expect(numberOfProfilesAfterFilter).to.be.at.most(numberOfProfiles);

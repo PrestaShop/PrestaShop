@@ -26,14 +26,10 @@
 
 namespace PrestaShopBundle\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
-class DataFormatterExtension extends AbstractExtension
+class DataFormatterExtension extends \Twig_Extension
 {
     /**
      * Define available filters.
@@ -43,10 +39,10 @@ class DataFormatterExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new TwigFilter('arrayCast', [$this, 'arrayCast']),
-            new TwigFilter('intCast', [$this, 'intCast']),
-            new TwigFilter('unsetElement', [$this, 'unsetElement']),
-            new TwigFilter('array_pluck', [$this, 'arrayPluck']),
+            new \Twig_SimpleFilter('arrayCast', [$this, 'arrayCast']),
+            new \Twig_SimpleFilter('intCast', [$this, 'intCast']),
+            new \Twig_SimpleFilter('unsetElement', [$this, 'unsetElement']),
+            new \Twig_SimpleFilter('array_pluck', [$this, 'arrayPluck']),
         ];
     }
 
@@ -58,10 +54,10 @@ class DataFormatterExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('arrayCast', [$this, 'arrayCast']),
-            new TwigFunction('intCast', [$this, 'intCast']),
-            new TwigFunction('unsetElement', [$this, 'unsetElement']),
-            new TwigFunction('array_pluck', [$this, 'arrayPluck']),
+            new \Twig_SimpleFunction('arrayCast', [$this, 'arrayCast']),
+            new \Twig_SimpleFunction('intCast', [$this, 'intCast']),
+            new \Twig_SimpleFunction('unsetElement', [$this, 'unsetElement']),
+            new \Twig_SimpleFunction('array_pluck', [$this, 'arrayPluck']),
         ];
     }
 

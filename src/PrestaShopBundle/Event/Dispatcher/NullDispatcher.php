@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Event\Dispatcher;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -43,12 +44,12 @@ class NullDispatcher implements EventDispatcherInterface, HookDispatcherInterfac
     }
 
     /**
-     * @param object $event
-     * @param string|null $eventName
+     * @param string $eventName
+     * @param Event|null $event
      *
-     * @return object|void
+     * @return Event|void
      */
-    public function dispatch($event, string $eventName = null)
+    public function dispatch($eventName, Event $event = null)
     {
     }
 

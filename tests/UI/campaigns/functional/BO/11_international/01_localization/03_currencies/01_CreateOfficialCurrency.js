@@ -203,8 +203,18 @@ describe('BO - International - Currencies : Create official currency and check i
     it('should check currency non existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrency2', baseContext);
 
-      const found = await foHomePage.currencyExists(page, Currencies.mad.name);
-      await expect(found).to.be.false;
+      // Check currency
+      let textError = '';
+
+      try {
+        await foHomePage.changeCurrency(page, Currencies.mad.isoCode, Currencies.mad.symbol);
+      } catch (e) {
+        textError = e.toString();
+      }
+
+      await expect(textError).to.contains(
+        `${Currencies.mad.isoCode} was not found as option of select`,
+      );
     });
 
     it('should go back to BO', async function () {

@@ -32,21 +32,20 @@
   </section>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import ProductsActions from './products-actions.vue';
-  import ProductsTable from './products-table.vue';
+<script>
+  import ProductsActions from './products-actions';
+  import ProductsTable from './products-table';
 
   const DEFAULT_SORT = 'asc';
 
-  export default Vue.extend({
+  export default {
     computed: {
-      isLoading(): boolean {
+      isLoading() {
         return this.$store.state.isLoading;
       },
     },
     methods: {
-      sort(sortDirection: string): void {
+      sort(sortDirection) {
         this.$emit('fetch', sortDirection);
       },
     },
@@ -62,5 +61,5 @@
       ProductsActions,
       ProductsTable,
     },
-  });
+  };
 </script>

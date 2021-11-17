@@ -45,9 +45,14 @@ class Preferences extends BOBasePage {
       page,
       this.euroCurrencyRestrictionsCheckbox(paymentModule),
     );
+    const isCheckboxSelected = await this.isCheckboxSelected(
+      page,
+      this.euroCurrencyRestrictionsCheckbox(paymentModule),
+    );
 
-    await this.setCheckedWithIcon(page, this.euroCurrencyRestrictionsCheckbox(paymentModule), valueWanted);
-
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.euroCurrencyRestrictionsCheckbox(paymentModule)} + i`, el => el.click());
+    }
     await page.click(this.currencyRestrictionsSaveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -61,9 +66,13 @@ class Preferences extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setGroupRestrictions(page, group, paymentModule, valueWanted) {
-    await this.waitForAttachedSelector(page, `${this.paymentModuleCheckbox(paymentModule, group)} + i`);
-    await this.setCheckedWithIcon(page, this.paymentModuleCheckbox(paymentModule, group), valueWanted);
+    const selector = this.paymentModuleCheckbox(paymentModule, group);
+    await this.waitForAttachedSelector(page, `${selector} + i`);
+    const isCheckboxSelected = await this.isCheckboxSelected(page, selector);
 
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${selector} + i`, el => el.click());
+    }
     await page.click(this.groupRestrictionsSaveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -81,8 +90,14 @@ class Preferences extends BOBasePage {
       page,
       `${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`,
     );
-    await this.setCheckedWithIcon(page, this.countryRestrictionsCheckbox(paymentModule, countryID), valueWanted);
+    const isCheckboxSelected = await this.isCheckboxSelected(
+      page,
+      this.countryRestrictionsCheckbox(paymentModule, countryID),
+    );
 
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.countryRestrictionsCheckbox(paymentModule, countryID)} + i`, el => el.click());
+    }
     await page.click(this.currencyRestrictionsSaveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -100,8 +115,14 @@ class Preferences extends BOBasePage {
       page,
       `${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`,
     );
-    await this.setCheckedWithIcon(page, this.carrierRestrictionsCheckbox(paymentModule, carrierID), valueWanted);
+    const isCheckboxSelected = await this.isCheckboxSelected(
+      page,
+      this.carrierRestrictionsCheckbox(paymentModule, carrierID),
+    );
 
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.carrierRestrictionsCheckbox(paymentModule, carrierID)} + i`, el => el.click());
+    }
     await page.click(this.carrierRestrictionSaveButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

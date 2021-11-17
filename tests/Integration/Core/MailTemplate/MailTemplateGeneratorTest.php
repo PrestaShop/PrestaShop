@@ -61,7 +61,7 @@ class MailTemplateGeneratorTest extends TestCase
     /** @var ThemeInterface */
     private $theme;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->fs = new Filesystem();

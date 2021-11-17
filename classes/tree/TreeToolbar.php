@@ -155,7 +155,7 @@ class TreeToolbarCore implements ITreeToolbarCore
     }
 
     /**
-     * @param ITreeToolbarButtonCore $action
+     * @param ITreeToolbarButton $action
      *
      * @return TreeToolbar
      *

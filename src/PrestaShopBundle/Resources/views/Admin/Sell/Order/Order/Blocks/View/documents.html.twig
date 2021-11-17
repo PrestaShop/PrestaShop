@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<table id="documents-grid-table" class="table mb-3{% if orderForViewing.documents.documents is empty %} table-empty{% endif %}">
+<table class="table mb-3{% if orderForViewing.documents.documents is empty %} table-empty{% endif %}">
   <thead>
   <tr>
     <th>
@@ -98,15 +98,13 @@
                 {{ 'Enter payment'|trans({}, 'Admin.Orderscustomers.Feature') }}
               </button>
             {% endif %}
-            {% if document.note is empty %}
-              <button href="#" class="js-open-invoice-note-btn btn btn-primary btn-sm">
+            <button href="#" class="js-open-invoice-note-btn btn btn-primary btn-sm">
+              {% if document.note is empty %}
                 {{ 'Add note'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
-            {% else %}
-              <button href="#" class="js-open-invoice-note-btn btn btn-primary btn-sm btn-edit">
+              {% else %}
                 {{ 'Edit note'|trans({}, 'Admin.Orderscustomers.Feature') }}
-              </button>
-            {% endif %}
+              {% endif %}
+            </button>
           {% endif %}
         </td>
       </tr>
@@ -118,11 +116,11 @@
               'orderInvoiceId': document.id
             }) }}" method="post">
               <div class="input-group">
-                <input type="text" class="form-control invoice-note" name="invoice_note" value="{{ document.note }}">
+                <input type="text" class="form-control" name="invoice_note" value="{{ document.note }}">
                 <button class="btn btn-secondary ml-2 btn-sm js-cancel-invoice-note-btn" type="button">
                   {{ 'Cancel'|trans({}, 'Admin.Actions') }}
                 </button>
-                <button class="btn btn-primary ml-2 btn-sm js-save-invoice-note-btn" type="submit">
+                <button class="btn btn-primary ml-2 btn-sm" type="submit">
                   {{ 'Save'|trans({}, 'Admin.Actions') }}
                 </button>
               </div>
@@ -133,7 +131,7 @@
     {% endfor %}
   {% else %}
     <tr>
-      <td colspan="5" class="text-center alert-available">
+      <td colspan="5" class="text-center">
         {{ 'There is no available document'|trans({}, 'Admin.Orderscustomers.Notification') }}
       </td>
     </tr>

@@ -98,7 +98,7 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
             $details['mpn'],
             $details['reference'],
             $details['upc'],
-            new DecimalNumber($details['impact on weight'] ?? '0')
+            new DecimalNumber($details['impact on weight'])
         );
     }
 

@@ -24,23 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException as ProductSpecificPriceConstraintException;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        SpecificPriceConstraintException::class
-    ),
-    E_USER_DEPRECATED
-);
-
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see ProductSpecificPriceConstraintException
+ * Thrown when specific price constraints are violated
  */
 class SpecificPriceConstraintException extends SpecificPriceException
 {

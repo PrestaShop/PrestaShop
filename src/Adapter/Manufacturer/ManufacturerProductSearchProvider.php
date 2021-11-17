@@ -54,14 +54,14 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return array|int
+     * @return array|bool
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        $result = $this->manufacturer->getProducts(
+        return $this->manufacturer->getProducts(
             $this->manufacturer->id,
             $context->getIdLang(),
             $query->getPage(),
@@ -70,8 +70,6 @@ class ManufacturerProductSearchProvider implements ProductSearchProviderInterfac
             $query->getSortOrder()->toLegacyOrderWay(),
             $type !== 'products'
         );
-
-        return $type !== 'products' ? (int) $result : $result;
     }
 
     /**

@@ -27,8 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
-use Customer;
-use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
@@ -169,9 +167,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         DataTransfer::transferAttributesFromArrayToObject($data, $command);
         $commandBus->handle($command);
-
-        // Clear static cache or same cached groups will always be returned
-        Customer::resetStaticCache();
     }
 
     /**
@@ -188,28 +183,17 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When I delete customer ":customerReference" and allow it to register again
+     * @When I delete customer ":customerReference" with "allow registration after deletion" checked
      */
-    public function deleteCustomerWithAllowCustomerRegistration(string $customerReference): void
+    public function deleteCustomerWithAllowCustomerRegistration($customerReference)
     {
         $this->deleteCustomer($customerReference, CustomerDeleteMethod::ALLOW_CUSTOMER_REGISTRATION);
     }
 
     /**
-     * @When I delete customer ":customerReference" and prevent it from registering again
+     * @When /^I delete customer "(.+)" with method "(.+)"$/
      */
-    public function deleteCustomerWithDenyCustomerRegistration(string $customerReference): void
-    {
-        $this->deleteCustomer($customerReference, CustomerDeleteMethod::DENY_CUSTOMER_REGISTRATION);
-    }
-
-    /**
-     * @param string $customerReference
-     * @param string $methodName
-     *
-     * @throws \Exception
-     */
-    private function deleteCustomer(string $customerReference, string $methodName): void
+    public function deleteCustomer($customerReference, $methodName)
     {
         $this->assertCustomerReferenceExistsInRegistry($customerReference);
         $this->validateDeleteCustomerMethod($methodName);
@@ -224,7 +208,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @When /^I query customer "(.+)" I should get a Customer with properties:$/
+     * @Then /^if I query customer "(.+)" I should get a Customer with properties:$/
      */
     public function assertQueryCustomerProperties($customerReference, TableNode $table)
     {
@@ -243,17 +227,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         DataComparator::assertDataSetsAreIdentical($expectedData, $realData);
 
         $this->latestResult = null;
-    }
-
-    /**
-     * @When customer ":customerReference" should be soft deleted
-     *
-     * @param string $customerReference
-     */
-    public function checkSoftDeleted(string $customerReference): void
-    {
-        $customer = new Customer($this->customerRegistry[$customerReference]);
-        Assert::assertTrue((bool) $customer->deleted);
     }
 
     /**
@@ -350,14 +323,6 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
         if (array_key_exists('isPartnerOffersSubscribed', $data)) {
             $data['isPartnerOffersSubscribed'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['isPartnerOffersSubscribed']);
-        }
-        if (array_key_exists('newsletterSubscribed', $data)) {
-            $data['newsletterSubscribed'] = PrimitiveUtils::castStringBooleanIntoBoolean($data['newsletterSubscribed']);
-        }
-        if (!empty($data['riskId'])) {
-            $data['riskId'] = SharedStorage::getStorage()->get($data['riskId']);
-        } else {
-            $data['riskId'] = 0;
         }
 
         return $data;

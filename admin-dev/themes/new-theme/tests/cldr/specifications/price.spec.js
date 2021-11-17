@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import { expect } from 'chai';
+import {expect} from 'chai';
 import PriceSpecification from '../../../js/app/cldr/specifications/price';
 import NumberSymbol from '../../../js/app/cldr/number-symbol';
 
@@ -40,7 +40,7 @@ describe('PriceSpecification', () => {
       '×',
       '‰',
       '∞',
-      'NaN'
+      'NaN',
     );
   });
   describe('validateData', () => {
@@ -52,37 +52,64 @@ describe('PriceSpecification', () => {
 
     it('should throw if invalid negative pattern', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###');
+        new PriceSpecification(
+          '#,##0.###',
+        );
       }).to.throw('Invalid negativePattern');
     });
 
     it('should throw if invalid symbol', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###', '-#,##0.###');
+        new PriceSpecification(
+          '#,##0.###',
+          '-#,##0.###',
+        );
       }).to.throw('Invalid symbol');
     });
 
     it('should throw if invalid maxFractionDigits', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###', '-#,##0.###', symbol);
+        new PriceSpecification(
+          '#,##0.###',
+          '-#,##0.###',
+          symbol,
+        );
       }).to.throw('Invalid maxFractionDigits');
     });
 
     it('should throw if invalid minFractionDigits', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3);
+        new PriceSpecification(
+          '#,##0.###',
+          '-#,##0.###',
+          symbol,
+          3,
+        );
       }).to.throw('Invalid minFractionDigits');
     });
 
     it('should throw if invalid groupingUsed', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0);
+        new PriceSpecification(
+          '#,##0.###',
+          '-#,##0.###',
+          symbol,
+          3,
+          0,
+        );
       }).to.throw('Invalid groupingUsed');
     });
 
     it('should throw if invalid primaryGroupSize', () => {
       expect(() => {
-        new PriceSpecification('#,##0.###', '-#,##0.###', symbol, 3, 0, false);
+        new PriceSpecification(
+          '#,##0.###',
+          '-#,##0.###',
+          symbol,
+          3,
+          0,
+          false,
+        );
       }).to.throw('Invalid primaryGroupSize');
     });
 
@@ -95,7 +122,7 @@ describe('PriceSpecification', () => {
           3,
           0,
           true,
-          3
+          3,
         );
       }).to.throw('Invalid secondaryGroupSize');
     });
@@ -110,7 +137,7 @@ describe('PriceSpecification', () => {
           0,
           true,
           3,
-          3
+          3,
         );
       }).to.throw('Invalid currencySymbol');
     });
@@ -126,7 +153,7 @@ describe('PriceSpecification', () => {
           true,
           3,
           3,
-          '$'
+          '$',
         );
       }).to.throw('Invalid currencyCode');
     });
@@ -143,7 +170,7 @@ describe('PriceSpecification', () => {
           3,
           3,
           '$',
-          'USD'
+          'USD',
         );
       }).to.not.throw();
     });

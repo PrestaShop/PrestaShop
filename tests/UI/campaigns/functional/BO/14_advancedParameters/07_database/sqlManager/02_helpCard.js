@@ -19,7 +19,7 @@ let browserContext;
 let page;
 
 // Check that help card is in english in sql manager page
-describe('BO - Advanced Parameters - Database : Help card in SQL Manager page', async () => {
+describe('Sql manager help card', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +34,7 @@ describe('BO - Advanced Parameters - Database : Help card in SQL Manager page', 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced Parameters > Database\' page', async function () {
+  it('should go to database > sql manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(

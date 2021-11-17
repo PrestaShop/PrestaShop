@@ -130,7 +130,7 @@ class OrderStateType extends TranslatorAwareType
                 ],
             ])
             ->add('color', ColorPickerType::class, [
-                'required' => true,
+                'required' => false,
             ])
             ->add('loggable', CheckboxType::class, [
                 'required' => false,

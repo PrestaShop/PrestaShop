@@ -214,7 +214,7 @@ abstract class StockManagementRepository
     /**
      * @param string $andWhereClause
      * @param string $having
-     * @param string|null $orderByClause
+     * @param null $orderByClause
      *
      * @return mixed
      */

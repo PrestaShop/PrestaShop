@@ -76,7 +76,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show categories listing.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     message="You do not have permission to list this."
      * )
      *
@@ -126,7 +126,7 @@ class CategoryController extends FrameworkBundleAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -149,7 +149,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
      *     message="You do not have permission to create this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -200,7 +200,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show "Add new root category" page & process adding.
      *
      * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     "is_granted(['create'], request.get('_legacy_controller'))",
      *     message="You do not have permission to create this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -249,7 +249,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show & process category editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -326,7 +326,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Show and process category editing.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_index"
      * )
@@ -398,7 +398,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Deletes category cover image.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
      *     redirectQueryParamsToKeep={"categoryId"}
@@ -439,7 +439,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Delete given menu thumbnail for category.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_categories_edit",
      *     redirectQueryParamsToKeep={"categoryId"}
@@ -484,7 +484,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Toggle category status.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
      *     message="You do not have permission to update this."
      * )
      *
@@ -526,7 +526,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Process bulk action for categories status enabling.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
@@ -560,7 +560,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Process bulk action for categories status disabling.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to update this."
      * )
@@ -682,7 +682,7 @@ class CategoryController extends FrameworkBundleAdminController
      * Export filtered categories.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
      *     redirectRoute="admin_categories_index",
      *     message="You do not have permission to view this."
      * )
@@ -791,10 +791,8 @@ class CategoryController extends FrameworkBundleAdminController
             $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
             $names = $categoryForTree->getLocalizedNames();
-            $active = $categoryForTree->getActive();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
-                'active' => $active,
                 'name' => $names[$langId] ?? reset($names),
                 'children' => $children,
             ];

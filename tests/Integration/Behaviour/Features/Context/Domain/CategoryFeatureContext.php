@@ -518,29 +518,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given category ":reference" is the default one
-     *
-     * @param string $reference
-     */
-    public function assertIsDefaultCategory(string $reference): void
-    {
-        $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
-
-        if (!$this->getSharedStorage()->exists($reference)) {
-            throw new RuntimeException(sprintf(
-                'Category referenced as "%s" was not set in sharedStorage',
-                $reference
-            ));
-        }
-
-        Assert::assertEquals(
-            $defaultCategoryId,
-            $this->getSharedStorage()->get($reference),
-            'Unexpected default category'
-        );
-    }
-
-    /**
      * @param CategoryForTree[] $actualCategories
      * @param array<int, array<string, string>> $expectedCategories
      * @param int $langId

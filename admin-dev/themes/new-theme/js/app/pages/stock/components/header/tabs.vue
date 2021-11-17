@@ -54,17 +54,15 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     computed: {
-      isOverview(): boolean {
+      isOverview() {
         return this.$route.name === 'overview';
       },
-      isMovements(): boolean {
+      isMovements() {
         return this.$route.name === 'movements';
       },
     },
-  });
+  };
 </script>

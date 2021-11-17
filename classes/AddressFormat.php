@@ -563,7 +563,10 @@ class AddressFormatCore extends ObjectModel
         $fieldSet = explode(AddressFormat::FORMAT_NEW_LINE, AddressFormat::getAddressCountryFormat($idCountry));
         foreach ($fieldSet as $fieldItem) {
             if ($splitAll) {
-                $keyList = $cleaned ? preg_split(self::_CLEANING_REGEX_, $fieldItem, -1, PREG_SPLIT_NO_EMPTY) : explode(' ', $fieldItem);
+                if ($cleaned) {
+                    $keyList = ($cleaned) ? preg_split(self::_CLEANING_REGEX_, $fieldItem, -1, PREG_SPLIT_NO_EMPTY) :
+                        explode(' ', $fieldItem);
+                }
                 foreach ($keyList as $wordItem) {
                     $out[] = trim($wordItem);
                 }
@@ -637,6 +640,18 @@ class AddressFormatCore extends ObjectModel
         }
 
         return $out;
+    }
+
+    /**
+     * @param int $idCountry
+     *
+     * @return false|string|null
+     *
+     * @deprecated 1.7.0
+     */
+    protected function _getFormatDB($idCountry)
+    {
+        return self::getFormatDB($idCountry);
     }
 
     /**

@@ -136,9 +136,7 @@ final class Currency implements CurrencyInterface
      *                             "one"     = talking about one unit of this currency (e.g.: "one euro")
      *                             "other"   = talking about several units of this currency (e.g.: "ten euros")
      *
-     * @return string|null The wanted display name
-     *
-     * @throws LocalizationException When an invalid display name is passed
+     * @return string The wanted display name
      */
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
@@ -146,7 +144,7 @@ final class Currency implements CurrencyInterface
             throw new LocalizationException(sprintf('Unknown display name: "%s"', print_r($countContext, true)));
         }
 
-        return $this->displayNames[$countContext] ?? null;
+        return $this->displayNames[$countContext];
     }
 
     /**

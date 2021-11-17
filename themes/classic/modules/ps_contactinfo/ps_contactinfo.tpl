@@ -42,8 +42,8 @@
       {* [1][/1] is for a HTML tag. *}
       {l s='Call us: [1]%phone%[/1]'
         sprintf=[
-        '[1]' => "<a href='tel:{$contact_infos['phone']|replace:' ':''}'>",
-        '[/1]' => '</a>',
+        '[1]' => '<span>',
+        '[/1]' => '</span>',
         '%phone%' => $contact_infos.phone
         ]
         d='Shop.Theme.Global'

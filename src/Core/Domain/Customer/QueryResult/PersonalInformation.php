@@ -77,7 +77,7 @@ class PersonalInformation
     private $lastVisitDate;
 
     /**
-     * @var int
+     * @var string
      */
     private $rankBySales;
 
@@ -111,7 +111,7 @@ class PersonalInformation
      * @param string $registrationDate
      * @param string $lastUpdateDate
      * @param string $lastVisitDate
-     * @param int $rankBySales
+     * @param string $rankBySales
      * @param string $shopName
      * @param string $languageName
      * @param Subscriptions $subscriptions
@@ -222,7 +222,7 @@ class PersonalInformation
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getRankBySales()
     {

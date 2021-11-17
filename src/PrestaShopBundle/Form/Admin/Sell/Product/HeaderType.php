@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -46,9 +45,6 @@ class HeaderType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('cover_thumbnail', ImagePreviewType::class, [
-                'label' => false,
-            ])
             ->add('name', TranslatableType::class, [
                 'label' => false,
                 'type' => TextType::class,
@@ -59,9 +55,6 @@ class HeaderType extends TranslatorAwareType
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
-                ],
-                'row_attr' => [
-                    'class' => 'header-name',
                 ],
             ])
             ->add('type', ChoiceType::class, [

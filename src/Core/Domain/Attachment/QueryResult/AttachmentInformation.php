@@ -36,14 +36,9 @@ class AttachmentInformation
     private $attachmentId;
 
     /**
-     * @var array<int, string>
+     * @var string
      */
-    private $localizedNames;
-
-    /**
-     * @var array<int, string>
-     */
-    private $localizedDescriptions;
+    private $name;
 
     /**
      * @var string
@@ -53,35 +48,20 @@ class AttachmentInformation
     /**
      * @var string
      */
-    private $mimeType;
-
-    /**
-     * @var int
-     */
-    private $fileSize;
+    private $type;
 
     /**
      * @param int $attachmentId
-     * @param array $localizedNames
-     * @param array $localizedDescriptions
+     * @param string $name
      * @param string $fileName
-     * @param string $mimeType
-     * @param int $fileSize
+     * @param string $type
      */
-    public function __construct(
-        int $attachmentId,
-        array $localizedNames,
-        array $localizedDescriptions,
-        string $fileName,
-        string $mimeType,
-        int $fileSize
-    ) {
+    public function __construct(int $attachmentId, string $name, string $fileName, string $type)
+    {
         $this->attachmentId = $attachmentId;
-        $this->localizedNames = $localizedNames;
-        $this->localizedDescriptions = $localizedDescriptions;
+        $this->name = $name;
         $this->fileName = $fileName;
-        $this->mimeType = $mimeType;
-        $this->fileSize = $fileSize;
+        $this->type = $type;
     }
 
     /**
@@ -93,19 +73,11 @@ class AttachmentInformation
     }
 
     /**
-     * @return string[]
+     * @return string
      */
-    public function getLocalizedNames(): array
+    public function getName(): string
     {
-        return $this->localizedNames;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getLocalizedDescriptions(): array
-    {
-        return $this->localizedDescriptions;
+        return $this->name;
     }
 
     /**
@@ -119,16 +91,8 @@ class AttachmentInformation
     /**
      * @return string
      */
-    public function getMimeType(): string
+    public function getType(): string
     {
-        return $this->mimeType;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFileSize(): int
-    {
-        return $this->fileSize;
+        return $this->type;
     }
 }

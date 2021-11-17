@@ -76,13 +76,6 @@ class AddCartRule extends BOBasePage {
     // Discount others selectors
     this.discountOffRadioButton = this.applyDiscountRadioButton('off');
 
-    // Apply discount to selectors
-    this.applyDiscountToOrderCheckbox = '#apply_discount_to_order';
-    this.applyDiscountToSpecificProductCheckbox = '#apply_discount_to_product';
-    this.productNameInput = '#reductionProductFilter';
-    this.productSearchResultBlock = 'div.ac_results';
-    this.productSearchResultItem = `${this.productSearchResultBlock} .ac_even`;
-
     // Exclude discount products and free gift selectors
     this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
     this.sendFreeGifToggle = toggle => `${this.cartRuleForm} #free_gift_${toggle}`;
@@ -112,20 +105,20 @@ class AddCartRule extends BOBasePage {
     if (cartRuleData.generateCode) {
       await page.click(this.generateButton);
     } else if (cartRuleData.code === null) {
-      await this.clearInput(page, this.codeInput);
+      await this.deleteTextFromInput(page, this.codeInput);
     } else {
       await this.setValue(page, this.codeInput, cartRuleData.code);
     }
 
     // Set toggles
-    await this.setChecked(page, this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
-    await this.setChecked(page, this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
+    await page.check(this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
+    await page.check(this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
 
     // Set priority
     await this.setValue(page, this.priorityInput, cartRuleData.priority);
 
     // Set status
-    await this.setChecked(page, this.statusToggle(cartRuleData.status ? 'on' : 'off'));
+    await page.check(this.statusToggle(cartRuleData.status ? 'on' : 'off'));
   }
 
   /**
@@ -181,53 +174,31 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
 
     // Set free shipping toggle
-    await this.setChecked(page, this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
+    await page.check(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
 
     switch (cartRuleData.discountType) {
       case 'Percent':
-        await this.setChecked(page, this.discountPercentRadioButton);
+        await page.check(this.discountPercentRadioButton);
         await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
-        await this.setChecked(
-          page,
-          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
-        );
+        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       case 'Amount':
-        await this.setChecked(page, this.discountAmountRadioButton);
+        await page.check(this.discountAmountRadioButton);
         await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
         await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
         await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
         break;
       case 'None':
-        await this.setChecked(page, this.discountOffRadioButton);
-        await this.setChecked(
-          page,
-          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
-        );
+        await page.check(this.discountOffRadioButton);
+        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
         break;
       default:
         // Do nothing for this option
         throw new Error(`${cartRuleData.discountType} was not found as a discount option`);
     }
 
-    // Set apply discount
-    switch (cartRuleData.applyDiscountTo) {
-      case 'Order':
-        await this.setChecked(page, this.applyDiscountToOrderCheckbox);
-        break;
-      case 'Specific product':
-        await this.setChecked(page, this.applyDiscountToSpecificProductCheckbox);
-        await this.setValue(page, this.productNameInput, cartRuleData.product);
-        await this.waitForVisibleSelector(page, this.productSearchResultBlock);
-        await this.waitForSelectorAndClick(page, this.productSearchResultItem);
-        break;
-      default:
-        // Do nothing for this option
-        throw new Error(`${cartRuleData.applyDiscountTo} was not found as apply a discount to option`);
-    }
-
     // Set free gift
-    await this.setChecked(page, this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
+    await page.check(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
     if (cartRuleData.freeGift) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);

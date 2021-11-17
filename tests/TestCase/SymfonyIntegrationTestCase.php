@@ -26,12 +26,11 @@
 
 namespace Tests\TestCase;
 
-use AppKernel;
-use Exception;
-use PrestaShopBundle\Install\DatabaseDump;
+use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator as Database;
+use LegacyTests\Unit\ContextMocker;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Integration\Utility\ContextMocker;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {
@@ -41,11 +40,16 @@ class SymfonyIntegrationTestCase extends WebTestCase
     protected $contextMocker;
 
     /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
      * @var Client
      */
     protected $client;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->contextMocker = new ContextMocker();
@@ -55,31 +59,22 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
         //createClient already creates the kernel
         //$this->bootKernel();
-        self::$container = self::$kernel->getContainer();
+        $this->container = self::$kernel->getContainer();
 
         // Global var for SymfonyContainer
         global $kernel;
         $kernel = self::$kernel;
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
         $this->contextMocker->resetContext();
     }
 
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
-        static::restoreTestDB();
+        Database::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';
-    }
-
-    private static function restoreTestDB(): void
-    {
-        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
-            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-
-        DatabaseDump::restoreDb();
     }
 }

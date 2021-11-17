@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Twig\Extension;
 use DateTime;
 use DateTimeInterface;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Twig_SimpleFilter;
 
 class LocalizationExtension extends AbstractExtension
 {
@@ -56,8 +56,8 @@ class LocalizationExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('date_format_full', [$this, 'dateFormatFull']),
-            new TwigFilter('date_format_lite', [$this, 'dateFormatLite']),
+            new Twig_SimpleFilter('date_format_full', [$this, 'dateFormatFull']),
+            new Twig_SimpleFilter('date_format_lite', [$this, 'dateFormatLite']),
         ];
     }
 

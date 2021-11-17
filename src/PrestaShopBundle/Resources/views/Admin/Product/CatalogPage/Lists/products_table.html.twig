@@ -25,7 +25,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 <div class="table-responsive">
   <table
-    class="table product"
+    class="table product mt-3"
     redirecturl="{{ path('admin_product_catalog', {
         'limit': limit,
         'offset': offset,
@@ -37,8 +37,8 @@
     <thead class="with-filters">
       {% block product_catalog_form_table_header %}
         <tr class="column-headers">
-          <th scope="col"></th>
-          <th scope="col" class="text-center" style="width: 9%">
+          <th scope="col" style="width: 2rem"></th>
+          <th scope="col" style="width: 5rem">
             {{ ps.sortable_column_header("ID"|trans({}, 'Admin.Global'), 'id_product', orderBy, sortOrder) }}
           </th>
           <th scope="col">
@@ -85,22 +85,7 @@
       {% block product_catalog_form_table_filters %}
         {% set filters_disabled = activate_drag_and_drop %}
         <tr class="column-filters">
-          <th class="text-center" style="vertical-align: middle;">
-            {% block product_catalog_filter_select_all %}
-              <div class="md-checkbox md-checkbox-inline">
-                <label>
-                  <input
-                    type="checkbox"
-                    id="bulk_action_select_all"
-                    onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-                    value=""
-                  >
-                  <i class="md-checkbox-control"></i>
-                </label>
-              </div>
-            {% endblock %}
-          </th>
-          <th>
+          <th colspan="2">
             {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_id_product",
               'min': '0',

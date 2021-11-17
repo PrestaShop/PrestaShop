@@ -296,7 +296,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 'Unexpected attributes count in combination'
             );
 
-            if (!empty($expectedCombination['image url'])) {
+            if (empty($expectedCombination['image url'])) {
+                Assert::assertNull($editableCombinationForListing->getImageUrl(), 'Unexpected combination image');
+            } else {
                 $realImageUrl = $this->getRealImageUrl($expectedCombination['image url']);
                 Assert::assertEquals(
                     $realImageUrl,

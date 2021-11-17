@@ -45,7 +45,7 @@ class HookDescriptionGeneratorTest extends TestCase
      */
     private $stringModifierMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

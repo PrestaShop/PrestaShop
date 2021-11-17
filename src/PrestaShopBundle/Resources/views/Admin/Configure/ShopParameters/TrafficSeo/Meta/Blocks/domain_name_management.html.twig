@@ -29,18 +29,19 @@
   {% if isHostMode %}
     <div class="card">
       <h3 class="card-header">
-        <i class="material-icons">settings</i>
-        {{ 'Manage domain name'|trans }}
+        <i class="material-icons">settings</i> {{ 'Manage domain name'|trans }}
       </h3>
       <div class="card-block row">
         <div class="card-text">
-
-          <div class="alert alert-info" role="alert">
-            <div class="alert-text">
-              {{ 'You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'|trans({}, 'Admin.Shopparameters.Help') }}
+          <div class="row">
+            <div class="col-sm">
+              <div class="alert alert-info" role="alert">
+                <div class="alert-text">
+                  {{ 'You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'|trans({}, 'Admin.Shopparameters.Help') }}
+                </div>
+              </div>
             </div>
           </div>
-
         </div>
       </div>
 

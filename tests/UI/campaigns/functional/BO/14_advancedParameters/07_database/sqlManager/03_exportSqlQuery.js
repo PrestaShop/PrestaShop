@@ -5,9 +5,6 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -18,6 +15,9 @@ const addSqlQueryPage = require('@pages/BO/advancedParameters/database/sqlManage
 // Import pages
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_sqlManager_exportSqlQuery';
 
@@ -31,7 +31,7 @@ const dbPrefix = global.INSTALL.DB_PREFIX;
 const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
 const fileContent = `${Tables.ps_alias.columns[1]};${Tables.ps_alias.columns[2]};${Tables.ps_alias.columns[3]}`;
 
-describe('BO - Advanced Parameters - Database : Export SQL query', async () => {
+describe('Export SQL query', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -64,7 +64,7 @@ class LocaleDataSourceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->frStubLocaleData = $this->getStubLocaleData('fr-FR');
         $this->enStubLocaleData = $this->getStubLocaleData('en-US');

@@ -57,6 +57,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modules->{$type},
+            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -89,6 +90,37 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return $toolbarButtons;
+        return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
+    }
+
+    /**
+     * Create a button in the header for the marketplace account (login or logout).
+     *
+     * @return array
+     */
+    protected function getAddonsConnectToolbar()
+    {
+        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
+        if ($addonsProvider->isAddonsAuthenticated()) {
+            $addonsEmail = $addonsProvider->getAddonsEmail();
+
+            return [
+                'addons_logout' => [
+                    'href' => '#',
+                    'desc' => $addonsEmail['username_addons'],
+                    'icon' => 'exit_to_app',
+                    'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
+                ],
+            ];
+        }
+
+        return [
+            'addons_connect' => [
+                'href' => '#',
+                'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
+                'icon' => 'vpn_key',
+                'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
+            ],
+        ];
     }
 }

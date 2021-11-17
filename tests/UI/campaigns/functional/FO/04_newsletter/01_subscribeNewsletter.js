@@ -18,8 +18,9 @@ const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
 
-// Import data
+// Import datas
 const {DefaultCustomer} = require('@data/demo/customer');
+
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -29,11 +30,8 @@ const baseContext = 'functional_FO_newsletter_subscribeNewsletter';
 
 let browserContext;
 let page;
+const moduleName = 'Newsletter subscription';
 
-const moduleInformation = {
-  tag: 'ps_emailsubscription',
-  name: 'Newsletter subscription',
-};
 
 /*
 Go to the FO homepage
@@ -42,9 +40,9 @@ Go to BO in newsletter module
 Check if correctly subscribed
 Go back to the FO homepage
 Try to subscribe again with the same email
-Go to back to BO and delete subscription
+Go to back to BO and delete subsbcription
  */
-describe('FO - Newsletter : Subscribe to Newsletter', async () => {
+describe('FO Subscribe to Newsletter', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -93,7 +91,6 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go account information page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToInformationPage(page);
 
       const pageTitle = await foAccountIdentityPage.getPageTitle(page);
@@ -131,11 +128,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
+      await moduleManagerPage.goToConfigurationPage(page, moduleName);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
     });
 
     it('should check if user is unsubscribed from newsletter', async function () {
@@ -190,11 +186,10 @@ describe('FO - Newsletter : Subscribe to Newsletter', async () => {
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToNewsletterModuleConfig', baseContext);
 
-      await moduleManagerPage.searchModule(page, moduleInformation.tag, moduleInformation.name);
-      await moduleManagerPage.goToConfigurationPage(page, moduleInformation.name);
+      await moduleManagerPage.goToConfigurationPage(page, moduleName);
 
       const moduleConfigurationPageSubtitle = await moduleConfigurationPage.getPageSubtitle(page);
-      await expect(moduleConfigurationPageSubtitle).to.contains(moduleInformation.name);
+      await expect(moduleConfigurationPageSubtitle).to.contains(moduleName);
     });
 
     it('should check if previous customer subscription is visible in table', async function () {

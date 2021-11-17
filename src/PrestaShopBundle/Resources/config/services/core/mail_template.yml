@@ -20,7 +20,8 @@ services:
     arguments:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.language.language_default_fonts_catalog'
-      - mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
+      -
+        mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
 
   prestashop.core.mail_template.generator:
     class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'

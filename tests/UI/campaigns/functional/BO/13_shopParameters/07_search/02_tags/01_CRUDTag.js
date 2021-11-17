@@ -1,10 +1,7 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -19,7 +16,13 @@ const addTagPage = require('@pages/BO/shopParameters/search/tags/add');
 const TagFaker = require('@data/faker/tag');
 const {Languages} = require('@data/demo/languages');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_search_tags_CRUDTag';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -34,7 +37,7 @@ Create new tag
 Update the created tag
 Delete tag
  */
-describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', async () => {
+describe('Create, update and delete tag in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,7 +52,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete tag in BO', 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Search\' page', async function () {
+  it('should go to \'ShopParameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
     await dashboardPage.goToSubMenu(

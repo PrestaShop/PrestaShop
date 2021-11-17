@@ -50,7 +50,6 @@ class UpgraderCore
     public $autoupgrade_module;
     public $autoupgrade_last_version;
     public $autoupgrade_module_link;
-    public $desc;
     public $changelog;
     public $md5;
 
@@ -274,7 +273,7 @@ class UpgraderCore
     }
 
     /**
-     * @param SimpleXMLElement $node
+     * @param $node
      * @param array $currentPath
      * @param int $level
      */

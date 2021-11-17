@@ -27,23 +27,17 @@
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command;
 
 use DateTime;
+use Exception;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        AddSpecificPriceCommand::class
-    ),
-    E_USER_DEPRECATED
-);
-
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see UpdateProductPriceInCartCommand or
- * @see AddProductSpecificPriceCommand
+ * Adds specific price
+ *
+ * @deprecated since 1.7.8.0 Use UpdateProductPriceInCartCommand or AddProductSpecificPriceCommand
  */
 class AddSpecificPriceCommand
 {
@@ -130,7 +124,7 @@ class AddSpecificPriceCommand
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param string $reductionValue
+     * @param float $reductionValue
      * @param bool $includeTax
      * @param float $price
      * @param int $fromQuantity
@@ -140,7 +134,7 @@ class AddSpecificPriceCommand
     public function __construct(
         int $productId,
         string $reductionType,
-        string $reductionValue,
+        float $reductionValue,
         bool $includeTax,
         float $price,
         int $fromQuantity
@@ -205,7 +199,7 @@ class AddSpecificPriceCommand
      */
     public function setDateTimeFrom(?DateTime $dateTimeFrom): void
     {
-        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeFrom = $this->createDateTime($dateTimeFrom);
     }
 
     /**
@@ -385,6 +379,22 @@ class AddSpecificPriceCommand
      */
     public function setDateTimeTo(?DateTime $dateTimeTo): void
     {
-        $this->dateTimeTo = $dateTimeTo;
+        $this->dateTimeTo = $this->createDateTime($dateTimeTo);
+    }
+
+    /**
+     * @param string $dateTime
+     *
+     * @return DateTime
+     *
+     * @throws SpecificPriceConstraintException
+     */
+    private function createDateTime(string $dateTime): DateTime
+    {
+        try {
+            return new DateTime($dateTime);
+        } catch (Exception $e) {
+            throw new SpecificPriceConstraintException('An error occurred when creating DateTime object for specific price', SpecificPriceConstraintException::INVALID_DATETIME, $e);
+        }
     }
 }

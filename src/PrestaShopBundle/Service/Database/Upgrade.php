@@ -36,8 +36,8 @@ class Upgrade extends AbstractCommand
      */
     public function addDoctrineSchemaUpdate()
     {
-        $updateSchemaCommand = $this->kernel->getContainer()->get(UpdateSchemaCommand::class);
-        $this->application->add($updateSchemaCommand);
+        $command = new UpdateSchemaCommand();
+        $this->application->add($command);
 
         $this->commands[] = [
             'command' => 'prestashop:schema:update-without-foreign',

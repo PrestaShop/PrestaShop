@@ -302,9 +302,7 @@ class TranslatableType extends TranslatorAwareType
         $errorsByLocale = null;
         $iteration = 0;
         foreach ($form as $formItem) {
-            $doesLocaleExistForInvalidForm = isset($locales[$iteration])
-                && $formItem->isSubmitted()
-                && !$formItem->isValid();
+            $doesLocaleExistForInvalidForm = isset($locales[$iteration]) && !$formItem->isValid();
 
             if ($doesLocaleExistForInvalidForm) {
                 foreach ($formErrors as $formError) {

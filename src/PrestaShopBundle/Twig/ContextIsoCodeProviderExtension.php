@@ -26,13 +26,10 @@
 
 namespace PrestaShopBundle\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
-
 /**
  * Provides context language iso code
  */
-class ContextIsoCodeProviderExtension extends AbstractExtension
+class ContextIsoCodeProviderExtension extends \Twig_Extension
 {
     /**
      * @var string
@@ -53,7 +50,7 @@ class ContextIsoCodeProviderExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('get_context_iso_code', [$this, 'getIsoCode']),
+            new \Twig_SimpleFunction('get_context_iso_code', [$this, 'getIsoCode']),
         ];
     }
 

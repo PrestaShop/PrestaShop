@@ -93,13 +93,7 @@ class DbQueryCore
     public function from($table, $alias = null)
     {
         if (!empty($table)) {
-            if ($table instanceof DbQuery) {
-                $query = '(' . $table->build() . ')';
-            } else {
-                $query = '`' . _DB_PREFIX_ . $table . '`';
-            }
-
-            $this->query['from'][] = $query . ($alias ? ' ' . $alias : '');
+            $this->query['from'][] = '`' . _DB_PREFIX_ . $table . '`' . ($alias ? ' ' . $alias : '');
         }
 
         return $this;
@@ -336,15 +330,5 @@ class DbQueryCore
     public function __toString()
     {
         return $this->build();
-    }
-
-    /**
-     * Get query.
-     *
-     * @return array
-     */
-    public function getQuery(): array
-    {
-        return $this->query;
     }
 }

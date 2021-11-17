@@ -6,17 +6,14 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 const files = require('@utils/files');
 
-// Import pages
-// FO
+// Importing pages
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const productPage = require('@pages/FO/product');
-const searchResultsPage = require('@pages/FO/searchResults');
-
-// BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
 const boAddProductPage = require('@pages/BO/catalog/products/add');
+const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -73,7 +70,7 @@ Select color on hover from product list
 Change image from quick view
  */
 
-describe('FO - product page : Product quick view', async () => {
+describe('Product quick view', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

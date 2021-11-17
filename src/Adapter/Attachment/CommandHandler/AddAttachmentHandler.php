@@ -87,7 +87,6 @@ final class AddAttachmentHandler extends AbstractAttachmentHandler implements Ad
             $attachment->file_name = $command->getOriginalName();
             $attachment->file = $uniqueFileName;
             $attachment->mime = $command->getMimeType();
-            $attachment->file_size = $command->getFileSize();
 
             $this->assertValidFields($attachment);
 

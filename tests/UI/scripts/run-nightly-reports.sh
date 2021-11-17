@@ -18,7 +18,6 @@ REPORT_PATH="${DIR_PATH}/campaigns"
 TESTS_DIR="${DIR_PATH}/prestashop/tests/UI"
 LOG_DIR="/var/log/ps-reports/"
 LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
-API_NIGHTLY_IMPORT_HOOK="https://api-nightly.prestashop.com/hook/reports/import"
 
 exec &> >(tee -a $LOG_PATH)
 
@@ -34,7 +33,7 @@ echo "Check for reports..."
 if [ -n "$(ls ${REPORT_PATH})" ]; then
   npm install --unsafe-perm=true --allow-root
   mkdir -p "${DIR_PATH}/reports"
-  npx mochawesome-merge "${REPORT_PATH}/*.json" -o "${DIR_PATH}/reports/${REPORT_NAME}.json"
+  ./scripts/combine-reports.py "${REPORT_PATH}" "${DIR_PATH}/reports/${REPORT_NAME}.json"
   nodejs ./node_modules/mochawesome-report-generator/bin/cli.js "${DIR_PATH}/reports/${REPORT_NAME}.json" -o "${DIR_PATH}/reports" -f "${REPORT_NAME}.html"
 
   cp $LOG_PATH "${DIR_PATH}/reports"
@@ -43,7 +42,7 @@ if [ -n "$(ls ${REPORT_PATH})" ]; then
   gsutil cp -r "${DIR_PATH}/reports" gs://prestashop-core-nightly
 
   # Trigger event on nightly board
-  curl -v "${API_NIGHTLY_IMPORT_HOOK}?token=${TOKEN}&filename=${REPORT_NAME}.json"
+  curl -v "https://api-nightly.prestashop.com/hook/add?token=${TOKEN}&filename=${REPORT_NAME}.json"
 
   if [ -z "${NO_SHUTDOWN}" ]; then
     rm -rf $DIR_PATH

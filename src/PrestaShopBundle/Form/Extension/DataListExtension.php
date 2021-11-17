@@ -61,8 +61,8 @@ class DataListExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType(): string
     {
-        return [TextType::class];
+        return TextType::class;
     }
 }

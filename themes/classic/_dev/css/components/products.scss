@@ -304,7 +304,7 @@
     height: 100%;
     text-align: center;
     cursor: pointer;
-    background: $black;
+    background: #000;
     background: rgba(0, 0, 0, 0.6);
     opacity: 0;
     @include transition(opacity 0.7s ease-in-out);
@@ -755,11 +755,6 @@
 
   .customization-message {
     margin-top: 20px;
-
-    .customization-label {
-      text-align: left;
-      word-break: break-word;
-    }
   }
 
   .custom-file {

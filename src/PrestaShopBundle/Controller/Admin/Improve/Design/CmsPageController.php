@@ -223,7 +223,7 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->render(
-            '@PrestaShop/Admin/Improve/Design/Cms/add.html.twig',
+            'PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig',
             [
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $categoryParentId,

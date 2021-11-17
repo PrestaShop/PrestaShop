@@ -28,19 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException as CannotSetProductSpecificPricePrioritiesException;
-
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        CannotSetSpecificPricePrioritiesException::class
-    ),
-    E_USER_DEPRECATED
-);
-
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see CannotSetProductSpecificPricePrioritiesException
+ * Thrown when setting specific price priorities fails
  */
 class CannotSetSpecificPricePrioritiesException extends SpecificPriceException
 {

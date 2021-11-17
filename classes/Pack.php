@@ -71,7 +71,7 @@ class PackCore extends Product
     /**
      * Is product a pack?
      *
-     * @param int $id_product
+     * @param $id_product
      *
      * @return bool
      */
@@ -232,11 +232,11 @@ class PackCore extends Product
     /**
      * Returns the available quantity of a given pack (this method already have decreased products in cart).
      *
-     * @param int $idProduct Product id
-     * @param int|null $idProductAttribute Product attribute id (optional)
+     * @param int $id_product Product id
+     * @param int $id_product_attribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
-     * @param int|null $idCustomization Product customization id (optional)
+     * @param Cart $cart
+     * @param int $idCustomization Product customization id (optional)
      *
      * @return int
      *
@@ -505,8 +505,8 @@ class PackCore extends Product
      *
      * @since 1.5.0
      *
-     * @param string|null $table Name of table linked to entity
-     * @param bool $has_active_column True if the table has an active column
+     * @param $table
+     * @param $has_active_column
      *
      * @return bool
      */

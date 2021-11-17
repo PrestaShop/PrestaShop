@@ -45,7 +45,7 @@ class HashingTest extends TestCase
         $hashing = new Hashing();
         $salt = '2349123849231-4123';
 
-        $this->assertIsString($hashing->hash('123', $salt));
+        $this->assertInternalType('string', $hashing->hash('123', $salt));
     }
 
     public function testSimpleFirstHash()

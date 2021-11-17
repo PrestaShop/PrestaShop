@@ -22,8 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-const TerserPlugin = require("terser-webpack-plugin");
-
 module.exports = (env, argv) => {
   const path = require('path');
   const mode = argv.mode || 'production';
@@ -42,7 +40,10 @@ module.exports = (env, argv) => {
         {
           test: /\.js$/,
           use: {
-            loader: 'esbuild-loader',
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+            },
           },
         },
       ],
@@ -51,11 +52,5 @@ module.exports = (env, argv) => {
       prestashop: 'prestashop',
     },
     devtool: 'source-map',
-    optimization: {
-      minimize: true,
-      minimizer: [new TerserPlugin({
-        extractComments: false
-      })],
-    },
   };
 };

@@ -14,7 +14,7 @@ services:
   prestashop.adapter.supplier.supplier_order_validator:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator'
 
-  # Command handlers
+# Command handlers
 
   prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AbstractDeleteSupplierHandler'
@@ -90,4 +90,4 @@ services:
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
 
   prestashop.adapter.supplier.repository.supplier_repository:
-    class: 'PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'
+      class: 'PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'

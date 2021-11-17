@@ -38,9 +38,9 @@ class CommaTransformerExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType(): string
     {
-        return [NumberType::class];
+        return NumberType::class;
     }
 
     /**

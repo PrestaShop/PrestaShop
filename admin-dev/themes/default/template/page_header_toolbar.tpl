@@ -124,7 +124,6 @@
               {if isset($tab_modules_open) && $tab_modules_open}
               $(function () {
                 $('#modules_list_container').modal('show');
-
                 openModulesList();
 
               });

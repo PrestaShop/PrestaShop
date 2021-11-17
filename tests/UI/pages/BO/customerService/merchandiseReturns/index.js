@@ -36,7 +36,7 @@ class MerchandiseReturns extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setOrderReturnStatus(page, status = true) {
-    await this.setChecked(page, this.enableOrderReturnLabel(status ? 'on' : 'off'));
+    await page.check(this.enableOrderReturnLabel(status ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getTextContent(page, this.alertSuccessBlock);
   }

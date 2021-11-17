@@ -244,7 +244,7 @@
     }
 
     a {
-      color: $black;
+      color: #000;
       text-decoration: none;
     }
 
@@ -277,13 +277,13 @@
 
     .badge-dark,
     .badge-secondary {
-      color: $black;
+      color: #000;
       background-color: $white;
     }
 
     .badge-print-light {
       font-weight: 500;
-      color: $black !important; // stylelint-disable-line
+      color: #000 !important; // stylelint-disable-line
       background-color: $white !important; // stylelint-disable-line
     }
   }

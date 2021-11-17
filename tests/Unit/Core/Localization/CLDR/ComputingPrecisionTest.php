@@ -39,7 +39,7 @@ class ComputingPrecisionTest extends TestCase
     /**
      * Setup tested dependency
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->computingPrecision = new ComputingPrecision();
     }

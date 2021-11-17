@@ -112,6 +112,16 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
+     * @deprecated since 1.5
+     */
+    public static function deleteTaxRuleByIdCounty($id_county)
+    {
+        Tools::displayAsDeprecated();
+
+        return true;
+    }
+
+    /**
      * @param int $id_tax
      *
      * @return bool
@@ -130,7 +140,7 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
-     * @param string $zip_codes a range of zipcode (eg: 75000 / 75000-75015)
+     * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
      *
      * @return array an array containing two zipcode ordered by zipcode
      */

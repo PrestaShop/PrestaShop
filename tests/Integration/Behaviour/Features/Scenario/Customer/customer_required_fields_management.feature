@@ -1,6 +1,5 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer --tags customer-required-fields
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer
 @reset-database-before-feature
-@customer-required-fields
 Feature: Customer Required fields management
   PrestaShop allows BO users to manage required fields for FO customer profile
   As a BO user

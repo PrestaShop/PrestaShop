@@ -65,9 +65,4 @@ class CustomerConstraintException extends CustomerException
      * @var int Code is used when invalid customer birthday is provided
      */
     public const INVALID_BIRTHDAY = 7;
-
-    /**
-     * When customer id value is invalid
-     */
-    public const INVALID_ID = 8;
 }

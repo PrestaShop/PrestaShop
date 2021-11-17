@@ -25,10 +25,6 @@
   background: $gray-dark;
   @include transition(all 0.5s ease-out);
 
-  .logo-container {
-    display: none;
-  }
-
   &-overflow {
     height: 100%;
     overflow: hidden;
@@ -41,56 +37,14 @@
   }
 
   &.mobile-nav {
-    z-index: 2000;
-    width: 80%;
-    margin-top: 0;
+    width: 70%;
+    margin-top: $size-header-height + ($header-mobile-padding-y * 2);
     margin-left: -100%;
-
-    .employee-top {
-      display: flex;
-      align-items: center;
-      padding: 0 1rem;
-
-      .employee-avatar {
-        padding-top: 0;
-
-        img {
-          width: 2.5rem;
-          height: 2.5rem;
-          margin-right: 1rem;
-          margin-bottom: 0;
-        }
-      }
-
-      span {
-        color: $white;
-      }
-    }
-
-    .logo-container {
-      display: flex;
-      align-items: center;
-      padding: 0.875rem;
-      border-bottom: 1px solid $white;
-
-      .logo {
-        width: 8rem;
-        height: 1.25rem;
-        background: url("@images/ps-logo-white.svg") no-repeat;
-        background-size: contain;
-      }
-
-      .header-version {
-        margin-left: 0.75rem;
-        font-size: 1rem;
-        color: $white;
-      }
-    }
 
     &::before {
       position: fixed;
-      top: 1rem;
-      left: 85%;
+      top: 5rem;
+      left: 75%;
       display: block;
       font-family: "Material Icons", sans-serif;
       font-size: 1.5rem;
@@ -326,7 +280,7 @@
 
         .material-icons {
           &:first-child {
-            color: $primary;
+            color: #25b9d7;
           }
         }
       }
@@ -334,7 +288,7 @@
 
     &:not(#subtab-AdminParentModulesSf) {
       i.material-icons.mi-extension {
-        color: $gray-500;
+        color: #6c868e;
       }
     }
 
@@ -362,7 +316,7 @@
       .sub-tabs-arrow {
         margin-left: auto;
         line-height: inherit;
-        color: $gray-500;
+        color: #6c868e;
         vertical-align: middle;
         visibility: hidden;
       }
@@ -628,11 +582,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1999;
+  z-index: 998;
   display: none;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.7);
   @include transition(all 0.2s ease-in-out);
 
   &.expanded {

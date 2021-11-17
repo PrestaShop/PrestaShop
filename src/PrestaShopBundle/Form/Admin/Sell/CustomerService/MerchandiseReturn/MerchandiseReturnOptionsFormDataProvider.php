@@ -52,7 +52,9 @@ final class MerchandiseReturnOptionsFormDataProvider implements FormDataProvider
      */
     public function getData()
     {
-        return $this->optionsDataConfiguration->getConfiguration();
+        return [
+            'options' => $this->optionsDataConfiguration->getConfiguration(),
+        ];
     }
 
     /**
@@ -60,6 +62,6 @@ final class MerchandiseReturnOptionsFormDataProvider implements FormDataProvider
      */
     public function setData(array $data)
     {
-        return $this->optionsDataConfiguration->updateConfiguration($data);
+        return $this->optionsDataConfiguration->updateConfiguration($data['options']);
     }
 }

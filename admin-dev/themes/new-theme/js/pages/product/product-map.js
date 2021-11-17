@@ -24,7 +24,6 @@
  */
 
 const combinationListId = '#combination_list';
-const attachmentsBlockId = '#product_specifications_attachments';
 
 export default {
   productForm: 'form[name=product]',
@@ -70,7 +69,7 @@ export default {
     combinationsTableBody: `${combinationListId} table tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     isDefaultInputsSelector: '.combination-is-default-input',
-    deleteCombinationSelector: '.delete-combination-item',
+    removeCombinationSelector: '.remove-combination-item',
     combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
@@ -150,9 +149,6 @@ export default {
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
       targetInput: '#product_seo_redirect_option_target',
-      groupSelector: '.form-group',
-      labelSelector: 'label',
-      helpSelector: 'small.form-text',
     },
   },
   jsTabs: '.js-tabs',
@@ -167,34 +163,25 @@ export default {
     deleteProductButton: '.delete-product-button',
   },
   categories: {
-    categoriesContainer: '#product_description_categories',
-    categoriesModalTemplate: '#categories-modal-template',
-    modalContentContainer: '#categories-modal-content',
-    categoriesModalId: 'categories-modal',
-    applyCategoriesBtn: '.js-apply-categories-btn',
-    cancelCategoriesBtn: '.js-cancel-categories-btn',
-    categoryTree: '.js-category-tree-list',
+    categoriesContainer: '.js-categories-container',
+    categoryTree: '.js-categories-tree',
     treeElement: '.category-tree-element',
     treeElementInputs: '.category-tree-inputs',
-    treeCheckboxInput: '.tree-checkbox-input',
     checkboxInput: '[type=checkbox]',
     checkedCheckboxInputs: '[type=checkbox]:checked',
-    inputByValue: (value) => `input[value="${value}"]`,
-    defaultCategorySelectInput: '#product_description_categories_default_category_id',
+    checkboxName: (categoryId) => `product[categories][product_categories][${categoryId}][is_associated]`,
     materialCheckbox: '.md-checkbox',
+    radioInput: '[type=radio]',
     defaultRadioInput: '[type=radio]:checked',
-    tagsContainer: '.pstaggerTagsWrapper',
-    tagRemoveBtn: '.pstaggerClosingCross',
-    tagCategoryIdInput: '.category-id-input',
-    tagItem: '.tag-item',
-    categoryNamePreview: '.category-name-preview',
-    categoryNameInput: '.category-name-input',
+    radioName: (categoryId) => `product[categories][product_categories][${categoryId}][is_default]`,
+    tagsContainer: '#categories-tags-container',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',
     loader: '.categories-tree-loader',
     childrenList: '.children-list',
     everyItems: '.less, .more',
-    addCategoriesBtn: '.add-categories-btn',
+    expandAllButton: '#categories-tree-expand',
+    reduceAllButton: '#categories-tree-reduce',
   },
   modules: {
     previewContainer: '.module-render-container.all-modules',
@@ -206,10 +193,5 @@ export default {
     contentContainer: '.module-contents',
     moduleContents: '.module-contents .module-render-container',
     moduleContent: (moduleId) => `.module-contents .module-render-container.${moduleId}`,
-  },
-  attachments: {
-    attachmentsContainer: attachmentsBlockId,
-    searchAttributeInput: `${attachmentsBlockId}_attached_files`,
-    addAttachmentBtn: '.add-attachment',
   },
 };

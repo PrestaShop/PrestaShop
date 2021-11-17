@@ -6,7 +6,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Util\HelperCard\DocumentationLinkProvider'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language ? service("prestashop.adapter.legacy.context").getContext().language.iso_code : "en-US"'
-      - 'team':
+      -
+        'team':
           'en': 'https://doc.prestashop.com/display/PS17/Team'
           'fr': 'http://doc.prestashop.com/pages/viewpage.action?pageId=51840334'
           'es': 'https://doc.prestashop.com/display/PS17/Equipo'
@@ -77,8 +78,8 @@ services:
           'it': 'http://doc.prestashop.com/display/PS17/Corrieri'
           '_fallback': 'https://doc.prestashop.com/display/PS17/Carriers'
         'combinations':
-          'en': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'
-          'fr': "http://doc.prestashop.com/display/PS17/Gerer+les+produits#Gererlesproduits-Cr%%C3%%A9ationd'unproduitavecdesd%%C3%%A9clinaisons"
-          'es': 'http://doc.prestashop.com/display/PS17/Gestionar+los+productos#Gestionarlosproductos-Crearunproductoconcombinaciones'
-          'it': 'http://doc.prestashop.com/display/PS17/Gestire+Prodotti#GestireProdotti-Creareunprodottoconcombinazioni'
-          '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'
+            'en': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'
+            'fr': "http://doc.prestashop.com/display/PS17/Gerer+les+produits#Gererlesproduits-Cr%%C3%%A9ationd'unproduitavecdesd%%C3%%A9clinaisons"
+            'es': 'http://doc.prestashop.com/display/PS17/Gestionar+los+productos#Gestionarlosproductos-Crearunproductoconcombinaciones'
+            'it': 'http://doc.prestashop.com/display/PS17/Gestire+Prodotti#GestireProdotti-Creareunprodottoconcombinazioni'
+            '_fallback': 'http://doc.prestashop.com/display/PS17/Managing+Products#ManagingProducts-Creatingaproductwithcombinations'

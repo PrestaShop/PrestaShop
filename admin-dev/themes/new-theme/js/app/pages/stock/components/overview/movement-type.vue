@@ -40,30 +40,29 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSButton from '@app/widgets/ps-button.vue';
+<script>
+  import PSButton from '@app/widgets/ps-button';
 
-  export default Vue.extend({
+  export default {
     computed: {
-      disabled(): boolean {
+      disabled() {
         return !this.$store.state.hasQty;
       },
-      classObject(): Record<string, any> {
+      classObject() {
         return {
           'btn-primary': !this.disabled,
         };
       },
     },
     methods: {
-      sendQty(): void {
+      sendQty() {
         this.$store.dispatch('updateQtyByProductsId');
       },
     },
     components: {
       PSButton,
     },
-  });
+  };
 </script>
 
 <style lang="scss" scoped>

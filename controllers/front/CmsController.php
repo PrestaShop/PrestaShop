@@ -25,9 +25,6 @@
  */
 class CmsControllerCore extends FrontController
 {
-    public const CMS_CASE_PAGE = 1;
-    public const CMS_CASE_CATEGORY = 2;
-
     public $php_self = 'cms';
     public $assignCase;
     public $cms;
@@ -67,16 +64,17 @@ class CmsControllerCore extends FrontController
 
         $this->canonicalRedirection();
 
+        // assignCase (1 = CMS page, 2 = CMS category)
         if (Validate::isLoadedObject($this->cms)) {
             $adtoken = Tools::getAdminToken('AdminCmsContent' . (int) Tab::getIdFromClassName('AdminCmsContent') . (int) Tools::getValue('id_employee'));
             if (!$this->cms->isAssociatedToShop() || !$this->cms->active && Tools::getValue('adtoken') != $adtoken) {
                 $this->redirect_after = '404';
                 $this->redirect();
             } else {
-                $this->assignCase = self::CMS_CASE_PAGE;
+                $this->assignCase = 1;
             }
         } elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active) {
-            $this->assignCase = self::CMS_CASE_CATEGORY;
+            $this->assignCase = 2;
         } else {
             $this->redirect_after = '404';
             $this->redirect();
@@ -90,7 +88,7 @@ class CmsControllerCore extends FrontController
      */
     public function initContent()
     {
-        if ($this->assignCase == self::CMS_CASE_PAGE) {
+        if ($this->assignCase == 1) {
             $cmsVar = $this->objectPresenter->present($this->cms);
 
             $filteredCmsContent = Hook::exec(
@@ -119,7 +117,7 @@ class CmsControllerCore extends FrontController
                 'cms/page',
                 ['entity' => 'cms', 'id' => $this->cms->id]
             );
-        } elseif ($this->assignCase == self::CMS_CASE_CATEGORY) {
+        } elseif ($this->assignCase == 2) {
             $cmsCategoryVar = $this->getTemplateVarCategoryCms();
 
             $filteredCmsCategoryContent = Hook::exec(
@@ -137,10 +135,7 @@ class CmsControllerCore extends FrontController
             }
 
             $this->context->smarty->assign($cmsCategoryVar);
-            $this->setTemplate(
-                'cms/category',
-                ['entity' => 'cms_category', 'id' => $this->cms_category->id]
-            );
+            $this->setTemplate('cms/category');
         }
         parent::initContent();
     }
@@ -158,7 +153,7 @@ class CmsControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        if ($this->assignCase == self::CMS_CASE_CATEGORY) {
+        if ($this->assignCase == 2) {
             $cmsCategory = new CMSCategory($this->cms_category->id_cms_category);
         } else {
             $cmsCategory = new CMSCategory($this->cms->id_cms_category);
@@ -174,7 +169,7 @@ class CmsControllerCore extends FrontController
             }
         }
 
-        if ($this->assignCase == self::CMS_CASE_PAGE) {
+        if ($this->assignCase == 1) {
             $breadcrumb['links'][] = [
                 'title' => $this->context->controller->cms->meta_title,
                 'url' => $this->context->link->getCMSLink($this->context->controller->cms),
@@ -188,7 +183,7 @@ class CmsControllerCore extends FrontController
     {
         $page = parent::getTemplateVarPage();
 
-        if ($this->assignCase == self::CMS_CASE_CATEGORY) {
+        if ($this->assignCase == 2) {
             $page['body_classes']['cms-id-' . $this->cms_category->id] = true;
         } else {
             $page['body_classes']['cms-id-' . $this->cms->id] = true;

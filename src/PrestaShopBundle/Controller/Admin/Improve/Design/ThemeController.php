@@ -127,7 +127,7 @@ class ThemeController extends AbstractAdminController
     /**
      * Upload shop logos.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))", redirectRoute="admin_themes_index")
      * @DemoRestricted(redirectRoute="admin_themes_index")
      *
      * @param Request $request

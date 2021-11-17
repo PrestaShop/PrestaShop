@@ -362,9 +362,8 @@ function gencode(size)
   getE('code').value = '';
   /* There are no O/0 in the codes in order to avoid confusion */
   var chars = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
-  var randomNumbers = crypto.getRandomValues(new Uint32Array(size));
   for (var i = 1; i <= size; ++i) {
-    getE('code').value += chars.charAt(Math.floor(randomNumbers[i]/2**32 * chars.length));
+    getE('code').value += chars.charAt(Math.floor(Math.random() * chars.length));
   }
 
   getE('cart-rules-highlight').style.display = '';
@@ -920,6 +919,26 @@ $(document).ready(function()
     }
   });
 
+  if (typeof host_mode !== 'undefined' && host_mode)
+  {
+        // http://status.prestashop.com/
+        var status_map = {
+            operational: status_operational,
+            degraded_performance: status_degraded_performance,
+            partial_outage: status_partial_outage,
+            major_outage: status_major_outage,
+        };
+
+        var components_map = {'ca1': 0, 'fr1': 1};
+
+        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
+        sp.components({
+            success: function (data) {
+                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
+                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
+            }
+        });
+    }
     if ($('.kpi-container').length) {
         refresh_kpis();
     }

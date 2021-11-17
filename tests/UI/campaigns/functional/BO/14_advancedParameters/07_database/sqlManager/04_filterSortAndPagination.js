@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -19,7 +16,13 @@ const SQLQueryFaker = require('@data/faker/sqlQuery');
 
 const dbPrefix = global.INSTALL.DB_PREFIX;
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_advancedParameters_database_sqlManager_filterSortAndPagination';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -32,7 +35,7 @@ Filter SQL queries by : Id, Name, sql query
 Sort SQL queries by : Id, Name, sql query
 Delete by bulk actions
  */
-describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL manager table', async () => {
+describe('Filter, sort and pagination SQL manager', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,12 +76,13 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
   });
 
   // 1 - Create 11 SQL queries
-  describe('Create 11 SQL queries in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
-    creationTests.forEach((test, index) => {
+  const creationTests = new Array(11).fill(0, 0, 11);
+
+  creationTests.forEach((test, index) => {
+    describe(`Create SQL query n°${index + 1} in BO`, async () => {
       const sqlQueryData = new SQLQueryFaker({name: `todelete${index}`, tableName: `${dbPrefix}alias`});
 
-      it('should go to add new SQL query page', async function () {
+      it('should go to add new SQL manager group page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddSqlQueryPage${index}`, baseContext);
 
         await sqlManagerPage.goToNewSQLQueryPage(page);
@@ -87,7 +91,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
         await expect(pageTitle).to.contains(addSqlQueryPage.pageTitle);
       });
 
-      it(`should create SQL query n°${index + 1} and check result`, async function () {
+      it('should create SQL manager and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createOrderStatus${index}`, baseContext);
 
         const textResult = await addSqlQueryPage.createEditSQLQuery(page, sqlQueryData);
@@ -101,7 +105,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
 
   // 2 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 10 per page', async function () {
+    it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, '10');
@@ -122,7 +126,7 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the items number to 50 per page', async function () {
+    it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await sqlManagerPage.selectPaginationLimit(page, '50');
@@ -247,13 +251,17 @@ describe('BO - Advanced Parameters - Database : Filter, sort and pagination SQL 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
-      await sqlManagerPage.filterSQLQuery(page, 'name', 'todelete');
+      await sqlManagerPage.filterSQLQuery(
+        page,
+        'name',
+        'todelete',
+      );
 
       const textResult = await sqlManagerPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete categories with Bulk Actions and check result', async function () {
+    it('should delete categories with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await sqlManagerPage.deleteWithBulkActions(page);

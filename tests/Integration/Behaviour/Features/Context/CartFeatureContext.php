@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Cart;
 use Context;
-use Tests\Integration\Utility\CartOld;
+use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {

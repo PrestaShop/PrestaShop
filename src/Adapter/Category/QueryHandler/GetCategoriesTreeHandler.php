@@ -57,7 +57,7 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     public function handle(GetCategoriesTree $query): array
     {
         $langId = $query->getLanguageId() ? $query->getLanguageId()->getValue() : (int) $this->contextLangId;
-        $nestedCategories = Category::getNestedCategories(null, $langId, false);
+        $nestedCategories = Category::getNestedCategories(null, $langId);
 
         return $this->buildCategoriesTree($nestedCategories, $langId);
     }
@@ -73,7 +73,6 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
-            $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
 
             if (!empty($category['children'])) {
@@ -82,7 +81,6 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
 
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
-                $categoryActive,
                 // @todo: it is always only one language now,
                 //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
                 [$langId => $category['name']],

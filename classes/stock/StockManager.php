@@ -47,7 +47,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
-     * @param int|null $id_stock_mvt_reason
+     * @param int $id_stock_mvt_reason
      * @param float $price_te
      * @param bool $is_usable
      * @param int|null $id_supply_order
@@ -611,21 +611,9 @@ class StockManagerCore implements StockManagerInterface
         }
 
         // skip if product is a pack without
-        $product = new Product((int) $id_product);
-        if (!Pack::isPack($id_product)
-            || (
-                Pack::isPack($id_product)
-                && Validate::isLoadedObject($product)
-                && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
-                || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
-                || (
-                    $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
-                    && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
-                        || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH
-                    )
-                )
-            )
-        ) {
+        if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int) $id_product))
+            && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH ||
+                    ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
             // Gets client_orders_qty
             $query = new DbQuery();
             $query->select('od.product_quantity, od.product_quantity_refunded');
@@ -808,7 +796,7 @@ class StockManagerCore implements StockManagerInterface
      * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
      * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd).
      *
-     * @param Stock $stock
+     * @param Stock|PrestaShopCollection $stock
      * @param int $quantity
      * @param float $price_te
      *

@@ -61,9 +61,7 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
 
         yield [
             [
-                'description' => [
-                    'categories' => [
-                    ],
+                'categories' => [
                 ],
             ],
             [],
@@ -72,80 +70,147 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             42,
-            [42, 49, 51]
+            [42, 51]
         );
         yield [
             [
-                'description' => [
-                    'categories' => [
-                        'product_categories' => [
-                            0 => [
-                                'name' => 'name is not important its only for presentation',
-                                'id' => 42,
-                            ],
-                            1 => [
-                                'id' => 49,
-                            ],
-                            2 => [
-                                'id' => 51,
-                            ],
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => true,
                         ],
-                        'default_category_id' => 42,
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
             [$command],
         ];
 
-        // default category which is not one of selected categories
+        // Use last defined as default as default
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
             51,
-            [42, 49, 51]
+            [42, 51]
         );
         yield [
             [
-                'description' => [
-                    'categories' => [
-                        'product_categories' => [
-                            0 => [
-                                'name' => 'name is not important its only for presentation',
-                                'id' => 42,
-                            ],
-                            1 => [
-                                'id' => 49,
-                            ],
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => true,
                         ],
-                        'default_category_id' => 51,
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => true,
+                        ],
                     ],
                 ],
             ],
             [$command],
         ];
 
-        // no default category id provided. First one taken as default
+        // Default is always amongst the list
         $command = new SetAssociatedProductCategoriesCommand(
             $this->getProductId()->getValue(),
-            42,
-            [42, 49, 51]
+            49,
+            [42, 51, 49]
         );
         yield [
             [
-                'description' => [
-                    'categories' => [
-                        'product_categories' => [
-                            0 => [
-                                'name' => 'name is not important its only for presentation',
-                                'id' => 42,
-                            ],
-                            1 => [
-                                'id' => 49,
-                            ],
-                            2 => [
-                                'id' => 51,
-                            ],
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => true,
+                            'is_default' => false,
                         ],
-                        'default_category_id' => null,
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new RemoveAllAssociatedProductCategoriesCommand($this->getProductId()->getValue());
+        yield [
+            [
+                'categories' => [
+                    'product_categories' => [
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Use first associated as default
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            49,
+            [49, 51]
+        );
+        yield [
+            [
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => true,
+                            'is_default' => false,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Default is always associated
+        $command = new SetAssociatedProductCategoriesCommand(
+            $this->getProductId()->getValue(),
+            49,
+            [49]
+        );
+        yield [
+            [
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => true,
+                        ],
+                        51 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],
@@ -156,9 +221,20 @@ class ProductCategoriesCommandsBuilderTest extends AbstractProductCommandBuilder
         $command = new RemoveAllAssociatedProductCategoriesCommand($this->getProductId()->getValue());
         yield [
             [
-                'description' => [
-                    'categories' => [
-                        'product_categories' => [],
+                'categories' => [
+                    'product_categories' => [
+                        42 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        49 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
+                        51 => [
+                            'is_associated' => false,
+                            'is_default' => false,
+                        ],
                     ],
                 ],
             ],

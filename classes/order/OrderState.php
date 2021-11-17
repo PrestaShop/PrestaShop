@@ -25,10 +25,10 @@
  */
 class OrderStateCore extends ObjectModel
 {
-    /** @var string|array<int, string> Name */
+    /** @var array<string> Name */
     public $name;
 
-    /** @var string|array<int, string> Template name if there is any e-mail to send */
+    /** @var array<string> Template name if there is any e-mail to send */
     public $template;
 
     /** @var bool Send an e-mail to customer ? */
@@ -114,7 +114,7 @@ class OrderStateCore extends ObjectModel
      * Get all available order statuses.
      *
      * @param int $id_lang Language id for status name
-     * @param bool $filterDeleted
+     * @param bool $getDeletedStates
      *
      * @return array Order statuses
      */
@@ -174,7 +174,7 @@ class OrderStateCore extends ObjectModel
      */
     public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT COUNT(*) AS count' .
             ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
             ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .

@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Twig;
 
-use PrestaShop\PrestaShop\Core\Util\Inflector;
+use Doctrine\Common\Util\Inflector;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig_Extension;
+use Twig_SimpleFunction;
 
-class TranslationsExtension extends AbstractExtension
+class TranslationsExtension extends Twig_Extension
 {
     /**
      * @var TranslatorInterface
@@ -75,8 +75,8 @@ class TranslationsExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
-            new TwigFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
+            new Twig_SimpleFunction('getTranslationsTree', [$this, 'getTranslationsTree']),
+            new Twig_SimpleFunction('getTranslationsForms', [$this, 'getTranslationsForms']),
         ];
     }
 
@@ -108,8 +108,7 @@ class TranslationsExtension extends AbstractExtension
         $hasMessages = $this->hasMessages($subtree);
 
         if ($hasMessages) {
-            $keysSubTreeMessages = array_keys($subtree['__messages']);
-            $camelizedDomain = reset($keysSubTreeMessages);
+            $camelizedDomain = reset(array_keys($subtree['__messages']));
             $messages = $subtree['__messages'][$camelizedDomain];
 
             foreach ($messages as $translationKey => $translation) {
@@ -166,8 +165,7 @@ class TranslationsExtension extends AbstractExtension
         $messagesSubtree = $this->hasMessages($tree);
 
         if ($messagesSubtree) {
-            $keysSubTreeMessages = array_keys($tree['__messages']);
-            $camelizedDomain = reset($keysSubTreeMessages);
+            $camelizedDomain = reset(array_keys($tree['__messages']));
             $messagesTree = $tree['__messages'][$camelizedDomain];
 
             $formIndex = 0;
@@ -256,9 +254,9 @@ class TranslationsExtension extends AbstractExtension
             $isSearchResults = $properties['is_search_results'];
         }
 
-        $breadcrumbParts = explode('_', Inflector::getInflector()->tableize($domain));
+        $breadcrumbParts = explode('_', Inflector::tableize($domain));
 
-        return $this->container->get('twig')->render(
+        return $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/form-edit-message.html.twig',
             [
                 'default_translation_value' => $defaultTranslationValue,
@@ -365,7 +363,7 @@ class TranslationsExtension extends AbstractExtension
         }
 
         if ($hasMessagesSubtree) {
-            $output .= $this->container->get('twig')->render(
+            $output .= $this->container->get('templating')->render(
                 '@PrestaShop/Admin/Translations/include/button-toggle-messages-visibility.html.twig',
                 [
                     'label_show_messages' => $this->translator->trans('Show messages', [], 'Admin.International.Feature'),
@@ -377,7 +375,7 @@ class TranslationsExtension extends AbstractExtension
         }
 
         $formStart = $this->getTranslationsFormStart($subtree, $output);
-        $output = $this->container->get('twig')->render(
+        $output = $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/translations-form-end.html.twig',
             [
                 'form_start' => $formStart,
@@ -439,7 +437,7 @@ class TranslationsExtension extends AbstractExtension
             unset($subtree['__metadata']);
         }
 
-        return $this->container->get('twig')->render(
+        return $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/translations-form-start.html.twig',
             [
                 'id' => $id,
@@ -534,7 +532,7 @@ class TranslationsExtension extends AbstractExtension
      */
     protected function getNavigation($id)
     {
-        return $this->container->get('twig')->render(
+        return $this->container->get('templating')->render(
             '@PrestaShop/Admin/Translations/include/pagination-bar.html.twig',
             ['page_id' => $id]
         );

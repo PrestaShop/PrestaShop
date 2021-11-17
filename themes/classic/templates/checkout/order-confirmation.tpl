@@ -13,7 +13,7 @@
             {/block}
 
             <p>
-              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $order_customer.email]}
+              {l s='An email has been sent to your mail address %email%.' d='Shop.Theme.Checkout' sprintf=['%email%' => $customer.email]}
               {if $order.details.invoice_url}
                 {* [1][/1] is for a HTML tag. *}
                 {l
@@ -65,11 +65,6 @@
                   <em>{$order.carrier.delay}</em>
                 </li>
               {/if}
-              {if $order.details.recyclable}
-                <li>  
-                  <em>{l s='You have given permission to receive your order in recycled packaging.' d="Shop.Theme.Customeraccount"}</em>
-                </li>
-              {/if}
             </ul>
           </div>
         {/block}
@@ -92,15 +87,16 @@
     {/if}
   {/block}
 
-  {if !$registered_customer_exists}
-    {block name='account_transformation_form'}
-      <div class="card">
+  {block name='customer_registration_form'}
+    {if $customer.is_guest}
+      <div id="registration-form" class="card">
         <div class="card-block">
-          {include file='customer/_partials/account-transformation-form.tpl'}
+          <h4 class="h4">{l s='Save time on your next order, sign up now' d='Shop.Theme.Checkout'}</h4>
+          {render file='customer/_partials/customer-form.tpl' ui=$register_form}
         </div>
       </div>
-    {/block}
-  {/if}
+    {/if}
+  {/block}
 
   {block name='hook_order_confirmation_1'}
     {hook h='displayOrderConfirmation1'}

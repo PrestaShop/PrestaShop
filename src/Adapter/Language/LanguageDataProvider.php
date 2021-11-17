@@ -38,7 +38,7 @@ class LanguageDataProvider
      * Returns languages data.
      *
      * @param bool $active
-     * @param int|bool $shopId
+     * @param bool $shopId
      * @param bool $onlyIds
      *
      * @return array

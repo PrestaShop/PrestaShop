@@ -28,8 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use Egulias\EmailValidator\EmailLexer;
-use Egulias\EmailValidator\Result\InvalidEmail;
-use Egulias\EmailValidator\Result\Reason\ExceptionFound;
+use Egulias\EmailValidator\Exception\InvalidEmail;
 use Egulias\EmailValidator\Validation\EmailValidation;
 use PrestaShop\PrestaShop\Core\Exception\NonASCIIInLocalPartException;
 
@@ -43,11 +42,13 @@ class SwiftMailerValidation implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function isValid(string $email, EmailLexer $emailLexer): bool
+    public function isValid($email, EmailLexer $emailLexer)
     {
-        $parts = explode('@', $email);
-        if (preg_match('/[^\x00-\x7F]/', $parts[0])) {
-            $this->error = new InvalidEmail(new ExceptionFound(new NonASCIIInLocalPartException()), '');
+        if (is_string($email)) {
+            $parts = explode('@', $email);
+            if (preg_match('/[^\x00-\x7F]/', $parts[0])) {
+                $this->error = new NonASCIIInLocalPartException();
+            }
         }
 
         return null === $this->error;
@@ -56,7 +57,7 @@ class SwiftMailerValidation implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function getError(): ?InvalidEmail
+    public function getError()
     {
         return $this->error;
     }
@@ -64,7 +65,7 @@ class SwiftMailerValidation implements EmailValidation
     /**
      * {@inheritdoc}
      */
-    public function getWarnings(): array
+    public function getWarnings()
     {
         return [];
     }

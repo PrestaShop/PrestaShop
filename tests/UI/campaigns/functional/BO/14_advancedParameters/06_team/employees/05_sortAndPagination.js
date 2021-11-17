@@ -4,9 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -16,6 +13,9 @@ const EmployeeFaker = require('@data/faker/employee');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_sortAndPagination';
 
@@ -31,7 +31,7 @@ Sort employee list
 Pagination
 Delete created employees
  */
-describe('BO - Advanced Parameters - Team : Sort and pagination employees', async () => {
+describe('Sort and pagination employees', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +46,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced parameters > Team\' page', async function () {
+  it('should go to "Advanced parameters > Team" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -68,12 +68,12 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     await expect(numberOfEmployees).to.be.above(0);
   });
 
-  // 1 : Create 10 employees
+  // 1 : Create 20 employees
   const tests = new Array(10).fill(0, 0, 10);
-  describe('Create 10 employees in BO', async () => {
-    tests.forEach((test, index) => {
-      const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
 
+  tests.forEach((test, index) => {
+    const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
+    describe(`Create employee n°${index + 1} in BO`, async () => {
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
 
@@ -83,7 +83,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
         await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
       });
 
-      it(`should create employee n°${index + 1}`, async function () {
+      it('should create employee', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
@@ -146,7 +146,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
 
   // 3 : Test pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 10 per page', async function () {
+    it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await employeesPage.selectPaginationLimit(page, '10');
@@ -167,7 +167,7 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
-    it('should change the items number to 50 per page', async function () {
+    it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await employeesPage.selectPaginationLimit(page, '50');
@@ -180,13 +180,18 @@ describe('BO - Advanced Parameters - Team : Sort and pagination employees', asyn
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
+      await employeesPage.filterEmployees(
+        page,
+        'input',
+        'email',
+        employeeData.email,
+      );
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
       await expect(textEmail).to.contains(employeeData.email);
     });
 
-    it('should delete employees with Bulk Actions and check result', async function () {
+    it('should delete employees with Bulk Actions and check Result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
       const deleteTextResult = await employeesPage.deleteBulkActions(page);

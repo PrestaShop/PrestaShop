@@ -264,21 +264,43 @@ class AdminSearchControllerCore extends AdminController
     {
         $this->_list['features'] = [];
 
+        global $_LANGADM;
+        if ($_LANGADM === null) {
+            return;
+        }
+
+        $tabs = [];
+        $key_match = [];
         $result = Db::getInstance()->executeS(
-            'SELECT class_name, name, route_name
-            FROM ' . _DB_PREFIX_ . 'tab t
-            INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
-            WHERE active = 1'
+            '
+		SELECT class_name, name
+		FROM ' . _DB_PREFIX_ . 'tab t
+		INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
+		WHERE active = 1' . (defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
         );
         foreach ($result as $row) {
-            if (
-                false !== stripos($row['name'], $this->query)
-                && Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)
-            ) {
-                $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
-                $this->_list['features'][$row['name']][] = [
-                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
-                ];
+            if (Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+                $tabs[strtolower($row['class_name'])] = $row['name'];
+                $key_match[strtolower($row['class_name'])] = $row['class_name'];
+            }
+        }
+
+        $this->_list['features'] = [];
+        foreach ($_LANGADM as $key => $value) {
+            if (stripos($value, $this->query) !== false) {
+                $value = stripslashes($value);
+                $key = strtolower(substr($key, 0, -32));
+                if (in_array($key, ['AdminTab', 'index'])) {
+                    continue;
+                }
+                // if class name doesn't exists, just ignore it
+                if (!isset($tabs[$key])) {
+                    continue;
+                }
+                if (!isset($this->_list['features'][$tabs[$key]])) {
+                    $this->_list['features'][$tabs[$key]] = [];
+                }
+                $this->_list['features'][$tabs[$key]][] = ['link' => Context::getContext()->link->getAdminLink($key_match[$key]), 'value' => Tools::safeOutput($value)];
             }
         }
     }

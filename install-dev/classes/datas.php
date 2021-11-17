@@ -23,151 +23,152 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 class Datas
 {
     private static $instance = null;
-    protected static $available_args = [
-        'step' => [
+    protected static $available_args = array(
+        'step' => array(
             'name' => 'step',
             'default' => 'all',
             'validate' => 'isGenericName',
-            'help' => 'all / database,fixtures,theme,modules,postInstall',
-        ],
-        'language' => [
+            'help' => 'all / database,fixtures,theme,modules,addons_modules',
+        ),
+        'language' => array(
             'default' => 'en',
             'validate' => 'isLanguageIsoCode',
             'alias' => 'l',
             'help' => 'language iso code',
-        ],
-        'all_languages' => [
+        ),
+        'all_languages' => array(
             'default' => '0',
             'validate' => 'isInt',
             'alias' => 'l',
             'help' => 'install all available languages',
-        ],
-        'timezone' => [
+        ),
+        'timezone' => array(
             'default' => 'Europe/Paris',
             'alias' => 't',
-        ],
-        'base_uri' => [
+        ),
+        'base_uri' => array(
             'name' => 'base_uri',
             'validate' => 'isUrl',
             'default' => '/',
-        ],
-        'http_host' => [
+        ),
+        'http_host' => array(
             'name' => 'domain',
             'validate' => 'isGenericName',
             'default' => 'localhost',
-        ],
-        'database_server' => [
+        ),
+        'database_server' => array(
             'name' => 'db_server',
             'default' => 'localhost',
             'validate' => 'isGenericName',
             'alias' => 'h',
-        ],
-        'database_login' => [
+        ),
+        'database_login' => array(
             'name' => 'db_user',
             'alias' => 'u',
             'default' => 'root',
             'validate' => 'isGenericName',
-        ],
-        'database_password' => [
+        ),
+        'database_password' => array(
             'name' => 'db_password',
             'alias' => 'p',
             'default' => '',
-        ],
-        'database_name' => [
+        ),
+        'database_name' => array(
             'name' => 'db_name',
             'alias' => 'd',
             'default' => 'prestashop',
             'validate' => 'isGenericName',
-        ],
-        'database_clear' => [
+        ),
+        'database_clear' => array(
             'name' => 'db_clear',
             'default' => '1',
             'validate' => 'isInt',
             'help' => 'Drop existing tables',
-        ],
-        'database_create' => [
+        ),
+        'database_create' => array(
             'name' => 'db_create',
             'default' => '0',
             'validate' => 'isInt',
             'help' => 'Create the database if not exist',
-        ],
-        'database_prefix' => [
+        ),
+        'database_prefix' => array(
             'name' => 'prefix',
             'default' => 'ps_',
             'validate' => 'isGenericName',
-        ],
-        'database_engine' => [
+        ),
+        'database_engine' => array(
             'name' => 'engine',
             'validate' => 'isMySQLEngine',
             'default' => 'InnoDB',
             'help' => 'InnoDB/MyISAM',
-        ],
-        'shop_name' => [
+        ),
+        'shop_name' => array(
             'name' => 'name',
             'validate' => 'isGenericName',
             'default' => 'PrestaShop',
-        ],
-        'shop_activity' => [
+        ),
+        'shop_activity'    => array(
             'name' => 'activity',
             'default' => 0,
             'validate' => 'isInt',
-        ],
-        'shop_country' => [
+        ),
+        'shop_country' => array(
             'name' => 'country',
             'validate' => 'isLanguageIsoCode',
             'default' => 'fr',
-        ],
-        'admin_firstname' => [
+        ),
+        'admin_firstname' => array(
             'name' => 'firstname',
             'validate' => 'isName',
             'default' => 'John',
-        ],
-        'admin_lastname' => [
+        ),
+        'admin_lastname'    => array(
             'name' => 'lastname',
             'validate' => 'isName',
             'default' => 'Doe',
-        ],
-        'admin_password' => [
+        ),
+        'admin_password' => array(
             'name' => 'password',
-            'validate' => 'isPlaintextPassword',
+            'validate' => 'isPasswd',
             'default' => '0123456789',
-        ],
-        'admin_email' => [
+        ),
+        'admin_email' => array(
             'name' => 'email',
             'validate' => 'isEmail',
             'default' => 'pub@prestashop.com',
-        ],
-        'show_license' => [
+        ),
+        'show_license' => array(
             'name' => 'license',
             'default' => 0,
             'help' => 'show PrestaShop license',
-        ],
-        'theme' => [
+        ),
+        'theme' => array(
             'name' => 'theme',
             'default' => '',
-        ],
-        'enable_ssl' => [
+        ),
+        'enable_ssl' => array(
             'name' => 'ssl',
             'default' => 0,
             'help' => 'enable SSL for PrestaShop',
-        ],
-        'rewrite_engine' => [
+        ),
+        'rewrite_engine' => array(
             'name' => 'rewrite',
             'default' => 1,
             'help' => 'enable rewrite engine for PrestaShop',
-        ],
-        'fixtures' => [
+        ),
+        'fixtures' => array(
             'name' => 'fixtures',
             'default' => '1',
             'validate' => 'isInt',
             'help' => 'enable fixtures installation',
-        ],
-    ];
+        ),
+    );
 
-    protected $datas = [];
+    protected $datas = array();
 
     public function __get($key)
     {
@@ -203,7 +204,7 @@ class Datas
             return false;
         }
 
-        $args_ok = [];
+        $args_ok = array();
         foreach ($argv as $arg) {
             if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res)) {
                 continue;
@@ -220,7 +221,7 @@ class Datas
             $args_ok[$res[1]] = $res[2];
         }
 
-        $errors = [];
+        $errors = array();
         foreach (static::getArgs() as $key => $row) {
             if (isset($row['name'])) {
                 $name = $row['name'];
@@ -229,12 +230,12 @@ class Datas
             }
             if (!isset($args_ok[$name])) {
                 if (!isset($row['default'])) {
-                    $errors[] = 'Field ' . $row['name'] . ' is empty';
+                    $errors[] = 'Field '.$row['name'].' is empty';
                 } else {
                     $this->$key = $row['default'];
                 }
-            } elseif (isset($row['validate']) && class_exists('Validate') && !call_user_func(['Validate', $row['validate']], $args_ok[$name])) {
-                $errors[] = 'Field ' . $key . ' is not valid';
+            } elseif (isset($row['validate']) && class_exists('Validate') && !call_user_func(array('Validate', $row['validate']), $args_ok[$name])) {
+                $errors[] = 'Field '.$key.' is not valid';
             } else {
                 $this->$key = $args_ok[$name];
             }

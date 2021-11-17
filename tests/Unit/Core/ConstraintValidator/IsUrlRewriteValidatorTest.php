@@ -49,7 +49,7 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
      */
     private $configurationMockWithAscendingCharsOn;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->useAscendedChars = false;
 

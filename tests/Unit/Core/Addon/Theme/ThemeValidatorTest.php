@@ -28,48 +28,43 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Addon\Theme;
 
+use LegacyTests\TestCase\FakeConfiguration;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
 
 class ThemeValidatorTest extends TestCase
 {
-    private const NOTICE = '[ThemeValidator] ';
+    const NOTICE = '[ThemeValidator] ';
 
-    /**
-     * @var ThemeValidator
-     */
     private $validator;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)
-            ->getMock();
-        $configurationMock->method('get')
-            ->will($this->returnValueMap([
-                ['_PS_ALL_THEMES_DIR_', null, null, '/themes/'],
-            ]));
-
-        $this->validator = new ThemeValidator($translator, $configurationMock);
+        /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator */
+        $this->validator = new ThemeValidator($translator, new FakeConfiguration(
+            [
+                '_PS_ALL_THEMES_DIR_' => '/themes/',
+            ]
+        ));
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->validator = null;
     }
 
-    public function testIsValidWithValidTheme(): void
+    public function testIsValidWithValidTheme()
     {
         $isValid = $this->validator->isValid($this->getTheme());
         $this->assertTrue($isValid, self::NOTICE . sprintf('expected isValid to return true when theme is valid, got %s', gettype($isValid)));
     }
 
-    public function testIsValidWithInvalidThemeMissingFiles(): void
+    public function testIsValidWithInvalidThemeMissingFiles()
     {
         $isValid = $this->validator->isValid($this->getTheme('missfiles'));
         $this->assertFalse($isValid, self::NOTICE . sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
@@ -81,7 +76,7 @@ class ThemeValidatorTest extends TestCase
         $this->assertFalse($isValid, self::NOTICE . sprintf('expected isValid to return false when theme is invalid, got %s', gettype($isValid)));
     }
 
-    private function getTheme(string $name = 'valid'): Theme
+    private function getTheme($name = 'valid')
     {
         $options = ['valid', 'missfiles', 'missconfig'];
 

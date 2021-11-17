@@ -35,11 +35,15 @@
     </div>
   {% endif %}
 
-  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig' %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig' %}
 
-  {% block sql_manager_db_tables_panel %}
-    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
-  {% endblock %}
+      {% block sql_manager_db_tables_panel %}
+        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
+      {% endblock %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

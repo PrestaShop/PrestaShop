@@ -45,7 +45,7 @@ class FormHandlerTest extends TestCase
     private $hookDispatcherMock;
     private $dataProviderMock;
 
-    public function setUp(): void
+    public function setUp()
     {
         // mocks creation
         $formBuilderMock = $this->createMock(FormBuilderInterface::class);

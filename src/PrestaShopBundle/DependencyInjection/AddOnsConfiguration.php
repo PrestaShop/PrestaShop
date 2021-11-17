@@ -34,8 +34,8 @@ class AddOnsConfiguration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('prestashop');
-        $rootNode = $treeBuilder->getRootNode();
+        $treeBuilder = new TreeBuilder();
+        $rootNode = $treeBuilder->root('prestashop');
 
         Tools::refreshCACertFile();
 
@@ -65,6 +65,13 @@ class AddOnsConfiguration implements ConfigurationInterface
             ->end()
             ->end()
             ->end()
+            ->end()
+            ->end()
+            ->end()
+            ->arrayNode('prestatrust')
+            ->children()
+            ->booleanNode('enabled')
+            ->defaultFalse()
             ->end()
             ->end()
             ->end()

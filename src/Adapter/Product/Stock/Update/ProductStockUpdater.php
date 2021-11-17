@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
@@ -63,11 +62,6 @@ class ProductStockUpdater
     private $stockAvailableRepository;
 
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var bool
      */
     private $advancedStockEnabled;
@@ -76,19 +70,18 @@ class ProductStockUpdater
      * @param StockManager $stockManager
      * @param ProductRepository $productRepository
      * @param StockAvailableRepository $stockAvailableRepository
-     * @param Configuration $configuration
+     * @param bool $advancedStockEnabled
      */
     public function __construct(
         StockManager $stockManager,
         ProductRepository $productRepository,
         StockAvailableRepository $stockAvailableRepository,
-        Configuration $configuration
+        bool $advancedStockEnabled
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
-        $this->configuration = $configuration;
-        $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
+        $this->advancedStockEnabled = $advancedStockEnabled;
     }
 
     /**
@@ -98,15 +91,13 @@ class ProductStockUpdater
     public function update(ProductId $productId, ProductStockProperties $properties)
     {
         $product = $this->productRepository->get($productId);
-        $stockAvailable = $this->getStockAvailable($product);
-
         $this->productRepository->partialUpdate(
             $product,
-            $this->fillUpdatableProperties($product, $stockAvailable, $properties),
+            $this->fillUpdatableProperties($product, $properties),
             CannotUpdateProductException::FAILED_UPDATE_STOCK
         );
 
-        $this->updateStockAvailable($stockAvailable, $properties);
+        $this->updateStockAvailable($product, $properties);
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
@@ -121,7 +112,6 @@ class ProductStockUpdater
      */
     private function fillUpdatableProperties(
         Product $product,
-        StockAvailable $stockAvailable,
         ProductStockProperties $properties
     ): array {
         $updatableProperties = [];
@@ -161,8 +151,8 @@ class ProductStockUpdater
             $product->pack_stock_type = $properties->getPackStockType()->getValue();
             $updatableProperties[] = 'pack_stock_type';
         }
-        if (null !== $properties->getDeltaQuantity()) {
-            $product->quantity = $stockAvailable->quantity + $properties->getDeltaQuantity();
+        if (null !== $properties->getQuantity()) {
+            $product->quantity = $properties->getQuantity();
             $updatableProperties[] = 'quantity';
         }
         if (null !== $properties->getAvailableDate()) {
@@ -174,11 +164,12 @@ class ProductStockUpdater
     }
 
     /**
-     * @param StockAvailable $stockAvailable
+     * @param Product $product
      * @param ProductStockProperties $properties
      */
-    private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties)
+    private function updateStockAvailable(Product $product, ProductStockProperties $properties)
     {
+        $stockAvailable = $this->getStockAvailable($product);
         $stockUpdateRequired = false;
 
         if (null !== $properties->getOutOfStockType()) {
@@ -190,8 +181,8 @@ class ProductStockUpdater
             $stockUpdateRequired = true;
         }
 
-        if (null !== $properties->getDeltaQuantity()) {
-            $this->updateQuantity($stockAvailable, $properties->getDeltaQuantity());
+        if (null !== $properties->getQuantity()) {
+            $this->updateQuantity($stockAvailable, $properties->getQuantity());
             $stockUpdateRequired = true;
         }
 
@@ -202,27 +193,15 @@ class ProductStockUpdater
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param int $deltaQuantity
+     * @param int $newQuantity
      */
-    private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
+    private function updateQuantity(StockAvailable $stockAvailable, int $newQuantity): void
     {
-        $stockAvailable->quantity += $deltaQuantity;
+        $deltaQuantity = $newQuantity - (int) $stockAvailable->quantity;
+        $stockAvailable->quantity = $newQuantity;
 
         if (0 !== $deltaQuantity) {
-            if ($deltaQuantity > 0) {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_INC_EMPLOYEE_EDITION');
-            } else {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION');
-            }
-
-            $this->stockManager->saveMovement(
-                $stockAvailable->id_product,
-                $stockAvailable->id_product_attribute,
-                $deltaQuantity,
-                [
-                    'id_stock_mvt_reason' => $movementReasonId,
-                ]
-            );
+            $this->stockManager->saveMovement($stockAvailable->id_product, $stockAvailable->id_product_attribute, $deltaQuantity);
         }
     }
 

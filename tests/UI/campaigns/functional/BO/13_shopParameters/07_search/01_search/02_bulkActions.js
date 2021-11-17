@@ -1,10 +1,7 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -17,7 +14,13 @@ const addSearchPage = require('@pages/BO/shopParameters/search/add');
 // Import data
 const SearchFaker = require('@data/faker/search');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_search_search_bulkActions';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -30,7 +33,7 @@ Enable status by bulk actions
 Disable status by bulk actions
 Delete th created aliases by bulk actions
  */
-describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk actions search', async () => {
+describe('Enable/Disable and delete by bulk actions search', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +48,7 @@ describe('BO - Shop Parameters - Search : Enable/Disable and delete by bulk acti
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Search\' page', async function () {
+  it('should go to \'ShopParameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
     await dashboardPage.goToSubMenu(

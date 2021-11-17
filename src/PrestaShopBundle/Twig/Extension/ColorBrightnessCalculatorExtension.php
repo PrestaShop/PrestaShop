@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
+use Twig_SimpleFunction;
 
 /**
  * Adds color calculation functions to Twig.
@@ -54,7 +54,7 @@ class ColorBrightnessCalculatorExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new TwigFunction(
+            new Twig_SimpleFunction(
                 'is_color_bright',
                 [$this->brightnessCalculator, 'isBright']
             ),

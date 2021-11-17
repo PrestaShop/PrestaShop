@@ -71,7 +71,7 @@ class AddGroup extends BOBasePage {
 
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, groupData.priceDisplayMethod);
 
-    await this.setChecked(page, this.showPricesToggle(groupData ? 'on' : 'off'));
+    await page.check(this.showPricesToggle(groupData ? 'on' : 'off'));
 
     // Save group
     await this.clickAndWaitForNavigation(page, this.saveButton);

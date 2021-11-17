@@ -103,7 +103,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         /** @var array $shopAssociation */
         $shopAssociation = [
-            SharedStorage::getStorage()->get($shopReference),
+            SharedStorage::getStorage()->get($shopReference)->id,
         ];
         $data['shopAssociation'] = $shopAssociation;
 

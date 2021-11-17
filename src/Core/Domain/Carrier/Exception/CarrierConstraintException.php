@@ -36,5 +36,5 @@ class CarrierConstraintException extends CarrierException
     /**
      * Thrown when provided carrier id is not valid
      */
-    public const INVALID_ID = 10;
+    const INVALID_ID = 10;
 }

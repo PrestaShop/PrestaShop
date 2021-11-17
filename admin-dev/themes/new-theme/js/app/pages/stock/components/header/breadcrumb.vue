@@ -39,20 +39,18 @@
   </nav>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     computed: {
-      isOverview(): boolean {
+      isOverview() {
         return this.$route.name === 'overview';
       },
-      catalogLink(): string {
+      catalogLink() {
         return window.data.catalogUrl;
       },
-      stockLink(): string {
+      stockLink() {
         return window.data.stockUrl;
       },
     },
-  });
+  };
 </script>

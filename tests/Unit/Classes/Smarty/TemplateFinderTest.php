@@ -33,49 +33,46 @@ use TemplateFinder;
 
 class TemplateFinderTest extends TestCase
 {
-    /**
-     * @var TemplateFinder
-     */
     protected $templateFinder;
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        $root = realpath(_PS_ROOT_DIR_) . '/tests/Resources/template-hierarchy/templates/';
+        $root = realpath(_PS_ROOT_DIR_) . '/tests-legacy/resources/template-hierarchy/templates/';
 
-        /* @var TemplateFinder */
+        /* @var TemplateFinderCore */
         $this->templateFinder = new TemplateFinder([$root], '.tpl');
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->templateFinder = null;
     }
 
-    public function testTheTemplateFoundForACategoryPageWithId(): void
+    public function testTheTemplateFoundForACategoryPageWithId()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category', 9, 'fr-FR');
         $this->assertEquals($template, 'catalog/listing/category-9.tpl');
     }
 
-    public function testTheTemplateFoundForACategoryPageWithNoneExistingId(): void
+    public function testTheTemplateFoundForACategoryPageWithNoneExistingId()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category', 8, 'fr-FR');
         $this->assertEquals($template, 'catalog/listing/category.tpl');
     }
 
-    public function testTheTemplateFoundForANoneExistingCategory(): void
+    public function testTheTemplateFoundForANoneExistingCategory()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/product-list', 'category-test', 8, 'fr-FR');
         $this->assertEquals($template, 'catalog/listing/product-list.tpl');
     }
 
-    public function testWrongTemplateFallback(): void
+    public function testWrongTemplateFallback()
     {
         $template = $this->templateFinder->getTemplate('catalog/listing/srg-list', 'category', false, 'fr-FR');
         $this->assertEquals($template, 'catalog/listing/category.tpl');
     }
 
-    public function testNoFoundTemplateThrowException(): void
+    public function testNoFoundTemplateThrowException()
     {
         $this->expectException('\PrestaShopException');
         $template = $this->templateFinder->getTemplate('catalog/listing/my-custom-list', 'custom', null, 'fr-FR');

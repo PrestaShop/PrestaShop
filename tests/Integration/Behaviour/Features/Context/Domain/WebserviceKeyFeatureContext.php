@@ -33,43 +33,77 @@ use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\AddWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Command\EditWebserviceKeyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\Exception\DuplicateWebserviceKeyException;
+use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\WebserviceKeyId;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use WebserviceKey;
 
-class WebserviceKeyFeatureContext extends CommonDomainFeatureContext
+class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @Given I add a new webservice key with specified properties:
+     * @Given I specify following properties for new webservice key :reference:
      */
-    public function addNewWebserviceKey(TableNode $node): void
+    public function specifyPropertiesForWebserviceKey(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
 
+        $data['is_enabled'] = (bool) $data['is_enabled'];
         $data['shop_association'] = [
-            SharedStorage::getStorage()->get($data['shop_association']),
+            SharedStorage::getStorage()->get($data['shop_association'])->id,
         ];
-        $data['permissions'] = [];
-        foreach ($data as $key => $value) {
-            if (substr($key, 0, 11) !== 'permission_') {
-                continue;
-            }
-            $data['permissions'][substr($key, 11)] = PrimitiveUtils::castStringArrayIntoArray($value);
-        }
+
+        SharedStorage::getStorage()->set(sprintf('%s_properties', $reference), $data);
+    }
+
+    /**
+     * @Then /^I specify "(View|Add|Modify|Delete|Fast view)" permission for "([^"]*)" resources for new webservice key "(.*)"$/
+     */
+    public function specifyResourcePermissions(string $permission, string $resources, string $reference): void
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+
+        $data = SharedStorage::getStorage()->get($propertiesKey);
+
+        $permissionsMap = [
+            'View' => 'GET',
+            'Add' => 'POST',
+            'Modify' => 'PUT',
+            'Delete' => 'DELETE',
+            'Fast view' => 'HEAD',
+        ];
+
+        $data['permissions'][$permissionsMap[$permission]] = PrimitiveUtils::castStringArrayIntoArray($resources);
+
+        SharedStorage::getStorage()->set($propertiesKey, $data);
+    }
+
+    /**
+     * @When I add webservice key :reference with specified properties
+     */
+    public function addWebserviceKeyFromSpecifiedProperties(string $reference): void
+    {
+        $propertiesKey = sprintf('%s_properties', $reference);
+
+        $data = SharedStorage::getStorage()->get($propertiesKey);
 
         $command = new AddWebserviceKeyCommand(
             $data['key'],
             $data['description'],
-            (bool) $data['is_enabled'],
+            $data['is_enabled'],
             $data['permissions'],
             $data['shop_association']
         );
 
         try {
-            $this->getCommandBus()->handle($command);
+            /** @var WebserviceKeyId $webserviceKeyId */
+            $webserviceKeyId = $this->getCommandBus()->handle($command);
+
+            SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKeyId->getValue()));
         } catch (Exception $e) {
             $this->setLastException($e);
         }
+
+        SharedStorage::getStorage()->clear($propertiesKey);
     }
 
     /**
@@ -77,18 +111,11 @@ class WebserviceKeyFeatureContext extends CommonDomainFeatureContext
      */
     public function editWebserviceKeyFromSpecifiedProperties(string $reference, TableNode $node): void
     {
-        $webserviceKeyId = (int) WebserviceKey::getIdFromKey($reference);
+        $webserviceKey = SharedStorage::getStorage()->get($reference);
 
         $data = $node->getRowsHash();
-        $data['permissions'] = [];
-        foreach ($data as $key => $value) {
-            if (substr($key, 0, 11) !== 'permission_') {
-                continue;
-            }
-            $data['permissions'][substr($key, 11)] = PrimitiveUtils::castStringArrayIntoArray($value);
-        }
 
-        $command = new EditWebserviceKeyCommand($webserviceKeyId);
+        $command = new EditWebserviceKeyCommand($webserviceKey->id);
         if (isset($data['key'])) {
             $command->setKey($data['key']);
         }
@@ -98,12 +125,11 @@ class WebserviceKeyFeatureContext extends CommonDomainFeatureContext
         if (isset($data['is_enabled'])) {
             $command->setStatus((bool) $data['is_enabled']);
         }
-        if (!empty($data['permissions'])) {
-            $command->setPermissions($data['permissions']);
-        }
 
         try {
             $this->getCommandBus()->handle($command);
+
+            SharedStorage::getStorage()->set($reference, new WebserviceKey($webserviceKey->id));
         } catch (Exception $e) {
             $this->setLastException($e);
         }

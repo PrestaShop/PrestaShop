@@ -496,6 +496,18 @@ class ShopCore extends ObjectModel
     }
 
     /**
+     * Get theme directory name.
+     *
+     * @return string $this->theme->theme_name
+     */
+    public function getTheme()
+    {
+        Tools::displayAsDeprecated('Please use $this->theme->getDirectory() instead');
+
+        return $this->theme->getDirectory();
+    }
+
+    /**
      * Get shop URI.
      *
      * @return string
@@ -879,7 +891,7 @@ class ShopCore extends ObjectModel
         Shop::cacheShops();
         foreach (self::$shops as $group_id => $group_data) {
             if (array_key_exists($shop_id, $group_data['shops'])) {
-                return $as_id ? $group_id : $group_data;
+                return ($as_id) ? $group_id : $group_data;
             }
         }
 
@@ -890,13 +902,13 @@ class ShopCore extends ObjectModel
      * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID.
      *
      * @param int $shop_id
-     * @param string $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER
+     * @param int $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER
      *
      * @return array
      */
     public static function getSharedShops($shop_id, $type)
     {
-        if (!in_array($type, [Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, Shop::SHARE_STOCK])) {
+        if (!in_array($type, [Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, SHOP::SHARE_STOCK])) {
             die('Wrong argument ($type) in Shop::getSharedShops() method');
         }
 
@@ -913,14 +925,14 @@ class ShopCore extends ObjectModel
     /**
      * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID).
      *
-     * @param bool|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
      *
      * @return array
      */
     public static function getContextListShopID($share = false)
     {
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $list = $share ? Shop::getSharedShops(Shop::getContextShopID(), $share) : [Shop::getContextShopID()];
+            $list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : [Shop::getContextShopID()];
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $list = Shop::getShops(true, Shop::getContextShopGroupID(), true);
         } else {
@@ -1058,8 +1070,8 @@ class ShopCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields.
      *
-     * @param bool|int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
-     * @param string|null $alias
+     * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param string $alias
      */
     public static function addSqlRestriction($share = false, $alias = null)
     {
@@ -1119,8 +1131,8 @@ class ShopCore extends ObjectModel
     /**
      * Add a restriction on id_shop for multishop lang table.
      *
-     * @param string|null $alias
-     * @param int|null $id_shop
+     * @param string $alias
+     * @param Context $context
      *
      * @return string
      */
@@ -1133,7 +1145,7 @@ class ShopCore extends ObjectModel
             $id_shop = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        return ' AND ' . ($alias ? Db::getInstance()->escape($alias) . '.' : '') . 'id_shop = ' . $id_shop . ' ';
+        return ' AND ' . (($alias) ? Db::getInstance()->escape($alias) . '.' : '') . 'id_shop = ' . $id_shop . ' ';
     }
 
     /**

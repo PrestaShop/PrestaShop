@@ -27,9 +27,11 @@
 namespace PrestaShopBundle\Routing\Linter;
 
 use Doctrine\Common\Annotations\Reader;
+use InvalidArgumentException;
 use PrestaShopBundle\Routing\Linter\Exception\LinterException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use ReflectionMethod;
+use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -43,11 +45,18 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
     private $annotationReader;
 
     /**
-     * @param Reader $annotationReader
+     * @var ControllerNameParser
      */
-    public function __construct(Reader $annotationReader)
+    private $controllerNameParser;
+
+    /**
+     * @param Reader $annotationReader
+     * @param ControllerNameParser $controllerNameParser
+     */
+    public function __construct(Reader $annotationReader, ControllerNameParser $controllerNameParser)
     {
         $this->annotationReader = $annotationReader;
+        $this->controllerNameParser = $controllerNameParser;
     }
 
     /**
@@ -99,7 +108,12 @@ final class SecurityAnnotationLinter implements RouteLinterInterface
         $controller = $route->getDefault('_controller');
 
         if (strpos($controller, '::') === false) {
-            return null;
+            // we need to support controllers defined as services & defined using short notation
+            try {
+                $controller = $this->controllerNameParser->parse($controller);
+            } catch (InvalidArgumentException $e) {
+                return null;
+            }
         }
 
         list($controller, $method) = explode('::', $controller, 2);

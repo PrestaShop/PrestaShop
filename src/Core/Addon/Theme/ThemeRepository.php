@@ -65,7 +65,7 @@ class ThemeRepository implements AddonRepositoryInterface
     /**
      * @param string $name
      *
-     * @return Theme
+     * @return \PrestaShop\PrestaShop\Core\Addon\AddonInterface|Theme
      *
      * @throws PrestaShopException
      */

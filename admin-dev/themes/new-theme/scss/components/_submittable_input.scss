@@ -10,7 +10,7 @@
     height: 100%;
     padding: 0;
     cursor: pointer;
-    background: $gray-300;
+    background: #bbcdd2;
     border: none;
     outline: none;
     @include border-top-right-radius(4px);
@@ -31,6 +31,6 @@
   }
 
   .check-button.active {
-    background: $primary;
+    background: #25b9d7;
   }
 }

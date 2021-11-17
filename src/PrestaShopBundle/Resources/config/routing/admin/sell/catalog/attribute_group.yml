@@ -3,36 +3,36 @@ admin_attribute_groups_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::indexAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:index'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups
+#    _legacy_link: AdminAttributesGroups
 
 admin_attribute_groups_search:
   path: /
   methods: POST
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _controller: PrestaShopBundle:Admin\Common:searchGrid
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributeGroups:submitFilterattribute_group
+    #    _legacy_link: AdminAttributeGroups:submitFilterattribute_group
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.attribute_group
     redirectRoute: admin_attribute_groups_index
 
 admin_attribute_groups_create:
   path: /new
-  methods: [ GET, POST ]
+  methods: [GET, POST]
   defaults:
-    # todo: implement create
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::indexAction'
+    #todo: implement create
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:index'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributeGroups:addattribute_group
+#    _legacy_link: AdminAttributeGroups:addattribute_group
 
 admin_attribute_groups_view:
   path: /{attributeGroupId}/view
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\Attribute:index'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Attribute:index'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:viewattribute_group
+#    _legacy_link: AdminAttributesGroups:viewattribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -40,11 +40,11 @@ admin_attribute_groups_view:
 
 admin_attribute_groups_edit:
   path: /{attributeGroupId}/edit
-  methods: [ GET, POST ]
+  methods: [GET, POST]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::editAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:edit'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:updateattribute_group
+#    _legacy_link: AdminAttributesGroups:updateattribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -52,11 +52,11 @@ admin_attribute_groups_edit:
 
 admin_attribute_groups_delete:
   path: /{attributeGroupId}/delete
-  methods: [ POST, DELETE ]
+  methods: [POST, DELETE]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::deleteAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:delete'
     _legacy_controller: AdminAttributesGroups
-    #  _legacy_link: AdminAttributesGroups:deleteattribute_group
+#    _legacy_link: AdminAttributesGroups:deleteattribute_group
     _legacy_parameters:
       id_attribute_group: attributeGroupId
   requirements:
@@ -66,22 +66,22 @@ admin_attribute_groups_bulk_delete:
   path: /bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::bulkDeleteAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:bulkDelete'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:submitBulkdeleteattribute_group
+#    _legacy_link: AdminAttributesGroups:submitBulkdeleteattribute_group
 
 admin_attribute_groups_export:
   path: /export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::exportAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:export'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:exportattribute_group
+#    _legacy_link: AdminAttributesGroups:exportattribute_group
 
 admin_attribute_groups_update_position:
   path: /update-position
-  methods: [ POST ]
+  methods: [POST]
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\AttributeGroupController::updatePositionAction'
+    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/AttributeGroup:updatePosition'
     _legacy_controller: AdminAttributesGroups
-#  _legacy_link: AdminAttributesGroups:updateGroupsPositions
+#    _legacy_link: AdminAttributesGroups:updateGroupsPositions

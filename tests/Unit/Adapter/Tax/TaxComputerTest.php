@@ -52,7 +52,7 @@ class TaxComputerTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->taxRulesGroupId = new TaxRulesGroupId(42);

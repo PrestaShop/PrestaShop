@@ -23,29 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 class Step
 {
     /**
+     *
      * @var string
      */
     protected $name;
 
     /**
+     *
      * @var string
      */
     protected $displayName;
 
     /**
+     *
      * @var string
      */
     protected $controllerName;
 
     /**
+     *
      * @var object
      */
     protected $instance;
 
     /**
+     *
      * @return string
      */
     public function __toString()
@@ -54,6 +60,7 @@ class Step
     }
 
     /**
+     *
      * @return string
      */
     public function getName()
@@ -62,6 +69,7 @@ class Step
     }
 
     /**
+     *
      * @return string
      */
     public function getdisplayName()
@@ -70,6 +78,7 @@ class Step
     }
 
     /**
+     *
      * @return string
      */
     public function getControllerName()
@@ -78,8 +87,8 @@ class Step
     }
 
     /**
-     * @param string $name
      *
+     * @param string $name
      * @return Step
      */
     public function setName($name)
@@ -90,8 +99,8 @@ class Step
     }
 
     /**
-     * @param string $displayName
      *
+     * @param string $displayName
      * @return Step
      */
     public function setDisplayName($displayName)
@@ -102,8 +111,8 @@ class Step
     }
 
     /**
-     * @param string $name
      *
+     * @param string $name
      * @return Step
      */
     public function setControllerName($controllerName)
@@ -114,16 +123,17 @@ class Step
     }
 
     /**
+     *
      * @return object
      */
     public function getControllerInstance()
     {
         if (null == $this->instance) {
-            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_ . 'http/' . $this->name . '.php')) {
+            if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'http/'.$this->name.'.php')) {
                 throw new PrestashopInstallerException("Controller file 'http/{$this->name}.php' not found");
             }
 
-            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/' . $this->name . '.php';
+            require_once _PS_INSTALL_CONTROLLERS_PATH_.'http/'.$this->name.'.php';
 
             $this->instance = new $this->controllerName();
         }

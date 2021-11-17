@@ -56,14 +56,11 @@ export default class ProductFormModel {
     return {
       getProduct: () => this.getProduct(),
       watch: (productModelKey, callback) => this.watchProductModel(productModelKey, callback),
-      set: (modelKey, value) => this.setProductValue(modelKey, value),
     };
   }
 
   /**
    * @returns {Object}
-   *
-   * @private
    */
   getProduct() {
     return this.mapper.getModel().product;
@@ -72,26 +69,15 @@ export default class ProductFormModel {
   /**
    * @param {string} productModelKey
    * @param {function} callback
-   *
-   * @private
    */
   watchProductModel(productModelKey, callback) {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
   /**
-   * @param {string} productModelKey
-   * @param {*} value
-   */
-  setProductValue(productModelKey, value) {
-    this.mapper.set(`product.${productModelKey}`, value);
-  }
-
-  /**
    * Handles modifications that have happened in the product
    *
    * @param {Object} event
-   *
    * @private
    */
   productFieldUpdated(event) {

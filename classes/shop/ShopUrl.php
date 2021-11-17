@@ -103,7 +103,7 @@ class ShopUrlCore extends ObjectModel
     /**
      * Get list of shop urls.
      *
-     * @param int|bool $id_shop
+     * @param bool $id_shop
      *
      * @return PrestaShopCollection Collection of ShopUrl
      */

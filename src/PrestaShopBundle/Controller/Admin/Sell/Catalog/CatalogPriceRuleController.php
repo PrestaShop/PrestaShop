@@ -152,7 +152,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule creation.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -184,7 +184,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     /**
      * Show & process catalog price rule editing.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
      *
      * @param int $catalogPriceRuleId
      * @param Request $request

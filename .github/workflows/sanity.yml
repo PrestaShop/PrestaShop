@@ -1,21 +1,21 @@
-name: UI tests
-on: [ push, pull_request ]
+name: UI tests - PHP 7.1
+
+on:
+  pull_request:
+    types: [opened,reopened,synchronize]
+
 jobs:
 
   sanity:
-    runs-on: ubuntu-latest
-    name: Sanity
+    runs-on: ubuntu-18.04
+    name: Sanity - PHP 7.1
     strategy:
       matrix:
-        php: [ '7.2', '7.3', '7.4', '8.0' ]
+        # We should have only one workflow but sanity tests and addons are too unstable so for now they are split
+        php: [ '7.1' ]
       fail-fast: false
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-        with:
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v2
 
       - name: Setup Apache
@@ -25,7 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
@@ -37,28 +37,31 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '10'
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache node Directory
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          restore-keys: |
+            ${{ runner.os }}-composer-
 
       - name: Composer install and build assets
         run: make
@@ -76,7 +79,8 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Run tests
-        run: npm install && npm run test:sanity:fast-fail
+        run: |
+          npm install && npm run sanity-tests-fast-fail
         env:
           URL_FO: http://localhost/
           DB_NAME: prestashop
@@ -88,5 +92,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: ${{ always() }}
         with:
-          name: screenshots-${{ matrix.php }}
+          name: fail
           path: ./tests/UI/screenshots/

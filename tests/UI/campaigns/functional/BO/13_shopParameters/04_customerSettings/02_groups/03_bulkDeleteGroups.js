@@ -1,12 +1,10 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -19,11 +17,18 @@ const addGroupPage = require('@pages/BO/shopParameters/customerSettings/groups/a
 const GroupFaker = require('@data/faker/group');
 
 // Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_customerSettings_groups_bulkDeleteGroups';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
+
 
 let numberOfGroups = 0;
 
@@ -32,7 +37,7 @@ const groupsToCreate = [
   new GroupFaker({name: 'todelete2'}),
 ];
 
-describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async () => {
+describe('Create Groups then delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +52,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
+  it('should go to customer settings page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -62,7 +67,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to \'Groups\' page', async function () {
+  it('should go to groups page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
 
     await customerSettingPage.goToGroupsPage(page);
@@ -104,13 +109,23 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete groups', async 
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await groupsPage.filterTable(page, 'input', 'b!name', 'todelete');
+      await groupsPage.filterTable(
+        page,
+        'input',
+        'b!name',
+        'todelete',
+      );
 
       const numberOfGroupsAfterFilter = await groupsPage.getNumberOfElementInGrid(page);
       await expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
 
       for (let i = 1; i <= numberOfGroupsAfterFilter; i++) {
-        const textColumn = await groupsPage.getTextColumn(page, i, 'b!name');
+        const textColumn = await groupsPage.getTextColumn(
+          page,
+          i,
+          'b!name',
+        );
+
         await expect(textColumn).to.contains('todelete');
       }
     });

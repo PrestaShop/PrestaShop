@@ -21,11 +21,10 @@ class Addresses extends FOBasePage {
     this.deleteAddressSuccessfulMessage = 'Address successfully deleted!';
 
     // Selectors
-    this.addressBlock = 'article.address';
-    this.addressBodyTitle = `${this.addressBlock} .address-body h4`;
     this.createNewAddressLink = '#content div.addresses-footer a[data-link-action=\'add-address\']';
     this.editAddressLink = 'a[data-link-action=\'edit-address\']';
     this.deleteAddressLink = 'a[data-link-action=\'delete-address\']';
+    this.countrySelect = '#content  select[name=\'id_country\']';
   }
 
   /*
@@ -42,18 +41,22 @@ class Addresses extends FOBasePage {
   }
 
   /**
-   * Get address position from its alias
+   * Is country exist
    * @param page {Page} Browser tab
-   * @param alias {string} Alias of the address
-   * @return {Promise<number>}
+   * @param countryName {string} String of the country name
+   * @returns {Promise<boolean>}
    */
-  async getAddressPosition(page, alias) {
-    const titles = await page.$$eval(
-      this.addressBodyTitle,
-      all => all.map(address => address.textContent),
+  async isCountryExist(page, countryName) {
+    let options = await page.$$eval(
+      `${this.countrySelect} option`,
+      all => all.map(
+        option => ({
+          textContent: option.textContent,
+          value: option.value,
+        })),
     );
-
-    return titles.indexOf(alias) + 1;
+    options = await options.filter(option => countryName === option.textContent);
+    return options.length !== 0;
   }
 
   /**

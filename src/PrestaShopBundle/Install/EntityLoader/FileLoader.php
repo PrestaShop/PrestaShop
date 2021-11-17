@@ -36,7 +36,7 @@ use SimpleXMLElement;
  */
 class FileLoader
 {
-    public const FALLBACK_LANGUAGE_CODE = 'en';
+    const FALLBACK_LANGUAGE_CODE = 'en';
 
     /**
      * @var array[] Loaded data, indexed by entity name and iso code

@@ -34,10 +34,10 @@ class ManufacturerCore extends ObjectModel
     /** @var string Name */
     public $name;
 
-    /** @var string|array<int, string> Description */
+    /** @var array<string> Description */
     public $description;
 
-    /** @var string|array<int, string> Short description */
+    /** @var array<string> Short description */
     public $short_description;
 
     /** @var int Address */
@@ -52,13 +52,13 @@ class ManufacturerCore extends ObjectModel
     /** @var string Friendly URL */
     public $link_rewrite;
 
-    /** @var string|array<int, string> Meta title */
+    /** @var array<string> Meta title */
     public $meta_title;
 
-    /** @var string|array<int, string> Meta keywords */
+    /** @var array<string> Meta keywords */
     public $meta_keywords;
 
-    /** @var string|array<int, string> Meta description */
+    /** @var array<string> Meta description */
     public $meta_description;
 
     /** @var bool active */
@@ -136,8 +136,6 @@ class ManufacturerCore extends ObjectModel
 
             return $this->deleteImage();
         }
-
-        return false;
     }
 
     /**
@@ -154,7 +152,7 @@ class ManufacturerCore extends ObjectModel
         $result = true;
         foreach ($selection as $id) {
             $this->id = (int) $id;
-            $this->id_address = static::getManufacturerAddress();
+            $this->id_address = Manufacturer::getManufacturerAddress();
             $result = $result && $this->delete();
         }
 
@@ -181,8 +179,8 @@ class ManufacturerCore extends ObjectModel
      * @param bool $getNbProducts [optional] return products numbers for each
      * @param int $idLang Language ID
      * @param bool $active
-     * @param int|bool $p
-     * @param int|bool $n
+     * @param int $p
+     * @param int $n
      * @param bool $allGroup
      *
      * @return array Manufacturers

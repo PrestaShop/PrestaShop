@@ -27,7 +27,11 @@
 
 {% block content %}
   {% block contacts_list_panel %}
-    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': contactGrid} %}
+    <div class="row">
+      <div class="col">
+        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': contactGrid} %}
+      </div>
+    </div>
   {% endblock %}
 {% endblock %}
 

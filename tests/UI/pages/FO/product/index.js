@@ -89,14 +89,14 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get Product information (Product name, price, short description, description)
-   * @param page
-   * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
+   * Get Product information (Product name, price, description)
+   * @param page {Page} Browser tab
+   * @returns {Promise<{price: (number), name: (string), description: (string)}>}
    */
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: await this.getPriceFromText(page, this.productPrice),
+      price: await this.getPriceFromText(page, this.productPrice, 'content'),
       shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
     };
@@ -422,7 +422,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   getNumberOfComments(page) {
-    return page.$$eval(this.productReviewRows, rows => rows.length);
+    return this.getNumberFromText(page, this.commentCount);
   }
 
   /**

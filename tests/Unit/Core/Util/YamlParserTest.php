@@ -24,21 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace LegacyTests\Unit\Core\Util\File;
 
-namespace Tests\Unit\Core\Util;
-
-use PHPUnit\Framework\TestCase;
+use LegacyTests\TestCase\UnitTestCase;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 
-class YamlParserTest extends TestCase
+class YamlParserTest extends UnitTestCase
 {
     /**
      * @param $yamlFiles
      *
      * @return string
      */
-    private function clearCacheFile(string $yamlFiles): string
+    private function clearCacheFile($yamlFiles)
     {
         $yamlParser = new YamlParser($this->getCacheDir(), false);
         $cacheFile = $yamlParser->getCacheFile($yamlFiles);
@@ -47,12 +45,12 @@ class YamlParserTest extends TestCase
         return $cacheFile;
     }
 
-    public function getConfigDir(): string
+    public function getConfigDir()
     {
         return _PS_ROOT_DIR_ . '/app/config/';
     }
 
-    public function getCacheDir(): string
+    public function getCacheDir()
     {
         return _PS_ROOT_DIR_ . '/var/cache/test/';
     }
@@ -60,7 +58,7 @@ class YamlParserTest extends TestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserNoCache(string $yamlFiles): void
+    public function testParserNoCache($yamlFiles)
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
         $yamlParser = new YamlParser($this->getCacheDir(), false);
@@ -74,7 +72,7 @@ class YamlParserTest extends TestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserCache(string $yamlFiles): void
+    public function testParserCache($yamlFiles)
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
@@ -104,7 +102,7 @@ class YamlParserTest extends TestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserCacheRefresh(string $yamlFiles): void
+    public function testParserCacheRefresh($yamlFiles)
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
@@ -126,12 +124,10 @@ class YamlParserTest extends TestCase
     /**
      * Data provider
      *
-     * @return array<array<string>>
+     * @return array
      */
-    public function getYamlFilesProvider(): array
+    public function getYamlFilesProvider()
     {
-        return [
-            [$this->getConfigDir() . '/config_test.yml'],
-        ];
+        return [[$this->getConfigDir() . '/config_test.yml']];
     }
 }

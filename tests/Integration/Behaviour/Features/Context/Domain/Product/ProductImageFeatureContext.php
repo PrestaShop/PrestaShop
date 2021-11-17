@@ -37,8 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
@@ -244,7 +242,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $directories = str_split((string) $imageId);
         $path = implode('/', $directories);
 
-        return _PS_PRODUCT_IMG_DIR_ . $path;
+        return _PS_PROD_IMG_DIR_ . $path;
     }
 
     /**
@@ -269,23 +267,6 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $this->getProductImages($productReference),
             sprintf('No images expected for product "%s"', $productReference)
         );
-    }
-
-    /**
-     * @Then product :productReference should have following cover :coverUrl
-     *
-     * @param string $productReference
-     * @param string $coverUrl
-     */
-    public function assertProductCover(string $productReference, string $coverUrl): void
-    {
-        /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->getCommandBus()->handle(new GetProductForEditing(
-            (int) $this->getSharedStorage()->get($productReference)
-        ));
-        $realImageUrl = $this->getRealImageUrl($coverUrl);
-
-        Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
     }
 
     /**
@@ -371,7 +352,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $imageFolder = implode('/', str_split((string) $imageId));
 
-        return _PS_PRODUCT_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
+        return _PS_PROD_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
     }
 
     /**

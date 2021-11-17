@@ -148,14 +148,14 @@ export default class CombinationsManager {
     this.$paginatedList.toggleClass('d-none', firstTime);
     this.$emptyState.addClass('d-none');
 
+    // When attributes are refreshed we show first page
+    this.paginator.paginate(1);
+
     // Wait for product attributes to adapt rendering depending on their number
     this.productAttributeGroups = await getProductAttributeGroups(
       this.productId,
     );
     this.filtersApp.filters = this.productAttributeGroups;
-
-    // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
-    // which will itself be caught by this manager which will in turn refresh to first page)
     this.eventEmitter.emit(CombinationEvents.clearFilters);
     this.$preloader.addClass('d-none');
 
@@ -181,12 +181,10 @@ export default class CombinationsManager {
    */
   initPaginatedList() {
     this.combinationsRenderer = new CombinationsGridRenderer();
-    // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.combinationsService,
       this.combinationsRenderer,
-      0,
     );
 
     this.initSubmittableInputs();
@@ -204,13 +202,14 @@ export default class CombinationsManager {
 
     this.$combinationsContainer.on(
       'click',
-      CombinationsMap.deleteCombinationSelector,
+      CombinationsMap.removeCombinationSelector,
       async (e) => {
-        await this.deleteCombination(e.currentTarget);
+        await this.removeCombination(e.currentTarget);
       },
     );
 
     this.initSortingColumns();
+    this.paginator.paginate(1);
   }
 
   /**
@@ -362,7 +361,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async deleteCombination(button) {
+  async removeCombination(button) {
     try {
       const $deleteButton = $(button);
       const modal = new ConfirmModal(
@@ -376,7 +375,7 @@ export default class CombinationsManager {
           closable: true,
         },
         async () => {
-          const response = await this.combinationsService.deleteCombination(
+          const response = await this.combinationsService.removeCombination(
             this.findCombinationId(button),
           );
           $.growl({message: response.message});

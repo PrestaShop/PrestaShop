@@ -26,7 +26,7 @@
 {% form_theme categories '@PrestaShop/Admin/Product/Themes/categories_theme.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_catalog' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_catalog.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block javascripts %}
@@ -39,13 +39,15 @@
 {% endblock %}
 
 {% block content %}
-  <div class="products-catalog card">
+  <div class="products-catalog">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
-    <div class="content card-body">
+    <div class="content container-fluid">
 
       {% if permission_error|length %}
+      <div class="row">
+        <div class="col-md-12">
           <div class="alert alert-danger" role="alert">
             <button type="button" class="close" data-dismiss="alert">
               <span aria-hidden="true"><i class="material-icons">close</i></span>
@@ -54,9 +56,15 @@
               {{ permission_error }}
             </p>
           </div>
+        </div>
+      </div>
       {% endif %}
 
-      <div class="d-flex">
+      <div class="row align-items-start">
+        {% block product_catalog_tools %}
+          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
+        {% endblock %}
+
         {% block product_catalog_filters %}
           {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
               'limit': limit,
@@ -65,9 +73,6 @@
               'sortOrder': sortOrder
             })
           }}
-        {% endblock %}
-        {% block product_catalog_tools %}
-          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
         {% endblock %}
       </div>
 

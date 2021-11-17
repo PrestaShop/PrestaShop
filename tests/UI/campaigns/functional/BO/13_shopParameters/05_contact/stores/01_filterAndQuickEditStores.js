@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -17,7 +14,13 @@ const storesPage = require('@pages/BO/shopParameters/stores');
 // Import data
 const {stores} = require('@data/demo/stores');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_contact_stores_filterAndQuickEditStores';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -25,7 +28,7 @@ let page;
 
 let numberOfStores = 0;
 
-describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async () => {
+describe('Filter and quick edit stores', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,7 +43,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Contact\' page', async function () {
+  it('should go to contact page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -55,7 +58,7 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     await expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
-  it('should go to \'Stores\' page', async function () {
+  it('should go to stores page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPage', baseContext);
 
     await contactPage.goToStoresPage(page);
@@ -184,7 +187,12 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
             const storeStatus = await storesPage.getStoreStatus(page, row);
             await expect(storeStatus).to.equal(test.args.filterValue);
           } else {
-            const textColumn = await storesPage.getTextColumn(page, row, test.args.filterBy);
+            const textColumn = await storesPage.getTextColumn(
+              page,
+              row,
+              test.args.filterBy,
+            );
+
             await expect(textColumn).to.contains(test.args.filterValue);
           }
         }
@@ -203,18 +211,40 @@ describe('BO - Shop Parameters - Contact : Filter and quick edit stores', async 
     it(`should filter by name '${stores.second.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 
-      await storesPage.filterTable(page, 'input', 'sl!name', stores.second.name);
+      await storesPage.filterTable(
+        page,
+        'input',
+        'sl!name',
+        stores.second.name,
+      );
 
       const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
       await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
-      const textColumn = await storesPage.getTextColumn(page, 1, 'sl!name');
+      const textColumn = await storesPage.getTextColumn(
+        page,
+        1,
+        'sl!name',
+      );
+
       await expect(textColumn).to.contains(stores.second.name);
     });
 
     const tests = [
-      {args: {action: 'disable', statusWanted: false}},
-      {args: {action: 'enable', statusWanted: true}},
+      {
+        args:
+          {
+            action: 'disable',
+            statusWanted: false,
+          },
+      },
+      {
+        args:
+          {
+            action: 'enable',
+            statusWanted: true,
+          },
+      },
     ];
 
     tests.forEach((test) => {

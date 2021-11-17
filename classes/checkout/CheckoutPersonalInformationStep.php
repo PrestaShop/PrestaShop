@@ -33,11 +33,6 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
 
     private $show_login_form = false;
 
-    /**
-     * @var bool
-     */
-    public $logged_in;
-
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

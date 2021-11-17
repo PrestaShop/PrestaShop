@@ -29,13 +29,7 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 export default class ProductSEOManager {
-  /**
-   * @param {EventEmitter} eventEmitter
-   *
-   * @returns {{}}
-   */
-  constructor(eventEmitter) {
-    this.eventEmitter = eventEmitter;
+  constructor() {
     this.$previewButton = $(ProductMap.footer.previewUrlButton);
 
     this.init();
@@ -48,7 +42,9 @@ export default class ProductSEOManager {
    */
   init() {
     // Init the product/category search field for redirection target
-    new RedirectOptionManager(this.eventEmitter);
+    const $redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
+    const $redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
+    new RedirectOptionManager($redirectTypeInput, $redirectTargetInput);
 
     // Init Serp component to preview Search engine display
     const {translatableInput, translatableField} = window.prestashop.instance;

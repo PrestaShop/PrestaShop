@@ -56,7 +56,7 @@ class CatalogueProviderFactoryTest extends TestCase
      */
     private $factory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $databaseTranslationLoader = $this->createMock(DatabaseTranslationLoader::class);
         $legacyModuleExtractor = $this->createMock(LegacyModuleExtractorInterface::class);

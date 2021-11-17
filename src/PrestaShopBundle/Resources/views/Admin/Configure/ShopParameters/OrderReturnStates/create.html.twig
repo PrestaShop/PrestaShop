@@ -26,10 +26,14 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Return statuses'|trans({}, 'Admin.Shopparameters.Feature') %}
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig' %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig' %}
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

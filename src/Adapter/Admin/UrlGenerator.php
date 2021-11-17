@@ -67,11 +67,7 @@ class UrlGenerator implements UrlGeneratorInterface
     }
 
     /**
-     * @param string $name
-     * @param array $parameters
-     * @param int $referenceType
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
     {
@@ -93,7 +89,7 @@ class UrlGenerator implements UrlGeneratorInterface
      * @param string $routeName
      * @param string[] $parameters The route parameters to convert
      *
-     * @return array{0: string, 1: array<string>} An array with: the legacy controller name, then the parameters array
+     * @return array[] An array with: the legacy controller name, then the parameters array
      */
     final public function getLegacyOptions($routeName, $parameters = [])
     {

@@ -52,8 +52,6 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    public const GRID_ID = 'email_logs';
-
     /**
      * @var string the URL to reset Grid filters
      */
@@ -92,7 +90,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return self::GRID_ID;
+        return 'email_logs';
     }
 
     /**
@@ -226,11 +224,10 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => self::GRID_ID,
+                        'attr' => [
+                            'data-url' => $this->resetActionUrl,
+                            'data-redirect' => $this->redirectionUrl,
                         ],
-                        'redirect_route' => 'admin_emails_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

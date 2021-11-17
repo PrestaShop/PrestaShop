@@ -36,7 +36,7 @@ class PercentageTest extends NumberTest
      * Let's override numberSpec with the tested Percentage specification
      * All NumberTest tests are supposed to pass with a Percentage spec.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->latinNumberSpec = new PercentageSpecification(

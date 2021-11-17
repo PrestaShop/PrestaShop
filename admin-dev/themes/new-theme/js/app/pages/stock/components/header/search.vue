@@ -71,15 +71,14 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSTags from '@app/widgets/ps-tags.vue';
-  import PSButton from '@app/widgets/ps-button.vue';
-  import PSAlert from '@app/widgets/ps-alert.vue';
+<script>
+  import PSTags from '@app/widgets/ps-tags';
+  import PSButton from '@app/widgets/ps-button';
+  import PSAlert from '@app/widgets/ps-alert';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters.vue';
+  import Filters from './filters';
 
-  export default Vue.extend({
+  export default {
     components: {
       Filters,
       PSTags,
@@ -87,23 +86,22 @@
       PSAlert,
     },
     computed: {
-      error(): boolean {
+      error() {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
     methods: {
-      onClick(): void {
-        const refPsTags = this.$refs.psTags as VTags;
-        const {tag} = refPsTags;
-        refPsTags.add(tag);
+      onClick() {
+        const {tag} = this.$refs.psTags;
+        this.$refs.psTags.add(tag);
       },
-      onSearch(): void {
+      onSearch() {
         this.$emit('search', this.tags);
       },
-      applyFilter(filters: Array<any>): void {
+      applyFilter(filters) {
         this.$emit('applyFilter', filters);
       },
-      onCloseAlert(): void {
+      onCloseAlert() {
         this.showAlert = false;
       },
     },
@@ -113,7 +111,7 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type: string) => {
+      EventBus.$on('displayBulkAlert', (type) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(() => {
@@ -121,13 +119,11 @@
         }, 5000);
       });
     },
-    data() {
-      return {
-        tags: [],
-        showAlert: false,
-        alertType: 'ALERT_TYPE_DANGER',
-        duration: false,
-      };
-    },
-  });
+    data: () => ({
+      tags: [],
+      showAlert: false,
+      alertType: 'ALERT_TYPE_DANGER',
+      duration: false,
+    }),
+  };
 </script>

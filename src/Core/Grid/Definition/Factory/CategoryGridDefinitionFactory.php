@@ -152,15 +152,6 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
                     ])
             )
             ->add(
-                (new DataColumn('products_count'))
-                    ->setName($this->trans('Products', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'products_count',
-                        'sortable' => false,
-                        'alignment' => 'center',
-                    ])
-            )
-            ->add(
                 (new ToggleColumn('active'))
                     ->setName($this->trans('Displayed', [], 'Admin.Global'))
                     ->setOptions([
@@ -181,7 +172,7 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
         if ($this->multistoreContextChecker->isSingleShopContext()) {
             $columns
                 ->addAfter(
-                    'products_count',
+                    'description',
                     (new CategoryPositionColumn('position'))
                         ->setName($this->trans('Position', [], 'Admin.Global'))
                         ->setOptions([

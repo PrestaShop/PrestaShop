@@ -122,6 +122,12 @@ $changes = array(
             '#unsigned' => true,
         ),
     ),
+    'tax_rules_group' => array(
+        'id_tax_rules_group' => array(
+            '#type' => 'INT(11)',
+            '#unsigned' => true,
+        ),
+    ),
     'specific_price_priority' => array(
         'id_specific_price_priority' => array(
             '#type' => 'INT(11)',

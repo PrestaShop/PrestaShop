@@ -43,8 +43,7 @@ export const transform = (value) => {
   }
 
   if (unwantedChars.length > 1) {
-    const unwantedCharsSet = new Set(unwantedChars);
-    const unique = Array.from(unwantedCharsSet);
+    const unique = [...new Set(unwantedChars)];
 
     if (unique.length === 1) {
       return val.replace(findAllUnwantedChars, '');

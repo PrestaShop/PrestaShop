@@ -362,9 +362,7 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Generates robots.txt file for Front Office.
      *
-     * @AdminSecurity(
-     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
-     * )
+     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse
@@ -429,7 +427,8 @@ class MetaController extends FrameworkBundleAdminController
         if ($isGridDisplayed) {
             $grid = $seoUrlsGridFactory->getGrid($filters);
 
-            $presentedGrid = $this->presentGrid($grid);
+            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
+            $presentedGrid = $gridPresenter->present($grid);
         }
 
         $tools = $this->get('prestashop.adapter.tools');

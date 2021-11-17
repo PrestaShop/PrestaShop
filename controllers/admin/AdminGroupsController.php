@@ -197,33 +197,6 @@ class AdminGroupsControllerCore extends AdminController
         parent::initProcess();
     }
 
-    public function postProcess(): void
-    {
-        $tableCustomerGroup = 'customer_group';
-        if (!empty($_POST[$tableCustomerGroup . 'Box'])
-            && is_array($_POST[$tableCustomerGroup . 'Box'])
-            && (
-                Tools::isSubmit('submitBulkenableSelection' . $tableCustomerGroup)
-                || Tools::isSubmit('submitBulkdisableSelection' . $tableCustomerGroup)
-            )
-        ) {
-            $status = Tools::isSubmit('submitBulkenableSelection' . $tableCustomerGroup);
-            foreach ($_POST[$tableCustomerGroup . 'Box'] as $customerId) {
-                $customer = new Customer((int) $customerId);
-                $customer->setFieldsToUpdate(['active' => true]);
-                $customer->active = $status;
-                if (!$customer->update(false)) {
-                    $this->errors[] = $this->trans('Failed to update the status', [], 'Admin.Notifications.Error');
-
-                    break;
-                }
-            }
-        }
-        if (!count($this->errors)) {
-            parent::postProcess();
-        }
-    }
-
     public function renderView()
     {
         $this->context = Context::getContext();
@@ -259,7 +232,6 @@ class AdminGroupsControllerCore extends AdminController
         $this->bulk_actions = false;
         $this->list_no_link = true;
         $this->explicitSelect = true;
-        $this->list_skip_actions = [];
 
         $this->fields_list = ([
             'id_customer' => [

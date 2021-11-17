@@ -4,21 +4,19 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
-
-// Import FO pages
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 
 // Import data
 const ProductData = require('@data/FO/product');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSetting_productsGeneral_catalogMode';
 
@@ -32,7 +30,7 @@ Enable show prices
 Check catalog page
 Disable catalog mode
  */
-describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode', async () => {
+describe('Enable/Disable catalog mode', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -135,15 +133,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
           isVisible = await productPage.isAddToCartButtonDisplayed(page);
           await expect(isVisible).to.equal(showPrices.args.isAddToCartExist);
-        });
-
-        it('should close the page and go back to BO', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${index}`, baseContext);
 
           page = await productPage.closePage(browserContext, page, 0);
-
-          const pageTitle = await productSettingsPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
         });
       });
     } else {
@@ -184,15 +175,8 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable catalog mode'
 
         isVisible = await productPage.isAddToCartButtonDisplayed(page);
         await expect(isVisible).to.be.true;
-      });
-
-      it('should close the page and go back to BO', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
         page = await productPage.closePage(browserContext, page, 0);
-
-        const pageTitle = await productSettingsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
       });
     }
   });

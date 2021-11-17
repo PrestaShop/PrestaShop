@@ -33,15 +33,15 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class LangRepositoryTest extends KernelTestCase
 {
-    private const SERVICE_NAME = 'prestashop.core.admin.lang.repository';
+    const SERVICE_NAME = 'prestashop.core.admin.lang.repository';
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         self::bootKernel();
     }
 
-    public function testInterface(): void
+    public function testInterface()
     {
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
@@ -49,7 +49,7 @@ class LangRepositoryTest extends KernelTestCase
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $languageRepository);
     }
 
-    public function testGetByLocale(): void
+    public function testGetByLocale()
     {
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
@@ -67,7 +67,7 @@ class LangRepositoryTest extends KernelTestCase
         }
     }
 
-    public function testGetByIsoCode(): void
+    public function testGetByIsoCode()
     {
         /** @var LanguageRepositoryInterface $languageRepository */
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
@@ -78,18 +78,23 @@ class LangRepositoryTest extends KernelTestCase
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
-        $notAvailableLocales = ['en-UK', 'jp'];
+        $notAvailableLocales = ['en-UK', 'fr'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
             $language = $languageRepository->getOneByIsoCode($notAvailableLocale);
             $this->assertNull($language);
         }
     }
 
-    public function testGetLocaleByIsoCode(): void
+    public function testGetLocaleByIsoCode()
     {
         /** @var LangRepository $languageRepository */
         $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
         $locale = $languageRepository->getLocaleByIsoCode('en');
         $this->assertEquals('en-US', $locale);
+    }
+
+    protected function tearDown()
+    {
+        self::$kernel->shutdown();
     }
 }

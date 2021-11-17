@@ -43,7 +43,7 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
 {
     public $mockedShopConfiguration;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->mockedShopConfiguration = $this->createShopConfigurationMock();
         parent::setUp();

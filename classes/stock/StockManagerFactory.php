@@ -31,7 +31,7 @@
 class StockManagerFactoryCore
 {
     /**
-     * @var StockManager : instance of the current StockManager
+     * @var : instance of the current StockManager
      */
     protected static $stock_manager;
 

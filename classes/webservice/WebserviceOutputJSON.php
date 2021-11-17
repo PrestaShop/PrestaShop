@@ -155,18 +155,14 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             foreach ($this->currentAssociatedEntity as $element) {
                 $current[$element['key']] = $element['value'];
             }
-            if (isset($element, $element['name'])) {
-                $this->currentEntity['associations'][$element['name']][] = $current;
-            }
+            //$this->currentEntity['associations'][$element['name']][][$element['key']] = $element['value'];
+            $this->currentEntity['associations'][$element['name']][] = $current;
             $this->currentAssociatedEntity = [];
         }
     }
 
     public function overrideContent($content)
     {
-        array_walk($this->content, function (&$item) {
-            $item = array_filter($item);
-        });
         $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
 
         return (false !== $content) ? $content : '';

@@ -4,15 +4,15 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
 const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_dbBackup_paginationAndBulkActions';
 
@@ -25,7 +25,7 @@ Create 11 SQL queries
 Pagination next and previous
 Delete by bulk actions
  */
-describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Backup', async () => {
+describe('Pagination and bulk delete DB backup', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +41,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
   });
 
   // Go db backup page
-  it('should go to \'Advanced Parameters > Database\' page', async function () {
+  it('should go to database > sql manager page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -56,7 +56,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
-  it('should go to \'DB Backup\' page', async function () {
+  it('should go to db backup page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
     await sqlManagerPage.goToDbBackupPage(page);
@@ -72,11 +72,11 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
   });
 
   // 1 - Create 11 DB backup
-  describe('Create 11 new DB Backup in BO', async () => {
-    const creationTests = new Array(11).fill(0, 0, 11);
+  const creationTests = new Array(11).fill(0, 0, 11);
 
-    creationTests.forEach((test, index) => {
-      it(`should generate db backup n°${index + 1}`, async function () {
+  creationTests.forEach((test, index) => {
+    describe(`Create DB backup n°${index + 1} in BO`, async () => {
+      it('should generate new db backup', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `generateNewDbBackup${index}`, baseContext);
 
         const result = await dbBackupPage.createDbDbBackup(page);
@@ -90,7 +90,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
 
   // 2 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 10 per page', async function () {
+    it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '10');
@@ -111,7 +111,7 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the items number to 50 per page', async function () {
+    it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await dbBackupPage.selectPaginationLimit(page, '50');
@@ -119,8 +119,8 @@ describe('BO - Advanced Parameters - Database : Pagination and bulk delete DB Ba
     });
   });
 
-  describe('Bulk delete the 11 DB Backups created', async () => {
-    it('should delete DB Backups', async function () {
+  describe('Bulk delete db backups', async () => {
+    it('should delete db backups created', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteDbBackups', baseContext);
 
       const result = await dbBackupPage.deleteWithBulkActions(page);

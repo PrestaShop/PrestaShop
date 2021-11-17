@@ -39,7 +39,7 @@ class CombinationGeneratorTest extends TestCase
      */
     private $combinationGenerator;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->combinationGenerator = new CombinationGenerator();
     }

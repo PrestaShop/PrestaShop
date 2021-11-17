@@ -13,15 +13,12 @@ const FakerAddress = require('@data/faker/address');
 const createAddressData = new FakerAddress({country: 'France'});
 const editAddressData = new FakerAddress({country: 'France'});
 
-// Import pages
-// FO
+// Importing pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
 const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
-
-// BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boAddressesPage = require('@pages/BO/customers/addresses');
 
@@ -41,7 +38,7 @@ Check the Update in BO
 Delete the address in FO
 Check that the address is deleted
  */
-describe('FO - Account : CRUD address', async () => {
+describe('CRUD address in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -80,7 +77,6 @@ describe('FO - Account : CRUD address', async () => {
   it('should go to addresses page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
 
-    await foHomePage.goToMyAccountPage(page);
     await foMyAccountPage.goToAddressesPage(page);
     const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
     await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);
@@ -147,8 +143,7 @@ describe('FO - Account : CRUD address', async () => {
     it('should go to edit address page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditAddressPage', baseContext);
 
-      const addressPosition = await foAddressesPage.getAddressPosition(page, createAddressData.alias);
-      await foAddressesPage.goToEditAddressPage(page, addressPosition);
+      await foAddressesPage.goToEditAddressPage(page);
 
       const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddAddressesPage.updateFormTitle);
@@ -196,12 +191,11 @@ describe('FO - Account : CRUD address', async () => {
     });
   });
 
-  describe('Delete the address on FO', async () => {
+  describe('Update the created address on FO', async () => {
     it('should delete the address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const addressPosition = await foAddressesPage.getAddressPosition(page, editAddressData.alias);
-      const textResult = await foAddressesPage.deleteAddress(page, addressPosition);
+      const textResult = await foAddressesPage.deleteAddress(page);
       await expect(textResult).to.equal(foAddressesPage.deleteAddressSuccessfulMessage);
     });
   });

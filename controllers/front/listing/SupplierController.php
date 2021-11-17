@@ -107,7 +107,6 @@ class SupplierControllerCore extends ProductListingFrontController
     {
         $query = new ProductSearchQuery();
         $query
-            ->setQueryType('supplier')
             ->setIdSupplier($this->supplier->id)
             ->setSortOrder(new SortOrder('product', 'position', 'asc'));
 
@@ -187,7 +186,7 @@ class SupplierControllerCore extends ProductListingFrontController
             $suppliers_for_display[$supplier['id_supplier']] = $supplier;
             $suppliers_for_display[$supplier['id_supplier']]['text'] = $supplier['description'];
             $suppliers_for_display[$supplier['id_supplier']]['image'] = $this->context->link->getSupplierImageLink($supplier['id_supplier'], 'small_default');
-            $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getSupplierLink($supplier['id_supplier']);
+            $suppliers_for_display[$supplier['id_supplier']]['url'] = $this->context->link->getsupplierLink($supplier['id_supplier']);
             $suppliers_for_display[$supplier['id_supplier']]['nb_products'] = $supplier['nb_products'] > 1
                 ? $this->trans('%number% products', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog')
                 : $this->trans('%number% product', ['%number%' => $supplier['nb_products']], 'Shop.Theme.Catalog');

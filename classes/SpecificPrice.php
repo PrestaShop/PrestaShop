@@ -213,11 +213,11 @@ class SpecificPriceCore extends ObjectModel
     public static function getIdsByProductId($id_product, $id_product_attribute = false, $id_cart = 0)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-            SELECT `id_specific_price`
-            FROM `' . _DB_PREFIX_ . 'specific_price`
-            WHERE `id_product` = ' . (int) $id_product .
-            ($id_product_attribute !== false ? ' AND id_product_attribute = ' . (int) $id_product_attribute : '') . '
-            AND id_cart = ' . (int) $id_cart);
+			SELECT `id_specific_price`
+			FROM `' . _DB_PREFIX_ . 'specific_price`
+			WHERE `id_product` = ' . (int) $id_product . '
+			AND id_product_attribute=' . (int) $id_product_attribute . '
+			AND id_cart=' . (int) $id_cart);
     }
 
     /**
@@ -400,7 +400,7 @@ class SpecificPriceCore extends ObjectModel
     /**
      * Check if the given product could have a specific price.
      *
-     * @param int $idProduct
+     * @param $idProduct
      *
      * @return bool
      */
@@ -716,17 +716,13 @@ class SpecificPriceCore extends ObjectModel
      * Duplicate a product.
      *
      * @param bool|int $id_product The product ID to duplicate, false when duplicating the current product
-     * @param array $combination_associations Associations between the ids of base combinations and their duplicates
      *
      * @return bool
      */
-    public function duplicate($id_product = false, array $combination_associations = []): bool
+    public function duplicate($id_product = false)
     {
         if ($id_product) {
             $this->id_product = (int) $id_product;
-        }
-        if ($this->id_product_attribute && isset($combination_associations[$this->id_product_attribute])) {
-            $this->id_product_attribute = (int) $combination_associations[$this->id_product_attribute];
         }
         unset($this->id);
         // specific price row may already have been created for catalog specific price rule

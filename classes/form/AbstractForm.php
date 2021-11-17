@@ -28,34 +28,16 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractFormCore implements FormInterface
 {
-    /**
-     * @var Smarty
-     */
     private $smarty;
-    /**
-     * @var TranslatorInterface
-     */
     protected $translator;
-    /**
-     * @var ValidateConstraintTranslator
-     */
     protected $constraintTranslator;
-
-    /**
-     * @var FormFormatterInterface
-     */
-    protected $formatter;
 
     protected $action;
     protected $template;
 
-    /**
-     * @var array
-     */
+    protected $formatter;
+
     protected $formFields = [];
-    /**
-     * @var array[]
-     */
     protected $errors = ['' => []];
 
     public function __construct(
@@ -248,7 +230,7 @@ abstract class AbstractFormCore implements FormInterface
     /**
      * Validate field length
      *
-     * @param FormField $field the field to check
+     * @param $field the field to check
      *
      * @return bool
      */

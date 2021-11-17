@@ -4,18 +4,16 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const maintenancePage = require('@pages/BO/shopParameters/general/maintenance');
-
-// Import FO pages
 const homePage = require('@pages/FO/home');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_general_maintenance_enableDisableShop';
 
@@ -30,7 +28,7 @@ Update maintenance text
 Update ip address in maintenance
 Enable shop
  */
-describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', async () => {
+describe('Enable/Disable shop', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -94,7 +92,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
-  it('should verify that the maintenance text is updated successfully', async function () {
+  it('should verify the existence of the new maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyNewMaintenanceText', baseContext);
 
     page = await maintenancePage.viewMyShop(page);
@@ -103,7 +101,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await expect(pageContent).to.equal(newMaintenanceText);
   });
 
-  it('should go back to the default maintenance text', async function () {
+  it('should back to the default maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultMaintenanceText', baseContext);
 
     page = await homePage.closePage(browserContext, page, 0);

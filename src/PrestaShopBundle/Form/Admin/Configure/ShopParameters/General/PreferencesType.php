@@ -145,6 +145,7 @@ class PreferencesType extends TranslatorAwareType
             ->add(
                 'price_round_mode', ChoiceType::class, [
                     'placeholder' => false,
+                    'choices_as_values' => true,
                     'choices' => [
                         'Round up away from zero, when it is half way there (recommended)' => $configuration->get('PS_ROUND_HALF_UP'),
                         'Round down towards zero, when it is half way there' => $configuration->get('PS_ROUND_HALF_DOWN'),
@@ -161,6 +162,7 @@ class PreferencesType extends TranslatorAwareType
                 ])
             ->add('price_round_type', ChoiceType::class, [
                 'placeholder' => false,
+                'choices_as_values' => true,
                 'choices' => [
                     'Round on each item' => Order::ROUND_ITEM,
                     'Round on each line' => Order::ROUND_LINE,
@@ -206,6 +208,7 @@ class PreferencesType extends TranslatorAwareType
             ])
             ->add('shop_activity', ChoiceType::class, [
                 'required' => false,
+                'choices_as_values' => true,
                 'placeholder' => $this->trans('-- Please choose your main activity --', 'Install'),
                 'choices' => [
                     'Animals and Pets' => 2,

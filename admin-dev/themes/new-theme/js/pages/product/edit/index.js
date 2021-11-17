@@ -26,8 +26,7 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
-import AttachmentsManager from '@pages/product/edit/attachments-manager';
-import CategoriesManager from '@pages/product/components/categories/categories-manager';
+import CategoriesManager from '@pages/product/components/categories';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
@@ -52,7 +51,6 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
-    'DeltaQuantityInput',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -74,7 +72,7 @@ $(() => {
   }
 
   new NavbarHandler(ProductMap.navigationBar);
-  new ProductSEOManager(eventEmitter);
+  new ProductSEOManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
@@ -99,10 +97,9 @@ $(() => {
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
-  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
-    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
+    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
   }
   if (productType === ProductMap.productType.VIRTUAL) {
     new VirtualProductManager(productFormModel);

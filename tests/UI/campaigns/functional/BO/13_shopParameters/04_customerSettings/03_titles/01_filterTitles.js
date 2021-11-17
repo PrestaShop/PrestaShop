@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -17,15 +14,24 @@ const titlesPage = require('@pages/BO/shopParameters/customerSettings/titles');
 // Import data
 const {Titles} = require('@data/demo/titles');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_customerSettings_titles_filterTitles';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
 
+
 let numberOfTitles = 0;
 
-describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name and gender', async () => {
+
+describe('Filter titles by id, name and gender', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,7 +46,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
+  it('should go to customer settings page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -55,7 +61,7 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to \'Titles\' page', async function () {
+  it('should go to titles page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
     await customerSettingPage.goToTitlesPage(page);
@@ -104,7 +110,12 @@ describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name a
         const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
         await expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
-        const textColumn = await titlesPage.getTextColumn(page, 1, test.args.filterBy);
+        const textColumn = await titlesPage.getTextColumn(
+          page,
+          1,
+          test.args.filterBy,
+        );
+
         await expect(textColumn).to.contains(test.args.filterValue);
       });
 

@@ -18,7 +18,6 @@ services:
       PASSWD: "prestashop_demo"
       HEADLESS: "true"
       DB_SERVER: "db"
-      SMTP_SERVER: "172.20.0.4"
     depends_on:
       - "prestashop"
     command: ["/tmp/wait-for-it.sh", "--timeout=1800", "--strict", "prestashop-web:80", "--", "/bin/bash"]

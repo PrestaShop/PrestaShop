@@ -4,22 +4,20 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
 const logsPage = require('@pages/BO/advancedParameters/logs');
-
-// Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
@@ -36,13 +34,14 @@ let numberOfLogs = 0;
 const today = new Date();
 
 // Current day
-const dd = (`0${today.getDate()}`).slice(-2);
+const day = (`0${today.getDate()}`).slice(-2);
 // Current month
-const mm = (`0${today.getMonth() + 1}`).slice(-2);
+const month = (`0${today.getMonth() + 1}`).slice(-2);
 // Current year
-const yyyy = today.getFullYear();
+const year = today.getFullYear();
+
 // Date today (yyy-mm-dd)
-const dateToday = `${mm}/${dd}/${yyyy}`;
+const dateToday = `${year}-${month}-${day}`;
 
 /*
 Erase all logs
@@ -53,7 +52,7 @@ Filter logs table by : Id, Employee, Severity, Message, Object type, Object ID, 
 Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
  */
 
-describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs table', async () => {
+describe('Filter, sort and pagination logs', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -68,7 +67,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced Parameters > Logs\' page', async function () {
+  it('should go to "Advanced parameters > Logs" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
@@ -102,7 +101,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
         await loginCommon.loginBO(this, page);
       });
 
-      it('should go to \'Advanced parameters > Logs\' page', async function () {
+      it('should go to "Advanced parameters > Logs" page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToLogsPage${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
@@ -191,21 +190,14 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
-
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await logsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(logsPage.pageTitle);
-    });
   });
 
   // 1 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should go to \'Advanced parameters > Logs\' page', async function () {
+    it('should go to "Advanced parameters > Logs" page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToFilter', baseContext);
+
+      page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
@@ -216,7 +208,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       await expect(numberOfElements).to.be.equal(numberOfLogs + 11);
     });
 
-    it('should change the items number to 10 per page', async function () {
+    it('should change the item number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
@@ -237,7 +229,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the items number to 20 per page', async function () {
+    it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
@@ -246,7 +238,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   });
 
   // 2 - Filter logs
-  describe('Filter Logs table', async () => {
+  describe('Filter Logs', async () => {
     [
       {
         args:
@@ -263,7 +255,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: DefaultEmployee.lastName,
+            filterValue: DefaultEmployee.firstName,
           },
       },
       {
@@ -463,7 +455,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
           },
       },
     ].forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);

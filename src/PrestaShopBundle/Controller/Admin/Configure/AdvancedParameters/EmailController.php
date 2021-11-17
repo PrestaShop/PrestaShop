@@ -66,8 +66,11 @@ class EmailController extends FrameworkBundleAdminController
 
         $isEmailLogsEnabled = $configuration->get('PS_LOG_EMAILS');
 
+        $presentedEmailLogsGrid = null;
+
         if ($isEmailLogsEnabled) {
-            $emailLogsGrid = $this->get('prestashop.core.grid.factory.email_logs')->getGrid($filters);
+            $emailLogsGridFactory = $this->get('prestashop.core.grid.factory.email_logs');
+            $emailLogsGrid = $emailLogsGridFactory->getGrid($filters);
             $presentedEmailLogsGrid = $this->presentGrid($emailLogsGrid);
         }
 
@@ -76,7 +79,7 @@ class EmailController extends FrameworkBundleAdminController
             'isOpenSslExtensionLoaded' => $extensionChecker->loaded('openssl'),
             'smtpMailMethod' => MailOption::METHOD_SMTP,
             'testEmailSendingForm' => $testEmailSendingForm->createView(),
-            'emailLogsGrid' => $presentedEmailLogsGrid ?? null,
+            'emailLogsGrid' => $presentedEmailLogsGrid,
             'isEmailLogsEnabled' => $isEmailLogsEnabled,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -84,8 +87,6 @@ class EmailController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
@@ -114,10 +115,7 @@ class EmailController extends FrameworkBundleAdminController
      * Process email configuration saving.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
-     *     message="Access denied."
-     * )
+     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -149,7 +147,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete selected email logs.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
      *
@@ -178,7 +176,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete all email logs.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @return RedirectResponse
      */
@@ -197,7 +195,7 @@ class EmailController extends FrameworkBundleAdminController
      * Delete single email log.
      *
      * @DemoRestricted(redirectRoute="admin_emails_index")
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="Access denied.")
+     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param int $mailId
      *

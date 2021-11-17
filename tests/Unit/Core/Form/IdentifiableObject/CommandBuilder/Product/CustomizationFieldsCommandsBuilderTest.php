@@ -75,7 +75,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
         yield [
             [
-                'specifications' => [
+                'options' => [
                     'customizations' => null,
                 ],
             ],
@@ -84,7 +84,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
         yield [
             [
-                'specifications' => [
+                'options' => [
                     'customizations' => [],
                 ],
             ],
@@ -125,7 +125,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
         yield [
             [
-                'specifications' => [
+                'options' => [
                     'customizations' => [
                         'customization_fields' => [
                             [

@@ -342,7 +342,7 @@ class AttributeGroupCore extends ObjectModel
      * Move a group attribute.
      *
      * @param bool $direction Up (1) or Down (0)
-     * @param int|null $position
+     * @param int $position
      *
      * @return bool Update result
      */

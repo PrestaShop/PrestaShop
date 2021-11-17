@@ -26,21 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        AddSpecificPriceHandlerInterface::class
-    ),
-    E_USER_DEPRECATED
-);
-
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see AddProductSpecificPriceHandlerInterface
+ * Interface for handling AddSpecificPrice command
  */
 interface AddSpecificPriceHandlerInterface
 {

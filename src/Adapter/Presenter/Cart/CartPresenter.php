@@ -522,7 +522,7 @@ class CartPresenter implements PresenterInterface
             $defaultCountry = null;
 
             if (isset(Context::getContext()->cookie->id_country)) {
-                $defaultCountry = new Country((int) Context::getContext()->cookie->id_country);
+                $defaultCountry = new Country(Context::getContext()->cookie->id_country);
             }
 
             $deliveryOptionList = $cart->getDeliveryOptionList($defaultCountry);
@@ -571,7 +571,9 @@ class CartPresenter implements PresenterInterface
 
             $totalCartVoucherReduction = 0;
 
-            if ($this->cartVoucherHasFreeShippingOnly($cartVoucher)) {
+            if (!$this->cartVoucherHasPercentReduction($cartVoucher)
+                && !$this->cartVoucherHasAmountReduction($cartVoucher)
+                && !$this->cartVoucherHasGiftProductReduction($cartVoucher)) {
                 $freeShippingOnly = true;
                 if ($freeShippingAlreadySet) {
                     unset($vouchers[$cartVoucher['id_cart_rule']]);
@@ -617,7 +619,17 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasPercentReduction(array $cartVoucher): bool
+    private function cartVoucherHasFreeShipping($cartVoucher)
+    {
+        return !empty($cartVoucher['free_shipping']);
+    }
+
+    /**
+     * @param array $cartVoucher
+     *
+     * @return bool
+     */
+    private function cartVoucherHasPercentReduction($cartVoucher)
     {
         return isset($cartVoucher['reduction_percent'])
             && $cartVoucher['reduction_percent'] > 0
@@ -629,7 +641,7 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasAmountReduction(array $cartVoucher): bool
+    private function cartVoucherHasAmountReduction($cartVoucher)
     {
         return isset($cartVoucher['reduction_amount']) && $cartVoucher['reduction_amount'] > 0;
     }
@@ -639,21 +651,9 @@ class CartPresenter implements PresenterInterface
      *
      * @return bool
      */
-    private function cartVoucherHasGiftProductReduction(array $cartVoucher): bool
+    private function cartVoucherHasGiftProductReduction($cartVoucher)
     {
         return !empty($cartVoucher['gift_product']);
-    }
-
-    /**
-     * @param array $cartVoucher
-     *
-     * @return bool
-     */
-    private function cartVoucherHasFreeShippingOnly(array $cartVoucher): bool
-    {
-        return !$this->cartVoucherHasPercentReduction($cartVoucher)
-            && !$this->cartVoucherHasAmountReduction($cartVoucher)
-            && !$this->cartVoucherHasGiftProductReduction($cartVoucher);
     }
 
     /**
@@ -693,7 +693,6 @@ class CartPresenter implements PresenterInterface
             $this->settings->stock_management_enabled = Configuration::get('PS_STOCK_MANAGEMENT');
             $this->settings->showPrices = Configuration::showPrices();
             $this->settings->showLabelOOSListingPages = (bool) Configuration::get('PS_SHOW_LABEL_OOS_LISTING_PAGES');
-            $this->settings->lastRemainingItems = (int) Configuration::get('PS_LAST_QTIES');
         }
 
         return $this->settings;

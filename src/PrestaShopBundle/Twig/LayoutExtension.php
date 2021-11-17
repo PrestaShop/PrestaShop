@@ -32,15 +32,12 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
-use Twig\TwigFilter;
-use Twig\TwigFunction;
 
 /**
  * This class is used by Twig_Environment and provide layout methods callable from a twig template.
  */
-class LayoutExtension extends AbstractExtension implements GlobalsInterface
+class LayoutExtension extends \Twig_Extension implements GlobalsInterface
 {
     /** @var LegacyContext */
     private $context;
@@ -81,7 +78,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      *
      * @return array the base globals available in twig templates
      */
-    public function getGlobals(): array
+    public function getGlobals()
     {
         /*
          * As this is a twig extension we need to be very resilient and prevent it from crashing
@@ -105,7 +102,6 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
             'default_currency_symbol' => $defaultCurrency instanceof Currency ? $defaultCurrency->getSymbol() : null,
             'root_url' => $rootUrl,
             'js_translatable' => [],
-            'rtl_suffix' => $this->context->getContext()->language->is_rtl ? '_rtl' : '',
         ];
     }
 
@@ -117,7 +113,7 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
     public function getFilters()
     {
         return [
-            new TwigFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
+            new \Twig_SimpleFilter('configuration', [$this, 'getConfiguration'], ['deprecated' => true]),
         ];
     }
 
@@ -129,10 +125,10 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
     public function getFunctions()
     {
         return [
-            new TwigFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
-            new TwigFunction('getAdminLink', [$this, 'getAdminLink']),
-            new TwigFunction('youtube_link', [$this, 'getYoutubeLink']),
-            new TwigFunction('configuration', [$this, 'getConfiguration']),
+            new \Twig_SimpleFunction('getLegacyLayout', [$this, 'getLegacyLayout']),
+            new \Twig_SimpleFunction('getAdminLink', [$this, 'getAdminLink']),
+            new \Twig_SimpleFunction('youtube_link', [$this, 'getYoutubeLink']),
+            new \Twig_SimpleFunction('configuration', [$this, 'getConfiguration']),
         ];
     }
 
@@ -164,7 +160,6 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
      * @param array|string $headerTabContent Tabs labels
      * @param bool $enableSidebar Allow to use right sidebar to display docs for instance
      * @param string $helpLink If specified, will be used instead of legacy one
-     * @param string[] $jsRouterMetadata JS Router needed configuration settings: base_url and security token
      * @param string $metaTitle
      * @param bool $useRegularH1Structure allows complex <h1> structure if set to false
      *

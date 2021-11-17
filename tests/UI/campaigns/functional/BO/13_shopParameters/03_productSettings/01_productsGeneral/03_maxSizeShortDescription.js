@@ -1,12 +1,9 @@
 require('module-alias/register');
-
+// Using chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -17,6 +14,9 @@ const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_maxSizeShortDescription';
 
@@ -34,7 +34,7 @@ Check the error message when the description size is more than 5 characters
 Go back to the default max size short description
 Check the validation message when the description is less than 800 characters
  */
-describe('BO - Shop Parameters - Product Settings : Update max size of short description', async () => {
+describe('Update max size of short description', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

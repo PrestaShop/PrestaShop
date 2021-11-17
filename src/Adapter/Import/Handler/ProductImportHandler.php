@@ -650,7 +650,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
             foreach ($product->category as $value) {
                 if (is_numeric($value)) {
-                    if (Category::categoryExists((int) $value)) {
+                    if (Category::categoryExists($value)) {
                         $product->id_category[] = (int) $value;
                     } else {
                         $category = new Category();
@@ -837,7 +837,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
             if ($productExistsByReference) {
                 $sqlPart .= 'p.`reference` = "' . pSQL($product->reference) . '"';
-            } else {
+            } elseif ($productExistsById) {
                 $sqlPart .= 'p.`id_product` = ' . (int) $product->id;
             }
 
@@ -1005,7 +1005,7 @@ final class ProductImportHandler extends AbstractImportHandler
         if (isset($product->id) && $product->id) {
             $tags = Tag::getProductTags($product->id);
             if (is_array($tags) && count($tags)) {
-                if (!empty($product->tags) && is_string($product->tags)) {
+                if (!empty($product->tags)) {
                     $product->tags = explode($multipleValueSeparator, $product->tags);
                 }
                 if (is_array($product->tags) && count($product->tags)) {
@@ -1028,9 +1028,9 @@ final class ProductImportHandler extends AbstractImportHandler
                 $isTagAdded = Tag::addTags($key, $product->id, $tags, $multipleValueSeparator);
                 if (!$isTagAdded) {
                     $this->addEntityWarning(
-                        $this->translator->trans('Tags list is invalid', [], 'Admin.Advparameters.Notification'),
                         $this->tools->sanitize($productName),
-                        $product->id
+                        $product->id,
+                        $this->translator->trans('Tags list is invalid', [], 'Admin.Advparameters.Notification')
                     );
                     break;
                 }
@@ -1048,15 +1048,15 @@ final class ProductImportHandler extends AbstractImportHandler
 
                 if (!$isTagAdded) {
                     $this->addEntityWarning(
+                        $this->tools->sanitize($productName),
+                        (int) $product->id,
                         $this->translator->trans(
                             'Invalid tag(s) (%s)',
                             [
                                 $str,
                             ],
                             'Admin.Notifications.Error'
-                        ),
-                        $this->tools->sanitize($productName),
-                        (int) $product->id
+                        )
                     );
                     break;
                 }
@@ -1247,7 +1247,7 @@ final class ProductImportHandler extends AbstractImportHandler
             }
             // automaticly disable depends on stock, if a_s_m set to disabled
             if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
-                StockAvailable::setProductDependsOnStock($product->id, false);
+                StockAvailable::setProductDependsOnStock($product->id, 0);
             }
         }
 

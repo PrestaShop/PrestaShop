@@ -44,7 +44,7 @@ class DoctrineNamingStrategy extends UnderscoreNamingStrategy
      */
     public function __construct($prefix = 'ps_')
     {
-        parent::__construct(CASE_LOWER, true);
+        parent::__construct(CASE_LOWER);
         $this->prefix = $prefix;
     }
 

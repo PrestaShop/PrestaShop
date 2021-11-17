@@ -57,7 +57,6 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
-use PrestaShopException;
 use PrestashopInstallerException;
 use Symfony\Component\Yaml\Yaml;
 
@@ -667,7 +666,7 @@ class Install extends AbstractInstall
         }
 
         $list = [
-            'products' => _PS_PRODUCT_IMG_DIR_,
+            'products' => _PS_PROD_IMG_DIR_,
             'categories' => _PS_CAT_IMG_DIR_,
             'manufacturers' => _PS_MANU_IMG_DIR_,
             'suppliers' => _PS_SUPP_IMG_DIR_,
@@ -836,7 +835,7 @@ class Install extends AbstractInstall
 
         $locale = new LocalizationPack();
         $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
-            $locale->loadLocalisationPack($localization_file_content, [], true);
+            $locale->loadLocalisationPack($localization_file_content, false, true);
         });
 
         // Create default employee
@@ -889,103 +888,207 @@ class Install extends AbstractInstall
         return true;
     }
 
-    /**
-     * Get all modules present on the disk
-     */
-    public function getModulesOnDisk(): array
+    public function getModulesList()
     {
-        $modules = [];
-        foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
-            if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_ . $module) && file_exists(_PS_MODULE_DIR_ . $module . '/' . $module . '.php')) {
-                $modules[] = $module;
+        return [
+            'blockwishlist',
+            'contactform',
+            'dashactivity',
+            'dashtrends',
+            'dashgoals',
+            'dashproducts',
+            'graphnvd3',
+            'gridhtml',
+            'gsitemap',
+            'pagesnotfound',
+            'productcomments',
+            'ps_banner',
+            'ps_categorytree',
+            'ps_checkpayment',
+            'ps_contactinfo',
+            'ps_crossselling',
+            'ps_currencyselector',
+            'ps_customeraccountlinks',
+            'ps_customersignin',
+            'ps_customtext',
+            'ps_dataprivacy',
+            'ps_emailsubscription',
+            'ps_facetedsearch',
+            'ps_faviconnotificationbo',
+            'ps_featuredproducts',
+            'ps_imageslider',
+            'ps_languageselector',
+            'ps_linklist',
+            'ps_mainmenu',
+            'ps_searchbar',
+            'ps_sharebuttons',
+            'ps_shoppingcart',
+            'ps_socialfollow',
+            'ps_themecusto',
+            'ps_wirepayment',
+            'statsbestcategories',
+            'statsbestcustomers',
+            'statsbestproducts',
+            'statsbestsuppliers',
+            'statsbestvouchers',
+            'statscarrier',
+            'statscatalog',
+            'statscheckup',
+            'statsdata',
+            'statsforecast',
+            'statslive',
+            'statsnewsletter',
+            'statspersonalinfos',
+            'statsproduct',
+            'statsregistrations',
+            'statssales',
+            'statssearch',
+            'statsstock',
+            'welcome',
+        ];
+    }
+
+    public function getAddonsModulesList($params = [])
+    {
+        /**
+         * TODO: Remove blacklist once 1.7 is out.
+         */
+        $blacklist = [
+            'bankwire',
+            'blockadvertising',
+            'blockbanner',
+            'blockbestsellers',
+            'blockcart',
+            'blockcategories',
+            'blockcms',
+            'blockcmsinfo',
+            'blockcontact',
+            'blockcontactinfos',
+            'blockcurrencies',
+            'blockcustomerprivacy',
+            'blockfacebook',
+            'blocklanguages',
+            'blocklayered',
+            'blocklink',
+            'blockmanufacturer',
+            'blockmyaccount',
+            'blockmyaccountfooter',
+            'blocknewproducts',
+            'blocknewsletter',
+            'blockpaymentlogo',
+            'blockpermanentlinks',
+            'blockrss',
+            'blocksearch',
+            'blocksharefb',
+            'blocksocial',
+            'blockstore',
+            'blockspecials',
+            'blocksupplier',
+            'blocktags',
+            'blocktopmenu',
+            'blockuserinfo',
+            'blockviewed',
+            'cheque',
+            'crossselling',
+            'homefeatured',
+            'homeslider',
+            'onboarding',
+            'productscategory',
+            'producttooltip',
+            'sendtoafriend',
+            'socialsharing',
+        ];
+
+        $addons_modules = [];
+        $content = Tools::addonsRequest('install-modules', $params);
+        $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+
+        if ($xml !== false && isset($xml->module)) {
+            foreach ($xml->module as $modaddons) {
+                if (in_array($modaddons->name, $blacklist)) {
+                    continue;
+                }
+                $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];
             }
         }
 
-        return $modules;
+        return $addons_modules;
+    }
+
+    /**
+     * PROCESS : installModules
+     * Download module from addons and Install all modules in ~/modules/ directory.
+     */
+    public function installModulesAddons($module = null)
+    {
+        $addons_modules = $module ? [$module] : $this->getAddonsModulesList();
+        $modules = [];
+
+        foreach ($addons_modules as $addons_module) {
+            if (file_put_contents(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']]))) {
+                if (Tools::ZipExtract(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', _PS_MODULE_DIR_)) {
+                    $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
+                    unlink(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
+                }
+            }
+        }
+
+        return count($modules) ? $this->installModules($modules) : true;
     }
 
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
+     * @param array|string|null $module Module to install. If not provided, installs all modules.
+     *
      * @return bool
      */
-    public function installModules(): bool
+    public function installModules($module = null)
     {
-        $modules = $this->getModulesOnDisk();
+        if ($module && !is_array($module)) {
+            $module = [$module];
+        }
+
+        $modules = $module ? $module : $this->getModulesList();
 
         Module::updateTranslationsAfterInstall(false);
 
-        $result = $this->executeAction(
-            $modules,
-            'install',
-            $this->translator->trans(
-                'Cannot install module "%module%"',
-                ['%module%' => '%module%'],
-                'Install'
-            )
-        );
-        if ($result === false) {
-            return false;
-        }
-
-        Module::updateTranslationsAfterInstall(true);
-        EntityLanguage::updateModulesTranslations($modules);
-
-        return true;
-    }
-
-    public function postInstall(): bool
-    {
-        return $this->executeAction(
-            $this->getModulesOnDisk(),
-            'postInstall',
-            $this->translator->trans(
-                'Cannot execute post install on module "%module%"',
-                ['%module%' => '%module%'],
-                'Install'
-            )
-        );
-    }
-
-    protected function executeAction(array $modules, string $action, string $errorMessage): bool
-    {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         $errors = [];
         foreach ($modules as $module_name) {
+            if (!file_exists(_PS_MODULE_DIR_ . $module_name . '/' . $module_name . '.php')) {
+                continue;
+            }
+
             $moduleException = null;
 
             try {
-                $moduleActionIsExecuted = $moduleManager->{$action}($module_name);
-            } catch (PrestaShopException $e) {
-                $moduleActionIsExecuted = false;
+                $moduleInstalled = $moduleManager->install($module_name);
+            } catch (\PrestaShopException $e) {
+                $moduleInstalled = false;
                 $moduleException = $e->getMessage();
             }
 
-            if (!$moduleActionIsExecuted) {
-                $moduleErrors = [
-                    str_replace(
-                        '%module%',
-                        $module_name,
-                        $errorMessage
-                    ),
-                ];
-
-                if (!empty($moduleException)) {
-                    $moduleErrors[] = $moduleException;
+            if (!$moduleInstalled) {
+                $module_errors = [$this->translator->trans('Cannot install module "%module%"', ['%module%' => $module_name], 'Install')];
+                if (null !== $moduleException) {
+                    $module_errors[] = $moduleException;
                 }
-
-                $errors[$module_name] = $moduleErrors;
+                $errors[$module_name] = $module_errors;
             }
         }
 
-        if (count($errors) > 0) {
+        if ($errors) {
             $this->setError($errors);
 
             return false;
         }
+
+        Module::updateTranslationsAfterInstall(true);
+        EntityLanguage::updateModulesTranslations($modules);
 
         return true;
     }

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
-use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
 
 /**
@@ -47,17 +46,12 @@ class ProductForEditing
     private $type;
 
     /**
-     * @var bool
-     */
-    private $isActive;
-
-    /**
      * @var ProductBasicInformation
      */
     private $basicInformation;
 
     /**
-     * @var CategoriesInformation
+     * @var ProductCategoriesInformation
      */
     private $categoriesInformation;
 
@@ -92,9 +86,9 @@ class ProductForEditing
     private $productSeoOptions;
 
     /**
-     * @var AttachmentInformation[]
+     * @var int[]
      */
-    private $associatedAttachments;
+    private $associatedAttachmentIds;
 
     /**
      * @var ProductStockInformation
@@ -107,47 +101,37 @@ class ProductForEditing
     private $virtualProductFile;
 
     /**
-     * @var string
-     */
-    private $coverThumbnailUrl;
-
-    /**
      * @param int $productId
      * @param string $type
-     * @param bool $isActive
      * @param ProductCustomizationOptions $customizationOptions
      * @param ProductBasicInformation $basicInformation
-     * @param CategoriesInformation $categoriesInformation
+     * @param ProductCategoriesInformation $categoriesInformation
      * @param ProductPricesInformation $pricesInformation
      * @param ProductOptions $options
      * @param ProductDetails $details
      * @param ProductShippingInformation $shippingInformation
      * @param ProductSeoOptions $productSeoOptions
-     * @param AttachmentInformation[] $associatedAttachments
+     * @param array $associatedAttachmentIds
      * @param ProductStockInformation $stockInformation
      * @param VirtualProductFileForEditing|null $virtualProductFile
-     * @param string $coverThumbnailUrl
      */
     public function __construct(
         int $productId,
         string $type,
-        bool $isActive,
         ProductCustomizationOptions $customizationOptions,
         ProductBasicInformation $basicInformation,
-        CategoriesInformation $categoriesInformation,
+        ProductCategoriesInformation $categoriesInformation,
         ProductPricesInformation $pricesInformation,
         ProductOptions $options,
         ProductDetails $details,
         ProductShippingInformation $shippingInformation,
         ProductSeoOptions $productSeoOptions,
-        array $associatedAttachments,
+        array $associatedAttachmentIds,
         ProductStockInformation $stockInformation,
-        ?VirtualProductFileForEditing $virtualProductFile,
-        string $coverThumbnailUrl
+        ?VirtualProductFileForEditing $virtualProductFile
     ) {
         $this->productId = $productId;
         $this->type = $type;
-        $this->isActive = $isActive;
         $this->customizationOptions = $customizationOptions;
         $this->basicInformation = $basicInformation;
         $this->categoriesInformation = $categoriesInformation;
@@ -156,10 +140,9 @@ class ProductForEditing
         $this->details = $details;
         $this->shippingInformation = $shippingInformation;
         $this->productSeoOptions = $productSeoOptions;
-        $this->associatedAttachments = $associatedAttachments;
+        $this->associatedAttachmentIds = $associatedAttachmentIds;
         $this->stockInformation = $stockInformation;
         $this->virtualProductFile = $virtualProductFile;
-        $this->coverThumbnailUrl = $coverThumbnailUrl;
     }
 
     /**
@@ -179,14 +162,6 @@ class ProductForEditing
     }
 
     /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->isActive;
-    }
-
-    /**
      * @return ProductCustomizationOptions
      */
     public function getCustomizationOptions(): ProductCustomizationOptions
@@ -203,9 +178,9 @@ class ProductForEditing
     }
 
     /**
-     * @return CategoriesInformation
+     * @return ProductCategoriesInformation
      */
-    public function getCategoriesInformation(): CategoriesInformation
+    public function getCategoriesInformation(): ProductCategoriesInformation
     {
         return $this->categoriesInformation;
     }
@@ -251,11 +226,11 @@ class ProductForEditing
     }
 
     /**
-     * @return AttachmentInformation[]
+     * @return int[]
      */
-    public function getAssociatedAttachments(): array
+    public function getAssociatedAttachmentIds(): array
     {
-        return $this->associatedAttachments;
+        return $this->associatedAttachmentIds;
     }
 
     /**
@@ -272,13 +247,5 @@ class ProductForEditing
     public function getVirtualProductFile(): ?VirtualProductFileForEditing
     {
         return $this->virtualProductFile;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCoverThumbnailUrl(): string
-    {
-        return $this->coverThumbnailUrl;
     }
 }

@@ -125,7 +125,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         }
 
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
-        $this->dispatcher->dispatch($filterSearchParametersEvent, FilterSearchCriteriaEvent::NAME);
+        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
 
         yield $filterSearchParametersEvent->getSearchCriteria();
     }

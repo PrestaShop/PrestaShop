@@ -497,7 +497,7 @@ class AdminCartsControllerCore extends AdminController
                 if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int) $id_product_attribute, (int) $id_customization, $operator))) {
                     $errors[] = $this->trans('You already have the maximum quantity available for this product.', [], 'Admin.Catalog.Notification');
                 } elseif ($qty_upd < 0) {
-                    $minimal_qty = $id_product_attribute ? ProductAttribute::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
+                    $minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
                     $errors[] = $this->trans('You must add a minimum quantity of %d', [$minimal_qty], 'Admin.Orderscustomers.Notification');
                 }
             }

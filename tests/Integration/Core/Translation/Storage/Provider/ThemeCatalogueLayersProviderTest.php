@@ -66,7 +66,7 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
      */
     private $themesDir;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
 

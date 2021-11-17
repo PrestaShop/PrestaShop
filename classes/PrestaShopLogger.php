@@ -103,6 +103,7 @@ class PrestaShopLoggerCore extends ObjectModel
     /**
      * Send e-mail to the shop owner only if the minimal severity level has been reached.
      *
+     * @param Logger
      * @param PrestaShopLogger $log
      */
     public static function sendByMail($log)
@@ -143,7 +144,7 @@ class PrestaShopLoggerCore extends ObjectModel
         $log = new PrestaShopLogger();
         $log->severity = (int) $severity;
         $log->error_code = (int) $errorCode;
-        $log->message = $message;
+        $log->message = pSQL($message);
         $log->date_add = date('Y-m-d H:i:s');
         $log->date_upd = date('Y-m-d H:i:s');
 
@@ -157,11 +158,9 @@ class PrestaShopLoggerCore extends ObjectModel
             $log->id_employee = (int) $idEmployee;
         }
 
-        if (!empty($objectType)) {
-            $log->object_type = $objectType;
-            if (!empty($objectId)) {
-                $log->object_id = (int) $objectId;
-            }
+        if (!empty($objectType) && !empty($objectId)) {
+            $log->object_type = pSQL($objectType);
+            $log->object_id = (int) $objectId;
         }
 
         $log->id_lang = (int) $context->language->id ?? null;
@@ -169,11 +168,11 @@ class PrestaShopLoggerCore extends ObjectModel
         $log->id_shop = (Shop::getContext() == Shop::CONTEXT_SHOP) ? (int) $context->shop->getContextualShopId() : null;
         $log->id_shop_group = (Shop::getContext() == Shop::CONTEXT_GROUP) ? (int) $context->shop->getContextShopGroupID() : null;
 
-        if ($objectType != 'SwiftMessage') {
+        if ($objectType != 'Swift_Message') {
             PrestaShopLogger::sendByMail($log);
         }
 
-        if ($allowDuplicate || !$log->isPresent()) {
+        if ($allowDuplicate || !$log->_isPresent()) {
             $res = $log->add();
             if ($res) {
                 self::$is_present[$log->getHash()] = isset(self::$is_present[$log->getHash()]) ? self::$is_present[$log->getHash()] + 1 : 1;
@@ -210,6 +209,14 @@ class PrestaShopLoggerCore extends ObjectModel
     public static function eraseAllLogs()
     {
         return Db::getInstance()->execute('TRUNCATE TABLE ' . _DB_PREFIX_ . 'log');
+    }
+
+    /**
+     * @deprecated 1.7.0
+     */
+    protected function _isPresent()
+    {
+        return $this->isPresent();
     }
 
     /**

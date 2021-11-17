@@ -104,7 +104,7 @@
                   </a>
                 </li>
 
-              {% for group in groupList|filter(group => group.shops is not empty) %}
+              {% for group in groupList if group.shops is not empty %}
                 <li class="multishop-modal-group-item multishop-modal-item">
                   <span class="multishop-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
                     <i class="material-icons">check</i>

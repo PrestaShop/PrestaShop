@@ -6,15 +6,12 @@ const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
-// BO
 const dashboardPage = require('@pages/BO/dashboard');
 const searchPage = require('@pages/BO/shopParameters/search');
-
-// FO
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 
-// Import data
+// Import products demo data
 const {Products} = require('@data/demo/products');
 
 // Import test context
@@ -38,7 +35,7 @@ Search Product and check result
 Check the products number
  */
 
-describe('FO - Search Page : Search product and consult autocomplete list', async () => {
+describe('Search product and consult autocomplete list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -66,7 +63,7 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'DisableFuzzySearch', baseContext);
 
     const result = await searchPage.setFuzzySearch(page, false);
-    await expect(result).to.contains(searchPage.settingsUpdateMessage);
+    await expect(result).to.contains(searchPage.successfulUpdateMessage);
   });
 
   it('should go to FO and search product to check the autocomplete list', async function () {
@@ -106,6 +103,6 @@ describe('FO - Search Page : Search product and consult autocomplete list', asyn
     await testContext.addContextItem(this, 'testIdentifier', 'EnableFuzzySearch', baseContext);
 
     const result = await searchPage.setFuzzySearch(page, true);
-    await expect(result).to.contains(searchPage.settingsUpdateMessage);
+    await expect(result).to.contains(searchPage.successfulUpdateMessage);
   });
 });

@@ -121,7 +121,8 @@
 		</tr>
 
 		<tr>
-			<td colspan="12">
+			<td colspan="2">&nbsp;</td>
+			<td colspan="10">
 				{$HOOK_DISPLAY_PDF}
 			</td>
 		</tr>

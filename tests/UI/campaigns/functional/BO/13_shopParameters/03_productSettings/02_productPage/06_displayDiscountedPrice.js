@@ -1,27 +1,25 @@
 require('module-alias/register');
-
+// Using chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceRules');
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
-
-// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 
 // Import data
 const PriceRuleFaker = require('@data/faker/catalogPriceRule');
+
+// import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_displayDiscountedPrice';
 
@@ -44,7 +42,7 @@ const unitDiscountToCheck = '€20.00';
 // Unit price in Volume discounts table(Product page FO)
 const unitPriceToCheck = '€8.68';
 
-describe('BO - Shop Parameters - Product Settings : Enable/Disable display discounted price', async () => {
+describe('Enable/Disable display discounted price', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -136,21 +134,13 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable display disco
       await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should view my shop and go to first product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
+    it('should check the existence of the unit value', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
       page = await productSettingsPage.viewMyShop(page);
 
       await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page was not opened').to.be.true;
-
       await homePage.goToProductPage(page, 1);
-    });
-
-    it('should check the existence of the unit value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkUnitValue${index}`, baseContext);
 
       const columnTitle = await productPage.getDiscountColumnTitle(page);
       await expect(columnTitle).to.equal(test.args.textColumnToCheck);

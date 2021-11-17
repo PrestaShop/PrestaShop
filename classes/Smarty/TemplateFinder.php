@@ -103,12 +103,6 @@ class TemplateFinderCore
                 $template,
                 'cms/page',
             ];
-        } elseif ('cms_category' === $entity) {
-            $templates = [
-                'cms/category-' . $id,
-                $template,
-                'cms/category',
-            ];
         } else {
             $templates = [$template];
         }
@@ -153,7 +147,7 @@ class TemplateFinderCore
     /**
      * Set productListSearch.
      *
-     * @param array $productListSearchEntities
+     * @param array $productListSearch
      *
      * @return TemplateFinderCore
      */

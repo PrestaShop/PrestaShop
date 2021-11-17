@@ -61,7 +61,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
             $command->getProductId(),
             new ProductStockProperties(
                 $command->getPackStockType(),
-                $command->getDeltaQuantity(),
+                $command->getQuantity(),
                 $command->getOutOfStockType(),
                 $command->getMinimalQuantity(),
                 $command->getLocation(),

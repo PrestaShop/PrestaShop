@@ -30,31 +30,14 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GenerateMailTemplatesCommand extends Command
+class GenerateMailTemplatesCommand extends ContainerAwareCommand
 {
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    public function __construct(CommandBusInterface $commandBus, LegacyContext $legacyContext)
-    {
-        parent::__construct();
-        $this->commandBus = $commandBus;
-        $this->legacyContext = $legacyContext;
-    }
-
     protected function configure()
     {
         $this
@@ -103,7 +86,9 @@ class GenerateMailTemplatesCommand extends Command
             $coreOutputFolder ?: '',
             $modulesOutputFolder ?: ''
         );
-        $this->commandBus->handle($generateCommand);
+        /** @var CommandBusInterface $commandBus */
+        $commandBus = $this->getContainer()->get('prestashop.core.command_bus');
+        $commandBus->handle($generateCommand);
     }
 
     /**
@@ -111,11 +96,13 @@ class GenerateMailTemplatesCommand extends Command
      */
     private function initContext()
     {
+        /** @var LegacyContext $legacyContext */
+        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the module hooks don't work
         //see LegacyHookSubscriber
-        if (!$this->legacyContext->getContext()->employee) {
+        if (!$legacyContext->getContext()->employee) {
             //Even a non existing employee is fine
-            $this->legacyContext->getContext()->employee = new Employee(42);
+            $legacyContext->getContext()->employee = new Employee(42);
         }
     }
 }

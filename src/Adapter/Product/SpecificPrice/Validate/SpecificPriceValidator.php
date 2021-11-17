@@ -30,29 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
-use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
-use PrestaShop\PrestaShop\Adapter\Customer\Group\Repository\GroupRepository;
-use PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository;
-use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
 
 /**
@@ -60,76 +39,6 @@ use SpecificPrice;
  */
 class SpecificPriceValidator extends AbstractObjectModelValidator
 {
-    /**
-     * @var ShopGroupRepository
-     */
-    private $shopGroupRepository;
-
-    /**
-     * @var ShopRepository
-     */
-    private $shopRepository;
-
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
-    /**
-     * @var CurrencyRepository
-     */
-    private $currencyRepository;
-
-    /**
-     * @var CountryRepository
-     */
-    private $countryRepository;
-
-    /**
-     * @var GroupRepository
-     */
-    private $groupRepository;
-
-    /**
-     * @var CustomerRepository
-     */
-    private $customerRepository;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
-     * @param ShopGroupRepository $shopGroupRepository
-     * @param ShopRepository $shopRepository
-     * @param CombinationRepository $combinationRepository
-     * @param CurrencyRepository $currencyRepository
-     * @param CountryRepository $countryRepository
-     * @param GroupRepository $groupRepository
-     * @param CustomerRepository $customerRepository
-     * @param ProductRepository $productRepository
-     */
-    public function __construct(
-        ShopGroupRepository $shopGroupRepository,
-        ShopRepository $shopRepository,
-        CombinationRepository $combinationRepository,
-        CurrencyRepository $currencyRepository,
-        CountryRepository $countryRepository,
-        GroupRepository $groupRepository,
-        CustomerRepository $customerRepository,
-        ProductRepository $productRepository
-    ) {
-        $this->shopGroupRepository = $shopGroupRepository;
-        $this->shopRepository = $shopRepository;
-        $this->combinationRepository = $combinationRepository;
-        $this->currencyRepository = $currencyRepository;
-        $this->countryRepository = $countryRepository;
-        $this->groupRepository = $groupRepository;
-        $this->customerRepository = $customerRepository;
-        $this->productRepository = $productRepository;
-    }
-
     /**
      * @param SpecificPrice $specificPrice
      *
@@ -157,7 +66,6 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_shop_group', SpecificPriceConstraintException::INVALID_RELATION_ID);
         $this->validateSpecificPriceProperty($specificPrice, 'id_specific_price_rule', SpecificPriceConstraintException::INVALID_RELATION_ID);
-        $this->assertRelatedEntitiesExist($specificPrice);
     }
 
     /**
@@ -186,58 +94,10 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
             return;
         }
 
-        if (DateTimeUtil::isNull($specificPrice->from) || DateTimeUtil::isNull($specificPrice->to)) {
-            return;
-        }
-
         $from = new DateTime($specificPrice->from);
         $to = new DateTime($specificPrice->to);
         if ($from->diff($to)->invert) {
             throw new SpecificPriceConstraintException('The date time for specific price cannot be inverse', SpecificPriceConstraintException::INVALID_DATE_RANGE);
-        }
-    }
-
-    /**
-     * @param SpecificPrice $specificPrice
-     */
-    private function assertRelatedEntitiesExist(SpecificPrice $specificPrice): void
-    {
-        $productId = (int) $specificPrice->id_product;
-        $this->productRepository->assertProductExists(new ProductId($productId));
-
-        $shopGroupId = (int) $specificPrice->id_shop_group;
-        if ($shopGroupId) {
-            $this->shopGroupRepository->assertShopGroupExists(new ShopGroupId($shopGroupId));
-        }
-
-        $shopId = (int) $specificPrice->id_shop;
-        if ($shopId !== NoShopId::NO_SHOP_ID) {
-            $this->shopRepository->assertShopExists(new ShopId($shopId));
-        }
-
-        $combinationId = (int) $specificPrice->id_product_attribute;
-        if ($combinationId !== NoCombinationId::NO_COMBINATION_ID) {
-            $this->combinationRepository->assertCombinationExists(new CombinationId($combinationId));
-        }
-
-        $currencyId = (int) $specificPrice->id_currency;
-        if ($currencyId !== NoCurrencyId::NO_CURRENCY_ID) {
-            $this->currencyRepository->assertCurrencyExists(new CurrencyId($currencyId));
-        }
-
-        $countryId = (int) $specificPrice->id_country;
-        if ($countryId) {
-            $this->countryRepository->assertCountryExists(new CountryId($countryId));
-        }
-
-        $groupId = (int) $specificPrice->id_group;
-        if ($groupId !== NoGroupId::NO_GROUP_ID) {
-            $this->groupRepository->assertGroupExists(new GroupId($groupId));
-        }
-
-        $customerId = (int) $specificPrice->id_customer;
-        if ($customerId) {
-            $this->customerRepository->assertCustomerExists(new CustomerId($customerId));
         }
     }
 }

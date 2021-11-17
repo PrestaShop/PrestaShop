@@ -47,7 +47,7 @@ class ProfileId
     {
         // Strict type should be used in next major
         if (!is_int($profileId)) {
-            @trigger_error('Invalid type, int is expected', E_USER_NOTICE);
+            @trigger_error('Invalid type, int is expected', E_STRICT);
         }
 
         $this->setProfileId($profileId);

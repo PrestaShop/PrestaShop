@@ -67,11 +67,11 @@
               {/if}
             </td>
             <td class="text-sm-center order-actions">
-              <a class="view-order-details-link" href="{$order.details.details_url}" data-link-action="view-order-details">
+              <a href="{$order.details.details_url}" data-link-action="view-order-details">
                 {l s='Details' d='Shop.Theme.Customeraccount'}
               </a>
               {if $order.details.reorder_url}
-                <a class="reorder-link" href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Actions'}</a>
+                <a href="{$order.details.reorder_url}">{l s='Reorder' d='Shop.Theme.Actions'}</a>
               {/if}
             </td>
           </tr>

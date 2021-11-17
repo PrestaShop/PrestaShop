@@ -115,7 +115,7 @@
               {% if hook['modules_count'] %}
                 <section class="module-list{% if not hook['active'] %}-disabled{% endif %}">
                   <ul class="list-unstyled{% if hook['modules_count'] > 1 %} sortable{% endif %}">
-                    {% for module in hook['modules']|filter(module => modules[module['id_module']] is defined) %}
+                    {% for module in hook['modules'] if modules[module['id_module']] is defined %}
                       {% set moduleInstance = modules[module['id_module']] %}
                       <li id="{{ hook['id_hook'] ~ '_' ~ moduleInstance.id }}"
                         class="module-position-{{ moduleInstance.id }} module-item{% if canMove and hook['modules_count'] >= 2 %} draggable{% endif %}">

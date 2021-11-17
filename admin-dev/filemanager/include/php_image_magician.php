@@ -2483,10 +2483,6 @@ class imageLib
                 $img = @imagecreatefrompng($file);
 
                 break;
-            case '.webp':
-                $img = @imagecreatefromwebp($file);
-
-                break;
             case '.bmp':
                 $img = @$this->ImageCreateFromBMP($file);
 
@@ -2573,14 +2569,6 @@ class imageLib
         } else {
             $error = 'jpg';
         }
-
-                break;
-            case '.webp':
-                if (imagetypes() & IMG_WEBP) {
-                    imagewebp($this->imageResized, $savePath, $imageQuality);
-                } else {
-                    $error = 'webp';
-                }
 
                 break;
 

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module\Exception;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 /**
@@ -37,7 +37,7 @@ class UnconfirmedModuleActionException extends CoreException
     /**
      * Concerned module by the exception.
      *
-     * @var ModuleInterface
+     * @var Module
      */
     protected $module;
 
@@ -58,7 +58,7 @@ class UnconfirmedModuleActionException extends CoreException
     /**
      * Module getter.
      *
-     * @return ModuleInterface
+     * @return Module
      */
     public function getModule()
     {
@@ -76,7 +76,7 @@ class UnconfirmedModuleActionException extends CoreException
     }
 
     /**
-     * Subject getter..
+     * Subject getter (PrestaTrust...).
      *
      * @return string
      */
@@ -88,11 +88,11 @@ class UnconfirmedModuleActionException extends CoreException
     /**
      * Module setter.
      *
-     * @param ModuleInterface $module
+     * @param Module $module
      *
      * @return $this
      */
-    public function setModule(ModuleInterface $module)
+    public function setModule(Module $module)
     {
         $this->module = $module;
 

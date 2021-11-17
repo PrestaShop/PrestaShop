@@ -45,7 +45,7 @@ class PreferencesConfigurationTest extends TestCase
      */
     private $mockConfiguration;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
             ->setMethods(['get', 'getBoolean', 'set'])

@@ -52,10 +52,10 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function loadSingleShopContext(string $shopReference): void
     {
-        Shop::setContext(
-            Shop::CONTEXT_SHOP,
-            SharedStorage::getStorage()->get($shopReference)
-        );
+        /** @var Shop $shop */
+        $shop = SharedStorage::getStorage()->get($shopReference);
+
+        Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
     }
 
     /**
@@ -66,13 +66,13 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function shopWithNameExists(string $reference, string $shopName): void
     {
-        (int) $shopId = Shop::getIdByName($shopName);
+        $shopId = Shop::getIdByName($shopName);
 
-        if (!$shopId) {
+        if (false === $shopId) {
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
-        SharedStorage::getStorage()->set($reference, $shopId);
+        SharedStorage::getStorage()->set($reference, new Shop($shopId));
     }
 
     /**
@@ -96,7 +96,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Could not create shop group: %s', Db::getInstance()->getMsgError()));
         }
 
-        SharedStorage::getStorage()->set($reference, (int) $shopGroup->id);
+        SharedStorage::getStorage()->set($reference, $shopGroup);
     }
 
     /**
@@ -144,7 +144,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         }
         $shop->setTheme();
 
-        SharedStorage::getStorage()->set($reference, (int) $shop->id);
+        SharedStorage::getStorage()->set($reference, $shop);
     }
 
     /**
@@ -241,8 +241,9 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public function addShopUrl(string $shopReference): void
     {
+        $shop = SharedStorage::getStorage()->get($shopReference);
         $shopUrl = new ShopUrl();
-        $shopUrl->id_shop = SharedStorage::getStorage()->get($shopReference);
+        $shopUrl->id_shop = $shop->id;
         $shopUrl->active = true;
         $shopUrl->main = true;
         $shopUrl->domain = 'localhost';

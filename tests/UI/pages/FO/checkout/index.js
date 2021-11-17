@@ -25,8 +25,6 @@ class Checkout extends FOBasePage {
     this.termsOfServiceModalDiv = '#modal div.js-modal-content';
     this.paymentConfirmationButton = `${this.paymentStepSection} #payment-confirmation button:not([disabled])`;
     this.shippingValueSpan = '#cart-subtotal-shipping span.value';
-    this.noPaymentNeededElement = `${this.paymentStepSection} div.content > p.cart-payment-step-not-needed-info`;
-    this.noPaymentNeededText = 'No payment needed for this order';
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
@@ -136,25 +134,6 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Is confirm button visible and enabled
-   * @param page
-   * @returns {Promise<boolean>}
-   */
-  isPaymentConfirmationButtonVisibleAndEnabled(page) {
-    // small side effect note, the selector is the one that checks for disabled
-    return this.elementVisible(page, this.paymentConfirmationButton, 1000);
-  }
-
-  /**
-   * Get No payment needed block content
-   * @param page
-   * @returns {string}
-   */
-  getNoPaymentNeededBlockContent(page) {
-    return this.getTextContent(page, this.noPaymentNeededElement);
-  }
-
-  /**
    * Get selected shipping method name
    * @param page {Page} Browser tab
    * @return {Promise<string>}
@@ -182,7 +161,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers prices
    * @param page {Page} Browser tab
-   * @returns {Promise<Array<string>>}
+   * @returns {Promise<[]>}
    */
   async getAllCarriersPrices(page) {
     return page.$$eval(this.deliveryOptionAllPricesSpan, all => all.map(el => el.textContent));
@@ -200,7 +179,7 @@ class Checkout extends FOBasePage {
   /**
    * Get all carriers names
    * @param page {Page} Browser tab
-   * @returns {Promise<Array<string>>}
+   * @returns {Promise<[]>}
    */
   async getAllCarriersNames(page) {
     return page.$$eval(this.deliveryOptionAllNamesSpan, all => all.map(el => el.textContent));
@@ -228,24 +207,6 @@ class Checkout extends FOBasePage {
       this.waitForVisibleSelector(page, this.paymentConfirmationButton),
       page.click(this.conditionToApproveLabel),
     ]);
-    await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
-  }
-
-  /**
-   * Order when no payment is needed
-   * @param page
-   * @returns {Promise<void>}
-   */
-  async orderWithoutPaymentMethod(page) {
-    // Click on terms of services checkbox if visible
-    if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
-      await Promise.all([
-        this.waitForVisibleSelector(page, this.paymentConfirmationButton),
-        page.click(this.conditionToApproveLabel),
-      ]);
-    }
-
-    // Validate the order
     await this.clickAndWaitForNavigation(page, this.paymentConfirmationButton);
   }
 
@@ -343,7 +304,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<string>}
    */
   async getGiftPrice(page) {
-    await this.setChecked(page, this.giftCheckbox, true);
+    await this.changeCheckboxValue(page, this.giftCheckbox, true);
     return this.getTextContent(page, this.cartSubtotalGiftWrappingValueSpan);
   }
 
@@ -375,11 +336,11 @@ class Checkout extends FOBasePage {
 
     // Set invoice address if not null
     if (invoiceAddress !== null) {
-      await this.setChecked(page, this.addressStepUseSameAddressCheckbox, false);
+      await page.uncheck(this.addressStepUseSameAddressCheckbox);
       await page.click(this.addressStepContinueButton);
       await this.fillAddressForm(page, invoiceAddress);
     } else {
-      await this.setChecked(page, this.addressStepUseSameAddressCheckbox);
+      await page.check(this.addressStepUseSameAddressCheckbox);
     }
 
     await page.click(this.addressStepContinueButton);
@@ -393,7 +354,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async setGuestPersonalInformation(page, customerData) {
-    await this.setChecked(page, this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
+    await page.check(this.checkoutGuestGenderInput(customerData.socialTitle === 'Mr.' ? 1 : 2));
 
     await this.setValue(page, this.checkoutGuestFirstnameInput, customerData.firstName);
     await this.setValue(page, this.checkoutGuestLastnameInput, customerData.lastName);
@@ -410,21 +371,21 @@ class Checkout extends FOBasePage {
     );
 
     if (customerData.partnerOffers) {
-      await this.setChecked(page, this.checkoutGuestOptinCheckbox);
+      await page.check(this.checkoutGuestOptinCheckbox);
     }
 
     if (customerData.newsletter) {
-      await this.setChecked(page, this.checkoutGuestNewsletterCheckbox);
+      await page.check(this.checkoutGuestNewsletterCheckbox);
     }
 
     // Check customer privacy input if visible
     if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
-      await this.setChecked(page, this.checkoutGuestCustomerPrivacyCheckbox);
+      await page.check(this.checkoutGuestCustomerPrivacyCheckbox);
     }
 
     // Check gdpr input if visible
     if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
-      await this.setChecked(page, this.checkoutGuestGdprCheckbox);
+      await page.check(this.checkoutGuestGdprCheckbox);
     }
 
     // Click on continue

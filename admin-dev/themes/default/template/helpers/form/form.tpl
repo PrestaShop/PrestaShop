@@ -111,7 +111,7 @@
                     {/if}
 										{if $languages|count > 1}
 										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
-											<div class="col-lg-10">
+											<div class="col-lg-9">
 										{/if}
 												{if $input.type == 'tags'}
 													{literal}
@@ -435,7 +435,7 @@
 										{foreach $languages as $language}
 											{if $languages|count > 1}
 											<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
-												<div class="col-lg-10">
+												<div class="col-lg-9">
 											{/if}
 													{if isset($input.maxchar) && $input.maxchar}
 													<div class="input-group">
@@ -735,8 +735,9 @@
 									{$asso_shop}
 								{elseif $input.type == 'color'}
 								<div class="form-group">
-									<div class="col-lg-6">
-										<div class="input-group">
+									<div class="col-lg-2">
+										<div class="row">
+											<div class="input-group">
 												<input type="color"
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
@@ -744,6 +745,7 @@
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											</div>
+										</div>
 									</div>
 								</div>
 								{elseif $input.type == 'date'}

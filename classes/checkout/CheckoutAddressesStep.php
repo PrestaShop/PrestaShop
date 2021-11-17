@@ -261,10 +261,14 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
         /** @var OrderControllerCore $controller */
         $controller = $this->context->controller;
-        if ($controller instanceof OrderController) {
+        if (isset($controller)) {
             $warnings = $controller->checkoutWarning;
-            $addressWarning = $warnings['address'] ?? false;
-            $invalidAddresses = $warnings['invalid_addresses'] ?? [];
+            $addressWarning = isset($warnings['address'])
+                ? $warnings['address']
+                : false;
+            $invalidAddresses = isset($warnings['invalid_addresses'])
+                ? $warnings['invalid_addresses']
+                : [];
 
             $errors = [];
             if (in_array($idAddressDelivery, $invalidAddresses)) {

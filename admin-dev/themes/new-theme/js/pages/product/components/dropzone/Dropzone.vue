@@ -494,8 +494,7 @@
           const imageElement = document.querySelector(
             DropzoneMap.savedImage(newImage.image_id),
           );
-          const imageUpdateTime = new Date();
-          imageElement.src = `${newImage.image_url}?${imageUpdateTime.getTime()}`;
+          imageElement.src = newImage.image_url;
 
           $.growl({message: this.$t('window.imageReplaced')});
           this.buttonLoading = false;

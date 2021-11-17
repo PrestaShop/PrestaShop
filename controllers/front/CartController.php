@@ -237,8 +237,8 @@ class CartControllerCore extends FrontController
 
     protected function updateCart()
     {
-        // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
-        if (!Connection::isBot()
+        // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
+        if ($this->context->cookie->exists()
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
         ) {
@@ -306,7 +306,7 @@ class CartControllerCore extends FrontController
         if (count($customization_product)) {
             $product = new Product((int) $this->id_product);
             if ($this->id_product_attribute > 0) {
-                $minimal_quantity = (int) ProductAttribute::getAttributeMinimalQty($this->id_product_attribute);
+                $minimal_quantity = (int) Attribute::getAttributeMinimalQty($this->id_product_attribute);
             } else {
                 $minimal_quantity = (int) $product->minimal_quantity;
             }
@@ -504,7 +504,7 @@ class CartControllerCore extends FrontController
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute)
-                        ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
+                        ? Attribute::getAttributeMinimalQty($this->id_product_attribute)
                         : $product->minimal_quantity;
                     $this->{$ErrorKey}[] = $this->trans(
                         'You must add %quantity% minimum quantity',
@@ -579,7 +579,7 @@ class CartControllerCore extends FrontController
     {
         if (($this->id_product_attribute)) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
-                && !ProductAttribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
+                && !Attribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
         } elseif (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
             return false;
         }

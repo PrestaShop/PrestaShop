@@ -298,7 +298,10 @@ class Addresses extends BOBasePage {
     }
 
     // Click on checkbox if not selected
-    await this.setCheckedWithIcon(page, this.requiredFieldCheckBox(id), valueWanted);
+    const isCheckboxSelected = await this.isCheckboxSelected(page, this.requiredFieldCheckBox(id));
+    if (valueWanted !== isCheckboxSelected) {
+      await page.$eval(`${this.requiredFieldCheckBox(id)} + i`, el => el.click());
+    }
 
     // Save setting
     await this.clickAndWaitForNavigation(page, this.saveButton);

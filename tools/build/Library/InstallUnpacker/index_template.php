@@ -188,6 +188,7 @@ if (isset($_POST['extract'])) {
 
     @chmod('install/index.php', 0644);
     @chmod('admin/index.php', 0644);
+    @chmod('admin/ajax.php', 0644);
     @chmod('admin/ajax-tab.php', 0644);
     @chmod('index.php', 0644);
 

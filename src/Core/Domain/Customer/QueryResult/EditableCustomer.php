@@ -128,11 +128,6 @@ class EditableCustomer
     private $riskId;
 
     /**
-     * @var bool
-     */
-    private $isGuest;
-
-    /**
      * @param CustomerId $customerId
      * @param int $genderId
      * @param FirstName $firstName
@@ -151,7 +146,6 @@ class EditableCustomer
      * @param float $allowedOutstandingAmount
      * @param int $maxPaymentDays
      * @param int $riskId
-     * @param bool $isGuest
      */
     public function __construct(
         CustomerId $customerId,
@@ -171,8 +165,7 @@ class EditableCustomer
         $website,
         $allowedOutstandingAmount,
         $maxPaymentDays,
-        $riskId,
-        bool $isGuest = false
+        $riskId
     ) {
         $this->customerId = $customerId;
         $this->genderId = $genderId;
@@ -192,7 +185,6 @@ class EditableCustomer
         $this->allowedOutstandingAmount = $allowedOutstandingAmount;
         $this->maxPaymentDays = $maxPaymentDays;
         $this->riskId = $riskId;
-        $this->isGuest = $isGuest;
     }
 
     /**
@@ -337,13 +329,5 @@ class EditableCustomer
     public function isNewsletterSubscribed()
     {
         return $this->isNewsletterSubscribed;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isGuest(): bool
-    {
-        return $this->isGuest;
     }
 }

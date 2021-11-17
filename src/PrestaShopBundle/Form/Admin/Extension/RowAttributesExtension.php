@@ -69,8 +69,8 @@ class RowAttributesExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType()
     {
-        return [FormType::class];
+        return FormType::class;
     }
 }

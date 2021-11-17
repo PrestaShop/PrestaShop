@@ -114,15 +114,14 @@
   </tr>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
-  import PSMedia from '@app/widgets/ps-media.vue';
+<script>
+  import PSCheckbox from '@app/widgets/ps-checkbox';
+  import PSMedia from '@app/widgets/ps-media';
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
   import {EventBus} from '@app/utils/event-bus';
-  import Spinner from '@app/pages/stock/components/overview/spinner.vue';
+  import Spinner from '@app/pages/stock/components/overview/spinner';
 
-  export default Vue.extend({
+  export default {
     props: {
       product: {
         type: Object,
@@ -131,54 +130,54 @@
     },
     mixins: [ProductDesc],
     computed: {
-      reference(): string {
+      reference() {
         if (this.product.combination_reference !== 'N/A') {
           return this.product.combination_reference;
         }
         return this.product.product_reference;
       },
-      updatedQty(): boolean {
+      updatedQty() {
         return !!this.product.qty;
       },
-      physicalQtyUpdated(): number {
+      physicalQtyUpdated() {
         return Number(this.physical) + Number(this.product.qty);
       },
-      availableQtyUpdated(): number {
+      availableQtyUpdated() {
         return Number(this.product.product_available_quantity) + Number(this.product.qty);
       },
-      physical(): number {
+      physical() {
         const productAvailableQty = Number(this.product.product_available_quantity);
         const productReservedQty = Number(this.product.product_reserved_quantity);
 
         return productAvailableQty + productReservedQty;
       },
-      lowStock(): boolean {
+      lowStock() {
         return this.product.product_low_stock_alert;
       },
-      lowStockLevel(): string {
+      lowStockLevel() {
         return `<div class="text-sm-left">
           <p>${this.trans('product_low_stock')}</p>
           <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
         </div>`;
       },
-      lowStockAlert(): string {
+      lowStockAlert() {
         return `<div class="text-sm-left">
           <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
         </div>`;
       },
-      id(): string {
+      id() {
         return `product-${this.product.product_id}${this.product.combination_id}`;
       },
     },
     methods: {
-      productChecked(checkbox: any): void {
+      productChecked(checkbox) {
         if (checkbox.checked) {
           this.$store.dispatch('addSelectedProduct', checkbox.item);
         } else {
           this.$store.dispatch('removeSelectedProduct', checkbox.item);
         }
       },
-      updateProductQty(productToUpdate: Record<string, any>): void {
+      updateProductQty(productToUpdate) {
         const updatedProduct = {
           product_id: productToUpdate.product.product_id,
           combination_id: productToUpdate.product.combination_id,
@@ -193,11 +192,11 @@
       },
     },
     mounted() {
-      EventBus.$on('toggleProductsCheck', (checked: boolean) => {
+      EventBus.$on('toggleProductsCheck', (checked) => {
         const ref = this.id;
 
         if (this.$refs[ref]) {
-          (<VCheckboxDatas> this.$refs[ref]).checked = checked;
+          this.$refs[ref].checked = checked;
         }
       });
       $('[data-toggle="pstooltip"]').pstooltip();
@@ -210,5 +209,5 @@
       PSMedia,
       PSCheckbox,
     },
-  });
+  };
 </script>

@@ -52,7 +52,7 @@ class GridPresenterTest extends TestCase
      */
     private $gridPresenter;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $this->gridPresenter = new GridPresenter($hookDispatcherMock);
@@ -76,7 +76,7 @@ class GridPresenterTest extends TestCase
             'view_options' => [],
         ];
 
-        $this->assertIsArray($presentedGrid);
+        $this->assertInternalType('array', $presentedGrid);
 
         foreach ($expectedPresentedGrid as $itemName => $innerStruct) {
             $this->assertArrayHasKey($itemName, $presentedGrid);

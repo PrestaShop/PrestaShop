@@ -40,7 +40,7 @@ class ContainerTest extends TestCase
      */
     private $container;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->container = new Container();
     }

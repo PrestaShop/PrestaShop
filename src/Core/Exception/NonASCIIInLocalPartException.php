@@ -26,9 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Exception;
 
+use Egulias\EmailValidator\Exception\InvalidEmail;
+
 /**
  * Exception thrown when email local part contains non-ascii characters
  */
-class NonASCIIInLocalPartException extends CoreException
+class NonASCIIInLocalPartException extends InvalidEmail
 {
 }

@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
-{% form_theme backupForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme backupForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block backup_options_card %}
   {{ form_start(backupForm) }}

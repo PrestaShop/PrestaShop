@@ -105,14 +105,7 @@ final class CategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-        $qb->select('COUNT(cp.`id_product`) AS `products_count`, c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
-        $qb->leftJoin(
-            'c',
-            $this->dbPrefix . 'category_product',
-            'cp',
-            'c.`id_category` = cp.`id_category`'
-        );
-        $qb->groupBy('c.`id_category`');
+        $qb->select('c.id_category, c.id_parent, c.active, cl.name, cl.description, cs.position');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)

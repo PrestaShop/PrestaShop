@@ -56,7 +56,7 @@ class CarrierGridDefinitionFactory extends AbstractGridDefinitionFactory
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
 
-    public const GRID_ID = 'carrier';
+    const GRID_ID = 'carrier';
 
     /**
      * {@inheritdoc}

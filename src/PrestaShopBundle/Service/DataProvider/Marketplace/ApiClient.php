@@ -45,13 +45,10 @@ class ApiClient
     private $defaultQueryParameters;
 
     /**
-     * @param Client $addonsApiClient
-     * @param string $locale
-     * @param string|false $isoCode
-     * @param null $toolsAdapter
-     * @param string $domain
-     * @param string $shopVersion
+     * @var \PrestaShop\PrestaShop\Adapter\Tools
      */
+    private $toolsAdapter;
+
     public function __construct(
         Client $addonsApiClient,
         $locale,
@@ -61,6 +58,7 @@ class ApiClient
         $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
+        $this->toolsAdapter = $toolsAdapter;
 
         list($isoLang) = explode('-', $locale);
 
@@ -71,11 +69,10 @@ class ApiClient
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
-    /**
-     * @Deprecated use Client constructor instead
-     */
     public function setSslVerification($verifySsl)
     {
+        $this->toolsAdapter->refreshCaCertFile();
+        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
     /**
@@ -111,6 +108,17 @@ class ApiClient
         return json_decode($response);
     }
 
+    public function getNativesModules()
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('native')
+            ->getResponse();
+
+        $responseArray = json_decode($response);
+
+        return isset($responseArray->modules) ? $responseArray->modules : [];
+    }
+
     public function getPreInstalledModules()
     {
         $response = $this->setMethod('listing')
@@ -119,6 +127,36 @@ class ApiClient
         $responseDecoded = json_decode($response);
 
         return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
+    }
+
+    public function getMustHaveModules()
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('must-have')
+            ->getResponse();
+
+        $responseArray = json_decode($response);
+
+        return isset($responseArray->modules) ? $responseArray->modules : [];
+    }
+
+    /**
+     * Prepare and call API for PrestaTrust integrity and property module details.
+     *
+     * @param string $hash Hash of module files
+     * @param string $sc_address Smart contract (Module licence)
+     *
+     * @return object List of checks made and their results
+     */
+    public function getPrestaTrustCheck($hash, $sc_address)
+    {
+        $this->queryParameters['module_hash'] = $hash;
+        $this->queryParameters['sc_address'] = $sc_address;
+
+        $response = $this->setMethod('trust')
+            ->getResponse();
+
+        return json_decode($response);
     }
 
     public function getServices()
@@ -173,6 +211,23 @@ class ApiClient
             ->getPostResponse();
     }
 
+    public function getCustomerModules($userMail, $password)
+    {
+        $response = $this->setMethod('listing')
+            ->setAction('customer')
+            ->setUserMail($userMail)
+            ->setPassword($password)
+            ->getPostResponse();
+
+        $responseArray = json_decode($response);
+
+        if (!empty($responseArray->modules)) {
+            return $responseArray->modules;
+        }
+
+        return [];
+    }
+
     /**
      * Get list of themes bought by customer.
      *
@@ -197,7 +252,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->get(
-                '',
+                null,
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -207,7 +262,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->post(
-                '',
+                null,
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();

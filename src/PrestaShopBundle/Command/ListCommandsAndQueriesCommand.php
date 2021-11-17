@@ -26,8 +26,7 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShop\PrestaShop\Core\CommandBus\Parser\CommandDefinitionParser;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -35,25 +34,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * Lists all commands and queries definitions
  */
-class ListCommandsAndQueriesCommand extends Command
+class ListCommandsAndQueriesCommand extends ContainerAwareCommand
 {
-    /**
-     * @var CommandDefinitionParser
-     */
-    private $commandDefinitionParser;
-
-    /**
-     * @var array
-     */
-    private $commandAndQueries;
-
-    public function __construct(CommandDefinitionParser $commandDefinitionParser, array $commandAndQueries)
-    {
-        parent::__construct();
-        $this->commandDefinitionParser = $commandDefinitionParser;
-        $this->commandAndQueries = $commandAndQueries;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -70,11 +52,14 @@ class ListCommandsAndQueriesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $commands = $this->getContainer()->getParameter('prestashop.commands_and_queries');
+        $commandDefinitionParser = $this->getContainer()->get('prestashop.core.provider.command_definition_provider');
+
         $outputStyle = new OutputFormatterStyle('blue', null);
         $output->getFormatter()->setStyle('blue', $outputStyle);
 
-        foreach ($this->commandAndQueries as $key => $commandName) {
-            $commandDefinition = $this->commandDefinitionParser->parseDefinition($commandName);
+        foreach ($commands as $key => $commandName) {
+            $commandDefinition = $commandDefinitionParser->parseDefinition($commandName);
 
             $output->writeln(++$key . '.');
             $output->writeln('<blue>Class: </blue><info>' . $commandDefinition->getClassName() . '</info>');

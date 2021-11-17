@@ -57,13 +57,6 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [],
         ];
 
-        yield [
-            [
-                'options' => [],
-            ],
-            [],
-        ];
-
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
         yield [
             [
@@ -75,12 +68,22 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command->setActive(true);
+        yield [
+            [
+                'not_handled' => 0,
+                'footer' => [
+                    'active' => 1,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
         $command->setManufacturerId(1);
         yield [
             [
-                'description' => [
-                    'manufacturer' => '1',
-                ],
+                'manufacturer' => '1',
             ],
             [$command],
         ];

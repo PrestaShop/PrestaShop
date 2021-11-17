@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Cart\CommandHandler;
 
+use Attribute;
 use Cart;
 use Context;
 use Customer;
@@ -44,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
-use ProductAttribute;
 use Shop;
 
 /**
@@ -137,7 +137,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
         // when adding product with less quantity than minimum required.
         if ($updateResult < 0) {
             $minQuantity = $combinationIdValue ?
-                ProductAttribute::getAttributeMinimalQty($combinationIdValue) :
+                Attribute::getAttributeMinimalQty($combinationIdValue) :
                 $product->minimal_quantity;
 
             throw new MinimalQuantityException('Minimum quantity of %d must be added to cart.', $minQuantity);
@@ -185,7 +185,7 @@ final class UpdateProductQuantityInCartHandler extends AbstractCartHandler imple
     {
         $isAvailableWhenOutOfStock = Product::isAvailableWhenOutOfStock($product->out_of_stock);
         if (null !== $command->getCombinationId()) {
-            $isEnoughQuantity = ProductAttribute::checkAttributeQty(
+            $isEnoughQuantity = Attribute::checkAttributeQty(
                 $command->getCombinationId()->getValue(),
                 $command->getNewQuantity()
             );

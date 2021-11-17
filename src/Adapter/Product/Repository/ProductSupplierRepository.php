@@ -97,13 +97,11 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Returns the ID of the Supplier set as default for this product.
-     *
      * @param ProductId $productId
      *
      * @return SupplierId|null
      */
-    public function getDefaultSupplierId(ProductId $productId): ?SupplierId
+    public function getProductDefaultSupplierId(ProductId $productId): ?SupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_supplier AS default_supplier_id')
@@ -125,38 +123,6 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         }
 
         return new SupplierId((int) $result['default_supplier_id']);
-    }
-
-    /**
-     * Returns the ProductSupplier associated to a product as its default one.
-     *
-     * @param ProductId $productId
-     *
-     * @return ProductSupplierId|null
-     */
-    public function getDefaultProductSupplierId(ProductId $productId): ?ProductSupplierId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('ps.id_product_supplier AS default_supplier_id')
-            ->from($this->dbPrefix . 'product_supplier', 'ps')
-            ->innerJoin(
-                'ps',
-                $this->dbPrefix . 'product',
-                'p',
-                'ps.id_supplier = p.id_supplier'
-            )
-            ->where('ps.id_product = :productId')
-            ->andWhere('ps.id_supplier = p.id_supplier')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetch();
-
-        if (empty($result['default_supplier_id'])) {
-            return null;
-        }
-
-        return new ProductSupplierId((int) $result['default_supplier_id']);
     }
 
     /**

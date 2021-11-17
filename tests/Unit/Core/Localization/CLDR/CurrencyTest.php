@@ -48,7 +48,7 @@ class CurrencyTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $currencyData = new CurrencyData();
         $currencyData->setIsoCode('PCE');

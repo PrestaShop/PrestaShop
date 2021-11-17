@@ -162,9 +162,12 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
                     ])
                     ->setAssociatedColumn('name')
             )
-            ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->setTypeOptions([
+                'required' => false,
+                'choice_translation_domain' => false,
+            ])
+            ->setAssociatedColumn('active')
             )
             ->add(
                 (new Filter('actions', SearchAndResetType::class))

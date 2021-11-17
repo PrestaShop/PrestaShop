@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
-class FrameworkBundleAdminController extends AbstractController
+class FrameworkBundleAdminController extends Controller
 {
     public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
@@ -71,14 +71,10 @@ class FrameworkBundleAdminController extends AbstractController
     /**
      * @Template
      *
-     * @deprecated Since 8.0, to be removed in the next major version
-     *
-     * @return array|Response Template vars if the action uses template annotation, or a Response object
+     * @return array Template vars
      */
     public function overviewAction()
     {
-        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
-
         return [
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
@@ -90,13 +86,13 @@ class FrameworkBundleAdminController extends AbstractController
      *
      * Parse all errors mapped by id html field
      *
-     * @param FormInterface $form
+     * @param Form $form
      *
-     * @return array<array<string>> Errors
+     * @return array[array[string]] Errors
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function getFormErrorsForJS(FormInterface $form)
+    public function getFormErrorsForJS(Form $form)
     {
         $errors = [];
 

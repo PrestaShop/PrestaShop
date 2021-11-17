@@ -30,7 +30,6 @@ namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Form\Exception\OutOfBoundsException;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 
@@ -39,7 +38,7 @@ class FormListenerTestCase extends KernelTestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         self::bootKernel();
@@ -68,44 +67,12 @@ class FormListenerTestCase extends KernelTestCase
     /**
      * @param string $type
      * @param array $options
-     * @param mixed|null $data
+     * @param null $data
      *
      * @return FormInterface
      */
     protected function createForm(string $type, array $options = [], $data = null): FormInterface
     {
         return self::$kernel->getContainer()->get('form.factory')->create($type, $data, $options);
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param string $typeName
-     * @param bool $shouldExist
-     */
-    protected function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
-    {
-        if ($shouldExist) {
-            $this->assertNotNull($this->getFormChild($form, $typeName));
-        } else {
-            $this->expectException(OutOfBoundsException::class);
-            $this->getFormChild($form, $typeName);
-        }
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param string $typeName
-     *
-     * @return FormInterface
-     */
-    protected function getFormChild(FormInterface $form, string $typeName): FormInterface
-    {
-        $typeNames = explode('.', $typeName);
-        $child = $form;
-        foreach ($typeNames as $typeName) {
-            $child = $child->get($typeName);
-        }
-
-        return $child;
     }
 }

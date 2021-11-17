@@ -72,7 +72,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
-        $command->setDeltaQuantity(100);
+        $command->setQuantity(100);
         $command->setMinimalQuantity(1);
         yield [
             [

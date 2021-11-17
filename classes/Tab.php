@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string|array<int, string> Displayed name */
+    /** @var string|array<string> Displayed name */
     public $name;
 
     /** @var string Class and file name */
@@ -354,7 +354,7 @@ class TabCore extends ObjectModel
     public static function getIdFromClassName($className)
     {
         $className = self::getClassName($className);
-        if (empty(self::$_getIdFromClassName)) {
+        if (self::$_getIdFromClassName === null) {
             self::$_getIdFromClassName = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `' . _DB_PREFIX_ . 'tab`', true, false);
 
@@ -394,8 +394,8 @@ class TabCore extends ObjectModel
     /**
      * Get collection from module name.
      *
-     * @param string $module Module name
-     * @param int|null $idLang integer Language ID
+     * @param $module string Module name
+     * @param null $idLang integer Language ID
      *
      * @return array|PrestaShopCollection Collection of tabs (or empty array)
      */
@@ -418,7 +418,7 @@ class TabCore extends ObjectModel
     /**
      * Enabling tabs for module.
      *
-     * @param string $module Module Name
+     * @param $module string Module Name
      *
      * @return bool Status
      */
@@ -440,7 +440,7 @@ class TabCore extends ObjectModel
     /**
      * Disabling tabs for module.
      *
-     * @param string $module Module name
+     * @param $module string Module name
      *
      * @return bool Status
      */
@@ -462,8 +462,8 @@ class TabCore extends ObjectModel
     /**
      * Get Instance from tab class name.
      *
-     * @param string $className Name of tab class
-     * @param int|null $idLang id_lang
+     * @param $className string Name of tab class
+     * @param $idLang     integer id_lang
      *
      * @return Tab Tab object (empty if bad id or class name)
      */
@@ -584,7 +584,7 @@ class TabCore extends ObjectModel
             }
         }
 
-        if (!isset($movedTab)) {
+        if (!isset($movedTab) || !isset($position)) {
             return false;
         }
         // < and > statements rather than BETWEEN operator

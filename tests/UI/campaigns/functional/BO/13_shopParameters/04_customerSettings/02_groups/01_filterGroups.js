@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -17,16 +14,24 @@ const groupsPage = require('@pages/BO/shopParameters/customerSettings/groups');
 // Import data
 const {groupAccess} = require('@data/demo/groupAccess');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_customerSettings_groups_filterGroups';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
 
+
 let numberOfGroups = 0;
 
-describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name and discount,  '
-  + 'members and show prices', async () => {
+
+describe('Filter groups by id, name and discount, members and show prices', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +46,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
+  it('should go to customer settings page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -56,7 +61,7 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to \'Groups\' page', async function () {
+  it('should go to groups page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToGroupsPage', baseContext);
 
     await customerSettingPage.goToGroupsPage(page);
@@ -137,7 +142,11 @@ describe('BO - Shop Parameters - Customer Settings : Filter groups by id, name a
         await expect(numberOfGroupsAfterFilter).to.be.at.most(numberOfGroups);
 
         for (let row = 1; row <= numberOfGroupsAfterFilter; row++) {
-          const textColumn = await groupsPage.getTextColumn(page, row, test.args.filterBy);
+          const textColumn = await groupsPage.getTextColumn(
+            page,
+            row,
+            test.args.filterBy,
+          );
 
           if (test.expected !== undefined) {
             await expect(textColumn).to.contains(test.expected);

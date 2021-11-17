@@ -17,12 +17,7 @@ services:
       MYSQL_DATABASE: prestashop
     restart: always
   prestashop-git:
-    build:
-      dockerfile: .docker/Dockerfile
-      context: .
-      args:
-        - USER_ID=${USER_ID:-1000}
-        - GROUP_ID=${GROUP_ID:-1000}
+    build: .docker
     environment:
       DISABLE_MAKE: ${DISABLE_MAKE:-0}
       PS_INSTALL_AUTO: ${PS_INSTALL_AUTO:-1}
@@ -37,3 +32,5 @@ services:
       - "8001:80"
     volumes:
       - ./:/var/www/html/:delegated
+      - vendor:/var/www/html/vendor
+      - var:/var/www/html/var

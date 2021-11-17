@@ -38,7 +38,7 @@ class CategoriesProviderTest extends TestCase
      */
     private $provider;
 
-    public function setUp(): void
+    public function setUp()
     {
         $yamlParser = new YamlParser(_PS_CACHE_DIR_);
         $prestashopAddonsConfig = $yamlParser->parse(__DIR__ . '/fixtures/categories.yml');

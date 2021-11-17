@@ -171,15 +171,6 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 $imageId = reset($defaultImageIds);
             }
 
-            if (null === $imageId) {
-                $imagePath = $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
-            } else {
-                $imagePath = $this->productImagePathFactory->getPathByType(
-                    $imageId,
-                    ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT
-                );
-            }
-
             $impactOnPrice = new DecimalNumber($combination['price']);
             $combinationsForEditing[] = new EditableCombinationForListing(
                 $combinationId,
@@ -189,7 +180,7 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
                 (bool) $combination['default_on'],
                 $impactOnPrice,
                 (int) $this->stockAvailableRepository->getForCombination(new CombinationId($combinationId))->quantity,
-                $imagePath
+                $imageId ? $this->productImagePathFactory->getPathByType($imageId, ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT) : null
             );
         }
 

@@ -30,16 +30,6 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
     protected $template = 'checkout/_partials/steps/payment.tpl';
     private $selected_payment_option;
 
-    /**
-     * @var ConditionsToApproveFinder
-     */
-    public $conditionsToApproveFinder;
-
-    /**
-     * @var PaymentOptionsFinder
-     */
-    public $paymentOptionsFinder;
-
     public function __construct(
         Context $context,
         TranslatorInterface $translator,
@@ -113,7 +103,6 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
-            'is_recyclable_packaging' => $this->getCheckoutSession()->isRecyclable(),
         ];
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);

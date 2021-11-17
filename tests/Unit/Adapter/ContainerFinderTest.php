@@ -31,7 +31,6 @@ use Controller;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
-use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContainerFinderTest extends TestCase
@@ -54,11 +53,12 @@ class ContainerFinderTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $containerFinder->getContainer());
     }
 
+    /**
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException
+     * @expectedExceptionMessage Kernel Container is not available
+     */
     public function testGetContainerException()
     {
-        $this->expectException(ContainerNotFoundException::class);
-        $this->expectExceptionMessage('Kernel Container is not available');
-
         $contextMock = $this->getMockContext();
 
         $containerFinder = new ContainerFinder($contextMock);

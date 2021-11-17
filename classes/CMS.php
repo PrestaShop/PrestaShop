@@ -187,8 +187,8 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param int|null $way
-     * @param int|null $position
+     * @param $way
+     * @param $position
      *
      * @return bool
      */
@@ -232,7 +232,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param int $idCategory
+     * @param $idCategory
      *
      * @return bool
      */
@@ -258,7 +258,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param int $idCategory
+     * @param $idCategory
      *
      * @return false|string|null
      */
@@ -312,7 +312,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param int $idCms
+     * @param $idCms
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */

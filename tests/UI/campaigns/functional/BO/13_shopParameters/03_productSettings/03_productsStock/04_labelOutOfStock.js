@@ -4,18 +4,13 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
-
-// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
@@ -23,14 +18,16 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const ProductFaker = require('@data/faker/product');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_labelOutOfStock';
 
 let browserContext;
 let page;
 const productData = new ProductFaker({type: 'Standard product', quantity: 0});
 
-describe('BO - Shop Parameters - product Settings : Set label out-of-stock with  '
-  + 'allowed/denied backorders', async () => {
+describe('Set label out-of-stock with allowed/denied backorders', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -144,36 +141,6 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
       await expect(result).to.contains(productSettingsPage.successfulUpdateMessage);
     });
 
-    it('should view my shop', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `viewMyShop${test.args.action}${index}`,
-        baseContext,
-      );
-
-      page = await productSettingsPage.viewMyShop(page);
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Home page was not opened').to.be.true;
-    });
-
-    it('should search for the product and go to product page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToProductPage${test.args.action}${index}`,
-        baseContext,
-      );
-
-      // Search and go to product page
-      await homePage.searchProduct(page, productData.name);
-      await searchResultsPage.goToProductPage(page, 1);
-
-      const pageTitle = await productPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productData.name);
-    });
-
     it('should check label out-of-stock', async function () {
       await testContext.addContextItem(
         this,
@@ -181,6 +148,12 @@ describe('BO - Shop Parameters - product Settings : Set label out-of-stock with 
         `checkOrderingOutOfStock${test.args.action}${index}`,
         baseContext,
       );
+
+      page = await productSettingsPage.viewMyShop(page);
+
+      // Search and go to product
+      await homePage.searchProduct(page, productData.name);
+      await searchResultsPage.goToProductPage(page, 1);
 
       // Check quantity and availability label
       const lastQuantityIsVisible = await productPage.isAddToCartButtonEnabled(page);

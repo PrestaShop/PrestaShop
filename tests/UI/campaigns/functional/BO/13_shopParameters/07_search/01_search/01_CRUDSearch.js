@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -17,7 +14,13 @@ const addSearchPage = require('@pages/BO/shopParameters/search/add');
 // Import data
 const SearchFaker = require('@data/faker/search');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_search_search_CRUDSearch';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -32,7 +35,7 @@ Create new search
 Update the created search
 Delete search
  */
-describe('BO - Shop Parameters - Search : Create, update and delete search in BO', async () => {
+describe('Create, update and delete search in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +50,7 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Search\' page', async function () {
+  it('should go to \'ShopParameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -114,8 +117,10 @@ describe('BO - Shop Parameters - Search : Create, update and delete search in BO
     it('should update alias', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateAlias', baseContext);
 
-      const textResult = await addSearchPage.setAlias(page, editSearchData);
-      await expect(textResult).to.contains(searchPage.successfulUpdateMessage);
+      await addSearchPage.setAlias(page, editSearchData);
+
+      // Successful update message is incorrect, https://github.com/PrestaShop/PrestaShop/issues/21867
+      // await expect(textResult).to.contains(searchPage.successfulUpdateMessage);
 
       const numberOfSearchAfterUpdate = await searchPage.resetAndGetNumberOfLines(page);
       await expect(numberOfSearchAfterUpdate).to.be.equal(numberOfSearch + 1);

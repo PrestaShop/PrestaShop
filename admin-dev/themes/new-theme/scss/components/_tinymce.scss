@@ -282,7 +282,7 @@ div.mce-tinymce-inline {
   position: absolute;
   width: 5px;
   height: 100%;
-  background-color: $black;
+  background-color: #000;
   border: 1px solid rgba(85, 85, 85, 0.6);
   @include border-radius(7px);
 }
@@ -380,7 +380,7 @@ div.mce-tinymce-inline {
   width: 100%;
   height: 100%;
   zoom: 1;
-  background: $black;
+  background: #000;
   filter: alpha(opacity = 0);
   opacity: 0;
 
@@ -505,7 +505,7 @@ body .mce-abs-layout-item {
   color: $white;
   text-align: center;
   white-space: normal;
-  background-color: $black;
+  background-color: #000;
   @include border-radius(3px);
 }
 
@@ -514,23 +514,23 @@ body .mce-abs-layout-item {
   width: 0;
   height: 0;
   line-height: 0;
-  border: 5px dashed $black;
+  border: 5px dashed #000;
 }
 
 .mce-tooltip-arrow-n {
-  border-bottom-color: $black;
+  border-bottom-color: #000;
 }
 
 .mce-tooltip-arrow-s {
-  border-top-color: $black;
+  border-top-color: #000;
 }
 
 .mce-tooltip-arrow-e {
-  border-left-color: $black;
+  border-left-color: #000;
 }
 
 .mce-tooltip-arrow-w {
-  border-left-color: $black;
+  border-left-color: #000;
 }
 
 .mce-tooltip-nw,

@@ -737,10 +737,9 @@ class CartCore extends ObjectModel
 
         if (Combination::isFeatureActive()) {
             $sql->select('
-                product_attribute_shop.`price` AS price_attribute,
-                product_attribute_shop.`ecotax` AS ecotax_attr,
+                product_attribute_shop.`price` AS price_attribute, product_attribute_shop.`ecotax` AS ecotax_attr,
                 IF (IFNULL(pa.`reference`, \'\') = \'\', p.`reference`, pa.`reference`) AS reference,
-                (p.`weight`+ IFNULL(product_attribute_shop.`weight`, pa.`weight`)) weight_attribute,
+                (p.`weight`+ pa.`weight`) weight_attribute,
                 IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
                 IF (IFNULL(pa.`isbn`, \'\') = \'\', p.`isbn`, pa.`isbn`) AS isbn,
                 IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
@@ -868,9 +867,9 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param array $row
-     * @param Context $shopContext
-     * @param int|null $productQuantity
+     * @param $row
+     * @param $shopContext
+     * @param $productQuantity
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return mixed
@@ -1525,7 +1524,7 @@ class CartCore extends ObjectModel
 
         /* If we have a product combination, the minimal quantity is set with the one of this combination */
         if (!empty($id_product_attribute)) {
-            $minimal_quantity = (int) ProductAttribute::getAttributeMinimalQty($id_product_attribute);
+            $minimal_quantity = (int) Attribute::getAttributeMinimalQty($id_product_attribute);
         } else {
             $minimal_quantity = (int) $product->minimal_quantity;
         }
@@ -1554,6 +1553,8 @@ class CartCore extends ObjectModel
             'auto_add_cart_rule' => $auto_add_cart_rule,
         ];
 
+        /* @deprecated deprecated since 1.6.1.1 */
+        // Hook::exec('actionBeforeCartUpdateQty', $data);
         Hook::exec('actionCartUpdateQuantityBefore', $data);
 
         if ((int) $quantity <= 0) {
@@ -1759,7 +1760,7 @@ class CartCore extends ObjectModel
      * @param int $quantity Quantity value
      * @param bool $returnId if true - returns the customization record id
      *
-     * @return bool|int
+     * @return bool Success
      */
     public function _addCustomization($id_product, $id_product_attribute, $index, $type, $value, $quantity, $returnId = false)
     {
@@ -1954,8 +1955,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param int $id_product
-     * @param int $id_product_attribute
+     * @param $id_product
+     * @param $id_product_attribute
      *
      * @return array
      */
@@ -2053,10 +2054,7 @@ class CartCore extends ObjectModel
 
         $with_taxes = $use_tax_display ? $cart->_taxCalculationMethod != PS_TAX_EXC : true;
 
-        return Context::getContext()->getCurrentLocale()->formatPrice(
-            $cart->getOrderTotal($with_taxes, $type),
-            Currency::getIsoCodeById((int) $cart->id_currency)
-        );
+        return Context::getContext()->getCurrentLocale()->formatPrice($cart->getOrderTotal($with_taxes, $type), Currency::getIsoCodeById((int) $cart->id_currency), false);
     }
 
     /**
@@ -2298,7 +2296,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param array $products
+     * @param $products
      *
      * @return array
      */
@@ -2319,7 +2317,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param array $products
+     * @param $products
      *
      * @return array
      */
@@ -2338,8 +2336,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param int $type
-     * @param bool $withShipping
+     * @param $type
+     * @param $withShipping
      *
      * @return array
      */
@@ -2368,9 +2366,9 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param bool $withTaxes
-     * @param array $product
-     * @param Context|null $virtualContext
+     * @param $withTaxes
+     * @param $product
+     * @param $virtualContext
      *
      * @return int
      */
@@ -2392,7 +2390,7 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param array $product
+     * @param $product
      *
      * @return int|null
      */
@@ -2426,8 +2424,8 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param bool $withTaxes
-     * @param int $type
+     * @param $withTaxes
+     * @param $type
      *
      * @return float|int
      */
@@ -3043,8 +3041,8 @@ class CartCore extends ObjectModel
         $context = Context::getContext();
         foreach ($cart_rules as $cart_rule) {
             $total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
-            $total_price += ($cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price)) ? $real_best_price : 0;
-            $total_price += (!$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] && isset($real_best_price_wt)) ? $real_best_price_wt : 0;
+            $total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
+            $total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
             if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
                 && in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
                 && $cart_rule['minimum_amount'] <= $total_price) {
@@ -3071,7 +3069,6 @@ class CartCore extends ObjectModel
             foreach ($delivery_option as $key => $value) {
                 $total_price_with_tax = 0;
                 $total_price_without_tax = 0;
-                $total_price_without_tax_with_rules = 0;
                 $position = 0;
                 foreach ($value['carrier_list'] as $id_carrier => $data) {
                     $total_price_with_tax += $data['price_with_tax'];
@@ -3111,8 +3108,8 @@ class CartCore extends ObjectModel
     /**
      * Sort list of option delivery by parameters define in the BO.
      *
-     * @param array $option1
-     * @param array $option2
+     * @param $option1
+     * @param $option2
      *
      * @return int -1 if $option 1 must be placed before and 1 if the $option1 must be placed after the $option2
      */
@@ -3776,6 +3773,17 @@ class CartCore extends ObjectModel
 
         // Get shipping cost using correct method
         if ($carrier->range_behavior) {
+            if (!isset($id_zone)) {
+                // Get id zone
+                if (isset($this->id_address_delivery)
+                    && $this->id_address_delivery
+                    && Customer::customerHasAddress($this->id_customer, $this->id_address_delivery)) {
+                    $id_zone = Address::getZoneById((int) $this->id_address_delivery);
+                } else {
+                    $id_zone = (int) $default_country->id_zone;
+                }
+            }
+
             if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
                 || (
                     $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency)
@@ -4218,25 +4226,14 @@ class CartCore extends ObjectModel
      */
     public function hasRealProducts()
     {
-        // Check for non-virtual products which are not packs
-        $sql = 'SELECT 1 FROM %scart_product cp
-            INNER JOIN %sproduct p ON (p.id_product = cp.id_product AND cache_is_pack = 0 and p.is_virtual = 0)
-            INNER JOIN %sproduct_shop ps ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product)
-            WHERE cp.id_cart=%d';
-        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, $this->id);
-        if ((bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql)) {
-            return true;
-        }
-
-        // Check for non-virtual products which are in packs
-        $sql = 'SELECT 1 FROM %scart_product cp
-            INNER JOIN %spack pa ON (pa.id_product_pack = cp.id_product)
-            INNER JOIN %sproduct p ON (p.id_product = pa.id_product_item AND p.is_virtual = 0)
-            INNER JOIN %sproduct_shop ps ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product)
-            WHERE cp.id_cart=%d';
-        $sql = sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, _DB_PREFIX_, $this->id);
-
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT 1 FROM ' . _DB_PREFIX_ . 'cart_product cp ' .
+            'INNER JOIN ' . _DB_PREFIX_ . 'product p
+                ON (p.is_virtual = 0 AND p.id_product = cp.id_product) ' .
+            'INNER JOIN ' . _DB_PREFIX_ . 'product_shop ps
+                ON (ps.id_shop = cp.id_shop AND ps.id_product = p.id_product) ' .
+            'WHERE cp.id_cart=' . (int) $this->id
+        );
     }
 
     /**
@@ -5051,7 +5048,7 @@ class CartCore extends ObjectModel
     /**
      * Are all products of the Cart in stock?
      *
-     * @param bool $ignoreVirtual Ignore virtual products
+     * @param bool $ignore_virtual Ignore virtual products
      * @param bool $exclusive (DEPRECATED) If true, the validation is exclusive : it must be present product in stock and out of stock
      *
      * @since 1.5.0
@@ -5159,7 +5156,7 @@ class CartCore extends ObjectModel
      * Get all the IDs of the delivery Addresses without Carriers.
      *
      * @param bool $return_collection Returns sa collection
-     * @param array $error Contains an error message if an error occurs
+     * @param array &$error Contains an error message if an error occurs
      *
      * @return array Array of address id or of address object
      */
@@ -5354,6 +5351,8 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * @param Cart $cart
+     *
      * @return float
      */
     public function getCartTotalPrice()

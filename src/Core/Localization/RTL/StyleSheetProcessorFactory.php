@@ -64,6 +64,8 @@ final class StyleSheetProcessorFactory implements StyleSheetProcessorFactoryInte
         // @todo: improve modules configuration
         // see: https://github.com/PrestaShop/PrestaShop/pull/11169#discussion_r231824489
         $modulesToProcess = [
+            $moduleDir . 'gamification',
+            $moduleDir . 'welcome',
             $moduleDir . 'cronjobs',
         ];
 

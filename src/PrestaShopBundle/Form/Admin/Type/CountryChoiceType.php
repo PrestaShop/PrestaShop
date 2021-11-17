@@ -87,10 +87,14 @@ class CountryChoiceType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        $choices = array_merge(
+            ['--' => ''],
+            $this->countriesChoiceProvider->getChoices()
+        );
+
         $resolver->setDefaults([
-            'choices' => $this->countriesChoiceProvider->getChoices(),
+            'choices' => $choices,
             'choice_attr' => [$this, 'getChoiceAttr'],
-            'placeholder' => '--',
             'with_dni_attr' => false,
             'with_postcode_attr' => false,
         ]);

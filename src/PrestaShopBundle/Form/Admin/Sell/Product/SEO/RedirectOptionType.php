@@ -30,13 +30,15 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use PrestaShopBundle\Form\Admin\Type\TypeaheadProductCollectionType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Extension\Core\EventListener\TransformationFailureListener;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -59,31 +61,23 @@ class RedirectOptionType extends TranslatorAwareType
     private $targetTransformer;
 
     /**
-     * @var EventSubscriberInterface
-     */
-    private $eventSubscriber;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param LegacyContext $context
      * @param RouterInterface $router
      * @param DataTransformerInterface $targetTransformer
-     * @param EventSubscriberInterface $eventSubscriber
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         LegacyContext $context,
         RouterInterface $router,
-        DataTransformerInterface $targetTransformer,
-        EventSubscriberInterface $eventSubscriber
+        DataTransformerInterface $targetTransformer
     ) {
         parent::__construct($translator, $locales);
         $this->context = $context;
         $this->router = $router;
         $this->targetTransformer = $targetTransformer;
-        $this->eventSubscriber = $eventSubscriber;
     }
 
     /**
@@ -120,8 +114,10 @@ class RedirectOptionType extends TranslatorAwareType
                     $this->trans('Temporary redirection to a product (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
                 ],
             ])
-            ->add('target', EntitySearchInputType::class, [
+            ->add('target', TypeaheadProductCollectionType::class, [
                 'required' => false,
+                'error_bubbling' => false,
+                'template_collection' => '<span class="label">%s</span>',
                 'limit' => 1,
                 'label' => $entityAttributes[$defaultEntity]['label'],
                 'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
@@ -140,13 +136,45 @@ class RedirectOptionType extends TranslatorAwareType
             ])
         ;
 
-        // This will transform the target ID from model data into an array adapted for EntitySearchInputType
-        $builder->addModelTransformer($this->targetTransformer);
+        // This will transform the target ID from model data into an array adapted for TypeaheadProductCollectionType
+        $builder->get('target')->addModelTransformer($this->targetTransformer);
         // In case a transformation occurs it will be displayed as an inline error
         $builder->addEventSubscriber(new TransformationFailureListener($this->getTranslator()));
 
         // Preset the input attributes correctly depending on the data
-        $builder->addEventSubscriber($this->eventSubscriber);
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($entityAttributes) {
+            $data = $event->getData();
+            $form = $event->getForm();
+            $targetField = $form->get('target');
+            $targetOptions = $targetField->getConfig()->getOptions();
+            $dataType = $data['type'] ?? RedirectType::TYPE_NOT_FOUND;
+            switch ($dataType) {
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                    $dataEntity = 'category';
+                    break;
+                case RedirectType::TYPE_PRODUCT_PERMANENT:
+                case RedirectType::TYPE_PRODUCT_TEMPORARY:
+                default:
+                    $dataEntity = 'product';
+                    break;
+            }
+
+            // Adapt target options
+            $targetOptions['mapping_type'] = $dataEntity;
+            $targetOptions['label'] = $entityAttributes[$dataEntity]['label'];
+            $targetOptions['placeholder'] = $entityAttributes[$dataEntity]['placeholder'];
+            $targetOptions['help'] = $entityAttributes[$dataEntity]['help'];
+            $targetOptions['remote_url'] = $entityAttributes[$dataEntity]['searchUrl'];
+            if (RedirectType::TYPE_NOT_FOUND === $dataType) {
+                $targetOptions['row_attr']['class'] = 'd-none';
+            }
+
+            // Replace existing field with new one with adapted options
+            $cloner = new FormCloner();
+            $clonedForm = $cloner->cloneForm($targetField, $targetOptions);
+            $form->add($clonedForm);
+        });
     }
 
     /**

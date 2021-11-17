@@ -289,9 +289,9 @@ class EditCatalogPriceRuleCommand
 
     /**
      * @param string $type
-     * @param string $value
+     * @param float $value
      */
-    public function setReduction(string $type, string $value)
+    public function setReduction(string $type, float $value)
     {
         $this->reduction = new Reduction($type, $value);
     }

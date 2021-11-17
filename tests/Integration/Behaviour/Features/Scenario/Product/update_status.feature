@@ -11,13 +11,10 @@ Feature: Update product status from BO (Back Office)
       | type        | standard                         |
     And product product1 type should be standard
     And product "product1" should be disabled
-    And product "product1" should not be indexed
     When I enable product "product1"
-    Then product "product1" should be enabled
-    And product "product1" should be indexed
+    And product "product1" should be enabled
     When I disable product "product1"
-    Then product "product1" should be disabled
-    And product "product1" should not be indexed
+    And product "product1" should be disabled
 
   Scenario: I update virtual product status
     And I add product "product2" with following information:
@@ -26,11 +23,9 @@ Feature: Update product status from BO (Back Office)
     And product product2 type should be virtual
     And product "product2" should be disabled
     When I enable product "product2"
-    Then product "product2" should be enabled
-    And product "product2" should be indexed
+    And product "product2" should be enabled
     When I disable product "product2"
-    Then product "product2" should be disabled
-    And product "product2" should not be indexed
+    And product "product2" should be disabled
 
   Scenario: I update combination product status
     And I add product "product3" with following information:
@@ -44,23 +39,18 @@ Feature: Update product status from BO (Back Office)
     And product product3 type should be combinations
     And product "product3" should be disabled
     When I enable product "product3"
-    Then product "product3" should be enabled
-    And product "product3" should be indexed
+    And product "product3" should be enabled
     When I disable product "product3"
     Then product "product3" should be disabled
-    And product "product3" should not be indexed
 
   Scenario: I disable product which is already disabled
-    Given product "product1" should be disabled
+    And product "product1" should be disabled
     When I disable product "product1"
-    Then product "product1" should be disabled
-    And product "product1" should not be indexed
+    And product "product1" should be disabled
 
   Scenario: I enable product which is already enabled
-    Given product "product1" should be disabled
+    And product "product1" should be disabled
+    And I enable product "product1"
+    And product "product1" should be enabled
     When I enable product "product1"
     Then product "product1" should be enabled
-    And product "product1" should be indexed
-    When I enable product "product1"
-    Then product "product1" should be enabled
-    And product "product1" should be indexed

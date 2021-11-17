@@ -45,7 +45,6 @@ class YesAndNoChoiceType extends TranslatorAwareType
                 $this->trans('No', 'Admin.Global') => 0,
             ],
             'required' => false,
-            'placeholder' => $this->trans('All', 'Admin.Global'),
             'choice_translation_domain' => false,
         ]);
     }

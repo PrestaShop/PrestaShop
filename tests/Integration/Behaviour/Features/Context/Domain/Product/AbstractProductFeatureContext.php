@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Configuration;
 use DateTime;
 use DateTimeInterface;
-use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -62,51 +60,13 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         // Get image reference which is integrated in image url
         preg_match('_\{(.+)\}_', $imageUrl, $matches);
         $imageReference = $matches[1];
-
-        if ('no_picture' === $imageReference) {
-            $defaultIso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
-            $realImageUrl = str_replace(
-                '{' . $imageReference . '}',
-                $defaultIso . '-default',
-                $imageUrl
-            );
-        } else {
-            // Now rebuild the image folder with image id appended
-            $imageId = $this->getSharedStorage()->get($imageReference);
-            $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
-            $realImageUrl = str_replace(
-                '{' . $imageReference . '}',
-                $imageFolder,
-                $imageUrl
-            );
-        }
-
-        return $realImageUrl;
-    }
-
-    /**
-     * Transform url from behat test into a proper one, expected value looks like this:
-     *   http://myshop.com/img/c/{men}.jpg
-     *
-     * Where men is the reference to the category id in the shared storage, it allows to get the category
-     * id and correctly rebuild the url into something like this:
-     *  http://myshop.com/img/c/4.jpg
-     *
-     * @param string $imageUrl
-     *
-     * @return string
-     */
-    protected function getRealCategoryImageUrl(string $imageUrl): string
-    {
-        // Get image reference which is integrated in image url
-        preg_match('_\{(.+)\}_', $imageUrl, $matches);
-        $categoryReference = $matches[1];
+        $imageId = $this->getSharedStorage()->get($imageReference);
 
         // Now rebuild the image folder with image id appended
-        $categoryId = $this->getSharedStorage()->get($categoryReference);
+        $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
         $realImageUrl = str_replace(
-            '{' . $categoryReference . '}',
-            (string) $categoryId,
+            '{' . $imageReference . '}',
+            $imageFolder,
             $imageUrl
         );
 
@@ -264,7 +224,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
             'tags' => 'basicInformation.localizedTags',
-            'active' => 'active',
+            'active' => 'options.active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',

@@ -37,7 +37,7 @@ class StockController extends FrameworkBundleAdminController
     protected $layoutTitle = 'Stock';
 
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
      *
      * @Template("@PrestaShop/Admin/Stock/overview.html.twig")
      */

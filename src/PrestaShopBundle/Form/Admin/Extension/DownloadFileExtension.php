@@ -60,8 +60,8 @@ class DownloadFileExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType(): string
     {
-        return [FileType::class];
+        return FileType::class;
     }
 }

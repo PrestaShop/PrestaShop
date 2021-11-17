@@ -31,16 +31,6 @@
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {
-    /**
-     * @var array<string>
-     */
-    public $paths;
-
-    /**
-     * @var bool
-     */
-    public $isAdmin;
-
     public function __construct(array $paths, $isAdmin = false)
     {
         $this->paths = $paths;

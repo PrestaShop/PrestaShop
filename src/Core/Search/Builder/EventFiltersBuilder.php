@@ -56,7 +56,7 @@ final class EventFiltersBuilder extends AbstractFiltersBuilder
     public function buildFilters(Filters $filters = null)
     {
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
-        $this->dispatcher->dispatch($filterSearchParametersEvent, FilterSearchCriteriaEvent::NAME);
+        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
 
         /** @var Filters $filters */
         $filters = $filterSearchParametersEvent->getSearchCriteria();

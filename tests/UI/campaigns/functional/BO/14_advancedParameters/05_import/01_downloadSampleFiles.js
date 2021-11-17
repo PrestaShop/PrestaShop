@@ -5,22 +5,23 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const importPage = require('@pages/BO/advancedParameters/import');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_advancedParameters_import_downloadSampleFiles';
+
 
 let browserContext;
 let page;
 let filePath;
 
-describe('BO - Advanced Parameters - Import : Download sample csv files', async () => {
+describe('Download import sample csv files', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +36,7 @@ describe('BO - Advanced Parameters - Import : Download sample csv files', async 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced Parameters > Import\' page', async function () {
+  it('should go to import page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
     await dashboardPage.goToSubMenu(

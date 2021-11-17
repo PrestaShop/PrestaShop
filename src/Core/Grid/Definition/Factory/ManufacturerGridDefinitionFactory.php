@@ -218,9 +218,8 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ])
             ->setAssociatedColumn('name')
             )
-            ->add(
-                (new Filter('active', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('active')
+            ->add((new Filter('active', YesAndNoChoiceType::class))
+            ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')

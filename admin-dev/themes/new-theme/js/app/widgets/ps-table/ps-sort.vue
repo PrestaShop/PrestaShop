@@ -39,10 +39,8 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     props: {
       // column name
       order: {
@@ -56,21 +54,19 @@
       },
     },
     methods: {
-      sortToggle(): void {
+      sortToggle() {
         // toggle direction
         this.sortDirection = (this.sortDirection === 'asc') ? 'desc' : 'asc';
         this.$emit('sort', this.order, this.sortDirection);
       },
     },
-    data() {
-      return {
-        sortDirection: 'asc',
-      };
-    },
+    data: () => ({
+      sortDirection: 'asc',
+    }),
     computed: {
-      isCurrent(): boolean {
+      isCurrent() {
         return this.currentSort === this.order;
       },
     },
-  });
+  };
 </script>

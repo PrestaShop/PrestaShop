@@ -26,8 +26,12 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
-  {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig', {'metaForm': meta_form}) }}
+  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
+  <div class="row justify-content-center">
+    <div class="col">
+      {{ include('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig', {'metaForm': meta_form}) }}
+    </div>
+  </div>
 {% endblock %}
 
 {% block javascripts %}

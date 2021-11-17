@@ -22,7 +22,6 @@ class BOBasePage extends CommonPage {
 
     // Access denied message
     this.accessDeniedMessage = 'Access denied';
-    this.pageNotFoundMessage = 'Page not found';
 
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
@@ -473,12 +472,12 @@ class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
     await this.goTo(page, url);
-    if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
-      await this.clickAndWaitForNavigation(
-        page,
-        continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
-      );
-    }
+    await this.waitForVisibleSelector(page, this.invalidTokenContinuelink);
+
+    await this.clickAndWaitForNavigation(
+      page,
+      continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+    );
   }
 }
 

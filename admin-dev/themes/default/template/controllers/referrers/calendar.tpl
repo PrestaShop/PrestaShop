@@ -35,13 +35,11 @@
 					<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1" />
 					<p>
 						<span>{if isset($translations.From)}{$translations.From}{else}{l s='From:' d='Admin.Global'}{/if}</span>
-            <input type="text" class="datepicker" data-target="#datepickerFrom"/>
-            <input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" />
+						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker" />
 					</p>
 					<p>
 						<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='To:' d='Admin.Global'}</span>{/if}</span>
-            <input type="text" class="datepicker" data-target="#datepickerTo"/>
-						<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" />
+						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
 					</p>
 					<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">
 						<i class="icon-save"></i> {if isset($translations.Save)}{$translations.Save}{else}{l s='Save' d='Admin.Actions'}{/if}
@@ -51,25 +49,12 @@
 
 			<script type="text/javascript">
 				$(document).ready(function() {
-          if ($("form#calendar_form .datepicker").length > 0) {
-            const dateFormat = $.datepicker.regional[window.full_language_code]
-                ? $.datepicker.regional[window.full_language_code].dateFormat
-                : 'yy-mm-dd';
-            $("form#calendar_form .datepicker").each(function() {
-              var altField = $(this).data('target');
-              $(this).datepicker({
-                altField: altField,
-                altFormat: 'yy-mm-dd',
-                prevText: '',
-                nextText: '',
-                dateFormat: dateFormat,
-              });
-              $(this).datepicker(
-                'setDate',
-                new Date($(altField).val())
-              );
-            });
-          }
-        });
+					if ($("form#calendar_form .datepicker").length > 0)
+						$("form#calendar_form .datepicker").datepicker({
+							prevText: '',
+							nextText: '',
+							dateFormat: 'yy-mm-dd'
+						});
+				});
 			</script>
 	</div>

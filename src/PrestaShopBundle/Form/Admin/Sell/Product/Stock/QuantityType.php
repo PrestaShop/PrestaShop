@@ -28,24 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
-use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
-use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 class QuantityType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
     /**
      * @var bool
      */
@@ -54,17 +46,14 @@ class QuantityType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param RouterInterface $router
      * @param bool $stockManagementEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        RouterInterface $router,
         bool $stockManagementEnabled
     ) {
         parent::__construct($translator, $locales);
-        $this->router = $router;
         $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
@@ -74,34 +63,15 @@ class QuantityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->stockManagementEnabled) {
-            $urlParameters = !empty($options['product_id']) ? ['productId' => (int) $options['product_id']] : [];
-            $stockMovementsUrl = $this->router->generate('admin_stock_movements_overview', $urlParameters);
-
             $builder
-                ->add('quantity', DeltaQuantityType::class, [
+                ->add('quantity', NumberType::class, [
                     'required' => false,
-                    'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
-                    'label_tag_name' => 'h4',
+                    'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'numeric']),
                     ],
                     'default_empty_data' => 0,
-                ])
-                ->add('stock_movements', EntitySearchInputType::class, [
-                    'required' => false,
-                    'label' => $this->trans('Recent stock movements', 'Admin.Catalog.Feature'),
-                    'label_tag_name' => 'h4',
-                    'layout' => 'table',
-                    'entry_type' => StockMovementType::class,
-                    // No search input
-                    'allow_search' => false,
-                    // No delete button
-                    'allow_delete' => false,
-                    'external_link' => [
-                        'text' => $this->trans('[1]View all stock movements[/1]', 'Admin.Catalog.Feature'),
-                        'href' => $stockMovementsUrl,
-                    ],
                 ])
             ;
         }
@@ -126,14 +96,11 @@ class QuantityType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver
-            ->setDefaults([
-                'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'required' => false,
-                'product_id' => null,
-            ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
-        ;
+        $resolver->setDefaults([
+            'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h2',
+            'required' => false,
+            'columns_number' => 3,
+        ]);
     }
 }

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmailLogsDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -34,11 +33,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class EmailLogsFilter extends Filters
 {
-    /**
-     * @var string
-     */
-    protected $filterId = EmailLogsDefinitionFactory::GRID_ID;
-
     /**
      * {@inheritdoc}
      */

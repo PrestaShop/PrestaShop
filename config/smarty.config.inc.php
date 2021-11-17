@@ -23,28 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'prestashop/smarty/');
 
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
-} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) { /* @phpstan-ignore-line */
+} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) {
     $smarty = new SmartyDev();
 } else {
     $smarty = new Smarty();
 }
 
-$smarty->setConfigDir([]);
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 $smarty->use_sub_dirs = true;
-$smarty->caching = Smarty::CACHING_OFF;
+$smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
+$smarty->caching = false;
 
 if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
     include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
-$smarty->force_compile = Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_;
-$smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? Smarty::COMPILECHECK_ON : Smarty::COMPILECHECK_OFF;
+$smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
+$smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 $smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
 
 /* Use this constant if you want to load smarty without all PrestaShop functions */
@@ -177,7 +178,9 @@ function smartyCleanHtml($data)
 function smartyClassname($classname)
 {
     $classname = Tools::replaceAccentedChars(strtolower($classname));
-    $classname = preg_replace(['/[^A-Za-z0-9-_]/', '/-{3,}/', '/-+$/'], ['-', '-', ''] , $classname);
+    $classname = preg_replace('/[^A-Za-z0-9]/', '-', $classname);
+    $classname = preg_replace('/[-]+/', '-', $classname);
+
     return $classname;
 }
 

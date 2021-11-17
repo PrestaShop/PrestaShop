@@ -62,7 +62,8 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
          * duplicate contents, if it matches the expected iso code then we do nothing
          */
         if (SharedStorage::getStorage()->exists($reference)) {
-            $currency = $this->getCurrency($reference);
+            /** @var Currency $currency */
+            $currency = SharedStorage::getStorage()->get($reference);
             if ($currency->iso_code == $isoCode) {
                 return;
             }
@@ -89,7 +90,7 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
             $currency = new Currency($currencyId);
         }
 
-        SharedStorage::getStorage()->set($reference, (int) $currency->id);
+        SharedStorage::getStorage()->set($reference, $currency);
     }
 
     /**
@@ -105,15 +106,5 @@ class CLDRFeatureContext extends AbstractPrestaShopFeatureContext
         if ($expectedPrice !== $displayedPrice) {
             throw new RuntimeException(sprintf('Displayed price is "%s" but "%s" was expected', $displayedPrice, $expectedPrice));
         }
-    }
-
-    /**
-     * @param string $reference
-     *
-     * @return Currency
-     */
-    private function getCurrency(string $reference): Currency
-    {
-        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

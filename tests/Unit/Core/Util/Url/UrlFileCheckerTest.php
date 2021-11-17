@@ -39,7 +39,7 @@ class UrlFileCheckerTest extends TestCase
      */
     private $root;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->root = vfsStream::setup('foo');
 

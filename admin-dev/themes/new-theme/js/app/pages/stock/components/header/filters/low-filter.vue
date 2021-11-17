@@ -69,11 +69,10 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
+<script>
+  import PSCheckbox from '@app/widgets/ps-checkbox';
 
-  export default Vue.extend({
+  export default {
     props: {
       filters: {
         type: Object,
@@ -82,23 +81,23 @@
       },
     },
     computed: {
-      stockImportTitle(): string {
+      stockImportTitle() {
         return this.trans('title_import');
       },
-      stockExportTitle(): string {
+      stockExportTitle() {
         return this.trans('title_export');
       },
-      stockImportUrl(): string {
+      stockImportUrl() {
         return window.data.stockImportUrl;
       },
-      stockExportUrl(): string {
+      stockExportUrl() {
         const params = $.param(this.filters);
 
         return `${window.data.stockExportUrl}&${params}`;
       },
     },
     methods: {
-      onCheck(checkbox: HTMLInputElement): void {
+      onCheck(checkbox) {
         const isChecked = checkbox.checked ? 1 : 0;
         this.$emit('lowStockChecked', isChecked);
       },
@@ -109,5 +108,5 @@
     components: {
       PSCheckbox,
     },
-  });
+  };
 </script>

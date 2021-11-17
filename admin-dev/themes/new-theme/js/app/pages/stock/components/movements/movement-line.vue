@@ -63,7 +63,7 @@
       </span>
     </td>
     <td class="text-sm-center">
-      {{ dateAdd }}
+      {{ product.date_add }}
     </td>
     <td>
       {{ employeeName }}
@@ -71,12 +71,11 @@
   </tr>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSMedia from '@app/widgets/ps-media.vue';
+<script>
+  import PSMedia from '@app/widgets/ps-media';
   import productDesc from '@app/pages/stock/mixins/product-desc';
 
-  export default Vue.extend({
+  export default {
     props: {
       product: {
         type: Object,
@@ -85,26 +84,21 @@
     },
     mixins: [productDesc],
     computed: {
-      qty(): number {
+      qty() {
         return this.product.physical_quantity;
       },
-      employeeName(): string {
+      employeeName() {
         return `${this.product.employee_firstname} ${this.product.employee_lastname}`;
       },
-      isPositive(): boolean {
+      isPositive() {
         return this.product.sign > 0;
       },
-      orderLink(): string | null {
+      orderLink() {
         return this.product.order_link !== 'N/A' ? this.product.order_link : null;
-      },
-      dateAdd() {
-        const date = new Date(Date.parse(this.product.date_add));
-
-        return date.toLocaleDateString(window.data.locale, {});
       },
     },
     components: {
       PSMedia,
     },
-  });
+  };
 </script>

@@ -70,12 +70,8 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     }
 
     /**
+     * {@inheritdoc}
      * This override will check if $event is an instance of HookEvent.
-     *
-     * @param string|Hook $eventName
-     * @param Event|null $event
-     *
-     * @return Event|HookEvent
      *
      * @throws \Exception if the Event is not HookEvent or a subclass
      */
@@ -200,7 +196,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     public function dispatchWithParameters($hookName, array $hookParameters = [])
     {
-        $this->dispatchForParameters($hookName, $hookParameters);
+        $this->dispatch(new Hook($hookName, $hookParameters));
     }
 
     /**

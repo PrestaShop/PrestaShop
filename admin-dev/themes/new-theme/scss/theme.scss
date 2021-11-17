@@ -29,7 +29,6 @@
 @import "components/layout/nav_bar";
 @import "components/layout/non_responsive";
 @import "components/layout/header-multistore";
-@import "components/layout/header-search";
 @import "components/cards";
 @import "components/layout/kpi";
 @import "components/category_tree";
@@ -61,9 +60,6 @@
 @import "components/multishop-modal";
 @import "components/multistore-dropdown";
 @import "components/unavailable-feature";
-@import "components/modal";
-@import "components/entity_search";
-@import "components/delta_quantity";
 
 // Pages specifics SCSS files
 @import "pages/invoices";

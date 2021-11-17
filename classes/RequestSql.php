@@ -150,9 +150,9 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut the request for check each cutting.
      *
-     * @param array $tab
-     * @param bool $in
-     * @param string $sql
+     * @param $tab
+     * @param $in
+     * @param $sql
      *
      * @return bool
      */
@@ -203,7 +203,6 @@ class RequestSqlCore extends ObjectModel
     public function getTables()
     {
         $results = Db::getInstance()->executeS('SHOW TABLES');
-        $tables = [];
         foreach ($results as $result) {
             $key = array_keys($result);
             $tables[] = $result[$key[0]];
@@ -215,7 +214,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Get list of all attributes by an table.
      *
-     * @param string $table
+     * @param $table
      *
      * @return array
      */
@@ -263,8 +262,8 @@ class RequestSqlCore extends ObjectModel
     /**
      * Cut an attribute with or without the alias.
      *
-     * @param string $attr
-     * @param string $from
+     * @param $attr
+     * @param $from
      *
      * @return array|bool
      */
@@ -299,7 +298,7 @@ class RequestSqlCore extends ObjectModel
      * Get name of table by alias.
      *
      * @param bool $alias
-     * @param array $tables
+     * @param $tables
      *
      * @return array|bool
      */
@@ -330,14 +329,14 @@ class RequestSqlCore extends ObjectModel
             $this->error_sql['returnNameTable'] = false;
 
             return false;
-        }
+        } else {
+            $tab = [];
+            foreach ($tables as $table) {
+                $tab[] = $table['table'];
+            }
 
-        $tab = [];
-        foreach ($tables as $table) {
-            $tab[] = $table['table'];
+            return $tab;
         }
-
-        return $tab;
     }
 
     /**
@@ -369,7 +368,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check if all required sentence existing.
      *
-     * @param array $tab
+     * @param $tab
      *
      * @return bool
      */
@@ -389,7 +388,7 @@ class RequestSqlCore extends ObjectModel
     /**
      * Check if an unauthorized existing in an array.
      *
-     * @param array $tab
+     * @param string $tab
      *
      * @return bool
      */

@@ -96,12 +96,6 @@ class Router extends BaseRouter
 
         $queryParams['_token'] = $token;
 
-        $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
-        if (isset($components['fragment']) && $components['fragment'] !== '') {
-            /* This copy-paste from Symfony's UrlGenerator */
-            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
-        }
-
-        return $url;
+        return $baseUrl . '?' . http_build_query($queryParams, '', '&');
     }
 }

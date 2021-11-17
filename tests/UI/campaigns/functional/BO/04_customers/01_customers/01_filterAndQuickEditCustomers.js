@@ -27,7 +27,7 @@ const today = new Date();
 const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
 const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
-const dateToday = `${mm}/${dd}/${yyyy}`;
+const dateToday = `${yyyy}-${mm}-${dd}`;
 
 /*
 Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
@@ -250,68 +250,63 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       await expect(numberOfCustomersAfterFilter).to.be.at.above(0);
     });
 
-    describe('Quick edit customer status', async () => {
-      [
-        {args: {action: 'disable', value: false}},
-        {args: {action: 'enable', value: true}},
-      ].forEach((test, index) => {
-        it(`should ${test.args.action} customer status`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `quickEditStatus${index}`, baseContext);
+    [
+      {
+        args: {
+          testIdentifier: 'disableStatus', action: 'disable', column: 'active', value: false,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'enableStatus', action: 'enable', column: 'active', value: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'enableNewsletter', action: 'enable newsletter', column: 'newsletter', value: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'disableNewsletter', action: 'disable newsletter', column: 'newsletter', value: false,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'enablePartnerOffers', action: 'enable partner offers', column: 'optin', value: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'disablePartnerOffers', action: 'disable partner offers', column: 'optin', value: false,
+        },
+      },
+    ].forEach((test) => {
+      it(`should ${test.args.action} '${test.args.column}' column for customer`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-          const resultMessage = await customersPage.setCustomerStatus(page, 1, test.args.value);
+        const isActionPerformed = await customersPage.updateToggleColumnValue(
+          page,
+          1,
+          test.args.column,
+          test.args.value,
+        );
 
-          if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
-          }
+        if (isActionPerformed) {
+          const resultMessage = await customersPage.getAlertSuccessBlockParagraphContent(page);
+          await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
+        }
 
-          const customerStatus = await customersPage.getCustomerStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
-        });
+        const customerStatus = await customersPage.getToggleColumnValue(page, 1, test.args.column);
+        await expect(customerStatus).to.be.equal(test.args.value);
       });
     });
 
-    describe('Quick edit newsletter status', async () => {
-      [
-        {args: {action: 'enable', value: true}},
-        {args: {action: 'disable', value: false}},
-      ].forEach((test, index) => {
-        it(`should ${test.args.action} customer newsletter status`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `quickEditNewsletter${index}`, baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAllFilters', baseContext);
 
-          const resultMessage = await customersPage.setNewsletterStatus(page, 1, test.args.value);
-
-          if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
-          }
-
-          const customerStatus = await customersPage.getNewsletterStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
-        });
-      });
-    });
-
-    describe('Quick edit partner offers status', async () => {
-      [
-        {args: {action: 'enable', value: true}},
-        {args: {action: 'disable', value: false}},
-      ].forEach((test, index) => {
-        it(`should ${test.args.action} customer partner offers status`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', `quickEditOptin${index}`, baseContext);
-
-          const resultMessage = await customersPage.setPartnerOffersStatus(page, 1, test.args.value);
-
-          if (resultMessage) {
-            await expect(resultMessage).to.contains(customersPage.successfulUpdateStatusMessage);
-          }
-
-          const customerStatus = await customersPage.getPartnerOffersStatus(page, 1);
-          await expect(customerStatus).to.be.equal(test.args.value);
-        });
-      });
-    });
-
-    after(async () => {
-      await customersPage.resetAndGetNumberOfLines(page);
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.equal(numberOfCustomers);
     });
   });
 });

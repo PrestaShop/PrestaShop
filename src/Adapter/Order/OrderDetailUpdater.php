@@ -91,7 +91,7 @@ class OrderDetailUpdater
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
-            $ecotax = new DecimalNumber((string) $orderDetail->ecotax);
+            $ecotax = new DecimalNumber($orderDetail->ecotax);
 
             $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
             $ecotaxTaxFactor = new DecimalNumber((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));

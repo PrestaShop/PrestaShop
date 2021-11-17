@@ -39,7 +39,7 @@ class FormHandlerChecker implements FormHandlerInterface
     private $formHandler;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $lastCreatedId;
 
@@ -53,9 +53,6 @@ class FormHandlerChecker implements FormHandlerInterface
         $this->formHandler = $formHandler;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handle(FormInterface $form)
     {
         $result = $this->formHandler->handle($form);
@@ -64,18 +61,12 @@ class FormHandlerChecker implements FormHandlerInterface
         return $result;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function handleFor($id, FormInterface $form)
     {
-        return $this->formHandler->handleFor($id, $form);
+        return $this->formHandler->handleFor($form, $id);
     }
 
-    /**
-     * @return int|null
-     */
-    public function getLastCreatedId(): ?int
+    public function getLastCreatedId(): int
     {
         return $this->lastCreatedId;
     }

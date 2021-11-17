@@ -4,16 +4,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
-
-// Import FO pages
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
@@ -24,6 +19,9 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Languages} = require('@data/demo/languages');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 
@@ -40,6 +38,7 @@ const day = (`0${today.getDate()}`).slice(-2);
 const month = (`0${today.getMonth() + 1}`).slice(-2);
 // Current year
 const year = today.getFullYear();
+
 // Date today (yyy-mm-dd)
 const dateToday = `${year}-${month}-${day}`;
 
@@ -49,7 +48,7 @@ Filter email logs list
 Delete email log
 Delete email logs by bulk action
  */
-describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emails', async () => {
+describe('Filter, delete and bulk actions email log', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,9 +63,9 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Create order to have emails in the table', async () => {
-    it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewMyShop', baseContext);
+  describe('Create order to have email logs', async () => {
+    it('should go to FO and create an order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
 
       // Click on view my shop
       page = await dashboardPage.viewMyShop(page);
@@ -74,52 +73,28 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       // Change language in FO
       await homePage.changeLanguage(page, 'en');
 
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should add the first product to the cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the product to the cart
+      // Add the created product to the cart
       await productPage.addProductToTheCart(page);
-
-      const pageTitle = await cartPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartPage.pageTitle);
-    });
-
-    it('should proceed to checkout and sign in', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
+      // Checkout the order
+
       // Personal information step - Login
       await checkoutPage.clickOnSignIn(page);
       await checkoutPage.customerLogin(page, DefaultCustomer);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should pay the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -127,31 +102,17 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should logout from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'logoutFO', baseContext);
 
       // Logout from FO
       await orderConfirmationPage.logout(page);
 
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.false;
-    });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
-
       // Go Back to BO
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
     });
   });
 
-  describe('Filter E-mail table', async () => {
-    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
+  describe('Filter email logs table', async () => {
+    it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -219,7 +180,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     ];
 
     tests.forEach((test) => {
-      it(`should filter E-mail table by '${test.args.filterBy}'`, async function () {
+      it(`should filter email logs by '${test.args.filterBy}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.identifier, baseContext);
 
         await emailPage.filterEmailLogs(
@@ -246,7 +207,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       });
     });
 
-    it('should filter E-mail table by date sent \'From\' and \'To\'', async function () {
+    it('should filter email logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
       await emailPage.filterEmailLogsByDate(page, dateToday, dateToday);
@@ -268,8 +229,8 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     });
   });
 
-  describe('Delete E-mail', async () => {
-    it('should filter email list by \'subject\'', async function () {
+  describe('Delete email log', async () => {
+    it('should filter email logs by \'subject\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterBySubjectToDelete', baseContext);
 
       await emailPage.filterEmailLogs(page, 'input', 'subject', PaymentMethods.wirePayment.name);
@@ -278,7 +239,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
     });
 
-    it('should delete email', async function () {
+    it('should delete email log', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteEmail', baseContext);
 
       const textResult = await emailPage.deleteEmailLog(page, 1);
@@ -293,8 +254,8 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     });
   });
 
-  describe('Delete E-mail by bulk action', async () => {
-    it('should delete all emails', async function () {
+  describe('Delete email logs by bulk action', async () => {
+    it('should delete all email logs', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'BulkDelete', baseContext);
 
       const deleteTextResult = await emailPage.deleteEmailLogsBulkActions(page);

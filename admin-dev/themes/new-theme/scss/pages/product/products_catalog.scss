@@ -6,12 +6,38 @@
 /* stylelint-enable */
 
 .products-catalog {
+  @include border-radius(5px);
+  @include box-shadow(0 0 4px 0 rgba(0,0,0,0.06));
 
-  .catalog-tools {
-    flex: 0 0 2rem;
-    max-width: 2rem;
-    margin-left: auto;
-    text-align: right;
+  > .content {
+    margin-bottom: 20px;
+    background: $white;
+    padding: {
+      top: $grid-gutter-width / 2;
+      bottom: $grid-gutter-width / 2;
+    }
+
+    .row {
+      align-items: center;
+
+      @include media-breakpoint-down(sm) {
+        margin-right: 0;
+        margin-left: 0;
+      }
+    }
+  }
+
+  > .content:last-child {
+    margin-bottom: 0;
+  }
+
+  // actions at the top of the page
+  #catalog-actions {
+    align-items: start;
+
+    .row + .row {
+      padding-top: $grid-gutter-width / 2;
+    }
   }
 
   .icon-caret {
@@ -68,5 +94,13 @@
   > .material-icons {
     font-size: 12rem;
     color: $gray-light;
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .products-catalog {
+    #product_catalog_category_tree_filter {
+      margin-bottom: 0.75rem;
+    }
   }
 }

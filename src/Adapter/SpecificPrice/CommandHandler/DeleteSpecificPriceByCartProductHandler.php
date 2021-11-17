@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\DeleteSpecificPriceByCartProductCommand;
@@ -34,16 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceExcep
 use PrestaShopException;
 use SpecificPrice;
 
-@trigger_error(
-    sprintf(
-        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
-        DeleteSpecificPriceByCartProductHandler::class
-    ),
-    E_USER_DEPRECATED
-);
-
 /**
- * @deprecated since 8.0.0 and will be removed in the next major version.
+ * Handles DeleteSpecificPriceByCartProduct command using legacy object model
  */
 final class DeleteSpecificPriceByCartProductHandler implements DeleteSpecificPriceByCartProductHandlerInterface
 {

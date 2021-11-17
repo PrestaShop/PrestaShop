@@ -26,15 +26,13 @@
 
 namespace PrestaShopBundle\Command;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use PDO;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateSchemaCommand extends Command
+class UpdateSchemaCommand extends ContainerAwareCommand
 {
     /**
      * @var EntityManagerInterface
@@ -46,15 +44,6 @@ class UpdateSchemaCommand extends Command
     private $dbName;
 
     private $dbPrefix;
-
-    public function __construct(string $databaseName, string $databasePrefix, EntityManager $manager)
-    {
-        parent::__construct();
-        $this->dbName = $databaseName;
-        $this->dbPrefix = $databasePrefix;
-        $this->em = $manager;
-        $this->metadata = $manager->getMetadataFactory()->getAllMetadata();
-    }
 
     protected function configure()
     {
@@ -69,6 +58,14 @@ class UpdateSchemaCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $container = $this->getContainer();
+
+        $this->dbName = $container->getParameter('database_name');
+        $this->dbPrefix = $container->getParameter('database_prefix');
+
+        $this->em = $container->get('doctrine')->getManager();
+        $this->metadata = $this->em->getMetadataFactory()->getAllMetadata();
+
         $conn = $this->em->getConnection();
         $conn->beginTransaction();
 
@@ -219,9 +216,7 @@ class UpdateSchemaCommand extends Command
                 throw ($e);
             }
         }
-        if (!$conn->getWrappedConnection() instanceof PDO || $conn->getWrappedConnection()->inTransaction()) {
-            $conn->commit();
-        }
+        $conn->commit();
 
         $pluralization = (1 > $sqls) ? 'query was' : 'queries were';
         $output->writeln(sprintf('Database schema updated successfully! "<info>%s</info>" %s executed', $sqls, $pluralization));

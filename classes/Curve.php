@@ -111,7 +111,5 @@ class CurveCore
         if (array_key_exists((string) $x, $this->values)) {
             return $this->values[(string) $x];
         }
-
-        return null;
     }
 }

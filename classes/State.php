@@ -233,6 +233,18 @@ class StateCore extends ObjectModel
     }
 
     /**
+     * Has Counties.
+     *
+     * @param int $idState
+     *
+     * @return int
+     */
+    public static function hasCounties($idState)
+    {
+        return count(County::getCounties((int) $idState));
+    }
+
+    /**
      * Get Zone ID.
      *
      * @param int $idState State ID

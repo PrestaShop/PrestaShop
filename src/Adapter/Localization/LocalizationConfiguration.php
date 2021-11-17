@@ -108,6 +108,11 @@ class LocalizationConfiguration implements DataConfigurationInterface
                 $this->currencyManager->updateDefaultCurrency();
             }
 
+            // remove module list cache if the default country changed
+            if ($currentConfig['default_country'] != $config['default_country']) {
+                $this->adminModuleDataProvider->clearModuleListCache();
+            }
+
             $this->configuration->set('PS_LANG_DEFAULT', (int) $config['default_language']);
             $this->configuration->set('PS_DETECT_LANG', (int) $config['detect_language_from_browser']);
             $this->configuration->set('PS_COUNTRY_DEFAULT', (int) $config['default_country']);

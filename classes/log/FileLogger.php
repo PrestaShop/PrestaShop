@@ -25,18 +25,13 @@
  */
 class FileLoggerCore extends AbstractLogger
 {
-    /**
-     * @var string
-     */
     protected $filename = '';
 
     /**
      * Write the message in the log file.
      *
-     * @param string $message
-     * @param int $level
-     *
-     * @return bool
+     * @param string message
+     * @param level
      */
     protected function logMessage($message, $level)
     {
@@ -52,8 +47,6 @@ class FileLoggerCore extends AbstractLogger
      * Check if the specified filename is writable and set the filename.
      *
      * @param string $filename
-     *
-     * @return void
      */
     public function setFilename($filename)
     {
@@ -67,7 +60,8 @@ class FileLoggerCore extends AbstractLogger
     /**
      * Log the message.
      *
-     * @return string
+     * @param string message
+     * @param level
      */
     public function getFilename()
     {

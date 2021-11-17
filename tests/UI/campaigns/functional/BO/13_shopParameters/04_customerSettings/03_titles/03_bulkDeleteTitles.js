@@ -1,11 +1,11 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
+
+// Helper files to delete images
 const files = require('@utils/files');
+
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -19,11 +19,19 @@ const addTitlePage = require('@pages/BO/shopParameters/customerSettings/titles/a
 // Import data
 const TitleFaker = require('@data/faker/title');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_customerSettings_titles_bulkDeleteTitles';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
+
 
 let numberOfTitles = 0;
 
@@ -32,7 +40,7 @@ const titlesToCreate = [
   new TitleFaker({name: 'todelete2'}),
 ];
 
-describe('BO - Shop Parameters - Customer Settings : Bulk delete files', async () => {
+describe('Create titles then delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -52,7 +60,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete files', async (
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
+  it('should go to customer settings page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -67,7 +75,7 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete files', async (
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to \'Titles\' page', async function () {
+  it('should go to titles page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
     await customerSettingPage.goToTitlesPage(page);
@@ -109,13 +117,23 @@ describe('BO - Shop Parameters - Customer Settings : Bulk delete files', async (
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await titlesPage.filterTitles(page, 'input', 'b!name', 'todelete');
+      await titlesPage.filterTitles(
+        page,
+        'input',
+        'b!name',
+        'todelete',
+      );
 
       const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
       for (let i = 1; i <= numberOfTitlesAfterFilter; i++) {
-        const textColumn = await titlesPage.getTextColumn(page, i, 'b!name');
+        const textColumn = await titlesPage.getTextColumn(
+          page,
+          i,
+          'b!name',
+        );
+
         await expect(textColumn).to.contains('todelete');
       }
     });

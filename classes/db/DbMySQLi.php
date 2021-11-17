@@ -48,8 +48,8 @@ class DbMySQLiCore extends Db
      */
     public function connect()
     {
-        $socket = $port = false;
-        $server = '';
+        $socket = false;
+        $port = false;
         if (Tools::strpos($this->server, ':') !== false) {
             list($server, $port) = explode(':', $this->server);
             if (is_numeric($port) === false) {
@@ -327,7 +327,7 @@ class DbMySQLiCore extends Db
      * @param string $user Login for database connection
      * @param string $pwd Password for database connection
      * @param string $db Database name
-     * @param bool $new_db_link
+     * @param bool $newDbLink
      * @param string|bool $engine
      * @param int $timeout
      *

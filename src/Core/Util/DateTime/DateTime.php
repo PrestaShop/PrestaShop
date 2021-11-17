@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
-use DateTimeImmutable;
-use DateTimeInterface;
 use RuntimeException;
 
 /**
@@ -44,11 +42,6 @@ final class DateTime
      * Default format for date time string
      */
     public const DEFAULT_DATETIME_FORMAT = 'Y-m-d H:i:s';
-
-    /**
-     * ISO Date time format string
-     */
-    public const ISO_DATETIME_FORMAT = 'c';
 
     /**
      * DateTime value which should be considered same as null
@@ -71,27 +64,5 @@ final class DateTime
     public function __construct()
     {
         throw new RuntimeException(sprintf('This class purpose is to define constants only. You might have mistaken it with "%s"', \DateTime::class));
-    }
-
-    /**
-     * @param DateTimeInterface|string|null $value
-     *
-     * @return bool
-     */
-    public static function isNull($value): bool
-    {
-        return $value instanceof NullDateTime || empty($value) || $value === self::NULL_DATE || $value === self::NULL_DATETIME;
-    }
-
-    /**
-     * Returns NullDateTime if input value is nullable (including 0000-00-00 value), return a DateTime object otherwise.
-     *
-     * @param string|null $value
-     *
-     * @return DateTimeImmutable|NullDateTime
-     */
-    public static function buildNullableDateTime(?string $value): DateTimeImmutable
-    {
-        return empty($value) || $value === self::NULL_DATETIME || $value === self::NULL_DATE ? new NullDateTime() : new DateTimeImmutable($value);
     }
 }

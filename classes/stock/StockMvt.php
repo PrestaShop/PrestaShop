@@ -122,6 +122,20 @@ class StockMvtCore extends ObjectModel
     public $referer;
 
     /**
+     * @deprecated since 1.5.0
+     * @deprecated stock movement will not be updated anymore
+     */
+    public $date_upd;
+
+    /**
+     * @deprecated since 1.5.0
+     * @see physical_quantity
+     *
+     * @var int
+     */
+    public $quantity;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -156,6 +170,18 @@ class StockMvtCore extends ObjectModel
             'id_supply_order' => ['xlink_resource' => 'supply_order'],
         ],
     ];
+
+    /**
+     * @deprecated since 1.5.0
+     *
+     * This method no longer exists.
+     * There is no equivalent or replacement, considering that this should be handled by inventories.
+     */
+    public static function addMissingMvt($id_employee)
+    {
+        // display that this method is deprecated
+        Tools::displayAsDeprecated();
+    }
 
     /**
      * Gets the negative (decrements the stock) stock mvts that correspond to the given order, for :

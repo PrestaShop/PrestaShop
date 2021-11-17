@@ -1,13 +1,13 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
+
+// Helper files to delete images
 const files = require('@utils/files');
 
-// Import login steps
+
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -19,18 +19,27 @@ const addTitlePage = require('@pages/BO/shopParameters/customerSettings/titles/a
 // Import data
 const TitleFaker = require('@data/faker/title');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_customerSettings_titles_CRUDTitles';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
+
 
 let numberOfTitles = 0;
 
 const createTitleData = new TitleFaker();
 const editTitleData = new TitleFaker();
 
-describe('BO - Shop Parameters - Customer Settings : Create, update and delete title in BO', async () => {
+
+describe('Create, update and delete title in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +65,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
+  it('should go to customer settings page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -71,7 +80,7 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to \'Titles\' page', async function () {
+  it('should go to titles page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
     await customerSettingPage.goToTitlesPage(page);
@@ -112,7 +121,13 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await titlesPage.resetFilter(page);
-      await titlesPage.filterTitles(page, 'input', 'b!name', createTitleData.name);
+
+      await titlesPage.filterTitles(
+        page,
+        'input',
+        'b!name',
+        createTitleData.name,
+      );
 
       const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
       await expect(textEmail).to.contains(createTitleData.name);
@@ -142,7 +157,13 @@ describe('BO - Shop Parameters - Customer Settings : Create, update and delete t
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await titlesPage.resetFilter(page);
-      await titlesPage.filterTitles(page, 'input', 'b!name', editTitleData.name);
+
+      await titlesPage.filterTitles(
+        page,
+        'input',
+        'b!name',
+        editTitleData.name,
+      );
 
       const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
       await expect(textEmail).to.contains(editTitleData.name);

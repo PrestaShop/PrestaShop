@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -18,11 +15,19 @@ const addStorePage = require('@pages/BO/shopParameters/stores/add');
 // Import data
 const StoreFaker = require('@data/faker/store');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_contact_store_sortAndPagination';
+
+// Import expect from chai
+const {expect} = require('chai');
+
 
 // Browser and tab
 let browserContext;
 let page;
+
 
 let numberOfStores = 0;
 
@@ -33,7 +38,7 @@ Create 16 store
 Pagination stores
 Delete created stores
  */
-describe('BO - Shop Parameters - Contact : Sort and pagination stores', async () => {
+describe('Sort and pagination stores', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +53,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Contact\' page', async function () {
+  it('should go to contact page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -209,7 +214,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
     });
 
     describe('Paginate stores', async () => {
-      it('should change the items number to 20 per page', async function () {
+      it('should change the item number to 20 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
         const paginationNumber = await storesPage.selectPaginationLimit(page, '20');
@@ -230,7 +235,7 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
         expect(paginationNumber).to.equal('1');
       });
 
-      it('should change the items number to 50 per page', async function () {
+      it('should change the item number to 50 per page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
         const paginationNumber = await storesPage.selectPaginationLimit(page, '50');
@@ -242,13 +247,23 @@ describe('BO - Shop Parameters - Contact : Sort and pagination stores', async ()
       it('should filter list by name', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
-        await storesPage.filterTable(page, 'input', 'sl!name', 'todelete');
+        await storesPage.filterTable(
+          page,
+          'input',
+          'sl!name',
+          'todelete',
+        );
 
         const numberOfStoresAfterFilter = await storesPage.getNumberOfElementInGrid(page);
         await expect(numberOfStoresAfterFilter).to.be.at.least(16);
 
         for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
-          const textColumn = await storesPage.getTextColumn(page, i, 'sl!name');
+          const textColumn = await storesPage.getTextColumn(
+            page,
+            i,
+            'sl!name',
+          );
+
           await expect(textColumn).to.contains('todelete');
         }
       });

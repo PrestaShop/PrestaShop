@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Grid\Query\Filter;
 
 /**
@@ -37,7 +35,6 @@ final class SqlFilters
     public const WHERE_LIKE = 2;
     public const HAVING_LIKE = 3;
     public const WHERE_DATE = 4;
-    public const MIN_MAX = 5;
 
     /** @var array */
     private $filters = [];
@@ -49,7 +46,7 @@ final class SqlFilters
      *
      * @return self
      */
-    public function addFilter($filterName, $sqlField, $comparison = self::WHERE_STRICT): self
+    public function addFilter($filterName, $sqlField, $comparison = self::WHERE_STRICT)
     {
         $this->filters[] = [
             'filter_name' => $filterName,
@@ -63,7 +60,7 @@ final class SqlFilters
     /**
      * @return array
      */
-    public function getFilters(): array
+    public function getFilters()
     {
         return $this->filters;
     }

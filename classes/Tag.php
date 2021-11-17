@@ -329,7 +329,7 @@ class TagCore extends ObjectModel
     /**
      * Deletes product tags.
      *
-     * @param int $idProduct
+     * @param $idProduct
      * @param int|null $langId if provided, only deletes tags in specific language
      *
      * @return bool

@@ -72,7 +72,7 @@ class ShowcaseCard
     /**
      * Card shown in Improve -> Shipping -> Carriers
      */
-    public const CARRIERS_CARD = 'carriers_card';
+    const CARRIERS_CARD = 'carriers_card';
 
     /**
      * List of supported card names

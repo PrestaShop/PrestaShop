@@ -34,6 +34,9 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnInterface;
 use PrestaShop\PrestaShop\Core\Grid\Exception\ColumnNotFoundException;
 
+/**
+ * @doc ./vendor/bin/phpunit -c tests-legacy/phpunit.xml --filter=ColumnCollectionTest
+ */
 class ColumnCollectionTest extends TestCase
 {
     public function testItAddsColumnsToCollection()
@@ -185,7 +188,7 @@ class ColumnCollectionTest extends TestCase
 
         $columnsArray = $columns->toArray();
 
-        $this->assertIsArray($columnsArray);
+        $this->assertInternalType('array', $columnsArray);
         $this->assertCount(3, $columnsArray);
     }
 

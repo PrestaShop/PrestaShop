@@ -77,7 +77,7 @@ class OrderHistoryCore extends ObjectModel
      * Sets the new state of the given order.
      *
      * @param int $new_order_state
-     * @param int|object $id_order
+     * @param int/object $id_order
      * @param bool $use_existing_payment
      */
     public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
@@ -264,7 +264,9 @@ class OrderHistoryCore extends ObjectModel
                         ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
                         Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
                         true,
-                        (int) $order->id
+                        (int) $order->id,
+                        0,
+                        $employee
                     );
                 } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
                     Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
@@ -289,7 +291,8 @@ class OrderHistoryCore extends ObjectModel
                                         null,
                                         $mvt['price_te'],
                                         true,
-                                        null
+                                        null,
+                                        $employee
                                     );
                                 }
                                 if (!StockAvailable::dependsOnStock($product['id_product'])) {
@@ -344,7 +347,7 @@ class OrderHistoryCore extends ObjectModel
                             ]
                         );
                         //back to current shop context
-                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP && isset($current_shop_group_id)) {
+                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
                             Context::getContext()->shop->setContext($current_shop_context_type, $current_shop_group_id);
                         }
                     }
@@ -386,7 +389,7 @@ class OrderHistoryCore extends ObjectModel
                     $payment->id_currency = $order->id_currency;
                     $payment->amount = $rest_paid;
 
-                    if ($order->total_paid != 0 && isset($payment_method) && $payment_method instanceof Module) {
+                    if ($order->total_paid != 0) {
                         $payment->payment_method = $payment_method->displayName;
                     } else {
                         $payment->payment_method = null;
@@ -459,8 +462,8 @@ class OrderHistoryCore extends ObjectModel
 
     /**
      * @param bool $autodate Optional
-     * @param array|bool $template_vars Optional
-     * @param Context|null $context Deprecated
+     * @param array $template_vars Optional
+     * @param Context $context Deprecated
      *
      * @return bool
      */

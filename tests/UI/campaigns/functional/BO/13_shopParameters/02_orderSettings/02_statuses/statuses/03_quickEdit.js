@@ -1,12 +1,9 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
-// Import utils
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
-// Import login steps
+// Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,10 +11,16 @@ const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 
-// Import data
-const {Statuses} = require('@data/demo/orderStatuses');
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_QuickEditOrderStatus';
+
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import data
+const {Statuses} = require('@data/demo/orderStatuses');
 
 let browserContext;
 let page;
@@ -29,7 +32,7 @@ Quick edit send email to customer
 Quick edit delivery
 Quick edit invoice
  */
-describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order status in BO', async () => {
+describe('Quick edit order status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -32,23 +32,6 @@ use RuntimeException;
 class CountryFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @Given country :countryReference with iso code :isoCode exists
-     *
-     * @param string $countryReference
-     * @param string $isoCode
-     */
-    public function assertCountryExists(string $countryReference, string $isoCode): void
-    {
-        $countryId = (int) Country::getByIso($isoCode);
-
-        if (!$countryId) {
-            throw new RuntimeException(sprintf('Country "%s" does not exist', $countryReference));
-        }
-
-        SharedStorage::getStorage()->set($countryReference, $countryId);
-    }
-
-    /**
      * @Given country :countryIsoCode is enabled
      */
     public function enableCountry($countryIsoCode)

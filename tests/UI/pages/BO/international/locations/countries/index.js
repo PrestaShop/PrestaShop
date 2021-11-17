@@ -401,7 +401,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCountriesRestrictions(page, toEnable = true) {
-    await this.setChecked(page, this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
+    await page.check(this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockContent(page);

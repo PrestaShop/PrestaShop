@@ -32,12 +32,10 @@ export default class ProductSuppliersManager {
    *
    * @param {string} suppliersFormId
    * @param {boolean} forceUpdateDefault
-   * @param {ProductFormModel|null} productFormModel
    *
    * @returns {{}}
    */
-  constructor(suppliersFormId, forceUpdateDefault, productFormModel = null) {
-    this.productFormModel = productFormModel;
+  constructor(suppliersFormId, forceUpdateDefault) {
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
     this.$productSuppliersCollection = $(this.suppliersMap.productSuppliersCollection);
@@ -88,62 +86,6 @@ export default class ProductSuppliersManager {
       this.toggleTableVisibility();
       this.refreshDefaultSupplierBlock();
     });
-
-    // Default supplier changed
-    this.$defaultSupplierGroup.on('change', 'input', () => {
-      this.updateProductWholesalePrice();
-    });
-
-    if (this.productFormModel !== null) {
-      this.productFormModel.watch('price.wholesalePrice', (event) => {
-        this.updateDefaultProductSupplierPrice(event.value);
-      });
-    }
-  }
-
-  /**
-   * @param {string} newPrice
-   */
-  updateDefaultProductSupplierPrice(newPrice) {
-    const defaultProductSupplierId = this.getDefaultProductSupplierId();
-
-    if (defaultProductSupplierId) {
-      // Update default price value and trigger change so that memorizeCurrentSuppliers is triggered (along with other
-      // potential listeners)
-      const rowMap = this.suppliersMap.productSupplierRow;
-      $(rowMap.priceInput(defaultProductSupplierId)).val(newPrice).trigger('change');
-    }
-  }
-
-  updateProductWholesalePrice() {
-    const defaultProductSupplierId = this.getDefaultProductSupplierId();
-
-    if (defaultProductSupplierId) {
-      const $defaultPriceInput = $(this.suppliersMap.productSupplierRow.priceInput(defaultProductSupplierId));
-
-      if (!$defaultPriceInput.length) {
-        return;
-      }
-      const newDefaultPrice = $defaultPriceInput.val();
-      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
-    }
-  }
-
-  /**
-   * @returns {null|int}
-   */
-  getDefaultProductSupplierId() {
-    if (this.getSelectedSuppliers().length === 0) {
-      return null;
-    }
-
-    const defaultSupplier = this.$defaultSupplierGroup.find('input:checked');
-
-    if (!defaultSupplier.length) {
-      return null;
-    }
-
-    return defaultSupplier.first().val();
   }
 
   toggleTableVisibility() {
@@ -160,13 +102,10 @@ export default class ProductSuppliersManager {
    * @param {Object} supplier
    */
   addSupplier(supplier) {
-    const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
-
     if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
       const newSupplier = Object.create(this.defaultDataForSupplier);
       newSupplier.supplierId = supplier.supplierId;
       newSupplier.supplierName = supplier.supplierName;
-      newSupplier.price = wholeSalePrice;
 
       this.suppliers[supplier.supplierId] = newSupplier;
     } else {
@@ -291,8 +230,6 @@ export default class ProductSuppliersManager {
         removed: false,
       };
     });
-
-    this.updateProductWholesalePrice();
   }
 
   /**

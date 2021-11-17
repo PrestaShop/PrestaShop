@@ -538,50 +538,40 @@ class ProductLazyArray extends AbstractLazyArray
     /**
      * @arrayAccess
      *
-     * @return array|null
+     * @return 0|null
      */
     public function getSpecificReferences()
     {
-        if (isset($this->product['cart_quantity'])) {
-            return null;
-        }
-
-        // If the product has no combinations then the `specific_references` must be filled in
-        if (isset($this->product['attributes'])) {
+        if (isset($this->product['attributes']) && !isset($this->product['cart_quantity'])) {
             $specificReferences = array_slice($this->product['attributes'], 0)[0];
-        } else {
-            $specificReferences = [
-                'isbn' => $this->product['isbn'] ?? false,
-                'upc' => $this->product['upc'] ?? false,
-                'ean13' => $this->product['ean13'] ?? false,
-                'mpn' => $this->product['mpn'] ?? false,
-            ];
-        }
-        //this attributes should not be displayed in FO
-        unset(
-            $specificReferences['id_attribute'],
-            $specificReferences['id_attribute_group'],
-            $specificReferences['name'],
-            $specificReferences['group'],
-            $specificReferences['reference']
-        );
+            //this attributes should not be displayed in FO
+            unset(
+                $specificReferences['id_attribute'],
+                $specificReferences['id_attribute_group'],
+                $specificReferences['name'],
+                $specificReferences['group'],
+                $specificReferences['reference']
+            );
 
-        //if the attribute's references doesn't exist then get the product's references or unset it
-        foreach ($specificReferences as $key => $value) {
-            if (empty($value)) {
-                $translatedKey = $this->getTranslatedKey($key);
-                unset($specificReferences[$key]);
-                if (!empty($this->product[$key])) {
-                    $specificReferences[$translatedKey] = $this->product[$key];
+            //if the attribute's references doesn't exist then get the product's references or unset it
+            foreach ($specificReferences as $key => $value) {
+                if (empty($value)) {
+                    $translatedKey = $this->getTranslatedKey($key);
+                    unset($specificReferences[$key]);
+                    if (!empty($this->product[$key])) {
+                        $specificReferences[$translatedKey] = $this->product[$key];
+                    }
                 }
             }
+
+            if (empty($specificReferences)) {
+                $specificReferences = null;
+            }
+
+            return $specificReferences;
         }
 
-        if (empty($specificReferences)) {
-            $specificReferences = null;
-        }
-
-        return $specificReferences;
+        return null;
     }
 
     /**
@@ -886,10 +876,7 @@ class ProductLazyArray extends AbstractLazyArray
         $show_price = $this->shouldShowPrice($settings, $product);
         $show_availability = $show_price && $settings->stock_management_enabled;
         $this->product['show_availability'] = $show_availability;
-
-        if (!isset($product['quantity_wanted'])) {
-            $product['quantity_wanted'] = $this->getQuantityWanted();
-        }
+        $product['quantity_wanted'] = $this->getQuantityWanted();
 
         if (isset($product['available_date'])) {
             $date = new DateTime($product['available_date']);
@@ -903,16 +890,10 @@ class ProductLazyArray extends AbstractLazyArray
             if (isset($product['stock_quantity'])) {
                 $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
             }
-
-            $remainingQuantityOfAlternativeCombinations = 0;
-            if ($product['cache_default_attribute'] && !empty($product['quantity_all_versions'])) {
-                $remainingQuantityOfAlternativeCombinations = $product['quantity_all_versions'];
-            }
-
             if ($availableQuantity >= 0) {
                 $this->product['availability_date'] = $product['available_date'];
 
-                if ($availableQuantity < $settings->lastRemainingItems) {
+                if ($product['quantity'] < $settings->lastRemainingItems) {
                     $this->applyLastItemsInStockDisplayRule();
                 } else {
                     $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
@@ -926,7 +907,7 @@ class ProductLazyArray extends AbstractLazyArray
                     : ($config[$language->id] ?? null);
                 $this->product['availability_date'] = $product['available_date'];
                 $this->product['availability'] = 'available';
-            } elseif ($product['quantity'] > 0) {
+            } elseif ($product['quantity_wanted'] > 0 && $product['quantity'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'There are not enough products in stock',
                     [],
@@ -934,7 +915,7 @@ class ProductLazyArray extends AbstractLazyArray
                 );
                 $this->product['availability'] = 'unavailable';
                 $this->product['availability_date'] = null;
-            } elseif ($remainingQuantityOfAlternativeCombinations > 0) {
+            } elseif (!empty($product['quantity_all_versions']) && $product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     [],

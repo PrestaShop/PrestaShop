@@ -56,7 +56,7 @@ class ExternalModuleLegacySystemProviderTest extends KernelTestCase
         $this->catalogueVerifier = new CatalogueVerifier($this);
     }
 
-    protected function setUp(): void
+    protected function setUp()
     {
         self::bootKernel();
         $container = self::$kernel->getContainer();

@@ -26,10 +26,8 @@
 
 namespace PrestaShopBundle\Command;
 
-use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
-use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -38,25 +36,8 @@ use Symfony\Component\Routing\Route;
 /**
  * Runs naming conventions linter in the CLI
  */
-final class NamingConventionLinterCommand extends Command
+final class NamingConventionLinterCommand extends ContainerAwareCommand
 {
-    /**
-     * @var AdminRouteProvider
-     */
-    private $adminRouteProvider;
-
-    /**
-     * @var NamingConventionLinter
-     */
-    private $namingConventionLinter;
-
-    public function __construct(AdminRouteProvider $adminRouteProvider, NamingConventionLinter $namingConventionLinter)
-    {
-        parent::__construct();
-        $this->adminRouteProvider = $adminRouteProvider;
-        $this->namingConventionLinter = $namingConventionLinter;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -73,12 +54,16 @@ final class NamingConventionLinterCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $adminRouteProvider = $this->getContainer()->get('prestashop.bundle.routing.linter.admin_route_provider');
+        $namingConventionLinter = $this->getContainer()
+            ->get('prestashop.bundle.routing.linter.naming_convention_linter');
+
         $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
         $ioTableRows = [];
         /** @var Route $route */
-        foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
+        foreach ($adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
-                $this->namingConventionLinter->lint($routeName, $route);
+                $namingConventionLinter->lint($routeName, $route);
             } catch (NamingConventionException $e) {
                 $ioTableRows[] = [$routeName, $e->getExpectedRouteName()];
             }

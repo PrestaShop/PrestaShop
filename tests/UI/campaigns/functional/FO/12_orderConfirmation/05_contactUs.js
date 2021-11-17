@@ -56,7 +56,7 @@ const contactUsData = {
 11 go to the "customer service" page
 12 check that the previously made message is visible and the infos are correct
 */
-describe('FO - Order confirmation : Contact us', async () => {
+describe('FO contact us from order confirmation page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

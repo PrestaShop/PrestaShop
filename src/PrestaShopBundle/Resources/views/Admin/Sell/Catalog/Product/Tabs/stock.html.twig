@@ -25,7 +25,7 @@
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="stock-tab">
   {% if productForm.stock.virtual_product_file is defined %}
-    {% form_theme productForm.stock.virtual_product_file '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/virtual_product_file.html.twig' %}
+    {% form_theme productForm.stock.virtual_product_file '@PrestaShop/Admin/Sell/Catalog/Product/Form/virtual_product_file_form_theme.html.twig' %}
   {% endif %}
   {{ form_row(productForm.stock) }}
 </div>

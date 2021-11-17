@@ -181,9 +181,7 @@ abstract class CacheCore
     {
         if (!self::$instance) {
             $caching_system = _PS_CACHING_SYSTEM_;
-            if (class_exists($caching_system)) {
-                self::$instance = new $caching_system();
-            }
+            self::$instance = new $caching_system();
         }
 
         return self::$instance;
@@ -192,7 +190,7 @@ abstract class CacheCore
     /**
      * Unit testing purpose only.
      *
-     * @param Cache $test_instance
+     * @param $test_instance Cache
      */
     public static function setInstanceForTesting($test_instance)
     {
@@ -479,7 +477,7 @@ abstract class CacheCore
      * Remove the first less used query results from the cache.
      *
      * @param string $table
-     * @param string|null $keyToKeep the key we want to keep inside the table cache
+     * @param string $keyToKeep the keep we want to keep inside the table cache
      */
     protected function adjustTableCacheSize($table, $keyToKeep = null)
     {
@@ -514,7 +512,7 @@ abstract class CacheCore
             $this->_deleteMulti($invalidKeys);
 
             if ($keyToKeep) {
-                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep ?? null;
+                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep;
             }
         }
         $this->adjustTableCacheSize = false;

@@ -49,7 +49,7 @@ class HookDispatcherTest extends TestCase
      */
     private $hookDispatcher;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->hookDispatcherAdapter = $this->createMock(HookDispatcherAdapter::class);
         $this->hookDispatcher = new HookDispatcher($this->hookDispatcherAdapter);

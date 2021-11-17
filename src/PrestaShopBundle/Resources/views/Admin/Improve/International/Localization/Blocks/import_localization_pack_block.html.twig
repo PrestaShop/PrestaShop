@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
-{% form_theme localizationPackImportForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme localizationPackImportForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
 {% block import_localization_pack %}
   {{ form_start(localizationPackImportForm, {'action': path('admin_localization_import_pack')}) }}

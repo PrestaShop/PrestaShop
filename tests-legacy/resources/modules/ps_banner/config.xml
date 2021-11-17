@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>ps_banner</name>
+    <displayName><![CDATA[Banner]]></displayName>
+    <version><![CDATA[2.1.0]]></version>
+    <description><![CDATA[Displays a banner on your shop.]]></description>
+    <author><![CDATA[PrestaShop]]></author>
+    <is_configurable>1</is_configurable>
+    <need_instance>0</need_instance>
+	<limited_countries></limited_countries>
+</module>

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -34,11 +33,6 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class EmployeeFilters extends Filters
 {
-    /**
-     * @var string
-     */
-    protected $filterId = EmployeeGridDefinitionFactory::GRID_ID;
-
     /**
      * {@inheritdoc}
      */

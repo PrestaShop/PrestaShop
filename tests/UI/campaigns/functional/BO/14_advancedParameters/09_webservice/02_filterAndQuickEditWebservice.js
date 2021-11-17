@@ -4,9 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,8 +11,11 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const webservicePage = require('@pages/BO/advancedParameters/webservice');
 const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add');
 
-// Import data
+// Importing data
 const WebserviceFaker = require('@data/faker/webservice');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_modules_advancedParameters_webservice_filterAndQuickEditWebservice';
 
@@ -27,7 +27,7 @@ let numberOfWebserviceKeys = 0;
 const firstWebServiceData = new WebserviceFaker();
 const secondWebServiceData = new WebserviceFaker();
 
-describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservice', async () => {
+describe('Filter and quick edit webservice', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +42,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced parameters > Webservice\' page', async function () {
+  it('should go to "Advanced parameters > Webservice" page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -93,7 +93,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
       await expect(numberOfWebserviceKeysAfterCreation).to.be.equal(numberOfWebserviceKeys + 1 + index);
     });
   });
-  describe('Filter webservice table', async () => {
+  describe('Filter webservice', async () => {
     tests = [
       {
         args: {
@@ -154,7 +154,7 @@ describe('BO - Advanced Parameters - Webservice : Filter and quick edit webservi
     });
   });
 
-  describe('Quick edit webservice', async () => {
+  describe('Quick Edit webservice', async () => {
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
 

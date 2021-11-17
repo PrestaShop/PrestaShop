@@ -1,10 +1,7 @@
 require('module-alias/register');
 
-const {expect} = require('chai');
-
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -19,7 +16,13 @@ const addTagPage = require('@pages/BO/shopParameters/search/tags/add');
 const TagFaker = require('@data/faker/tag');
 const {Languages} = require('@data/demo/languages');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_search_tags_filterSortAndPagination';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -33,7 +36,7 @@ Sort tags by : Id, Language, Name, Products
 Pagination next and previous
 Delete by bulk actions
  */
-describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO', async () => {
+describe('Filter, sort and pagination tag in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,10 +76,10 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
   });
 
   // 1 - Create tag
-  describe('Create 21 tags in BO', async () => {
-    const creationTests = new Array(21).fill(0, 0, 21);
+  const creationTests = new Array(21).fill(0, 0, 21);
 
-    creationTests.forEach((test, index) => {
+  creationTests.forEach((test, index) => {
+    describe(`Create tag n°${index + 1} in BO`, async () => {
       const tagData = new TagFaker({name: `todelete${index}`, language: Languages.english.name});
 
       it('should go to add new tag page', async function () {
@@ -88,7 +91,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
         await expect(pageTitle).to.contains(addTagPage.pageTitleCreate);
       });
 
-      it(`should create tag n° ${index + 1} and check result`, async function () {
+      it('should create tag and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createTag${index}`, baseContext);
 
         const textResult = await addTagPage.setTag(page, tagData);
@@ -206,7 +209,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the items number to 20 per page', async function () {
+    it('should change the item number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await tagsPage.selectPaginationLimit(page, '20');
@@ -227,7 +230,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the items number to 50 per page', async function () {
+    it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await tagsPage.selectPaginationLimit(page, '50');
@@ -250,7 +253,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
       }
     });
 
-    it('should delete tags with Bulk Actions and check result', async function () {
+    it('should tags with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteTags', baseContext);
 
       const deleteTextResult = await tagsPage.bulkDelete(page);

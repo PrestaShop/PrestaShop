@@ -256,7 +256,7 @@ class WebService extends BOBasePage {
    * Enable / disable by Bulk Actions
    * @param page {Page} Browser tab
    * @param enable {boolean} True if we need to bulk enable status, false if not
-   * @returns {Promise<string>}
+   * @returns {Promise<void>}
    */
   async bulkSetStatus(page, enable = true) {
     // Click on Select All
@@ -273,8 +273,6 @@ class WebService extends BOBasePage {
 
     // Click on enable/Disable and wait for modal
     await this.clickAndWaitForNavigation(page, enable ? this.bulkActionsEnableButton : this.bulkActionsDisableButton);
-
-    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**

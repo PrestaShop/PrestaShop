@@ -37,9 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
@@ -137,93 +134,29 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should have no stock movements
-     *
-     * @param string $productReference
-     */
-    public function assertNoEmployeesStockMovement(string $productReference): void
-    {
-        $productId = (int) $this->getSharedStorage()->get($productReference);
-
-        /** @var StockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
-        ));
-        Assert::assertEmpty($stockMovements, 'Expected to find no stock movements');
-    }
-
-    /**
-     * @Then product :productReference last employees stock movements should be:
+     * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertLastEmployeesStockMovement(string $productReference, TableNode $table): void
-    {
-        $productId = (int) $this->getSharedStorage()->get($productReference);
-
-        /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
-        ));
-        $movementsData = $table->getColumnsHash();
-
-        Assert::assertEquals(count($movementsData), count($stockMovements));
-        $index = 0;
-        foreach ($movementsData as $movementDatum) {
-            $stockMovement = $stockMovements[$index];
-            Assert::assertEquals(
-                $movementDatum['first_name'],
-                $stockMovement->getFirstName(),
-                sprintf(
-                    'Invalid stock movement first name, expected %s instead of %s',
-                    $movementDatum['first_name'],
-                    $stockMovement->getFirstName()
-                )
-            );
-            Assert::assertEquals(
-                $movementDatum['last_name'],
-                $stockMovement->getLastName(),
-                sprintf(
-                    'Invalid stock movement last name, expected %s instead of %s',
-                    $movementDatum['last_name'],
-                    $stockMovement->getLastName()
-                )
-            );
-            Assert::assertEquals(
-                (int) $movementDatum['delta_quantity'],
-                $stockMovement->getDeltaQuantity(),
-                sprintf(
-                    'Invalid stock movement delta quantity, expected %d instead of %d',
-                    $movementDatum['delta_quantity'],
-                    $stockMovement->getDeltaQuantity()
-                )
-            );
-            Assert::assertNotNull($stockMovement->getDateAdd());
-            Assert::assertInstanceOf(DateTime::class, $stockMovement->getDateAdd());
-
-            ++$index;
-        }
-    }
-
-    /**
-     * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
-     *
-     * @param string $productReference
-     * @param string $movementType
-     * @param int $movementQuantity
-     */
     public function assertProductLastStockMovement(string $productReference, string $movementType, int $movementQuantity): void
     {
-        $productId = (int) $this->getSharedStorage()->get($productReference);
+        $productId = $this->getSharedStorage()->get($productReference);
 
-        /** @var StockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
-        ));
-        $lastMovement = $stockMovements[0];
+        /** @var StockMovementRepository $stockMovementRepository */
+        $stockMovementRepository = $this->getContainer()->get('prestashop.core.api.stock_movement.repository');
+        $params = new QueryStockMovementParamsCollection();
+        $params->fromArray([
+            'productId' => $productId,
+        ]);
+        $movements = $stockMovementRepository->getData($params);
+        if (count($movements) <= 0) {
+            throw new RuntimeException(sprintf('No stock movement found for product %s', $productReference));
+        }
 
-        $lastMovementType = $lastMovement->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
+        $lastMovement = $movements[0];
+
+        $lastMovementType = (int) $lastMovement['sign'] < 0 ? 'decreased' : 'increased';
         Assert::assertEquals(
             $movementType,
             $lastMovementType,
@@ -236,11 +169,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals(
             $movementQuantity,
-            abs($lastMovement->getDeltaQuantity()),
+            $lastMovement['physical_quantity'],
             sprintf(
                 'Invalid stock movement quantity, expected %d instead of %d',
                 $movementQuantity,
-                abs($lastMovement->getDeltaQuantity())
+                $lastMovement['physical_quantity']
             )
         );
     }
@@ -306,9 +239,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             unset($data['out_of_stock_type']);
         }
 
-        if (isset($data['delta_quantity'])) {
-            $command->setDeltaQuantity((int) $data['delta_quantity']);
-            unset($data['delta_quantity']);
+        if (isset($data['quantity'])) {
+            $command->setQuantity((int) $data['quantity']);
+            unset($data['quantity']);
         }
 
         if (isset($data['minimal_quantity'])) {

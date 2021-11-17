@@ -39,7 +39,7 @@ class LocaleDataTest extends TestCase
     /**
      * Setup tested dependency
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->localeData = new LocaleData();
     }

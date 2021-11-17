@@ -4,9 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -16,6 +13,9 @@ const addContactPage = require('@pages/BO/shopParameters/contact/add');
 
 // Import data
 const ContactFaker = require('@data/faker/contact');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_contact_contactBulkActions';
 
@@ -28,7 +28,7 @@ const firstContactData = new ContactFaker({title: 'todelete'});
 const secondContactData = new ContactFaker({title: 'todelete'});
 
 // Create contacts then delete with Bulk actions
-describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
+describe('Create contacts then delete with Bulk actions', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters > Contact\' page', async function () {
+  it('should go to \'Shop parameters>Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -98,13 +98,22 @@ describe('BO - Shop Parameters - Contact : Bulk delete contacts', async () => {
     it('should filter list by title', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await contactsPage.filterContacts(page, 'name', 'todelete');
+      await contactsPage.filterContacts(
+        page,
+        'name',
+        'todelete',
+      );
 
       const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
       await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
       for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
-        const textColumn = await contactsPage.getTextColumnFromTableContacts(page, i, 'name');
+        const textColumn = await contactsPage.getTextColumnFromTableContacts(
+          page,
+          i,
+          'name',
+        );
+
         await expect(textColumn).to.contains('todelete');
       }
     });

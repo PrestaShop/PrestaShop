@@ -4,18 +4,13 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
-
-// Import FO pages
 const foProductPage = require('@pages/FO/product');
 const foHomePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
@@ -23,13 +18,17 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // Import data
 const ProductFaker = require('@data/faker/product');
 
+// Import test context
+const testContext = require('@utils/testContext');
+
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeOutOfStockProducts';
+
 
 let browserContext;
 let page;
 const productData = new ProductFaker({type: 'Standard product', quantity: 0});
 
-describe('BO - Shop Parameters - Product Settings : Enable delivery time out-of-stocks products', async () => {
+describe('Enable delivery time out-of-stocks products', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

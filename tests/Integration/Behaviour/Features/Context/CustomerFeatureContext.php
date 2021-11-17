@@ -72,7 +72,7 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
-        SharedStorage::getStorage()->set($reference, (int) $customer->id);
+        SharedStorage::getStorage()->set($reference, $customer->id);
     }
 
     /**

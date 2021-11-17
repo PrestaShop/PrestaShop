@@ -43,7 +43,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * Create feature action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

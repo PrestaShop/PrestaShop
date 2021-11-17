@@ -27,7 +27,6 @@
 namespace Tests\Unit\Core\Security;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Security\HtaccessFolderGuard;
 
 class HtaccessFolderGuardTest extends TestCase
@@ -42,28 +41,28 @@ class HtaccessFolderGuardTest extends TestCase
      */
     private $htaccessTemplate;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
         $this->htaccessTemplate = file_get_contents($this->htaccessTemplatePath);
     }
 
+    /**
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\FileNotFoundException
+     */
     public function testInvalidTemplatePath()
     {
-        $this->expectException(FileNotFoundException::class);
-
         $invalidPath = __DIR__ . '/../../Resources/security/invalid_htaccess';
         new HtaccessFolderGuard($invalidPath);
     }
 
     /**
      * @dataProvider getInvalidFolders
+     * @expectedException \PrestaShop\PrestaShop\Core\Exception\FileNotFoundException
      */
     public function testProtectInvalidFolders($invalidFolder)
     {
-        $this->expectException(FileNotFoundException::class);
-
         $protector = new HtaccessFolderGuard($this->htaccessTemplatePath);
         $protector->protectFolder($invalidFolder);
     }

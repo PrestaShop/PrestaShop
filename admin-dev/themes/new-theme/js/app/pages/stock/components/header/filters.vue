@@ -147,40 +147,39 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-  import PSSelect from '@app/widgets/ps-select.vue';
-  import PSDatePicker from '@app/widgets/ps-datepicker.vue';
-  import PSRadio from '@app/widgets/ps-radio.vue';
-  import FilterComponent from './filters/filter-component.vue';
+<script>
+  import PSSelect from '@app/widgets/ps-select';
+  import PSDatePicker from '@app/widgets/ps-datepicker';
+  import PSRadio from '@app/widgets/ps-radio';
+  import FilterComponent from './filters/filter-component';
 
-  export default Vue.extend({
+  export default {
     computed: {
-      locale(): string {
+      locale() {
         return window.data.locale;
       },
-      isOverview(): boolean {
+      isOverview() {
         return this.$route.name === 'overview';
       },
-      employees(): Record<string, any> {
+      employees() {
         return this.$store.state.employees;
       },
-      movementsTypes(): Record<string, any> {
+      movementsTypes() {
         return this.$store.state.movementsTypes;
       },
-      categoriesList(): Record<string, any> {
+      categoriesList() {
         return this.$store.getters.categories;
       },
     },
     methods: {
-      onClear(event: any): void {
-        delete this.date_add[<number>event.dateType];
+      onClear(event) {
+        delete this.date_add[event.dateType];
         this.applyFilter();
       },
-      onClick(): void {
+      onClick() {
         this.applyFilter();
       },
-      onFilterActive(list: Array<any>, type: string): void {
+      onFilterActive(list, type) {
         if (type === 'supplier') {
           this.suppliers = list;
         } else {
@@ -189,7 +188,7 @@
         this.disabled = !this.suppliers.length && !this.categories.length;
         this.applyFilter();
       },
-      applyFilter(): void {
+      applyFilter() {
         this.$store.dispatch('isLoading');
         this.$emit('applyFilter', {
           suppliers: this.suppliers,
@@ -200,7 +199,7 @@
           active: this.active,
         });
       },
-      onChange(item: any): void {
+      onChange(item) {
         if (item.itemId === 'id_stock_mvt_reason') {
           this.id_stock_mvt_reason = item.value === 'default' ? [] : item.value;
         } else {
@@ -208,13 +207,13 @@
         }
         this.applyFilter();
       },
-      onDpChange(event: any) {
-        this.date_add[<number>event.dateType] = event.date.unix();
+      onDpChange(event) {
+        this.date_add[event.dateType] = event.date.unix();
         if (event.oldDate) {
           this.applyFilter();
         }
       },
-      onRadioChange(value: any): void {
+      onRadioChange(value) {
         this.active = value;
         this.applyFilter();
       },
@@ -226,20 +225,18 @@
       PSRadio,
     },
     mounted() {
-      this.date_add = [];
+      this.date_add = {};
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
-    data() {
-      return {
-        disabled: true,
-        suppliers: [] as Array<any>,
-        categories: [] as Array<any>,
-        id_stock_mvt_reason: [] as Array<any>,
-        id_employee: [] as Array<any>,
-        date_add: [] as Array<any>,
-        active: null,
-      };
-    },
-  });
+    data: () => ({
+      disabled: true,
+      suppliers: [],
+      categories: [],
+      id_stock_mvt_reason: [],
+      id_employee: [],
+      date_add: {},
+      active: null,
+    }),
+  };
 </script>

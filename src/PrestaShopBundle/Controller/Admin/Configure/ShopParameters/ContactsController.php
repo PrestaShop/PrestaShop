@@ -65,6 +65,7 @@ class ContactsController extends FrameworkBundleAdminController
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Contacts', 'Admin.Navigation.Menu'),
+                'requireAddonsSearch' => true,
                 'layoutHeaderToolbarBtn' => [
                     'add' => [
                         'desc' => $this->trans('Add new contact', 'Admin.Shopparameters.Feature'),
@@ -78,8 +79,6 @@ class ContactsController extends FrameworkBundleAdminController
     }
 
     /**
-     * @deprecated since 8.0 and will be removed in next major. Use CommonController:searchGridAction instead
-     *
      * Grid search action.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")

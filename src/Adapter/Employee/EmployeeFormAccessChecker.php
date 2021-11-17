@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Employee;
 use PrestaShop\PrestaShop\Core\Employee\Access\EmployeeFormAccessCheckerInterface;
 use PrestaShop\PrestaShop\Core\Employee\ContextEmployeeProviderInterface;
 use PrestaShop\PrestaShop\Core\Employee\EmployeeDataProviderInterface;
+use PrestaShopBundle\Entity\Repository\TabRepository;
+use Tab;
 
 /**
  * Class EmployeeFormAccessChecker checks employee's access to the employee form.
@@ -41,6 +43,11 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     private $contextEmployeeProvider;
 
     /**
+     * @var TabRepository
+     */
+    private $tabRepository;
+
+    /**
      * @var EmployeeDataProviderInterface
      */
     private $employeeDataProvider;
@@ -48,13 +55,16 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
     /**
      * @param ContextEmployeeProviderInterface $contextEmployeeProvider
      * @param EmployeeDataProviderInterface $employeeDataProvider
+     * @param TabRepository $tabRepository
      */
     public function __construct(
         ContextEmployeeProviderInterface $contextEmployeeProvider,
-        EmployeeDataProviderInterface $employeeDataProvider
+        EmployeeDataProviderInterface $employeeDataProvider,
+        TabRepository $tabRepository
     ) {
         $this->contextEmployeeProvider = $contextEmployeeProvider;
         $this->employeeDataProvider = $employeeDataProvider;
+        $this->tabRepository = $tabRepository;
     }
 
     /**
@@ -80,5 +90,15 @@ final class EmployeeFormAccessChecker implements EmployeeFormAccessCheckerInterf
         }
 
         return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function canAccessAddonsConnect()
+    {
+        return Tab::checkTabRights(
+            $this->tabRepository->findOneIdByClassName('AdminModulesController')
+        );
     }
 }

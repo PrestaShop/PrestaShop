@@ -40,9 +40,9 @@ class ResizableTextType extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType()
     {
-        return [TextType::class];
+        return TextType::class;
     }
 
     /**

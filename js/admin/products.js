@@ -30,6 +30,7 @@ function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
 	this.tabs_to_preload = [];
+	this.current_request;
 	this.stack_done = [];
 	this.page_reloading = false;
 	this.has_error_loading_tabs = false;
@@ -212,6 +213,7 @@ function ProductTabsManager(){
 }
 
 function loadPack() {
+	var container = $('#product-pack-container');
 	var id_product = $('input[name=id_product]').first().val();
 	var data;
 	$.ajax({
@@ -277,7 +279,7 @@ product_tabs['Combinations'] = new function(){
 					var quantity = data[0]['quantity'];
 					var image = false;
 					var product_att_list = new Array();
-					for(var i=0;i<data.length;i++)
+					for(i=0;i<data.length;i++)
 					{
 						product_att_list.push(data[i]['group_name']+' : '+data[i]['attribute_name']);
 						product_att_list.push(data[i]['id_attribute']);
@@ -435,6 +437,7 @@ product_tabs['Combinations'] = new function(){
 	this.fillCombination = function(wholesale_price, price_impact, weight_impact, unit_impact, reference,
 	ean, quantity, image, old_attr, id_product_attribute, default_attribute, eco_tax, upc, mpn, minimal_quantity, available_date, low_stock_threshold, low_stock_alert)
 	{
+		var link = '';
 		self.init_elems();
 		$('#stock_mvt_attribute').show();
 		$('#initial_stock_attribute').hide();
@@ -513,13 +516,14 @@ product_tabs['Combinations'] = new function(){
 		$("#add_new_combination").show();
 
 		/* Reset all combination images */
-		$('#id_image_attr').find("input[id^=id_image_attr_]").each(function() {
+		combinationImages = $('#id_image_attr').find("input[id^=id_image_attr_]");
+		combinationImages.each(function() {
 			this.checked = false;
 		});
 
 		/* Check combination images */
 		if (typeof(combination_images[id_product_attribute]) != 'undefined')
-			for (var i = 0; i < combination_images[id_product_attribute].length; i++)
+			for (i = 0; i < combination_images[id_product_attribute].length; i++)
 				$('#id_image_attr_' + combination_images[id_product_attribute][i]).attr('checked', true);
 		check_impact();
 		check_weight_impact();
@@ -551,7 +555,7 @@ product_tabs['Combinations'] = new function(){
 		var elem = getE('product_att_list');
 
 		if (elem.length)
-			for (var i = elem.length - 1; i >= 0; i--)
+			for (i = elem.length - 1; i >= 0; i--)
 				if (elem[i])
 					elem.remove(i);
 
@@ -622,12 +626,12 @@ function enableSave()
 
 function handleSaveButtons(e)
 {
-	var msg = [];
+	msg = [];
 	var i = 0;
 	// relative to type of product
 	if (product_type == product_type_pack)
 		msg[i++] = handleSaveButtonsForPack();
-	else if (product_type == product_type_virtual)
+	else if (product_type == product_type_pack)
 		msg[i++] = handleSaveButtonsForVirtual();
 	else
 		msg[i++] = handleSaveButtonsForSimple();
@@ -650,7 +654,7 @@ function handleSaveButtons(e)
 	else
 	{
 		$("#disableSaveMessage").remove();
-		var do_not_save = false;
+		do_not_save = false;
 		for (var key in msg)
 		{
 			if (msg != "")
@@ -683,6 +687,8 @@ function handleSaveButtonsForPack()
 }
 
 product_tabs['Seo'] = new function(){
+	var self = this;
+
 	this.onReady = function() {
 		if ($('#link_rewrite_'+id_lang_default).length)
 			if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
@@ -767,7 +773,7 @@ product_tabs['Prices'] = new function(){
 
 	this.loadInformations = function(select_id, action)
 	{
-		var id_shop = $('#sp_id_shop').val();
+		id_shop = $('#sp_id_shop').val();
 		$.ajax({
 			url: product_url + '&action='+action+'&ajax=true&id_shop='+id_shop,
 			success: function(data) {
@@ -868,7 +874,7 @@ product_tabs['Associations'] = new function(){
 		input.value = '';
 		name.value = '';
 		div.innerHTML = '';
-		for (var i in inputCut)
+		for (i in inputCut)
 		{
 			// If empty, error, next
 			if (!inputCut[i] || !nameCut[i])
@@ -1114,7 +1120,7 @@ product_tabs['Informations'] = new function(){
 				$('#is_virtual_good').removeAttr('checked');
 			});
 
-			window.product_type = $(this).val();
+			product_type = $(this).val();
 			$('#warn_virtual_combinations').hide();
 			$('#warn_pack_combinations').hide();
 			// until a product is added in the pack
@@ -1229,7 +1235,7 @@ product_tabs['Pack'] = new function() {
 		});
 
 		function productFormatResult(item) {
-			var itemTemplate = "<div class='media'>";
+			itemTemplate = "<div class='media'>";
 			itemTemplate += "<div class='pull-left'>";
 			itemTemplate += "<img class='media-object' width='40' src='" + item.image + "' alt='" + item.name + "'>";
 			itemTemplate += "</div>";
@@ -1330,7 +1336,7 @@ product_tabs['Pack'] = new function() {
 					e.preventDefault();
 					e.stopPropagation();
 					delPackItem($(this).data('delete'), $(this).data('delete-attr'));
-				});
+				})
 				selectedProduct = null;
 				$('#curPackItemName').select2("val", "");
 				$('.pack-empty-warning').hide();
@@ -1537,9 +1543,10 @@ product_tabs['Suppliers'] = new function(){
 
 	this.manageDefaultSupplier = function() {
 		var default_is_set = false;
+		var availables_radio_buttons = [];
 		var radio_buttons = $('input[name="default_supplier"]');
 
-		for (var i=0; i<radio_buttons.length; i++)
+		for (i=0; i<radio_buttons.length; i++)
 		{
 			var item = $(radio_buttons[i]);
 
@@ -1594,6 +1601,8 @@ product_tabs['Suppliers'] = new function(){
 }
 
 product_tabs['VirtualProduct'] = new function(){
+	var self = this;
+
 	this.onReady = function(){
 		$(".datepicker").datepicker({
 			prevText: '',
@@ -1650,13 +1659,15 @@ product_tabs['VirtualProduct'] = new function(){
 }
 
 product_tabs['Warehouses'] = new function(){
+	var self = this;
+
 	this.onReady = function(){
 		$('.check_all_warehouse').click(function() {
 			//get all checkboxes of current warehouse
 			var checkboxes = $('input[name*="'+$(this).val()+'"]');
 			var checked = false;
 
-			for (var i=0; i<checkboxes.length; i++)
+			for (i=0; i<checkboxes.length; i++)
 			{
 				var item = $(checkboxes[i]);
 
@@ -1686,6 +1697,9 @@ product_tabs['Warehouses'] = new function(){
  */
 function refreshImagePositions(imageTable)
 {
+	var reg = /_[0-9]$/g;
+	var up_reg  = new RegExp("imgPosition=[0-9]+&");
+
 	imageTable.find("tbody tr").each(function(i,el) {
 		$(el).find("td.positionImage").html(i + 1);
 	});

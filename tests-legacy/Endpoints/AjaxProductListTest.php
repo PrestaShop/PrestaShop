@@ -33,7 +33,7 @@ use Tools;
  */
 class AjaxProductListTest extends AbstractEndpointAdminTest
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->employeeLogin();

@@ -61,7 +61,7 @@ class FileUploaderTest extends TestCase
      */
     protected $object;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->downloadDirectory = sys_get_temp_dir() . '/' . uniqid();
         $this->filesystem = new Filesystem();
@@ -72,7 +72,7 @@ class FileUploaderTest extends TestCase
         );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         if ($this->filesystem->exists($this->downloadDirectory)) {
             $this->filesystem->remove($this->downloadDirectory);

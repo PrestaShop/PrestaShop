@@ -48,14 +48,13 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @param string $relativePath
      * @param string $position
      * @param int $priority
      * @param bool $inline
      * @param string $attribute
      * @param string $server
-     * @param string|null $version
      */
     public function register(
         $id,
@@ -64,13 +63,12 @@ class JavascriptManagerCore extends AbstractAssetManager
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
         $attribute = null,
-        $server = 'local',
-        ?string $version = null
+        $server = 'local'
     ) {
         if ('remote' === $server) {
-            $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server, $version);
+            $this->add($id, $relativePath, $position, $priority, $inline, $attribute, $server);
         } elseif ($fullPath = $this->getFullPath($relativePath)) {
-            $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server, $version);
+            $this->add($id, $fullPath, $position, $priority, $inline, $attribute, $server);
         }
     }
 
@@ -88,22 +86,19 @@ class JavascriptManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @param string $fullPath
      * @param string $position
      * @param int $priority
      * @param bool $inline
      * @param string $attribute
      * @param string $server
-     * @param string|null $version
      */
-    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server, ?string $version)
+    protected function add($id, $fullPath, $position, $priority, $inline, $attribute, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $position = $this->getSanitizedPosition($position);
         $attribute = $this->getSanitizedAttribute($attribute);
-
-        $fullPath = $version ? $fullPath . '?' . $version : $fullPath;
 
         if ('remote' === $server) {
             $uri = $fullPath;
@@ -141,7 +136,7 @@ class JavascriptManagerCore extends AbstractAssetManager
             foreach ($this->list[$position]['inline'] as &$item) {
                 $item['content'] =
                     '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
-                    file_get_contents($this->getPathFromUri($item['path']));
+                    file_get_contents($item['path']);
             }
         }
     }

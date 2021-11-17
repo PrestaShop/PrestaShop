@@ -80,9 +80,9 @@ function includeDatepicker($id, $time = false)
 /**
  * Generate a new settings file, only transmitted parameters are updated
  *
- * @param string|null $base_urls Base URI
- * @param string|null $theme Theme name (eg. default)
- * @param array|null $array_db Parameters in order to connect to database
+ * @param string $baseUri Base URI
+ * @param string $theme Theme name (eg. default)
+ * @param array $array_db Parameters in order to connect to database
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
@@ -144,8 +144,7 @@ function displayDate($sql_date, $with_time = false)
  * @param int $id_category Start category
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
- * @param string $category_type Category type (products/cms)
- * @param bool $home
+ * @param string $type Category type (products/cms)
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
@@ -239,6 +238,25 @@ function checkPSVersion()
 }
 
 /**
+ * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
+ * @param string $string
+ * @return string
+ */
+function translate($string)
+{
+    Tools::displayAsDeprecated();
+
+    global $_LANGADM;
+    if (!is_array($_LANGADM)) {
+        return str_replace('"', '&quot;', $string);
+    }
+    $key = md5(str_replace('\'', '\\\'', $string));
+    $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
+
+    return str_replace('"', '&quot;', stripslashes($str));
+}
+
+/**
  * Returns a new Tab object
  *
  * @param string $tab class name
@@ -252,13 +270,16 @@ function checkingTab($tab)
     }
     $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
     if (!$row['id_tab']) {
+        if (isset(AdminTab::$tabParenting[$tab])) {
+            Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
+        }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
 
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
-    if (!class_exists($tab, false)) {
+    if (!class_exists($tab, false) || !$row['id_tab']) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
 
         return false;
@@ -472,7 +493,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
                     } else {
                         /* Filter memorization */
-                        if (!empty($_POST) && isset($admin_obj->table)) {
+                        if (isset($_POST) && !empty($_POST) && isset($admin_obj->table)) {
                             foreach ($_POST as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
@@ -486,7 +507,7 @@ function runAdminTab($tab, $ajax_mode = false)
                             }
                         }
 
-                        if (!empty($_GET) && isset($admin_obj->table)) {
+                        if (isset($_GET) && !empty($_GET) && isset($admin_obj->table)) {
                             foreach ($_GET as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {

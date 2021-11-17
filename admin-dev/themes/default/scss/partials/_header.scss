@@ -61,7 +61,8 @@ $search-border-color: #bbcdd2;
       margin: 0;
     }
     // hide on very small screens
-    &.hide-mobile-sm {
+    &.hide-mobile-sm,
+    #gamification_notif {
       @media (max-width: breakpoint-max("sm")) {
         display: none;
       }

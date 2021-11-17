@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Product\ProductVirtual;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -102,7 +101,7 @@ class VirtualProductController extends FrameworkBundleAdminController
     {
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $download = $this->getDoctrine()
-            ->getRepository(ProductDownload::class)
+            ->getRepository('PrestaShopBundle:ProductDownload')
             ->findOneBy([
                 'idProduct' => $idProduct,
             ]);

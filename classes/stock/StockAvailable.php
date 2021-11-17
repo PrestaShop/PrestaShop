@@ -106,16 +106,18 @@ class StockAvailableCore extends ObjectModel
     ];
 
     /**
-     * @return bool
+     * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated.
+     *
+     * @param int $id_product
+     * @param int $id_product_attribute Optional
+     * @param int $id_shop Optional
+     *
+     * @return int
      */
     public function updateWs()
     {
         if ($this->depends_on_stock) {
-            return WebserviceRequest::getInstance()->setError(
-                500,
-                $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'),
-                133
-            );
+            return WebserviceRequest::getInstance()->setError(500, $this->trans('You cannot update the available stock when it depends on stock.', [], 'Admin.Catalog.Notification'), 133);
         }
 
         return $this->update();
@@ -172,8 +174,8 @@ class StockAvailableCore extends ObjectModel
 
         // gets warehouse ids grouped by shops
         $ids_warehouse = Warehouse::getWarehousesGroupedByShops();
-        $order_warehouses = [];
         if ($order_id_shop !== null) {
+            $order_warehouses = [];
             $wh = Warehouse::getWarehouses(false, (int) $order_id_shop);
             foreach ($wh as $warehouse) {
                 $order_warehouses[] = $warehouse['id_warehouse'];
@@ -199,7 +201,7 @@ class StockAvailableCore extends ObjectModel
 
                 // if it's a simple product
                 if (empty($ids_product_attribute)) {
-                    $allowed_warehouse_for_product = Warehouse::getProductWarehouseList((int) $id_product, 0, (int) $id_shop);
+                    $allowed_warehouse_for_product = WareHouse::getProductWarehouseList((int) $id_product, 0, (int) $id_shop);
                     $allowed_warehouse_for_product_clean = [];
                     foreach ($allowed_warehouse_for_product as $warehouse) {
                         $allowed_warehouse_for_product_clean[] = (int) $warehouse['id_warehouse'];
@@ -223,7 +225,7 @@ class StockAvailableCore extends ObjectModel
                 } else {
                     // else this product has attributes, hence loops on $ids_product_attribute
                     foreach ($ids_product_attribute as $id_product_attribute) {
-                        $allowed_warehouse_for_combination = Warehouse::getProductWarehouseList((int) $id_product, (int) $id_product_attribute, (int) $id_shop);
+                        $allowed_warehouse_for_combination = WareHouse::getProductWarehouseList((int) $id_product, (int) $id_product_attribute, (int) $id_shop);
                         $allowed_warehouse_for_combination_clean = [];
                         foreach ($allowed_warehouse_for_combination as $warehouse) {
                             $allowed_warehouse_for_combination_clean[] = (int) $warehouse['id_warehouse'];
@@ -302,7 +304,7 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, sets if stock available depends on stock.
      *
      * @param int $id_product
-     * @param bool $depends_on_stock Optional : true by default
+     * @param int $depends_on_stock Optional : true by default
      * @param int $id_shop Optional : gets context by default
      */
     public static function setProductDependsOnStock($id_product, $depends_on_stock = true, $id_shop = null, $id_product_attribute = 0)
@@ -338,9 +340,8 @@ class StockAvailableCore extends ObjectModel
      * For a given id_product, sets if product is available out of stocks.
      *
      * @param int $id_product
-     * @param int|bool $out_of_stock Optional false by default
-     * @param int|null $id_shop Optional gets context by default
-     * @param int $id_product_attribute
+     * @param int $out_of_stock Optional false by default
+     * @param int $id_shop Optional gets context by default
      */
     public static function setProductOutOfStock($id_product, $out_of_stock = false, $id_shop = null, $id_product_attribute = 0)
     {
@@ -376,7 +377,7 @@ class StockAvailableCore extends ObjectModel
      * @param int $id_shop Optional
      * @param int $id_product_attribute Optional
      *
-     * @return void
+     * @return bool
      *
      * @throws PrestaShopDatabaseException
      */
@@ -561,13 +562,13 @@ class StockAvailableCore extends ObjectModel
     /**
      * For a given id_product and id_product_attribute sets the quantity available.
      *
-     * @param int $id_product
-     * @param int $id_product_attribute
-     * @param int $quantity
-     * @param int|null $id_shop
+     * @param $id_product
+     * @param $id_product_attribute
+     * @param $quantity
+     * @param null $id_shop
      * @param bool $add_movement
      *
-     * @return bool|void
+     * @return bool
      */
     public static function setQuantity($id_product, $id_product_attribute, $quantity, $id_shop = null, $add_movement = true)
     {
@@ -650,7 +651,7 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+        if (Shop::getContext() == SHOP::CONTEXT_SHOP) {
             if (Shop::getContextShopGroup()->share_stock == 1) {
                 $pa_sql = '';
                 if ($id_product_attribute !== null) {
@@ -663,7 +664,7 @@ class StockAvailableCore extends ObjectModel
                 if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
 						FROM ' . _DB_PREFIX_ . 'product' . $pa_sql . '_shop
 						WHERE id_product' . $pa_sql . '=' . (int) $id_product_attribute_sql . '
-							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(Shop::SHARE_STOCK))) . ')')) {
+							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(SHOP::SHARE_STOCK))) . ')')) {
                     return true;
                 }
             }
@@ -705,15 +706,17 @@ class StockAvailableCore extends ObjectModel
      */
     public static function resetProductFromStockAvailableByShopGroup(ShopGroup $shop_group)
     {
-        $shop_list = $shop_group->share_stock ? Shop::getShops(false, $shop_group->id, true) : [];
+        if ($shop_group->share_stock) {
+            $shop_list = Shop::getShops(false, $shop_group->id, true);
+        }
 
         if (count($shop_list) > 0) {
             $id_shops_list = implode(', ', $shop_list);
 
             return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop IN (' . $id_shops_list . ')');
+        } else {
+            return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
         }
-
-        return Db::getInstance()->update('stock_available', ['quantity' => 0], 'id_shop_group = ' . $shop_group->id);
     }
 
     /**
@@ -745,9 +748,9 @@ class StockAvailableCore extends ObjectModel
      * For a given product, get its "out of stock" flag.
      *
      * @param int $id_product
-     * @param int|null $id_shop Optional : gets context if null @see Context::getContext()
+     * @param int $id_shop Optional : gets context if null @see Context::getContext()
      *
-     * @return int|bool : depends on stock @see $depends_on_stock
+     * @return bool : depends on stock @see $depends_on_stock
      */
     public static function outOfStock($id_product, $id_shop = null)
     {
@@ -768,8 +771,8 @@ class StockAvailableCore extends ObjectModel
 
     /**
      * @param int $id_product
-     * @param int|null $id_product_attribute Optional
-     * @param int|null $id_shop Optional
+     * @param int id_product_attribute Optional
+     * @param int $id_shop Optional
      *
      * @return bool|string
      */

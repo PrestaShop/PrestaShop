@@ -41,7 +41,7 @@ class ProductStockProperties
     /**
      * @var int|null
      */
-    private $deltaQuantity;
+    private $quantity;
 
     /**
      * @var OutOfStockType|null
@@ -85,7 +85,7 @@ class ProductStockProperties
 
     /**
      * @param PackStockType|null $packStockType
-     * @param int|null $deltaQuantity
+     * @param int|null $quantity
      * @param OutOfStockType|null $outOfStockType
      * @param int|null $minimalQuantity
      * @param string|null $location
@@ -97,7 +97,7 @@ class ProductStockProperties
      */
     public function __construct(
         ?PackStockType $packStockType = null,
-        ?int $deltaQuantity = null,
+        ?int $quantity = null,
         ?OutOfStockType $outOfStockType = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
@@ -108,7 +108,7 @@ class ProductStockProperties
         ?DateTimeInterface $availableDate = null
     ) {
         $this->packStockType = $packStockType;
-        $this->deltaQuantity = $deltaQuantity;
+        $this->quantity = $quantity;
         $this->outOfStockType = $outOfStockType;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
@@ -130,9 +130,9 @@ class ProductStockProperties
     /**
      * @return int|null
      */
-    public function getDeltaQuantity(): ?int
+    public function getQuantity(): ?int
     {
-        return $this->deltaQuantity;
+        return $this->quantity;
     }
 
     /**

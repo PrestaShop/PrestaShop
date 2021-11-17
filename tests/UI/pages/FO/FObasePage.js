@@ -32,8 +32,6 @@ class FOBasePage extends CommonPage {
     this.languageSelectorMenuItemLink = language => `${this.languageSelectorDiv} ul li a[data-iso-code='${language}']`;
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
-    this.currencySelectorExpandIcon = `${this.currencySelectorDiv} i.expand-more`;
-    this.currencySelectorMenuItemLink = currency => `${this.currencySelectorExpandIcon} ul li a[title='${currency}']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
@@ -208,20 +206,9 @@ class FOBasePage extends CommonPage {
     const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     await Promise.all([
-      this.selectByVisibleText(page, this.currencySelect, currency, true),
+      this.selectByVisibleText(page, this.currencySelect, currency),
       page.waitForNavigation('newtorkidle'),
     ]);
-  }
-
-  /**
-   * Get if currency exists on dropdown
-   * @param page {Page} Browser tab
-   * @param currencyName {string} Name of the currency to check
-   * @returns {Promise<boolean>}
-   */
-  async currencyExists(page, currencyName = 'Euro') {
-    await page.click(this.currencySelectorExpandIcon);
-    return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName), 1000);
   }
 
   /**

@@ -4,32 +4,25 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Importing pages
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const brandsPage = require('@pages/BO/catalog/brands');
 const suppliersPage = require('@pages/BO/catalog/suppliers');
-
-// Import FO pages
 const homePage = require('@pages/FO/home');
 const siteMapPage = require('@pages/FO/siteMap');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_general_general_enableDisableDisplaySuppliers';
 
 let browserContext;
 let page;
 
-/*
-Enable/Disable suppliers
-Check the alert message from BO Suppliers page
-Go to FO to check suppliers link in sitemap page
- */
-describe('BO - Shop Parameters - General : Enable/Disable display suppliers', async () => {
+describe('Enable display suppliers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,7 +65,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
-    it('should go to \'Brands & Suppliers\' page', async function () {
+    it('should go to Brands & Suppliers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
 
       await generalPage.goToSubMenu(
@@ -85,7 +78,7 @@ describe('BO - Shop Parameters - General : Enable/Disable display suppliers', as
       await expect(pageTitle).to.contains(brandsPage.pageTitle);
     });
 
-    it('should go to \'Suppliers\' tab', async function () {
+    it('should go to Suppliers tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToSuppliersTab_${index}`, baseContext);
 
       await brandsPage.goToSubTabSuppliers(page);

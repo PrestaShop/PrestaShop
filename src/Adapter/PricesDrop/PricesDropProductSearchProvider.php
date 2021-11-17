@@ -62,7 +62,7 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return array|int
+     * @return array
      */
     private function getProductsOrCount(
         ProductSearchContext $context,

@@ -151,15 +151,12 @@ class SitemapControllerCore extends FrontController
             ],
         ];
 
-        if (!Configuration::isCatalogMode()) {
-            if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-                $links[] = [
-                    'id' => 'best-sales-page',
-                    'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
-                    'url' => $this->context->link->getPageLink('best-sales'),
-                ];
-            }
-
+        if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+            $links[] = [
+                'id' => 'best-sales-page',
+                'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
+                'url' => $this->context->link->getPageLink('best-sales'),
+            ];
             $links[] = [
                 'id' => 'prices-drop-page',
                 'label' => $this->trans('Price drop', [], 'Shop.Theme.Catalog'),

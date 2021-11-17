@@ -39,9 +39,9 @@ class MultistoreExtension extends AbstractTypeExtension
     /**
      * {@inheritdoc}
      */
-    public static function getExtendedTypes(): iterable
+    public function getExtendedType(): string
     {
-        return [FormType::class];
+        return FormType::class;
     }
 
     /**

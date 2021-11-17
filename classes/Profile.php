@@ -34,7 +34,7 @@ class ProfileCore extends ObjectModel
         'class_name',
     ];
 
-    /** @var string|array<int, string> Name */
+    /** @var array<string> Name */
     public $name;
 
     /**

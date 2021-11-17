@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BadgeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -75,29 +74,21 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $genderChoices;
 
     /**
-     * @var string
-     */
-    private $contextDateFormat;
-
-    /**
      * @param HookDispatcherInterface $hookDispatcher
      * @param bool $isB2bFeatureEnabled
      * @param bool $isMultistoreFeatureEnabled
      * @param array $genderChoices
-     * @param string $contextDateFormat
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
-        array $genderChoices,
-        string $contextDateFormat
+        array $genderChoices
     ) {
         parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->genderChoices = $genderChoices;
-        $this->contextDateFormat = $contextDateFormat;
     }
 
     /**
@@ -202,20 +193,17 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DateTimeColumn('date_add'))
+                (new DataColumn('date_add'))
                     ->setName($this->trans('Registration', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
-                        'format' => $this->contextDateFormat,
                         'field' => 'date_add',
                     ])
             )
             ->add(
-                (new DateTimeColumn('connect'))
+                (new DataColumn('connect'))
                     ->setName($this->trans('Last visit', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
-                        'format' => $this->contextDateFormat,
                         'field' => 'connect',
-                        'empty_data' => '--',
                     ])
             )
             ->add((new ActionColumn('actions'))

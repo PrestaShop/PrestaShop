@@ -66,9 +66,11 @@ class VisibilityType extends TranslatorAwareType
             ->add('visibility', ChoiceType::class, [
                 'label' => false,
                 'choices' => $this->productVisibilityChoiceProvider->getChoices(),
-                'expanded' => true,
+                'attr' => [
+                    'class' => 'custom-select',
+                ],
                 'required' => false,
-                // placeholder false is important to avoid empty option in radio select despite required being false
+                // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'column_breaker' => true,
             ])

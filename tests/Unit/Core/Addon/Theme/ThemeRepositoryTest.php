@@ -39,7 +39,7 @@ class ThemeRepositoryTest extends ContextStateTestCase
     const NOTICE = '[ThemeRepository] ';
     private $repository;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $context = $this->createContextMock([
             'shop' => $this->createContextFieldMock(Shop::class, 1),
@@ -57,7 +57,7 @@ class ThemeRepositoryTest extends ContextStateTestCase
         );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->repository = null;
     }
@@ -81,7 +81,7 @@ class ThemeRepositoryTest extends ContextStateTestCase
     public function testGetList()
     {
         $themeList = $this->repository->getList();
-        $this->assertIsArray($themeList);
+        $this->assertInternalType('array', $themeList);
         $this->assertInstanceOf('PrestaShop\PrestaShop\Core\Addon\Theme\Theme', current($themeList));
     }
 

@@ -180,7 +180,7 @@ class CustomerCore extends ObjectModel
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
-            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPlaintextPassword', 'required' => true, 'size' => 255],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255],
             'last_passwd_gen' => ['type' => self::TYPE_STRING, 'copy_post' => false],
             'id_gender' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'birthday' => ['type' => self::TYPE_DATE, 'validate' => 'isBirthDate'],
@@ -272,8 +272,8 @@ class CustomerCore extends ObjectModel
     /**
      * Adds current Customer as a new Object to the database.
      *
-     * @param bool $autodate Automatically set `date_upd` and `date_add` columns
-     * @param bool $null_values Whether we want to use NULL values instead of empty quotes values
+     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
+     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Customer has been successfully added
      *
@@ -615,13 +615,6 @@ class CustomerCore extends ObjectModel
         return self::$_customerHasAddress[$key];
     }
 
-    public static function resetStaticCache()
-    {
-        self::$_customerHasAddress = [];
-        self::$_customer_groups = [];
-        self::$_defaultGroupId = [];
-    }
-
     /**
      * Reset Address cache.
      *
@@ -790,8 +783,7 @@ class CustomerCore extends ObjectModel
                         `id_lang` = ' . (int) $idLang . '
                         AND `id_customer` = ' . (int) $this->id . '
                         AND a.`deleted` = 0
-                        AND a.`active` = 1
-                    ORDER BY a.`alias`';
+                        AND a.`active` = 1';
 
         if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
@@ -1186,7 +1178,7 @@ class CustomerCore extends ObjectModel
         if (empty($password)) {
             $password = Tools::passwdGen(8, 'RANDOM');
         }
-        if (!Validate::isPlaintextPassword($password)) {
+        if (!Validate::isPasswd($password)) {
             return false;
         }
 
@@ -1414,7 +1406,7 @@ class CustomerCore extends ObjectModel
      * Set Customer Groups
      * (for webservice).
      *
-     * @param array $result
+     * @param $result
      *
      * @return bool
      */

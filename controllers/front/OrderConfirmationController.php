@@ -23,24 +23,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
     public $ssl = true;
     public $php_self = 'order-confirmation';
-    /** @var int Cart ID */
     public $id_cart;
     public $id_module;
     public $id_order;
+    public $reference;
     public $secure_key;
-    /** @var Order Order object we found by cart ID */
-    protected $order;
-    /** @var Customer Customer object related to the cart */
-    protected $customer;
-    public $reference; // Deprecated
-    public $order_presenter; // Deprecated
+    public $order_presenter;
 
     /**
      * Initialize order confirmation controller.
@@ -51,104 +45,31 @@ class OrderConfirmationControllerCore extends FrontController
     {
         parent::init();
 
-        // If we are coming to this page to finish free order we do extra checks and validations
-        // and redirect back here with bit more data.
         if (true === (bool) Tools::getValue('free_order')) {
             $this->checkFreeOrder();
         }
 
-        /*
-         * Because of order splitting scenarios, we must get the data by id_cart parameter (not id_order),
-         * so we can display all orders made from this cart.
-         *
-         * It's not implemented yet, however.
-         */
         $this->id_cart = (int) (Tools::getValue('id_cart', 0));
+
+        $redirectLink = 'index.php?controller=history';
+
+        $this->id_module = (int) (Tools::getValue('id_module', 0));
         $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
-        $this->order = new Order((int) ($this->id_order));
-        $this->id_module = (int) (Tools::getValue('id_module', 0));
+        $order = new Order((int) ($this->id_order));
 
-        // This data is kept only for backward compatibility purposes
-        $this->reference = (string) $this->order->reference;
-
-        $redirectLink = $this->context->link->getPageLink('history', $this->ssl);
-
-        // The confirmation link must contain a unique order secure key matching the key saved in database,
-        // this prevents user to view other customer's order confirmations
         if (!$this->id_order || !$this->id_module || !$this->secure_key || empty($this->secure_key)) {
             Tools::redirect($redirectLink . (Tools::isSubmit('slowvalidation') ? '&slowvalidation' : ''));
         }
-
-        if (!Validate::isLoadedObject($this->order) || $this->secure_key != $this->order->secure_key) {
+        $this->reference = $order->reference;
+        if (!Validate::isLoadedObject($order) || $order->id_customer != $this->context->customer->id || $this->secure_key != $order->secure_key) {
             Tools::redirect($redirectLink);
         }
-
-        // Free order uses -1 as id_module, it has a special check here
-        if ($this->id_module == -1) {
-            if ($this->order->module !== 'free_order') {
-                Tools::redirect($redirectLink);
-            }
-        } else {
-            // Otherwise we run a normal check that module matches
-            $module = Module::getInstanceById((int) ($this->id_module));
-            if ($this->order->module !== $module->name) {
-                Tools::redirect($redirectLink);
-            }
+        $module = Module::getInstanceById((int) ($this->id_module));
+        if ($order->module != $module->name) {
+            Tools::redirect($redirectLink);
         }
-
-        // If checks passed, initialize customer, we will need him anyway
-        $this->customer = new Customer((int) ($this->order->id_customer));
-    }
-
-    /**
-     * Logic after submitting forms
-     *
-     * @see FrontController::postProcess()
-     */
-    public function postProcess()
-    {
-        if (Tools::isSubmit('submitTransformGuestToCustomer')) {
-            // Only variable we need is the password
-            // There is no need to check other variables, because hacker would be kicked out in init(), if he tried to convert another customer
-            $password = Tools::getValue('password');
-
-            if (empty($password)) {
-                $this->errors[] = $this->trans(
-                    'Enter a password to transform your guest account into a customer account.',
-                    [],
-                    'Shop.Forms.Help'
-                );
-            } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
-                $this->errors[] = $this->trans(
-                    'Your password must be at least %min% characters long.',
-                    ['%min%' => Validate::PASSWORD_LENGTH],
-                    'Shop.Forms.Help'
-                );
-            // Prevent error
-            // A) either on page refresh
-            // B) if we already transformed him in other window or through backoffice
-            } elseif ($this->customer->is_guest == 0) {
-                $this->errors[] = $this->trans(
-                    'A customer account has already been created from this guest account. Please sign in.',
-                    [],
-                    'Shop.Notifications.Error'
-                );
-            // Attempt to convert the customer
-            } elseif ($this->customer->transformToCustomer($this->context->language->id, $password)) {
-                $this->success[] = $this->trans(
-                    'Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.',
-                    [],
-                    'Shop.Notifications.Success'
-                );
-            } else {
-                $this->errors[] = $this->trans(
-                    'An unexpected error occurred while creating your account.',
-                    [],
-                    'Shop.Notifications.Error'
-                );
-            }
-        }
+        $this->order_presenter = new OrderPresenter();
     }
 
     /**
@@ -158,21 +79,31 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function initContent()
     {
+        if (Configuration::isCatalogMode()) {
+            Tools::redirect('index.php');
+        }
+
+        $order = new Order(Order::getIdByCartId((int) ($this->id_cart)));
+        $presentedOrder = $this->order_presenter->present($order);
+        $register_form = $this
+            ->makeCustomerForm()
+            ->setGuestAllowed(false)
+            ->fillWith(Tools::getAllValues());
+
         parent::initContent();
 
         $this->context->smarty->assign([
-            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($this->order),
-            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($this->order),
-            'order' => (new OrderPresenter())->present($this->order),
-            'order_customer' => (new ObjectPresenter())->present($this->customer),
-            'registered_customer_exists' => Customer::customerExists($this->customer->email, false, true),
+            'HOOK_ORDER_CONFIRMATION' => $this->displayOrderConfirmation($order),
+            'HOOK_PAYMENT_RETURN' => $this->displayPaymentReturn($order),
+            'order' => $presentedOrder,
+            'register_form' => $register_form,
         ]);
-        $this->setTemplate('checkout/order-confirmation');
 
-        // If logged in guest we clear the cookie for security reasons
         if ($this->context->customer->is_guest) {
+            /* If guest we clear the cookie for security reason */
             $this->context->customer->mylogout();
         }
+        $this->setTemplate('checkout/order-confirmation');
     }
 
     /**
@@ -227,12 +158,6 @@ class OrderConfirmationControllerCore extends FrontController
             false,
             $cart->secure_key
         );
-
-        // redirect back to us with rest of the data
-        // note the id_module parameter with value -1
-        // it acts as a marker for the module check to use "free_payment"
-        // for the check
-        Tools::redirect('index.php?controller=order-confirmation&id_cart=' . (int) $cart->id . '&id_module=-1&id_order=' . (int) $order->currentOrder . '&key=' . $cart->secure_key);
     }
 
     public function getBreadcrumbLinks()

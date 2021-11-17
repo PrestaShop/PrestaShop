@@ -37,10 +37,8 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     props: {
       locale: {
         type: String,
@@ -53,10 +51,10 @@
       },
     },
     mounted() {
-      $(<HTMLInputElement> this.$refs.datepicker).datetimepicker({
+      $(this.$refs.datepicker).datetimepicker({
         format: 'YYYY-MM-DD',
         showClear: true,
-      }).on('dp.change', (infos: Record<string, any>) => {
+      }).on('dp.change', (infos) => {
         infos.dateType = this.type;
         this.$emit(
           infos.date ? 'dpChange' : 'reset',
@@ -64,7 +62,7 @@
         );
       });
     },
-  });
+  };
 </script>
 
 <style lang="scss">

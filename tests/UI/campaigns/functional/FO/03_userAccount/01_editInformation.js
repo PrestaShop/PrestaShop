@@ -12,15 +12,12 @@ const FakerCustomer = require('@data/faker/customer');
 const createCustomerData = new FakerCustomer();
 const editCustomerData = new FakerCustomer();
 
-// Import pages
-// FO
+// Importing pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
-
-// BO
 const dashboardPage = require('@pages/BO/dashboard');
 const customersPage = require('@pages/BO/customers');
 
@@ -40,7 +37,7 @@ Check new account information on BO
 Delete the created account on BO
  */
 
-describe('FO - Account : Create an account and edit its information', async () => {
+describe('Create an account in FO and edit its information', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

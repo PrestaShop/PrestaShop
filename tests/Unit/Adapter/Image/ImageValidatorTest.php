@@ -44,7 +44,7 @@ class ImageValidatorTest extends TestCase
      */
     private $imageValidator;
 
-    public function setUp(): void
+    public function setUp()
     {
         require_once __DIR__ . '/../../bootstrap.php';
         $iniConfiguration = new IniConfiguration();

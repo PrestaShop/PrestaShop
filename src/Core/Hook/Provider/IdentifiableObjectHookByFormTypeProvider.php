@@ -30,6 +30,7 @@ use Exception;
 use Generator;
 use Logger;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Form\FormFactoryInterface;
 use Throwable;
 
@@ -119,7 +120,7 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
     /**
      * Gets form names which are used when generating hooks.
      *
-     * @param string[] $formTypes
+     * @param Definition[] $formTypes
      *
      * @return Generator
      */

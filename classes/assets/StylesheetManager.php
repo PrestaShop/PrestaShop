@@ -47,14 +47,13 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @param string $relativePath
      * @param string $media
      * @param int $priority
      * @param bool $inline
      * @param string $server
      * @param bool $needRtl
-     * @param string|null $version
      */
     public function register(
         $id,
@@ -63,19 +62,18 @@ class StylesheetManagerCore extends AbstractAssetManager
         $priority = self::DEFAULT_PRIORITY,
         $inline = false,
         $server = 'local',
-        $needRtl = true,
-        ?string $version = null
+        $needRtl = true
     ) {
         $fullPath = $this->getFullPath($relativePath);
         $rtlFullPath = $this->getFullPath(str_replace('.css', '_rtl.css', $relativePath));
         $context = Context::getContext();
         $isRTL = is_object($context->language) && $context->language->is_rtl;
         if ('remote' === $server) {
-            $this->add($id, $relativePath, $media, $priority, $inline, $server, $version);
+            $this->add($id, $relativePath, $media, $priority, $inline, $server);
         } elseif ($needRtl && $isRTL && $rtlFullPath) {
-            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server, $version);
+            $this->add($id, $rtlFullPath, $media, $priority, $inline, $server);
         } elseif ($fullPath) {
-            $this->add($id, $fullPath, $media, $priority, $inline, $server, $version);
+            $this->add($id, $fullPath, $media, $priority, $inline, $server);
         }
     }
 
@@ -102,20 +100,17 @@ class StylesheetManagerCore extends AbstractAssetManager
     }
 
     /**
-     * @param string $id
+     * @param $id
      * @param string $fullPath
      * @param string $media
      * @param int $priority
      * @param bool $inline
      * @param string $server
-     * @param string|null $version
      */
-    protected function add($id, $fullPath, $media, $priority, $inline, $server, ?string $version)
+    protected function add($id, $fullPath, $media, $priority, $inline, $server)
     {
         $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
-
-        $fullPath = $version ? $fullPath . '?' . $version : $fullPath;
 
         if ('remote' === $server) {
             $uri = $fullPath;
@@ -162,7 +157,7 @@ class StylesheetManagerCore extends AbstractAssetManager
         foreach ($this->list['inline'] as &$item) {
             $item['content'] =
                 '/* ---- ' . $item['id'] . ' @ ' . $item['path'] . ' ---- */' . "\r\n" .
-                file_get_contents($this->getPathFromUri($item['path']));
+                file_get_contents($item['path']);
         }
     }
 }

@@ -697,6 +697,7 @@ $baseline = [
 'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getPrestaTrustCheck',
 'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getModule',
 'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getModuleZip',
+'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getCustomerModules',
 'PrestaShopBundle\Controller\Admin\Improve\Design\ThemeController::resetLayoutsAction',
 'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::setMethod',
 'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::setAction',

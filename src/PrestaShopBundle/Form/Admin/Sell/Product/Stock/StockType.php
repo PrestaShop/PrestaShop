@@ -61,9 +61,7 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantities', QuantityType::class, [
-                'product_id' => $options['product_id'],
-            ])
+            ->add('quantities', QuantityType::class)
             ->add('options', StockOptionsType::class)
             ->add('virtual_product_file', VirtualProductFileType::class, [
                 'virtual_product_file_id' => $options['virtual_product_file_id'] ?? null,
@@ -84,17 +82,13 @@ class StockType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver
-            ->setDefaults([
-                'label' => false,
-                'required' => false,
-                'product_id' => null,
-                'virtual_product_file_id' => null,
-                // Suppliers can be removed so there might be extra data during type switching
-                'allow_extra_fields' => true,
-            ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
-            ->setAllowedTypes('virtual_product_file_id', ['int', 'null'])
-        ;
+        $resolver->setDefaults([
+            'label' => false,
+            'required' => false,
+            'virtual_product_file_id' => null,
+            // Suppliers can be removed so there might be extra data during type switching
+            'allow_extra_fields' => true,
+        ]);
+        $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }
 }

@@ -89,7 +89,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
-            $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
+            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shop->id ?: 0,
                 'controller' => 'ProductController',
@@ -142,7 +142,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $employee = Context::getContext()->employee;
         $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
+        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',
@@ -364,7 +364,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
 
         foreach ($products as &$product) {

@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 
 class FormatterTest extends TestCase
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         if (!defined('PS_ROUND_UP')) {
             define('PS_ROUND_UP', 0);

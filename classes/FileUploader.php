@@ -49,7 +49,7 @@ class FileUploaderCore
 
     protected function toBytes($str)
     {
-        $val = (int) trim($str);
+        $val = trim($str);
         $last = strtolower($str[strlen($str) - 1]);
         switch ($last) {
             case 'g':

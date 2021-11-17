@@ -33,11 +33,6 @@ class CustomerFormCore extends AbstractForm
 {
     protected $template = 'customer/_partials/customer-form.tpl';
 
-    /**
-     * @var CustomerFormatter
-     */
-    protected $formatter;
-
     private $context;
     private $urls;
 
@@ -147,7 +142,7 @@ class CustomerFormCore extends AbstractForm
 
         $passwordField = $this->getField('password');
         if ((!empty($passwordField->getValue()) || $this->passwordRequired)
-            && Validate::isPlaintextPassword($passwordField->getValue()) === false) {
+            && Validate::isPasswd($passwordField->getValue()) === false) {
             $passwordField->addError($this->translator->trans(
                 'Password must be between 5 and 72 characters long',
                 [],
@@ -170,9 +165,9 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
-     * @param string $fieldName
-     * @param int $maximumLength
-     * @param string $violationMessage
+     * @param $fieldName
+     * @param $maximumLength
+     * @param $violationMessage
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {

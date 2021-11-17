@@ -44,7 +44,7 @@ class ImageFileDeleterTest extends TestCase
      */
     private $root;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->fs = new Filesystem();
         $this->root = vfsStream::setup();

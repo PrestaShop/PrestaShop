@@ -70,26 +70,22 @@ class SupplierProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return int|array
+     * @return array|bool
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        $isTypeProducts = $type === 'products';
-
-        $result = $this->supplier->getProducts(
+        return $this->supplier->getProducts(
             $this->supplier->id,
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay(),
-            !$isTypeProducts
+            $type !== 'products'
         );
-
-        return $isTypeProducts ? $result : (int) $result;
     }
 
     /**

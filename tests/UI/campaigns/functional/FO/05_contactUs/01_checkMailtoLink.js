@@ -24,7 +24,7 @@ Go to FO
 Click on contact us link
 Check email us link
  */
-describe('FO - Contact us : Check mail link on contact us page', async () => {
+describe('Check mail to link on contact us page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

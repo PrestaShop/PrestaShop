@@ -84,10 +84,7 @@ final class DeleteCategoryMenuThumbnailImageHandler implements DeleteCategoryMen
         $category = new Category($categoryId->getValue());
 
         if ($category->id !== $categoryId->getValue()) {
-            throw new CategoryNotFoundException(
-                $categoryId,
-                sprintf('Category with id "%d" was not found', $categoryId->getValue())
-            );
+            throw new CategoryNotFoundException($categoryId, sprintf('Category with id "%s" was not found', $categoryId));
         }
 
         $thumbnailPath = sprintf(

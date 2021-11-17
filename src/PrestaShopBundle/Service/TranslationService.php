@@ -106,8 +106,8 @@ class TranslationService
     /**
      * @param string $lang
      * @param string|null $type
-     * @param string|null $theme
-     * @param string|null $search
+     * @param string $theme
+     * @param null $search
      *
      * @return array|mixed
      */
@@ -220,7 +220,7 @@ class TranslationService
      * @param string $domain
      * @param string $key
      * @param string $translationValue
-     * @param string|null $theme
+     * @param null $theme
      *
      * @return bool
      */

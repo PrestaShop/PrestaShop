@@ -41,7 +41,7 @@ class ArabicToLatinDigitDataTransformerTest extends TestCase
      */
     private $dataTransformer;
 
-    public function setUp(): void
+    public function setUp()
     {
         parent::setUp();
 

@@ -33,16 +33,14 @@
   </button>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     props: {
       primary: {type: Boolean},
       ghost: {type: Boolean},
     },
     computed: {
-      classObject(): Record<string, any> {
+      classObject() {
         if (this.ghost) {
           return {
             'btn-outline-primary': this.primary,
@@ -57,9 +55,9 @@
       },
     },
     methods: {
-      onClick(): void {
+      onClick() {
         this.$emit('click');
       },
     },
-  });
+  };
 </script>

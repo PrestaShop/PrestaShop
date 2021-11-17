@@ -4,33 +4,25 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
-
-// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import BO pages
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
-
-// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_enablePartnerOffers';
 
 let browserContext;
 let page;
 
-/*
-Enable partner offer
-Go to FO > create account and check that partner offer checkbox is visible
-Disable partner offer
-Go to FO > create account and check that partner offer checkbox is not visible
- */
-describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offer', async () => {
+describe('Enable partner offer', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -94,16 +86,9 @@ describe('BO - Shop Parameters - Customer Settings : Enable/Disable partner offe
       // Check partner offer
       const isPartnerOfferVisible = await foCreateAccountPage.isPartnerOfferVisible(page);
       await expect(isPartnerOfferVisible).to.be.equal(test.args.enable);
-    });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await customerSettingsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

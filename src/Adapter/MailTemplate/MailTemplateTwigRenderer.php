@@ -36,8 +36,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
-use Twig\Environment;
-use Twig\Error\LoaderError;
+use Symfony\Component\Templating\EngineInterface;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -45,8 +44,8 @@ use Twig\Error\LoaderError;
  */
 class MailTemplateTwigRenderer implements MailTemplateRendererInterface
 {
-    /** @var Environment */
-    private $twig;
+    /** @var EngineInterface */
+    private $engine;
 
     /** @var LayoutVariablesBuilderInterface */
     private $variablesBuilder;
@@ -58,18 +57,18 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     private $transformations;
 
     /**
-     * @param Environment $twig
+     * @param EngineInterface $engine
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
      *
      * @throws TypeException
      */
     public function __construct(
-        Environment $twig,
+        EngineInterface $engine,
         LayoutVariablesBuilderInterface $variablesBuilder,
         HookDispatcherInterface $hookDispatcher
     ) {
-        $this->twig = $twig;
+        $this->engine = $engine;
         $this->variablesBuilder = $variablesBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
@@ -127,13 +126,11 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         } else {
             $layoutPath = !empty($layout->getTxtPath()) ? $layout->getTxtPath() : $layout->getHtmlPath();
         }
-
-        try {
-            $renderedTemplate = $this->twig->render($layoutPath, $layoutVariables);
-        } catch (LoaderError $e) {
+        if (!file_exists($layoutPath)) {
             throw new FileNotFoundException(sprintf('Could not find layout file: %s', $layoutPath));
         }
 
+        $renderedTemplate = $this->engine->render($layoutPath, $layoutVariables);
         $templateTransformations = $this->getMailLayoutTransformations($layout, $templateType);
         /** @var TransformationInterface $transformation */
         foreach ($templateTransformations as $transformation) {

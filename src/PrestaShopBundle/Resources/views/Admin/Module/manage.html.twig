@@ -29,6 +29,10 @@
     <div class="col-lg-10">
       {# Bulk Action confirm modal #}
       {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_bulk_action.html.twig' %}
+      {# PrestaTrust modal #}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_confirm_prestatrust.html.twig' %}
+      {# Addons connect modal with level authorization#}
+      {% include '@PrestaShop/Admin/Module/Includes/modal_addons_connect.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# Contains toolbar-nav for module page with level authorization #}
       {% include '@PrestaShop/Admin/Module/Includes/modal_import.html.twig' with { 'level' : level, 'errorMessage' : errorMessage } %}
       {# Contains menu with Selection/Categories/Popular and Tag Search #}

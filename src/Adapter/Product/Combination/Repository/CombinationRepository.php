@@ -154,6 +154,8 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws CannotDeleteCombinationException
      */
     public function deleteByProductId(ProductId $productId): void
     {
@@ -163,7 +165,7 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param CombinationId[] $combinationIds
+     * @param array $combinationIds
      */
     public function bulkDelete(array $combinationIds): void
     {

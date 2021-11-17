@@ -45,7 +45,7 @@ class ReaderTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->reader = new Reader();
     }

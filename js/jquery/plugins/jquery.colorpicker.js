@@ -30,7 +30,6 @@
   var $o;
 
   $.fn.mColorPicker = function(options) {
-    var inputs = $(this);
 
     $o = $.extend($.fn.mColorPicker.defaults, options);
 
@@ -42,22 +41,19 @@
     $(document).on('keyup', '.mColorPicker', function () {
      $.fn.mColorPicker.setTextColor($(this));
     });
+    
+    $(document).ready(function() {
+      $.fn.mColorPicker.setTextColor($('.mColorPicker'));
+    });
 
     $(document).on('click', '.mColorPickerTrigger', function () {
+
       $.fn.mColorPicker.colorShow($(this).attr('id').replace('icp_', ''));
     });
 
-    inputs = $();
     this.each(function () {
-      // collect the newly created inputs so that we can update their colors on document ready
-      inputs.push($.fn.mColorPicker.drawPickerTriggers($(this)));
-    });
 
-    // update the colors of the newly created inputs
-    $(document).ready(function() {
-      $(inputs).each(function(){
-        $.fn.mColorPicker.setTextColor($(this));
-      });
+      $.fn.mColorPicker.drawPickerTriggers($(this));
     });
 
     return this;

@@ -185,10 +185,9 @@ class InstallManager
      */
     private function deleteDirectoryWithItsContent($directoryPath)
     {
-        $directoriesToDelete = glob($directoryPath . DIRECTORY_SEPARATOR . '*.*');
-        $deleteDirectoryContentResult = !$directoriesToDelete ? false : array_map(
+        $deleteDirectoryContentResult = array_map(
             'unlink',
-            $directoriesToDelete
+            glob($directoryPath . DIRECTORY_SEPARATOR . '*.*')
         );
 
         $deleteDirectoryResult = @rmdir($directoryPath);

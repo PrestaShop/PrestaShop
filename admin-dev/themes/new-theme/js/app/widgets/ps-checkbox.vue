@@ -37,10 +37,8 @@
   </div>
 </template>
 
-<script lang="ts">
-  import Vue from 'vue';
-
-  export default Vue.extend({
+<script>
+  export default {
     props: {
       id: {
         type: String,
@@ -59,17 +57,15 @@
       },
     },
     watch: {
-      checked(val: boolean): void {
+      checked(val) {
         this.$emit('checked', {
           checked: val,
           item: this.model,
         });
       },
     },
-    data() {
-      return {
-        checked: false,
-      };
-    },
-  });
+    data: () => ({
+      checked: false,
+    }),
+  };
 </script>

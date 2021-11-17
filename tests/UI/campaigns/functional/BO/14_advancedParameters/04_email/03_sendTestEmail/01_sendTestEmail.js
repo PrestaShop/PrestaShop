@@ -6,12 +6,13 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import utils
+// Import test context
 const testContext = require('@utils/testContext');
 
-// Import pages
+// Importing pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
+
 
 const baseContext = 'functional_BO_advancedParameters_email_sendTestEmail';
 
@@ -21,7 +22,7 @@ let page;
 /*
 Send test email and check successful message
  */
-describe('BO - Advanced Parameters - Email : Send test email', async () => {
+describe('Send test email', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -36,7 +37,7 @@ describe('BO - Advanced Parameters - Email : Send test email', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced Parameters > E-mail\' page', async function () {
+  it('should go to \'Advanced parameters > E-mail\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
     await dashboardPage.goToSubMenu(

@@ -31,14 +31,14 @@
 {# Labels #}
 
 {% block form_label -%}
-    {% apply spaceless %}
+    {% spaceless %}
         {% if label is same as(false) %}
             <div class="{{ block('form_label_class') }}"></div>
         {% else %}
             {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ block('form_label_class'))|trim}) %}
             {{- parent() -}}
         {% endif %}
-    {% endapply %}
+    {% endspaceless %}
 {%- endblock form_label %}
 
 {% block form_label_class -%}
@@ -48,7 +48,7 @@
 {# Rows #}
 
 {% block form_row -%}
-    {% apply spaceless %}
+    {% spaceless %}
         <div class="{{ block('form_row_class') }} {% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{ form_label(form) }}
             <div class="{{ block('form_group_class') }}">
@@ -57,7 +57,7 @@
                 {{ block('form_help') }}
             </div>
         </div>
-    {% endapply %}
+    {% endspaceless %}
 {%- endblock form_row %}
 
 {% block checkbox_row -%}
@@ -69,7 +69,7 @@
 {%- endblock radio_row %}
 
 {% block checkbox_radio_row -%}
-    {% apply spaceless %}
+    {% spaceless %}
         <div class="form-group{% if not valid %} has-error{% endif %}">
             <div class="{{ block('form_label_class') }}"></div>
             <div class="{{ block('form_group_class') }}">
@@ -77,18 +77,18 @@
                 {{ form_errors(form) }}
             </div>
         </div>
-    {% endapply %}
+    {% endspaceless %}
 {%- endblock checkbox_radio_row %}
 
 {% block submit_row -%}
-    {% apply spaceless %}
+    {% spaceless %}
         <div class="form-group">
             <div class="{{ block('form_label_class') }}"></div>
             <div class="{{ block('form_group_class') }}">
                 {{ form_widget(form) }}
             </div>
         </div>
-    {% endapply %}
+    {% endspaceless %}
 {% endblock submit_row %}
 
 {% block form_group_class -%}

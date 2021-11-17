@@ -117,7 +117,7 @@ class EmployeeCore extends ObjectModel
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPlaintextPassword', 'required' => true, 'size' => 255],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255],
             'last_passwd_gen' => ['type' => self::TYPE_STRING],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_profile' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
@@ -526,7 +526,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Check if the employee is associated to a specific shop group.
      *
-     * @param int $idShopGroup ShopGroup ID
+     * @param int $id_shop_group ShopGroup ID
      *
      * @return bool
      *
@@ -539,9 +539,7 @@ class EmployeeCore extends ObjectModel
         }
 
         foreach ($this->associated_shops as $idShop) {
-            /** @var int $groupFromShop */
-            $groupFromShop = Shop::getGroupFromShop($idShop, true);
-            if ($idShopGroup == $groupFromShop) {
+            if ($idShopGroup == Shop::getGroupFromShop($idShop, true)) {
                 return true;
             }
         }
@@ -640,7 +638,7 @@ class EmployeeCore extends ObjectModel
     /**
      * Get last elements for notify.
      *
-     * @param string $element
+     * @param $element
      *
      * @return int
      */
@@ -733,8 +731,8 @@ class EmployeeCore extends ObjectModel
     /**
      * Is the Employee allowed to do the given action.
      *
-     * @param string $action
-     * @param string $tab
+     * @param $action
+     * @param $tab
      *
      * @return bool
      */
