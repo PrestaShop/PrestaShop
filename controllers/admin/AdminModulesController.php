@@ -696,8 +696,6 @@ class AdminModulesControllerCore extends AdminController
                         $this->errors[] = $this->trans('You do not have permission to access this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
                         $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name)) {
-                        $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
                         $this->errors[] = $this->trans('You do not have permission to delete this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
@@ -1269,22 +1267,6 @@ class AdminModulesControllerCore extends AdminController
             'modal_id' => 'moduleTradLangSelect',
             'modal_class' => 'modal-sm',
             'modal_title' => $this->trans('Translate this module'),
-            'modal_content' => $modal_content,
-        ];
-
-        $modal_content = $this->context->smarty->fetch('controllers/modules/' . (($this->context->mode == Context::MODE_HOST) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
-        $this->modals[] = [
-            'modal_id' => 'moduleNotTrusted',
-            'modal_class' => 'modal-lg',
-            'modal_title' => ($this->context->mode == Context::MODE_HOST) ? $this->trans('This module cannot be installed') : $this->trans('Important Notice'),
-            'modal_content' => $modal_content,
-        ];
-
-        $modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted_country.tpl');
-        $this->modals[] = [
-            'modal_id' => 'moduleNotTrustedCountry',
-            'modal_class' => 'modal-lg',
-            'modal_title' => $this->trans('This module is Untrusted for your country', [], 'Admin.Modules.Feature'),
             'modal_content' => $modal_content,
         ];
     }

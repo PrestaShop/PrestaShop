@@ -103,41 +103,6 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @param int $module_id
-     *
-     * @return bool
-     *
-     * @throws Exception
-     */
-    public function downloadModule(int $module_id): bool
-    {
-        $params = [
-            'id_module' => $module_id,
-            'format' => 'json',
-        ];
-
-        // Module downloading
-        try {
-            $module_data = $this->request('module_download', $params);
-        } catch (Exception $e) {
-            if (!$this->isAddonsAuthenticated()) {
-                throw new Exception('Error sent by Addons. You may need to be logged.', 0, $e);
-            } else {
-                throw new Exception('Error sent by Addons. You may be not allowed to download this module.', 0, $e);
-            }
-        }
-
-        $temp_filename = tempnam($this->cacheDir, 'mod');
-        if (file_put_contents($temp_filename, $module_data) !== false) {
-            $this->zipManager->storeInModulesFolder($temp_filename);
-
-            return true;
-        } else {
-            throw new Exception('Cannot store module content in temporary folder !');
-        }
-    }
-
-    /**
      * @return bool
      *
      * @todo Does this function should be in a User related class ?
@@ -180,15 +145,6 @@ class AddonsDataProvider implements AddonsInterface
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
                         ->getCheckCustomer();
-                case 'module_download':
-                    if ($this->isAddonsAuthenticated()) {
-                        return $this->marketplaceClient
-                            ->setUserMail($params['username_addons'])
-                            ->setPassword($params['password_addons'])
-                            ->getModuleZip($params['id_module'], $this->moduleChannel);
-                    }
-
-                    return $this->marketplaceClient->getModuleZip($params['id_module'], $this->moduleChannel);
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
                 case 'install-modules':
