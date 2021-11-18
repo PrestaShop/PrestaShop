@@ -47,10 +47,13 @@ export default class RedirectOptionManager {
     this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
     this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
-    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
+
+    // Target only inputs present in the redirect target row
     this.$redirectTargetRow = this.$redirectTargetInput.closest(ProductMap.seo.redirectOption.groupSelector);
+    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
     this.$redirectTargetLabel = $(ProductMap.seo.redirectOption.labelSelector, this.$redirectTargetRow).first();
     this.$redirectTargetHint = $(ProductMap.seo.redirectOption.helpSelector, this.$redirectTargetRow);
+
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
