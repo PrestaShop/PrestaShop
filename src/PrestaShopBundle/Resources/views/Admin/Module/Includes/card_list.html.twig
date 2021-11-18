@@ -44,13 +44,13 @@
 >
   <div class="container-fluid">
     <div class="module-item-wrapper-list row">
-      <div class="col-sm-12 col-md-12 col-lg-1 text-sm-center">
+      <div class="col-lg-1 text-sm-center">
         <div class="module-logo-thumb-list">
           <img src="{{ module.attributes.img }}" class="text-md-center" alt="{{ module.attributes.displayName }}"/>
         </div>
       </div>
-      <div class="col-md-12 col-lg-11 row">
-        <div class="col-sm-12 col-md-10 col-lg-11">
+      <div class="col-lg-11 row">
+        <div class="col-md-10 col-lg-11">
           <h3
             class="text-ellipsis module-name-list"
             data-toggle="pstooltip"
@@ -65,7 +65,7 @@
             {% endif %}
           </h3>
         </div>
-        <div class="col-sm-12 col-md-2">
+        <div class="col-md-2">
           <div class="text-ellipsis small-text">
             {% block addon_version %}
               {% if module.attributes.productType == "service" %}
@@ -79,9 +79,9 @@
             {% if module.attributes.urls.upgrade is defined %}
                 <span class="badge badge-success my-1">{{ 'Upgrade available'|trans({}, 'Admin.Modules.Feature') }}</span>
             {% endif %}
-          </div>          
+          </div>
         </div>
-        <div class="col-sm-12 col-md-8 col-lg-7">
+        <div class="col-md-8 col-lg-7">
           {% block addon_description %}
             {{ module.attributes.description|raw }}
             {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
@@ -94,7 +94,7 @@
             </span>
           {% endblock %}
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-3 text-md-right">
+        <div class="col-lg-3 text-md-right">
           {% block module_actions %}
             {% if requireBulkActions is defined and requireBulkActions == true %}
               <div class="module-checkbox-bulk-list md-checkbox">
