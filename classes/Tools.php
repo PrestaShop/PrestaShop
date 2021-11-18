@@ -3938,10 +3938,6 @@ exit;
                 $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
 
                 break;
-            case 'check_module':
-                $post_data .= '&method=check&module_name=' . urlencode($params['module_name']) . '&module_key=' . urlencode($params['module_key']);
-
-                break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
                 if (isset($params['username_addons'], $params['password_addons'])) {
