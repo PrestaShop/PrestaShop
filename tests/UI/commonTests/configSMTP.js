@@ -24,6 +24,10 @@ let page;
 // Maildev config
 const {smtpServer, smtpPort} = global.maildevConfig;
 
+/**
+ * Setup SMTP configuration
+ * @param baseContext {string} String to identify the test
+ */
 function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
   describe('PRE-TEST: Setup SMTP config', async () => {
     // before and after functions
@@ -68,13 +72,13 @@ function setupSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
 
       await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
     });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
   });
 }
 
+/**
+ * Reset SMTP configuration
+ * @param baseContext {string} String to identify the test
+ */
 function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
   describe('POST-TEST: Reset SMTP config', async () => {
     // before and after functions
@@ -111,10 +115,6 @@ function resetSmtpConfigTest(baseContext = 'commonTests-configSMTP') {
 
       const successParametersReset = await emailPage.resetDefaultParameters(page);
       await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
     });
   });
 }

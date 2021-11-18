@@ -32,7 +32,7 @@ let numberOfEmployees = 0;
 let newMail;
 const resetPasswordMailSubject = 'Your new password';
 
-// new employee data
+// New employee data
 const createEmployeeData = new EmployeeFaker({
   defaultPage: 'Products',
   language: 'English (English)',
@@ -42,6 +42,17 @@ const createEmployeeData = new EmployeeFaker({
 // mailListener
 let mailListener;
 
+/*
+Pre-condition
+- Setup SMTP parameters
+Scenario:
+- Create new employee
+- Click on 'I forget my password'
+- Check if the email is received
+- Delete created employee
+Post-condition
+- Reset SMTP parameters
+ */
 describe('BO - Login : Password reminder', async () => {
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(baseContext);
@@ -54,6 +65,7 @@ describe('BO - Login : Password reminder', async () => {
     // Start listening to maildev server
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
+
     // Handle every new email
     mailListener.on('new', (email) => {
       newMail = email;
@@ -123,6 +135,7 @@ describe('BO - Login : Password reminder', async () => {
 
     it('should send reset password mail', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordMailAndCheckSuccess', baseContext);
+
       await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
       const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
