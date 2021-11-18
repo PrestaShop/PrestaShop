@@ -39,12 +39,13 @@ let browserContext;
 let page;
 let filePath;
 
-// Get today date format 'mm/dd/yyyy'
+// Get today date format 'yyy/mm/dd'
 const today = new Date();
 const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
 const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
 const todayDate = `${yyyy}/${mm}/${dd}`;
+// Get today date format 'mm/dd/yyyy'
 const todayDateToCheck = `${mm}/${dd}/${yyyy}`;
 
 const totalOrder = 22.94;
