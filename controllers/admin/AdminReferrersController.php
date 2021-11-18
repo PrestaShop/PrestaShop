@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
  * @property Referrer $object
@@ -179,49 +178,40 @@ class AdminReferrersControllerCore extends AdminController
     {
         $uri = Tools::getHttpHost(true, true) . __PS_BASE_URI__;
 
-        $this->fields_form[0] = ['form' => [
-            'legend' => [
-                'title' => $this->trans('Affiliate', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-group',
-            ],
-            'input' => [
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Name', [], 'Admin.Global'),
-                    'name' => 'name',
-                    'required' => true,
-                    'autocomplete' => false,
+        $this->fields_form[0] = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Affiliate', [], 'Admin.Shopparameters.Feature'),
+                    'icon' => 'icon-group',
                 ],
-                [
-                    'type' => 'password',
-                    'label' => $this->trans('Password', [], 'Admin.Global'),
-                    'name' => 'passwd',
-                    'desc' => $this->trans('Leave blank if no change.', [], 'Admin.Shopparameters.Help'),
-                    'autocomplete' => false,
-                ],
-            ],
-            'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
-        ]];
-
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-
-        if ($moduleManager->isInstalled('trackingfront')) {
-            $this->fields_form[0]['form']['desc'] = [
-                $this->trans('Affiliates can access their data with this name and password.', [], 'Admin.Shopparameters.Feature'),
-                $this->trans('Front access:', [], 'Admin.Shopparameters.Feature') . ' <a class="btn btn-link" href="' . $uri . 'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> ' . $uri . 'modules/trackingfront/stats.php</a>',
-            ];
-        } else {
-            $this->fields_form[0]['form']['desc'] = [
-                $this->trans(
-                    'Please install the "%modulename%" module in order to give your affiliates access to their own statistics.',
+                'input' => [
                     [
-                        '%modulename%' => Module::getModuleName('trackingfront'),
+                        'type' => 'text',
+                        'label' => $this->trans('Name', [], 'Admin.Global'),
+                        'name' => 'name',
+                        'required' => true,
+                        'autocomplete' => false,
                     ],
-                    'Admin.Shopparameters.Notification'
-                ),
-            ];
-        }
+                    [
+                        'type' => 'password',
+                        'label' => $this->trans('Password', [], 'Admin.Global'),
+                        'name' => 'passwd',
+                        'desc' => $this->trans('Leave blank if no change.', [], 'Admin.Shopparameters.Help'),
+                        'autocomplete' => false,
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+                'desc' => [
+                    $this->trans(
+                        'Please install the "%modulename%" module in order to give your affiliates access to their own statistics.',
+                        [
+                            '%modulename%' => Module::getModuleName('trackingfront'),
+                        ],
+                        'Admin.Shopparameters.Notification'
+                    ),
+                ],
+            ],
+        ];
 
         $this->fields_form[1] = ['form' => [
             'legend' => [
