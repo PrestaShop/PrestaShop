@@ -152,6 +152,8 @@ small.value {
 }
 
 .input-group {
+  display: flex;
+
   &.focus {
     outline: 0.1875rem solid $brand-primary;
   }
@@ -161,10 +163,13 @@ small.value {
   }
 
   .input-group-btn {
-    height: 100%;
+    width: auto;
 
     > .btn {
-      padding: 0.625rem 1rem;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0.25rem 1rem;
       margin-left: 0;
       font-size: 0.6875rem;
       font-weight: 500;
