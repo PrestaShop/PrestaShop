@@ -127,7 +127,7 @@ class Order extends BOBasePage {
 
     // Merchandise returns tab
     this.merchandiseReturnsTab = '#orderReturnsTab';
-    this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`
+    this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`;
     this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
     this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
     this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
