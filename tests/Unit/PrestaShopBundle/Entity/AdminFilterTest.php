@@ -65,7 +65,9 @@ class AdminFilterTest extends TestCase
     {
         return [
             'quote_in_name' => [['filter_column_name' => 't\'est'], 't\'est'],
-            'double_quote_in_name' => [['filter_column_name' => 't\"est'], 't\"est'],
+            'double_quote_in_name' => [['filter_column_name' => 't"est'], 't"est'],
+            'lot_of_double_quote' => [['filter_column_name' => 't""e""s""t""""'], 't""e""s""t""""'],
+            'lot_of_quote' => [['filter_column_name' => "t'''e''s't''"], "t'''e''s't''"],
         ];
     }
 }
