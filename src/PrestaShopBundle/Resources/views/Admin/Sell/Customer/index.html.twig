@@ -34,14 +34,10 @@
   {% endblock %}
 
   {% block customers_kpis %}
-    <div class="card card-kpis">
-      <div class="row">
-        {{ render(controller(
-          'PrestaShopBundle:Admin\\Common:renderKpiRow',
-          { 'kpiRow': customersKpi }
-        )) }}
-      </div>
-    </div>
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      { 'kpiRow': customersKpi }
+    )) }}
   {% endblock %}
 
   {% block customers_listing %}
