@@ -180,13 +180,6 @@ class AddonsDataProvider implements AddonsInterface
                         ->setUserMail($params['username_addons'])
                         ->setPassword($params['password_addons'])
                         ->getCheckCustomer();
-                case 'check_module':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->setModuleName($params['module_name'])
-                        ->setModuleKey($params['module_key'])
-                        ->getCheckModule();
                 case 'module_download':
                     if ($this->isAddonsAuthenticated()) {
                         return $this->marketplaceClient

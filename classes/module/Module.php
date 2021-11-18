@@ -1715,7 +1715,7 @@ abstract class ModuleCore implements ModuleInterface
             // Addons API and clear XML files to be regenerated next time
             static::deleteTrustedXmlCache();
 
-            return (int) Module::checkModuleFromAddonsApi($module_name);
+            return 0;
         }
     }
 
@@ -1734,8 +1734,7 @@ abstract class ModuleCore implements ModuleInterface
     final public static function generateTrustedXml()
     {
         $modules_on_disk = Module::getModulesDirOnDisk();
-        $trusted = [];
-        $untrusted = [];
+        $trusted = $untrusted = [];
 
         $trusted_modules_xml = [
             _PS_ROOT_DIR_ . static::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
@@ -1770,11 +1769,7 @@ abstract class ModuleCore implements ModuleInterface
 
         foreach ($modules_on_disk as $name) {
             if (!in_array($name, $trusted)) {
-                if (Module::checkModuleFromAddonsApi($name)) {
-                    $trusted[] = Tools::strtolower($name);
-                } else {
-                    $untrusted[] = Tools::strtolower($name);
-                }
+                $untrusted[] = Tools::strtolower($name);
             }
         }
 
@@ -1804,32 +1799,6 @@ abstract class ModuleCore implements ModuleInterface
             return true;
         } else {
             Context::getContext()->getTranslator()->trans('Trusted and Untrusted XML have not been generated properly', [], 'Admin.Modules.Notification');
-        }
-    }
-
-    /**
-     * Create the Addons API call from the module name only.
-     *
-     * @param string $module_name Module dir name
-     *
-     * @return bool Returns if the module is trusted by addons.prestashop.com
-     */
-    final public static function checkModuleFromAddonsApi($module_name)
-    {
-        $obj = Module::getInstanceByName($module_name);
-
-        if (!is_object($obj)) {
-            return false;
-        } elseif ($obj->module_key === '') {
-            return false;
-        } else {
-            $params = [
-                'module_name' => $obj->name,
-                'module_key' => $obj->module_key,
-            ];
-            $xml = Tools::addonsRequest('check_module', $params);
-
-            return (bool) (strpos($xml, 'success') !== false);
         }
     }
 
