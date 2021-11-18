@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
@@ -986,24 +985,7 @@ class LinkCore
     public function getImageLink($name, $ids, $type = null)
     {
         $notDefault = false;
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-        static $watermarkLogged = null;
-        static $watermarkHash = null;
-        static $psLegacyImages = null;
-        if ($watermarkLogged === null) {
-            $watermarkLogged = Configuration::get('WATERMARK_LOGGED');
-            $watermarkHash = Configuration::get('WATERMARK_HASH');
-            $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
-        }
-
-        // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if (!empty($type) && $watermarkLogged &&
-            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
-            isset(Context::getContext()->customer->id)
-        ) {
-            $type .= '-' . $watermarkHash;
-        }
+        $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
 
         // legacy mode or default image
         $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');

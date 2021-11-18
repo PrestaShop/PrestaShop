@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
  * @property Referrer $object
@@ -179,77 +178,54 @@ class AdminReferrersControllerCore extends AdminController
     {
         $uri = Tools::getHttpHost(true, true) . __PS_BASE_URI__;
 
-        $this->fields_form[0] = ['form' => [
-            'legend' => [
-                'title' => $this->trans('Affiliate', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-group',
-            ],
-            'input' => [
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Name', [], 'Admin.Global'),
-                    'name' => 'name',
-                    'required' => true,
-                    'autocomplete' => false,
+        $this->fields_form[0] = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Affiliate', [], 'Admin.Shopparameters.Feature'),
+                    'icon' => 'icon-group',
                 ],
-                [
-                    'type' => 'password',
-                    'label' => $this->trans('Password', [], 'Admin.Global'),
-                    'name' => 'passwd',
-                    'desc' => $this->trans('Leave blank if no change.', [], 'Admin.Shopparameters.Help'),
-                    'autocomplete' => false,
-                ],
-            ],
-            'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
-        ]];
-
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-
-        if ($moduleManager->isInstalled('trackingfront')) {
-            $this->fields_form[0]['form']['desc'] = [
-                $this->trans('Affiliates can access their data with this name and password.', [], 'Admin.Shopparameters.Feature'),
-                $this->trans('Front access:', [], 'Admin.Shopparameters.Feature') . ' <a class="btn btn-link" href="' . $uri . 'modules/trackingfront/stats.php" onclick="return !window.open(this.href);"><i class="icon-external-link-sign"></i> ' . $uri . 'modules/trackingfront/stats.php</a>',
-            ];
-        } else {
-            $this->fields_form[0]['form']['desc'] = [
-                $this->trans(
-                    'Please install the "%modulename%" module in order to give your affiliates access to their own statistics.',
+                'input' => [
                     [
-                        '%modulename%' => Module::getModuleName('trackingfront'),
+                        'type' => 'text',
+                        'label' => $this->trans('Name', [], 'Admin.Global'),
+                        'name' => 'name',
+                        'required' => true,
+                        'autocomplete' => false,
                     ],
-                    'Admin.Shopparameters.Notification'
-                ),
-            ];
-        }
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+        ];
 
-        $this->fields_form[1] = ['form' => [
-            'legend' => [
-                'title' => $this->trans('Commission plan', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-dollar',
+        $this->fields_form[1] = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Commission plan', [], 'Admin.Shopparameters.Feature'),
+                    'icon' => 'icon-dollar',
+                ],
+                'input' => [
+                    [
+                        'type' => 'text',
+                        'label' => $this->trans('Click fee', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'click_fee',
+                        'desc' => $this->trans('Fee given for each visit.', [], 'Admin.Shopparameters.Help'),
+                    ],
+                    [
+                        'type' => 'text',
+                        'label' => $this->trans('Base fee', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'base_fee',
+                        'desc' => $this->trans('Fee given for each order placed.', [], 'Admin.Shopparameters.Help'),
+                    ],
+                    [
+                        'type' => 'text',
+                        'label' => $this->trans('Percent fee', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'percent_fee',
+                        'desc' => $this->trans('Percent of the sales.', [], 'Admin.Shopparameters.Notification'),
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
             ],
-            'input' => [
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Click fee', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'click_fee',
-                    'desc' => $this->trans('Fee given for each visit.', [], 'Admin.Shopparameters.Help'),
-                ],
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Base fee', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'base_fee',
-                    'desc' => $this->trans('Fee given for each order placed.', [], 'Admin.Shopparameters.Help'),
-                ],
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Percent fee', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'percent_fee',
-                    'desc' => $this->trans('Percent of the sales.', [], 'Admin.Shopparameters.Notification'),
-                ],
-            ],
-            'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
-        ]];
+        ];
 
         if (Shop::isFeatureActive()) {
             $this->fields_form[1]['form']['input'][] = [
@@ -259,95 +235,99 @@ class AdminReferrersControllerCore extends AdminController
             ];
         }
 
-        $this->fields_form[2] = ['form' => [
-            'legend' => [
-                'title' => $this->trans('Technical information -- Simple mode', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-cogs',
+        $this->fields_form[2] = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Technical information -- Simple mode', [], 'Admin.Shopparameters.Feature'),
+                    'icon' => 'icon-cogs',
+                ],
+                'help' => true,
+                'input' => [
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'http_referer_like',
+                        'cols' => 40,
+                        'rows' => 1,
+                        'legend' => $this->trans('HTTP referrer', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'http_referer_like_not',
+                        'cols' => 40,
+                        'rows' => 1,
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'request_uri_like',
+                        'cols' => 40,
+                        'rows' => 1,
+                        'legend' => $this->trans('Request URI', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'request_uri_like_not',
+                        'cols' => 40,
+                        'rows' => 1,
+                    ],
+                ],
+                'desc' => $this->trans(
+                    'If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].',
+                    [
+                        '[1]' => '<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">',
+                        '[/1]' => '</a>',
+                    ],
+                    'Admin.Shopparameters.Help'
+                ),
+                'submit' => [
+                    'title' => $this->trans('Save', [], 'Admin.Actions'),
+                ],
             ],
-            'help' => true,
-            'input' => [
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'http_referer_like',
-                    'cols' => 40,
-                    'rows' => 1,
-                    'legend' => $this->trans('HTTP referrer', [], 'Admin.Shopparameters.Feature'),
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'http_referer_like_not',
-                    'cols' => 40,
-                    'rows' => 1,
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'request_uri_like',
-                    'cols' => 40,
-                    'rows' => 1,
-                    'legend' => $this->trans('Request URI', [], 'Admin.Shopparameters.Feature'),
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'request_uri_like_not',
-                    'cols' => 40,
-                    'rows' => 1,
-                ],
-            ],
-            'desc' => $this->trans(
-                'If you know how to use MySQL regular expressions, you can use the [1]expert mode[/1].',
-                [
-                    '[1]' => '<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">',
-                    '[/1]' => '</a>',
-                ],
-                'Admin.Shopparameters.Help'
-            ),
-            'submit' => [
-                'title' => $this->trans('Save', [], 'Admin.Actions'),
-            ],
-        ]];
+        ];
 
-        $this->fields_form[3] = ['form' => [
-            'legend' => [
-                'title' => $this->trans('Technical information -- Expert mode', [], 'Admin.Shopparameters.Feature'),
-                'icon' => 'icon-cogs',
+        $this->fields_form[3] = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Technical information -- Expert mode', [], 'Admin.Shopparameters.Feature'),
+                    'icon' => 'icon-cogs',
+                ],
+                'input' => [
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'http_referer_regexp',
+                        'cols' => 40,
+                        'rows' => 1,
+                        'legend' => $this->trans('HTTP referrer', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'http_referer_regexp_not',
+                        'cols' => 40,
+                        'rows' => 1,
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'request_uri_regexp',
+                        'cols' => 40,
+                        'rows' => 1,
+                        'legend' => $this->trans('Request URI', [], 'Admin.Shopparameters.Feature'),
+                    ],
+                    [
+                        'type' => 'textarea',
+                        'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
+                        'name' => 'request_uri_regexp_not',
+                        'cols' => 40,
+                        'rows' => 1,
+                    ],
+                ],
             ],
-            'input' => [
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'http_referer_regexp',
-                    'cols' => 40,
-                    'rows' => 1,
-                    'legend' => $this->trans('HTTP referrer', [], 'Admin.Shopparameters.Feature'),
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'http_referer_regexp_not',
-                    'cols' => 40,
-                    'rows' => 1,
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Include', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'request_uri_regexp',
-                    'cols' => 40,
-                    'rows' => 1,
-                    'legend' => $this->trans('Request URI', [], 'Admin.Shopparameters.Feature'),
-                ],
-                [
-                    'type' => 'textarea',
-                    'label' => $this->trans('Exclude', [], 'Admin.Shopparameters.Feature'),
-                    'name' => 'request_uri_regexp_not',
-                    'cols' => 40,
-                    'rows' => 1,
-                ],
-            ],
-        ]];
+        ];
 
         $this->multiple_fieldsets = true;
 
