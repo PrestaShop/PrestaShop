@@ -180,6 +180,7 @@ $header-text-color: #4e6167 !default;
           border: 0;
           // we can't use display:none or else the transition doesn't work
           opacity: 0;
+          height: 0;
         }
       }
     }
