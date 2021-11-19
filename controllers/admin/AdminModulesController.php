@@ -1363,7 +1363,7 @@ class AdminModulesControllerCore extends AdminController
     {
         $this->assignReadMoreSmartyVar();
 
-        die(Tools::jsonEncode([
+        die(json_encode([
             'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
             'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl'),
         ]));

@@ -355,18 +355,18 @@ class AdminLoginControllerCore extends AdminController
                     ]
                 );
 
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => false,
                     'confirm' => $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification'),
                 ]));
             } else {
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => true,
                     'errors' => [$this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification')],
                 ]));
             }
         } elseif (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(['hasErrors' => true, 'errors' => $this->errors]));
+            die(json_encode(['hasErrors' => true, 'errors' => $this->errors]));
         }
     }
 
@@ -463,19 +463,19 @@ class AdminLoginControllerCore extends AdminController
                             'employee' => $employee,
                         ]
                     );
-                    die(Tools::jsonEncode([
+                    die(json_encode([
                         'hasErrors' => false,
                         'confirm' => $this->trans('The password has been changed successfully.', [], 'Admin.Login.Notification'),
                     ]));
                 }
             } else {
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => true,
                     'errors' => [$this->trans('An error occurred while attempting to change your password.', [], 'Admin.Login.Notification')],
                 ]));
             }
         } elseif (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(['hasErrors' => true, 'errors' => $this->errors]));
+            die(json_encode(['hasErrors' => true, 'errors' => $this->errors]));
         }
     }
 }
