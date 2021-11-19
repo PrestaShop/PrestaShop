@@ -107,7 +107,7 @@ class OrderCore extends ObjectModel
     /** @var float Total to pay tax excluded */
     public $total_paid_tax_excl;
 
-    /** @var float Total really paid @deprecated 1.5.0.1 */
+    /** @var float Total really paid */
     public $total_paid_real;
 
     /** @var float Products total */
