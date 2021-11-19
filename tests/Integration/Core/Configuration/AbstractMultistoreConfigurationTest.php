@@ -79,7 +79,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      */
     public function testUpdate(ShopConstraint $shopConstraint, bool $isAllShopContext): void
     {
-        $testedObject = $this->getTestableObject($shopConstraint, $isAllShopContext);
+        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
 
         if ($isAllShopContext) {
             // in all shop we test without multistore checkboxes (it would throw an exception, this is tested elsewhere)
@@ -124,7 +124,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      */
     public function testUndefinedOptionsException(ShopConstraint $shopConstraint, bool $isAllShopContext): void
     {
-        $testedObject = $this->getTestableObject($shopConstraint, $isAllShopContext);
+        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
         $this->expectException(UndefinedOptionsException::class);
 
         if ($isAllShopContext) {
@@ -144,7 +144,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      */
     public function testInvalidOptionsException(ShopConstraint $shopConstraint, bool $isAllShopContext): void
     {
-        $testedObject = $this->getTestableObject($shopConstraint, $isAllShopContext);
+        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
         $this->expectException(InvalidOptionsException::class);
         $confValues = [
             'test_conf_1' => 'wrong value type',
@@ -164,7 +164,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      *
      * @return DummyMultistoreConfiguration
      */
-    private function getTestableObject(ShopConstraint $shopConstraint, bool $isAllShopContext): DummyMultistoreConfiguration
+    private function getConfiguration(ShopConstraint $shopConstraint, bool $isAllShopContext): DummyMultistoreConfiguration
     {
         // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
         $this->shopContext = $this->createShopContextMock();
