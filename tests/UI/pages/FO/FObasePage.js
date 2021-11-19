@@ -19,7 +19,7 @@ class FOBasePage extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
-    this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.accountLink = `${this.userInfoLink} .user-info a.account`;
@@ -61,8 +61,8 @@ class FOBasePage extends CommonPage {
     // Store information
     this.wrapperContactBlockDiv = '#footer div.block-contact';
 
-    this.footerLinksDiv = '#footer div.links';
-    this.wrapperDiv = position => `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(${position})`;
+    this.footerLinksDiv = '#footer .links';
+    this.wrapperDiv = position => `${this.footerLinksDiv} .wrapper:nth-child(${position})`;
     this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
