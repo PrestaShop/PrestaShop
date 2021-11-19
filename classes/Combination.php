@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShopBundle\Translation\Translator;
-
 /**
  * Class CombinationCore.
  */
@@ -38,14 +36,6 @@ class CombinationCore extends ObjectModel
 
     /** @var string */
     public $supplier_reference;
-
-    /**
-     * @deprecated since 1.7.8
-     * @see StockAvailable::$location instead
-     *
-     * @var string
-     */
-    public $location = '';
 
     public $ean13;
 
@@ -71,14 +61,6 @@ class CombinationCore extends ObjectModel
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
 
-    /**
-     * @deprecated since 1.7.8
-     * @see StockAvailable::$quantity instead
-     *
-     * @var int
-     */
-    public $quantity;
-
     public $weight;
 
     public $default_on;
@@ -93,12 +75,10 @@ class CombinationCore extends ObjectModel
         'primary' => 'id_product_attribute',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
             'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
             'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
             'mpn' => ['type' => self::TYPE_STRING, 'validate' => 'isMpn', 'size' => 40],
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'size' => 10],
             'reference' => ['type' => self::TYPE_STRING, 'size' => 64],
             'supplier_reference' => ['type' => self::TYPE_STRING, 'size' => 64],
 
@@ -127,31 +107,6 @@ class CombinationCore extends ObjectModel
             'images' => ['resource' => 'image', 'api' => 'images/products'],
         ],
     ];
-
-    /**
-     * @param int|null $id
-     * @param int|null $id_lang
-     * @param int|null $id_shop
-     * @param Translator|null $translator
-     */
-    public function __construct(?int $id = null, ?int $id_lang = null, ?int $id_shop = null, ?Translator $translator = null)
-    {
-        parent::__construct($id, $id_lang, $id_shop, $translator);
-        $this->loadStockData();
-    }
-
-    /**
-     * Fill the variables used for stock management.
-     */
-    public function loadStockData(): void
-    {
-        if (false === Validate::isLoadedObject($this)) {
-            return;
-        }
-
-        $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id_product, $this->id);
-        $this->location = StockAvailable::getLocation($this->id_product, $this->id);
-    }
 
     /**
      * Deletes current Combination from the database.

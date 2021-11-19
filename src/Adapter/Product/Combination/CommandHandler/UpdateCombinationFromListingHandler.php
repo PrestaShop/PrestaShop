@@ -109,11 +109,6 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $updatableProperties[] = 'price';
         }
 
-        if (null !== $command->getQuantity()) {
-            $combination->quantity = $command->getQuantity();
-            $updatableProperties[] = 'quantity';
-        }
-
         if (null !== $command->getReference()) {
             $combination->reference = $command->getReference();
             $updatableProperties[] = 'reference';

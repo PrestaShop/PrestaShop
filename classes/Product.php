@@ -2232,7 +2232,6 @@ class ProductCore extends ObjectModel
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
@@ -2332,11 +2331,9 @@ class ProductCore extends ObjectModel
         $combination->id_product = (int) $this->id;
         $combination->price = (float) $price;
         $combination->ecotax = (float) $ecotax;
-        $combination->quantity = (int) $quantity;
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit_impact;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
@@ -2780,18 +2777,19 @@ class ProductCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
-                    a.`id_attribute`
-                FROM `' . _DB_PREFIX_ . 'product_attribute` pa
-                ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
-                WHERE pa.`id_product` = ' . (int) $this->id . '
-                GROUP BY pa.`id_product_attribute`' . ($groupByIdAttributeGroup ? ',ag.`id_attribute_group`' : '') . '
-                ORDER BY pa.`id_product_attribute`';
+        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name, ' .
+             'a.`id_attribute`, stock.location ' .
+             'FROM `' . _DB_PREFIX_ . 'product_attribute` pa ' .
+             Shop::addSqlAssociation('product_attribute', 'pa') . ' ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ') ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ') ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'stock_available` stock ON (stock.id_product = pa.id_product AND stock.id_product_attribute = IFNULL(pa.`id_product_attribute`, 0)) ' .
+             'WHERE pa.`id_product` = ' . (int) $this->id . ' ' .
+             'GROUP BY pa.`id_product_attribute`' . ($groupByIdAttributeGroup ? ', ag.`id_attribute_group` ' : '') .
+             'ORDER BY pa.`id_product_attribute`';
 
         $res = Db::getInstance()->executeS($sql);
 
