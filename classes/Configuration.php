@@ -607,7 +607,7 @@ class ConfigurationCore extends ObjectModel
 
         $configurationId = Configuration::getIdByName($key, $idShopGroup, $idShop);
 
-        self::deleteMultiShopConfigurationByKey($key, $configurationId, $idShopGroup, $idShop);
+        self::deleteById($configurationId);
     }
 
     /**
@@ -616,9 +616,14 @@ class ConfigurationCore extends ObjectModel
      * @param int|null $idShopGroup
      * @param int|null $idShop
      */
-    public static function deleteMultiShopConfigurationByKey($key, ?int $configurationId, ?int $idShopGroup, ?int $idShop): void
+    public static function deleteFromGivenContext($key, ?int $idShopGroup, ?int $idShop): void
     {
-        $configurationId = $configurationId ?: Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
+        $configurationId = Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
+        self::deleteById($configurationId);
+    }
+
+    public static function deleteById(int $configurationId): void
+    {
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
         WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $configurationId);

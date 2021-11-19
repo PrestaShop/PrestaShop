@@ -401,9 +401,8 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         $shopId = $shopConstraint->getShopId();
         $shopGroupId = $shopConstraint->getShopGroupId();
 
-        ConfigurationLegacy::deleteMultiShopConfigurationByKey(
+        ConfigurationLegacy::deleteFromGivenContext(
             $key,
-            null,
             !empty($shopGroupId) ? $shopGroupId->getValue() : null,
             !empty($shopId) ? $shopId->getValue() : null
         );
