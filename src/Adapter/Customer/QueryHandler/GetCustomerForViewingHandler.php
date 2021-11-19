@@ -314,7 +314,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         foreach ($result as $row) {
             $cart = new Cart((int) row['id_cart']);
             $customerCarts[] = new CartInformation(
-                sprintf('%06d', $row['id_cart'])
+                sprintf('%06d', $row['id_cart']),
                 Tools::displayDate($row['date_add'], null, true),
                 $this->locale->formatPrice($cart->getOrderTotal(true), $row['iso_code']),
                 $row['carrier_name']
