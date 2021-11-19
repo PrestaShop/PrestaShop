@@ -5384,16 +5384,16 @@
         },
         {
             "name": "prestashop/gridhtml",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gridhtml.git",
-                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9"
+                "reference": "184ed2be93b84dea56c98a9042cafd66ac48458b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/bbd3985d5919a0c4dec622eb716cf157769eaab9",
-                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9",
+                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/184ed2be93b84dea56c98a9042cafd66ac48458b",
+                "reference": "184ed2be93b84dea56c98a9042cafd66ac48458b",
                 "shasum": ""
             },
             "require": {
@@ -5416,9 +5416,9 @@
             "description": "PrestaShop module gridhtml",
             "homepage": "https://github.com/PrestaShop/gridhtml",
             "support": {
-                "source": "https://github.com/PrestaShop/gridhtml/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/gridhtml/tree/v2.0.2"
             },
-            "time": "2020-12-09T14:23:53+00:00"
+            "time": "2021-11-19T15:48:55+00:00"
         },
         {
             "name": "prestashop/gsitemap",
