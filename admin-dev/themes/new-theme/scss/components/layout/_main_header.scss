@@ -174,13 +174,13 @@ $header-text-color: #4e6167 !default;
         }
 
         .btn {
+          height: 0;
           width: 0;
           padding: 0;
           overflow: hidden;
           border: 0;
           // we can't use display:none or else the transition doesn't work
           opacity: 0;
-          height: 0;
         }
       }
     }
