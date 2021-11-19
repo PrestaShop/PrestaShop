@@ -51,7 +51,7 @@ Scenario :
 - Update carrier and tracking number and check details
  */
 
-describe('BO - Orders - View and edit order : Check order documents tab', async () => {
+describe('BO - Orders - View and edit order : Check order carriers tab', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
