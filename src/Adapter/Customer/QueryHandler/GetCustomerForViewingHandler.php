@@ -312,7 +312,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         
         $customerCarts = [];
         foreach ($result as $row) {
-            $cart = new Cart((int) row['id_cart']);
+            $cart = new Cart((int) $row['id_cart']);
             $customerCarts[] = new CartInformation(
                 sprintf('%06d', $row['id_cart']),
                 Tools::displayDate($row['date_add'], null, true),
