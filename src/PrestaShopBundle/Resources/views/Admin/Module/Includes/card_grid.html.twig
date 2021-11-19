@@ -25,7 +25,7 @@
 {% set isModuleActive = module.database.active %}
 
 <div
-  class="module-item module-item-grid col-md-12 col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
+  class="module-item module-item-grid col-lg-6 col-xl-3 {% if origin == 'manage' and isModuleActive == '0' %}module-item-grid-isNotActive{% endif %}"
   data-id="{{ module.attributes.id }}"
   data-name="{{ module.attributes.displayName }}"
   data-scoring="{{ module.attributes.avgRate }}"

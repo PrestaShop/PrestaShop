@@ -125,6 +125,15 @@ class Order extends BOBasePage {
     this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
 
+    // Merchandise returns tab
+    this.merchandiseReturnsTab = '#orderReturnsTab';
+    this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`;
+    this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
+    this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
+    this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
+    this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
+      + ` td[data-role='merchandise-${column}']`;
+
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
     this.refundProductAmount = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_amount']`;
@@ -305,7 +314,7 @@ class Order extends BOBasePage {
    * @returns {Promise<number>}
    */
   getDocumentsNumber(page) {
-    return this.getNumberFromText(page, `${this.documentTab} .count`);
+    return this.getNumberFromText(page, `${this.documentTab} .js-test-count`);
   }
 
   /**
@@ -863,6 +872,45 @@ class Order extends BOBasePage {
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
 
     return this.elementVisible(page, this.paginationNextLink, 1000);
+  }
+
+  // Methods for Merchandise returns tab
+  /**
+   * Go to merchandise returns tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToMerchandiseReturnsTab(page) {
+    await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
+
+    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
+  }
+
+  /**
+   * Get merchandise returns number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getMerchandiseReturnsNumber(page) {
+    return this.getNumberFromText(page, this.merchandisereturnCount);
+  }
+
+  /**
+   * Get merchandise returns details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table merchandise returns
+   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   */
+  async getMerchandiseReturnsDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
+      type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
+      carrier: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
+      trackingNumber: await this.getTextContent(
+        page,
+        this.merchandiseReturnsTableColumn(row, 'return-tracking-number'),
+      ),
+    };
   }
 }
 
