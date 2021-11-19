@@ -106,6 +106,7 @@ tests-legacy/resources/modules/ps_sharebuttons
 # Installed with test data maybe via API push
 tests-legacy/resources/modules/ps_reminder
 
+tests/Resources/img/*
 tests/Resources/img/l/*
 !tests/Resources/img/l/.gitkeep
 tests/Resources/img/p/*

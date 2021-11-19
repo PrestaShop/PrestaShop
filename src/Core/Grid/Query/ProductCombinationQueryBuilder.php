@@ -139,7 +139,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             $qb->addOrderBy('id_product_attribute', 'asc');
         } elseif ('stock_quantity' === $productCombinationFilters->getOrderBy()) {
             $qb
-                ->addSelect('pa.quantity AS stock_quantity')
+                ->addSelect('sa.quantity AS stock_quantity')
                 ->innerJoin(
                     'pa',
                     $this->dbPrefix . 'stock_available',
