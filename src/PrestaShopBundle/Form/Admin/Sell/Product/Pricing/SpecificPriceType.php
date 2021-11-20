@@ -44,6 +44,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
@@ -246,5 +247,11 @@ class SpecificPriceType extends TranslatorAwareType
                 'choices' => $this->shopByIdChoiceProvider->getChoices(),
             ]);
         }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefault('label', false);
     }
 }
