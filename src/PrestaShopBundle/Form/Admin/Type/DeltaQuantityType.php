@@ -54,10 +54,13 @@ class DeltaQuantityType extends TranslatorAwareType
             ])
         ;
 
-        //@todo: clean up. (dont forget prestashop_ui_kit)
         if ($options['submittable']) {
             $builder->add('delta', SubmittableInputType::class, [
                 'block_prefix' => 'delta_quantity_delta',
+                'label' => false,
+                'attr' => [
+                    'aria-label' => $this->trans('Add or subtract items', 'Admin.Global'),
+                ],
             ]);
         } else {
             $builder->add('delta', NumberType::class, [
