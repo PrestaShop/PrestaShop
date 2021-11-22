@@ -110,6 +110,10 @@
   {% endif %}
 {%- endblock form_row %}
 
+{#
+# This block is integrated into each form row, its purpose is to display a "Modify all stores" checkbox when present,
+# the checkbox form field is added by the ModifyAllStoresExtension when the config modify_all_stores
+#}
 {% block form_modify_all_stores %}
   {% set overrideCheckboxName = modify_all_stores_prefix ~ form.vars.name %}
   {% if attribute(form.parent, overrideCheckboxName) is defined %}
