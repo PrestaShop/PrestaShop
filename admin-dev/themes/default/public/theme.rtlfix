@@ -33,6 +33,10 @@ body.lang-rtl, .lang-rtl #content.bootstrap .panel .panel-heading a.btn, .lang-r
   font-family: Vazir, Tahoma, Arial, sans-serif !important;
 }
 
+.lang-rtl #login-panel input[type="email"], .lang-rtl #login-panel input[type="password"], .lang-rtl #login-panel #forgot_name {
+  font-family: Vazir, Tahoma, Arial, "FontAwesome", sans-serif !important;
+}
+
 .lang-rtl .bootstrap .page-head .page-title {
   font-size: 1.625rem;
 }
