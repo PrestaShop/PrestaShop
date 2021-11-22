@@ -1,5 +1,10 @@
 .menu {
   margin-bottom: 0;
+
+  @include media-breakpoint-down(md) {
+    align-self: flex-start;
+    margin-bottom: 1rem;
+  }
 }
 
 .top-menu {
