@@ -40,7 +40,7 @@ class AdminFilterTest extends TestCase
         $this->emptyFilter = AdminFilter::getProductCatalogEmptyFilter();
     }
 
-    public function testGetProductCatalogEmptyFilter()
+    public function testGetProductCatalogEmptyFilter(): void
     {
         $this->assertEmpty($this->emptyFilter['filter_category']);
         $this->assertEmpty($this->emptyFilter['filter_column_id_product']);
