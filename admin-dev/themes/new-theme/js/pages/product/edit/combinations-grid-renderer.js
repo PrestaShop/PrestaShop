@@ -24,6 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -35,6 +36,7 @@ export default class CombinationsGridRenderer {
    * @returns {{render: (function(*=): void)}}
    */
   constructor() {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
@@ -78,6 +80,7 @@ export default class CombinationsGridRenderer {
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
+      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityContainer, $row);
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
       const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
       // @todo final price should be calculated based on price impact and product price,
@@ -95,6 +98,7 @@ export default class CombinationsGridRenderer {
       $quantityInput.val(combination.quantity);
       $quantityInput.data('initial-value', combination.quantity);
       $quantityInput.find('.initial-quantity').text(combination.quantity);
+      $deltaQuantityContainer.data('initial-quantity', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
@@ -110,6 +114,8 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append($row);
       rowIndex += 1;
     });
+
+    this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
   }
 
   /**

@@ -88,20 +88,9 @@ class CombinationItemType extends TranslatorAwareType
             ->add('final_price_te', HiddenType::class)
             ->add('quantity', DeltaQuantityType::class, [
                 'submittable' => true,
-//                'type' => SubmittableInputType::class,
                 'attr' => [
                     'class' => 'combination-quantity',
                 ],
-//                'type_options' => [
-//                    'required' => false,
-//                    'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
-//                    'label_tag_name' => 'h4',
-//                    'constraints' => [
-//                        new NotBlank(),
-//                        new Type(['type' => 'numeric']),
-//                    ],
-//                    'default_empty_data' => 0,
-//                ],
             ])
             ->add('is_default', RadioType::class, [
                 'label' => false,
