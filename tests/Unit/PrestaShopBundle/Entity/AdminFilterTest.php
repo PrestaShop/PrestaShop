@@ -54,7 +54,7 @@ class AdminFilterTest extends TestCase
     /**
      * @dataProvider productFilterProviderByName
      */
-    public function testSetProductCatalogFilterByName(array $filter, $expected)
+    public function testSetProductCatalogFilterByName(array $filter, string $expected): void
     {
         $setFilter = (new AdminFilter())
             ->setProductCatalogFilter($filter)
