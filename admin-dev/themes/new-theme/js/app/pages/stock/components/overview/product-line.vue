@@ -73,7 +73,7 @@
         class="qty-update"
         :class="{'stock-warning':lowStock}"
       >
-        <i class="material-icons">trending_flat</i>
+        <i class="material-icons rtl-flip">trending_flat</i>
         {{ physicalQtyUpdated }}
       </span>
     </td>
@@ -93,7 +93,7 @@
         class="qty-update"
         :class="{'stock-warning':lowStock}"
       >
-        <i class="material-icons">trending_flat</i>
+        <i class="material-icons rtl-flip">trending_flat</i>
         {{ availableQtyUpdated }}
       </span>
       <span
