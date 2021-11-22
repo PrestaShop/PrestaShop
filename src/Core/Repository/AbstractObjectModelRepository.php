@@ -28,17 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Repository;
 
-use Db;
-use DbQuery;
 use ObjectModel;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShopDatabaseException;
 use PrestaShopException;
-use function bqSQL;
 
+/**
+ * This abstract class provides the base helper function to build a repository service based on the use of legacy
+ * objects from PrestaShop. You need to implement the required methods (get, add, update, ...) into your repository,
+ * but you can use this abstract class to do most of the job.
+ */
 abstract class AbstractObjectModelRepository
 {
     /**
@@ -84,77 +83,6 @@ abstract class AbstractObjectModelRepository
     }
 
     /**
-     * @param int $id
-     * @param string $objectModelClass
-     * @param string $exceptionClass
-     *
-     * @return ObjectModel
-     *
-     * @throws CoreException
-     */
-    protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
-    {
-        $objectModel = $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, $shopId->getValue());
-
-        // The object is fetched before checking the association, so that the NotFoundException has the priority over the NoAssociationException
-        $this->checkShopAssociation($id, $objectModelClass, $shopId);
-
-        // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
-        $objectModel->id_shop_list = [$shopId->getValue()];
-
-        return $objectModel;
-    }
-
-    /**
-     * @param int $id
-     * @param string $objectModelClassName
-     * @param ShopId $shopId
-     *
-     * @return bool
-     */
-    protected function hasShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): bool
-    {
-        $modelDefinition = $objectModelClassName::$definition;
-        $objectTable = $modelDefinition['table'];
-        $primaryColumn = $modelDefinition['primary'];
-
-        $query = new DbQuery();
-        $query
-            ->select('e.`' . bqSQL($primaryColumn) . '` as id')
-            ->from(bqSQL($objectTable) . '_shop', 'e')
-            ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
-            ->where('e.`id_shop` = ' . $shopId->getValue())
-        ;
-
-        try {
-            $row = Db::getInstance()->getRow($query, false);
-        } catch (PrestaShopDatabaseException $e) {
-            $row = false;
-        }
-
-        return !empty($row['id']);
-    }
-
-    /**
-     * @param int $id
-     * @param string $objectModelClassName
-     * @param ShopId $shopId
-     *
-     * @throws ShopAssociationNotFound
-     */
-    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
-    {
-        if (!$this->hasShopAssociation($id, $objectModelClassName, $shopId)) {
-            throw new ShopAssociationNotFound(sprintf(
-                'Could not find association between %s %d and Shop %d',
-                $objectModelClassName,
-                $id,
-                $shopId->getValue()
-            ));
-        }
-    }
-
-    /**
      * @param ObjectModel $objectModel
      * @param string $exceptionClass
      * @param int $errorCode
@@ -183,22 +111,6 @@ abstract class AbstractObjectModelRepository
                 $e
             );
         }
-    }
-
-    /**
-     * @param ObjectModel $objectModel
-     * @param string $exceptionClass
-     * @param int $errorCode
-     *
-     * @return int
-     */
-    protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
-    {
-        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
-        // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = [$shopId];
-
-        return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
     /**
@@ -239,27 +151,6 @@ abstract class AbstractObjectModelRepository
 
     /**
      * @param ObjectModel $objectModel
-     * @param array $shopIds
-     * @param string $exceptionClass
-     * @param int $errorCode
-     *
-     * @throws CoreException
-     */
-    protected function updateObjectModelForShops(
-        ObjectModel $objectModel,
-        array $shopIds,
-        string $exceptionClass,
-        int $errorCode = 0
-    ): void {
-        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
-        // this way we can control exactly which shop is updated
-        $objectModel->id_shop_list = $shopIds;
-
-        $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
-    }
-
-    /**
-     * @param ObjectModel $objectModel
      * @param array $propertiesToUpdate
      * @param string $exceptionClass
      * @param int $errorCode
@@ -274,26 +165,6 @@ abstract class AbstractObjectModelRepository
     ): void {
         $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
         $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
-    }
-
-    /**
-     * @param ObjectModel $objectModel
-     * @param array $propertiesToUpdate
-     * @param array $shopIds
-     * @param string $exceptionClass
-     * @param int $errorCode
-     *
-     * @throws CoreException
-     */
-    protected function partiallyUpdateObjectModelForShops(
-        ObjectModel $objectModel,
-        array $propertiesToUpdate,
-        array $shopIds,
-        string $exceptionClass,
-        int $errorCode = 0
-    ): void {
-        $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
-        $this->updateObjectModelForShops($objectModel, $shopIds, $exceptionClass, $errorCode);
     }
 
     /**
@@ -370,7 +241,7 @@ abstract class AbstractObjectModelRepository
      *
      * @return array<string, mixed>
      */
-    private function formatPropertiesToUpdate(array $propertiesToUpdate): array
+    protected function formatPropertiesToUpdate(array $propertiesToUpdate): array
     {
         $formattedPropertiesToUpdate = [];
         foreach ($propertiesToUpdate as $propertyName => $property) {
