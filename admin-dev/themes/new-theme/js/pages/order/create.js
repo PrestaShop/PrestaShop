@@ -66,7 +66,7 @@ function refreshCart() {
  */
 function addCreatedCartRuleToCart(cartRuleId) {
   if (orderPageManager === null) {
-    console.log('Error: Could not refresh created cart rule to the current cart as orderPageManager is null');
+    console.log('Error: Cannot apply created cart rule to the current cart as orderPageManager is not available');
     return;
   }
   orderPageManager.addCreatedCartRuleToCart(cartRuleId);
