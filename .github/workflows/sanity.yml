@@ -21,6 +21,10 @@ jobs:
       - name: Setup Apache
         run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
 
+      # temporary fix to make latest 7.4 & 8.0 work
+      - name: Update PCRE2
+        run: sudo apt-get install -y libpcre2-dev
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
