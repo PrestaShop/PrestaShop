@@ -165,7 +165,9 @@ class SEOType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('redirect_option', RedirectOptionType::class)
+            ->add('redirect_option', RedirectOptionType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('tags', TranslatableType::class, [
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
@@ -243,11 +245,15 @@ class SEOType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => $this->trans('Search Engine Optimization', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
-            'required' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'product_id' => null,
+                'label' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->setAllowedTypes('product_id', ['null', 'int'])
+        ;
     }
 }

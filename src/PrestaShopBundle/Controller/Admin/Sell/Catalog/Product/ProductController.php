@@ -292,7 +292,8 @@ class ProductController extends FrameworkBundleAdminController
             $products = $this->getQueryBus()->handle(new SearchProductsForAssociation(
                 $request->get('query', ''),
                 $lang->getId(),
-                (int) $shopId
+                (int) $shopId,
+                (int) $request->get('limit', 20)
             ));
         } catch (ProductConstraintException $e) {
             return $this->json([

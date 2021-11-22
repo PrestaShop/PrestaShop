@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import AutoCompleteSearch from '@components/auto-complete-search';
+import AutoCompleteSearch, {InputAutoCompleteSearchConfig} from '@components/auto-complete-search';
 import ComponentsMap from '@components/components-map';
 import ConfirmModal from '@components/modal';
 // @ts-ignore-next-line
@@ -37,10 +37,14 @@ export interface EntitySearchInputOptions extends OptionsObject {
   prototypeTemplate: string,
   prototypeIndex: string,
   prototypeMapping: OptionsObject,
+  identifierField: string;
 
   allowDelete: boolean,
   dataLimit: number,
+  minLength: number,
   remoteUrl: string,
+  filterSelected: boolean,
+  filteredIdentities: Array<string>,
 
   removeModal: ModalOptions,
 
@@ -76,19 +80,19 @@ export interface ModalOptions extends OptionsObject {
  * either override it in a theme or create your own entity type if you need to customize the behaviour.
  */
 export default class EntitySearchInput {
-  private $entitySearchInputContainer: JQuery;
+  private readonly $entitySearchInputContainer: JQuery;
 
-  private $entitySearchInput: JQuery;
+  private readonly $entitySearchInput: JQuery;
 
-  private $entitiesContainer: JQuery;
+  private readonly $entitiesContainer: JQuery;
 
   private $listContainer: JQuery;
 
   private $emptyState: JQuery;
 
-  private options!: EntitySearchInputOptions;
+  private readonly options!: EntitySearchInputOptions;
 
-  private entityRemoteSource?: Bloodhound<Record<string, any>>;
+  private entityRemoteSource!: Bloodhound;
 
   private autoSearch!: AutoCompleteSearch;
 
@@ -170,10 +174,14 @@ export default class EntitySearchInput {
         name: '__name__',
         image: '__image__',
       },
+      identifierField: 'id',
 
       allowDelete: true,
       dataLimit: 0,
+      minLength: 2,
       remoteUrl: undefined,
+      filterSelected: true,
+      filteredIdentities: [],
 
       removeModal: {
         id: 'modal-confirm-remove-entity',
@@ -203,6 +211,9 @@ export default class EntitySearchInput {
       // This gets the proper value for each option, respecting the priority: input > data-attribute > default
       this.initOption(optionName, inputOptions, defaultOptions[optionName]);
     });
+
+    // Cast all IDs into string to avoid not matching because of different types
+    this.options.filteredIdentities = this.options.filteredIdentities.map(String);
   }
 
   /**
@@ -262,10 +273,11 @@ export default class EntitySearchInput {
    * Build the AutoCompleteSearch component
    */
   private buildAutoCompleteSearch(): void {
-    const autoSearchConfig = {
+    const autoSearchConfig: InputAutoCompleteSearchConfig = {
       source: this.entityRemoteSource,
       dataLimit: this.options.dataLimit,
-      value: '',
+      value: this.options.identifierField,
+      minLength: this.options.minLength,
       templates: {
         suggestion: (entity: any) => {
           let entityImage = '';
@@ -286,11 +298,6 @@ export default class EntitySearchInput {
       },
     };
 
-    // Can be used to format value depending on selected item
-    if (this.options.mappingValue !== undefined) {
-      autoSearchConfig.value = <string> this.options.mappingValue;
-    }
-
     // The search feature may be disabled so the search input won't be present
     if (this.$entitySearchInput.length) {
       this.autoSearch = new AutoCompleteSearch(
@@ -307,26 +314,35 @@ export default class EntitySearchInput {
    * @returns {Bloodhound}
    */
   private buildRemoteSource(): void {
-    const sourceConfig = {
-      mappingValue: this.options.mappingValue,
-      remoteUrl: this.options.remoteUrl,
-    };
-
     this.entityRemoteSource = new Bloodhound({
       datumTokenizer: Bloodhound.tokenizers.whitespace,
       queryTokenizer: Bloodhound.tokenizers.whitespace,
       identify(obj: any) {
-        return obj[sourceConfig.mappingValue];
+        return obj[this.options.identifierField];
       },
       remote: {
-        url: sourceConfig.remoteUrl,
+        url: this.options.remoteUrl,
         cache: false,
         wildcard: this.options.queryWildcard,
-        transform(response: any) {
+        transform: (response: any) => {
           if (!response) {
             return [];
           }
-          return response;
+
+          const selectedIds: string[] = this.getSelectedIds();
+          const suggestedItems: any[] = [];
+          response.forEach((responseItem: any) => {
+            // Force casting to string to avoid inequality with number IDs because of type
+            const responseIdentifier: string = String(responseItem[this.options.identifierField]);
+            const isIdContained = this.options.filterSelected && selectedIds.includes(responseIdentifier);
+            const isFiltered = this.options.filteredIdentities.includes(responseIdentifier);
+
+            if (!isIdContained && !isFiltered) {
+              suggestedItems.push(responseItem);
+            }
+          });
+
+          return suggestedItems;
         },
       },
     });
@@ -387,7 +403,8 @@ export default class EntitySearchInput {
    * @param {Object} selectedItem
    */
   private addSelectedContentToContainer(selectedItem: any): void {
-    const newIndex = this.$entitiesContainer.children().length;
+    const $entityItems = $(this.options.entityItemSelector, this.$entitiesContainer);
+    const newIndex = $entityItems.length ? this.getIndexFromItem($entityItems.last()) + 1 : 0;
     const selectedHtml = this.renderSelected(selectedItem, newIndex);
 
     const $selectedNode = $(selectedHtml);
@@ -400,6 +417,45 @@ export default class EntitySearchInput {
       this.options.onSelectedContent($selectedNode, selectedItem);
     }
     this.updateEmptyState();
+  }
+
+  /**
+   * Try and find the index of an element in the collection by parsing its inputs names which should look like:
+   *
+   * form[collection][0][name], form[collection][1][id] => we aim to extract the 1
+   *
+   * We search for the name matching the configured identifier, and extract its index. This is important because
+   * when you edit a collection, you can add then remove then add an element again, the indexes are not gonna follow
+   * so you cannot rely on just the index from element order. Which is why it is more accurate to parse the index that
+   * was used when the element has been rendered for the first time.
+   *
+   * If we can't find anything we use the order index as fallback though.
+   *
+   * @param {JQuery} $item
+   *
+   * @return number
+   */
+  private getIndexFromItem($item: JQuery): number {
+    // By default use the position index
+    let index = $item.index();
+
+    // Try to find an input which names contains [1][id] (where 1 is the index, and id the identifier)
+    const identifierNameRegexp: string = `\\[(\\d+)\\]\\[${this.options.identifierField}\\]`;
+    const inputs = $item.find('input');
+    inputs.each((inputIndex: number, input: HTMLInputElement): void => {
+      const matches = input.name.match(identifierNameRegexp);
+
+      // Extract the index from the input name, if it is found and is a number use it as the index
+      if (matches && matches.length > 0) {
+        const foundIndex = parseInt(matches[1], 10);
+
+        if (!Number.isNaN(foundIndex)) {
+          index = foundIndex;
+        }
+      }
+    });
+
+    return index;
   }
 
   /**
@@ -421,5 +477,26 @@ export default class EntitySearchInput {
     });
 
     return template;
+  }
+
+  /**
+   * Parses the selection container and extract the IDs this allows to filter the already selected items.
+   *
+   * @private
+   */
+  private getSelectedIds(): string[] {
+    const selectedIds: string[] = [];
+    const selectedChildren = $(this.options.entityItemSelector, this.$entitiesContainer);
+    selectedChildren.each((index: number, selectedChild: HTMLElement) => {
+      const identifierNameRegexp: string = `\\[${this.options.identifierField}\\]`;
+      const inputs = $(selectedChild).find('input');
+      inputs.each((inputIndex: number, input: HTMLInputElement): void => {
+        if (input.name.match(identifierNameRegexp)) {
+          selectedIds.push(input.value);
+        }
+      });
+    });
+
+    return selectedIds;
   }
 }

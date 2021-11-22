@@ -26,47 +26,31 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Type;
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Description;
 
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
- * This form type is used to display an image value without providing an interactive input to edit it.
- * It is based on a hidden input so it could be changed programmatically, or be used just to display
- * an image in a form.
- */
-class ImagePreviewType extends HiddenType
+class RelatedProductType extends AbstractType
 {
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildView($view, $form, $options);
-        $view->vars['type'] = 'hidden';
-        $view->vars['image_class'] = $options['image_class'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'image_class' => 'img-fluid',
-        ]);
-        $resolver->setAllowedTypes('image_class', ['string']);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'image_preview';
+        $builder
+            ->add('id', HiddenType::class, [
+                'label' => false,
+            ])
+            ->add('image', ImagePreviewType::class, [
+                'label' => false,
+            ])
+            ->add('name', TextPreviewType::class, [
+                'label' => false,
+            ])
+        ;
     }
 }

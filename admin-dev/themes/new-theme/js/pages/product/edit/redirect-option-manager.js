@@ -47,10 +47,13 @@ export default class RedirectOptionManager {
     this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
     this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);
-    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
+
+    // Target only inputs present in the redirect target row
     this.$redirectTargetRow = this.$redirectTargetInput.closest(ProductMap.seo.redirectOption.groupSelector);
+    this.$searchInput = $(ComponentsMap.entitySearchInput.searchInputSelector, this.$redirectTargetRow);
     this.$redirectTargetLabel = $(ProductMap.seo.redirectOption.labelSelector, this.$redirectTargetRow).first();
     this.$redirectTargetHint = $(ProductMap.seo.redirectOption.helpSelector, this.$redirectTargetRow);
+
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
   }
@@ -76,6 +79,7 @@ export default class RedirectOptionManager {
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('categoryHelp'));
           this.entitySearchInput.setOption('allowDelete', true);
+          this.entitySearchInput.setOption('filteredIdentities', this.$redirectTargetInput.data('categoryFiltered'));
           this.showTarget();
           break;
         case '301-product':
@@ -89,6 +93,7 @@ export default class RedirectOptionManager {
           }
           this.$redirectTargetHint.html(this.$redirectTargetInput.data('productHelp'));
           this.entitySearchInput.setOption('allowDelete', false);
+          this.entitySearchInput.setOption('filteredIdentities', this.$redirectTargetInput.data('productFiltered'));
           this.showTarget();
           break;
         case '404':

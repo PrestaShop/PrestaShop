@@ -47,6 +47,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatu
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
@@ -59,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
@@ -111,6 +113,7 @@ class ProductFormDataProviderTest extends TestCase
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'related_products' => [],
             ],
             'stock' => [
                 'quantities' => [
@@ -183,6 +186,7 @@ class ProductFormDataProviderTest extends TestCase
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'related_products' => [],
             ],
             'stock' => [
                 'quantities' => [
@@ -270,6 +274,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
+            $this->getDatasetsForRelatedProducts(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -577,6 +582,52 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData['description']['categories']['default_category_id'] = 51;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForRelatedProducts(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'related_products' => [
+                [
+                    'id' => 42,
+                    'name' => 'cool glasses',
+                    'reference' => '',
+                    'image' => 'http://awesome.jpg',
+                ],
+                [
+                    'id' => 15,
+                    'name' => 'wicked snowboard',
+                    'reference' => 'zebest',
+                    'image' => 'http://awesome.jpg',
+                ],
+            ],
+        ];
+
+        $expectedOutputData['description']['related_products'] = [
+            [
+                'id' => 42,
+                'name' => 'cool glasses',
+                'image' => 'http://awesome.jpg',
+            ],
+            [
+                'id' => 15,
+                'name' => 'wicked snowboard (ref: zebest)',
+                'image' => 'http://awesome.jpg',
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -1029,6 +1080,30 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
+     * @return RelatedProduct[]
+     */
+    private function createRelatedProducts(array $productData): array
+    {
+        if (empty($productData['related_products'])) {
+            return [];
+        }
+
+        $relatedProducts = [];
+        foreach ($productData['related_products'] as $relatedProduct) {
+            $relatedProducts[] = new RelatedProduct(
+                (int) $relatedProduct['id'],
+                $relatedProduct['name'],
+                $relatedProduct['reference'],
+                $relatedProduct['image']
+            );
+        }
+
+        return $relatedProducts;
+    }
+
+    /**
+     * @param array $productData
+     *
      * @return CustomizationField[]
      */
     private function createProductCustomizationFields(array $productData): array
@@ -1262,7 +1337,8 @@ class ProductFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
                 $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeesStockMovements::class)
+                $this->isInstanceOf(GetEmployeesStockMovements::class),
+                $this->isInstanceOf(GetRelatedProducts::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
@@ -1276,7 +1352,7 @@ class ProductFormDataProviderTest extends TestCase
      * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]|RelatedProduct[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
@@ -1286,6 +1362,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
             GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
+            GetRelatedProducts::class => $this->createRelatedProducts($productData),
         ];
 
         $queryClass = get_class($query);
@@ -1311,11 +1388,12 @@ class ProductFormDataProviderTest extends TestCase
             'description' => [
                 'description' => [],
                 'description_short' => [],
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'categories' => [
                     'product_categories' => [],
                     'default_category_id' => self::HOME_CATEGORY_ID,
                 ],
+                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'related_products' => [],
             ],
             'specifications' => [
                 'references' => [

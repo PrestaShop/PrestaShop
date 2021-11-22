@@ -94,6 +94,8 @@ class EntitySearchInputType extends CollectionType
             'remote_url' => null,
             // Max number of selectable entities (0 is unlimited)
             'limit' => 0,
+            // Min length before suggestions start getting rendered
+            'min_length' => 2,
             // Search input attributes (if needed to be customized)
             'search_attr' => [],
             // List container attributes (if needed to be customized)
@@ -104,6 +106,10 @@ class EntitySearchInputType extends CollectionType
             // This mapping array indicate which field from the entity must be used and what placeholder use to replace
             // it (the placeholder must be used in the prototype so that the value is in the right place)
             'prototype_mapping' => null,
+            'identifier_field' => 'id',
+
+            // Specify IDs that must be filtered out of suggestions
+            'filtered_identities' => [],
 
             // Layout
             'layout' => static::LIST_LAYOUT,
@@ -122,9 +128,12 @@ class EntitySearchInputType extends CollectionType
 
         $resolver->setAllowedTypes('remote_url', ['string', 'null']);
         $resolver->setAllowedTypes('limit', ['int']);
+        $resolver->setAllowedTypes('min_length', ['int']);
         $resolver->setAllowedTypes('entity_type', ['string', 'null']);
 
         $resolver->setAllowedTypes('prototype_mapping', ['array', 'null']);
+        $resolver->setAllowedTypes('identifier_field', ['string']);
+        $resolver->setAllowedTypes('filtered_identities', ['array']);
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
@@ -169,6 +178,7 @@ class EntitySearchInputType extends CollectionType
             'allow_search' => $options['allow_search'],
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],
+            'min_length' => $options['min_length'],
             'search_attr' => $options['search_attr'],
             'list_attr' => $options['list_attr'],
             'placeholder' => $options['placeholder'],
@@ -176,6 +186,8 @@ class EntitySearchInputType extends CollectionType
             'remove_modal' => $removeModal,
             'list_layout' => $options['layout'],
             'empty_state' => $options['empty_state'],
+            'identifier_field' => $options['identifier_field'],
+            'filtered_identities' => $options['filtered_identities'],
         ]);
     }
 

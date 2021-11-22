@@ -352,6 +352,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@prestashop.adapter.product.image.product_image_url_factory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts

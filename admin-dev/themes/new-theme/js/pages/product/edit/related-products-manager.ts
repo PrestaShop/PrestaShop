@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,33 +21,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
-{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+import EntitySearchInput from '@components/entity-search-input';
+import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
+import {EventEmitter} from 'events';
 
-{% block image_dropzone_widget %}
-  {% set attr = attr|merge({
-    'class': (attr.class|default('') ~ ' image-dropzone')|trim,
-    'data-translations': translations|json_encode,
-    'data-locales': locales|json_encode,
-    'data-product-id': product_id,
-    'data-form-name': update_form_name,
-    'data-token': csrf_token(update_form_name)
-  }) %}
+export default class RelatedProductsManager {
+  private eventEmitter: EventEmitter;
 
-  <div {{ block('widget_attributes') }}>
-  </div>
-{% endblock %}
+  private entitySearchInput: EntitySearchInput;
 
-{% block related_product_row %}
-  <li class="related-product entity-item" id="{{ form.vars.name }}">
-    <div class="related-product-image">
-      {{ form_widget(form.image) }}
-    </div>
-    <div class="related-product-legend">
-      {{ form_widget(form.name, {prefix: '<i class="material-icons delete entity-item-delete">delete</i>'}) }}
-    </div>
-    {{ form_widget(form.id) }}
-  </li>
-{% endblock %}
+  constructor(eventEmitter: EventEmitter) {
+    this.eventEmitter = eventEmitter;
+    this.entitySearchInput = new EntitySearchInput($(ProductMap.relatedProducts.searchInput), {
+      onRemovedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+      onSelectedContent: () => {
+        this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState);
+      },
+    });
+  }
+}

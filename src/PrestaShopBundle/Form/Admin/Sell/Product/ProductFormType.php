@@ -86,7 +86,9 @@ class ProductFormType extends TranslatorAwareType
             ])
             ->add('shipping', ShippingType::class)
             ->add('pricing', PricingType::class)
-            ->add('seo', SEOType::class)
+            ->add('seo', SEOType::class, [
+                'product_id' => $productId,
+            ])
             ->add('options', OptionsType::class)
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
@@ -110,7 +112,7 @@ class ProductFormType extends TranslatorAwareType
         $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
-            'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
+            'product_id' => $options['product_id'] ?? null,
         ];
 
         $view->vars = array_replace($view->vars, $formVars);

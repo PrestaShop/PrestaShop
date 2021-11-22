@@ -36,8 +36,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -159,6 +161,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                     'default_category_id' => $this->defaultCategoryId,
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'related_products' => [],
             ],
             'stock' => [
                 'quantities' => [
@@ -251,6 +254,36 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    private function extractRelatedProducts(int $productId): array
+    {
+        /** @var RelatedProduct[] $relatedProducts */
+        $relatedProducts = $this->queryBus->handle(new GetRelatedProducts($productId, $this->contextLangId));
+
+        $relatedProductsData = [];
+        foreach ($relatedProducts as $relatedProduct) {
+            $productName = $relatedProduct->getName();
+            if (!empty($relatedProduct->getReference())) {
+                $productName .= sprintf(
+                    ' (ref: %s)',
+                    $relatedProduct->getReference()
+                );
+            }
+
+            $relatedProductsData[] = [
+                'id' => $relatedProduct->getProductId(),
+                'name' => $productName,
+                'image' => $relatedProduct->getImageUrl(),
+            ];
+        }
+
+        return $relatedProductsData;
+    }
+
+    /**
      * @param ProductForEditing $productForEditing
      *
      * @return array<string, mixed>
@@ -302,8 +335,9 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         return [
             'description' => $productForEditing->getBasicInformation()->getLocalizedDescriptions(),
             'description_short' => $productForEditing->getBasicInformation()->getLocalizedShortDescriptions(),
-            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'categories' => $this->extractCategoriesData($productForEditing),
+            'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
+            'related_products' => $this->extractRelatedProducts($productForEditing->getProductId()),
         ];
     }
 

@@ -212,4 +212,7 @@ export default {
     searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
+  relatedProducts: {
+    searchInput: '#product_description_related_products',
+  },
 };

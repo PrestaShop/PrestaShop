@@ -29,9 +29,12 @@
     'data-prototype-template': form_row(prototype),
     'data-prototype-index': prototype.vars.name|e('html_attr'),
     'data-prototype-mapping': prototype_mapping|json_encode,
+    'data-identifier-field': identifier_field,
+    'data-filtered-identities': filtered_identities|json_encode,
     'data-remove-modal': remove_modal|json_encode,
     'data-remote-url': remote_url,
     'data-data-limit': limit,
+    'data-min-length': min_length,
     'data-allow-delete': form.vars.allow_delete ? 1 : 0
   }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}

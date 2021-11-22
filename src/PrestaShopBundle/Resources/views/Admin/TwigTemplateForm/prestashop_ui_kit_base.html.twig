@@ -1216,16 +1216,26 @@
 {% block text_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <span class="label {{ form.vars.preview_class }}">
+  <span class="label {{ preview_class }}">
+    {# Allows to insert content as prefix, like an icon #}
+    {% if prefix is defined %}
+      {{ prefix|raw }}
+    {% endif %}
+
     {# This just outputs the value #}
     {{ form.vars.value|e('html') }}
+
+    {# Allows to insert content as suffix, like an icon #}
+    {% if suffix is defined %}
+      {{ suffix|raw }}
+    {% endif %}
   </span>
 {% endblock %}
 
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" />
+  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
 {% endblock %}
 
 {% block delta_quantity_widget %}

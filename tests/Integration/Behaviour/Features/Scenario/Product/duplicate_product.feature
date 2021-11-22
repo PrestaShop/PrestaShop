@@ -205,7 +205,8 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product1 should have following related products:
-      | product2 |
+      | product  | name            | reference | image url                                             |
+      | product2 | Reading glasses |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And product copy_of_product1 should have following attachments associated:
       | attachment reference | title                       | description                           | file name    | type      | size  |
       | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |

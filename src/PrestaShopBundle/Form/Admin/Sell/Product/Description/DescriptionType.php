@@ -32,16 +32,45 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Image\ProductImageType;
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 class DescriptionType extends TranslatorAwareType
 {
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param RouterInterface $router
+     * @param string $employeeIsoCode
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        RouterInterface $router,
+        string $employeeIsoCode
+    ) {
+        parent::__construct($translator, $locales);
+        $this->router = $router;
+        $this->employeeIsoCode = $employeeIsoCode;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -110,9 +139,20 @@ class DescriptionType extends TranslatorAwareType
                 'product_id' => $productId,
             ])
             ->add('manufacturer', ManufacturerType::class)
-            ->add('related_products', UnavailableType::class, [
+            ->add('related_products', EntitySearchInputType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'entry_type' => RelatedProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'related_product',
+                ],
+                'remote_url' => $this->router->generate('admin_products_v2_search_associations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'min_length' => 3,
+                'filtered_identities' => $productId > 0 ? [$productId] : [],
+                'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
         ;
     }
