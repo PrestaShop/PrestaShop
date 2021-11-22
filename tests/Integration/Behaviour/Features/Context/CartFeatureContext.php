@@ -29,9 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Cart;
 use Context;
 use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
-use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -199,40 +196,5 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
         if ($expectedTotal != $shippingFees) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $shippingFees));
         }
-    }
-
-    /**
-     * @Then /^cart rule "(.+)" should be applied to my cart$/
-     */
-    public function assertCartRuleIsAppliedToCart(string $cartRuleReference): void
-    {
-        $cartInfo = $this->getCurrentCartInfos();
-        $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference);
-
-        foreach ($cartInfo->getCartRules() as $cartRule) {
-            if ($cartRule->getCartRuleId() === $cartRuleId) {
-                return;
-            }
-        }
-
-        throw new \RuntimeException(sprintf(
-            'Cart rule %s is not applied to cart',
-            $cartRuleReference
-        ));
-    }
-
-    private function getCurrentCartInfos(): CartForOrderCreation
-    {
-        $cart = $this->getCurrentCart();
-
-        return $this->getCommandBus()->handle(
-            (new GetCartForOrderCreation((int) $cart->id))
-                ->setHideDiscounts(true)
-        );
-    }
-
-    private function getCommandBus(): CommandBusInterface
-    {
-        return CommonFeatureContext::getContainer()->get('prestashop.core.command_bus');
     }
 }
