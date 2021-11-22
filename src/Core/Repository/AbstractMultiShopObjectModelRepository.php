@@ -1,0 +1,176 @@
+<?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Repository;
+
+use function bqSQL;
+use Db;
+use DbQuery;
+use ObjectModel;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopDatabaseException;
+
+/**
+ * This abstract class is an extension of the AbstractObjectModelRepository that provides additional helper functions
+ * to deal with multi shop entities. It provides additional function which rely on mandatory shop IDs. When you use
+ * this class you shouldn't rely on single shop functions anymore, your repository should be oriented as a multi shop
+ * one and always require some shop parameters (single shop becomes only an edge case of you generic multi shop
+ * behaviour).
+ */
+class AbstractMultiShopObjectModelRepository extends AbstractObjectModelRepository
+{
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
+     */
+    protected function getObjectModelForShop(int $id, string $objectModelClass, string $exceptionClass, ShopId $shopId): ObjectModel
+    {
+        $objectModel = $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, $shopId->getValue());
+
+        // The object is fetched before checking the association, so that the NotFoundException has the priority over the NoAssociationException
+        $this->checkShopAssociation($id, $objectModelClass, $shopId);
+
+        // Force id_shop_list right away so that DB modification use the appropriate shop and not the one from context
+        $objectModel->id_shop_list = [$shopId->getValue()];
+
+        return $objectModel;
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @return int
+     */
+    protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
+    {
+        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
+        // this way we can control exactly which shop is updated
+        $objectModel->id_shop_list = [$shopId];
+
+        return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param array $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function updateObjectModelForShops(
+        ObjectModel $objectModel,
+        array $shopIds,
+        string $exceptionClass,
+        int $errorCode = 0
+    ): void {
+        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
+        // this way we can control exactly which shop is updated
+        $objectModel->id_shop_list = $shopIds;
+
+        $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param array $propertiesToUpdate
+     * @param array $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function partiallyUpdateObjectModelForShops(
+        ObjectModel $objectModel,
+        array $propertiesToUpdate,
+        array $shopIds,
+        string $exceptionClass,
+        int $errorCode = 0
+    ): void {
+        $objectModel->setFieldsToUpdate($this->formatPropertiesToUpdate($propertiesToUpdate));
+        $this->updateObjectModelForShops($objectModel, $shopIds, $exceptionClass, $errorCode);
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClassName
+     * @param ShopId $shopId
+     *
+     * @return bool
+     */
+    protected function hasShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): bool
+    {
+        $modelDefinition = $objectModelClassName::$definition;
+        $objectTable = $modelDefinition['table'];
+        $primaryColumn = $modelDefinition['primary'];
+
+        $query = new DbQuery();
+        $query
+            ->select('e.`' . bqSQL($primaryColumn) . '` as id')
+            ->from(bqSQL($objectTable) . '_shop', 'e')
+            ->where('e.`' . bqSQL($primaryColumn) . '` = ' . $id)
+            ->where('e.`id_shop` = ' . $shopId->getValue())
+        ;
+
+        try {
+            $row = Db::getInstance()->getRow($query, false);
+        } catch (PrestaShopDatabaseException $e) {
+            $row = false;
+        }
+
+        return !empty($row['id']);
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClassName
+     * @param ShopId $shopId
+     *
+     * @throws ShopAssociationNotFound
+     */
+    protected function checkShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): void
+    {
+        if (!$this->hasShopAssociation($id, $objectModelClassName, $shopId)) {
+            throw new ShopAssociationNotFound(sprintf(
+                'Could not find association between %s %d and Shop %d',
+                $objectModelClassName,
+                $id,
+                $shopId->getValue()
+            ));
+        }
+    }
+}
