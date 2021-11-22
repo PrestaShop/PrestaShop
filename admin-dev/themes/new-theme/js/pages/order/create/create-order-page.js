@@ -648,5 +648,6 @@ export default class CreateOrderPage {
    */
   addCreatedCartRuleToCart(cartRuleId) {
     this.cartRuleManager.addCartRuleToCart(cartRuleId, this.cartId);
+    this.refreshCart();
   }
 }
