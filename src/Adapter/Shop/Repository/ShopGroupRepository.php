@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
  * Provides methods to access data storage for shopGroup

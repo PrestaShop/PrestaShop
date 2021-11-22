@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\Repository;
 
-use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
  * Provides methods to access data storage of Country
