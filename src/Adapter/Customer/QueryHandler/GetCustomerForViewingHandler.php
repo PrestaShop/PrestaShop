@@ -309,7 +309,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         LEFT JOIN ' . _DB_PREFIX_ . 'currency cu ON cu.id_currency = c.id_currency
         WHERE c.`id_customer` = ' . (int) $customer->id . '
         ORDER BY c.`date_add` DESC');
-        
+
         $customerCarts = [];
         foreach ($result as $row) {
             $cart = new Cart((int) $row['id_cart']);
