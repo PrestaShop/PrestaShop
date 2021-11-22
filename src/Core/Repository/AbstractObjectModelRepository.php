@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\Repository;
 
 use Db;
 use DbQuery;
@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use function bqSQL;
 
 abstract class AbstractObjectModelRepository
 {
