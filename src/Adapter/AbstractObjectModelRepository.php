@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use Db;
 use DbQuery;
-use Exception;
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -111,8 +110,6 @@ abstract class AbstractObjectModelRepository
      * @param ShopId $shopId
      *
      * @return bool
-     *
-     * @throws ShopAssociationNotFound
      */
     protected function hasShopAssociation(int $id, string $objectModelClassName, ShopId $shopId): bool
     {
@@ -196,21 +193,11 @@ abstract class AbstractObjectModelRepository
      */
     protected function addObjectModelToShop(ObjectModel $objectModel, int $shopId, string $exceptionClass, int $errorCode = 0): int
     {
-        // Store object's list of shop ID to reset it appropriately after the update
-        $savedShopIds = $objectModel->id_shop_list;
+        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
+        // this way we can control exactly which shop is updated
         $objectModel->id_shop_list = [$shopId];
 
-        try {
-            $object = $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
-        } catch (Exception $e) {
-            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
-            $objectModel->id_shop_list = $savedShopIds;
-            throw $e;
-        }
-
-        $objectModel->id_shop_list = $savedShopIds;
-
-        return $object;
+        return $this->addObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
     /**
@@ -263,19 +250,11 @@ abstract class AbstractObjectModelRepository
         string $exceptionClass,
         int $errorCode = 0
     ): void {
-        // Store object's list of shop ID to reset it appropriately after the update
-        $savedShopIds = $objectModel->id_shop_list;
+        // Force internal shop list which is used as an override of the one from Context when generating the SQL queries
+        // this way we can control exactly which shop is updated
         $objectModel->id_shop_list = $shopIds;
 
-        try {
-            $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
-        } catch (Exception $e) {
-            // Even if an error occurs we reset the initial object's inner data, but without blocking the exception
-            $objectModel->id_shop_list = $savedShopIds;
-            throw $e;
-        }
-
-        $objectModel->id_shop_list = $savedShopIds;
+        $this->updateObjectModel($objectModel, $exceptionClass, $errorCode);
     }
 
     /**
