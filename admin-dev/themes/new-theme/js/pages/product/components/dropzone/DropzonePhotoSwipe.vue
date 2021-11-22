@@ -94,7 +94,7 @@
           class="pswp__button pswp__button--arrow--left"
           :title="$t('window.previousPhotoSwipe')"
         >
-          <i class="material-icons">arrow_back</i>
+          <i class="material-icons rtl-flip">arrow_back</i>
         </button>
 
         <button
@@ -102,7 +102,7 @@
           class="pswp__button pswp__button--arrow--right"
           :title="$t('window.nextPhotoSwipe')"
         >
-          <i class="material-icons">arrow_forward</i>
+          <i class="material-icons rtl-flip">arrow_forward</i>
         </button>
 
         <div class="pswp__caption">
