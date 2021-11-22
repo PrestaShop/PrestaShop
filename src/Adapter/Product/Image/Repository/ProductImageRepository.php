@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\Connection;
 use Image;
 use ImageType;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
