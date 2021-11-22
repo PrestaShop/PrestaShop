@@ -50,6 +50,7 @@ export default {
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
+    listRendered: 'combinationsListRendered',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
