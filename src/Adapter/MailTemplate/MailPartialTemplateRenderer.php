@@ -61,6 +61,12 @@ class MailPartialTemplateRenderer
      */
     public function render($partialTemplateName, LanguageInterface $language, array $variables = [], $cleanComments = false)
     {
+        Hook::exec('actionMailPartialTemplateRendererVariables', [
+            'variables' => &$variables,
+            'template' => $partialTemplateName,
+            'language' => $language,
+        ]);
+        
         $potentialPaths = [
             _PS_THEME_DIR_ . 'mails' . DIRECTORY_SEPARATOR . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
             _PS_MAIL_DIR_ . $language->getIsoCode() . DIRECTORY_SEPARATOR . $partialTemplateName,
