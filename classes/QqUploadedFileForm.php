@@ -28,13 +28,19 @@ class QqUploadedFileFormCore
     /**
      * Save the file to the specified path.
      *
-     * @return bool TRUE on success
+     * @return bool|array{"error": string} TRUE on success
      */
     public function save()
     {
         $product = new Product($_GET['id_product']);
         if (!Validate::isLoadedObject($product)) {
-            return ['error' => Context::getContext()->getTranslator()->trans('Cannot add image because product creation failed.', [], 'Admin.Catalog.Notification')];
+            return [
+                'error' => Context::getContext()->getTranslator()->trans(
+                    'Cannot add image because product creation failed.',
+                    [],
+                    'Admin.Catalog.Notification'
+                ),
+            ];
         } else {
             $image = new Image();
             $image->id_product = (int) $product->id;
@@ -49,11 +55,7 @@ class QqUploadedFileFormCore
                     }
                 }
             }
-            if (!Image::getCover($image->id_product)) {
-                $image->cover = 1;
-            } else {
-                $image->cover = 0;
-            }
+            $image->cover = !Image::getCover($image->id_product);
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                 return ['error' => $validate];

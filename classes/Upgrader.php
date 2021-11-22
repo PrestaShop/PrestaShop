@@ -176,7 +176,7 @@ class UpgraderCore
     /**
      * load the last version informations stocked in base.
      *
-     * @return Upgrader
+     * @return $this
      */
     public function loadFromConfig()
     {

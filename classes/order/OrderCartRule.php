@@ -50,7 +50,7 @@ class OrderCartRuleCore extends ObjectModel
     public $free_shipping;
 
     /** @var bool value : deleted from order */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition

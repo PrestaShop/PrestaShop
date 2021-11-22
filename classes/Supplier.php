@@ -110,7 +110,7 @@ class SupplierCore extends ObjectModel
     /**
      * Return suppliers.
      *
-     * @return array Suppliers
+     * @return bool|array Suppliers
      */
     public static function getSuppliers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroups = false, $withProduct = false)
     {

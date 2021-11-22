@@ -1322,7 +1322,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 // if depends on stock and quantity, add quantity to stock
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();
-                    $price = str_replace(',', '.', $product->wholesale_price);
+                    $price = str_replace(',', '.', (string) $product->wholesale_price);
                     if ($price == 0) {
                         $price = 0.000001;
                     }

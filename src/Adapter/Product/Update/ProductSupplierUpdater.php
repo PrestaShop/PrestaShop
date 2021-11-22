@@ -220,7 +220,7 @@ class ProductSupplierUpdater
 
         $defaultSupplier = $this->productSupplierRepository->get(reset($productSuppliers));
         $product->supplier_reference = $defaultSupplier->product_supplier_reference;
-        $product->wholesale_price = (string) $defaultSupplier->product_supplier_price_te;
+        $product->wholesale_price = (float) (string) $defaultSupplier->product_supplier_price_te;
         $product->id_supplier = $supplierIdValue;
 
         $this->productRepository->partialUpdate(

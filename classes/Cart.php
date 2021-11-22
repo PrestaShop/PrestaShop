@@ -62,10 +62,10 @@ class CartCore extends ObjectModel
     public $id_lang;
 
     /** @var bool True if the customer wants a recycled package */
-    public $recyclable = 0;
+    public $recyclable = false;
 
     /** @var bool True if the customer wants a gift wrapping */
-    public $gift = 0;
+    public $gift = false;
 
     /** @var string Gift message if specified */
     public $gift_message;
@@ -262,7 +262,7 @@ class CartCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if (!$this->id_lang) {
-            $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+            $this->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
         }
         if (!$this->id_shop) {
             $this->id_shop = Context::getContext()->shop->id;
@@ -482,6 +482,7 @@ class CartCore extends ObjectModel
     {
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
+        /* @phpstan-ignore-next-line */
         $virtual_context->cart = $this;
 
         // If the cart has not been saved, then there can't be any cart rule applied
@@ -515,6 +516,7 @@ class CartCore extends ObjectModel
 
         // Define virtual context to prevent case where the cart is not the in the global context
         $virtual_context = Context::getContext()->cloneContext();
+        /* @phpstan-ignore-next-line */
         $virtual_context->cart = $this;
 
         // set base cart total values, they will be updated and used for percentage cart rules (because percentage cart rules
@@ -1660,6 +1662,7 @@ class CartCore extends ObjectModel
         $this->_products = $this->getProducts(true);
         $this->update();
         $context = Context::getContext()->cloneContext();
+        /* @phpstan-ignore-next-line */
         $context->cart = $this;
         Cache::clean('getContextualValue_*');
         CartRule::autoRemoveFromCart(null, $useOrderPrices);
@@ -3239,7 +3242,7 @@ class CartCore extends ObjectModel
             return 0;
         }
 
-        return Cart::intifier(reset($delivery_option));
+        return (int) Cart::intifier(reset($delivery_option));
     }
 
     /**
@@ -3249,7 +3252,7 @@ class CartCore extends ObjectModel
      * This method replace the delimiter by a sequence of '0'.
      * The size of this sequence is fixed by the first digit of the return
      *
-     * @return int Intified value
+     * @return string Intified value
      */
     public static function intifier($string, $delimiter = ',')
     {
@@ -3955,6 +3958,7 @@ class CartCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $context = Context::getContext()->cloneContext();
+        /* @phpstan-ignore-next-line */
         $context->cart = $this;
 
         return $obj->checkValidity($context);
@@ -4359,11 +4363,11 @@ class CartCore extends ObjectModel
 
         // Delete customization picture if necessary
         if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
-            $result &= file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+            $result = $result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
+            $result = $result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
         }
 
-        $result &= Db::getInstance()->execute(
+        $result = $result && Db::getInstance()->execute(
             'DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
             WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
             AND `index` = ' . (int) $index
@@ -4375,7 +4379,7 @@ class CartCore extends ObjectModel
         );
 
         if (!$hasRemainingCustomData) {
-            $result &= Db::getInstance()->execute(
+            $result = $result && Db::getInstance()->execute(
                 'DELETE FROM `' . _DB_PREFIX_ . 'customization`
             WHERE `id_customization` = ' . (int) $cust_data['id_customization']
             );

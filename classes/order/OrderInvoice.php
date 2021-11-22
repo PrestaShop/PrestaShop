@@ -38,7 +38,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var int */
     public $delivery_number;
 
-    /** @var int */
+    /** @var string */
     public $delivery_date = '0000-00-00 00:00:00';
 
     /** @var float */
@@ -80,7 +80,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string note */
     public $note;
 
-    /** @var int */
+    /** @var string */
     public $date_add;
 
     /** @var array Total paid cache */
@@ -925,7 +925,7 @@ class OrderInvoiceCore extends ObjectModel
         $address->postcode = Configuration::get('PS_SHOP_CODE', null, null, $id_shop);
         $address->city = Configuration::get('PS_SHOP_CITY', null, null, $id_shop);
         $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
-        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
+        $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, [], '<br />', ' ');
     }

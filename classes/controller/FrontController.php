@@ -113,7 +113,7 @@ class FrontControllerCore extends Controller
     /** @var bool SSL connection flag */
     public $ssl = false;
 
-    /** @var bool If true, switches display to restricted country page during init. */
+    /** @var int If Country::GEOLOC_CATALOG_MODE, switches display to restricted country page during init. */
     protected $restrictedCountry = Country::GEOLOC_ALLOWED;
 
     /** @var bool If true, forces display to maintenance page. */
@@ -1286,12 +1286,12 @@ class FrontControllerCore extends Controller
             if (Validate::isLoadedObject($cart)) {
                 $customer = new Customer((int) $cart->id_customer);
                 if (Validate::isLoadedObject($customer)) {
-                    $customer->logged = 1;
+                    $customer->logged = true;
                     $this->context->customer = $customer;
                     $this->context->cookie->id_customer = (int) $customer->id;
                     $this->context->cookie->customer_lastname = $customer->lastname;
                     $this->context->cookie->customer_firstname = $customer->firstname;
-                    $this->context->cookie->logged = 1;
+                    $this->context->cookie->logged = true;
                     $this->context->cookie->check_cgv = 1;
                     $this->context->cookie->is_guest = $customer->isGuest();
                     $this->context->cookie->passwd = $customer->passwd;

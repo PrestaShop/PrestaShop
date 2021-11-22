@@ -40,7 +40,7 @@ use Symfony\Component\Finder\Finder;
 
 abstract class ModuleCore implements ModuleInterface
 {
-    /** @var int Module ID */
+    /** @var int|null Module ID */
     public $id = null;
 
     /** @var string Version */
@@ -60,7 +60,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var array filled with modules needed for install */
     public $dependencies = [];
 
-    /** @var string Unique name */
+    /** @var string|int|null Unique name */
     public $name;
 
     /** @var string Human name */
@@ -165,7 +165,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var string Identifier of the main table */
     protected $identifier = 'id_module';
 
-    /** @var array Array cache filled with modules informations */
+    /** @var array|null Array cache filled with modules informations */
     protected static $modules_cache;
 
     /** @var array Array cache filled with modules instances */
@@ -186,7 +186,7 @@ abstract class ModuleCore implements ModuleInterface
     /** @var Context */
     protected $context;
 
-    /** @var Smarty_Data */
+    /** @var Smarty_Data|Smarty_Internal_TemplateBase */
     protected $smarty;
 
     /** @var Smarty_Internal_Template|null */
@@ -1004,7 +1004,7 @@ abstract class ModuleCore implements ModuleInterface
      * @param bool $return define the return way : false for a display, true for a return
      * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
      *
-     * @return void
+     * @return bool|string|void
      */
     public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
     {

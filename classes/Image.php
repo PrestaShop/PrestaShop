@@ -40,7 +40,7 @@ class ImageCore extends ObjectModel
     /** @var int Position used to order images of the same product */
     public $position;
 
-    /** @var bool Image is cover */
+    /** @var bool|null Image is cover */
     public $cover;
 
     /** @var array<int,string> Legend */
@@ -109,7 +109,7 @@ class ImageCore extends ObjectModel
         }
 
         if ($this->cover) {
-            $this->cover = 1;
+            $this->cover = true;
         } else {
             $this->cover = null;
         }
@@ -130,7 +130,7 @@ class ImageCore extends ObjectModel
     public function update($nullValues = false)
     {
         if ($this->cover) {
-            $this->cover = 1;
+            $this->cover = true;
         } else {
             $this->cover = null;
         }
@@ -470,7 +470,7 @@ class ImageCore extends ObjectModel
      * @param int $way position is moved up if 0, moved down if 1
      * @param int $position new position of the moved image
      *
-     * @return int success
+     * @return bool success
      */
     public function updatePosition($way, $position)
     {
@@ -480,20 +480,22 @@ class ImageCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        $result = (Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
-			' . ($way
-                ? '> ' . (int) $this->position . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $this->position . ' AND `position` >= ' . (int) $position) . '
-			AND `id_product`=' . (int) $this->id_product)
-        && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_image` = ' . (int) $this->id_image));
-
-        return $result;
+        return
+            Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'image`
+                SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
+                WHERE `position`
+                ' . ($way
+                    ? '> ' . (int) $this->position . ' AND `position` <= ' . (int) $position
+                    : '< ' . (int) $this->position . ' AND `position` >= ' . (int) $position) . '
+                AND `id_product`=' . (int) $this->id_product
+            )
+            && Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'image`
+                SET `position` = ' . (int) $position . '
+                WHERE `id_image` = ' . (int) $this->id_image
+            )
+        ;
     }
 
     /**
@@ -694,7 +696,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path to the folder containing the image in the new filesystem.
      *
-     * @return string path to folder
+     * @return string|bool path to folder
      */
     public function getImgFolder()
     {
@@ -739,7 +741,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path to the image without file extension.
      *
-     * @return string path
+     * @return string|bool path
      */
     public function getImgPath()
     {
@@ -747,9 +749,7 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $path = $this->getImgFolder() . $this->id;
-
-        return $path;
+        return $this->getImgFolder() . $this->id;
     }
 
     /**
@@ -757,7 +757,7 @@ class ImageCore extends ObjectModel
      *
      * @param mixed $idImage
      *
-     * @return string path to folder
+     * @return string|bool path to folder
      */
     public static function getImgFolderStatic($idImage)
     {
@@ -860,7 +860,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path where a product image should be created (without file format).
      *
-     * @return string path
+     * @return string|bool path
      */
     public function getPathForCreation()
     {

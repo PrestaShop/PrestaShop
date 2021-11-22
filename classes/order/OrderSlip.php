@@ -49,13 +49,13 @@ class OrderSlipCore extends ObjectModel
     /** @var float */
     public $total_shipping_tax_incl;
 
-    /** @var int */
+    /** @var float */
     public $amount;
 
-    /** @var int */
+    /** @var bool */
     public $shipping_cost;
 
-    /** @var int */
+    /** @var float */
     public $shipping_cost_amount;
 
     /** @var int */
@@ -85,7 +85,7 @@ class OrderSlipCore extends ObjectModel
             'total_shipping_tax_excl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'total_shipping_tax_incl' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true],
             'amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
-            'shipping_cost' => ['type' => self::TYPE_INT],
+            'shipping_cost' => ['type' => self::TYPE_BOOL],
             'shipping_cost_amount' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
             'partial' => ['type' => self::TYPE_INT],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],

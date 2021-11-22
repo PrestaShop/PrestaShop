@@ -96,7 +96,7 @@ class WebserviceRequestCore
     /**
      * The time in microseconds of the start of the execution of the web service request.
      *
-     * @var int
+     * @var float
      */
     protected $_startTime = 0;
 
@@ -167,7 +167,7 @@ class WebserviceRequestCore
     /**
      * Object instance for singleton.
      *
-     * @var WebserviceRequest
+     * @var WebserviceRequest|null
      */
     protected static $_instance;
 
@@ -474,7 +474,7 @@ class WebserviceRequestCore
      * @param string $key
      * @param string $method
      * @param string $url
-     * @param string $params
+     * @param array $params
      * @param string $bad_class_name
      * @param string $inputXml
      *
@@ -501,7 +501,9 @@ class WebserviceRequestCore
 
         $this->_key = trim($key);
 
-        $this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
+        if (isset($params['output_format'])) {
+            $this->outputFormat = $params['output_format'];
+        }
         // Set the render object to build the output on the asked format (XML, JSON, CSV, ...)
         $this->objOutput->setObjectRender($this->getOutputObject($this->outputFormat));
         $this->params = $params;
@@ -707,7 +709,7 @@ class WebserviceRequestCore
     {
         $display_errors = strtolower(ini_get('display_errors')) != 'off';
         if (!(error_reporting() & $errno) || $display_errors) {
-            return;
+            return true;
         }
 
         $errortype = [
@@ -1522,10 +1524,9 @@ class WebserviceRequestCore
         } catch (Exception $error) {
             $this->setError(500, 'XML error : ' . $error->getMessage() . "\n" . 'XML length : ' . strlen($this->_inputXml) . "\n" . 'Original XML : ' . $this->_inputXml, 127);
 
-            return;
+            return false;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
         $xmlEntities = $xml->children();
         $object = null;
 
@@ -1537,7 +1538,6 @@ class WebserviceRequestCore
             }
         }
         if ($this->method == 'PUT') {
-            $ids2 = [];
             $ids2 = array_unique($ids);
             if (count($ids2) != count($ids)) {
                 $this->setError(400, 'id is duplicate in request', 89);

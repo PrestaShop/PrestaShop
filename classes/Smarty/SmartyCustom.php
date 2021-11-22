@@ -272,7 +272,7 @@ class SmartyCustomCore extends Smarty
      * @param string $cache_id cache id
      * @param string $compile_id compile id
      *
-     * @return bool
+     * @return bool|int
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {

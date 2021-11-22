@@ -34,6 +34,7 @@ use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -45,7 +46,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ContextCore
 {
-    /** @var Context */
+    /** @var Context|null */
     protected static $instance;
 
     /** @var Cart */
@@ -103,7 +104,7 @@ class ContextCore
     /** @var int */
     public $mode;
 
-    /** @var ContainerBuilder */
+    /** @var ContainerBuilder|ContainerInterface */
     public $container;
 
     /** @var float */
@@ -332,7 +333,7 @@ class ContextCore
     /**
      * Clone current context object.
      *
-     * @return Context
+     * @return static
      */
     public function cloneContext()
     {
@@ -351,8 +352,8 @@ class ContextCore
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
         $this->cookie->passwd = $customer->passwd;
-        $this->cookie->logged = 1;
-        $customer->logged = 1;
+        $this->cookie->logged = true;
+        $customer->logged = true;
         $this->cookie->email = $customer->email;
         $this->cookie->is_guest = $customer->isGuest();
 

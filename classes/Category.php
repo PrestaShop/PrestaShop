@@ -38,7 +38,7 @@ class CategoryCore extends ObjectModel
     public $name;
 
     /** @var bool Status for display */
-    public $active = 1;
+    public $active = true;
 
     /** @var int category position */
     public $position;
@@ -131,7 +131,7 @@ class CategoryCore extends ObjectModel
         ],
     ];
 
-    /** @var string id_image is the category ID when an image exists and 'default' otherwise */
+    /** @var string|int|bool id_image is the category ID when an image exists and 'default' otherwise */
     public $id_image = 'default';
 
     protected $webserviceParameters = [
@@ -238,7 +238,7 @@ class CategoryCore extends ObjectModel
         }
 
         if ($this->is_root_category && $this->id_parent != (int) Configuration::get('PS_ROOT_CATEGORY')) {
-            $this->is_root_category = 0;
+            $this->is_root_category = false;
         }
 
         // Update group selection
@@ -428,7 +428,7 @@ class CategoryCore extends ObjectModel
             if ($category->isRootCategoryForAShop()) {
                 return false;
             } else {
-                $return &= $category->delete();
+                $return = $return && $category->delete();
             }
         }
 
@@ -1819,7 +1819,7 @@ class CategoryCore extends ObjectModel
      *
      * @param mixed $idCategoryParent
      *
-     * @return bool true if succeed
+     * @return bool|void true if succeed
      */
     public static function cleanPositions($idCategoryParent = null)
     {
@@ -1836,12 +1836,14 @@ class CategoryCore extends ObjectModel
         ORDER BY category_shop.`position`');
         $count = count($result);
         for ($i = 0; $i < $count; ++$i) {
-            $return &= Db::getInstance()->execute('
-            UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
-            SET c.`position` = ' . (int) ($i) . ',
-            category_shop.`position` = ' . (int) ($i) . ',
-            c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
-            WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' AND c.`id_category` = ' . (int) $result[$i]['id_category']);
+            $return = $return
+                && Db::getInstance()->execute(
+                    'UPDATE `' . _DB_PREFIX_ . 'category` c ' . Shop::addSqlAssociation('category', 'c') . '
+                    SET c.`position` = ' . (int) ($i) . ',
+                    category_shop.`position` = ' . (int) ($i) . ',
+                    c.`date_upd` = "' . date('Y-m-d H:i:s') . '"
+                    WHERE c.`id_parent` = ' . (int) $idCategoryParent . ' AND c.`id_category` = ' . (int) $result[$i]['id_category']
+                );
         }
 
         return $return;
@@ -2027,17 +2029,18 @@ class CategoryCore extends ObjectModel
     /**
      * Search for another Category with the same parent and the same position.
      *
-     * @return array first Category found
+     * @return int First Category found
      */
     public function getDuplicatePosition()
     {
-        return Db::getInstance()->getValue('
-		SELECT c.`id_category`
-		FROM `' . _DB_PREFIX_ . 'category` c
-		' . Shop::addSqlAssociation('category', 'c') . '
-		WHERE c.`id_parent` = ' . (int) $this->id_parent . '
-		AND category_shop.`position` = ' . (int) $this->position . '
-		AND c.`id_category` != ' . (int) $this->id);
+        return (int) Db::getInstance()->getValue(
+            'SELECT c.`id_category`
+            FROM `' . _DB_PREFIX_ . 'category` c
+            ' . Shop::addSqlAssociation('category', 'c') . '
+            WHERE c.`id_parent` = ' . (int) $this->id_parent . '
+            AND category_shop.`position` = ' . (int) $this->position . '
+            AND c.`id_category` != ' . (int) $this->id
+        );
     }
 
     /**
@@ -2275,10 +2278,10 @@ class CategoryCore extends ObjectModel
             );
         }
 
-        $return &= Db::getInstance()->execute(
+        $return = $return && Db::getInstance()->execute(
             sprintf(
-                'UPDATE `' . _DB_PREFIX_ . 'category` c ' .
-                'SET c.`position`= %d WHERE c.id_category = %d',
+                'UPDATE `%scategory` c SET c.`position`= %d WHERE c.id_category = %d',
+                _DB_PREFIX_,
                 $position,
                 (int) $this->id
             )

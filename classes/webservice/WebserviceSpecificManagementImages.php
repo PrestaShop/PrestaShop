@@ -27,6 +27,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 {
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
+
     /** @var string */
     protected $output;
 
@@ -96,7 +97,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      *
      * @return WebserviceSpecificManagementInterface
      */
-    public function setObjectOutput(WebserviceOutputBuilderCore $obj)
+    public function setObjectOutput(WebserviceOutputBuilder $obj)
     {
         $this->objOutput = $obj;
 
@@ -108,7 +109,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         return $this->objOutput;
     }
 
-    public function setWsObject(WebserviceRequestCore $obj)
+    public function setWsObject(WebserviceRequest $obj)
     {
         $this->wsObject = $obj;
 
@@ -1047,7 +1048,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      * @param array $image_types
      * @param string $parent_path
      *
-     * @return bool|void
+     * @return bool|string
      *
      * @throws WebserviceException
      */
@@ -1121,9 +1122,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $image->position = Image::getHighestPosition($product->id) + 1;
 
                         if (!Image::getCover((int) $product->id)) {
-                            $image->cover = 1;
+                            $image->cover = true;
                         } else {
-                            $image->cover = 0;
+                            $image->cover = false;
                         }
 
                         if (!$image->add()) {
@@ -1212,8 +1213,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             } else {
                 throw new WebserviceException('Please set an "image" parameter with image data for value', [76, 400]);
             }
-        } else {
-            throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);
         }
+
+        throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);
+
+        return false;
     }
 }

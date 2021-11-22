@@ -370,7 +370,8 @@ class AddressFormatCore extends ObjectModel
      * Returns the formatted fields with associated values.
      *
      * @param Address $address Address object
-     * @param AddressFormat $addressFormat The format
+     * @param array $addressFormat Address format fields by line
+     * @param int|null $id_lang
      *
      * @return array
      */
