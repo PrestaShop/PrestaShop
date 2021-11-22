@@ -10,7 +10,7 @@ jobs:
     name: Update PHP Modules
     steps:
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           ## Use the lowest dependency
           php-version: '7.2'
