@@ -29,7 +29,7 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 ob_start();
 
-require_once dirname(__FILE__) . '/../config/config.inc.php';
+require_once dirname(__FILE__, 1) . '/config/config.inc.php';
 
 global $kernel;
 if (null === $kernel) {
