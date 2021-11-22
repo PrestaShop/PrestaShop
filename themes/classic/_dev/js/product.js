@@ -91,6 +91,7 @@ $(document).ready(() => {
           }
         }
       },
+      allowPageScroll: 'vertical',
     });
   }
 
