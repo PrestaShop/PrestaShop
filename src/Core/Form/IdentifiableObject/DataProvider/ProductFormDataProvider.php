@@ -408,7 +408,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'quantities' => [
-                'quantity' => $stockInformation->getQuantity(),
+                'quantity' => [
+                    'quantity' => $stockInformation->getQuantity(),
+                    'delta' => 0,
+                ],
                 'stock_movements' => $this->getStockMovements($productForEditing->getProductId()),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
