@@ -193,7 +193,7 @@ class PDFCore
      *
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         if (!empty($this->filename)) {
             return $this->filename;
