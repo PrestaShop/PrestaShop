@@ -5,10 +5,6 @@
 
 .header-top {
   &-right {
-    @include media-breakpoint-down(md) {
-      padding-right: 0;
-    }
-
     @include media-breakpoint-down(xs) {
       width: 100%;
       padding-right: 15px;
