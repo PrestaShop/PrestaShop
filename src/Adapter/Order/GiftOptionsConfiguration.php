@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
