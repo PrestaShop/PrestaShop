@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -42,7 +42,7 @@ use Product;
 class ProductShopUpdater
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -52,11 +52,11 @@ class ProductShopUpdater
     private $shopRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ShopRepository $shopRepository
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ShopRepository $shopRepository
     ) {
         $this->productRepository = $productRepository;
@@ -75,7 +75,7 @@ class ProductShopUpdater
 
         /** @var Product $sourceProduct */
         $sourceProduct = $this->productRepository->getByShopConstraint($productId, ProductShopConstraint::shop($sourceShopId->getValue()));
-        $this->productRepository->updateForShopConstraint(
+        $this->productRepository->update(
             $sourceProduct,
             ProductShopConstraint::shop($targetShopId->getValue()),
             CannotUpdateProductException::FAILED_SHOP_COPY
