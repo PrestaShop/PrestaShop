@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
@@ -45,7 +45,7 @@ use Product;
 final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -60,11 +60,11 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     private $productSupplierRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductPricePropertiesFiller $productPricePropertiesFiller,
         ProductSupplierRepository $productSupplierRepository
     ) {
@@ -80,7 +80,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     {
         $product = $this->productRepository->getByShopConstraint($command->getProductId(), $command->getShopConstraint());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
-        $this->productRepository->partialUpdateForShopConstraint(
+        $this->productRepository->partialUpdate(
             $product,
             $updatableProperties,
             $command->getShopConstraint(),
