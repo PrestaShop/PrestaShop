@@ -68,7 +68,6 @@ final class GridPresenter implements GridPresenterInterface
             'form_prefix' => '',
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
-            'hidden_column_filters' => $this->getHiddenColumnFilters($definition),
             'actions' => [
                 'grid' => $definition->getGridActions()->toArray(),
                 'bulk' => $definition->getBulkActions()->toArray(),
@@ -169,27 +168,6 @@ final class GridPresenter implements GridPresenterInterface
         }
 
         return $columnFiltersMapping;
-    }
-
-    /**
-     * Get filters that have associated columns.
-     *
-     * @param GridDefinitionInterface $definition
-     *
-     * @return array
-     */
-    private function getHiddenColumnFilters(GridDefinitionInterface $definition)
-    {
-        $hiddenFilters = [];
-
-        /** @var FilterInterface $filter */
-        foreach ($definition->getFilters()->all() as $filter) {
-            if ($filter instanceof HiddenFilter) {
-                $hiddenFilters[] = $filter;
-            }
-        }
-
-        return $hiddenFilters;
     }
 
     /**

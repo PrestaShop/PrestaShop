@@ -42,8 +42,4 @@
       {% endif %}
     </td>
   {% endfor %}
-
-  {% for filter in grid.hidden_column_filters %}
-    {{ form_widget(grid.filter_form[filter.name]) }}
-  {% endfor %}
 </tr>

@@ -28,16 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 /**
  * Class Filter defines single filter for grid.
  */
 class HiddenFilter implements FilterInterface
 {
-    /**
-     * @var string Fully qualified filter type class name
-     */
-    private $type;
-
     /**
      * @var array Filter type options
      */
@@ -55,11 +52,9 @@ class HiddenFilter implements FilterInterface
 
     /**
      * @param string $name
-     * @param string $filterFormType
      */
-    public function __construct($name, $filterFormType)
+    public function __construct(string $name)
     {
-        $this->type = $filterFormType;
         $this->name = $name;
     }
 
@@ -68,7 +63,7 @@ class HiddenFilter implements FilterInterface
      */
     public function getType()
     {
-        return $this->type;
+        return HiddenType::class;
     }
 
     /**

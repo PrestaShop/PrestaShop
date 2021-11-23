@@ -303,7 +303,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('reference')
             )
             ->add(
-                (new HiddenFilter('id_category', HiddenType::class))
+                (new HiddenFilter('id_category'))
                     ->setTypeOptions([
                         'required' => false,
                     ])
