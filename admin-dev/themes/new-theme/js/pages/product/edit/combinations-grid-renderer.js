@@ -80,7 +80,7 @@ export default class CombinationsGridRenderer {
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
-      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityContainer, $row);
+      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityWrapper, $row);
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
       const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
       // @todo final price should be calculated based on price impact and product price,

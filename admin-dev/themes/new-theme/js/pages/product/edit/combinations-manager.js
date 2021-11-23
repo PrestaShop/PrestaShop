@@ -255,24 +255,6 @@ export default class CombinationsManager {
         }
       );
     });
-
-    this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      // Init DeltaQuantityInput when each container of deltaQuantity is already rendered in DOM.
-      new DeltaQuantityInput({
-        // containerSelector: `${CombinationMap.combinationsContainer} .delta-quantity`,
-        submittableInputConfig: {
-          wrapperSelector: CombinationsMap.quantityInputWrapper,
-          callback: input =>
-            this.combinationsService.updateListedCombination(
-              this.findCombinationId(input),
-              {
-                [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
-                [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken()
-              }
-            )
-        }
-      });
-    });
   }
 
   /**
@@ -315,9 +297,9 @@ export default class CombinationsManager {
    */
   initDeltaQuantityInput() {
     new DeltaQuantityInput({
-      containerSelector: `${CombinationsMap.combinationsContainer} .delta-quantity`,
+      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
       submittableInputConfig: {
-        wrapperSelector: CombinationsMap.quantityInputWrapper,
+        wrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
         callback: input => this.combinationsService.updateListedCombination(
           this.findCombinationId(input),
           {
