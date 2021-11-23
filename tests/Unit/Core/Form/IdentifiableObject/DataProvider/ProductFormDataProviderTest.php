@@ -33,6 +33,7 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
@@ -1339,13 +1340,7 @@ class ProductFormDataProviderTest extends TestCase
 
         $queryBusMock
             ->method('handle')
-            ->with($this->logicalOr(
-                $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
-                $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeesStockMovements::class)
-            ))
+            ->with($this->getHandledQueries())
             ->willReturnCallback(function ($query) use ($expectedShopId) {
                 if ($query instanceof GetProductForEditing) {
                     if (!empty($expectedShopId)) {
@@ -1373,20 +1368,28 @@ class ProductFormDataProviderTest extends TestCase
 
         $queryBusMock
             ->method('handle')
-            ->with($this->logicalOr(
-                $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
-                $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeesStockMovements::class),
-                $this->isInstanceOf(GetRelatedProducts::class)
-            ))
+            ->with($this->getHandledQueries())
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
             })
         ;
 
         return $queryBusMock;
+    }
+
+    /**
+     * @return LogicalOr
+     */
+    private function getHandledQueries(): LogicalOr
+    {
+        return $this->logicalOr(
+            $this->isInstanceOf(GetProductForEditing::class),
+            $this->isInstanceOf(GetProductSupplierOptions::class),
+            $this->isInstanceOf(GetProductFeatureValues::class),
+            $this->isInstanceOf(GetProductCustomizationFields::class),
+            $this->isInstanceOf(GetEmployeesStockMovements::class),
+            $this->isInstanceOf(GetRelatedProducts::class)
+        );
     }
 
     /**
