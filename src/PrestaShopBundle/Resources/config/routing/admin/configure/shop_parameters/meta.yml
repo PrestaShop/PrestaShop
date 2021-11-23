@@ -54,7 +54,7 @@ admin_metas_delete_bulk:
 
 admin_metas_set_up_urls_save:
   path: /set-up-urls
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSetUpUrlsFormAction'
     _legacy_controller: AdminMeta
@@ -69,14 +69,14 @@ admin_metas_shop_urls_save:
 
 admin_metas_url_schema_save:
   path: /url-schema
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processUrlSchemaFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_seo_options_save:
   path: /seo-options
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSeoOptionsFormAction'
     _legacy_controller: AdminMeta
