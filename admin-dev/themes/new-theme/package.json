@@ -5,7 +5,7 @@
   "private": "true",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
-    "build": "webpack --progress --stats-error-details",
+    "build": "webpack --progress --mode=production",
     "dev": "webpack --progress --watch --mode=development",
     "serve": "webpack serve --mode=development",
     "watch": "npm run dev",
@@ -43,6 +43,7 @@
     "punycode": "^2.1.1",
     "sprintf-js": "^1.1.2",
     "tablednd": "^1.0.3",
+    "terser-webpack-plugin": "^5.2.5",
     "tether": "^1.4.7",
     "typeahead.js": "^0.11.1",
     "url-polyfill": "^1.1.7",
