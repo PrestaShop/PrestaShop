@@ -32,7 +32,11 @@ $component-name: delta-quantity;
     min-width: 60px;
   }
 
-  span,
+  span {
+    margin: 0;
+    line-height: 39px;
+  }
+
   label {
     min-width: 200px;
     margin: 0 0.3125rem;
