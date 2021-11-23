@@ -39,6 +39,7 @@ class PhpParametersTest extends TestCase
     /** @var string */
     protected $parametersSampleFileContent;
 
+    /** @var array */
     protected $sampleParams = [
         'parameters' => [
             'a' => '127.0.0.1',
@@ -56,6 +57,9 @@ class PhpParametersTest extends TestCase
         $this->parametersSampleFileContent = file_get_contents($this->parametersSampleFile);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function tearDown(): void
     {
         // restore parameters sample file content as it can be modified
