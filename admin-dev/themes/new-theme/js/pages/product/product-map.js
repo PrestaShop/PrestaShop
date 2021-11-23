@@ -84,7 +84,6 @@ export default {
     combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
-    quantityInputWrapper: '.combination-quantity',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
     referenceInputWrapper: '.combination-reference',
     sortableColumns: '.ps-sortable-column',
@@ -102,7 +101,7 @@ export default {
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       combinationImg: '.combination-image',
-      deltaQuantityContainer: '.delta-quantity',
+      deltaQuantityWrapper: '.delta-quantity',
       combinationCheckbox: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_selected`,
       combinationIdInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_combination_id`,
       combinationNameInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_name`,

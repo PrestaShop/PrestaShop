@@ -25,6 +25,7 @@
 
 import {showGrowl} from '@app/utils/growl';
 import {EventEmitter} from 'events';
+import ComponentsMap from '@components/components-map';
 
 import ClickEvent = JQuery.ClickEvent;
 
@@ -57,8 +58,8 @@ export default class SubmittableInput {
 
   constructor(config: SubmittableInputConfig) {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.inputSelector = '.submittable-input';
-    this.buttonSelector = '.check-button';
+    this.inputSelector = ComponentsMap.submittableInput.inputSelector;
+    this.buttonSelector = ComponentsMap.submittableInput.buttonSelector;
     this.wrapperSelector = config.wrapperSelector;
     this.inputsInContainerSelector = `${this.wrapperSelector} ${this.inputSelector}`;
     this.callback = config.callback;
@@ -67,9 +68,6 @@ export default class SubmittableInput {
     this.init();
   }
 
-  /**
-   * @private
-   */
   private init(): void {
     $(document).on('focus', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget, true);
@@ -103,9 +101,6 @@ export default class SubmittableInput {
     });
   }
 
-  /**
-   * @private
-   */
   private submitInput(button: HTMLButtonElement): void {
     const input: HTMLInputElement = this.findInput(button);
     // set local variable to be able to use it inside callback scope
@@ -140,12 +135,6 @@ export default class SubmittableInput {
       });
   }
 
-  /**
-   * @param {HTMLElement} input
-   * @param {Boolean|null} visible
-   *
-   * @private
-   */
   private refreshButtonState(
     input: HTMLElement,
     visible: boolean | null = null,
@@ -161,22 +150,10 @@ export default class SubmittableInput {
     }
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} active
-   *
-   * @private
-   */
   private toggleButtonActivity(button: HTMLElement, active: boolean): void {
     $(button).toggleClass('active', active);
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
   private toggleButtonVisibility(
     button: Element,
     visible: boolean,
