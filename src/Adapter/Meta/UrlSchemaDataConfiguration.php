@@ -64,7 +64,7 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
     {
         $configResult = [];
         foreach ($this->rules as $routeId => $defaultRule) {
-            $result = $this->getConfigurationValue($routeId) ?: $defaultRule;
+            $result = $this->configuration->get($this->getConfigurationKey($routeId)) ?: $defaultRule;
             $configResult[$routeId] = $result;
         }
 
@@ -77,8 +77,10 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+
             foreach ($configuration as $routeId => $value) {
-                $this->updateConfigurationValue($routeId, $value);
+                $this->updateConfigurationValue($this->getConfigurationKey($routeId), $routeId, $configuration, $shopConstraint);
             }
         }
 
@@ -96,31 +98,6 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
         }
 
         return $configurationExists;
-    }
-
-    /**
-     * Gets configuration from configuration table.
-     *
-     * @param string $routeId
-     *
-     * @return string
-     */
-    private function getConfigurationValue($routeId)
-    {
-        return $this->configuration->get($this->getConfigurationKey($routeId));
-    }
-
-    /**
-     * Updates configuration data.
-     *
-     * @param string $routeId
-     * @param string $rule
-     *
-     * @return mixed
-     */
-    private function updateConfigurationValue($routeId, $rule)
-    {
-        return $this->configuration->set($this->getConfigurationKey($routeId), $rule);
     }
 
     /**

@@ -86,15 +86,12 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         $errors = [];
+
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_REWRITING_SETTINGS', $configuration['friendly_url']);
-            $this->configuration->set('PS_ALLOW_ACCENTED_CHARS_URL', $configuration['accented_url']);
-            $this->configuration->set('PS_CANONICAL_REDIRECT', $configuration['canonical_url_redirection']);
-            $this->configuration->set('PS_HTACCESS_DISABLE_MULTIVIEWS', $configuration['disable_apache_multiview']);
-            $this->configuration->set('PS_HTACCESS_DISABLE_MODSEC', $configuration['disable_apache_mod_security']);
+            $shopConstraint = $this->getShopConstraint();
 
             if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
-                $this->configuration->set('PS_REWRITING_SETTINGS', 0);
+                $configuration['friendly_url'] = 0;
 
                 $errorMessage = $this->translator
                     ->trans(
@@ -121,6 +118,12 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 
                 $errors[] = $errorMessage;
             }
+
+            $this->updateConfigurationValue('PS_REWRITING_SETTINGS', 'friendly_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ALLOW_ACCENTED_CHARS_URL', 'accented_url', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CANONICAL_REDIRECT', 'canonical_url_redirection', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MULTIVIEWS', 'disable_apache_multiview', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_HTACCESS_DISABLE_MODSEC', 'disable_apache_mod_security', $configuration, $shopConstraint);
         }
 
         return $errors;

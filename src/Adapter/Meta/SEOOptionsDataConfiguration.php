@@ -37,7 +37,7 @@ class SEOOptionsDataConfiguration extends AbstractMultistoreConfiguration
     public function getConfiguration()
     {
         return [
-            'product_attributes_in_title' => (bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
+            'product_attributes_in_title' => $this->configuration->getBoolean('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
         ];
     }
 
@@ -49,7 +49,9 @@ class SEOOptionsDataConfiguration extends AbstractMultistoreConfiguration
         $errors = [];
         try {
             if ($this->validateConfiguration($configuration)) {
-                $this->configuration->set('PS_PRODUCT_ATTRIBUTES_IN_TITLE', $configuration['product_attributes_in_title']);
+                $shopConstraint = $this->getShopConstraint();
+
+                $this->updateConfigurationValue('PS_PRODUCT_ATTRIBUTES_IN_TITLE', 'product_attributes_in_title', $configuration, $shopConstraint);
             }
         } catch (CoreException $exception) {
             $errors[] = $exception->getMessage();
