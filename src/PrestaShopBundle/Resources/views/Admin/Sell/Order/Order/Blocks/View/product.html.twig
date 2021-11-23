@@ -54,7 +54,7 @@
   </td>
   <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
   <td class="cellProductQuantity text-center">
-    {% if product.quantity > 1 %}
+    {% if product.quantity > 0 %}
       <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
     {% else %}
       {{ product.quantity }}
