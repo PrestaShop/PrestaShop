@@ -26,14 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Meta;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
 /**
  * Class UrlSchemaDataConfiguration is responsible for validating, updating and retrieving data used in
  * Shop parameters -> Traffix & Seo -> Seo & Urls -> Set Shop URL form field.
  */
-final class UrlSchemaDataConfiguration implements DataConfigurationInterface
+final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
 {
     /**
      * @var array
@@ -41,20 +43,18 @@ final class UrlSchemaDataConfiguration implements DataConfigurationInterface
     private $rules;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * UrlSchemaDataConfiguration constructor.
      *
-     * @param ConfigurationInterface $configuration
+     * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      * @param array $rules
      */
-    public function __construct(ConfigurationInterface $configuration, array $rules)
+    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, array $rules)
     {
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
+
         $this->rules = $rules;
-        $this->configuration = $configuration;
     }
 
     /**
