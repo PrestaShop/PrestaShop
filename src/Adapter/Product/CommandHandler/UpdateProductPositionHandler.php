@@ -79,15 +79,8 @@ class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterf
 
         try {
             $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
-        } catch (PositionDataException $e) {
-            $exception = new CannotUpdateProductPositionException($e->getMessage());
-            $exception->setErrors([$e->toArray()]);
-            throw $exception;
-        }
-
-        try {
             $this->positionUpdater->update($positionUpdate);
-        } catch (PositionUpdateException $e) {
+        } catch (PositionUpdateException|PositionDataException $e) {
             $exception = new CannotUpdateProductPositionException($e->getMessage());
             $exception->setErrors([$e->toArray()]);
             throw $exception;
