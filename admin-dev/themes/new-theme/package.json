@@ -4,8 +4,8 @@
   "description": "",
   "private": "true",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --reporter spec \"tests/**/*.spec.js\"",
-    "build": "webpack --progress --stats-error-details",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --require ts-node/register --require tsconfig-paths/register --require babel-register --reporter spec \"tests/**/*.spec.js\"",
+    "build": "webpack --progress --stats-error-details  --mode=production",
     "dev": "webpack --progress --watch --mode=development",
     "serve": "webpack serve --mode=development",
     "watch": "npm run dev",
