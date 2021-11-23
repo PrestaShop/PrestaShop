@@ -171,6 +171,8 @@ export default class SubmittableInput {
       button.disabled = true;
       $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
+      // eslint-disable-next-line no-param-reassign
+      button.disabled = false;
       $(button).html('<i class="material-icons">check</i>');
     }
   }
