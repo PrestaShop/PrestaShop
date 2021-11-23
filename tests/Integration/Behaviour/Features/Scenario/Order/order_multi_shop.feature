@@ -43,6 +43,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 37.84  |

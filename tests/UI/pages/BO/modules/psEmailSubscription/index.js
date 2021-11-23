@@ -49,7 +49,7 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
 
     // Get email from each row
     for (let row = 1; row <= numberOfEmails; row++) {
-      await emails.push(await this.getTextContent(page, this.newsletterTableEmailColumn(row)));
+      emails.push(await this.getTextContent(page, this.newsletterTableEmailColumn(row)));
     }
 
     return emails;

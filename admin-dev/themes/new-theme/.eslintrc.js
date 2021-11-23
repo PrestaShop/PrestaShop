@@ -17,7 +17,8 @@ module.exports = {
     JQueryStatic: true,
   },
   parserOptions: {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
+    requireConfigFile: false,
   },
   extends: ['prestashop'],
   plugins: ['import'],
@@ -57,14 +58,23 @@ module.exports = {
   },
   overrides: [
     {
+      parser: 'vue-eslint-parser',
+      parserOptions: {
+        parser: '@typescript-eslint/parser',
+        project: './tsconfig.json',
+        ecmaFeatures: {
+          jsx: false,
+        },
+      },
       files: ['*.vue'],
       rules: {
         indent: 0,
         'vue/no-mutating-props': 0,
+        'no-undef': 0,
         'vue/no-template-shadow': 0,
       },
-      extends: ['plugin:vue/strongly-recommended'],
-      plugins: ['vue'],
+      extends: ['plugin:vue/strongly-recommended', '@vue/typescript'],
+      plugins: ['vue', '@typescript-eslint'],
     },
     {
       files: ['*.ts'],
@@ -81,6 +91,8 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 0,
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/no-this-alias': 0,
+        '@typescript-eslint/no-inferrable-types': 0,
+        '@typescript-eslint/explicit-module-boundary-types': ['error', {allowArgumentsExplicitlyTypedAsAny: true}],
         'func-names': 0,
         'no-new': 0,
       },

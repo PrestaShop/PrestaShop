@@ -204,9 +204,9 @@ export default class CombinationsManager {
 
     this.$combinationsContainer.on(
       'click',
-      CombinationsMap.removeCombinationSelector,
+      CombinationsMap.deleteCombinationSelector,
       async (e) => {
-        await this.removeCombination(e.currentTarget);
+        await this.deleteCombination(e.currentTarget);
       },
     );
 
@@ -362,7 +362,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async removeCombination(button) {
+  async deleteCombination(button) {
     try {
       const $deleteButton = $(button);
       const modal = new ConfirmModal(
@@ -376,7 +376,7 @@ export default class CombinationsManager {
           closable: true,
         },
         async () => {
-          const response = await this.combinationsService.removeCombination(
+          const response = await this.combinationsService.deleteCombination(
             this.findCombinationId(button),
           );
           $.growl({message: response.message});

@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -13,11 +17,8 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
 const AddressFaker = require('@data/faker/address');
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customers_addresses_paginationAndSortAddresses';
-
 
 let browserContext;
 let page;
@@ -29,7 +30,7 @@ Paginate between pages
 Sort addresses by id, firstname, lastname, address, post code, city and country
 Delete addresses with bulk actions
  */
-describe('Pagination and sort addresses', async () => {
+describe('BO - Customers - Addresses : Pagination and sort addresses table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +45,7 @@ describe('Pagination and sort addresses', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to addresses page', async function () {
+  it('should go to \'Customers > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -67,9 +68,10 @@ describe('Pagination and sort addresses', async () => {
   });
 
   // 1 : Create 11 new addresses
-  const creationTests = new Array(10).fill(0, 0, 10);
-  creationTests.forEach((test, index) => {
-    describe(`Create address n°${index + 1} in BO`, async () => {
+  // 1 : Create 10 new addresses
+  describe('Create 10 addresses in BO', async () => {
+    const creationTests = new Array(10).fill(0, 0, 10);
+    creationTests.forEach((test, index) => {
       const createAddressData = new AddressFaker(
         {
           email: 'pub@prestashop.com',
@@ -86,7 +88,7 @@ describe('Pagination and sort addresses', async () => {
         await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
       });
 
-      it('should create address and check result', async function () {
+      it(`should create address n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
 
         const textResult = await addAddressPage.createEditAddress(page, createAddressData);
@@ -100,8 +102,8 @@ describe('Pagination and sort addresses', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
+    it('should change the items number to 10 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
       const paginationNumber = await addressesPage.selectPaginationLimit(page, '10');
       expect(paginationNumber).to.contains('(page 1 / 2)');
@@ -121,8 +123,8 @@ describe('Pagination and sort addresses', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await addressesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.contains('(page 1 / 1)');
@@ -194,7 +196,7 @@ describe('Pagination and sort addresses', async () => {
       await expect(address).to.contains('My address');
     });
 
-    it('should delete addresses with Bulk Actions and check addresses page', async function () {
+    it('should delete addresses', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
 
       const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);

@@ -1,10 +1,10 @@
 .dropzone .dz-preview .dz-progress {
   height: 10px;
   background: none;
-  background-color: #363a41;
+  background-color: $gray-700;
 
   > .dz-upload {
     background: none;
-    background-color: #25b9d7;
+    background-color: $primary;
   }
 }

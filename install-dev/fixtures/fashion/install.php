@@ -24,7 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShopBundle\Install\XmlLoader;
 
 /**
@@ -37,9 +39,9 @@ class InstallFixturesFashion extends XmlLoader
 {
     public function createEntityCustomer($identifier, array $data, array $data_lang)
     {
-        if ($identifier == 'John') {
-            $data['passwd'] = Tools::hash('123456789');
-        }
+        $crypto = ServiceLocator::get(Hashing::class);
+
+        $data['passwd'] = $crypto->hash($data['passwd']);
 
         return $this->createEntity('customer', $identifier, 'Customer', $data, $data_lang);
     }

@@ -33,7 +33,7 @@ Go to Attributes & Features page
 Go to view attribute 'Color' page
 Filter values table by ID, Name and Position
  */
-describe('Filter values by id, name and position', async () => {
+describe('BO - Catalog - Attributes & Features : Filter attribute values table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

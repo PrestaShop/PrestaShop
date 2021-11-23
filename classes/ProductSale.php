@@ -168,7 +168,7 @@ class ProductSaleCore
      * @param int $pageNumber Start from (optional)
      * @param int $nbProducts Number of products to return (optional)
      *
-     * @return array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
+     * @return bool|array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
      */
     public static function getBestSalesLight($idLang, $pageNumber = 0, $nbProducts = 10, Context $context = null)
     {

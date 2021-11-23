@@ -340,7 +340,7 @@ class HelperFormCore extends Helper
     public function renderAssoShop($disable_shared = false, $template_directory = null)
     {
         if (!Shop::isFeatureActive()) {
-            return;
+            return '';
         }
 
         $assos = [];

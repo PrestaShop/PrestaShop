@@ -66,7 +66,7 @@ class OrderStateCore extends ObjectModel
     public $pdf_delivery;
 
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition
@@ -114,7 +114,7 @@ class OrderStateCore extends ObjectModel
      * Get all available order statuses.
      *
      * @param int $id_lang Language id for status name
-     * @param bool $getDeletedStates
+     * @param bool $filterDeleted
      *
      * @return array Order statuses
      */
@@ -174,7 +174,7 @@ class OrderStateCore extends ObjectModel
      */
     public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
     {
-        return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT COUNT(*) AS count' .
             ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
             ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .

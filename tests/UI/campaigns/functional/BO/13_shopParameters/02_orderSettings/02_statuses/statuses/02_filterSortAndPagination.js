@@ -1,8 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -17,13 +20,7 @@ const addOrderStatusPage = require('@pages/BO/shopParameters/orderSettings/statu
 const {Statuses} = require('@data/demo/orderStatuses');
 const OrderStatusFaker = require('@data/faker/orderStatus');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_filterSortAndPagination';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -33,11 +30,11 @@ const tableName = 'order';
 /*
 Filter order status by : Id, Name, Send email to customer, Delivery, Invoice, email template
 Sort order status by : Id, Name, Email template
-Create 2 order statuses
+Create 8 order statuses
 Pagination next and previous
 Delete by bulk actions
  */
-describe('Filter, sort and pagination order status', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and pagination order status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -291,7 +288,7 @@ describe('Filter, sort and pagination order status', async () => {
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '20');
@@ -312,7 +309,7 @@ describe('Filter, sort and pagination order status', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await statusesPage.selectPaginationLimit(page, tableName, '50');

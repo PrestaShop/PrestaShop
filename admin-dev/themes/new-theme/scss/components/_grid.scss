@@ -103,9 +103,16 @@ table .thead-default .column-headers th:last-child .grid-actions-header-text {
   }
 }
 
-table .column-filters td:last-child .grid-search-button,
-table .column-filters td:last-child .grid-reset-button {
-  float: right;
+table .column-filters {
+  th .btn {
+    white-space: nowrap;
+  }
+
+  td:last-child .grid-search-button,
+  td:last-child .grid-reset-button {
+    float: right;
+    white-space: nowrap;
+  }
 }
 
 .grid {
@@ -154,7 +161,7 @@ table .column-filters td:last-child .grid-reset-button {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: #fafbfc;
+          background: $gray-250;
 
           td {
             color: $white;

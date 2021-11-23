@@ -143,7 +143,7 @@ class SeoAndUrls extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name of the value to return
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -151,7 +151,7 @@ class SeoAndUrls extends BOBasePage {
 
     for (let row = 1; row <= rowsNumber; row++) {
       const rowContent = await this.getTextColumnFromTable(page, row, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -318,7 +318,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableFriendlyURL(page, toEnable = true) {
-    await page.check(this.friendlyUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.friendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -331,7 +331,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableAccentedURL(page, toEnable = true) {
-    await page.check(this.accentedUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.accentedUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -344,7 +344,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
-    await page.check(this.displayAttributesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

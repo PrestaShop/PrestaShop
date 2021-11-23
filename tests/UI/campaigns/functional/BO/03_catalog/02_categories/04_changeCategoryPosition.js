@@ -1,5 +1,6 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -15,12 +16,11 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_categories_changeCategoryPosition';
 
-
 let browserContext;
 let page;
 let numberOfCategories = 0;
 
-describe('Change category position', async () => {
+describe('BO - Catalog - Categories : Change category position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +35,7 @@ describe('Change category position', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to categories page', async function () {
+  it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -75,7 +75,7 @@ describe('Change category position', async () => {
   });
 
   describe('Change categories position', async () => {
-    it('should change category position', async function () {
+    it('should drag and drop the first category to the second position', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeCategoryPosition', baseContext);
 
       const firstCategoryNameBeforeUpdate = await categoriesPage.getTextColumnFromTableCategories(

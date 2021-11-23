@@ -1,12 +1,12 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
 /**
  * Add currency page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
-class AddCurrency extends BOBasePage {
+class AddCurrency extends LocalizationBasePage {
   /**
    * @constructs
    * Setting up texts and selectors to use on add currency page
@@ -37,7 +37,8 @@ class AddCurrency extends BOBasePage {
   /**
    * Add official currency
    * @param page {Page} Browser tab
-   * @param currencyData {currencyData} Data to set on add currency form
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}, successful text message that appears
    */
   async addOfficialCurrency(page, currencyData) {
@@ -71,7 +72,7 @@ class AddCurrency extends BOBasePage {
       await page.waitForTimeout(200);
     }
 
-    await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -80,17 +81,16 @@ class AddCurrency extends BOBasePage {
   /**
    * Create unofficial currency
    * @param page {Page} Browser tab
-   * @param currencyData {currencyData} Data to set on add currency form
+   * @param currencyData {{name: string, frName:string, symbol: string, isoCode: string, exchangeRate: number,
+   * decimals: number, enabled: boolean}} Data to set on add currency form
    * @returns {Promise<string>}
    */
   async createUnOfficialCurrency(page, currencyData) {
-    if (!(await this.isCheckboxSelected(page, this.alternativeCurrencyCheckBox))) {
-      await page.$eval(`${this.alternativeCurrencyCheckBox} + i`, el => el.click());
-    }
+    await this.setCheckedWithIcon(page, this.alternativeCurrencyCheckBox);
     await this.setValue(page, this.currencyNameInput(1), currencyData.name);
     await this.setValue(page, this.isoCodeInput, currencyData.isoCode);
     await this.setValue(page, this.exchangeRateInput, currencyData.exchangeRate.toString());
-    await page.check(this.statusToggleInput(currencyData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(currencyData.enabled ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

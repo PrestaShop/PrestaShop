@@ -264,9 +264,7 @@ class OrderHistoryCore extends ObjectModel
                         ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
                         Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
                         true,
-                        (int) $order->id,
-                        0,
-                        $employee
+                        (int) $order->id
                     );
                 } elseif ($new_os->shipped == 0 && Validate::isLoadedObject($old_os) && $old_os->shipped == 1 &&
                     Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
@@ -291,8 +289,7 @@ class OrderHistoryCore extends ObjectModel
                                         null,
                                         $mvt['price_te'],
                                         true,
-                                        null,
-                                        $employee
+                                        null
                                     );
                                 }
                                 if (!StockAvailable::dependsOnStock($product['id_product'])) {
@@ -347,7 +344,7 @@ class OrderHistoryCore extends ObjectModel
                             ]
                         );
                         //back to current shop context
-                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP) {
+                        if ($current_shop_context_type !== Shop::CONTEXT_SHOP && isset($current_shop_group_id)) {
                             Context::getContext()->shop->setContext($current_shop_context_type, $current_shop_group_id);
                         }
                     }
@@ -389,7 +386,7 @@ class OrderHistoryCore extends ObjectModel
                     $payment->id_currency = $order->id_currency;
                     $payment->amount = $rest_paid;
 
-                    if ($order->total_paid != 0) {
+                    if ($order->total_paid != 0 && isset($payment_method) && $payment_method instanceof Module) {
                         $payment->payment_method = $payment_method->displayName;
                     } else {
                         $payment->payment_method = null;
@@ -462,8 +459,8 @@ class OrderHistoryCore extends ObjectModel
 
     /**
      * @param bool $autodate Optional
-     * @param array $template_vars Optional
-     * @param Context $context Deprecated
+     * @param array|bool $template_vars Optional
+     * @param Context|null $context Deprecated
      *
      * @return bool
      */
@@ -606,7 +603,7 @@ class OrderHistoryCore extends ObjectModel
      */
     public function isValidated()
     {
-        return Db::getInstance()->getValue('
+        return (int) Db::getInstance()->getValue('
         SELECT COUNT(oh.`id_order_history`) AS nb
         FROM `' . _DB_PREFIX_ . 'order_state` os
         LEFT JOIN `' . _DB_PREFIX_ . 'order_history` oh ON (os.`id_order_state` = oh.`id_order_state`)

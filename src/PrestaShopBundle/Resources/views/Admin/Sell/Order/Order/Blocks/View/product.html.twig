@@ -1,0 +1,182 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set rowIsDisplayed =  (productIndex is defined and paginationNum is defined and productIndex > paginationNum) %}
+<tr id="orderProduct_{{ product.orderDetailId }}" class="cellProduct{% if rowIsDisplayed %} d-none d-print-table-row{% endif %}">
+  <td class="cellProductImg">
+    {% if product.imagePath %}
+      <img src="{{ product.imagePath }}" alt="{{ product.name }}" />
+    {% endif %}
+  </td>
+  <td class="cellProductName">
+    <a href="{{ path('admin_product_form', {'id': product.id}) }}">
+      <p class="mb-0 productName">{{ product.name }}</p>
+      {% if product.reference %}
+        <p class="mb-0 productReference">
+          {{ 'Reference number:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ product.reference }}
+        </p>
+      {% endif %}
+      {% if product.supplierReference is not empty %}
+        <p class="mb-0 productSupplierReference">
+          {{ 'Supplier reference:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          {{ product.supplierReference }}
+        </p>
+      {% endif %}
+    </a>
+    {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') and product.customizations is null %}
+      <span class="btn-product-pack-modal d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+        <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
+      </span>
+    {% endif %}
+  </td>
+  <td class="cellProductUnitPrice">{{ product.unitPrice }}</td>
+  <td class="cellProductQuantity text-center">
+    {% if product.quantity > 1 %}
+      <span class="badge badge-secondary rounded-circle">{{ product.quantity }}</span>
+    {% else %}
+      {{ product.quantity }}
+    {% endif %}
+
+    <div class="d-none js-product-quantity">
+      <input type="text" value="{{ product.quantity }}" class="form-control">
+    </div>
+  </td>
+  <td class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">{{ product.location }}</td>
+  <td class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
+    {% if product.quantityRefunded > 0 %}
+      {{ product.quantityRefunded }} ({{ product.amountRefunded }} {{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }})
+    {% endif %}
+  </td>
+  <td class="cellProductAvailableQuantity text-center{% if not isAvailableQuantityDisplayed %} d-none{% endif %}">{{ product.availableQuantity }}</td>
+  <td class="cellProductTotalPrice">{{ product.totalPrice }}</td>
+  {% if orderForViewing.hasInvoice() %}
+    <td>{{ product.orderInvoiceNumber }}</td>
+  {% endif %}
+  {% if not orderForViewing.delivered %}
+    <td class="text-right cellProductActions">
+      <button
+        type="button"
+        class="btn tooltip-link js-order-product-edit-btn"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-original-title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
+        data-order-detail-id="{{ product.orderDetailId }}"
+        data-product-id="{{ product.id }}"
+        data-combination-id="{{ product.combinationId }}"
+        data-product-quantity="{{ product.quantity }}"
+        data-product-price-tax-incl="{{ product.unitPriceTaxInclRaw }}"
+        data-product-price-tax-excl="{{ product.unitPriceTaxExclRaw }}"
+        data-tax-rate="{{ product.taxRate }}"
+        data-location="{{ product.location }}"
+        data-available-quantity="{{ product.availableQuantity }}"
+        data-available-out-of-stock="{{ product.availableOutOfStock }}"
+        data-order-invoice-id="{{ product.orderInvoiceId }}"
+        data-is-order-tax-included="{{ orderForViewing.isTaxIncluded }}">
+        <i class="material-icons">edit</i>
+      </button>
+      <button
+        type="button"
+        class="btn tooltip-link js-order-product-delete-btn"
+        data-toggle="pstooltip"
+        data-placement="top"
+        data-order-id="{{ orderForViewing.id }}"
+        data-order-detail-id="{{ product.orderDetailId }}"
+        data-delete-message="{{ 'Are you sure?'|trans({}, 'Admin.Notifications.Warning') }}"
+        data-original-title="{{ 'Delete'|trans({}, 'Admin.Actions') }}">
+        <i class="material-icons">delete</i>
+      </button>
+    </td>
+  {% endif %}
+  <td class="text-right cancel-product-element">
+    <div class="cancel-product-cell cancel-product-element{% if product.refundable == false %} hidden{% endif %}">
+      <div class="cancel-product-cell-elements">
+        <div class="cancel-product-selector form-group">
+          {{ form_widget(cancelProductForm['selected_' ~ product.orderDetailId]) }}
+        </div>
+        <div class="cancel-product-quantity form-group">
+          {{ form_label(cancelProductForm['quantity_' ~ product.orderDetailId]) }}
+          <div class="input-group">
+            {% set quantityInputOptions = {
+              'attr': {
+                'data-product-price-tax-incl': product.unitPriceTaxInclRaw,
+                'data-product-price-tax-excl': product.unitPriceTaxExclRaw,
+                'data-amount-refundable': product.amountRefundableRaw,
+                'data-quantity-refundable': product.quantityRefundable,
+              }
+            } %}
+            {{ form_widget(cancelProductForm['quantity_' ~ product.orderDetailId], quantityInputOptions) }}
+            <div class="input-group-append"><div class="input-group-text">/ {{ product.quantityRefundable }}</div></div>
+          </div>
+        </div>
+        <div class="cancel-product-amount form-group">
+          {{ form_label(cancelProductForm['amount_' ~ product.orderDetailId]) }}
+          <div class="input-group">
+            {{ form_widget(cancelProductForm['amount_' ~ product.orderDetailId]) }}
+            <div class="input-group-append"><div class="input-group-text">{{ orderCurrency.symbol }}</div></div>
+            <small class="max-refund text-left">
+              {{ '(Max %amount_refundable% %tax_method%)'|trans({
+                '%amount_refundable%': product.amountRefundable,
+                '%tax_method%': orderForViewing.taxMethod
+              }, 'Admin.Orderscustomers.Help')|raw }}
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>
+{% if product.customizations is not null %}
+  <tr class="order-product-customization{% if rowIsDisplayed %} d-none{% endif %}">
+    <td class="border-top-0"></td>
+    {% set colspan = 8 %}
+    {% set colspan = (orderForViewing.hasInvoice() ? colspan + 1 : colspan) %}
+    {% set colspan = (not orderForViewing.delivered ? colspan + 1 : colspan) %}
+    <td colspan="{{ colspan }}" class="border-top-0 text-muted">
+      {% if product.customizations.fileCustomizations %}
+        <div class="d-flex flex-row flex-wrap">
+          {% for customization in product.customizations.fileCustomizations %}
+              <div class="mr-4">
+                <p><strong>{{ customization.name }}</strong></p>
+                <p>
+                  <a href="{{ path('admin_orders_display_customization_image', {'orderId': orderForViewing.id, "value": customization.value})}}" download>
+                    <img src="{{ customization.image }}" alt="{{ customization.name }}">
+                  </a>
+                </p>
+              </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {% for customization in product.customizations.textCustomizations %}
+        <p><strong>{{ customization.name }} :</strong> {{ customization.value }}</p>
+      {% endfor %}
+      {% if product.type == constant('PrestaShop\\PrestaShop\\Core\\Domain\\Order\\QueryResult\\OrderProductForViewing::TYPE_PACK') %}
+        <div class="btn-product-pack-modal mb-3 d-print-none" data-toggle="modal" data-target="#product-pack-modal" data-pack-items="{{ product.packItems|json_encode }}">
+          <strong>{{ 'View pack content'|trans({}, 'Admin.Actions') }}</strong>
+        </div>
+      {% endif %}
+    </td>
+  </tr>
+{% endif %}

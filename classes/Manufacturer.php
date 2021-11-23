@@ -136,6 +136,8 @@ class ManufacturerCore extends ObjectModel
 
             return $this->deleteImage();
         }
+
+        return false;
     }
 
     /**
@@ -152,7 +154,7 @@ class ManufacturerCore extends ObjectModel
         $result = true;
         foreach ($selection as $id) {
             $this->id = (int) $id;
-            $this->id_address = Manufacturer::getManufacturerAddress();
+            $this->id_address = static::getManufacturerAddress();
             $result = $result && $this->delete();
         }
 
@@ -162,7 +164,7 @@ class ManufacturerCore extends ObjectModel
     /**
      * Get Manufacturer Address ID.
      *
-     * @return bool|false|string|null
+     * @return bool|int
      */
     protected function getManufacturerAddress()
     {
@@ -170,7 +172,9 @@ class ManufacturerCore extends ObjectModel
             return false;
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address WHERE `id_manufacturer` = ' . (int) $this->id);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_address` FROM ' . _DB_PREFIX_ . 'address WHERE `id_manufacturer` = ' . (int) $this->id
+        );
     }
 
     /**
@@ -183,7 +187,7 @@ class ManufacturerCore extends ObjectModel
      * @param int|bool $n
      * @param bool $allGroup
      *
-     * @return array Manufacturers
+     * @return array|bool Manufacturers
      */
     public static function getManufacturers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroup = false, $group_by = false, $withProduct = false)
     {
@@ -364,7 +368,7 @@ class ManufacturerCore extends ObjectModel
      * @param bool $activeCategory
      * @param Context|null $context
      *
-     * @return array|bool
+     * @return array|bool|int
      */
     public static function getProducts(
         $idManufacturer,

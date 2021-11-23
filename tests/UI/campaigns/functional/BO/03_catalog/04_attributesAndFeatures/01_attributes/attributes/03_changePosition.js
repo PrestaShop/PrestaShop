@@ -27,7 +27,7 @@ Go To attributes page
 Change first attribute position to 3
 Reset attribute position
  */
-describe('Change attribute position', async () => {
+describe('BO - Catalog - Attributes & Features : Change attribute position', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,7 +64,7 @@ describe('Change attribute position', async () => {
       await expect(numberOfAttributes).to.be.above(2);
     });
 
-    it('should sort by \'position\' \'asc\' And check result', async function () {
+    it('should sort by \'position\' \'asc\' and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sortByPosition', baseContext);
 
       let nonSortedTable = await attributesPage.getAllRowsColumnContent(page, 'a!position');

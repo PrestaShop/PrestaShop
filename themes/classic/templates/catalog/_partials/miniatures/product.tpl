@@ -23,13 +23,14 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='product_miniature_item'}
-<div class="product">
+<div class="product{if !empty($productClasses)} {$productClasses}{/if}">
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
     <div class="thumbnail-container">
       {block name='product_thumbnail'}
         {if $product.cover}
           <a href="{$product.url}" class="thumbnail product-thumbnail">
             <img
+              class="img-fluid"
               src="{$product.cover.bySize.home_default.url}"
               alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
               loading="lazy"

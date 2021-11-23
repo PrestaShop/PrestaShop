@@ -8,7 +8,7 @@ parameters:
     - bin
     - cache
     # - classes
-    # - config
+    - config
     # - controllers
     - docs
     - download
@@ -30,12 +30,17 @@ parameters:
   excludePaths:
     - admin-dev/filemanager
     - admin-dev/themes
+    - classes/lang/KeysReference
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
     - '#^Constructor of class PrestaShopBundle\\Service\\DataProvider\\Marketplace\\ApiClient has an unused parameter \$toolsAdapter\.$#'
     - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
+    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    ## Smarty functions
+    - '#^Function smartyRegisterFunction not found\.$#'
+  reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie
     - ObjectModel

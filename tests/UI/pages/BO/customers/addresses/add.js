@@ -43,9 +43,9 @@ class AddAddress extends BOBasePage {
   /**
    * Fill form for add/edit address
    * @param page {Page} Browser tab
-   * @param addressData {addressData} Data to set on new address form
+   * @param addressData {AddressData} Data to set on new address form
    * @param save {boolean} True if we need to save the new address, false if not
-   * @returns {Promise<string>}
+   * @returns {Promise<?string>}
    */
   async createEditAddress(page, addressData, save = true) {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {

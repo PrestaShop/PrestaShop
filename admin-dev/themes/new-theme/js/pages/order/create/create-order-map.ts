@@ -49,6 +49,7 @@ export default {
   customerSearchResultEmail: '.js-customer-email',
   customerSearchResultId: '.js-customer-id',
   customerSearchResultBirthday: '.js-customer-birthday',
+  customerSearchResultCompany: '.js-customer-company',
   customerDetailsBtn: '.js-details-customer-btn',
   customerSearchResultColumn: '.js-customer-search-result-col',
   customerSearchBlock: '#customer-search-block',

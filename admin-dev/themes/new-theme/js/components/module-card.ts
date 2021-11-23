@@ -40,10 +40,10 @@ const BOEvent = {
     });
   },
 
-  emitEvent(eventName: string, eventType: string) {
-    const event = document.createEvent(eventType);
+  emitEvent(eventName: string, eventType: string, datas: JQuery) {
+    const event = new CustomEvent(eventType, <any>datas);
     // true values stand for: can bubble, and is cancellable
-    event.initEvent(eventName, true, true);
+    event.initCustomEvent(eventName, true, true, datas);
     document.dispatchEvent(event);
   },
 };
@@ -130,10 +130,6 @@ export default class ModuleCard {
       'click',
       this.moduleActionMenuInstallLinkSelector,
       function () {
-        if ($(ComponentsMap.modalPrestaTrust).length) {
-          $(ComponentsMap.modalPrestaTrust).modal('hide');
-        }
-
         return (
           self.dispatchPreEvent('install', this)
           && self.confirmAction('install', this)
@@ -224,7 +220,7 @@ export default class ModuleCard {
         maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
         maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
 
-        const updateConfirmModal = new (ConfirmModal as any)(
+        const updateConfirmModal = new ConfirmModal(
           {
             id: 'confirm-module-update-modal',
             confirmTitle:
@@ -308,7 +304,7 @@ export default class ModuleCard {
               self.moduleActionMenuUninstallLinkSelector,
               $(
                 ModuleCardMap.moduleItemList(
-                    <string>$(this).attr('data-tech-name'),
+                    <string>$(e.target).attr('data-tech-name'),
                 ),
               ),
             ),
@@ -339,79 +335,6 @@ export default class ModuleCard {
     modal.first().modal('show');
 
     return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
-  }
-
-  /**
-   * Update the content of a modal asking a confirmation for PrestaTrust and open it
-   *
-   * @param {array} result containing module data
-   * @return {void}
-   */
-  confirmPrestaTrust(result: Record<string, any>): void {
-    const that = this;
-    const modal = <JQuery> this.replacePrestaTrustPlaceholders(result);
-
-    modal
-      .find('.pstrust-install')
-      .off('click')
-      .on('click', () => {
-        // Find related form, update it and submit it
-        const installButton = $(
-          that.moduleActionMenuInstallLinkSelector,
-          ModuleCardMap.moduleItem(result.module.attributes.name),
-        );
-
-        const form = installButton.parent('form');
-        $('<input>')
-          .attr({
-            type: 'hidden',
-            value: '1',
-            name: 'actionParams[confirmPrestaTrust]',
-          })
-          .appendTo(form);
-
-        installButton.click();
-        modal.modal('hide');
-      });
-
-    modal.modal();
-  }
-
-  replacePrestaTrustPlaceholders(
-    result: Record<string, any>,
-  ): JQuery | boolean {
-    const modal = $();
-    const module = result.module.attributes;
-
-    if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
-      return false;
-    }
-
-    const alertClass = module.prestatrust.status ? 'success' : 'warning';
-
-    if (module.prestatrust.check_list.property) {
-      modal.find('#pstrust-btn-property-ok').show();
-      modal.find('#pstrust-btn-property-nok').hide();
-    } else {
-      modal.find('#pstrust-btn-property-ok').hide();
-      modal.find('#pstrust-btn-property-nok').show();
-      modal
-        .find('#pstrust-buy')
-        .attr('href', module.url)
-        .toggle(module.url !== null);
-    }
-
-    modal.find('#pstrust-img').attr({src: module.img, alt: module.name});
-    modal.find('#pstrust-name').text(module.displayName);
-    modal.find('#pstrust-author').text(module.author);
-    modal
-      .find('#pstrust-label')
-      .attr('class', `text-${alertClass}`)
-      .text(module.prestatrust.status ? 'OK' : 'KO');
-    modal.find('#pstrust-message').attr('class', `alert alert-${alertClass}`);
-    modal.find('#pstrust-message > p').text(module.prestatrust.message);
-
-    return modal;
   }
 
   dispatchPreEvent(action: string, element: string): boolean {
@@ -482,12 +405,6 @@ export default class ModuleCard {
         const moduleTechName = Object.keys(result)[0];
 
         if (result[moduleTechName].status === false) {
-          if (
-            typeof result[moduleTechName].confirmation_subject !== 'undefined'
-          ) {
-            self.confirmPrestaTrust(result[moduleTechName]);
-          }
-
           $.growl.error({message: result[moduleTechName].msg, fixed: true});
           return;
         }
@@ -502,22 +419,30 @@ export default class ModuleCard {
 
         if (action === 'uninstall') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
-          mainElement.remove();
+          mainElement.attr('data-installed', '0');
+          mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Uninstalled', 'CustomEvent');
+          BOEvent.emitEvent('Module Uninstalled', 'CustomEvent', mainElement);
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '0');
 
-          BOEvent.emitEvent('Module Disabled', 'CustomEvent');
+          BOEvent.emitEvent('Module Disabled', 'CustomEvent', mainElement);
         } else if (action === 'enable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.removeClass(`${alteredSelector}-isNotActive`);
           mainElement.attr('data-active', '1');
 
-          BOEvent.emitEvent('Module Enabled', 'CustomEvent');
-        }
+          BOEvent.emitEvent('Module Enabled', 'CustomEvent', mainElement);
+        } else if (action === 'install') {
+          mainElement = jqElementObj.closest(`.${alteredSelector}`);
+          mainElement.attr('data-installed', '1');
+          mainElement.attr('data-active', '1');
+          mainElement.removeClass(`${alteredSelector}-isNotActive`);
+
+          BOEvent.emitEvent('Module Installed', 'CustomEvent', mainElement);
+        };
 
         jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
       })

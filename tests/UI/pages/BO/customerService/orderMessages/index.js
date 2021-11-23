@@ -103,7 +103,7 @@ class OrderMessages extends BOBasePage {
    * Filter Table
    * @param page {Page} Browser tab
    * @param filterBy {string} Column to filter with
-   * @param value {string/number} Value to put in filter
+   * @param value {string|number} Value to put in filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
@@ -241,7 +241,7 @@ class OrderMessages extends BOBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get text from
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -249,7 +249,7 @@ class OrderMessages extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextContent(page, this.tableColumn(i, column));
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

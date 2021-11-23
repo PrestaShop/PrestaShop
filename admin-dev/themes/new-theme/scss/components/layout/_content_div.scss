@@ -45,3 +45,9 @@
     padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
   }
 }
+
+.mobile {
+  .content-div {
+    padding-bottom: 5rem;
+  }
+}

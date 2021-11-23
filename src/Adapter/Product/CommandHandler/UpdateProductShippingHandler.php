@@ -99,7 +99,7 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
         }
 
         if (null !== $command->getAdditionalShippingCost()) {
-            $product->additional_shipping_cost = (string) $command->getAdditionalShippingCost();
+            $product->additional_shipping_cost = (float) (string) $command->getAdditionalShippingCost();
             $updatableProperties[] = 'additional_shipping_cost';
         }
 

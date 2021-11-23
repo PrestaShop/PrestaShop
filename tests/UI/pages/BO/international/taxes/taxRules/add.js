@@ -43,12 +43,12 @@ class AddTaxRules extends BOBasePage {
   /**
    * Fill form for add/edit tax rules group
    * @param page {Page} Browser tab
-   * @param taxRuleGroupData {taxRuleGroupData} Data to set on tax rule group data
+   * @param taxRuleGroupData {TaxRulesGroupData} Data to set on tax rule group data
    * @returns {Promise<string>}
    */
   async createEditTaxRulesGroup(page, taxRuleGroupData) {
     await this.setValue(page, this.nameInput, taxRuleGroupData.name);
-    await page.check(this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
+    await this.setChecked(page, this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
 
@@ -58,7 +58,7 @@ class AddTaxRules extends BOBasePage {
   /**
    * Fill form for add/edit tax rules group
    * @param page {Page} Browser tab
-   * @param taxRuleData {taxRuleData} Data to set on new/edit tax rule data
+   * @param taxRuleData {TaxRuleData} Data to set on new/edit tax rule data
    * @returns {Promise<string>}
    */
   async createEditTaxRules(page, taxRuleData) {

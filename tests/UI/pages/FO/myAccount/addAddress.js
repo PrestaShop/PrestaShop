@@ -1,14 +1,22 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Add address page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class AddAddress extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add address page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Address';
     this.creationFormTitle = 'New address';
     this.updateFormTitle = 'Update your address';
-
 
     // Selectors
     this.pageHeaderTitle = '#main .page-header h1';
@@ -93,6 +101,21 @@ class AddAddress extends FOBasePage {
    */
   async isVatNumberRequired(page) {
     return this.elementVisible(page, `${this.vatNumberInput}:required`, 1000);
+  }
+
+  /**
+   * Is country exist
+   * @param page {Page} Browser tab
+   * @param countryName {string} String of the country name
+   * @returns {Promise<boolean>}
+   */
+  async countryExist(page, countryName) {
+    const options = await page.$$eval(
+      `${this.countrySelect} option`,
+      all => all.map(option => option.textContent),
+    );
+
+    return options.indexOf(countryName) !== -1;
   }
 }
 

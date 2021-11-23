@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Home page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Home extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on home page
+   */
   constructor() {
     super();
 
@@ -184,8 +193,8 @@ class Home extends FOBasePage {
   /**
    * Get product details from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{discountPercentage: *, thumbImage: *, size: *, color: *, price: *, taxShippingDeliveryLabel: *,
-   * regularPrice: *, coverImage: *, name: *, shortDescription: *}>}
+   * @returns {Promise<{discountPercentage: string, thumbImage: string, price: number, taxShippingDeliveryLabel: string,
+   * regularPrice: number, coverImage: string, name: string, shortDescription: string}>}
    */
   async getProductDetailsFromQuickViewModal(page) {
     return {
@@ -203,7 +212,7 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from quick view modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributesFromQuickViewModal(page) {
     return {
@@ -265,8 +274,8 @@ class Home extends FOBasePage {
   /**
    * Get product details from blockCart modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{quantity: number, size: *, color: *, price: *, name: *, cartShipping: *, cartSubtotal: *,
-   * totalTaxIncl: *, cartProductsCount: number}>}
+   * @returns {Promise<{quantity: number, price: number, name: string, cartShipping: string, cartSubtotal: number,
+   * totalTaxIncl: number, cartProductsCount: number}>}
    */
   async getProductDetailsFromBlockCartModal(page) {
     return {
@@ -283,7 +292,7 @@ class Home extends FOBasePage {
   /**
    * Get product attributes from block cart modal
    * @param page {Page} Browser tab
-   * @returns {Promise<{size: *, color: *}>}
+   * @returns {Promise<{size: string, color: string}>}
    */
   async getProductAttributesFromBlockCartModal(page) {
     return {
@@ -334,8 +343,7 @@ class Home extends FOBasePage {
    * Subscribe to the newsletter from the FO homepage
    * @param page {Page} Browser tab
    * @param email {string} Email to set on input
-   *
-   * @returns {Promise<string|TextContent|*>}
+   * @returns {Promise<string>}
    */
   async subscribeToNewsletter(page, email) {
     await this.setValue(page, this.newsletterFormField, email);

@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
@@ -238,11 +237,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
+    protected function shouldRecommendConfigurationForModule(ModuleInterface $installedProduct)
     {
         $warnings = $this->getModuleInstallationWarnings($installedProduct);
 
@@ -250,11 +249,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
      * @return string|array
      */
-    protected function getModuleInstallationWarnings(Module $installedProduct)
+    protected function getModuleInstallationWarnings(ModuleInterface $installedProduct)
     {
         if ($installedProduct->hasValidInstance()) {
             return $installedProduct->getInstance()->warning;
@@ -288,7 +287,12 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            return $this->upgrade($name, 'latest', $source);
+            if ($source !== null) {
+                return $this->upgrade($name, 'latest', $source);
+            }
+
+            // Module is already installed
+            return true;
         }
 
         if (!empty($source)) {
@@ -333,7 +337,7 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($moduleName);
-        /** @var Module $module */
+        /** @var ModuleInterface $module */
         $result = $module->onPostInstall();
 
         $this->checkAndClearCache($result);
@@ -680,7 +684,7 @@ class ModuleManager implements AddonManagerInterface
      * This function is a refacto of the event dispatching.
      *
      * @param string $event
-     * @param Module $module
+     * @param ModuleInterface $module
      */
     private function dispatch($event, $module)
     {

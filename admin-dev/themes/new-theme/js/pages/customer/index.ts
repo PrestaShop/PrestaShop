@@ -36,7 +36,6 @@ import SubmitRowActionExtension from '@components/grid/extension/action/row/subm
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import LinkableItem from '@components/linkable-item';
 import ChoiceTable from '@components/choice-table';
-import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import DeleteCustomersBulkActionExtension
   from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
@@ -45,6 +44,7 @@ import FiltersSubmitButtonEnablerExtension
   from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ShowcaseCard from '@components/showcase-card/showcase-card';
 import ShowcaseCardCloseExtension from '@components/showcase-card/extension/showcase-card-close-extension';
+import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 
 const {$} = window;
 
@@ -59,10 +59,10 @@ $(() => {
   customerGrid.addExtension(new SubmitBulkExtension());
   customerGrid.addExtension(new SubmitGridExtension());
   customerGrid.addExtension(new LinkRowActionExtension());
-  customerGrid.addExtension(new ColumnTogglingExtension());
   customerGrid.addExtension(new DeleteCustomersBulkActionExtension());
   customerGrid.addExtension(new DeleteCustomerRowActionExtension());
   customerGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  customerGrid.addExtension(new AsyncToggleColumnExtension());
 
   const customerDiscountsGrid = new Grid('customer_discount');
   customerDiscountsGrid.addExtension(new SubmitRowActionExtension());
@@ -70,6 +70,7 @@ $(() => {
 
   const customerAddressesGrid = new Grid('customer_address');
   customerAddressesGrid.addExtension(new SubmitRowActionExtension());
+  customerAddressesGrid.addExtension(new SortingExtension());
   customerAddressesGrid.addExtension(new LinkRowActionExtension());
 
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');

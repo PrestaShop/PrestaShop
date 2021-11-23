@@ -93,7 +93,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             $currency->save();
         }
         $this->currencies[$currencyName] = $currency;
-        SharedStorage::getStorage()->set($currencyName, $currency);
+        SharedStorage::getStorage()->set($currencyName, (int) $currency->id);
     }
 
     /**
@@ -129,8 +129,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function setCurrencyPattern($pattern, $reference, $localeIsoCode)
     {
         $languageId = Language::getIdByLocale($localeIsoCode, true);
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
         $patterns = $currency->pattern;
         if (is_array($patterns)) {
             $patterns[$languageId] = $pattern;
@@ -145,9 +144,9 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $cartRuleName
+     * @param string $currencyName
      */
-    public function checkCurrencyWithNameExists($currencyName)
+    public function checkCurrencyWithNameExists(string $currencyName)
     {
         $this->checkFixtureExists($this->currencies, 'Currency', $currencyName);
     }
@@ -174,8 +173,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyIsoCode($reference, $isoCode)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ($currency->iso_code !== $isoCode) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" iso code, but "%s" was expected.', $reference, $currency->iso_code, $isoCode));
@@ -187,8 +185,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyStatus($reference, $status)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
         $expectedStatus = $status === 'enabled';
 
         if ($currency->active != $expectedStatus) {
@@ -201,8 +198,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyExchangeRate($reference, $exchangeRate)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ((float) $currency->conversion_rate != (float) $exchangeRate) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" exchange rate, but "%s" was expected.', $reference, $currency->conversion_rate, $exchangeRate));
@@ -214,8 +210,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyPrecision($reference, $precision)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ((int) $currency->precision != (int) $precision) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" precision, but "%s" was expected.', $reference, $currency->precision, $precision));
@@ -227,12 +222,11 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyIsAvailableInShop($currencyReference, $shopReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-        /** @var \Shop $shop */
-        $shop = SharedStorage::getStorage()->get($shopReference);
+        $currencyId = SharedStorage::getStorage()->get($currencyReference);
+        $shopId = SharedStorage::getStorage()->get($shopReference);
+        $currency = new Currency($currencyId);
 
-        if (!in_array($shop->id, $currency->getAssociatedShops())) {
+        if (!in_array($shopId, $currency->getAssociatedShops())) {
             throw new RuntimeException(sprintf('Currency "%s" is not associated with "%s" shop', $currencyReference, $shopReference));
         }
     }
@@ -248,7 +242,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Currency with ISO Code "%s" does not exist', $isoCode));
         }
 
-        SharedStorage::getStorage()->set($reference, new Currency($currencyId));
+        SharedStorage::getStorage()->set($reference, $currencyId);
     }
 
     /**
@@ -300,15 +294,16 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
 
     /**
      * @Given currency :currencyReference is default in :shopReference shop
+     *
+     * @param string $currencyReference
+     * @param string $shopReference
      */
-    public function assertCurrencyIsDefaultInShop($currencyReference, $shopReference)
+    public function assertCurrencyIsDefaultInShop(string $currencyReference, string $shopReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-        /** @var \Shop $shop */
-        $shop = SharedStorage::getStorage()->get($shopReference);
+        $currencyId = SharedStorage::getStorage()->get($currencyReference);
+        $shopId = SharedStorage::getStorage()->get($shopReference);
 
-        if ($currency->id !== (int) Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shop->id)) {
+        if ($currencyId !== (int) Configuration::get('PS_CURRENCY_DEFAULT', null, null, $shopId)) {
             throw new RuntimeException(sprintf('Currency "%s" is not default currency in shop "%s"', $currencyReference, $shopReference));
         }
     }
@@ -328,8 +323,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyNumericIsoCode($reference, $numericIsoCode)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ('null' === $numericIsoCode) {
             if (null !== $currency->numeric_iso_code) {
@@ -345,8 +339,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyName($reference, $name)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ($currency->name !== $name) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" name, but "%s" was expected.', $reference, $currency->name, $name));
@@ -358,8 +351,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencySymbol($reference, $symbol)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
 
         if ($currency->symbol !== $symbol) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" symbol, but "%s" was expected.', $reference, $currency->symbol, $symbol));
@@ -371,8 +363,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyUnofficial($reference, $unofficial)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
         $expectedUnofficial = $unofficial === 'true';
 
         if ($currency->unofficial != $expectedUnofficial) {
@@ -385,8 +376,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyModified($reference, $modified)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
         $expectedModified = $modified === 'true';
 
         if ($currency->modified != $expectedModified) {
@@ -399,8 +389,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function assertCurrencyPattern($reference, $pattern, $localeCode)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($reference);
+        $currency = $this->getCurrency($reference);
         $langId = Language::getIdByLocale($localeCode, true);
         $currencyPattern = $currency->getPattern($langId);
         if ('empty' === $pattern) {
@@ -410,5 +399,15 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
         if ($currencyPattern !== $pattern) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" pattern for language %s, but "%s" was expected.', $reference, $currencyPattern, $localeCode, $pattern));
         }
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

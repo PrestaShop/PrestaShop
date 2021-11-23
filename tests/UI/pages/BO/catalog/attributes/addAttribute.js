@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add attribute page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddAttribute extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add attribute page
+   */
   constructor() {
     super();
 
@@ -19,11 +28,14 @@ class AddAttribute extends BOBasePage {
     this.attributeTypeSelect = '#group_type';
     this.saveButton = '#attribute_group_form_submit_btn';
   }
+  /*
+  Methods
+   */
 
   /**
    * Fill attribute form and save it
-   * @param page
-   * @param attributeData
+   * @param page {Page} Browser tab
+   * @param attributeData {AttributeData} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
   async addEditAttribute(page, attributeData) {
@@ -36,7 +48,7 @@ class AddAttribute extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, attributeData.metaTitle);
 
     // Set indexable toggle
-    await page.check(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
 
     // Set attribute type
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);

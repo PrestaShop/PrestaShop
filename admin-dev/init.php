@@ -45,6 +45,10 @@ try {
         include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
+        @trigger_error(
+            'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
+            E_USER_DEPRECATED
+        );
         include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
@@ -108,7 +112,7 @@ try {
             $split = explode('-', $context->cookie->shopContext);
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
-                    if ($context->employee->hasAuthOnShopGroup($split[1])) {
+                    if ($context->employee->hasAuthOnShopGroup((int) $split[1])) {
                         Shop::setContext(Shop::CONTEXT_GROUP, (int) $split[1]);
                     } else {
                         $shop_id = $context->employee->getDefaultShopID();

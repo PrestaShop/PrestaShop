@@ -54,7 +54,6 @@ class OrderPreferencesController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderPreferences/order_preferences.html.twig', [
             'layoutTitle' => $this->trans('Order settings', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'generalForm' => $generalForm->createView(),

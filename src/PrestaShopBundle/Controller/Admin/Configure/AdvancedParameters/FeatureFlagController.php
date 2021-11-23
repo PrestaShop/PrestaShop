@@ -70,11 +70,11 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'featureFlagsForm' => $featureFlagsForm->createView(),
-            'multistoreForcedContextInfoTip' => $this->trans(
+            'multistoreInfoTip' => $this->trans(
                 'Note that this page is available in all shops context only, this is why your context has just switched.',
                 'Admin.Notifications.Info'
             ),
-            'displayAllShopsContextForced' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+            'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
                 && $this->get('prestashop.adapter.shop.context')->isShopContext()),
         ]);
     }

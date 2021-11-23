@@ -23,8 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-
 class AdminDashboardControllerCore extends AdminController
 {
     public function __construct()
@@ -294,24 +292,20 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
         ];
 
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-
         $this->tpl_view_vars = [
             'date_from' => $this->context->employee->stats_date_from,
             'date_to' => $this->context->employee->stats_date_to,
             'hookDashboardZoneOne' => Hook::exec('dashboardZoneOne', $params),
             'hookDashboardZoneTwo' => Hook::exec('dashboardZoneTwo', $params),
+            'hookDashboardZoneThree' => Hook::exec('dashboardZoneThree', $params),
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
-            'new_version_url' => Tools::getCurrentUrlProtocolPrefix() . _PS_API_DOMAIN_ . '/version/check_version.php?v=' . _PS_VERSION_ . '&lang=' . $this->context->language->iso_code . '&autoupgrade=' . (int) ($moduleManager->isInstalled('autoupgrade') && $moduleManager->isEnabled('autoupgrade')) . '&hosted_mode=' . (int) defined('_PS_HOST_MODE_'),
             'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
             'calendar' => $calendar_helper->generate(),
             'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
             'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
             'datepickerTo' => Tools::getValue('datepickerTo', $this->context->employee->stats_date_to),
             'preselect_date_range' => Tools::getValue('preselectDateRange', $this->context->employee->preselect_date_range),
-            'help_center_link' => $this->getHelpCenterLink($this->context->language->iso_code),
         ];
 
         return parent::renderView();
@@ -476,28 +470,5 @@ class AdminDashboardControllerCore extends AdminController
         }
 
         die(json_encode($return));
-    }
-
-    /**
-     * Returns the Help center link for the provided locale
-     *
-     * @param string $languageCode 2-letter locale code
-     *
-     * @return string
-     */
-    private function getHelpCenterLink($languageCode)
-    {
-        $links = [
-            'fr' => 'https://www.prestashop.com/fr/contact?utm_source=back-office&utm_medium=links&utm_campaign=help-center-fr&utm_content=download17',
-            'en' => 'https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=links&utm_campaign=help-center-en&utm_content=download17',
-            'es' => 'https://www.prestashop.com/es/contacto?utm_source=back-office&utm_medium=links&utm_campaign=help-center-es&utm_content=download17',
-            'de' => 'https://www.prestashop.com/de/kontakt?utm_source=back-office&utm_medium=links&utm_campaign=help-center-de&utm_content=download17',
-            'it' => 'https://www.prestashop.com/it/contatti?utm_source=back-office&utm_medium=links&utm_campaign=help-center-it&utm_content=download17',
-            'nl' => 'https://www.prestashop.com/nl/contacteer-ons?utm_source=back-office&utm_medium=links&utm_campaign=help-center-nl&utm_content=download17',
-            'pt' => 'https://www.prestashop.com/pt/contato?utm_source=back-office&utm_medium=links&utm_campaign=help-center-pt&utm_content=download17',
-            'pl' => 'https://www.prestashop.com/pl/kontakt?utm_source=back-office&utm_medium=links&utm_campaign=help-center-pl&utm_content=download17',
-        ];
-
-        return isset($links[$languageCode]) ? $links[$languageCode] : $links['en'];
     }
 }

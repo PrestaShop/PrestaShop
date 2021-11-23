@@ -315,17 +315,15 @@ class OrderAmountUpdater
                 $order->total_discounts = $order->total_discounts - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
                 $order->total_discounts_tax_excl = $order->total_discounts_tax_excl - $order->total_shipping_tax_excl + $totalShippingTaxExcluded;
                 $order->total_discounts_tax_incl = $order->total_discounts_tax_incl - $order->total_shipping_tax_incl + $totalShippingTaxIncluded;
+            } else {
+                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
             }
 
             $order->total_shipping = $totalShippingTaxIncluded;
             $order->total_shipping_tax_incl = $totalShippingTaxIncluded;
             $order->total_shipping_tax_excl = $totalShippingTaxExcluded;
-
-            if (!$freeShipping) {
-                $order->total_paid -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
-                $order->total_paid_tax_incl -= ($order->total_shipping_tax_incl - $totalShippingTaxIncluded);
-                $order->total_paid_tax_excl -= ($order->total_shipping_tax_excl - $totalShippingTaxExcluded);
-            }
         }
     }
 
@@ -633,10 +631,7 @@ class OrderAmountUpdater
     {
         $constraintKey = $order->id_shop . '-' . $order->id_shop_group;
         if (!isset($this->orderConstraints[$constraintKey])) {
-            $this->orderConstraints[$constraintKey] = new ShopConstraint(
-                (int) $order->id_shop,
-                (int) $order->id_shop_group
-            );
+            $this->orderConstraints[$constraintKey] = ShopConstraint::shop((int) $order->id_shop);
         }
 
         return $this->orderConstraints[$constraintKey];

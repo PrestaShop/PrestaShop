@@ -42,6 +42,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2     |
       | product_price               | 11.90 |
+      | original_product_price      | 11.90 |
       | unit_price_tax_incl         | 14.28 |
       | unit_price_tax_excl         | 11.90 |
       | total_price_tax_incl        | 28.56 |
@@ -88,7 +89,7 @@ Feature: Order from Back Office (BO)
       | amount         | 2                       |
       | price          | 83.33                   |
       | price_tax_incl | 100.00                  |
-    # product_price is computed for backward compatibility which is why it is rounded
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     And the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 2         |
       | product_price               | 83.33     |

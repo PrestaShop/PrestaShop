@@ -110,7 +110,7 @@ class SupplierCore extends ObjectModel
     /**
      * Return suppliers.
      *
-     * @return array Suppliers
+     * @return bool|array Suppliers
      */
     public static function getSuppliers($getNbProducts = false, $idLang = 0, $active = true, $p = false, $n = false, $allGroups = false, $withProduct = false)
     {
@@ -262,10 +262,10 @@ class SupplierCore extends ObjectModel
     }
 
     /**
-     * @param $idSupplier
-     * @param $idLang
-     * @param $p
-     * @param $n
+     * @param int $idSupplier
+     * @param int $idLang
+     * @param int $p
+     * @param int $n
      * @param string|null $orderBy
      * @param string|null $orderWay
      * @param bool $getTotal
@@ -306,6 +306,7 @@ class SupplierCore extends ObjectModel
         }
 
         $sqlGroups = '';
+        $groups = [];
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sqlGroups = 'WHERE cg.`id_group` ' . (count($groups) ? 'IN (' . implode(',', $groups) . ')' : '=' . (int) Group::getCurrent()->id);
@@ -472,11 +473,14 @@ class SupplierCore extends ObjectModel
      */
     public function delete()
     {
-        if (parent::delete()) {
+        $res = parent::delete();
+        if ($res) {
             CartRule::cleanProductRuleIntegrity('suppliers', $this->id);
 
             return $this->deleteImage();
         }
+
+        return $res;
     }
 
     /**
@@ -500,8 +504,6 @@ class SupplierCore extends ObjectModel
         $query->where('id_product_attribute = ' . (int) $idProductAttribute);
         $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        if (count($res)) {
-            return $res[0];
-        }
+        return count($res) ? $res[0] : [];
     }
 }

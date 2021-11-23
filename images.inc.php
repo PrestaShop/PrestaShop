@@ -153,7 +153,7 @@ function deleteImage($id_item, $id_image = null)
     } else {
         // Product
 
-        $path = _PS_PROD_IMG_DIR_;
+        $path = _PS_PRODUCT_IMG_DIR_;
         $table = 'product';
         $image = new Image($id_image);
         $image->id_product = $id_item;

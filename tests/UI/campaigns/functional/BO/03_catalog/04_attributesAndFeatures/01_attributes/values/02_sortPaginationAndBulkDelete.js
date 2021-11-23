@@ -37,7 +37,7 @@ Pagination next and previous
 Sort values table by ID, Value, Color and Position
 Delete the created values by bulk actions
  */
-describe('Sort and pagination values', async () => {
+describe('BO - Catalog - Attributes & Features : Sort, pagination and bulk delete attribute values', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -90,7 +90,7 @@ describe('Sort and pagination values', async () => {
 
   // 1 : Create 7 new values
   const creationTests = new Array(7).fill(0, 0, 7);
-  describe('Create new values in BO', async () => {
+  describe('Create 7 new values in BO', async () => {
     it('should go to add new value page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewValuePage', baseContext);
 
@@ -130,8 +130,8 @@ describe('Sort and pagination values', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await viewAttributePage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -151,8 +151,8 @@ describe('Sort and pagination values', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await viewAttributePage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');

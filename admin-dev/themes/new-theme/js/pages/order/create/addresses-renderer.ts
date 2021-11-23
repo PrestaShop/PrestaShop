@@ -78,12 +78,12 @@ export default class AddressesRenderer {
     const deliveryAddressOption = {
       value: address.addressId,
       text: address.alias,
-      selected: '',
+      selected: false,
     };
 
     if (address.delivery) {
       $(createOrderMap.deliveryAddressDetails).html(address.formattedAddress);
-      deliveryAddressOption.selected = 'selected';
+      deliveryAddressOption.selected = true;
       $(createOrderMap.deliveryAddressEditBtn).prop(
         'href',
         this.router.generate('admin_cart_addresses_edit', {
@@ -116,12 +116,12 @@ export default class AddressesRenderer {
     const invoiceAddressOption = {
       value: address.addressId,
       text: address.alias,
-      selected: '',
+      selected: false,
     };
 
     if (address.invoice) {
       $(createOrderMap.invoiceAddressDetails).html(address.formattedAddress);
-      invoiceAddressOption.selected = 'selected';
+      invoiceAddressOption.selected = true;
       $(createOrderMap.invoiceAddressEditBtn).prop(
         'href',
         this.router.generate('admin_cart_addresses_edit', {

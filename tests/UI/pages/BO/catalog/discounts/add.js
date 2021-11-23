@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add cart rule page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddCartRule extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add cart rule page
+   */
   constructor() {
     super();
 
@@ -37,7 +46,7 @@ class AddCartRule extends BOBasePage {
 
     // Valid date selectors
     this.dateFromInput = 'input[name=date_from]';
-    this.dateToInput = 'input[name=date_To]';
+    this.dateToInput = 'input[name=date_to]';
 
     // Minimum amount selectors
     this.minimumAmountInput = 'input[name=minimum_amount]';
@@ -67,11 +76,19 @@ class AddCartRule extends BOBasePage {
     // Discount others selectors
     this.discountOffRadioButton = this.applyDiscountRadioButton('off');
 
+    // Apply discount to selectors
+    this.applyDiscountToOrderCheckbox = '#apply_discount_to_order';
+    this.applyDiscountToSpecificProductCheckbox = '#apply_discount_to_product';
+    this.productNameInput = '#reductionProductFilter';
+    this.productSearchResultBlock = 'div.ac_results';
+    this.productSearchResultItem = `${this.productSearchResultBlock} .ac_even`;
+
     // Exclude discount products and free gift selectors
     this.excludeDiscountProductsToggle = toggle => `${this.cartRuleForm} #reduction_exclude_special_${toggle}`;
     this.sendFreeGifToggle = toggle => `${this.cartRuleForm} #free_gift_${toggle}`;
     this.freeGiftFilterInput = '#giftProductFilter';
     this.freeGiftProductSelect = '#gift_product';
+
     // Form footer selectors
     this.saveButton = '#desc-cart_rule-save';
   }
@@ -79,8 +96,8 @@ class AddCartRule extends BOBasePage {
   /* Methods */
   /**
    * Fill form in information tab
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {CartRuleData} Data to set on information form
    * @return {Promise<void>}
    */
   async fillInformationForm(page, cartRuleData) {
@@ -92,27 +109,29 @@ class AddCartRule extends BOBasePage {
     await this.setValue(page, this.descriptionTextArea, cartRuleData.description);
 
     // Generate a discount code
-    if (cartRuleData.code) {
-      await this.setValue(page, this.codeInput, cartRuleData.code);
-    } else {
+    if (cartRuleData.generateCode) {
       await page.click(this.generateButton);
+    } else if (cartRuleData.code === null) {
+      await this.clearInput(page, this.codeInput);
+    } else {
+      await this.setValue(page, this.codeInput, cartRuleData.code);
     }
 
     // Set toggles
-    await page.check(this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
-    await page.check(this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
+    await this.setChecked(page, this.highlightToggle(cartRuleData.highlight ? 'on' : 'off'));
+    await this.setChecked(page, this.partialUseToggle(cartRuleData.partialUse ? 'on' : 'off'));
 
     // Set priority
     await this.setValue(page, this.priorityInput, cartRuleData.priority);
 
     // Set status
-    await page.check(this.statusToggle(cartRuleData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(cartRuleData.status ? 'on' : 'off'));
   }
 
   /**
-   *
-   * @param page
-   * @param cartRuleData
+   * Fill form in condition tab
+   * @param page {Page} Browser tab
+   * @param cartRuleData {CartRuleData} Data to set on conditions form
    * @return {Promise<void>}
    */
   async fillConditionsForm(page, cartRuleData) {
@@ -140,21 +159,21 @@ class AddCartRule extends BOBasePage {
     }
 
     // Fill minimum amount values
-    await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value.toString());
+    await this.setValue(page, this.minimumAmountInput, cartRuleData.minimumAmount.value);
     await this.selectByVisibleText(page, this.minimumAmountCurrencySelect, cartRuleData.minimumAmount.currency);
     await this.selectByVisibleText(page, this.minimumAmountTaxSelect, cartRuleData.minimumAmount.tax);
     await this.selectByVisibleText(page, this.minimumAmountShippingSelect, cartRuleData.minimumAmount.shipping);
 
     // Fill quantities
-    await this.setValue(page, this.quantityInput, cartRuleData.quantity.toString());
-    await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser.toString());
+    await this.setValue(page, this.quantityInput, cartRuleData.quantity);
+    await this.setValue(page, this.quantityPerUserInput, cartRuleData.quantityPerUser);
   }
 
 
   /**
    * Fill actions tab
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {CartRuleData} Data to set on actions form
    * @return {Promise<void>}
    */
   async fillActionsForm(page, cartRuleData) {
@@ -162,31 +181,53 @@ class AddCartRule extends BOBasePage {
     await page.click(this.actionsTabLink);
 
     // Set free shipping toggle
-    await page.check(this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
+    await this.setChecked(page, this.freeShippingToggle(cartRuleData.freeShipping ? 'on' : 'off'));
 
     switch (cartRuleData.discountType) {
       case 'Percent':
-        await page.check(this.discountPercentRadioButton);
-        await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent.toString());
-        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await this.setChecked(page, this.discountPercentRadioButton);
+        await this.setValue(page, this.discountPercentInput, cartRuleData.discountPercent);
+        await this.setChecked(
+          page,
+          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
+        );
         break;
       case 'Amount':
-        await page.check(this.discountAmountRadioButton);
-        await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value.toString());
+        await this.setChecked(page, this.discountAmountRadioButton);
+        await this.setValue(page, this.discountAmountInput, cartRuleData.discountAmount.value);
         await this.selectByVisibleText(page, this.discountAmountCurrencySelect, cartRuleData.discountAmount.currency);
         await this.selectByVisibleText(page, this.discountAmountTaxSelect, cartRuleData.discountAmount.tax);
         break;
       case 'None':
-        await page.check(this.discountOffRadioButton);
-        await page.check(this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'));
+        await this.setChecked(page, this.discountOffRadioButton);
+        await this.setChecked(
+          page,
+          this.excludeDiscountProductsToggle(cartRuleData.excludeDiscountProducts ? 'on' : 'off'),
+        );
         break;
       default:
         // Do nothing for this option
         throw new Error(`${cartRuleData.discountType} was not found as a discount option`);
     }
 
+    // Set apply discount
+    switch (cartRuleData.applyDiscountTo) {
+      case 'Order':
+        await this.setChecked(page, this.applyDiscountToOrderCheckbox);
+        break;
+      case 'Specific product':
+        await this.setChecked(page, this.applyDiscountToSpecificProductCheckbox);
+        await this.setValue(page, this.productNameInput, cartRuleData.product);
+        await this.waitForVisibleSelector(page, this.productSearchResultBlock);
+        await this.waitForSelectorAndClick(page, this.productSearchResultItem);
+        break;
+      default:
+        // Do nothing for this option
+        throw new Error(`${cartRuleData.applyDiscountTo} was not found as apply a discount to option`);
+    }
+
     // Set free gift
-    await page.check(this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
+    await this.setChecked(page, this.sendFreeGifToggle(cartRuleData.freeGift ? 'on' : 'off'));
 
     if (cartRuleData.freeGift) {
       await this.setValue(page, this.freeGiftFilterInput, cartRuleData.freeGiftProduct.name);
@@ -202,8 +243,8 @@ class AddCartRule extends BOBasePage {
 
   /**
    * Create/edit cart rule
-   * @param page
-   * @param cartRuleData
+   * @param page {Page} Browser tab
+   * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
    * @returns {Promise<string>}
    */
   async createEditCartRules(page, cartRuleData) {

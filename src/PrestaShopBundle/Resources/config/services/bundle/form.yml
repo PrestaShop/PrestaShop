@@ -1,2 +1,2 @@
 imports:
-    - { resource: form/*.yml }
+  - { resource: form/*.yml }

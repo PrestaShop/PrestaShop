@@ -40,6 +40,8 @@ use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
 {
+    private const MAX_LENGTH = 42;
+
     protected function createValidator(): TinyMceMaxLengthValidator
     {
         $this->translator = $this->createMock(TranslatorInterface::class);
@@ -114,6 +116,74 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
             [$this->generateRandomTinyMceText(50), 51],
             [$this->generateRandomTinyMceText(0), 0],
             [$this->generateRandomTinyMceText(154), 200],
+            ['Valid text', self::MAX_LENGTH],
+            ['Valid text too long only because of HTML', self::MAX_LENGTH],
+            ['<p>Valid text too long only because of HTML</p>', self::MAX_LENGTH],
+            [
+                '<p>White Hot Ceramic Mug</p>
+<p>White Hot Ceramic Mug</p>',
+                self::MAX_LENGTH,
+            ],
+            [
+                '<p>White Hot Ceramic Mug</p>
+<p></p>
+<p>White Hot Ceramic Mug</p>
+<p></p>',
+                self::MAX_LENGTH,
+            ],
+            [
+                'White Hot Ceramic Mug
+
+White Hot Ceramic Mug',
+                self::MAX_LENGTH,
+            ],
+            [
+                '<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>
+<p>testtesttesttesttesttesttesttesttest</p>
+<p></p>',
+                800,
+            ],
         ];
     }
 
@@ -146,6 +216,14 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
             [TinyMceMaxLength::TOO_LONG_ERROR_CODE, $this->generateRandomTinyMceText(200), 154],
             [TinyMceMaxLength::TOO_LONG_ERROR_CODE, $this->generateRandomTinyMceText(1), 0],
             [TinyMceMaxLength::TOO_LONG_ERROR_CODE, $this->generateRandomTinyMceText(50), 43],
+            [TinyMceMaxLength::TOO_LONG_ERROR_CODE, 'Invalid text that is a too long even without HTML', self::MAX_LENGTH],
+            [TinyMceMaxLength::TOO_LONG_ERROR_CODE, '<p>Invalid text that is a too long even without HTML</p>', self::MAX_LENGTH],
+            [
+                TinyMceMaxLength::TOO_LONG_ERROR_CODE,
+                '<p>White Ceramic Mug. 325ml</p>
+<p>White Ceramic Mug. 325ml</p>',
+                self::MAX_LENGTH,
+            ],
         ];
     }
 
@@ -156,16 +234,16 @@ class TinyMceMaxLengthValidatorTest extends ConstraintValidatorTestCase
      */
     protected function generateRandomTinyMceText(?int $length = null): string
     {
-        $fakeTextFull = 'Contrary to popular belief, Lorem Ipsum is not simply random text. 
-            It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, 
+        $fakeTextFull = 'Contrary to popular belief, Lorem Ipsum is not simply random text.
+            It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock,
             a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, :
-            from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. 
-            Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, 
+            from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source.
+            Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero,
             written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum,
             "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
 
-            The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. 
-            Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, 
+            The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested.
+            Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form,
             accompanied by English versions from the 1914 translation by H. Rackham.
         ';
 

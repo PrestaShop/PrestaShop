@@ -4,13 +4,18 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const foProductPage = require('@pages/FO/product');
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
@@ -24,11 +29,7 @@ const ProductFaker = require('@data/faker/product');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_defaultPackStockManagement';
-
 
 let browserContext;
 let page;
@@ -40,7 +41,7 @@ const productPackData = new ProductFaker({
   pack: {demo_test1: 10, demo_test2: 5},
 });
 
-describe('Default pack stock management', async () => {
+describe('BO - Shop Parameters - Product Settings : Default pack stock management', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

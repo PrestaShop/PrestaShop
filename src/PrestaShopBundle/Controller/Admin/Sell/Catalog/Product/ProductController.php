@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -46,6 +48,7 @@ use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -231,27 +234,6 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param FormInterface $productForm
-     * @param int|null $productId
-     *
-     * @return Response
-     */
-    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
-    {
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
-
-        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
-            'showContentHeader' => false,
-            'productForm' => $productForm->createView(),
-            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
-            'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'isMultiShopContext' => $isMultiShopContext,
-            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
-        ]);
-    }
-
-    /**
      * Download the content of the virtual product.
      *
      * @param int $virtualProductFileId
@@ -277,6 +259,100 @@ class ProductController extends FrameworkBundleAdminController
         );
 
         return $response;
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchAssociationsAction(Request $request, string $languageCode): JsonResponse
+    {
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $lang = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+        if (null === $lang) {
+            return $this->json([
+                'message' => sprintf(
+                    'Invalid language code %s was used which matches no existing language in this shop.',
+                    $languageCode
+                ),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var ProductForAssociation[] $products */
+            $products = $this->getQueryBus()->handle(new SearchProductsForAssociation(
+                $request->get('query', ''),
+                $lang->getId(),
+                (int) $shopId,
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($products)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($this->formatProductsForAssociation($products));
+    }
+
+    /**
+     * @param ProductForAssociation[] $productsForAssociation
+     *
+     * @return array
+     */
+    private function formatProductsForAssociation(array $productsForAssociation): array
+    {
+        $productsData = [];
+        foreach ($productsForAssociation as $productForAssociation) {
+            $productName = $productForAssociation->getName();
+            if (!empty($productForAssociation->getReference())) {
+                $productName .= sprintf(' (ref: %s)', $productForAssociation->getReference());
+            }
+
+            $productsData[] = [
+                'id' => $productForAssociation->getProductId(),
+                'name' => $productName,
+                'image' => $productForAssociation->getImageUrl(),
+            ];
+        }
+
+        return $productsData;
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int|null $productId
+     *
+     * @return Response
+     */
+    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    {
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+        $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
+            'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
+            'showContentHeader' => false,
+            'productForm' => $productForm->createView(),
+            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'isMultiShopContext' => $isMultiShopContext,
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+        ]);
     }
 
     /**

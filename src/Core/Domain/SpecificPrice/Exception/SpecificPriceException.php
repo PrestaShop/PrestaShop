@@ -31,14 +31,14 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 
 @trigger_error(
     sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version.',
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
         SpecificPriceException::class
     ),
     E_USER_DEPRECATED
 );
 
 /**
- * @deprecated since 1.7.9.0 and will be removed in the next major version.
+ * @deprecated since 8.0.0 and will be removed in the next major version.
  * @see ProductSpecificPriceException
  */
 class SpecificPriceException extends DomainException

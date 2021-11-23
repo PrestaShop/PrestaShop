@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<nav data-depth="{$breadcrumb.count}" class="breadcrumb hidden-sm-down">
+<nav data-depth="{$breadcrumb.count}" class="breadcrumb">
   <ol>
     {block name='breadcrumb'}
       {foreach from=$breadcrumb.links item=path name=breadcrumb}

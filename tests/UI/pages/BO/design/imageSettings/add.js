@@ -37,7 +37,7 @@ class AddImageType extends BOBasePage {
   /**
    * Fill image type form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param imageTypeData {imageTypeData} Data to set on new/edit image type form
+   * @param imageTypeData {ImageTypeData} Data to set on new/edit image type form
    * @return {Promise<string>}
    */
   async createEditImageType(page, imageTypeData) {
@@ -46,11 +46,11 @@ class AddImageType extends BOBasePage {
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());
 
     // Set status for image type
-    await page.check(this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
-    await page.check(this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
-    await page.check(this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
-    await page.check(this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
-    await page.check(this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
 
     // Save image type
     await this.clickAndWaitForNavigation(page, this.saveButton);

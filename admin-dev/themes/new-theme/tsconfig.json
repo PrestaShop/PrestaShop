@@ -2,11 +2,14 @@
   "compilerOptions": {
     "outDir": "./public/",
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "module": "es6",
     "target": "es5",
     "strict": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "allowJs": true,
     "baseUrl": "./",
     "paths": {

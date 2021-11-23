@@ -8,16 +8,20 @@ Feature: Duplicate product from Back Office (BO).
 
   Background:
     Given category "home" in default language named "Home" exists
+    And category "home" is the default one
     And shop "shop1" with name "test_shop" exists
     And single shop shop1 context is loaded
     And category "men" in default language named "Men" exists
     And category "clothes" in default language named "Clothes" exists
     And manufacturer studioDesign named "Studio Design" exists
-    Given language "language1" with locale "en-US" exists
+    And language "language1" with locale "en-US" exists
     And language with iso code "en" is the default one
     And language "language2" with locale "fr-FR" exists
     And carrier carrier1 named "ecoCarrier" exists
     And carrier carrier2 named "Fast carry" exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "Red" named "Red" in en language exists
+    And attribute "Blue" named "Blue" in en language exists
     Given I add product "product1" with following information:
       | name[en-US] | smart sunglasses   |
       | name[fr-FR] | lunettes de soleil |
@@ -103,7 +107,7 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US]        | puffin           |
       | name[fr-FR]        | macareux         |
       | file_name          | app_icon.png     |
-    And I associate attachment "att1" with product product1
+    When I associate product product1 with following attachments: "[att1]"
     And I enable product "product1"
     When I update product product1 SEO information with following values:
       | redirect_type   | 301-product |
@@ -111,6 +115,13 @@ Feature: Duplicate product from Back Office (BO).
     And product product1 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product2    |
+    When I add a specific price specific_price1 to product product1 with following details:
+      | price           | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    Then product "product1" should have 1 specific prices
 
   Scenario: I duplicate product
 #todo: add specific prices & priorities, test combinations, packs
@@ -130,11 +141,12 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | Simple & nice sunglasses   |
       | fr-FR  | lunettes simples et belles |
     And product copy_of_product1 should be assigned to following categories:
-      | categories       | [home, men, clothes] |
-      | default category | clothes              |
+      | id reference | name[en-US] | name[fr-FR] | is default |
+      | home         | Home        | Home        | false      |
+      | men          | Men         | Men         | false      |
+      | clothes      | Clothes     | Clothes     | true       |
     And product "copy_of_product1" should have following options:
       | product option      | value        |
-      | active              | false        |
       | visibility          | catalog      |
       | available_for_order | false        |
       | online_only         | true         |
@@ -193,10 +205,42 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product1 should have following related products:
-      | product2 |
-    And product copy_of_product1 should have following attachments associated: "[att1]"
+      | product  | name            | reference | image url                                             |
+      | product2 | Reading glasses |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    And product copy_of_product1 should have following attachments associated:
+      | attachment reference | title                       | description                           | file name    | type      | size  |
+      | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
     And product copy_of_product1 should have identical customization fields to product1
     And product copy_of_product1 should have 1 customizable text field
     And product copy_of_product1 should have 0 customizable file fields
+    And product "copy_of_product1" should have 1 specific prices
 #@todo: assert stock info
 #@todo: add tests for other type of products Pack, Virtual, Combinations
+
+  Scenario: I duplicate product with combinations
+    When I add product product_with_combinations with following information:
+      | name[en-US] | Jar of sand  |
+      | type        | combinations |
+    And I generate combinations for product product_with_combinations using following attributes:
+      | Color | [Red,Blue] |
+    Then product "product_with_combinations" should have following combinations:
+      | id reference                   | combination name | reference | attributes    | impact on price | quantity | is default |
+      | product_with_combinationsRed   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
+      | product_with_combinationsBlue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
+    When I add a specific price specific_price1 to product product_with_combinations with following details:
+      | price           | 123.00                       |
+      | combination     | product_with_combinationsRed |
+      | reduction type  | amount                       |
+      | reduction value | 0.00                         |
+      | includes tax    | true                         |
+      | from quantity   | 1                            |
+    And I add a specific price specific_price2 to product product_with_combinations with following details:
+      | price           | 0.00   |
+      | reduction type  | amount |
+      | reduction value | 5.00   |
+      | includes tax    | true   |
+      | from quantity   | 1      |
+    Then product "product_with_combinations" should have 2 specific prices
+    When I duplicate product product_with_combinations to a copy_of_product_with_combinations
+    Then product "copy_of_product_with_combinations" should have 2 specific prices
+    # TODO: all sorts of other checks

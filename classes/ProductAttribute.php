@@ -155,7 +155,7 @@ class ProductAttributeCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->position <= 0) {
-            $this->position = ProductAttribute::getHigherPosition($this->id_attribute_group) + 1;
+            $this->position = static::getHigherPosition($this->id_attribute_group) + 1;
         }
 
         $return = parent::add($autoDate, $nullValues);
@@ -254,7 +254,7 @@ class ProductAttributeCore extends ObjectModel
     /**
      * Return true if the Attribute is a color.
      *
-     * @return bool Color is the attribute type
+     * @return bool|int Color is the attribute type
      */
     public function isColorAttribute()
     {
@@ -326,7 +326,7 @@ class ProductAttributeCore extends ObjectModel
             }
         }
 
-        if (!isset($movedAttribute) || !isset($position)) {
+        if (!isset($movedAttribute)) {
             return false;
         }
 

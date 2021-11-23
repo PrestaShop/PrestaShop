@@ -137,7 +137,10 @@ class CmsControllerCore extends FrontController
             }
 
             $this->context->smarty->assign($cmsCategoryVar);
-            $this->setTemplate('cms/category');
+            $this->setTemplate(
+                'cms/category',
+                ['entity' => 'cms_category', 'id' => $this->cms_category->id]
+            );
         }
         parent::initContent();
     }

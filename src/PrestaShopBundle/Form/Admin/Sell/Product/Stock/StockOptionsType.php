@@ -68,7 +68,6 @@ class StockOptionsType extends TranslatorAwareType
             ->add('stock_location', TextType::class, [
                 'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'column_breaker' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
@@ -112,7 +111,6 @@ class StockOptionsType extends TranslatorAwareType
             'required' => false,
             'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h2',
-            'columns_number' => 3,
         ]);
     }
 }

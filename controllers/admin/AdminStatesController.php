@@ -112,7 +112,7 @@ class AdminStatesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
+        if ($this->display === null || $this->display === 'list') {
             $this->page_header_toolbar_btn['new_state'] = [
                 'href' => self::$currentIndex . '&addstate&token=' . $this->token,
                 'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),

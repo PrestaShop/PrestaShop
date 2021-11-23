@@ -100,11 +100,14 @@ class ExternalLinkExtension extends AbstractTypeExtension
             ->setDefaults([
                 'attr' => [],
                 'align' => 'left',
+                'position' => 'append',
             ])
             ->setAllowedTypes('href', 'string')
             ->setAllowedTypes('text', 'string')
             ->setAllowedTypes('align', 'string')
+            ->setAllowedTypes('position', 'string')
             ->setAllowedTypes('attr', ['null', 'array'])
+            ->setAllowedValues('position', ['append', 'prepend'])
         ;
 
         return $externalLinkResolver;

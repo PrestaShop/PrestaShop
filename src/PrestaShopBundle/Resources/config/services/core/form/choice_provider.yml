@@ -244,41 +244,41 @@ services:
   prestashop.core.form.choice_provider.customer_service_order_messages:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomerServiceOrderMessagesChoiceProvider'
     arguments:
-      - '@=service("prestashop.adapter.order_message.order_message_provider").getMessages()'
+      - '@prestashop.adapter.order_message.order_message_provider'
 
   prestashop.core.form.choice_provider.delivery_time_note_types_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DeliveryTimeNoteTypesProvider'
-      arguments:
-          - '@translator'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\DeliveryTimeNoteTypesProvider'
+    arguments:
+      - '@translator'
 
   prestashop.core.form.choice_provider.product_visibility_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductVisibilityChoiceProvider'
-      arguments:
-          - '@translator'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductVisibilityChoiceProvider'
+    arguments:
+      - '@translator'
 
   prestashop.core.form.choice_provider.product_condition_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
-      arguments:
-          - '@translator'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductConditionChoiceProvider'
+    arguments:
+      - '@translator'
 
   prestashop.core.form.choice_provider.out_of_stock_type_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
-      arguments:
-          - '@translator'
-          - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ORDER_OUT_OF_STOCK")'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\OutOfStockTypeChoiceProvider'
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_ORDER_OUT_OF_STOCK")'
 
   prestashop.core.form.choice_provider.pack_stock_type_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider'
-      arguments:
-          - '@translator'
-          - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PackStockTypeChoiceProvider'
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_PACK_STOCK_TYPE")'
 
   prestashop.core.form.choice_provider.customization_field_type_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
-      arguments:
-          - '@translator'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CustomizationFieldTypeChoiceProvider'
+    arguments:
+      - '@translator'
 
   prestashop.core.form.choice_provider.product_images_choice_provider:
-      class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
-      arguments:
-          - '@prestashop.core.command_bus'
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
+    arguments:
+      - '@prestashop.core.command_bus'

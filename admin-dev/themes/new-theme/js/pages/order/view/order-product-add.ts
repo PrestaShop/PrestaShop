@@ -77,6 +77,12 @@ export default class OrderProductAdd {
 
   orderPricesRefresher: OrderPricesRefresher;
 
+  isOrderTaxIncluded: boolean;
+
+  taxExcluded: number | null;
+
+  taxIncluded: number | null;
+
   constructor() {
     this.router = new Router();
     this.productAddActionBtn = $(OrderViewPageMap.productAddActionBtn);
@@ -106,27 +112,30 @@ export default class OrderProductAdd {
     this.priceTaxCalculator = new OrderPrices();
     this.orderProductRenderer = new OrderProductRenderer();
     this.orderPricesRefresher = new OrderPricesRefresher();
+    this.isOrderTaxIncluded = $(OrderViewPageMap.productAddRow).data('isOrderTaxIncluded');
+    this.taxExcluded = null;
+    this.taxIncluded = null;
   }
 
   setupListener(): void {
     this.combinationsSelect.on('change', (event) => {
-      this.priceTaxExcludedInput.val(
-        window.ps_round(
-          $(event.currentTarget)
-            .find(':selected')
-            .data('priceTaxExcluded'),
-          this.currencyPrecision,
-        ),
+      const taxExcluded = window.ps_round(
+        $(event.currentTarget)
+          .find(':selected')
+          .data('priceTaxExcluded'),
+        this.currencyPrecision,
       );
+      this.priceTaxExcludedInput.val(taxExcluded);
+      this.taxExcluded = parseFloat(taxExcluded);
 
-      this.priceTaxIncludedInput.val(
-        window.ps_round(
-          $(event.currentTarget)
-            .find(':selected')
-            .data('priceTaxIncluded'),
-          this.currencyPrecision,
-        ),
+      const taxIncluded = window.ps_round(
+        $(event.currentTarget)
+          .find(':selected')
+          .data('priceTaxIncluded'),
+        this.currencyPrecision,
       );
+      this.priceTaxIncludedInput.val(taxIncluded);
+      this.taxIncluded = parseFloat(taxIncluded);
 
       this.locationText.html(
         $(event.currentTarget)
@@ -164,7 +173,7 @@ export default class OrderProductAdd {
           !availableOutOfStock && remainingAvailable < 0,
         );
 
-        const taxIncluded = parseFloat(
+        this.taxIncluded = parseFloat(
           <string> this.priceTaxIncludedInput.val(),
         );
         this.totalPriceText.html(
@@ -172,7 +181,7 @@ export default class OrderProductAdd {
             (<unknown>(
               this.priceTaxCalculator.calculateTotalPrice(
                 newQuantity,
-                taxIncluded,
+                this.isOrderTaxIncluded ? <number> this.taxIncluded : <number> this.taxExcluded,
                 this.currencyPrecision,
               )
             ))
@@ -188,21 +197,21 @@ export default class OrderProductAdd {
 
     this.priceTaxIncludedInput.on('change keyup', (event) => {
       const input = <HTMLInputElement>event.target;
-      const taxIncluded = parseFloat(input.value);
-      const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
-        taxIncluded,
+      this.taxIncluded = parseFloat(input.value);
+      this.taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
+        this.taxIncluded,
         <number> this.taxRateInput.val(),
         this.currencyPrecision,
       );
       const quantity = parseInt(<string> this.quantityInput.val(), 10);
 
-      this.priceTaxExcludedInput.val(taxExcluded);
+      this.priceTaxExcludedInput.val(this.taxExcluded);
       this.totalPriceText.html(
         <string>(
           (<unknown>(
             this.priceTaxCalculator.calculateTotalPrice(
               quantity,
-              taxIncluded,
+              this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
               this.currencyPrecision,
             )
           ))
@@ -212,21 +221,21 @@ export default class OrderProductAdd {
 
     this.priceTaxExcludedInput.on('change keyup', (event) => {
       const input = <HTMLInputElement>event.target;
-      const taxExcluded = parseFloat(input.value);
-      const taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
-        taxExcluded,
+      this.taxExcluded = parseFloat(input.value);
+      this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
+        this.taxExcluded,
         <number> this.taxRateInput.val(),
         this.currencyPrecision,
       );
       const quantity = parseInt(<string> this.quantityInput.val(), 10);
 
-      this.priceTaxIncludedInput.val(taxIncluded);
+      this.priceTaxIncludedInput.val(this.taxIncluded);
       this.totalPriceText.html(
         <string>(
           (<unknown>(
             this.priceTaxCalculator.calculateTotalPrice(
               quantity,
-              taxIncluded,
+              this.isOrderTaxIncluded ? this.taxIncluded : this.taxExcluded,
               this.currencyPrecision,
             )
           ))
@@ -243,12 +252,14 @@ export default class OrderProductAdd {
   setProduct(product: Record<string, any> | undefined): void {
     if (product) {
       this.productIdInput.val(product.productId).trigger('change');
-      this.priceTaxExcludedInput.val(
-        window.ps_round(product.priceTaxExcl, this.currencyPrecision),
-      );
-      this.priceTaxIncludedInput.val(
-        window.ps_round(product.priceTaxIncl, this.currencyPrecision),
-      );
+      const taxExcluded = window.ps_round(product.priceTaxExcl, this.currencyPrecision);
+      this.priceTaxExcludedInput.val(taxExcluded);
+      this.taxExcluded = parseFloat(taxExcluded);
+
+      const taxIncluded = window.ps_round(product.priceTaxIncl, this.currencyPrecision);
+      this.priceTaxIncludedInput.val(taxIncluded);
+      this.taxIncluded = parseFloat(taxIncluded);
+
       this.taxRateInput.val(product.taxRate);
       this.locationText.html(product.location);
       this.available = product.stock;
@@ -330,7 +341,7 @@ export default class OrderProductAdd {
 
     // Explicit 0 value is used when we the user selected New Invoice
     if (invoiceId === 0) {
-      const modal = new (ConfirmModal as any)(
+      const modal = new ConfirmModal(
         {
           id: 'modal-confirm-new-invoice',
           confirmTitle: this.invoiceSelect.data('modal-title'),
@@ -360,7 +371,7 @@ export default class OrderProductAdd {
     );
 
     if (productPriceMatch === 'invoice') {
-      const modalEditPrice = new (ConfirmModal as any)(
+      const modalEditPrice = new ConfirmModal(
         {
           id: 'modal-confirm-new-price',
           confirmTitle: this.invoiceSelect.data('modal-edit-price-title'),

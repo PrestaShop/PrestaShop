@@ -52,11 +52,4 @@ interface EmployeeFormAccessCheckerInterface
      * @return bool
      */
     public function canAccessEditFormFor($employeeId);
-
-    /**
-     * Check if context employee can access addons connect form control.
-     *
-     * @return bool
-     */
-    public function canAccessAddonsConnect();
 }

@@ -29,7 +29,7 @@ class AddFeature extends BOBasePage {
   /**
    * Fill feature form and save it
    * @param page {Page} Browser tab
-   * @param featureData {object} Values to set on add feature form inputs
+   * @param featureData {FeatureData} Values to set on add feature form inputs
    * @return {Promise<string>}
    */
   async setFeature(page, featureData) {
@@ -41,7 +41,7 @@ class AddFeature extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, featureData.metaTitle);
 
     // Set indexable toggle
-    await page.check(this.indexableToggle(featureData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(featureData.indexable ? 'on' : 'off'));
 
     // Save feature
     await this.clickAndWaitForNavigation(page, this.saveButton);

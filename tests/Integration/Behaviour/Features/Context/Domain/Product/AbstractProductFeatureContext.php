@@ -264,7 +264,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
             'tags' => 'basicInformation.localizedTags',
-            'active' => 'options.active',
+            'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',

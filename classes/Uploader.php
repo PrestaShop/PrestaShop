@@ -33,12 +33,15 @@ class UploaderCore
 
     /** @var bool */
     private $_check_file_size;
-    private $_accept_types;
+    /** @var array<string> */
+    private $_accept_types = [];
     /** @var array */
-    private $_files;
+    private $_files = [];
+    /** @var int */
     private $_max_size;
     /** @var string|null */
     private $_name;
+    /** @var string */
     private $_save_path;
 
     /**
@@ -50,13 +53,12 @@ class UploaderCore
     {
         $this->setName($name);
         $this->setCheckFileSize(true);
-        $this->files = [];
     }
 
     /**
-     * @param $value
+     * @param array<string> $value
      *
-     * @return $this
+     * @return self
      */
     public function setAcceptTypes($value)
     {
@@ -66,7 +68,7 @@ class UploaderCore
     }
 
     /**
-     * @return mixed
+     * @return array<string>
      */
     public function getAcceptTypes()
     {
@@ -76,7 +78,7 @@ class UploaderCore
     /**
      * @param bool $value
      *
-     * @return $this
+     * @return self
      */
     public function setCheckFileSize($value)
     {
@@ -117,9 +119,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param int $value
      *
-     * @return $this
+     * @return self
      */
     public function setMaxSize($value)
     {
@@ -141,9 +143,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return $this
+     * @return self
      */
     public function setName($value)
     {
@@ -161,9 +163,9 @@ class UploaderCore
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
-     * @return $this
+     * @return self
      */
     public function setSavePath($value)
     {
@@ -208,7 +210,7 @@ class UploaderCore
             $this->setSavePath(_PS_UPLOAD_DIR_);
         }
 
-        return $this->_normalizeDirectory($this->_save_path);
+        return $this->normalizeDirectory($this->_save_path);
     }
 
     /**
@@ -249,18 +251,18 @@ class UploaderCore
                     'error' => $upload['error'][$index],
                 ];
 
-                $this->files[] = $this->upload($tmp[$index], $dest);
+                $this->_files[] = $this->upload($tmp[$index], $dest);
             }
         } elseif ($upload) {
-            $this->files[] = $this->upload($upload, $dest);
+            $this->_files[] = $this->upload($upload, $dest);
         }
 
-        return $this->files;
+        return $this->_files;
     }
 
     /**
-     * @param $file
-     * @param null $dest
+     * @param string $file
+     * @param string|null $dest
      *
      * @return mixed
      */
@@ -280,7 +282,7 @@ class UploaderCore
                 file_put_contents($filePath, fopen('php://input', 'rb'));
             }
 
-            $fileSize = $this->_getFileSize($filePath, true);
+            $fileSize = $this->getFileSize($filePath, true);
 
             if ($fileSize === $file['size']) {
                 $file['save_path'] = $filePath;
@@ -295,9 +297,9 @@ class UploaderCore
     }
 
     /**
-     * @param $error_code
+     * @param int $error_code
      *
-     * @return array|int|mixed|string
+     * @return string|int
      */
     protected function checkUploadError($error_code)
     {
@@ -339,7 +341,7 @@ class UploaderCore
     }
 
     /**
-     * @param $file
+     * @param array $file
      *
      * @return bool
      */
@@ -349,7 +351,7 @@ class UploaderCore
 
         $postMaxSize = $this->getPostMaxSizeBytes();
 
-        if ($postMaxSize && ($this->_getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
+        if ($postMaxSize && ($this->getServerVars('CONTENT_LENGTH') > $postMaxSize)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('The uploaded file exceeds the post_max_size directive in php.ini', [], 'Admin.Notifications.Error');
 
             return false;
@@ -364,7 +366,7 @@ class UploaderCore
         $types = $this->getAcceptTypes();
 
         //TODO check mime type.
-        if (isset($types) && !in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
+        if (!in_array(Tools::strtolower(pathinfo($file['name'], PATHINFO_EXTENSION)), $types)) {
             $file['error'] = Context::getContext()->getTranslator()->trans('Filetype not allowed', [], 'Admin.Notifications.Error');
 
             return false;
@@ -385,19 +387,6 @@ class UploaderCore
      *
      * @return int
      *
-     * @deprecated 1.7.0
-     */
-    protected function _getFileSize($filePath, $clearStatCache = false)
-    {
-        return $this->getFileSize($filePath, $clearStatCache);
-    }
-
-    /**
-     * @param string $filePath
-     * @param bool $clearStatCache
-     *
-     * @return int
-     *
      * @since 1.7.0
      */
     protected function getFileSize($filePath, $clearStatCache = false)
@@ -410,19 +399,7 @@ class UploaderCore
     }
 
     /**
-     * @param $var
-     *
-     * @return string
-     *
-     * @deprecated 1.7.0
-     */
-    protected function _getServerVars($var)
-    {
-        return $this->getServerVars($var);
-    }
-
-    /**
-     * @param $var
+     * @param string $var
      *
      * @return string
      *
@@ -434,19 +411,7 @@ class UploaderCore
     }
 
     /**
-     * @param $directory
-     *
-     * @return string
-     *
-     * @deprecated 1.7.0
-     */
-    protected function _normalizeDirectory($directory)
-    {
-        return $this->normalizeDirectory($directory);
-    }
-
-    /**
-     * @param $directory
+     * @param string $directory
      *
      * @return string
      *

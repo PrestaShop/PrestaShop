@@ -53,7 +53,7 @@ Delete second value
 Delete attribute
  */
 
-describe('CRUD attribute and values', async () => {
+describe('BO - Catalog - Attributes & Features : CRUD attribute and values', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -127,18 +127,9 @@ describe('CRUD attribute and values', async () => {
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedAttribute', baseContext);
 
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        createAttributeData.name,
-      );
+      await attributesPage.filterTable(page, 'b!name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(createAttributeData.name);
     });
 
@@ -182,18 +173,9 @@ describe('CRUD attribute and values', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdateAttribute', baseContext);
 
       await attributesPage.resetFilter(page);
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        createAttributeData.name,
-      );
+      await attributesPage.filterTable(page, 'b!name', createAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(createAttributeData.name);
     });
 
@@ -217,18 +199,9 @@ describe('CRUD attribute and values', async () => {
     it('should filter list of attributes', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdateAttribute', baseContext);
 
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        updateAttributeData.name,
-      );
+      await attributesPage.filterTable(page, 'b!name', updateAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(updateAttributeData.name);
     });
 
@@ -249,18 +222,9 @@ describe('CRUD attribute and values', async () => {
     it('should filter values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterValuesToUpdate', baseContext);
 
-      await viewAttributePage.filterTable(
-        page,
-        'b!name',
-        valuesToCreate[0].value,
-      );
+      await viewAttributePage.filterTable(page, 'b!name', valuesToCreate[0].value);
 
-      const textColumn = await viewAttributePage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(valuesToCreate[0].value);
     });
 
@@ -284,18 +248,9 @@ describe('CRUD attribute and values', async () => {
     it('should filter values', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterValuesToDelete', baseContext);
 
-      await viewAttributePage.filterTable(
-        page,
-        'b!name',
-        valuesToCreate[1].value,
-      );
+      await viewAttributePage.filterTable(page, 'b!name', valuesToCreate[1].value);
 
-      const textColumn = await viewAttributePage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await viewAttributePage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(valuesToCreate[1].value);
     });
 
@@ -323,18 +278,9 @@ describe('CRUD attribute and values', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAttributesToDelete', baseContext);
 
       await attributesPage.resetFilter(page);
-      await attributesPage.filterTable(
-        page,
-        'b!name',
-        updateAttributeData.name,
-      );
+      await attributesPage.filterTable(page, 'b!name', updateAttributeData.name);
 
-      const textColumn = await attributesPage.getTextColumn(
-        page,
-        1,
-        'b!name',
-      );
-
+      const textColumn = await attributesPage.getTextColumn(page, 1, 'b!name');
       await expect(textColumn).to.contains(updateAttributeData.name);
     });
 

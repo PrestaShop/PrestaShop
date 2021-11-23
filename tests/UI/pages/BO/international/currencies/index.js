@@ -4,7 +4,7 @@ const LocalizationBasePage = require('@pages/BO/international/localization/local
 /**
  * Currencies page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends LocalizationBasePage
  */
 class Currencies extends LocalizationBasePage {
   /**
@@ -157,7 +157,7 @@ class Currencies extends LocalizationBasePage {
    * Get currency row from table
    * @param page {Page} Browser tab
    * @param row {number} Row on table
-   * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: string}>}
+   * @returns {Promise<{symbol: string, isoCode: string, exchangeRate: number, name: string, enabled: boolean}>}
    */
   async getCurrencyFromTable(page, row) {
     return {
@@ -170,7 +170,7 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * Get toggle column value for a row
+   * Get a currency status
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @return {Promise<boolean>}
@@ -188,7 +188,7 @@ class Currencies extends LocalizationBasePage {
   }
 
   /**
-   * Update Enable column for the value wanted in currency list
+   * Set a currency status
    * @param page {Page} Browser tab
    * @param row {number} Row on table
    * @param valueWanted {boolean} True if we need to enable status
@@ -330,7 +330,7 @@ class Currencies extends LocalizationBasePage {
    * Get content from all rows
    * @param page {Page} Browser tab
    * @param column {string} Column to get all rows content
-   * @return {Promise<[]>}
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -338,7 +338,7 @@ class Currencies extends LocalizationBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumnFromTableCurrency(page, i, column);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

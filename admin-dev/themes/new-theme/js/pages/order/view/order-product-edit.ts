@@ -58,6 +58,8 @@ export default class OrderProductEdit {
 
   priceTaxIncludedInput: JQuery | null;
 
+  taxExcluded: number | null;
+
   taxIncluded: number | null;
 
   taxRate: number | null;
@@ -80,6 +82,8 @@ export default class OrderProductEdit {
 
   locationText: JQuery | null;
 
+  isOrderTaxIncluded: boolean | null;
+
   constructor(orderDetailId: number) {
     this.router = new Router();
     this.orderDetailId = orderDetailId;
@@ -91,9 +95,10 @@ export default class OrderProductEdit {
     this.quantityInput = $(OrderViewPageMap.productEditQuantityInput);
     this.orderPricesRefresher = new OrderPricesRefresher();
     this.availableText = null;
-
+    this.isOrderTaxIncluded = null;
     this.productEditInvoiceSelect = null;
     this.priceTaxIncludedInput = null;
+    this.taxExcluded = null;
     this.taxIncluded = null;
     this.taxRate = null;
     this.priceTaxExcludedInput = null;
@@ -115,12 +120,11 @@ export default class OrderProductEdit {
       const previousQuantity = parseInt(this.quantityInput.data('previousQuantity'), 10);
       const remainingAvailable = availableQuantity - (newQuantity - previousQuantity);
       const availableOutOfStock = this.availableText?.data('availableOutOfStock');
-
+      this.quantity = newQuantity;
       if (this.availableText) {
         this.availableText.text(remainingAvailable);
         this.availableText.toggleClass('text-danger font-weight-bold', remainingAvailable < 0);
       }
-
       this.updateTotal();
       const disableEditActionBtn = newQuantity <= 0 || (remainingAvailable < 0 && !availableOutOfStock);
       this.productEditSaveBtn.prop('disabled', disableEditActionBtn);
@@ -135,18 +139,15 @@ export default class OrderProductEdit {
     if (this.priceTaxIncludedInput) {
       this.priceTaxIncludedInput.on('change keyup', (event) => {
         const input = <HTMLInputElement>event.target;
-
         this.taxIncluded = parseFloat(input.value);
-        const taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
+        this.taxExcluded = this.priceTaxCalculator.calculateTaxExcluded(
           this.taxIncluded,
           <number> this.taxRate,
           this.currencyPrecision,
         );
-
         if (this.priceTaxExcludedInput) {
-          this.priceTaxExcludedInput.val(taxExcluded);
+          this.priceTaxExcludedInput.val(this.taxExcluded);
         }
-
         this.updateTotal();
       });
     }
@@ -154,13 +155,12 @@ export default class OrderProductEdit {
     if (this.priceTaxExcludedInput) {
       this.priceTaxExcludedInput.on('change keyup', (event) => {
         const input = <HTMLInputElement>event.target;
-        const taxExcluded = parseFloat(input.value);
+        this.taxExcluded = parseFloat(input.value);
         this.taxIncluded = this.priceTaxCalculator.calculateTaxIncluded(
-          taxExcluded,
+          this.taxExcluded,
           <number> this.taxRate,
           this.currencyPrecision,
         );
-
         if (this.priceTaxIncludedInput) {
           this.priceTaxIncludedInput.val(this.taxIncluded);
         }
@@ -192,7 +192,7 @@ export default class OrderProductEdit {
   updateTotal(): void {
     const updatedTotal = this.priceTaxCalculator.calculateTotalPrice(
       <number> this.quantity,
-      <number> this.taxIncluded,
+      this.isOrderTaxIncluded ? <number> this.taxIncluded : <number> this.taxExcluded,
       this.currencyPrecision,
     );
 
@@ -244,11 +244,13 @@ export default class OrderProductEdit {
     this.taxRate = product.tax_rate;
     this.initialTotal = this.priceTaxCalculator.calculateTotalPrice(
       product.quantity,
-      product.price_tax_incl,
+      product.isOrderTaxIncluded ? product.price_tax_incl : product.price_tax_excl,
       this.currencyPrecision,
     );
+    this.isOrderTaxIncluded = product.isOrderTaxIncluded;
     this.quantity = product.quantity;
     this.taxIncluded = product.price_tax_incl;
+    this.taxExcluded = product.price_tax_excl;
 
     // Copy product content in cells
     this.productEditImage.html(
@@ -291,7 +293,7 @@ export default class OrderProductEdit {
     const dataSelector = productPriceMatch === 'product' ? this.priceTaxExcludedInput : this.productEditInvoiceSelect;
 
     if (dataSelector) {
-      const modalEditPrice = new (ConfirmModal as any)(
+      const modalEditPrice = new ConfirmModal(
         {
           id: 'modal-confirm-new-price',
           confirmTitle: dataSelector.data('modal-edit-price-title'),

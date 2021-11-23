@@ -4,11 +4,16 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
@@ -18,15 +23,16 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_enableFinalSummary';
 
 let browserContext;
 let page;
 
-describe('Enable final summary', async () => {
+/*
+Enable/Disable final summary
+Go to FO and check final summary in payment step of checkout
+ */
+describe('BO - Shop Parameters - Order Settings : Enable/Disable final summary', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -83,12 +89,7 @@ describe('Enable final summary', async () => {
     });
 
     it('should check the final summary after checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkFinalSummary${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkFinalSummary${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);

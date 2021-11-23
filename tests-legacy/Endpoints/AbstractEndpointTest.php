@@ -26,7 +26,7 @@
 
 namespace LegacyTests\Endpoints;
 
-use LegacyTests\Unit\ContextMocker;
+use Tests\Integration\Utility\ContextMocker;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractEndpointTest extends TestCase

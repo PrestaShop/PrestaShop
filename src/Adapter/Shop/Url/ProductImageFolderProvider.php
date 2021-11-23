@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 
 @trigger_error(
     sprintf(
-        '%s is deprecated since version 1.7.9.0 and will be removed in the next major version. Use %s instead.',
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version. Use %s instead.',
         ProductImageFolderProvider::class,
         ImageFolderProvider::class
     ),
@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 );
 
 /**
- * @deprecated Since 1.7.9.0 and will be removed in the next major version. Use ImageFolderProvider instead.
+ * @deprecated Since 8.0.0 and will be removed in the next major version. Use ImageFolderProvider instead.
  */
 class ProductImageFolderProvider implements UrlProviderInterface
 {

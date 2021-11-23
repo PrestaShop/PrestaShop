@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Basic\BasicType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
 use PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Shipping\ShippingType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -77,18 +76,20 @@ class ProductFormType extends TranslatorAwareType
         $productId = $options['product_id'] ?? null;
         $builder
             ->add('header', HeaderType::class)
-            ->add('basic', BasicType::class, [
+            ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
-            ->add('shortcuts', ShortcutsType::class)
+            ->add('specifications', SpecificationsType::class)
             ->add('stock', StockType::class, [
+                'product_id' => $productId,
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
             ->add('pricing', PricingType::class)
-            ->add('seo', SEOType::class)
+            ->add('seo', SEOType::class, [
+                'product_id' => $productId,
+            ])
             ->add('options', OptionsType::class)
-            ->add('categories', CategoriesType::class)
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
             ])
@@ -111,7 +112,7 @@ class ProductFormType extends TranslatorAwareType
         $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
             'product_type' => $productType,
-            'product_id' => isset($options['product_id']) ? (int) $options['product_id'] : null,
+            'product_id' => $options['product_id'] ?? null,
         ];
 
         $view->vars = array_replace($view->vars, $formVars);

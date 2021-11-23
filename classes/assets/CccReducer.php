@@ -34,6 +34,8 @@ class CccReducerCore
     private $cacheDir;
     /** @var Filesystem */
     protected $filesystem;
+    /** @var ConfigurationInterface */
+    public $configuration;
 
     /**
      * @param string $cacheDir

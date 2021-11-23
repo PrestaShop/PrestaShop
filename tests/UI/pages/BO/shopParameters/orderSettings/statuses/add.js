@@ -38,7 +38,7 @@ class AddOrderStatus extends BOBasePage {
   /**
    * Fill order status form in create or edit page and save
    * @param page {Page} Browser tab
-   * @param orderStatusData {orderStatusData} Data to set on order status form
+   * @param orderStatusData {OrderStatusData} Data to set on order status form
    * @return {Promise<string>}
    */
   async setOrderStatus(page, orderStatusData) {
@@ -50,15 +50,15 @@ class AddOrderStatus extends BOBasePage {
     // Set color
     await this.setValue(page, this.colorInput, orderStatusData.color);
 
-    await this.changeCheckboxValue(page, this.logableOnCheckbox, orderStatusData.logableOn);
-    await this.changeCheckboxValue(page, this.invoiceOnCheckbox, orderStatusData.invoiceOn);
-    await this.changeCheckboxValue(page, this.hiddenOnCheckbox, orderStatusData.hiddenOn);
-    await this.changeCheckboxValue(page, this.sendEmailOnCheckbox, orderStatusData.sendEmailOn);
-    await this.changeCheckboxValue(page, this.pdfInvoiceOnCheckbox, orderStatusData.pdfInvoiceOn);
-    await this.changeCheckboxValue(page, this.pdfDeliveryOnCheckbox, orderStatusData.pdfDeliveryOn);
-    await this.changeCheckboxValue(page, this.shippedOnCheckbox, orderStatusData.shippedOn);
-    await this.changeCheckboxValue(page, this.paidOnCheckbox, orderStatusData.paidOn);
-    await this.changeCheckboxValue(page, this.deliveryOnCheckbox, orderStatusData.deliveryOn);
+    await this.setChecked(page, this.logableOnCheckbox, orderStatusData.logableOn);
+    await this.setChecked(page, this.invoiceOnCheckbox, orderStatusData.invoiceOn);
+    await this.setChecked(page, this.hiddenOnCheckbox, orderStatusData.hiddenOn);
+    await this.setChecked(page, this.sendEmailOnCheckbox, orderStatusData.sendEmailOn);
+    await this.setChecked(page, this.pdfInvoiceOnCheckbox, orderStatusData.pdfInvoiceOn);
+    await this.setChecked(page, this.pdfDeliveryOnCheckbox, orderStatusData.pdfDeliveryOn);
+    await this.setChecked(page, this.shippedOnCheckbox, orderStatusData.shippedOn);
+    await this.setChecked(page, this.paidOnCheckbox, orderStatusData.paidOn);
+    await this.setChecked(page, this.deliveryOnCheckbox, orderStatusData.deliveryOn);
 
     // Save order status
     await this.clickAndWaitForNavigation(page, this.saveButton);

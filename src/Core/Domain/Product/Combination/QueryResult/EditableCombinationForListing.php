@@ -71,7 +71,7 @@ class EditableCombinationForListing
     private $quantity;
 
     /**
-     * @var string|null
+     * @var string
      */
     private $imageUrl;
 
@@ -83,7 +83,7 @@ class EditableCombinationForListing
      * @param bool $default
      * @param DecimalNumber $impactOnPrice
      * @param int $quantity
-     * @param string|null $imageUrl
+     * @param string $imageUrl
      */
     public function __construct(
         int $combinationId,
@@ -93,7 +93,7 @@ class EditableCombinationForListing
         bool $default,
         DecimalNumber $impactOnPrice,
         int $quantity,
-        ?string $imageUrl = null
+        string $imageUrl
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
@@ -162,9 +162,9 @@ class EditableCombinationForListing
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getImageUrl(): ?string
+    public function getImageUrl(): string
     {
         return $this->imageUrl;
     }

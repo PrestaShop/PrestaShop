@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Design;
 
 use Hook;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Command\UpdateHookStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookException;
 use PrestaShop\PrestaShop\Core\Domain\Hook\Exception\HookNotFoundException;
@@ -131,7 +130,6 @@ class PositionsController extends FrameworkBundleAdminController
             ],
             'selectedModule' => $this->selectedModule,
             'layoutTitle' => $this->trans('Positions', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'showContentHeader' => true,

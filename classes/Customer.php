@@ -113,10 +113,10 @@ class CustomerCore extends ObjectModel
     public $active = true;
 
     /** @var bool Status */
-    public $is_guest = 0;
+    public $is_guest = false;
 
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /** @var string Object creation date */
     public $date_add;
@@ -136,17 +136,17 @@ class CustomerCore extends ObjectModel
     public $geoloc_postcode;
 
     /** @var bool is the customer logged in */
-    public $logged = 0;
+    public $logged = false;
 
     /** @var int id_guest meaning the guest table, not the guest customer */
     public $id_guest;
 
     public $groupBox;
 
-    /** @var string Unique token for forgot password feature */
+    /** @var string|null Unique token for forgot password feature */
     public $reset_password_token;
 
-    /** @var string token validity date for forgot password feature */
+    /** @var string|null token validity date for forgot password feature */
     public $reset_password_validity;
 
     protected $webserviceParameters = [
@@ -180,7 +180,7 @@ class CustomerCore extends ObjectModel
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
-            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 255],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPlaintextPassword', 'required' => true, 'size' => 255],
             'last_passwd_gen' => ['type' => self::TYPE_STRING, 'copy_post' => false],
             'id_gender' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'birthday' => ['type' => self::TYPE_DATE, 'validate' => 'isBirthDate'],
@@ -272,8 +272,8 @@ class CustomerCore extends ObjectModel
     /**
      * Adds current Customer as a new Object to the database.
      *
-     * @param bool $autoDate Automatically set `date_upd` and `date_add` columns
-     * @param bool $nullValues Whether we want to use NULL values instead of empty quotes values
+     * @param bool $autodate Automatically set `date_upd` and `date_add` columns
+     * @param bool $null_values Whether we want to use NULL values instead of empty quotes values
      *
      * @return bool Indicates whether the Customer has been successfully added
      *
@@ -615,6 +615,13 @@ class CustomerCore extends ObjectModel
         return self::$_customerHasAddress[$key];
     }
 
+    public static function resetStaticCache()
+    {
+        self::$_customerHasAddress = [];
+        self::$_customer_groups = [];
+        self::$_defaultGroupId = [];
+    }
+
     /**
      * Reset Address cache.
      *
@@ -783,7 +790,8 @@ class CustomerCore extends ObjectModel
                         `id_lang` = ' . (int) $idLang . '
                         AND `id_customer` = ' . (int) $this->id . '
                         AND a.`deleted` = 0
-                        AND a.`active` = 1';
+                        AND a.`active` = 1
+                    ORDER BY a.`alias`';
 
         if (null !== $idAddress) {
             $sql .= ' AND a.`id_address` = ' . (int) $idAddress;
@@ -801,9 +809,8 @@ class CustomerCore extends ObjectModel
      */
     public static function getAddressesTotalById($idCustomer)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-            SELECT COUNT(`id_address`)
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(`id_address`)
             FROM `' . _DB_PREFIX_ . 'address`
             WHERE `id_customer` = ' . (int) $idCustomer . '
             AND `deleted` = 0'
@@ -1178,7 +1185,7 @@ class CustomerCore extends ObjectModel
         if (empty($password)) {
             $password = Tools::passwdGen(8, 'RANDOM');
         }
-        if (!Validate::isPasswd($password)) {
+        if (!Validate::isPlaintextPassword($password)) {
             return false;
         }
 
@@ -1189,11 +1196,11 @@ class CustomerCore extends ObjectModel
 
         /** @var \PrestaShop\PrestaShop\Core\Crypto\Hashing $crypto */
         $crypto = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Core\\Crypto\\Hashing');
-        $this->is_guest = 0;
+        $this->is_guest = false;
         $this->passwd = $crypto->hash($password);
         $this->cleanGroups();
         $this->addGroups([Configuration::get('PS_CUSTOMER_GROUP')]);
-        $this->id_default_group = Configuration::get('PS_CUSTOMER_GROUP');
+        $this->id_default_group = (int) Configuration::get('PS_CUSTOMER_GROUP');
         $this->stampResetPasswordToken();
         if ($this->update()) {
             $vars = [
@@ -1275,7 +1282,7 @@ class CustomerCore extends ObjectModel
 
         /* Customer is valid only if it can be load and if object password is the same as database one */
         return
-            $this->logged == 1
+            $this->logged == true
             && $this->id
             && Validate::isUnsignedId($this->id)
             && Customer::checkPassword($this->id, $this->passwd)
@@ -1296,7 +1303,7 @@ class CustomerCore extends ObjectModel
             Context::getContext()->cookie->logout();
         }
 
-        $this->logged = 0;
+        $this->logged = false;
 
         Hook::exec('actionCustomerLogoutAfter', ['customer' => $this]);
     }
@@ -1315,7 +1322,7 @@ class CustomerCore extends ObjectModel
             Context::getContext()->cookie->mylogout();
         }
 
-        $this->logged = 0;
+        $this->logged = false;
 
         Hook::exec('actionCustomerLogoutAfter', ['customer' => $this]);
     }
@@ -1406,7 +1413,7 @@ class CustomerCore extends ObjectModel
      * Set Customer Groups
      * (for webservice).
      *
-     * @param $result
+     * @param array $result
      *
      * @return bool
      */

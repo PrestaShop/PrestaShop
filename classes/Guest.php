@@ -92,7 +92,7 @@ class GuestCore extends ObjectModel
     /**
      * Get Guest Language.
      *
-     * @param $acceptLanguage
+     * @param string $acceptLanguage
      *
      * @return mixed|string
      */

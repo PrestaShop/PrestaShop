@@ -79,7 +79,6 @@ class DeliveryController extends FrameworkBundleAdminController
             'pdfForm' => $this->get('prestashop.adapter.order.delivery.slip.pdf.form_handler')->getForm()->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'layoutTitle' => $this->trans('Delivery Slips', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

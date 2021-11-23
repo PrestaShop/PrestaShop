@@ -213,7 +213,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $ignore_pack
      * @param Employee|null $employee
      *
-     * @return array
+     * @return array|bool
      *
      * @throws PrestaShopException
      */
@@ -611,9 +611,21 @@ class StockManagerCore implements StockManagerInterface
         }
 
         // skip if product is a pack without
-        if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int) $id_product))
-            && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH ||
-                    ($product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH)))) {
+        $product = new Product((int) $id_product);
+        if (!Pack::isPack($id_product)
+            || (
+                Pack::isPack($id_product)
+                && Validate::isLoadedObject($product)
+                && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
+                || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
+                || (
+                    $product->pack_stock_type == Pack::STOCK_TYPE_DEFAULT
+                    && (Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_ONLY
+                        || Configuration::get('PS_PACK_STOCK_TYPE') == Pack::STOCK_TYPE_PACK_BOTH
+                    )
+                )
+            )
+        ) {
             // Gets client_orders_qty
             $query = new DbQuery();
             $query->select('od.product_quantity, od.product_quantity_refunded');
@@ -796,11 +808,11 @@ class StockManagerCore implements StockManagerInterface
      * For a given stock, calculates its new WA(Weighted Average) price based on the new quantities and price
      * Formula : (physicalStock * lastCump + quantityToAdd * unitPrice) / (physicalStock + quantityToAdd).
      *
-     * @param Stock|PrestaShopCollection $stock
+     * @param Stock $stock
      * @param int $quantity
      * @param float $price_te
      *
-     * @return int WA
+     * @return float
      */
     protected function calculateWA(Stock $stock, $quantity, $price_te)
     {
@@ -839,7 +851,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product_attribute optional
      * @param array $delivery_option
      *
-     * @return int quantity
+     * @return bool|int quantity
      */
     public static function getStockByCarrier($id_product = 0, $id_product_attribute = 0, $delivery_option = null)
     {

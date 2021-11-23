@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -13,9 +17,6 @@ const OrderMessageFaker = require('@data/faker/orderMessage');
 const dashboardPage = require('@pages/BO/dashboard');
 const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 const addOrderMessagePage = require('@pages/BO/customerService/orderMessages/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_customerService_orderMessages_CRUDOrderMessage';
 
@@ -30,7 +31,7 @@ Create order message
 Update order message
 Delete order message
  */
-describe('Create, update and delete order message', async () => {
+describe('BO - Customer Service - Order Messages : CRUD order message', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +46,7 @@ describe('Create, update and delete order message', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to order messages page', async function () {
+  it('should go to \'Customer Service > Order Messages\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderMessagesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -94,7 +95,7 @@ describe('Create, update and delete order message', async () => {
 
   // 2: Update order message
   describe('Update order message', async () => {
-    it('should filter by name of order message', async function () {
+    it(`should filter by name '${createOrderMessageData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
       await orderMessagesPage.filterTable(page, 'name', createOrderMessageData.name);
@@ -128,9 +129,10 @@ describe('Create, update and delete order message', async () => {
       await expect(numberOfOrderMessagesAfterReset).to.be.equal(numberOfOrderMessages + 1);
     });
   });
+
   // 3: Delete order message
   describe('Delete order message', async () => {
-    it('should filter by name of order message', async function () {
+    it(`should filter by name '${editOrderMessageData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
       await orderMessagesPage.filterTable(page, 'name', editOrderMessageData.name);

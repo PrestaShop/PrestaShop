@@ -3,24 +3,26 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
+
+// Import data
 const {moduleCategories} = require('@data/demo/moduleCategories');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_modules_moduleManager_filterModulesByCategory';
-
 
 let browserContext;
 let page;
 
-describe('Filter modules by Categories', async () => {
+describe('BO - Modules - Module Manager : Filter modules by Categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +37,7 @@ describe('Filter modules by Categories', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to module manager page', async function () {
+  it('should go to \'Modules > Module Manager\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToModuleManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(

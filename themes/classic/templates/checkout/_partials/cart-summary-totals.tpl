@@ -36,7 +36,7 @@
       </div>
     {else}
       <div class="cart-summary-line cart-total">
-        <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.taxes_enabled}{$cart.labels.tax_short}{/if}</span>
+        <span class="label">{$cart.totals.total.label}&nbsp;{if $configuration.display_taxes_label && $configuration.taxes_enabled}{$cart.labels.tax_short}{/if}</span>
         <span class="value">{$cart.totals.total.value}</span>
       </div>
     {/if}

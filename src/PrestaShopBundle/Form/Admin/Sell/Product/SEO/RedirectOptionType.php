@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -43,11 +42,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class RedirectOptionType extends TranslatorAwareType
 {
-    /**
-     * @var LegacyContext
-     */
-    private $context;
-
     /**
      * @var RouterInterface
      */
@@ -64,26 +58,39 @@ class RedirectOptionType extends TranslatorAwareType
     private $eventSubscriber;
 
     /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
+    /**
+     * @var int
+     */
+    private $homeCategoryId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param LegacyContext $context
      * @param RouterInterface $router
      * @param DataTransformerInterface $targetTransformer
      * @param EventSubscriberInterface $eventSubscriber
+     * @param string $employeeIsoCode
+     * @param int $homeCategoryId
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        LegacyContext $context,
         RouterInterface $router,
         DataTransformerInterface $targetTransformer,
-        EventSubscriberInterface $eventSubscriber
+        EventSubscriberInterface $eventSubscriber,
+        string $employeeIsoCode,
+        int $homeCategoryId
     ) {
         parent::__construct($translator, $locales);
-        $this->context = $context;
         $this->router = $router;
         $this->targetTransformer = $targetTransformer;
         $this->eventSubscriber = $eventSubscriber;
+        $this->employeeIsoCode = $employeeIsoCode;
+        $this->homeCategoryId = $homeCategoryId;
     }
 
     /**
@@ -96,13 +103,18 @@ class RedirectOptionType extends TranslatorAwareType
                 'label' => $this->trans('Target product', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which product the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => '',
-                'searchUrl' => $this->context->getLegacyAdminLink('AdminProducts', true, ['ajax' => 1, 'action' => 'productsList', 'forceJson' => 1, 'disableCombination' => 1, 'exclude_packs' => 0, 'excludeVirtuals' => 0, 'limit' => 20]) . '&q=__QUERY__',
+                'searchUrl' => $this->router->generate('admin_products_v2_search_associations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'filtered' => json_encode(!empty($options['product_id']) ? [$options['product_id']] : []),
             ],
             'category' => [
                 'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
                 'placeholder' => $this->trans('To which category the page should redirect?', 'Admin.Catalog.Help'),
                 'help' => $this->trans('If no category is selected the Main Category is used', 'Admin.Catalog.Help'),
                 'searchUrl' => $this->router->generate('admin_get_ajax_categories', ['query' => '__QUERY__']),
+                'filtered' => json_encode([$this->homeCategoryId]),
             ],
         ];
         $defaultEntity = 'product';
@@ -123,6 +135,7 @@ class RedirectOptionType extends TranslatorAwareType
             ->add('target', EntitySearchInputType::class, [
                 'required' => false,
                 'limit' => 1,
+                'min_length' => 3,
                 'label' => $entityAttributes[$defaultEntity]['label'],
                 'remote_url' => $entityAttributes[$defaultEntity]['searchUrl'],
                 'placeholder' => $entityAttributes[$defaultEntity]['placeholder'],
@@ -132,10 +145,12 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-product-placeholder' => $entityAttributes['product']['placeholder'],
                     'data-product-search-url' => $entityAttributes['product']['searchUrl'],
                     'data-product-help' => $entityAttributes['product']['help'],
+                    'data-product-filtered' => $entityAttributes['product']['filtered'],
                     'data-category-label' => $entityAttributes['category']['label'],
                     'data-category-placeholder' => $entityAttributes['category']['placeholder'],
-                    'data-category-help' => $entityAttributes['category']['help'],
                     'data-category-search-url' => $entityAttributes['category']['searchUrl'],
+                    'data-category-help' => $entityAttributes['category']['help'],
+                    'data-category-filtered' => $entityAttributes['category']['filtered'],
                 ],
             ])
         ;
@@ -155,17 +170,21 @@ class RedirectOptionType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'required' => false,
-            'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
-            'columns_number' => 2,
-            'row_attr' => [
-                'class' => 'redirect-option-widget',
-            ],
-            'alert_message' => $this->getRedirectionAlertMessages(),
-        ]);
+        $resolver
+            ->setDefaults([
+                'product_id' => null,
+                'required' => false,
+                'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
+                'columns_number' => 2,
+                'row_attr' => [
+                    'class' => 'redirect-option-widget',
+                ],
+                'alert_message' => $this->getRedirectionAlertMessages(),
+            ])
+            ->setAllowedTypes('product_id', ['null', 'int'])
+        ;
     }
 
     /**

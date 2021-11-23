@@ -32,7 +32,7 @@ class AddState extends BOBasePage {
   /**
    * Fill form for add/edit state
    * @param page {Page} Browser tab
-   * @param stateData {stateDate} Data to set on new/edit state form
+   * @param stateData {StateData} Data to set on new/edit state form
    * @returns {Promise<string>}
    */
   async createEditState(page, stateData) {
@@ -41,7 +41,7 @@ class AddState extends BOBasePage {
     await this.setValue(page, this.isoCodeInput, stateData.isoCode);
     await this.selectByVisibleText(page, this.countrySelect, stateData.country);
     await this.selectByVisibleText(page, this.zoneSelect, stateData.zone);
-    await page.check(this.statusToggle(stateData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(stateData.status ? 'on' : 'off'));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveStateButton);

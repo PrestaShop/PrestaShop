@@ -33,6 +33,15 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
+/**
+ * The computation here means to only count the raw text, not the rich text with html strip tags, also all the
+ * line breaks are simply ignored (not event replaced with spaces). This computation is made to match the one
+ * from the TinyMce text count. You can see it in TinyMCEEditor.js component, if the js component is modified
+ * so should this validator.
+ *
+ * Note: if you rely on Product class validation you might also need to update Product::validateField
+ * Note: if you are still using the legacy AdminProductsController you should also update the checkProduct() function
+ */
 class TinyMceMaxLengthValidator extends ConstraintValidator
 {
     /**
@@ -51,6 +60,10 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
         $this->translator = $translator;
     }
 
+    /**
+     * @param mixed $value
+     * @param TinyMceMaxLength $constraint
+     */
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof TinyMceMaxLength) {
@@ -65,6 +78,7 @@ class TinyMceMaxLengthValidator extends ConstraintValidator
             "\n",
             "\r",
             "\n\r",
+            "\r\n",
         ];
         $str = str_replace($replaceArray, [''], strip_tags($value));
 

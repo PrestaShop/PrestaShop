@@ -36,10 +36,6 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class EntityItemType extends CommonAbstractType
 {
-    public const ID_PLACEHOLDER = '__id__';
-    public const NAME_PLACEHOLDER = '__name__';
-    public const IMAGE_PLACEHOLDER = '__image__';
-
     /**
      * {@inheritDoc}
      */
@@ -48,15 +44,12 @@ class EntityItemType extends CommonAbstractType
         $builder
             ->add('id', HiddenType::class, [
                 'label' => false,
-                'default_empty_data' => self::ID_PLACEHOLDER,
             ])
             ->add('name', TextPreviewType::class, [
                 'label' => false,
-                'default_empty_data' => self::NAME_PLACEHOLDER,
             ])
             ->add('image', ImagePreviewType::class, [
                 'label' => false,
-                'default_empty_data' => self::IMAGE_PLACEHOLDER,
             ])
         ;
     }

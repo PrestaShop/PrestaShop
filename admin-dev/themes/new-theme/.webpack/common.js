@@ -30,6 +30,7 @@ const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   externals: {
@@ -77,7 +78,8 @@ module.exports = {
     main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
@@ -140,26 +142,32 @@ module.exports = {
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
       '@PSTypes': path.resolve(__dirname, '../js/types'),
+      '@images': path.resolve(__dirname, '../img'),
     },
   },
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
-            },
+            loader: 'esbuild-loader',
           },
         ],
       },
       {
         test: /\.ts?$/,
-        use: 'ts-loader',
+        include: path.resolve(__dirname, '../js'),
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target: 'es2015',
+        },
         exclude: /node_modules/,
       },
       {
@@ -287,10 +295,6 @@ module.exports = {
         },
       },
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-      {
         test: /\.css$/,
         use: [
           {
@@ -302,7 +306,6 @@ module.exports = {
       {
         test: /\.scss$/,
         include: /scss/,
-        exclude: /js/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -358,5 +361,16 @@ module.exports = {
       patterns: [{from: 'static'}],
     }),
     new VueLoaderPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        extensions: {
+          vue: true,
+        },
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
+    }),
   ],
 };

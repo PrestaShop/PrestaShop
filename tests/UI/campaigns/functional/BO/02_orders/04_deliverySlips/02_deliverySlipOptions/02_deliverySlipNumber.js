@@ -1,21 +1,26 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
+const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
-// Importing data
+// Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -25,6 +30,9 @@ const DeliverySlipOptionsFaker = require('@data/faker/deliverySlipOptions');
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_deliverSlips_deliverSlipsOptions_deliverySlipNumber';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -39,7 +47,7 @@ Change the Order status to Shipped
 Check the delivery slip file name
  */
 
-describe('Edit \'Delivery slip number\' and check the generated file name', async () => {
+describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,8 +62,8 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Edit the Delivery slip number', async () => {
-    it('should go to delivery slips page', async function () {
+  describe('Update the Delivery slip number', async () => {
+    it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPageToUpdateNumber', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -80,8 +88,8 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
   });
 
   describe('Create new order in FO', async () => {
-    it('should go to FO and create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrderInFO', baseContext);
+    it('should go to FO page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       // Click on view my shop
       page = await deliverySlipsPage.viewMyShop(page);
@@ -89,28 +97,63 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
       // Change FO language
       await homePage.changeLanguage(page, 'en');
 
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+
+      await homePage.goToLoginPage(page);
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with default customer', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultCustomer);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
+
+      // Go to home page
+      await foLoginPage.goToHomePage(page);
+
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the created product to the cart
+      // Add the product to the cart
       await productPage.addProductToTheCart(page);
+
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(1);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
-      // Checkout the order
-
-      // Personal information step - Login
-      await checkoutPage.clickOnSignIn(page);
-      await checkoutPage.customerLogin(page, DefaultCustomer);
-
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -118,17 +161,30 @@ describe('Edit \'Delivery slip number\' and check the generated file name', asyn
       // Check the confirmation message
       const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
       await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+    });
 
-      // Logout from FO
+    it('should sign out from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
+
       await orderConfirmationPage.logout(page);
 
-      // Close tab and go back to BO
+      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
+
+      // Close tab and init other page objects with new current tab
       page = await orderConfirmationPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await deliverySlipsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(deliverySlipsPage.pageTitle);
     });
   });
 
-  describe('Create a delivery slip and check the edited data', async () => {
-    it('should go to the orders page', async function () {
+  describe('Create a delivery slip and check the update data', async () => {
+    it('should go to the \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await deliverySlipsPage.goToSubMenu(

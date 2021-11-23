@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * My account page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class MyAccount extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on my account page
+   */
   constructor() {
     super();
 
@@ -13,6 +22,7 @@ class MyAccount extends FOBasePage {
     this.accountAddressesLink = '#addresses-link';
     this.accountFirstAddressLink = '#address-link';
     this.accountVouchersLink = '#discounts-link';
+    this.merchandiseReturnsLink = '#returns-link';
   }
 
   /*
@@ -62,6 +72,15 @@ class MyAccount extends FOBasePage {
    */
   async goToVouchersPage(page) {
     await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
+  }
+
+  /**
+   * Go to merchandise returns page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToMerchandiseReturnsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
   }
 }
 

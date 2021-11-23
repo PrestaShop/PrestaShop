@@ -25,7 +25,7 @@
     <image id="Mountain_fox_notebook" id_product="Mountain_fox_notebook" cover="1"/>
     <image id="Mountain_fox_notebook_1" id_product="Brown_bear_notebook" cover="1"/>
     <image id="Mountain_fox_notebook_2" id_product="Hummingbird_notebook" cover="1"/>
-    <image id="Brown_bear_printed_sweater" id_product="Hummingbird_printed_sweater" cover="1"/>
+    <image id="Hummingbird_printed_sweater" id_product="Hummingbird_printed_sweater" cover="1"/>
     <image id="Customizable_mug" id_product="Customizable_mug" cover="1"/>
     <image id="Pack_Mug_Framed_poster" id_product="Pack_Mug_Framed_poster" cover="1"/>
   </entities>

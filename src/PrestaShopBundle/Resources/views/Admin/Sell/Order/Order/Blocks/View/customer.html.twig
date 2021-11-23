@@ -1,0 +1,241 @@
+{#**
+  * Copyright since 2007 PrestaShop SA and Contributors
+  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+  *
+  * NOTICE OF LICENSE
+  *
+  * This source file is subject to the Open Software License (OSL 3.0)
+  * that is bundled with this package in the file LICENSE.md.
+  * It is also available through the world-wide-web at this URL:
+  * https://opensource.org/licenses/OSL-3.0
+  * If you did not receive a copy of the license and are unable to
+  * obtain it through the world-wide-web, please send an email
+  * to license@prestashop.com so we can send you a copy immediately.
+  *
+  * DISCLAIMER
+  *
+  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+  * versions in the future. If you wish to customize PrestaShop for your
+  * needs please refer to https://devdocs.prestashop.com/ for more information.
+  *
+  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+  * @copyright Since 2007 PrestaShop SA and Contributors
+  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+  *#}
+
+<div id="customerCard" class="customer card">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Customer'|trans({}, 'Admin.Global') }}
+    </h3>
+  </div>
+
+  <div class="card-body">
+    <div id="customerInfo" class="info-block">
+      <div class="row">
+        {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+          <div class="col-xxl-7">
+            <h2 class="mb-0">
+              <i class="material-icons">account_box</i>
+
+              {{ orderForViewing.customer.gender }}
+              {{ orderForViewing.customer.firstName }}
+              {{ orderForViewing.customer.lastName }}
+
+              <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
+            </h2>
+            {% if orderForViewing.customer.isGuest %}
+              <strong class="text-muted">Guest</strong>
+            {% endif %}
+          </div>
+          <div id="viewFullDetails" class="col-xxl-5 text-xxl-right">
+            <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
+              {{ 'View full details'|trans({}, 'Admin.Actions') }}
+            </a>
+          </div>
+        {% else %}
+          <div class="col">
+            <h2 class="mb-0">{{ 'Deleted customer'|trans({}, 'Admin.Global') }}</h2>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+      <div class="row mt-3">
+        <div id="customerEmail" class="col-xxl-6">
+          <p class="mb-1">
+            <strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <p>
+            <a href="mailto:{{ orderForViewing.customer.email }}">
+              {{ orderForViewing.customer.email }}
+            </a>
+          </p>
+
+          {%  if orderForViewing.customer.isGuest is same as(false) %}
+            <p class="mb-1">
+              <strong>{{ 'Account registered:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <p>{{ orderForViewing.customer.accountRegistrationDate|date_format_full }}</p>
+          {% endif %}
+
+          {%  if orderForViewing.customer.siret is not empty %}
+            <p class="mb-1">
+              <strong>{{ 'SIRET'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <p>{{ orderForViewing.customer.siret }}</p>
+          {% endif %}
+
+          {%  if orderForViewing.customer.ape is not empty %}
+            <p class="mb-1 d-block d-md-none">
+              <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <p class="d-block d-md-none">{{ orderForViewing.customer.ape }}</p>
+          {% endif %}
+        </div>
+        <div id="validatedOrders" class="col-xxl-6">
+          <p class="mb-1">
+            <strong>{{ 'Validated orders placed:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+          </p>
+          <p>
+            <span class="badge rounded badge-dark">{{ orderForViewing.customer.validOrdersPlaced }}</span>
+          </p>
+
+          {%  if orderForViewing.customer.isGuest is same as(false) %}
+            <p class="mb-1">
+              <strong>{{ 'Total spent since registration:'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <p>
+              <span class="badge rounded badge-dark">{{ orderForViewing.customer.totalSpentSinceRegistration }}</span>
+            </p>
+          {% endif %}
+
+          {%  if orderForViewing.customer.ape is not empty %}
+            <p class="mb-1 d-none d-md-block">
+              <strong>{{ 'APE'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <p class="d-none d-md-block">{{ orderForViewing.customer.ape }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+    <div class="info-block mt-2">
+      <div class="row">
+        {% if orderForViewing.virtual is same as(false) %}
+          <div id="addressShipping" class="info-block-col col-xl-6">
+            <div class="row justify-content-between no-gutters">
+              <strong>{{ 'Shipping address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+              {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+                <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
+                  <i class="material-icons">more_vert</i>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" id="js-delivery-address-edit-btn"
+                     href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'delivery', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
+                  >
+                    {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
+                  </a>
+
+                  <a href="#"
+                     class="dropdown-item js-update-customer-address-modal-btn"
+                     data-toggle="modal"
+                     data-target="#updateCustomerAddressModal"
+                     data-address-type="shipping"
+                  >
+                    {{ 'Select another address'|trans({}, 'Admin.Actions') }}
+                  </a>
+                </div>
+              {% endif %}
+            </div>
+
+            {% for line in orderForViewing.shippingAddressFormatted|split("\n") %}
+              <p class="mb-0">{{ line }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <div id="addressInvoice" class="info-block-col {% if orderForViewing.virtual %}col-md-12{% else %}col-xl-6{% endif %}">
+          <div class="row justify-content-between no-gutters">
+            <strong>{{ 'Invoice address'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+
+            {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
+              <a class="tooltip-link d-print-none" href="#" data-toggle="dropdown">
+                <i class="material-icons">more_vert</i>
+              </a>
+
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" id="js-invoice-address-edit-btn"
+                   href="{{ path('admin_order_addresses_edit', {'orderId': orderForViewing.id, 'addressType': 'invoice', 'liteDisplaying': 1, 'submitFormAjax': 1}) }}"
+                >
+                  {{ 'Edit existing address'|trans({}, 'Admin.Actions') }}
+                </a>
+
+                <a href="#"
+                   class="dropdown-item js-update-customer-address-modal-btn"
+                   data-toggle="modal"
+                   data-target="#updateCustomerAddressModal"
+                   data-address-type="invoice"
+                >
+                  {{ 'Select another address'|trans({}, 'Admin.Actions') }}
+                </a>
+              </div>
+            {% endif %}
+          </div>
+
+          {% for line in orderForViewing.invoiceAddressFormatted|split("\n") %}
+            <p class="mb-0">{{ line }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 and privateNoteForm is not null %}
+      <div id="privateNote" class="mt-2 info-block">
+        <div class="row">
+          {% set isPrivateNoteOpen = not orderForViewing.customer.privateNote is empty %}
+
+          <div class="col-md-6">
+            <h3 class="mb-0{{ not isPrivateNoteOpen ? ' d-print-none': '' }}">
+              {{ 'Private note'|trans({}, 'Admin.Orderscustomers.Feature') }}
+            </h3>
+          </div>
+          <div class="col-md-6 text-right d-print-none">
+            <a href="#"
+               class="float-right tooltip-link js-private-note-toggle-btn {% if isPrivateNoteOpen %}is-opened{% endif %}"
+            >
+              {% if isPrivateNoteOpen %}
+                <i class="material-icons">remove</i>
+              {% else %}
+                <i class="material-icons">add</i>
+              {% endif %}
+            </a>
+          </div>
+
+          <div class="col-md-12 mt-3 js-private-note-block {% if not isPrivateNoteOpen %}d-none{% endif %}">
+            {{ form_start(privateNoteForm, {
+              'action': path('admin_customers_set_private_note', {
+                'customerId': orderForViewing.customer.id,
+                'back': path('admin_orders_view', {'orderId': orderForViewing.id})
+              })
+              }) }}
+
+              {{ form_widget(privateNoteForm.note) }}
+              <div class="d-none">
+                {{ form_rest(privateNoteForm) }}
+              </div>
+
+              <div class="mt-2 text-right">
+                <button type="submit"
+                        class="btn btn-primary btn-sm js-private-note-btn"
+                        {% if orderForViewing.customer.privateNote is empty %}disabled{% endif %}
+                >
+                  {{ 'Save'|trans({}, 'Admin.Actions') }}
+                </button>
+              </div>
+            {{ form_end(privateNoteForm) }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>

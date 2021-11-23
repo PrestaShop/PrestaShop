@@ -96,7 +96,7 @@ class WebserviceRequestCore
     /**
      * The time in microseconds of the start of the execution of the web service request.
      *
-     * @var int
+     * @var float
      */
     protected $_startTime = 0;
 
@@ -167,7 +167,7 @@ class WebserviceRequestCore
     /**
      * Object instance for singleton.
      *
-     * @var WebserviceRequest
+     * @var WebserviceRequest|null
      */
     protected static $_instance;
 
@@ -207,6 +207,11 @@ class WebserviceRequestCore
     public static $ws_current_classname;
 
     /**
+     * @var array
+     */
+    public $params;
+
+    /**
      * @var array the list of shop ids, can be empty
      */
     public static $shopIDs = [];
@@ -237,6 +242,11 @@ class WebserviceRequestCore
         }
 
         return self::$_instance;
+    }
+
+    public static function resetStaticCache(): void
+    {
+        static::$_instance = null;
     }
 
     protected function getOutputObject($type)
@@ -358,13 +368,12 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on the output details.
      *
-     * @param $field
-     * @param $entity_object
-     * @param $ws_params
+     * @param array $field
+     * @param ObjectModel $entity_object
      *
      * @return array field parameters
      */
-    public function getPriceForProduct($field, $entity_object, $ws_params)
+    public function getPriceForProduct($field, $entity_object)
     {
         if (is_int($entity_object->id)) {
             $arr_return = $this->specificPriceForProduct($entity_object, ['default_price' => '']);
@@ -377,7 +386,7 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
-     * @param $entity_object
+     * @param ObjectModel $entity_object
      * @param array $parameters
      *
      * @return array
@@ -437,7 +446,7 @@ class WebserviceRequestCore
     /**
      * This method is used for calculate the price for products on a virtual fields.
      *
-     * @param $entity_object
+     * @param ObjectModel $entity_object
      * @param array $parameters
      *
      * @return array
@@ -465,7 +474,7 @@ class WebserviceRequestCore
      * @param string $key
      * @param string $method
      * @param string $url
-     * @param string $params
+     * @param array $params
      * @param string $bad_class_name
      * @param string $inputXml
      *
@@ -492,7 +501,9 @@ class WebserviceRequestCore
 
         $this->_key = trim($key);
 
-        $this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
+        if (isset($params['output_format'])) {
+            $this->outputFormat = $params['output_format'];
+        }
         // Set the render object to build the output on the asked format (XML, JSON, CSV, ...)
         $this->objOutput->setObjectRender($this->getOutputObject($this->outputFormat));
         $this->params = $params;
@@ -647,7 +658,7 @@ class WebserviceRequestCore
      * @param int $num
      * @param string $label
      * @param array $value
-     * @param array $values
+     * @param array $available_values
      * @param int $code
      */
     public function setErrorDidYouMean($num, $label, $value, $available_values, $code)
@@ -666,6 +677,7 @@ class WebserviceRequestCore
     protected function getClosest($input, $words)
     {
         $shortest = -1;
+        $closest = '';
         foreach ($words as $word) {
             $lev = levenshtein($input, $word);
             if ($lev == 0) {
@@ -686,10 +698,10 @@ class WebserviceRequestCore
     /**
      * Used to replace the default PHP error handler, in order to display PHP errors in a XML format.
      *
-     * @param string $errno contains the level of the error raised, as an integer
-     * @param array $errstr contains the error message, as a string
-     * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
-     * @param array $errline errline, which contains the line number the error was raised at, as an integer
+     * @param int $errno contains the level of the error raised, as an integer
+     * @param string $errstr contains the error message, as a string
+     * @param string $errfile errfile, which contains the filename that the error was raised in, as a string
+     * @param int $errline errline, which contains the line number the error was raised at, as an integer
      *
      * @return bool Always return true to avoid the default PHP error handler
      */
@@ -697,7 +709,7 @@ class WebserviceRequestCore
     {
         $display_errors = strtolower(ini_get('display_errors')) != 'off';
         if (!(error_reporting() & $errno) || $display_errors) {
-            return;
+            return true;
         }
 
         $errortype = [
@@ -715,7 +727,7 @@ class WebserviceRequestCore
             E_STRICT => 'Runtime Notice',
             E_RECOVERABLE_ERROR => 'Recoverable error',
         ];
-        $type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
+        $type = $errortype[$errno] ?? 'Unknown error';
         Tools::error_log('[PHP ' . $type . ' #' . $errno . '] ' . $errstr . ' (' . $errfile . ', line ' . $errline . ')');
 
         switch ($errno) {
@@ -795,37 +807,39 @@ class WebserviceRequestCore
      */
     protected function authenticate()
     {
-        if (!$this->hasErrors()) {
-            if (null === $this->_key) {
-                $this->setError(401, 'Please enter the authentication key as the login. No password required', 16);
-            } else {
-                if (empty($this->_key)) {
-                    $this->setError(401, 'Authentication key is empty', 17);
-                } elseif (strlen($this->_key) != '32') {
-                    $this->setError(401, 'Invalid authentication key format', 18);
-                } else {
-                    if (WebserviceKey::isKeyActive($this->_key)) {
-                        $this->keyPermissions = WebserviceKey::getPermissionForAccount($this->_key);
-                    } else {
-                        $this->setError(401, 'Authentification key is not active', 20);
-                    }
+        if ($this->hasErrors()) {
+            return false;
+        }
 
-                    if (!$this->keyPermissions) {
-                        $this->setError(401, 'No permission for this authentication key', 21);
-                    }
+        if (null === $this->_key) {
+            $this->setError(401, 'Please enter the authentication key as the login. No password required', 16);
+        } else {
+            if (empty($this->_key)) {
+                $this->setError(401, 'Authentication key is empty', 17);
+            } elseif (strlen($this->_key) != '32') {
+                $this->setError(401, 'Invalid authentication key format', 18);
+            } else {
+                if (WebserviceKey::isKeyActive($this->_key)) {
+                    $this->keyPermissions = WebserviceKey::getPermissionForAccount($this->_key);
+                } else {
+                    $this->setError(401, 'Authentification key is not active', 20);
+                }
+
+                if (!$this->keyPermissions) {
+                    $this->setError(401, 'No permission for this authentication key', 21);
                 }
             }
-            if ($this->hasErrors()) {
-                header('WWW-Authenticate: Basic realm="Welcome to PrestaShop Webservice, please enter the authentication key as the login. No password required."');
-                $this->objOutput->setStatus(401);
+        }
+        if ($this->hasErrors()) {
+            header('WWW-Authenticate: Basic realm="Welcome to PrestaShop Webservice, please enter the authentication key as the login. No password required."');
+            $this->objOutput->setStatus(401);
 
-                return false;
-            } else {
-                // only now we can say the access is authenticated
-                $this->_authenticated = true;
+            return false;
+        } else {
+            // only now we can say the access is authenticated
+            $this->_authenticated = true;
 
-                return true;
-            }
+            return true;
         }
     }
 
@@ -855,7 +869,7 @@ class WebserviceRequestCore
         $sql = 'SELECT 1
 				FROM ' . _DB_PREFIX_ . 'webservice_account wsa LEFT JOIN ' . _DB_PREFIX_ . 'webservice_account_shop wsas ON (wsa.id_webservice_account = wsas.id_webservice_account)
 				WHERE wsa.key = \'' . pSQL($key) . '\'';
-
+        $OR = [];
         foreach (self::$shopIDs as $id_shop) {
             $OR[] = ' wsas.id_shop = ' . (int) $id_shop . ' ';
         }
@@ -870,7 +884,7 @@ class WebserviceRequestCore
     }
 
     /**
-     * @param $params
+     * @param array $params
      *
      * @return bool
      */
@@ -903,7 +917,7 @@ class WebserviceRequestCore
     }
 
     /**
-     * @param $params
+     * @param array $params
      *
      * @return bool
      */
@@ -1241,6 +1255,7 @@ class WebserviceRequestCore
 
             foreach ($sorts as $sort) {
                 $delimiterPosition = strrpos($sort, '_');
+                $fieldName = $direction = '';
                 if ($delimiterPosition !== false) {
                     $fieldName = substr($sort, 0, $delimiterPosition);
                     $direction = strtoupper(substr($sort, $delimiterPosition + 1));
@@ -1359,6 +1374,7 @@ class WebserviceRequestCore
                 }
                 $sql .= '`';
 
+                $OR = [];
                 foreach (self::$shopIDs as $id_shop) {
                     $OR[] = ' (id_shop = ' . (int) $id_shop . ($check_shop_group ? ' OR (id_shop = 0 AND id_shop_group=' . (int) Shop::getGroupFromShop((int) $id_shop) . ')' : '') . ') ';
                 }
@@ -1401,6 +1417,7 @@ class WebserviceRequestCore
             if (!$return) {
                 return false;
             } else {
+                $this->_outputEnabled = true;
                 $this->objects = $return;
             }
         }
@@ -1431,7 +1448,7 @@ class WebserviceRequestCore
     /**
      * Execute DELETE method on a PrestaShop entity.
      *
-     * @return bool
+     * @return void
      */
     public function executeEntityDelete()
     {
@@ -1507,10 +1524,9 @@ class WebserviceRequestCore
         } catch (Exception $error) {
             $this->setError(500, 'XML error : ' . $error->getMessage() . "\n" . 'XML length : ' . strlen($this->_inputXml) . "\n" . 'Original XML : ' . $this->_inputXml, 127);
 
-            return;
+            return false;
         }
 
-        /** @var SimpleXMLElement|Countable $xmlEntities */
         $xmlEntities = $xml->children();
         $object = null;
 
@@ -1522,7 +1538,6 @@ class WebserviceRequestCore
             }
         }
         if ($this->method == 'PUT') {
-            $ids2 = [];
             $ids2 = array_unique($ids);
             if (count($ids2) != count($ids)) {
                 $this->setError(400, 'id is duplicate in request', 89);
@@ -1688,6 +1703,8 @@ class WebserviceRequestCore
 
             return true;
         }
+
+        return false;
     }
 
     /**

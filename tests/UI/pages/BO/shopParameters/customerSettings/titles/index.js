@@ -88,7 +88,7 @@ class Titles extends BOBasePage {
   async filterTitles(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 

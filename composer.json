@@ -23,18 +23,18 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "ext-openssl": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
         "beberlei/doctrineextensions": "^1.0",
         "composer/ca-bundle": "^1.0",
         "composer/installers": "^1.0.21",
-        "cssjanus/cssjanus": "dev-patch-1",
+        "cssjanus/cssjanus": "^2.0",
         "curl/curl": "^2.3.2",
         "defuse/php-encryption": "^2.3.1",
         "doctrine/cache": "^2.0",
         "doctrine/doctrine-bundle": "^2.3",
         "doctrine/orm": "^2.7",
-        "egulias/email-validator": "^2.1",
         "eightpoints/guzzle-bundle": "^8",
         "ezyang/htmlpurifier": "^4.10",
         "friendsofsymfony/jsrouting-bundle": "^2.4",
@@ -51,7 +51,6 @@
         "mobiledetect/mobiledetectlib": "~2.8.34",
         "mrclay/minify": "^3.0.11",
         "nikic/php-parser": "^4.0",
-        "paragonie/random_compat": "^2.0",
         "pear/archive_tar": "^1.4.12",
         "pelago/emogrifier": "^v5.0.1",
         "phpoffice/phpspreadsheet": "~1.5",
@@ -68,6 +67,10 @@
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
         "prestashop/ps_banner": "^2",
+        "prestashop/ps_bestsellers": "^1.0",
+        "prestashop/ps_brandlist": "^1.0",
+        "prestashop/ps_cashondelivery": "^1.0",
+        "prestashop/ps_categoryproducts": "^1.0",
         "prestashop/ps_categorytree": "^2",
         "prestashop/ps_checkpayment": "^2",
         "prestashop/ps_contactinfo": "^3.2",
@@ -77,7 +80,7 @@
         "prestashop/ps_customersignin": "^2",
         "prestashop/ps_customtext": "^4",
         "prestashop/ps_dataprivacy": "^2.0",
-        "prestashop/ps_emailsubscription": "^2.5",
+        "prestashop/ps_emailsubscription": "^2.7",
         "prestashop/ps_facetedsearch": "^3.2.1",
         "prestashop/ps_faviconnotificationbo": "^2",
         "prestashop/ps_featuredproducts": "^2",
@@ -85,11 +88,15 @@
         "prestashop/ps_languageselector": "^2",
         "prestashop/ps_linklist": "^5",
         "prestashop/ps_mainmenu": "^2",
+        "prestashop/ps_newproducts": "^1.0",
         "prestashop/ps_searchbar": "^2",
         "prestashop/ps_sharebuttons": "^2",
         "prestashop/ps_shoppingcart": "^2",
         "prestashop/ps_socialfollow": "^2",
+        "prestashop/ps_specials": "^1.0",
+        "prestashop/ps_supplierlist": "^1.0",
         "prestashop/ps_themecusto": "^1",
+        "prestashop/ps_viewedproduct": "^1.2",
         "prestashop/ps_wirepayment": "^2",
         "prestashop/statsbestcategories": "^2",
         "prestashop/statsbestcustomers": "^2",
@@ -109,8 +116,7 @@
         "prestashop/statssales": "^2",
         "prestashop/statssearch": "^2",
         "prestashop/statsstock": "^2",
-        "prestashop/translationtools-bundle": "^4.0",
-        "prestashop/welcome": "^6",
+        "prestashop/translationtools-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^5.1",
         "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.39",
@@ -118,11 +124,12 @@
         "swiftmailer/swiftmailer": "~6.2",
         "symfony/monolog-bundle": "^3.7.0",
         "symfony/polyfill-php73": "^1.10",
+        "symfony/property-access": "^4",
         "symfony/swiftmailer-bundle": "^3.1",
         "symfony/symfony": "^4.4",
         "tecnickcom/tcpdf": "^6.2.12",
         "tijsverkoyen/css-to-inline-styles": "^2.2",
-        "twig/twig": "^1.38"
+        "twig/twig": "^3.0"
     },
     "require-dev": {
         "behat/behat": "^3.5",
@@ -130,7 +137,6 @@
         "friendsofphp/php-cs-fixer": "^2.16.1",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
-        "phake/phake": "@stable",
         "phpstan/phpstan": "^0.12.48",
         "phpunit/phpunit": "~8.5.16",
         "prestashop/phpstan-prestashop": "^1.0",
@@ -175,22 +181,12 @@
             "vendor/symfony/symfony/src/Symfony/Component/VarDumper/Resources/functions/dump.php"
         ]
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/PrestaShop/php-cssjanus",
-            "canonical": false
-        }
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "post-update-cmd": [
-            "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile"
-        ],
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
-            "@php ./tests-legacy/create-test-db.php"
+            "@php ./tests/bin/create-test-db.php"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",

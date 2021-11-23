@@ -174,7 +174,7 @@ class DispatcherCore
     protected $controller_not_found = 'pagenotfound';
 
     /**
-     * @var string Front controller to use
+     * @var int Front controller to use
      */
     protected $front_controller = self::FC_FRONT;
 
@@ -497,17 +497,13 @@ class DispatcherCore
             $controller = Controller::getController($controller_class);
 
             // Execute hook dispatcher
-            if (isset($params_hook_action_dispatcher)) {
-                Hook::exec('actionDispatcher', $params_hook_action_dispatcher);
-            }
+            Hook::exec('actionDispatcher', $params_hook_action_dispatcher);
 
             // Running controller
             $controller->run();
 
             // Execute hook dispatcher after
-            if (isset($params_hook_action_dispatcher)) {
-                Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
-            }
+            Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
         } catch (PrestaShopException $e) {
             $e->displayMessage();
         }
@@ -1185,7 +1181,7 @@ class DispatcherCore
     public static function getControllerPhpself(string $controller)
     {
         if (!class_exists($controller)) {
-            return;
+            return null;
         }
 
         $reflectionClass = new ReflectionClass($controller);

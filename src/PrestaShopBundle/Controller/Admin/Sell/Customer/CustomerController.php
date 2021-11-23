@@ -208,8 +208,8 @@ class CustomerController extends AbstractAdminController
     public function editAction($customerId, Request $request)
     {
         $this->addGroupSelectionToRequest($request);
-        /** @var ViewableCustomer $customerInformation */
-        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
+        /** @var EditableCustomer $customerInformation */
+        $customerInformation = $this->getQueryBus()->handle(new GetCustomerForEditing((int) $customerId));
         $customerFormOptions = [
             'is_password_required' => false,
         ];
@@ -258,11 +258,17 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      * @param Request $request
+     * @param CustomerDiscountFilters $customerDiscountFilters
+     * @param CustomerAddressFilters $customerAddressFilters
      *
      * @return Response
      */
-    public function viewAction($customerId, Request $request)
-    {
+    public function viewAction(
+        $customerId,
+        Request $request,
+        CustomerDiscountFilters $customerDiscountFilters,
+        CustomerAddressFilters $customerAddressFilters
+    ) {
         try {
             /** @var ViewableCustomer $customerInformation */
             $customerInformation = $this->getQueryBus()->handle(new GetCustomerForViewing((int) $customerId));
@@ -291,7 +297,7 @@ class CustomerController extends AbstractAdminController
             'filters' => [
                 'id_customer' => $customerId,
             ],
-        ]);
+        ] + $customerDiscountFilters->all());
         $customerDiscountGrid = $customerDiscountGridFactory->getGrid($customerDiscountFilters);
 
         $customerAddressGridFactory = $this->get('prestashop.core.grid.factory.customer.address');
@@ -299,7 +305,7 @@ class CustomerController extends AbstractAdminController
             'filters' => [
                 'id_customer' => $customerId,
             ],
-        ]);
+        ] + $customerAddressFilters->all());
         $customerAddressGrid = $customerAddressGridFactory->getGrid($customerAddressFilters);
 
         if ($request->query->has('conf')) {
@@ -503,7 +509,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function toggleStatusAction($customerId)
     {
@@ -516,15 +522,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
@@ -538,7 +547,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function toggleNewsletterSubscriptionAction($customerId)
     {
@@ -553,15 +562,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
@@ -575,7 +587,7 @@ class CustomerController extends AbstractAdminController
      *
      * @param int $customerId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
     public function togglePartnerOfferSubscriptionAction($customerId)
     {
@@ -588,15 +600,18 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($editCustomerCommand);
 
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
         } catch (CustomerException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
         }
 
-        return $this->redirectToRoute('admin_customers_index');
+        return $this->json($response);
     }
 
     /**
@@ -975,6 +990,7 @@ class CustomerController extends AbstractAdminController
     private function manageLegacyFlashes($messageId)
     {
         $messages = [
+            1 => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
             4 => $this->trans('Update successful.', 'Admin.Notifications.Success'),
         ];
 

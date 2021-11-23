@@ -23,6 +23,8 @@ class Order extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
+    this.noAvailableDocumentsMessage = 'There is no available document';
+    this.updateSuccessfullMessage = 'Update successful';
 
     // Customer card
     this.customerInfoBlock = '#customerInfo';
@@ -48,6 +50,7 @@ class Order extends BOBasePage {
     // Products block
     this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsTableProductName = row => `${this.orderProductsTableNameColumn(row)} p.productName`;
+    this.orderProductsTableProductReference = row => `${this.orderProductsTableNameColumn(row)} p.productReference`;
     this.orderProductsTableProductBasePrice = row => `${this.orderProductsRowTable(row)} td.cellProductUnitPrice`;
     this.orderProductsTableProductQuantity = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity`;
     this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
@@ -75,8 +78,12 @@ class Order extends BOBasePage {
     this.addProductRowQuantity = '#add_product_row_quantity';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
+    this.addProductTotalPrice = '#addProductTotalPrice';
+    this.addProductInvoiceSelect = '#add_product_row_invoice';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
+    this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
+    this.addProductCreateNewInvoiceButton = `${this.addProductModalConfirmNewInvoice} .btn-confirm-submit`;
 
     // Pagination selectors
     this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
@@ -88,12 +95,62 @@ class Order extends BOBasePage {
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
 
-    // Documents card
+    // Documents tab
     this.documentTab = 'a#orderDocumentsTab';
-    this.documentsTableDiv = '#orderDocumentsTabContent';
-    this.documentsTableRow = row => `${this.documentsTableDiv} table tbody tr:nth-child(${row})`;
+    this.orderDocumentTabContent = '#orderDocumentsTabContent';
+    this.generateInvoiceButton = `${this.orderDocumentTabContent} .btn.btn-primary`;
+    this.documentsTablegrid = '#documents-grid-table';
+    this.documentsTableBody = `${this.documentsTablegrid} tbody`;
+    this.documentsTableRow = row => `${this.documentsTableBody} tr:nth-child(${row})`;
+    this.documentsTableColumn = (row, column) => `${this.documentsTableRow(row)} td.${column}`;
     this.documentNumberLink = row => `${this.documentsTableRow(row)} td.documents-table-column-download-link a`;
     this.documentType = row => `${this.documentsTableRow(row)} td.documents-table-column-type`;
+    this.addDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.js-open-invoice-note-btn`;
+    this.documentNoteInput = row => `${this.documentsTableRow(row)} td input.invoice-note`;
+    this.documentNoteSaveButton = row => `${this.documentsTableRow(row)} td button.js-save-invoice-note-btn`;
+    this.editDocumentNoteButton = row => `${this.documentsTableRow(row)} td button.btn-edit`;
+    this.enterPaymentButton = row => `${this.documentsTableRow(row)} td button.js-enter-payment-btn`;
+
+    // Payment block
+    this.orderPaymentsBlock = '#view_order_payments_block';
+    this.orderPaymentsTitle = `${this.orderPaymentsBlock} .card-header-title`;
+    this.paymentDateInput = '#order_payment_date';
+    this.paymentMethodInput = '#order_payment_payment_method';
+    this.transactionIDInput = '#order_payment_transaction_id';
+    this.paymentAmountInput = '#order_payment_amount';
+    this.paymentCurrencySelect = '#order_payment_id_currency';
+    this.paymentInvoiceSelect = '#order_payment_id_invoice';
+    this.paymentAddButton = `${this.orderPaymentsBlock} .btn.btn-primary.btn-sm`;
+    this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;
+    this.paymentsGridTable = 'table[data-role=\'payments-grid-table\']';
+    this.paymentsTableBody = `${this.paymentsGridTable} tbody`;
+    this.paymentsTableRow = row => `${this.paymentsTableBody} tr:nth-child(${row})`;
+    this.paymentsTableColumn = (row, column) => `${this.paymentsTableRow(row)} td[data-role='${column}-column']`;
+    this.paymentsTableDetailsButton = row => `${this.paymentsTableRow(row)} button.js-payment-details-btn`;
+    this.paymentTableRowDetails = row => `${this.paymentsTableRow(row)}[data-role='payment-details']`;
+
+    // Carriers tab
+    this.carriersTab = '#orderShippingTab';
+    this.orderShippingTabContent = '#orderShippingTabContent';
+    this.carriersGridTable = '#shipping-grid-table';
+    this.carriersTableBody = `${this.carriersGridTable} tbody`;
+    this.carriersTableRow = row => `${this.carriersTableBody} tr:nth-child(${row})`;
+    this.carriersTableColumn = (row, column) => `${this.carriersTableRow(row)} td.${column}`;
+    this.editLink = `${this.orderShippingTabContent} a.js-update-shipping-btn`;
+    this.updateOrderShippingModal = '#updateOrderShippingModal';
+    this.updateOrderShippingModalDialog = `${this.updateOrderShippingModal} div.modal-dialog`;
+    this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
+    this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
+    this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
+
+    // Merchandise returns tab
+    this.merchandiseReturnsTab = '#orderReturnsTab';
+    this.merchandisereturnCount = `${this.merchandiseReturnsTab} span[data-role='count']`;
+    this.merchandiseReturnsGridTable = 'table[data-role=\'merchandise-returns-grid-table\']';
+    this.merchandiseReturnsTableBody = `${this.merchandiseReturnsGridTable} tbody`;
+    this.merchandiseReturnsTableRow = row => `${this.merchandiseReturnsTableBody} tr:nth-child(${row})`;
+    this.merchandiseReturnsTableColumn = (row, column) => `${this.merchandiseReturnsTableRow(row)}`
+      + ` td[data-role='merchandise-${column}']`;
 
     // Refund form
     this.refundProductQuantity = row => `${this.orderProductsRowTable(row)} input[id*='cancel_product_quantity']`;
@@ -160,7 +217,7 @@ class Order extends BOBasePage {
    * Modify product price
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @param price {float} Price to edit
+   * @param price {number} Price to edit
    * @returns {Promise<void>}
    */
   async modifyProductPrice(page, row, price) {
@@ -236,7 +293,7 @@ class Order extends BOBasePage {
         })),
     );
 
-    options = await options.filter(option => statusName === option.textContent);
+    options = options.filter(option => statusName === option.textContent);
     return options.length !== 0;
   }
 
@@ -249,28 +306,55 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
   }
 
-  /**
-   * Get document name
-   * @param page {Page} Browser tab
-   * @param rowChild {number} Document row on table
-   * @returns {Promise<string>}
-   */
-  async getDocumentType(page, rowChild = 1) {
-    await this.goToDocumentsTab(page);
-
-    return this.getTextContent(page, this.documentType(rowChild));
-  }
-
+  // Documents tab methods
   /**
    * Go to documents tab
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async goToDocumentsTab(page) {
-    await Promise.all([
-      page.click(this.documentTab),
-      this.waitForVisibleSelector(page, `${this.documentTab}.active`),
-    ]);
+    await page.click(this.documentTab);
+    return this.elementVisible(page, `${this.documentTab}.active`, 1000);
+  }
+
+  /**
+   * Is generate invoice button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGenerateInvoiceButtonVisible(page) {
+    return this.elementVisible(page, this.generateInvoiceButton, 1000);
+  }
+
+  /**
+   * Get documents number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getDocumentsNumber(page) {
+    return this.getNumberFromText(page, `${this.documentTab} .count`);
+  }
+
+  /**
+   * Get text from Column on documents table
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} status row in table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromDocumentsTable(page, columnName, row) {
+    return this.getTextContent(page, this.documentsTableColumn(row, columnName));
+  }
+
+  /**
+   * Click on generate invoice button
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async generateInvoice(page) {
+    await this.clickAndWaitForNavigation(page, this.generateInvoiceButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -288,6 +372,18 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Get document name
+   * @param page {Page} Browser tab
+   * @param rowChild {number} Document row on table
+   * @returns {Promise<string>}
+   */
+  async getDocumentType(page, rowChild = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.getTextContent(page, this.documentType(rowChild));
+  }
+
+  /**
    * Download a document in document tab
    * @param page {Page} Browser tab
    * @param row {number} Document row on table
@@ -300,12 +396,76 @@ class Order extends BOBasePage {
   /**
    * Download invoice
    * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
-  async downloadInvoice(page) {
+  async downloadInvoice(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.downloadDocument(page, 1);
+    return this.downloadDocument(page, row);
+  }
+
+  /**
+   * Set document note
+   * @param page {Page} Browser tab
+   * @param note {String} Text to set on note input
+   * @param row {number} Row in documents table
+   * @returns {Promise<string>}
+   */
+  async setDocumentNote(page, note, row = 1) {
+    await this.waitForSelectorAndClick(page, this.addDocumentNoteButton(row));
+    await this.setValue(page, this.documentNoteInput(row + 1), note);
+    await this.waitForSelectorAndClick(page, this.documentNoteSaveButton(row + 1));
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is edit note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEditDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.editDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is add note button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isAddDocumentNoteButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.addDocumentNoteButton(row), 1000);
+  }
+
+  /**
+   * Is enter payment button visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table documents
+   * @returns {Promise<boolean>}
+   */
+  async isEnterPaymentButtonVisible(page, row = 1) {
+    await this.goToDocumentsTab(page);
+
+    return this.elementVisible(page, this.enterPaymentButton(row), 1000);
+  }
+
+  /**
+   * Click on enter payment button and get amount value
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<*>}
+   */
+  async clickOnEnterPaymentButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.enterPaymentButton(row));
+
+    return page.$eval(this.paymentAmountInput, el => el.value);
   }
 
   /**
@@ -342,7 +502,7 @@ class Order extends BOBasePage {
   /**
    * Download delivery slip
    * @param page {Page} Browser tab
-   * @returns {Promise<*>}
+   * @returns {Promise<string>}
    */
   async downloadDeliverySlip(page) {
     /* eslint-disable no-return-assign, no-param-reassign */
@@ -351,6 +511,68 @@ class Order extends BOBasePage {
     // Delete the target because a new tab is opened when downloading the file
     return this.downloadDocument(page, 3);
     /* eslint-enable no-return-assign, no-param-reassign */
+  }
+
+  // Methods for carriers tab
+  /**
+   * Get carriers number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getCarriersNumber(page) {
+    return this.getNumberFromText(page, `${this.carriersTab} .count`);
+  }
+
+  /**
+   * Go to carriers tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToCarriersTab(page) {
+    await this.waitForSelectorAndClick(page, this.carriersTab);
+
+    return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
+  }
+
+  /**
+   * Get carrier details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on carriers table
+   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   */
+  async getCarrierDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.carriersTableColumn(row, 'date')),
+      carrier: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-name')),
+      weight: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-weight')),
+      shippingCost: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-price')),
+      trackingNumber: await this.getTextContent(page, this.carriersTableColumn(row, 'carrier-tracking-number')),
+    };
+  }
+
+  /**
+   * Click on edit link and check if the modal is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditLink(page) {
+    await this.waitForSelectorAndClick(page, this.editLink);
+
+    return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
+  }
+
+  /**
+   * Set shipping details
+   * @param page {Page} Browser tab
+   * @param shippingData {shippingData} Data to set on shipping form
+   * @returns {Promise<string>}
+   */
+  async setShippingDetails(page, shippingData) {
+    await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
+    await this.setValue(page, this.carrierSelect, shippingData.carrier);
+    await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
@@ -401,7 +623,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Shipping address data to edit
+   * @param addressData {AddressData} Shipping address data to edit
    * @returns {Promise<void>}
    */
   async editExistingShippingAddress(page, addressData) {
@@ -416,7 +638,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getShippingAddress(page);
@@ -441,7 +663,7 @@ class Order extends BOBasePage {
   /**
    * Edit existing shipping address
    * @param page {Page} Browser tab
-   * @param addressData {object} Invoice address data to edit
+   * @param addressData {AddressData} Invoice address data to edit
    * @returns {Promise<void>}
    */
   async editExistingInvoiceAddress(page, addressData) {
@@ -456,7 +678,7 @@ class Order extends BOBasePage {
 
     await Promise.all([
       addressFrame.click(addAddressPage.saveAddressButton),
-      page.waitForSelector(this.editAddressIframe, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.editAddressIframe),
     ]);
 
     return this.getInvoiceAddress(page);
@@ -543,12 +765,13 @@ class Order extends BOBasePage {
   /**
    * Get searched product details
    * @param page {Page} Browser tab
-   * @returns {Promise<[]>}
+   * @returns {Promise<{stockLocation: string, available: number}>}
    */
   async getSearchedProductDetails(page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+      price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
   }
 
@@ -556,14 +779,21 @@ class Order extends BOBasePage {
    * Add product to cart
    * @param page {Page} Browser tab
    * @param quantity {number} Product quantity to add
+   * @param createNewInvoice {boolean} True if we need to create new invoice
    * @returns {Promise<string>}
    */
-  async addProductToCart(page, quantity = 0) {
+  async addProductToCart(page, quantity = 1, createNewInvoice = false) {
     await this.closeGrowlMessage(page);
-    if (quantity !== 0) {
+    if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
+    if (createNewInvoice) {
+      await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
+    }
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
+    if (createNewInvoice) {
+      await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
+    }
     return this.getGrowlMessageContent(page);
   }
 
@@ -596,14 +826,24 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Is add product table row visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isAddProductTableRowVisible(page) {
+    return this.elementVisible(page, this.addProductTableRow, 1000);
+  }
+
+  /**
    * Get product details
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
-   * @returns {Promise<[]>}
+   * @returns {Promise<{total: number, quantity: number, name: string, available: number, basePrice: number}>}
    */
   async getProductDetails(page, row) {
     return {
       name: await this.getTextContent(page, this.orderProductsTableProductName(row)),
+      reference: await this.getTextContent(page, this.orderProductsTableProductReference(row)),
       basePrice: parseFloat((await this.getTextContent(
         page,
         this.orderProductsTableProductBasePrice(row))).replace('€', ''),
@@ -658,6 +898,136 @@ class Order extends BOBasePage {
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
 
     return this.elementVisible(page, this.paginationNextLink, 1000);
+  }
+
+  // Methods for Merchandise returns tab
+  /**
+   * Go to merchandise returns tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToMerchandiseReturnsTab(page) {
+    await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
+
+    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
+  }
+
+  /**
+   * Get merchandise returns number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getMerchandiseReturnsNumber(page) {
+    return this.getNumberFromText(page, this.merchandisereturnCount);
+  }
+
+  /**
+   * Get merchandise returns details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table merchandise returns
+   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   */
+  async getMerchandiseReturnsDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
+      type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
+      carrier: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
+      trackingNumber: await this.getTextContent(
+        page,
+        this.merchandiseReturnsTableColumn(row, 'return-tracking-number'),
+      ),
+    };
+  }
+
+  // Payments block
+  /**
+   * Get payments number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getPaymentsNumber(page) {
+    return this.getNumberFromText(page, this.orderPaymentsTitle);
+  }
+
+  /**
+   * Add payment
+   * @param page {Page} Browser tab
+   * @param paymentData {object} Data to set on payment line
+   * @param invoice {string} Invoice number to select
+   * @returns {Promise<string>}
+   */
+  async addPayment(page, paymentData, invoice = '') {
+    await this.setValue(page, this.paymentDateInput, paymentData.date);
+    await this.setValue(page, this.paymentMethodInput, paymentData.paymentMethod);
+    await this.setValue(page, this.transactionIDInput, paymentData.transactionID);
+    await this.setValue(page, this.paymentAmountInput, paymentData.amount);
+    if (paymentData.currency !== '€') {
+      await this.selectByVisibleText(page, this.paymentCurrencySelect, paymentData.currency);
+    }
+
+    if (invoice !== '') {
+      await this.selectByVisibleText(page, this.paymentInvoiceSelect, invoice);
+    }
+
+    await this.clickAndWaitForNavigation(page, this.paymentAddButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Get invoice ID
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<number>}
+   */
+  getInvoiceID(page, row = 1) {
+    return this.getNumberFromText(page, this.paymentsTableColumn(row, 'invoice'));
+  }
+
+  /**
+   * Get payment warning
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getPaymentWarning(page) {
+    return this.getTextContent(page, this.paymentWarning);
+  }
+
+  /**
+   * Get payment details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<{date: string, amount: string, paymentMethod: string, invoice: string, transactionID: string}>}
+   */
+  async getPaymentsDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.paymentsTableColumn(row, 'date')),
+      paymentMethod: await this.getTextContent(page, this.paymentsTableColumn(row, 'payment-method')),
+      transactionID: await this.getTextContent(page, this.paymentsTableColumn(row, 'transaction-id')),
+      amount: await this.getTextContent(page, this.paymentsTableColumn(row, 'amount')),
+      invoice: await this.getTextContent(page, this.paymentsTableColumn(row, 'invoice')),
+    };
+  }
+
+  /**
+   * Display payment details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table - Start by 2
+   * @returns {Promise<string>}
+   */
+  async displayPaymentDetail(page, row = 2) {
+    await this.waitForSelectorAndClick(page, this.paymentsTableDetailsButton(row - 1));
+
+    return this.getTextContent(page, this.paymentTableRowDetails(row));
+  }
+
+  /**
+   * Get currency select options
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getCurrencySelectOptions(page) {
+    return this.getTextContent(page, this.paymentCurrencySelect);
   }
 }
 

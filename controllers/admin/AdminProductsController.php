@@ -1663,7 +1663,7 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
         }
-        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PROD_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
+        if (isset($image) && Validate::isLoadedObject($image) && !file_exists(_PS_PRODUCT_IMG_DIR_ . $image->getExistingImgPath() . '.' . $image->image_format)) {
             $image->delete();
         }
         if (count($this->errors)) {
@@ -2071,7 +2071,18 @@ class AdminProductsControllerCore extends AdminController
         }
         foreach ($languages as $language) {
             if ($this->isProductFieldUpdated('description_short', $language['id_lang']) && ($value = Tools::getValue('description_short_' . $language['id_lang']))) {
-                if (Tools::strlen(strip_tags($value)) > $limit) {
+                // This validation computation actually comes from TinyMceMaxLengthValidator if you modify it here you
+                // should keep the validator in sync (along with other parts of the code, more info in the
+                // TinyMceMaxLengthValidator comments).
+                $replaceArray = [
+                    "\n",
+                    "\r",
+                    "\n\r",
+                    "\r\n",
+                ];
+                $str = str_replace($replaceArray, [''], strip_tags($value));
+                $shortDescriptionLength = iconv_strlen($str);
+                if ($shortDescriptionLength > $limit) {
                     $this->errors[] = $this->trans(
                         'This %1$s field (%2$s) is too long: %3$d chars max (current count %4$d).',
                         [
@@ -2805,7 +2816,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         $image_uploader = new HelperImageUploader($inputFileName);
-        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg'])->setMaxSize($this->max_image_size);
+        $image_uploader->setAcceptTypes(['jpeg', 'gif', 'png', 'jpg', 'webp'])->setMaxSize($this->max_image_size);
         $files = $image_uploader->process();
 
         foreach ($files as &$file) {
@@ -3199,7 +3210,7 @@ class AdminProductsControllerCore extends AdminController
                             if (isset($position) && $product->updatePosition($way, $position)) {
                                 $category = new Category((int) $id_category);
                                 if (Validate::isLoadedObject($category)) {
-                                    hook::Exec('categoryUpdate', ['category' => $category]);
+                                    Hook::exec('actionCategoryUpdate', ['category' => $category]);
                                 }
                                 echo 'ok position ' . (int) $position . ' for product ' . (int) $pos[2] . "\r\n";
                             } else {

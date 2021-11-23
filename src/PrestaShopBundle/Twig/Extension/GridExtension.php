@@ -30,8 +30,7 @@ use RuntimeException;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
-use Twig\Loader\ExistsLoaderInterface;
-use Twig_SimpleFunction as SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Class GridExtension is responsible for providing grid helpers functions.
@@ -70,13 +69,13 @@ class GridExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new SimpleFunction('column_content', [$this, 'renderColumnContent'], [
+            new TwigFunction('column_content', [$this, 'renderColumnContent'], [
                 'is_safe' => ['html'],
             ]),
-            new SimpleFunction('column_header', [$this, 'renderColumnHeader'], [
+            new TwigFunction('column_header', [$this, 'renderColumnHeader'], [
                 'is_safe' => ['html'],
             ]),
-            new SimpleFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
+            new TwigFunction('is_ordering_column', [$this, 'isOrderingColumn'], [
                 'is_safe' => ['html'],
             ]),
         ];
@@ -206,9 +205,6 @@ class GridExtension extends AbstractExtension
         $columnTemplate = sprintf('%s/%s.html.twig', $basePath, $columnType);
 
         $loader = $this->twig->getLoader();
-        if (!($loader instanceof ExistsLoaderInterface)) {
-            return null;
-        }
 
         if ($loader->exists($columnGridTemplate)) {
             return $columnGridTemplate;
