@@ -35,6 +35,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Quantity field that displays the initial quantity (not editable) and allows editing with delta quantity
@@ -64,6 +66,12 @@ class DeltaQuantityType extends TranslatorAwareType
                 'data' => [
                     'value' => 0,
                 ],
+                'type_options' => [
+                    'constraints' => [
+                        new Type(['type' => 'numeric']),
+                        new NotBlank(),
+                    ],
+                ],
             ]);
         } else {
             $builder->add('delta', NumberType::class, [
@@ -73,6 +81,10 @@ class DeltaQuantityType extends TranslatorAwareType
                 'block_prefix' => 'delta_quantity_delta',
                 'row_attr' => [
                     'class' => 'delta-quantity-delta-container',
+                ],
+                'constraints' => [
+                    new Type(['type' => 'numeric']),
+                    new NotBlank(),
                 ],
             ]);
         }
