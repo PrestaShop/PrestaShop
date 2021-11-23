@@ -51,6 +51,11 @@ abstract class AbstractCustomerHandler
     protected $logger;
 
     /**
+     * @var string
+     */
+    protected $objectTypeLabel;
+
+    /**
      * @param TranslatorInterface $translator
      * @param LoggerInterface $logger
      */
