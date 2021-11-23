@@ -47,9 +47,6 @@ class VirtualProductFileConstraintException extends VirtualProductFileException
     public const INVALID_ACTIVE = 80;
     public const INVALID_SHAREABLE = 90;
 
-    /** Is thrown when product type is not valid to have a file */
-    public const INVALID_PRODUCT_TYPE = 100;
-
     /** Is thrown when file already exists for given product */
-    public const ALREADY_HAS_A_FILE = 110;
+    public const ALREADY_HAS_A_FILE = 100;
 }

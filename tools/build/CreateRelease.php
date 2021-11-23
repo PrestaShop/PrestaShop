@@ -55,7 +55,7 @@ $releaseOptions = [
     ],
     'no-installer' => [
         'required' => false,
-        'description' => 'Do not put the installer in the release. Interesting if release will be upload remotly by FTP or for public release. Default: false.',
+        'description' => 'Do not put the installer in the release. Interesting if release will be upload remotely by FTP or for public release. Default: false.',
         'longopt' => 'no-installer',
     ],
     'help' => [
@@ -88,18 +88,6 @@ if (isset($userOptions['h'])
     exit(0);
 }
 
-foreach ($releaseOptions as $optionName => $option) {
-    $required = isset($option['required']) ? $option['required'] : false;
-
-    if ($required && empty($userOptions[$optionName])) {
-        $consoleWrite->displayText(
-            "ERROR:{$lineSeparator}'--{$optionName}' option missing.{$lineSeparator}-h for help{$lineSeparator}",
-            ConsoleWriter::COLOR_RED
-        );
-
-        exit(1);
-    }
-}
 $destinationDir = '';
 $useZip = $useInstaller = true;
 

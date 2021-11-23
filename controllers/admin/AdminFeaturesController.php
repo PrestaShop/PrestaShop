@@ -292,7 +292,7 @@ class AdminFeaturesControllerCore extends AdminController
                 break;
 
             case 'view':
-                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+                $bread_extended[] = $this->feature_name[$this->context->employee->id_lang] ?? null;
                 $this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 
                 break;
@@ -526,7 +526,7 @@ class AdminFeaturesControllerCore extends AdminController
 
         if (Tools::isSubmit('submitAdd' . $this->table . 'AndStay') && !count($this->errors)) {
             if ($this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add')) {
-                $this->redirect_after = self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->token;
+                $this->redirect_after = self::$currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&conf=3&token=' . $this->token;
             } else {
                 $this->redirect_after = self::$currentIndex . '&' . $this->identifier . '=&conf=3&update' . $this->table . '&token=' . $this->token;
             }

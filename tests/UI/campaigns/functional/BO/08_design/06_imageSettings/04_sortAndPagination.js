@@ -1,7 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import expect from chai
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -14,14 +18,7 @@ const addImageTypePage = require('@pages/BO/design/imageSettings/add');
 // Import data
 const ImageTypeFaker = require('@data/faker/imageType');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_design_imageSettings_sortAndPagination';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 
 let browserContext;
 let page;
@@ -30,10 +27,10 @@ let numberOfImageTypes = 0;
 /*
 Create 15 image settings
 Paginate between pages
-Sort image settings table
+Sort image settings table by ID, Name, Width and Height
 Delete image settings with bulk actions
  */
-describe('Pagination and sort image settings', async () => {
+describe('BO - Design - Image Settings : Pagination and sort image settings', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +45,7 @@ describe('Pagination and sort image settings', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to image settings page', async function () {
+  it('should go to \'Design > Image Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImageSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -70,11 +67,10 @@ describe('Pagination and sort image settings', async () => {
     await expect(numberOfImageTypes).to.be.above(0);
   });
 
-  // 1 : Create 15 new image settings
-  const creationTests = new Array(15).fill(0, 0, 15);
-
-  creationTests.forEach((test, index) => {
-    describe(`Create image setting n°${index + 1} in BO`, async () => {
+  // 1 : Create 15 new image types
+  describe('Create 15 image types', async () => {
+    const creationTests = new Array(15).fill(0, 0, 15);
+    creationTests.forEach((test, index) => {
       const createImageTypeData = new ImageTypeFaker({name: `todelete${index}`});
 
       it('should go to add new image type page', async function () {
@@ -85,7 +81,7 @@ describe('Pagination and sort image settings', async () => {
         await expect(pageTitle).to.contains(addImageTypePage.pageTitleCreate);
       });
 
-      it('should create image type and check result', async function () {
+      it(`should create image type n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createImageType${index}`, baseContext);
 
         const textResult = await addImageTypePage.createEditImageType(page, createImageTypeData);
@@ -99,8 +95,8 @@ describe('Pagination and sort image settings', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -120,8 +116,8 @@ describe('Pagination and sort image settings', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await imageSettingsPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');
@@ -174,7 +170,7 @@ describe('Pagination and sort image settings', async () => {
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await imageSettingsPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -199,27 +195,17 @@ describe('Pagination and sort image settings', async () => {
     });
   });
 
-  // 4 : Delete image settings created with bulk actions
-  describe('Delete image settings with Bulk Actions', async () => {
+  // 4 : Delete image types created with bulk actions
+  describe('Delete image types with Bulk Actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
 
-      await imageSettingsPage.filterTable(
-        page,
-        'input',
-        'name',
-        'todelete',
-      );
+      await imageSettingsPage.filterTable(page, 'input', 'name', 'todelete');
 
       const numberOfImageTypesAfterFilter = await imageSettingsPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfImageTypesAfterFilter; i++) {
-        const textColumn = await imageSettingsPage.getTextColumn(
-          page,
-          i,
-          'name',
-        );
-
+        const textColumn = await imageSettingsPage.getTextColumn(page, i, 'name');
         await expect(textColumn).to.contains('todelete');
       }
     });

@@ -857,9 +857,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $tpl->assign([
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
-                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+            'thread_url' => $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1',
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
             'token' => $this->token,
@@ -1018,7 +1017,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $str_errors = '';
         $str_error_delete = '';
 
-        if (count($errors) && is_array($errors)) {
+        if (is_array($errors) && count($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
                 $str_errors .= $error . ', ';

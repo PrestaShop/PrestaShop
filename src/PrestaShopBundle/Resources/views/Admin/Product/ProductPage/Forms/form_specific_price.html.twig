@@ -29,11 +29,11 @@
 {% if is_modal == false %}
   {% set column_default_md_3 = 'col-md-3' %}
   {% set column_default_md_2 = 'col-md-2' %}
-  {% set column_default_xl_2 = 'col-xl-2' %}
+  {% set column_default_xl_3 = 'col-xl-3' %}
 {% else %}
   {% set column_default_md_3 = 'col-md-9' %}
   {% set column_default_md_2 = 'col-md-4' %}
-  {% set column_default_xl_2 = 'col-xl-4' %}
+  {% set column_default_xl_3 = 'col-xl-4' %}
 {% endif %}
 
 <div class="card card-block">
@@ -144,21 +144,21 @@
     </div>
   </div>
   <div class="row">
-    <div class="{{ column_default_xl_2 }} col-lg-3">
+    <div class="{{ column_default_xl_3 }} col-lg-4">
       <fieldset class="form-group">
         <label>{{ 'Apply a discount of'|trans({}, 'Admin.Catalog.Feature') }}</label>
         {{ form_errors(form.sp_reduction) }}
         {{ form_widget(form.sp_reduction) }}
       </fieldset>
     </div>
-    <div class="{{ column_default_xl_2 }} col-lg-3">
+    <div class="{{ column_default_xl_3 }} col-lg-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_type) }}
         {{ form_widget(form.sp_reduction_type) }}
       </fieldset>
     </div>
-    <div class="{{ column_default_xl_2 }} col-lg-3">
+    <div class="{{ column_default_xl_3 }} col-lg-3">
       <fieldset class="form-group">
         <label>&nbsp;</label>
         {{ form_errors(form.sp_reduction_tax) }}

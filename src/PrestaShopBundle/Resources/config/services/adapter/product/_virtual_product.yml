@@ -1,0 +1,56 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.product.virtual_product.command_handler.add_virtual_product_file_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\AddVirtualProductFileHandler
+    arguments:
+      - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand
+
+  prestashop.adapter.product.virtual_product.command_handler.update_virtual_product_file_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\UpdateVirtualProductFileHandler
+    arguments:
+      - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
+      - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand
+
+  prestashop.adapter.product.virtual_product.update.virtual_product_updater:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.file.uploader.virtual_product_file_uploader'
+      - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
+      - '@filesystem'
+      - !php/const _PS_DOWNLOAD_DIR_
+
+  prestashop.adapter.product.virtual_product.validate.virtual_product_file_validator:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Validate\VirtualProductFileValidator
+
+  prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository
+    arguments:
+      - '@prestashop.adapter.product.virtual_product.validate.virtual_product_file_validator'
+
+  prestashop.adapter.file.validator.virtual_product_file_validator:
+    class: PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_ATTACHMENT_MAXIMUM_SIZE")'
+
+  prestashop.adapter.file.uploader.virtual_product_file_uploader:
+    class: PrestaShop\PrestaShop\Adapter\File\Uploader\VirtualProductFileUploader
+    arguments:
+      - '@prestashop.adapter.file.validator.virtual_product_file_validator'
+      - !php/const _PS_DOWNLOAD_DIR_
+
+  prestashop.adapter.product.virtual_product.command_handler.delete_virtual_product_file_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\CommandHandler\DeleteVirtualProductFileHandler
+    arguments:
+      - '@prestashop.adapter.product.virtual_product.update.virtual_product_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand

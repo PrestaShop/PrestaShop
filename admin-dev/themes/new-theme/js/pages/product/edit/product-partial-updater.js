@@ -24,6 +24,7 @@
  */
 
 import _ from 'lodash';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -54,12 +55,33 @@ export default class ProductPartialUpdater {
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
   watch() {
+    // Avoid submitting form when pressing Enter
+    this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
     this.initialData = this.getFormDataAsObject();
     this.$productForm.submit(() => this.updatePartialForm());
     // 'dp.change' event allows tracking datepicker input changes
     this.$productForm.on('keyup change dp.change', ':input', () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateSubmitButtonState());
+
+    this.watchCustomizations();
+    this.watchCategories();
     this.initFormattedTextarea();
+  }
+
+  /**
+   * Watch events specifically related to customizations subform
+   */
+  watchCustomizations() {
+    this.eventEmitter.on(ProductEventMap.customizations.rowAdded, () => this.updateSubmitButtonState());
+    this.eventEmitter.on(ProductEventMap.customizations.rowRemoved, () => this.updateSubmitButtonState());
+  }
+
+  /**
+   * Watch events specifically related to categories subform
+   */
+  watchCategories() {
+    this.eventEmitter.on(ProductEventMap.categories.categoriesUpdated, () => this.updateSubmitButtonState());
   }
 
   /**
@@ -219,6 +241,13 @@ export default class ProductPartialUpdater {
       }
 
       serializedForm[formField.name] = value;
+    });
+
+    // File inputs must be handled manually
+    $('input[type="file"]', this.$productForm).each((inputIndex, fileInput) => {
+      $.each($(fileInput)[0].files, (fileIndex, file) => {
+        serializedForm[fileInput.name] = file;
+      });
     });
 
     return serializedForm;

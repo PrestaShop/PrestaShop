@@ -1,20 +1,31 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Addresses page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Addresses extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on addresses page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Addresses';
+    this.addressPageTitle = 'Address';
     this.addAddressSuccessfulMessage = 'Address successfully added!';
     this.updateAddressSuccessfulMessage = 'Address successfully updated!';
     this.deleteAddressSuccessfulMessage = 'Address successfully deleted!';
 
     // Selectors
+    this.addressBlock = 'article.address';
+    this.addressBodyTitle = `${this.addressBlock} .address-body h4`;
     this.createNewAddressLink = '#content div.addresses-footer a[data-link-action=\'add-address\']';
     this.editAddressLink = 'a[data-link-action=\'edit-address\']';
     this.deleteAddressLink = 'a[data-link-action=\'delete-address\']';
-    this.countrySelect = '#content  select[name=\'id_country\']';
   }
 
   /*
@@ -22,7 +33,7 @@ class Addresses extends FOBasePage {
    */
   /**
    * Open create new address form
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    * @constructor
    */
@@ -31,28 +42,24 @@ class Addresses extends FOBasePage {
   }
 
   /**
-   * Is country exist
-   * @param page
-   * @param countryName
-   * @returns {Promise<boolean>}
+   * Get address position from its alias
+   * @param page {Page} Browser tab
+   * @param alias {string} Alias of the address
+   * @return {Promise<number>}
    */
-  async isCountryExist(page, countryName) {
-    let options = await page.$$eval(
-      `${this.countrySelect} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
+  async getAddressPosition(page, alias) {
+    const titles = await page.$$eval(
+      this.addressBodyTitle,
+      all => all.map(address => address.textContent),
     );
-    options = await options.filter(option => countryName === option.textContent);
-    return options.length !== 0;
+
+    return titles.indexOf(alias) + 1;
   }
 
   /**
    * Go to edit address page in FO
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {string} String of the position
    * @returns {Promise<void>}
    */
   async goToEditAddressPage(page, position = 'last') {
@@ -66,8 +73,8 @@ class Addresses extends FOBasePage {
 
   /**
    * Delete address in FO
-   * @param page
-   * @param position
+   * @param page {Page} Browser tab
+   * @param position {string} String of the position
    * @returns {Promise<string>}
    */
   async deleteAddress(page, position = 'last') {

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Carriers page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class Carriers extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on carriers page
+   */
   constructor() {
     super();
 
@@ -81,7 +90,7 @@ class Carriers extends BOBasePage {
    */
   /**
    * Go to add new carrier page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewCarrierPage(page) {
@@ -92,7 +101,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Get Number of carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -101,7 +110,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -113,7 +122,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Reset and get number of image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -123,16 +132,16 @@ class Carriers extends BOBasePage {
 
   /**
    * Filter carriers table
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of the filter (input or select)
+   * @param filterBy {string} Value to use for the select type filter
+   * @param value {string|number} Value for the select filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
@@ -152,8 +161,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Go to edit carrier page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
    * @return {Promise<void>}
    */
   async gotoEditCarrierPage(page, row) {
@@ -162,9 +171,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
+   * @param columnName {string} Column name in the table
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -207,8 +216,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Delete carrier from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
    * @return {Promise<string>}
    */
   async deleteCarrier(page, row) {
@@ -229,9 +238,9 @@ class Carriers extends BOBasePage {
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name in the table
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -239,7 +248,7 @@ class Carriers extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -247,9 +256,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} column to sort with
+   * @param sortDirection {string} asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -279,7 +288,7 @@ class Carriers extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -288,8 +297,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {Number} The pagination number value
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -300,7 +309,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -310,7 +319,7 @@ class Carriers extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -321,12 +330,12 @@ class Carriers extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete carriers
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteCarriers(page) {
     // To confirm bulk delete action with dialog
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
 
     // Select all rows
     await Promise.all([
@@ -336,7 +345,7 @@ class Carriers extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -353,8 +362,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Bulk set carriers status
-   * @param page
-   * @param action
+   * @param page {Page} Browser tab
+   * @param action {string} The action to perform in bulk
    * @returns {Promise<void>}
    */
   async bulkSetStatus(page, action) {
@@ -366,7 +375,7 @@ class Carriers extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -388,8 +397,8 @@ class Carriers extends BOBasePage {
 
   /**
    * Get carrier status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
@@ -398,9 +407,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Set carriers status
-   * @param page
-   * @param row
-   * @param valueWanted
+   * @param page {Page} Browser tab
+   * @param row {number} Row index in the table
+   * @param valueWanted {boolean} The carrier status value
    * @return {Promise<boolean>}, true if click has been performed
    */
   async setStatus(page, row = 1, valueWanted = true) {
@@ -416,9 +425,9 @@ class Carriers extends BOBasePage {
 
   /**
    * Change carrier position
-   * @param page
-   * @param actualPosition
-   * @param newPosition
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} The actual row position
+   * @param newPosition {number} The new position for the row
    * @return {Promise<string>}
    */
   async changePosition(page, actualPosition, newPosition) {

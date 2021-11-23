@@ -40,7 +40,7 @@
 
 {block name="field"}
 	{if $input.name == 'current_texture'}
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			{if isset($imageTextureExists) && $imageTextureExists}
 				<img src="{$imageTexture}" alt="{l s='Texture' d='Admin.Catalog.Feature'}" class="img-thumbnail" />
 			{else}

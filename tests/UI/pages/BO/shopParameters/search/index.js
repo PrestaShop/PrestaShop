@@ -1,13 +1,24 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Search page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class Search extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on search page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'Search •';
-    this.successfulCreationMessage = 'Creation successful';
+    this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
+    this.settingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header links
@@ -61,6 +72,11 @@ class Search extends BOBasePage {
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
     this.bulkEnableButton = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.bulkDisableButton = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
+
+    // Search form
+    this.aliasForm = '#alias_fieldset_search';
+    this.fuzzySearchLabel = status => `#PS_SEARCH_FUZZY_${status}`;
+    this.saveFormButton = `${this.aliasForm} button[name='submitOptionsalias']`;
   }
 
   /*
@@ -70,7 +86,7 @@ class Search extends BOBasePage {
   /* Header methods */
   /**
    * Go to add new alias page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewAliasPage(page) {
@@ -79,7 +95,7 @@ class Search extends BOBasePage {
 
   /**
    * Go to tags page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToTagsPage(page) {
@@ -88,8 +104,8 @@ class Search extends BOBasePage {
 
   /* Filter methods */
   /**
-   * Get Number of lines
-   * @param page
+   * Get number of lines
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -98,7 +114,7 @@ class Search extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -110,7 +126,7 @@ class Search extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -120,10 +136,10 @@ class Search extends BOBasePage {
 
   /**
    * Filter aliases
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter (input/select)
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -148,8 +164,8 @@ class Search extends BOBasePage {
   /* Column methods */
   /**
    * Go to edit page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditAliasPage(page, row) {
@@ -158,9 +174,9 @@ class Search extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -192,8 +208,8 @@ class Search extends BOBasePage {
 
   /**
    * Delete alias from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteAlias(page, row) {
@@ -214,7 +230,7 @@ class Search extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -222,17 +238,17 @@ class Search extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
 
   /**
    * Delete by bulk action
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async bulkDeleteAliases(page) {
-    this.dialogListener(page, true);
+    await this.dialogListener(page, true);
     // Select all rows
     await this.bulkSelectRows(page);
 
@@ -247,8 +263,8 @@ class Search extends BOBasePage {
 
   /**
    * Enable / disable by Bulk Actions
-   * @param page
-   * @param enable
+   * @param page {Page} Browser tab
+   * @param enable {boolean} True if we need to enable status
    * @returns {Promise<void>}
    */
   async bulkSetStatus(page, enable = true) {
@@ -266,8 +282,8 @@ class Search extends BOBasePage {
 
   /**
    * Get alias status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   getStatus(page, row) {
@@ -276,15 +292,15 @@ class Search extends BOBasePage {
 
   /**
    * Quick edit toggle column value
-   * @param page
-   * @param row, row in table
-   * @param valueWanted, Value wanted in column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param valueWanted {boolean} Value wanted in column
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
     await this.waitForVisibleSelector(page, this.tableColumnStatus(row), 2000);
     if (await this.getStatus(page, row) !== valueWanted) {
-      page.click(this.tableColumnStatus(row));
+      await page.click(this.tableColumnStatus(row));
       await this.waitForVisibleSelector(
         page,
         (valueWanted ? this.tableColumnStatusEnabledIcon(row) : this.tableColumnStatusDisabledIcon(row)),
@@ -292,6 +308,19 @@ class Search extends BOBasePage {
       return true;
     }
     return false;
+  }
+
+  // Methods for search form
+  /**
+   * Enable/Disable fuzzy search
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable fuzzy search
+   * @returns {Promise<string>}
+   */
+  async setFuzzySearch(page, toEnable = true) {
+    await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
+    return this.getAlertSuccessBlockContent(page);
   }
 }
 

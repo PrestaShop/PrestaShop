@@ -32,12 +32,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 /**
  *  Holds product combination identification data
  */
-class CombinationId
+class CombinationId implements CombinationIdInterface
 {
     /**
      * Indicates that no combination is provided/selected
+     *
+     * @deprecated since 8.0.0 and will be removed in next major version.
+     * @see NoCombinationId instead
      */
-    const NO_COMBINATION = 0;
+    public const NO_COMBINATION = 0;
 
     /**
      * @var int

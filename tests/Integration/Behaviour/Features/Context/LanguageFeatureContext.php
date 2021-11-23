@@ -43,7 +43,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
             throw new RuntimeException(sprintf('Iso code %s does not exist', $isoCode));
         }
 
-        Configuration::updateValue('PS_LANG_DEFAULT', $languageId);
+        Configuration::updateValue('PS_LANG_DEFAULT', (string) $languageId);
 
         SharedStorage::getStorage()->set('default_language_id', $languageId);
     }
@@ -72,6 +72,15 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         SharedStorage::getStorage()->set($reference, $language);
+    }
+
+    /**
+     * @When I delete language :reference
+     */
+    public function deleteLanguage($reference): void
+    {
+        $language = SharedStorage::getStorage()->get($reference);
+        $language->delete();
     }
 
     /**

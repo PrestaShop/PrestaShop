@@ -113,7 +113,7 @@ class FrontControllerCore extends Controller
     /** @var bool SSL connection flag */
     public $ssl = false;
 
-    /** @var bool If true, switches display to restricted country page during init. */
+    /** @var int If Country::GEOLOC_CATALOG_MODE, switches display to restricted country page during init. */
     protected $restrictedCountry = Country::GEOLOC_ALLOWED;
 
     /** @var bool If true, forces display to maintenance page. */
@@ -141,7 +141,7 @@ class FrontControllerCore extends Controller
     public $nb_items_per_page;
 
     /**
-     * @var object ObjectSerializer
+     * @var ObjectPresenter
      */
     public $objectPresenter;
 
@@ -373,7 +373,7 @@ class FrontControllerCore extends Controller
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
-                if (!$has_currency && validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
+                if (!$has_currency && Validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
                     $this->context->cookie->id_currency = (int) Currency::getCurrencyInstance($country->id_currency ? (int) $country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'))->id;
                     $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
@@ -1077,6 +1077,8 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'server' => 'local',
+            'version' => null,
+            'needRtl' => true,
         ];
         $params = array_merge($default_params, $params);
 
@@ -1085,7 +1087,8 @@ class FrontControllerCore extends Controller
                 . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], $params['needRtl'], $params['version']);
     }
 
     public function unregisterStylesheet($id)
@@ -1105,6 +1108,7 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'attributes' => null,
             'server' => 'local',
+            'version' => null,
         ];
         $params = array_merge($default_params, $params);
 
@@ -1113,7 +1117,7 @@ class FrontControllerCore extends Controller
                 . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
             $params['server'] = 'remote';
         }
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server'], $params['version']);
     }
 
     public function unregisterJavascript($id)
@@ -1220,7 +1224,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
         $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 49]);
     }
 
     /**
@@ -1241,7 +1245,7 @@ class FrontControllerCore extends Controller
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
-     * @param string null $folder
+     * @param string|null $folder
      * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
@@ -1282,12 +1286,12 @@ class FrontControllerCore extends Controller
             if (Validate::isLoadedObject($cart)) {
                 $customer = new Customer((int) $cart->id_customer);
                 if (Validate::isLoadedObject($customer)) {
-                    $customer->logged = 1;
+                    $customer->logged = true;
                     $this->context->customer = $customer;
                     $this->context->cookie->id_customer = (int) $customer->id;
                     $this->context->cookie->customer_lastname = $customer->lastname;
                     $this->context->cookie->customer_firstname = $customer->firstname;
-                    $this->context->cookie->logged = 1;
+                    $this->context->cookie->logged = true;
                     $this->context->cookie->check_cgv = 1;
                     $this->context->cookie->is_guest = $customer->isGuest();
                     $this->context->cookie->passwd = $customer->passwd;
@@ -1296,15 +1300,15 @@ class FrontControllerCore extends Controller
                     return $id_cart;
                 }
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Sets template file for page content output.
      *
-     * @param string $default_template
+     * @param string $template
      */
     public function setTemplate($template, $params = [], $locale = null)
     {
@@ -1510,7 +1514,7 @@ class FrontControllerCore extends Controller
 
             $pages = [];
             $p = [
-                'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
+                'address', 'addresses', 'authentication', 'manufacturer', 'cart', 'category', 'cms', 'contact',
                 'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
                 'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
                 'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
@@ -1520,6 +1524,7 @@ class FrontControllerCore extends Controller
                 $index = str_replace('-', '_', $page_name);
                 $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
             }
+            $pages['brands'] = $pages['manufacturer'];
             $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
             $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
             $urls['pages'] = $pages;
@@ -1576,7 +1581,7 @@ class FrontControllerCore extends Controller
     public function getTemplateVarCurrency()
     {
         $curr = [];
-        $fields = ['name', 'iso_code', 'iso_code_num', 'sign'];
+        $fields = ['id', 'name', 'iso_code', 'iso_code_num', 'sign'];
         foreach ($fields as $field_name) {
             $curr[$field_name] = $this->context->currency->{$field_name};
         }
@@ -1600,6 +1605,7 @@ class FrontControllerCore extends Controller
             $cust['id_lang']
         );
 
+        $cust['id'] = $this->context->customer->id;
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1617,6 +1623,33 @@ class FrontControllerCore extends Controller
         return $cust;
     }
 
+    /**
+     * Get the shop logo with its dimensions
+     *
+     * @return array<string, string|int>
+     */
+    public function getShopLogo(): array
+    {
+        if (!Configuration::hasKey('PS_LOGO')) {
+            return [];
+        }
+
+        $logoFileName = Configuration::get('PS_LOGO');
+        $logoFileDir = _PS_IMG_DIR_ . $logoFileName;
+
+        if (!file_exists($logoFileDir)) {
+            return [];
+        }
+
+        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
+
+        return [
+            'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
+            'width' => $logoWidth,
+            'height' => $logoHeight,
+        ];
+    }
+
     public function getTemplateVarShop()
     {
         $address = $this->context->shop->getAddress();
@@ -1625,6 +1658,7 @@ class FrontControllerCore extends Controller
         $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
 
         $shop = [
+            'id' => $this->context->shop->id,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
@@ -1633,6 +1667,7 @@ class FrontControllerCore extends Controller
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
             'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'logo_details' => $this->getShopLogo(),
             'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
             'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
@@ -1739,6 +1774,14 @@ class FrontControllerCore extends Controller
         ];
     }
 
+    /**
+     * Generate the canonical URL of the current page
+     *
+     * Mainly used for ProductController and CategoryController
+     * but can be implemented by other classes inheriting from FrontController
+     *
+     * @return string|void
+     */
     public function getCanonicalURL()
     {
     }

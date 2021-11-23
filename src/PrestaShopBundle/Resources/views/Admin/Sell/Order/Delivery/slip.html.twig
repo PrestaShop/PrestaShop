@@ -33,7 +33,7 @@
   }}
     <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_pdf %}
-        <div class="col-xl-10">
+        <div class="col-xl-12">
           <div class="card" id="delivery_pdf_fieldset">
             <h3 class="card-header">
               <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
@@ -71,7 +71,7 @@
   {{ form_start(optionsForm, {'attr' : {'class': 'form', 'id': 'form-delivery-slips-options'} }) }}
     <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_options %}
-        <div class="col-xl-10">
+        <div class="col-xl-12">
           <div class="card" id="delivery_options_fieldset">
             <h3 class="card-header">
               <i class="material-icons">settings</i> {{ 'Delivery slip options'|trans }}

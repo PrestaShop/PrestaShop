@@ -358,7 +358,7 @@ class ThemeManager implements AddonManagerInterface
     private function doEnableModules(array $modules)
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
+        $moduleManager = $moduleManagerBuilder->build();
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
@@ -545,7 +545,7 @@ class ThemeManager implements AddonManagerInterface
             try {
                 // construct a new catalog for this lang and import in database if key and message are different
                 $messageCatalog = $this->translationFinder->getCatalogueFromPaths(
-                    $translationFolder . $locale,
+                    [$translationFolder . $locale],
                     $locale
                 );
 

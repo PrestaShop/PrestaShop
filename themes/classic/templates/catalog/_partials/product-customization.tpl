@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
-<section class="product-customization">
+<section class="product-customization js-product-customization">
   {if !$configuration.is_catalog}
     <div class="card card-block">
       <p class="h4 card-title">{l s='Product customization' d='Shop.Theme.Catalog'}</p>
@@ -33,13 +33,13 @@
           <ul class="clearfix">
             {foreach from=$customizations.fields item="field"}
               <li class="product-customization-item">
-                <label> {$field.label}</label>
+                <label for="field-{$field.input_name}">{$field.label}</label>
                 {if $field.type == 'text'}
-                  <textarea placeholder="{l s='Your message here' d='Shop.Forms.Help'}" class="product-message" maxlength="250" {if $field.required} required {/if} name="{$field.input_name}"></textarea>
+                  <textarea placeholder="{l s='Your message here' d='Shop.Forms.Help'}" class="product-message" maxlength="250" {if $field.required} required {/if} name="{$field.input_name}" id="field-{$field.input_name}"></textarea>
                   <small class="float-xs-right">{l s='250 char. max' d='Shop.Forms.Help'}</small>
                   {if $field.text !== ''}
                       <h6 class="customization-message">{l s='Your customization:' d='Shop.Theme.Catalog'}
-                          <label>{$field.text}</label>
+                          <label class="customization-label">{$field.text}</label>
                       </h6>
                   {/if}
                 {elseif $field.type == 'image'}
@@ -50,10 +50,11 @@
                   {/if}
                   <span class="custom-file">
                     <span class="js-file-name">{l s='No selected file' d='Shop.Forms.Help'}</span>
-                    <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}">
+                    <input class="file-input js-file-input" {if $field.required} required {/if} type="file" name="{$field.input_name}" id="field-{$field.input_name}">
                     <button class="btn btn-primary">{l s='Choose file' d='Shop.Theme.Actions'}</button>
                   </span>
-                  <small class="float-xs-right">{l s='.png .jpg .gif' d='Shop.Forms.Help'}</small>
+                  {assign var=authExtensions value=' .'|implode:constant('ImageManager::EXTENSIONS_SUPPORTED')}
+                  <small class="float-xs-right">.{$authExtensions}</small>
                 {/if}
               </li>
             {/foreach}

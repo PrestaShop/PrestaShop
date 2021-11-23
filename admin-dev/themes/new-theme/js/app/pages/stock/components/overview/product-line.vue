@@ -39,7 +39,7 @@
           <p>
             {{ product.product_name }}
             <small v-if="hasCombination"><br>
-              {{ combinationName }}
+              {{ product.combination_name }}
             </small>
           </p>
         </PSMedia>
@@ -114,14 +114,15 @@
   </tr>
 </template>
 
-<script>
-  import PSCheckbox from '@app/widgets/ps-checkbox';
-  import PSMedia from '@app/widgets/ps-media';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
+  import PSMedia from '@app/widgets/ps-media.vue';
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
   import {EventBus} from '@app/utils/event-bus';
-  import Spinner from '@app/pages/stock/components/overview/spinner';
+  import Spinner from '@app/pages/stock/components/overview/spinner.vue';
 
-  export default {
+  export default Vue.extend({
     props: {
       product: {
         type: Object,
@@ -130,54 +131,54 @@
     },
     mixins: [ProductDesc],
     computed: {
-      reference() {
+      reference(): string {
         if (this.product.combination_reference !== 'N/A') {
           return this.product.combination_reference;
         }
         return this.product.product_reference;
       },
-      updatedQty() {
+      updatedQty(): boolean {
         return !!this.product.qty;
       },
-      physicalQtyUpdated() {
+      physicalQtyUpdated(): number {
         return Number(this.physical) + Number(this.product.qty);
       },
-      availableQtyUpdated() {
+      availableQtyUpdated(): number {
         return Number(this.product.product_available_quantity) + Number(this.product.qty);
       },
-      physical() {
+      physical(): number {
         const productAvailableQty = Number(this.product.product_available_quantity);
         const productReservedQty = Number(this.product.product_reserved_quantity);
 
         return productAvailableQty + productReservedQty;
       },
-      lowStock() {
+      lowStock(): boolean {
         return this.product.product_low_stock_alert;
       },
-      lowStockLevel() {
+      lowStockLevel(): string {
         return `<div class="text-sm-left">
           <p>${this.trans('product_low_stock')}</p>
           <p><strong>${this.trans('product_low_stock_level')} ${this.product.product_low_stock_threshold}</strong></p>
         </div>`;
       },
-      lowStockAlert() {
+      lowStockAlert(): string {
         return `<div class="text-sm-left">
           <p><strong>${this.trans('product_low_stock_alert')} ${this.product.product_low_stock_alert}</strong></p>
         </div>`;
       },
-      id() {
+      id(): string {
         return `product-${this.product.product_id}${this.product.combination_id}`;
       },
     },
     methods: {
-      productChecked(checkbox) {
+      productChecked(checkbox: any): void {
         if (checkbox.checked) {
           this.$store.dispatch('addSelectedProduct', checkbox.item);
         } else {
           this.$store.dispatch('removeSelectedProduct', checkbox.item);
         }
       },
-      updateProductQty(productToUpdate) {
+      updateProductQty(productToUpdate: Record<string, any>): void {
         const updatedProduct = {
           product_id: productToUpdate.product.product_id,
           combination_id: productToUpdate.product.combination_id,
@@ -192,11 +193,11 @@
       },
     },
     mounted() {
-      EventBus.$on('toggleProductsCheck', (checked) => {
+      EventBus.$on('toggleProductsCheck', (checked: boolean) => {
         const ref = this.id;
 
         if (this.$refs[ref]) {
-          this.$refs[ref].checked = checked;
+          (<VCheckboxDatas> this.$refs[ref]).checked = checked;
         }
       });
       $('[data-toggle="pstooltip"]').pstooltip();
@@ -209,5 +210,5 @@
       PSMedia,
       PSCheckbox,
     },
-  };
+  });
 </script>

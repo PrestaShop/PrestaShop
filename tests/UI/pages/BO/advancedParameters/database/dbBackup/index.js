@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * DB Backup page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class DbBackup extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on db backup page
+   */
   constructor() {
     super();
 
@@ -17,7 +26,7 @@ class DbBackup extends BOBasePage {
     this.newBackupButton = `${this.newBackupForm} button`;
 
     // Download backup selectors
-    this.downloadBackupButton = 'a[href*=\'backups/download\']';
+    this.downloadBackupButton = 'a.download-file-link';
 
     // DB backup grid selectors
     this.gridPanel = '#backup_grid_panel';
@@ -45,13 +54,13 @@ class DbBackup extends BOBasePage {
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
   }
 
   /* Header methods */
   /**
    * Go to db Backup page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToSqlManagerPage(page) {
@@ -61,7 +70,7 @@ class DbBackup extends BOBasePage {
   /* Form and grid methods */
   /**
    * Get number of backups
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -70,14 +79,14 @@ class DbBackup extends BOBasePage {
 
   /**
    * Create new db backup
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async createDbDbBackup(page) {
     await Promise.all([
       page.click(this.newBackupButton),
-      page.waitForSelector(this.tableRow(1), {state: 'visible'}),
-      page.waitForSelector(this.downloadBackupButton, {state: 'visible'}),
+      this.waitForVisibleSelector(page, this.tableRow(1)),
+      this.waitForVisibleSelector(page, this.downloadBackupButton),
     ]);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -85,28 +94,23 @@ class DbBackup extends BOBasePage {
 
   /**
    * Download backup
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
    */
-  async downloadDbBackup(page) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      await page.click(this.downloadBackupButton),
-    ]);
-
-    return download.path();
+  downloadDbBackup(page) {
+    return this.clickAndWaitForDownload(page, this.downloadBackupButton);
   }
 
   /**
    * Delete backup
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteBackup(page, row) {
     await Promise.all([
       page.click(this.dropdownToggleButton(row)),
-      page.waitForSelector(`${this.dropdownToggleButton(row)}[aria-expanded='true']`),
+      this.waitForVisibleSelector(page, `${this.dropdownToggleButton(row)}[aria-expanded='true']`),
     ]);
     // Click on delete and wait for modal
     await Promise.all([
@@ -114,12 +118,13 @@ class DbBackup extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Confirm delete with in modal
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async confirmDeleteDbBackups(page) {
@@ -128,7 +133,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Delete with bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteWithBulkActions(page) {
@@ -150,13 +155,14 @@ class DbBackup extends BOBasePage {
     ]);
 
     await this.confirmDeleteDbBackups(page);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -165,8 +171,8 @@ class DbBackup extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -180,7 +186,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -191,7 +197,7 @@ class DbBackup extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

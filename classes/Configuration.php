@@ -37,7 +37,7 @@ class ConfigurationCore extends ObjectModel
     public $id_shop_group;
     public $id_shop;
 
-    /** @var string Value */
+    /** @var string|array<string> Value */
     public $value;
 
     /** @var string Object creation date */
@@ -63,10 +63,10 @@ class ConfigurationCore extends ObjectModel
         ],
     ];
 
-    /** @var array Configuration cache (kept for backward compat) */
+    /** @var array|null Configuration cache (kept for backward compat) */
     protected static $_cache = null;
 
-    /** @var array Configuration cache with optimised key order */
+    /** @var array|null Configuration cache with optimised key order */
     protected static $_new_cache_shop = null;
     protected static $_new_cache_group = null;
     protected static $_new_cache_global = null;
@@ -252,14 +252,6 @@ class ConfigurationCore extends ObjectModel
     public static function getGlobalValue($key, $idLang = null)
     {
         return Configuration::get($key, $idLang, 0, 0);
-    }
-
-    /**
-     * @deprecated use Configuration::getConfigInMultipleLangs() instead
-     */
-    public static function getInt($key, $idShopGroup = null, $idShop = null)
-    {
-        return self::getConfigInMultipleLangs($key, $idShopGroup, $idShop);
     }
 
     /**
@@ -584,19 +576,20 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * Delete configuration key from current context.
+     * Delete configuration key from current context
      *
      * @param string $key
+     * @param int $idShopGroup
+     * @param int $idShop
      */
-    public static function deleteFromContext($key)
+    public static function deleteFromContext($key, int $idShopGroup = null, int $idShop = null)
     {
         if (Shop::getContext() == Shop::CONTEXT_ALL) {
             return;
         }
 
-        $idShop = null;
-        $idShopGroup = Shop::getContextShopGroupID(true);
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+        $idShopGroup = $idShopGroup ?? Shop::getContextShopGroupID(true);
+        if (!isset($idShop) && Shop::getContext() == Shop::CONTEXT_SHOP) {
             $idShop = Shop::getContextShopID(true);
         }
 

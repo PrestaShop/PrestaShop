@@ -30,12 +30,15 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\AddVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\DeleteVirtualProductFileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Command\UpdateVirtualProductFileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Tests\Resources\DummyFileUploader;
 
@@ -54,10 +57,11 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I add virtual product file :fileReference to :productReference with following details:
+     * @When I add virtual product file :fileReference to product :productReference with following details:
      *
      * @param string $fileReference
      * @param string $productReference
+     * @param string $filePathReference
      * @param TableNode $dataTable
      */
     public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
@@ -73,12 +77,111 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             isset($dataRows['expiration date']) ? new DateTime($dataRows['expiration date']) : null
         );
 
+        $this->cleanLastException();
         try {
             $virtualProductId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
+
+            // save Downloads filePath in shared storage for further assertions
+            $filename = $this->getProductForEditing($productReference)->getVirtualProductFile()->getFileName();
+            $this->getSharedStorage()->set(
+                $this->buildSystemFileReference($productReference, $fileReference),
+                _PS_DOWNLOAD_DIR_ . $filename
+            );
         } catch (VirtualProductFileException $e) {
             $this->setLastException($e);
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I update file ":fileReference" with following details:
+     *
+     * @param string $fileReference
+     * @param TableNode $tableNode
+     */
+    public function updateFile(string $fileReference, TableNode $tableNode): void
+    {
+        $command = $this->buildUpdateVirtualProductFileCommand(
+            $this->getSharedStorage()->get($fileReference),
+            $tableNode->getRowsHash(),
+            null
+        );
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (VirtualProductFileConstraintException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I replace product ":productReference" file ":fileReference" with a new file ":newFileReference" named ":newFileName" and following details:
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     * @param string $newFileReference
+     * @param string $newFileName
+     * @param TableNode $tableNode
+     */
+    public function replaceFileWithDetails(
+        string $productReference,
+        string $fileReference,
+        string $newFileReference,
+        string $newFileName,
+        TableNode $tableNode
+    ): void {
+        $virtualProductFileId = $this->getSharedStorage()->get($fileReference);
+        $command = $this->buildUpdateVirtualProductFileCommand(
+            $virtualProductFileId,
+            $tableNode->getRowsHash(),
+            $newFileName
+        );
+
+        $this->getCommandBus()->handle($command);
+        $uploadedFilename = $this->getProductForEditing($productReference)->getVirtualProductFile()->getFileName();
+
+        $this->getSharedStorage()->set($newFileReference, $virtualProductFileId);
+        $this->getSharedStorage()->set(
+            $this->buildSystemFileReference($productReference, $newFileReference),
+            _PS_DOWNLOAD_DIR_ . $uploadedFilename
+        );
+    }
+
+    /**
+     * @When I delete virtual product file ":fileReference"
+     *
+     * @param string $fileReference
+     */
+    public function deleteFile(string $fileReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteVirtualProductFileCommand(
+            $this->getSharedStorage()->get($fileReference)
+        ));
+    }
+
+    /**
+     * @Then file ":fileReference" for product ":productReference" should not exist in system
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     */
+    public function assertFileDoesNotExistInSystem(string $productReference, string $fileReference): void
+    {
+        $this->assertSystemFileExistence($productReference, $fileReference, false);
+    }
+
+    /**
+     * @Given file ":fileReference" for product ":productReference" exists in system
+     * @Given file ":fileReference" for product ":productReference" should exist in system
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     */
+    public function assertFileExistsInSystem(string $productReference, string $fileReference): void
+    {
+        $this->assertSystemFileExistence($productReference, $fileReference, true);
     }
 
     /**
@@ -105,17 +208,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then I should get error that only virtual product can have file
-     */
-    public function assertInvalidProductTypeError(): void
-    {
-        $this->assertLastErrorIs(
-            VirtualProductFileConstraintException::class,
-            VirtualProductFileConstraintException::INVALID_PRODUCT_TYPE
-        );
-    }
-
-    /**
      * @Then I should get error that product already has a file
      */
     public function assertProductAlreadyHasAFileError(): void
@@ -138,11 +230,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         $actualFile = $this->getProductForEditing($productReference)->getVirtualProductFile();
         if (!$actualFile) {
             throw new RuntimeException('Expected virtual product to have a file');
-        }
-
-        $fileDestination = _PS_DOWNLOAD_DIR_ . $actualFile->getFileName();
-        if (!is_file($fileDestination)) {
-            throw new RuntimeException(sprintf('Virtual product file "%s" not found in "%s"', $fileReference, $fileDestination));
         }
 
         Assert::assertEquals(
@@ -172,7 +259,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
         unset($dataRows['expiration date']);
 
         if (!empty($dataRows)) {
-            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_dump($dataRows)));
+            throw new RuntimeException(sprintf('Some values were not asserted. [%s]', var_export($dataRows, true)));
         }
     }
 
@@ -182,11 +269,92 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      */
     private function assertExpirationDate(array $dataRows, VirtualProductFileForEditing $actualFile): void
     {
-        $expectedExpiration = $dataRows['expiration date'] !== '' ? $dataRows['expiration date'] : null;
-        $actualExpiration = $actualFile->getExpirationDate() ?
-            $actualFile->getExpirationDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT) :
-            null
-        ;
-        Assert::assertEquals($expectedExpiration, $actualExpiration, 'Unexpected file expiration date');
+        $expectedExpiration = $dataRows['expiration date'] === '' ? null : new DateTimeImmutable($dataRows['expiration date']);
+        Assert::assertEquals($expectedExpiration, $actualFile->getExpirationDate(), 'Unexpected file expiration date');
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $fileReference
+     * @param bool $expectedToExist
+     */
+    private function assertSystemFileExistence(string $productReference, string $fileReference, bool $expectedToExist): void
+    {
+        $reference = $this->buildSystemFileReference($productReference, $fileReference);
+
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException('No file reference stored in shared storage');
+        }
+
+        $path = $this->getSharedStorage()->get($reference);
+        $exists = file_exists($path);
+
+        if ($expectedToExist) {
+            Assert::assertTrue(
+                $exists,
+                sprintf('File referenced as "%s" does not exist in system (path "%s")', $reference, $path)
+            );
+        } else {
+            Assert::assertFalse(
+                $exists,
+                sprintf('File referenced as "%s" exists in system (path "%s")', $reference, $path)
+            );
+        }
+    }
+
+    /**
+     * System file name is generated, so we want to save it in shared storage after upload to assert later
+     *
+     * @param string $productReference
+     * @param string $fileReference
+     *
+     * @return string
+     */
+    private function buildSystemFileReference(string $productReference, string $fileReference): string
+    {
+        return sprintf('%s-%s', $productReference, $fileReference);
+    }
+
+    /**
+     * @param int $virtualProductFileId
+     * @param array<string, string> $data
+     * @param string|null $newFileName provide new file name to replace old file with new one from dummy files
+     *
+     * @return UpdateVirtualProductFileCommand
+     *
+     * @throws \Exception
+     */
+    private function buildUpdateVirtualProductFileCommand(int $virtualProductFileId, array $data, ?string $newFileName): UpdateVirtualProductFileCommand
+    {
+        $command = new UpdateVirtualProductFileCommand($virtualProductFileId);
+
+        if (isset($data['display name'])) {
+            $command->setDisplayName($data['display name']);
+            unset($data['display name']);
+        }
+        if (isset($data['access days'])) {
+            $command->setAccessDays((int) $data['access days']);
+            unset($data['access days']);
+        }
+        if (isset($data['download times limit'])) {
+            $command->setDownloadTimesLimit((int) $data['download times limit']);
+            unset($data['download times limit']);
+        }
+        if (isset($data['expiration date'])) {
+            $command->setExpirationDate(new DateTimeImmutable($data['expiration date']));
+            unset($data['expiration date']);
+        }
+
+        Assert::assertEmpty(
+            $data,
+            sprintf('Not all provided fields were handled during virtual product file testing. [%s]', var_export($data, true))
+        );
+
+        if (isset($newFileName)) {
+            $newFilePath = DummyFileUploader::upload($newFileName);
+            $command->setFilePath($newFilePath);
+        }
+
+        return $command;
     }
 }

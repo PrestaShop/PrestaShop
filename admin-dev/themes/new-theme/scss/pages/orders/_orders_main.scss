@@ -12,6 +12,11 @@
     word-break: normal;
   }
 
+  // Do not break order status change button
+  .column-osname .btn {
+    white-space: nowrap;
+  }
+
   .order-preview-content {
     .details th,
     .product th,
@@ -99,13 +104,12 @@
   margin-top: 8px;
 }
 
-$order-block-background-color: #f8f8f8 !default;
-
 .info-block {
   padding-top: 18px;
   padding-right: 18px;
   padding-bottom: 16px;
   padding-left: 18px;
+  background-color: $info-block-background;
 
   & &-col {
     > .row {
@@ -141,7 +145,7 @@ $order-block-background-color: #f8f8f8 !default;
 
 .messages-block {
   padding: 3rem 0;
-  background-color: $order-block-background-color;
+  background-color: $info-block-background;
   $private-message-color: #7a8a8f;
 
   .employee-icon {
@@ -170,15 +174,15 @@ $order-block-background-color: #f8f8f8 !default;
     @include border-radius(5px);
 
     &.customer-message {
-      background-color: #fff;
+      background-color: $white;
     }
 
     &.employee-message {
-      background-color: #d3f1f7;
+      background-color: $primary-disabled;
     }
 
     &.employee-message--private {
-      color: #fff;
+      color: $white;
       background-color: $private-message-color;
     }
   }
@@ -392,7 +396,7 @@ td.cancel-product-element {
 
 .voucher-refund-type-negative-error {
   display: none;
-  color: $color-error;
+  color: $danger;
 }
 
 input.refund-quantity {
@@ -425,7 +429,7 @@ input#partial_refund_shipping {
   display: none;
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: $white;
 
   .spinner {
     position: relative;

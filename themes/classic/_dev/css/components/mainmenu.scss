@@ -104,7 +104,7 @@
 
 #mobile_top_menu_wrapper {
   padding: 15px;
-  background: #fff;
+  background: $white;
 
   #top-menu {
     margin-bottom: 0.625rem;
@@ -153,7 +153,7 @@
       min-width: 100%;
       margin-left: 0;
       overflow: hidden;
-      background: #fff;
+      background: $white;
       box-shadow: none;
 
       &.collapse {
@@ -188,7 +188,7 @@
       li > a {
         padding: 0.625rem;
         font-weight: 600;
-        border-bottom: 1px solid #fff;
+        border-bottom: 1px solid $white;
       }
 
       ul[data-depth="2"] li a {

@@ -15,8 +15,9 @@ class AddCategory extends BOBasePage {
     this.categoryCoverImage = '#category_cover_image';
     this.metaTitleInput = '#category_meta_title_1';
     this.metaDescriptionTextarea = '#category_meta_description_1';
-    this.selectAllGroupAccessCheckbox = '.choice-table .table-bordered label';
+    this.selectAllGroupAccessCheckbox = '.js-choice-table-select-all';
     this.saveCategoryButton = '#save-button';
+
     // Selectors fo root category
     this.rootCategoryNameInput = '#root_category_name_1';
     this.rootCategoryDisplayedToggleInput = toggle => `#root_category_active_${toggle}`;
@@ -31,19 +32,32 @@ class AddCategory extends BOBasePage {
    */
 
   /**
-   * Fill form for add/edit category
+   * Select all groups
    * @param page
-   * @param categoryData
+   * @return {Promise<void>}
+   */
+  async selectAllGroups(page) {
+    if (!(await page.isChecked(this.selectAllGroupAccessCheckbox))) {
+      const parentElement = await this.getParentElement(page, this.selectAllGroupAccessCheckbox);
+      await parentElement.click();
+    }
+  }
+
+  /**
+   * Fill form for add/edit category
+   * @param page {Page} Browser tab
+   * @param categoryData {CategoryData} Data to set on new/edit category form
    * @returns {Promise<string>}
    */
   async createEditCategory(page, categoryData) {
     await this.setValue(page, this.nameInput, categoryData.name);
-    await page.check(this.displayedToggleInput(categoryData.displayed ? 1 : 0));
+    await this.setChecked(page, this.displayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.descriptionIframe, categoryData.description);
     await this.uploadFile(page, this.categoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.metaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.metaDescriptionTextarea, categoryData.metaDescription);
-    await page.click(this.selectAllGroupAccessCheckbox);
+    await this.selectAllGroups(page);
+
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -51,18 +65,18 @@ class AddCategory extends BOBasePage {
 
   /**
    * Edit home category
-   * @param page
-   * @param categoryData
+   * @param page {Page} Browser tab
+   * @param categoryData {CategoryData} Data to set on edit home category form
    * @returns {Promise<string>}
    */
   async editHomeCategory(page, categoryData) {
     await this.setValue(page, this.rootCategoryNameInput, categoryData.name);
-    await page.check(this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
+    await this.setChecked(page, this.rootCategoryDisplayedToggleInput(categoryData.displayed ? 1 : 0));
     await this.setValueOnTinymceInput(page, this.rootCategoryDescriptionIframe, categoryData.description);
     await this.uploadFile(page, this.rootCategoryCoverImage, `${categoryData.name}.jpg`);
     await this.setValue(page, this.rootCategoryMetaTitleInput, categoryData.metaTitle);
     await this.setValue(page, this.rootCategoryMetaDescriptionTextarea, categoryData.metaDescription);
-    await page.click(this.selectAllGroupAccessCheckbox);
+    await this.selectAllGroups(page);
     // Save Category
     await this.clickAndWaitForNavigation(page, this.saveCategoryButton);
     return this.getAlertSuccessBlockParagraphContent(page);

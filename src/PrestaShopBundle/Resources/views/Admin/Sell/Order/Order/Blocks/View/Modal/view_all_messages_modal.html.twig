@@ -30,7 +30,7 @@
         <div class="row">
           <div class="col">
             <h3 class="card-header-title">
-              {% if orderForViewing.customer is not null %}
+              {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
                 {{ 'Message history with %name%'|trans({'%name%': orderForViewing.customer.firstName ~ ' ' ~ orderForViewing.customer.lastName}, 'Admin.Global') }}
               {% else %}
                 {{ 'Message history'|trans({}, 'Admin.Global') }}

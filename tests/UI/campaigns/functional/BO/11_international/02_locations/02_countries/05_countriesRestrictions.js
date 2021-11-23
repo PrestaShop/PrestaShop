@@ -14,6 +14,7 @@ const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const myAccountPage = require('@pages/FO/myAccount');
 const addressesPage = require('@pages/FO/myAccount/addresses');
+const newAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import data
 const {countries} = require('@data/demo/countries');
@@ -33,7 +34,7 @@ let page;
 let numberOfCountries = 0;
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 /*
 Enable the country 'Afghanistan'
@@ -43,7 +44,7 @@ Disable 'Restrict country selections in front office to those covered by active 
 Go to FO > Address page and check that the country exist
 Disable the country 'Afghanistan'
  */
-describe('Enable/Disable Restrict country selections in front office', async () => {
+describe('BO - International - Countries : Restrict country selections in front office', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +59,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -73,7 +74,7 @@ describe('Enable/Disable Restrict country selections in front office', async () 
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);
@@ -138,11 +139,12 @@ describe('Enable/Disable Restrict country selections in front office', async () 
       await testContext.addContextItem(this, 'testIdentifier', `login${index}`, baseContext);
 
       await homePage.goToLoginPage(page);
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
 
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;
 
+      await homePage.goToMyAccountPage(page);
       const pageTitle = await myAccountPage.getPageTitle(page);
       await expect(pageTitle).to.contains(myAccountPage.pageTitle);
     });
@@ -161,8 +163,8 @@ describe('Enable/Disable Restrict country selections in front office', async () 
 
       await addressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await addressesPage.isCountryExist(page, countries.afghanistan.name);
-      await expect(isCountryExist).to.equal(status.args.isCountryVisible);
+      const countryExist = await newAddressesPage.countryExist(page, countries.afghanistan.name);
+      await expect(countryExist).to.equal(status.args.isCountryVisible);
     });
 
     it('should sign out from FO', async function () {

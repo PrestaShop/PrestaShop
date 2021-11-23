@@ -1,23 +1,25 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
-const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
-const files = require('@utils/files');
 
-// Importing pages
+// Import utils
+const helper = require('@utils/helpers');
+const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
 const addCategoryPage = require('@pages/BO/catalog/categories/add');
 
-// Importing data
+// Import data
 const CategoryFaker = require('@data/faker/category');
 
-// Test context imports
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_categories_paginationAndSortCategories';
-
 
 let browserContext;
 let page;
@@ -29,7 +31,7 @@ Paginate between pages
 Sort categories table
 Delete categories with bulk actions
  */
-describe('Pagination and sort Categories', async () => {
+describe('BO - Catalog - Categories : Pagination and sort categories table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +46,7 @@ describe('Pagination and sort Categories', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to categories page', async function () {
+  it('should go to \'Catalog > Categories\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -67,9 +69,9 @@ describe('Pagination and sort Categories', async () => {
   });
 
   // 1 : Create 11 new categories
-  const creationTests = new Array(10).fill(0, 0, 10);
-  creationTests.forEach((test, index) => {
-    describe(`Create category n°${index + 1} in BO`, async () => {
+  describe('Create 11 categories in BO', async () => {
+    const creationTests = new Array(10).fill(0, 0, 10);
+    creationTests.forEach((test, index) => {
       before(() => files.generateImage(`${createCategoryData.name}.jpg`));
 
       const createCategoryData = new CategoryFaker({name: `todelete${index}`});
@@ -82,7 +84,7 @@ describe('Pagination and sort Categories', async () => {
         await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
       });
 
-      it('should create category and check result', async function () {
+      it(`should create category n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
 
         const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
@@ -98,7 +100,7 @@ describe('Pagination and sort Categories', async () => {
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await categoriesPage.selectPaginationLimit(page, '10');
@@ -119,7 +121,7 @@ describe('Pagination and sort Categories', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await categoriesPage.selectPaginationLimit(page, '50');
@@ -169,7 +171,7 @@ describe('Pagination and sort Categories', async () => {
   // 3 : Sort categories
   describe('Sort categories table', async () => {
     tests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await categoriesPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -193,9 +195,9 @@ describe('Pagination and sort Categories', async () => {
     });
   });
 
-  // 4 : Delete categories created with bulk actions
-  describe('Delete categories with Bulk Actions', async () => {
-    it('should filter list by name', async function () {
+  // 4 : Delete categories created by bulk actions
+  describe('Delete categories by Bulk Actions', async () => {
+    it('should filter list by Name \'todelete\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
 
       await categoriesPage.filterCategories(
@@ -209,7 +211,7 @@ describe('Pagination and sort Categories', async () => {
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete categories with Bulk Actions and check Result', async function () {
+    it('should delete categories and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
 
       const deleteTextResult = await categoriesPage.deleteCategoriesBulkActions(page);

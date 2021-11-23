@@ -37,9 +37,7 @@ class HelperCore
     public $toolbar_scroll = false;
     public $bootstrap = false;
 
-    /**
-     * @var Module
-     */
+    /** @var Module */
     public $module;
 
     /** @var string Helper tpl folder */
@@ -48,14 +46,10 @@ class HelperCore
     /** @var string Controller tpl folder */
     public $override_folder;
 
-    /**
-     * @var Smarty_Internal_Template base template object
-     */
+    /** @var Smarty_Internal_Template base template object */
     protected $tpl;
 
-    /**
-     * @var string base template name
-     */
+    /** @var string base template name */
     public $base_tpl = 'content.tpl';
 
     public $tpl_vars = [];
@@ -137,7 +131,7 @@ class HelperCore
             throw new PrestaShopException('Missing root category parameter.');
         }
 
-        return $helper->renderCategoryTree($root, $selected_cat, $input_name, $use_radio, $use_search, $disabled_categories, $use_in_popup);
+        return $helper->renderCategoryTree($root, $selected_cat, $input_name, $use_radio, $use_search, $disabled_categories);
     }
 
     /**
@@ -372,7 +366,7 @@ class HelperCore
      *
      * @deprecated deprecated since 1.6.1.0 use HelperShop->getRenderedShopList
      *
-     * @return string
+     * @return string|null
      */
     public static function renderShopList()
     {

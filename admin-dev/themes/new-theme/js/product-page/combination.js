@@ -17,7 +17,6 @@ export default function () {
     const step = 50;
     let currentCount = 0;
 
-
     $.get(refreshImagesUrl).then((response) => {
       if (idsCount !== 0) {
         getCombinations(response);
@@ -194,7 +193,6 @@ export default function () {
           .then((combinationsImages) => {
             refreshImagesCombination(combinationsImages, response.ids_product_attribute);
           });
-
 
         /** initialize form */
         $('input.attribute-generator').remove();

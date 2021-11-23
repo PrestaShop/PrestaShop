@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<tr id="addProductTableRow" class="add-product d-none">
+<tr id="addProductTableRow" class="add-product d-none" data-is-order-tax-included="{{ orderForViewing.isTaxIncluded }}">
   <td colspan="2" class="pr-2">
     {{ form_row(addProductRowForm.product_id) }}
     {{ form_row(addProductRowForm.tax_rate) }}

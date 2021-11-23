@@ -1,7 +1,16 @@
 require('module-alias/register');
-const BOBasePage = require('@pages/BO/BObasePage');
+const LocalizationBasePage = require('@pages/BO/international/localization/localizationBasePage');
 
-class AddLanguage extends BOBasePage {
+/**
+ * Add language page, contains functions that can be used on the page
+ * @class
+ * @extends LocalizationBasePage
+ */
+class AddLanguage extends LocalizationBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add language page
+   */
   constructor() {
     super();
 
@@ -25,8 +34,8 @@ class AddLanguage extends BOBasePage {
 
   /**
    * Create or edit language
-   * @param page
-   * @param languageData
+   * @param page {Page} Browser tab
+   * @param languageData {LanguageData} Data to set on add/edit language form
    * @return {Promise<string>}
    */
   async createEditLanguage(page, languageData) {
@@ -42,11 +51,12 @@ class AddLanguage extends BOBasePage {
     await this.uploadFile(page, this.noPictureInput, languageData.noPicture);
 
     // Set rtl and status
-    await page.check(this.isRtlToggleInput(languageData.isRtl ? 1 : 0));
-    await page.check(this.statusToggleInput(languageData.status ? 1 : 0));
+    await this.setChecked(page, this.isRtlToggleInput(languageData.isRtl ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(languageData.enabled ? 1 : 0));
 
     // Save and return result
     await this.clickAndWaitForNavigation(page, this.saveButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }

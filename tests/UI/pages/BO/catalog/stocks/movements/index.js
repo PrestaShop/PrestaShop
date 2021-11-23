@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Movements page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Movements extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on movements page
+   */
   constructor() {
     super();
 
@@ -9,10 +18,12 @@ class Movements extends BOBasePage {
 
     // Header selectors
     this.stocksNavItemLink = '#head_tabs li:nth-child(1) > a';
+
     // Simple filter selectors
     this.searchForm = 'form.search-form';
     this.searchInput = `${this.searchForm} .search-input input.input`;
     this.searchButton = `${this.searchForm} button.search-button`;
+
     // Table selectors
     this.gridTable = '.stock-movements table.table';
     this.tableBody = `${this.gridTable} tbody`;
@@ -21,6 +32,7 @@ class Movements extends BOBasePage {
     this.tableProductNameColumn = row => `${this.tableRow(row)} td:nth-child(1) div.media-body p`;
     this.tableProductReferenceColumn = row => `${this.tableRow(row)} td:nth-child(2)`;
     this.tableQuantityColumn = row => `${this.tableRow(row)} td:nth-child(4) span.qty-number`;
+
     // Loader
     this.productListLoading = `${this.tableRow(1)} td:nth-child(1) div.ps-loader`;
   }
@@ -28,7 +40,7 @@ class Movements extends BOBasePage {
   /* Header methods */
   /**
    * Go to stocks page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToSubTabStocks(page) {
@@ -38,8 +50,8 @@ class Movements extends BOBasePage {
 
   /**
    * Filter by a word
-   * @param page
-   * @param value
+   * @param page {Page} Browser tab
+   * @param value {string} Value to set on filter input
    * @returns {Promise<void>}
    */
   async simpleFilter(page, value) {
@@ -48,15 +60,15 @@ class Movements extends BOBasePage {
       page.click(this.searchButton),
       this.waitForVisibleSelector(page, this.productListLoading),
     ]);
-    await page.waitForSelector(this.productListLoading, {state: 'hidden'});
+    await this.waitForHiddenSelector(page, this.productListLoading);
   }
 
   /* Table methods */
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Column to get text value
    * @return {Promise<string|number>}
    */
   async getTextColumnFromTable(page, row, column) {
@@ -76,8 +88,8 @@ class Movements extends BOBasePage {
 
   /**
    * Get number of element in movements grid
-   * @param page
-   * @return {Promise<integer>}
+   * @param page {Page} Browser tab
+   * @return {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
     return (await page.$$(this.tableRows)).length;

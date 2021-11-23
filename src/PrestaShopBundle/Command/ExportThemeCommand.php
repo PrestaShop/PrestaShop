@@ -28,13 +28,42 @@ namespace PrestaShopBundle\Command;
 
 \Smarty_Autoloader::register();
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ExportThemeCommand extends ContainerAwareCommand
+class ExportThemeCommand extends Command
 {
+    /**
+     * @var ThemeRepository
+     */
+    private $themeRepository;
+
+    /**
+     * @var ThemeExporter
+     */
+    private $themeExporter;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ThemeRepository $themeRepository,
+        ThemeExporter $themeExporter,
+        TranslatorInterface $translator
+    ) {
+        parent::__construct();
+        $this->themeRepository = $themeRepository;
+        $this->themeExporter = $themeExporter;
+        $this->translator = $translator;
+    }
+
     protected function configure()
     {
         $this
@@ -45,15 +74,12 @@ class ExportThemeCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $repository = $this->getContainer()->get('prestashop.core.addon.theme.repository');
-        $theme = $repository->getInstanceByName($input->getArgument('theme'));
+        $theme = $this->themeRepository->getInstanceByName($input->getArgument('theme'));
 
-        $themeExporter = $this->getContainer()->get('prestashop.core.addon.theme.exporter');
-        $path = $themeExporter->export($theme);
+        $path = $this->themeExporter->export($theme);
 
         $formatter = $this->getHelper('formatter');
-        $translator = $this->getContainer()->get('translator');
-        $successMsg = $translator->trans(
+        $successMsg = $this->translator->trans(
             'Your theme has been correctly exported: %path%',
             ['%path%' => $path],
             'Admin.Design.Notification'

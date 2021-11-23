@@ -29,12 +29,13 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class CccReducerCore
 {
+    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
     /** @var string */
     private $cacheDir;
     /** @var Filesystem */
     protected $filesystem;
-
-    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
+    /** @var ConfigurationInterface */
+    public $configuration;
 
     /**
      * @param string $cacheDir

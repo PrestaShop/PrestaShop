@@ -38,26 +38,26 @@ class InvalidOrderStateException extends OrderException
     /**
      * Used when the order is not paid (and it should be)
      */
-    const NOT_PAID = 1;
+    public const NOT_PAID = 1;
 
     /**
      * Used when the order is already paid (and it should not be)
      */
-    const ALREADY_PAID = 2;
+    public const ALREADY_PAID = 2;
 
     /**
      * Used when the order has not been delivered (and it should have)
      */
-    const DELIVERY_NOT_FOUND = 3;
+    public const DELIVERY_NOT_FOUND = 3;
 
     /**
      * Used when the order has been delivered (and it shouldn't have)
      */
-    const UNEXPECTED_DELIVERY = 4;
+    public const UNEXPECTED_DELIVERY = 4;
     /**
      * Used when the order state is not found
      */
-    const INVALID_ID = 5;
+    public const INVALID_ID = 5;
 
     /**
      * @param int $code

@@ -25,6 +25,8 @@
  */
 @trigger_error('Using '.__FILE__.' to do template rendering is deprecated since 1.7.6.0 and will be removed in the next major version. Use a controller instead.', E_USER_DEPRECATED);
 
+/** @var AdminController $con */
+global $con;
 $dir = Context::getContext()->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.trim($con->override_folder, '\\/').DIRECTORY_SEPARATOR;
 $footer_tpl = file_exists($dir.'footer.tpl') ? $dir.'footer.tpl' : 'footer.tpl';
 echo Context::getContext()->smarty->fetch($footer_tpl);

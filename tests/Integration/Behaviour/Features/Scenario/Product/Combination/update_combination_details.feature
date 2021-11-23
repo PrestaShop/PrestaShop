@@ -22,19 +22,19 @@ Feature: Update product combination details in Back Office (BO)
   Scenario: I update combination details:
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
-      | is_virtual  | false             |
-    And product product1 type should be standard
+      | type        | combinations      |
+    And product product1 type should be combinations
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product product1 should have following list of combinations:
-      | reference      | combination name        | attributes           | impact on price | final price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | [Size:S,Color:White] | 0               | 0           | 0        | true       |
-      | product1SBlack | Size - S, Color - Black | [Size:S,Color:Black] | 0               | 0           | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  | [Size:S,Color:Blue]  | 0               | 0           | 0        | false      |
-      | product1MWhite | Size - M, Color - White | [Size:M,Color:White] | 0               | 0           | 0        | false      |
-      | product1MBlack | Size - M, Color - Black | [Size:M,Color:Black] | 0               | 0           | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  | [Size:M,Color:Blue]  | 0               | 0           | 0        | false      |
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And combination "product1SWhite" should have following details:
       | combination detail | value |
       | ean13              |       |
@@ -42,14 +42,14 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |       |
       | reference          |       |
       | upc                |       |
-      | weight             | 0     |
+      | impact on weight   | 0     |
     When I update combination "product1SWhite" details with following values:
-      | ean13     | 978020137962      |
-      | isbn      | 978-3-16-148410-0 |
-      | mpn       | mpn1              |
-      | reference | ref1              |
-      | upc       | 72527273070       |
-      | weight    | 17.25             |
+      | ean13            | 978020137962      |
+      | isbn             | 978-3-16-148410-0 |
+      | mpn              | mpn1              |
+      | reference        | ref1              |
+      | upc              | 72527273070       |
+      | impact on weight | 17.25             |
     Then combination "product1SWhite" should have following details:
       | combination detail | value             |
       | ean13              | 978020137962      |
@@ -57,13 +57,13 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                | mpn1              |
       | reference          | ref1              |
       | upc                | 72527273070       |
-      | weight             | 17.25             |
+      | impact on weight   | 17.25             |
     When I update combination "product1SWhite" details with following values:
-      | ean13     | 978020137962      |
-      | isbn      | 978-3-16-148410-0 |
-      | mpn       |                   |
-      | reference | ref1              |
-      | upc       |                   |
+      | ean13            | 978020137962      |
+      | isbn             | 978-3-16-148410-0 |
+      | mpn              |                   |
+      | upc              |                   |
+      | impact on weight | -10.25            |
     Then combination "product1SWhite" should have following details:
       | combination detail | value             |
       | ean13              | 978020137962      |
@@ -71,14 +71,14 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |                   |
       | reference          | ref1              |
       | upc                |                   |
-      | weight             | 17.25             |
+      | impact on weight   | -10.25            |
     When I update combination "product1SWhite" details with following values:
-      | ean13     |   |
-      | isbn      |   |
-      | mpn       |   |
-      | reference |   |
-      | upc       |   |
-      | weight    | 0 |
+      | ean13            |   |
+      | isbn             |   |
+      | mpn              |   |
+      | reference        |   |
+      | upc              |   |
+      | impact on weight | 0 |
     Then combination "product1SWhite" should have following details:
       | combination detail | value |
       | ean13              |       |
@@ -86,4 +86,4 @@ Feature: Update product combination details in Back Office (BO)
       | mpn                |       |
       | reference          |       |
       | upc                |       |
-      | weight             | 0     |
+      | impact on weight   | 0     |

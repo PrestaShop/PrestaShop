@@ -2,8 +2,11 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
-// Import test context
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -11,9 +14,6 @@ const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_defaultActivationStatus';
 
@@ -26,7 +26,7 @@ Check that a new product is online by default
 Disable default activation status
 Check that a new product is offline by default
  */
-describe('Enable/Disable default activation status', async () => {
+describe('BO - Shop Parameters - Product Settings : Enable/Disable default activation status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,14 +46,9 @@ describe('Enable/Disable default activation status', async () => {
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it('should go to \'Shop parameters > Product Settings\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToProductSettingsPageTo${dashboardPage.uppercaseFirstCharacter(test.args.action)}Status`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductSettingsPage${index}`, baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -80,13 +75,7 @@ describe('Enable/Disable default activation status', async () => {
     });
 
     it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        'goToProductsPageToCheck'
-          + `${productSettingsPage.uppercaseFirstCharacter(test.args.action)}Status`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToProductsPage${index}`, baseContext);
 
       await productSettingsPage.goToSubMenu(
         page,
@@ -99,12 +88,7 @@ describe('Enable/Disable default activation status', async () => {
     });
 
     it('should go to create product page and check the new product online status', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `goToAddProductPageToCheck${productsPage.uppercaseFirstCharacter(test.args.action)}Status`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
 
       await productsPage.goToAddProductPage(page);
       const online = await addProductPage.getOnlineButtonStatus(page);

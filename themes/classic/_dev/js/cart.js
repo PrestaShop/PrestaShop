@@ -26,6 +26,8 @@ function createSpin() {
     });
   });
 
+  $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
+
   CheckUpdateQuantityOperations.switchErrorStat();
 }
 

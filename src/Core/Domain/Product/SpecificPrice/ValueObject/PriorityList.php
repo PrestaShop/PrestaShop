@@ -28,19 +28,19 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 
 /**
  * Holds valid specific price priority values
  */
 class PriorityList
 {
-    const PRIORITY_COUNTRY = 'id_country';
-    const PRIORITY_CURRENCY = 'id_currency';
-    const PRIORITY_GROUP = 'id_group';
-    const PRIORITY_SHOP = 'id_shop';
+    public const PRIORITY_COUNTRY = 'id_country';
+    public const PRIORITY_CURRENCY = 'id_currency';
+    public const PRIORITY_GROUP = 'id_group';
+    public const PRIORITY_SHOP = 'id_shop';
 
-    const AVAILABLE_PRIORITIES = [
+    public const AVAILABLE_PRIORITIES = [
         'country' => self::PRIORITY_COUNTRY,
         'currency' => self::PRIORITY_CURRENCY,
         'group' => self::PRIORITY_GROUP,

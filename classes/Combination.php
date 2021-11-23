@@ -71,6 +71,12 @@ class CombinationCore extends ObjectModel
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
 
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int
+     */
     public $quantity;
 
     public $weight;
@@ -97,7 +103,7 @@ class CombinationCore extends ObjectModel
             'supplier_reference' => ['type' => self::TYPE_STRING, 'size' => 64],
 
             /* Shop fields */
-            'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27],
+            'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 27],
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20],
             'ecotax' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20],
             'weight' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'],
@@ -171,6 +177,10 @@ class CombinationCore extends ObjectModel
         }
 
         if (!$this->hasMultishopEntries() && !$this->deleteAssociations()) {
+            return false;
+        }
+
+        if (!$this->deleteCartProductCombination()) {
             return false;
         }
 
@@ -265,15 +275,34 @@ class CombinationCore extends ObjectModel
         if ((int) $this->id === 0) {
             return false;
         }
-        $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = ' . (int) $this->id);
-        $result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = ' . (int) $this->id);
-        $result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = ' . (int) $this->id);
+        $result = Db::getInstance()->delete(
+            'product_attribute_combination',
+            '`id_product_attribute` = ' . (int) $this->id
+        );
+        $result = $result && Db::getInstance()->delete(
+            'product_attribute_image',
+            '`id_product_attribute` = ' . (int) $this->id
+        );
 
         if ($result) {
             Hook::exec('actionAttributeCombinationDelete', ['id_product_attribute' => (int) $this->id]);
         }
 
         return $result;
+    }
+
+    /**
+     * Delete product combination from cart.
+     *
+     * @return bool
+     */
+    protected function deleteCartProductCombination(): bool
+    {
+        if ((int) $this->id === 0) {
+            return false;
+        }
+
+        return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);
     }
 
     /**
@@ -346,7 +375,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idsImage
+     * @param array<int> $idsImage
      *
      * @return bool
      */
@@ -378,7 +407,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $values
+     * @param array<array{id: int}> $values
      *
      * @return bool
      */
@@ -393,7 +422,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idLang
+     * @param int $idLang
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -429,8 +458,8 @@ class CombinationCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $hasActiveColumn
+     * @param string|null $table Name of table linked to entity
+     * @param bool $hasActiveColumn True if the table has an active column
      *
      * @return bool
      */
@@ -470,7 +499,7 @@ class CombinationCore extends ObjectModel
      * @param int $idProduct
      * @param string $reference
      *
-     * @return int id
+     * @return int ID
      */
     public static function getIdByReference($idProduct, $reference)
     {
@@ -484,7 +513,7 @@ class CombinationCore extends ObjectModel
         $query->where('pa.reference LIKE \'%' . pSQL($reference) . '%\'');
         $query->where('pa.id_product = ' . (int) $idProduct);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -506,15 +535,14 @@ class CombinationCore extends ObjectModel
      *
      * @param int $idProductAttribute
      *
-     * @return float mixed
+     * @return string
      *
      * @since 1.5.0
      */
     public static function getPrice($idProductAttribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-			SELECT product_attribute_shop.`price`
+        return (string) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT product_attribute_shop.`price`
 			FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 			WHERE pa.`id_product_attribute` = ' . (int) $idProductAttribute

@@ -6,35 +6,12 @@
 /* stylelint-enable */
 
 .products-catalog {
-  > .content {
-    margin-bottom: 20px;
-    background: #fff;
-    padding: {
-      top: $grid-gutter-width / 2;
-      bottom: $grid-gutter-width / 2;
-    }
 
-    .row {
-      align-items: center;
-
-      @include media-breakpoint-down(sm) {
-        margin-right: 0;
-        margin-left: 0;
-      }
-    }
-  }
-
-  > .content:last-child {
-    margin-bottom: 0;
-  }
-
-  // actions at the top of the page
-  #catalog-actions {
-    align-items: start;
-
-    .row + .row {
-      padding-top: $grid-gutter-width / 2;
-    }
+  .catalog-tools {
+    flex: 0 0 2rem;
+    max-width: 2rem;
+    margin-left: auto;
+    text-align: right;
   }
 
   .icon-caret {
@@ -91,13 +68,5 @@
   > .material-icons {
     font-size: 12rem;
     color: $gray-light;
-  }
-}
-
-@include media-breakpoint-down(xs) {
-  .products-catalog {
-    #product_catalog_category_tree_filter {
-      margin-bottom: 0.75rem;
-    }
   }
 }

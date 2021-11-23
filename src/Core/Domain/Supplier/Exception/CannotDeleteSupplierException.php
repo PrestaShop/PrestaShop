@@ -34,15 +34,15 @@ class CannotDeleteSupplierException extends SupplierException
     /**
      * When fails to delete supplier due to existing pending orders of that supplier
      */
-    const HAS_PENDING_ORDERS = 1;
+    public const HAS_PENDING_ORDERS = 1;
 
     /**
      * When fails to delete single supplier
      */
-    const FAILED_DELETE = 2;
+    public const FAILED_DELETE = 2;
 
     /**
      * When fails to delete supplier in bulk action
      */
-    const FAILED_BULK_DELETE = 3;
+    public const FAILED_BULK_DELETE = 3;
 }

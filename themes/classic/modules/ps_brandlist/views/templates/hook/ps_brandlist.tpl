@@ -26,7 +26,7 @@
 <div id="search_filters_brands">
   <section class="facet">
     {if $display_link_brand}
-      <a href="{$page_link}" class="h6 text-uppercase facet-label" title="{l s='brands' d='shop.theme.catalog'}">
+      <a href="{$page_link}" class="h6 text-uppercase facet-label" title="{l s='brands' d='Shop.Theme.Catalog'}">
         {l s='Brands' d='Shop.Theme.Catalog'}
       </a>
     {else}

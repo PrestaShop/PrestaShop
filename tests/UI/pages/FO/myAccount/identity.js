@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Identity page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class AccountIdentity extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on identity page
+   */
   constructor() {
     super();
 
@@ -19,6 +28,7 @@ class AccountIdentity extends FOBasePage {
     this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
+    this.newsletterCheckbox = `${this.createAccountForm} input[name=newsletter]`;
     this.saveButton = `${this.createAccountForm} .form-control-submit`;
   }
 
@@ -27,9 +37,9 @@ class AccountIdentity extends FOBasePage {
    */
   /**
    * Edit account information
-   * @param page
-   * @param oldPassword
-   * @param customer
+   * @param page {Page} Browser tab
+   * @param oldPassword {string} The old password
+   * @param customer {object} Customer's information to fill form
    * @returns {Promise<string>}
    */
   async editAccount(page, oldPassword, customer) {
@@ -51,6 +61,26 @@ class AccountIdentity extends FOBasePage {
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
       await page.click(this.psgdprCheckbox);
     }
+
+    await this.clickAndWaitForNavigation(page, this.saveButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
+  }
+
+  /**
+   * Unsubscribe from the newsletter from customer edit information page
+   * @param page {object} Browser tab
+   * @param password {string} String for the password
+   * @returns {Promise<string>}
+   */
+  async unsubscribeNewsletter(page, password) {
+    await this.setValue(page, this.passwordInput, password);
+
+    await page.click(this.customerPrivacyCheckbox);
+    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+      await page.click(this.psgdprCheckbox);
+    }
+    await page.click(this.newsletterCheckbox);
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
 

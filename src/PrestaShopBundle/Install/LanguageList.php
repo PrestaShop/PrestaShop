@@ -31,7 +31,7 @@ use Symfony\Component\Finder\Finder;
 
 class LanguageList
 {
-    const DEFAULT_ISO = 'en';
+    public const DEFAULT_ISO = 'en';
 
     /**
      * @var array List of available languages

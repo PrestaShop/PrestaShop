@@ -30,6 +30,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Query\GetOrderForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderForViewing;
@@ -58,7 +59,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 $data['date'],
                 $data['payment_method'],
                 $data['amount'],
-                SharedStorage::getStorage()->get($data['currency'])->id,
+                SharedStorage::getStorage()->get($data['currency']),
                 isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )
@@ -148,12 +149,14 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['date'],
                     $data['payment_method'],
                     $data['amount'],
-                    SharedStorage::getStorage()->get($data['currency'])->id,
+                    SharedStorage::getStorage()->get($data['currency']),
                     isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                     $data['transaction_id']
                 )
             );
         } catch (NegativePaymentAmountException $exception) {
+            $this->setLastException($exception);
+        } catch (OrderConstraintException $exception) {
             $this->setLastException($exception);
         }
     }
@@ -161,9 +164,20 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that payment amount is negative
      */
-    public function assertLastErrorIsNegativePaymentAmount()
+    public function assertLastErrorIsNegativePaymentAmount(): void
     {
         $this->assertLastErrorIs(NegativePaymentAmountException::class);
+    }
+
+    /**
+     * @Then I should get error that payment method is invalid
+     */
+    public function assertLastErrorIsInvalidPaymentMethod(): void
+    {
+        $this->assertLastErrorIs(
+            OrderConstraintException::class,
+            OrderConstraintException::INVALID_PAYMENT_METHOD
+        );
     }
 
     private function mapToOrderPaymentForViewing(int $paymentId, array $data)

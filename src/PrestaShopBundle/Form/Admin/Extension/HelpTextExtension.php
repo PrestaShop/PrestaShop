@@ -55,14 +55,14 @@ class HelpTextExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->vars['help'] = isset($options['help']) ? $options['help'] : null;
+        $view->vars['help'] = $options['help'] ?? null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getExtendedType()
+    public static function getExtendedTypes(): iterable
     {
-        return FormType::class;
+        return [FormType::class];
     }
 }

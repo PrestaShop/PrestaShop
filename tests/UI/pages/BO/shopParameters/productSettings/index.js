@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Product settings page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class ProductSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add product settings page
+   */
   constructor() {
     super();
 
@@ -56,32 +65,32 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Enable/disable catalog mode
-   * @param page
-   * @param toEnable, true to enable and false to disable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable catalog mode status
    * @return {Promise<string>}
    */
   async changeCatalogModeStatus(page, toEnable = true) {
-    await page.check(this.catalogModeToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.catalogModeToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/disable show prices
-   * @param page
-   * @param toEnable, true to enable and false to disable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable show prices status
    * @return {Promise<string>}
    */
   async setShowPricesStatus(page, toEnable = true) {
-    await page.check(this.showPricesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.showPricesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Update number of days
-   * @param page
-   * @param numberOfDays
+   * @param page {Page} Browser tab
+   * @param numberOfDays {number} Value to set on number of days input
    * @returns {Promise<string>}
    */
   async updateNumberOfDays(page, numberOfDays) {
@@ -92,8 +101,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Update max size of short description
-   * @param page
-   * @param size
+   * @param page {Page} Browser tab
+   * @param size {number} Value to set on size input
    * @returns {Promise<string>}
    */
   async UpdateMaxSizeOfSummary(page, size) {
@@ -104,32 +113,32 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Enable/Disable force update of friendly URL
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable force update friendly url status
    * @returns {Promise<string>}
    */
   async setForceUpdateFriendlyURLStatus(page, toEnable = true) {
-    await page.check(this.forceUpdateFriendlyUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.forceUpdateFriendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Change default activation status
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable default activation status
    * @returns {Promise<string>}
    */
   async setDefaultActivationStatus(page, toEnable = true) {
-    await page.check(this.defaultActivationStatusToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.defaultActivationStatusToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Choose quantity discounts based on
-   * @param page
-   * @param basedOn
+   * @param page {Page} Browser tab
+   * @param basedOn {string} Value of quantity discount based on
    * @returns {Promise<string>}
    */
   async chooseQuantityDiscountsBasedOn(page, basedOn) {
@@ -140,20 +149,20 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Enable/ Disable display available quantities
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} Status to set to display available quantity
    * @returns {Promise<string>}
    */
   async setDisplayAvailableQuantitiesStatus(page, toEnable = true) {
-    await page.check(this.displayAvailableQuantitiesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayAvailableQuantitiesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set display remaining quantities
-   * @param page
-   * @param quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Value of remaining quantity to set
    * @returns {Promise<string>}
    */
   async setDisplayRemainingQuantities(page, quantity) {
@@ -164,20 +173,20 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set display unavailable product attributes
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable unavailable attributes
    * @returns {Promise<string>}
    */
   async setDisplayUnavailableProductAttributesStatus(page, toEnable = true) {
-    await page.check(this.displayUnavailableAttributesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayUnavailableAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set separator of attribute anchor on the product links
-   * @param page
-   * @param separator
+   * @param page {Page} Browser tab
+   * @param separator {string} Value of separator attribute on product page
    * @returns {Promise<string>}
    */
   async setSeparatorOfAttributeOnProductLink(page, separator) {
@@ -188,26 +197,26 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Enable/Disable allow ordering out of stock
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable allow ordering out of stock status
    * @returns {Promise<string>}
    */
   async setAllowOrderingOutOfStockStatus(page, toEnable = true) {
-    await page.check(this.allowOrderingOosToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.allowOrderingOosToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Enable/Disable stock management
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable stock management status
    * @returns {Promise<string>}
    */
   async setEnableStockManagementStatus(page, toEnable = true) {
-    await page.check(this.enableStockManagementToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableStockManagementToggleInput(toEnable ? 1 : 0));
     if (toEnable) {
-      await page.check(this.allowOrderingOosToggleInput(0));
+      await this.setChecked(page, this.allowOrderingOosToggleInput(0));
     }
     await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -215,8 +224,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set number of products displayed per page
-   * @param page
-   * @param numberOfProducts
+   * @param page {Page} Browser tab
+   * @param numberOfProducts {number} Value to set on products per page input
    * @return {Promise<string>}
    */
   async setProductsDisplayedPerPage(page, numberOfProducts) {
@@ -227,8 +236,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Change language for selectors
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to choose
    * @return {Promise<void>}
    */
   async changeLanguageForSelectors(page, lang = 'en') {
@@ -244,8 +253,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set label of in_stock products
-   * @param page
-   * @param label
+   * @param page {Page} Browser tab
+   * @param label {string} Value to set on label of in stock product input
    * @returns {Promise<string>}
    */
   async setLabelOfInStockProducts(page, label) {
@@ -261,8 +270,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set delivery time text
-   * @param page
-   * @param deliveryTimeText
+   * @param page {Page} Browser tab
+   * @param deliveryTimeText {string} Value to set on delivery time in stock input
    * @return {Promise<string>}
    */
   async setDeliveryTimeInStock(page, deliveryTimeText) {
@@ -273,21 +282,21 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set display discounted price
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable display discounted price status
    * @returns {Promise<string>}
    */
   async setDisplayDiscountedPriceStatus(page, toEnable = true) {
-    await page.check(this.displayDiscountedPriceToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayDiscountedPriceToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Set default order for products on products list in FO
-   * @param page
-   * @param orderBy, the order in which products will be displayed in the product list
-   * @param orderMethod, order method for product list
+   * @param page {Page} Browser tab
+   * @param orderBy {string} The order in which products will be displayed in the product list
+   * @param orderMethod {string} Order method for product list
    * @return {Promise<string>}
    */
   async setDefaultProductsOrder(page, orderBy, orderMethod = 'Ascending') {
@@ -299,8 +308,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set delivery time out-of-stock text
-   * @param page
-   * @param deliveryTimeText
+   * @param page {Page} Browser tab
+   * @param deliveryTimeText {string} Vale to set on delivery time out of stock input
    * @return {Promise<string>}
    */
   async setDeliveryTimeOutOfStock(page, deliveryTimeText = '') {
@@ -311,8 +320,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set label out-of-stock allowed backorders
-   * @param page
-   * @param label
+   * @param page {Page} Browser tab
+   * @param label {string} Value to set on label out of stock allowed backorders
    * @returns {Promise<string>}
    */
   async setLabelOosAllowedBackorders(page, label) {
@@ -328,8 +337,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set label out-of-stock denied backorders
-   * @param page
-   * @param label
+   * @param page {Page} Browser tab
+   * @param label {string} Value to set on label out of stock denied backorders input
    * @returns {Promise<string>}
    */
   async setLabelOosDeniedBackorders(page, label) {
@@ -345,8 +354,8 @@ class ProductSettings extends BOBasePage {
 
   /**
    * Set default pack stock management
-   * @param page
-   * @param option
+   * @param page {Page} Browser tab
+   * @param option {string} Option to select on default pack stock management
    * @returns {Promise<string>}
    */
   async setDefaultPackStockManagement(page, option) {

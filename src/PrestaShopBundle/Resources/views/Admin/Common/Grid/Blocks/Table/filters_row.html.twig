@@ -25,7 +25,10 @@
 
 <tr class="column-filters{% if grid.attributes.is_empty_state %} d-none{% endif %}">
   {% for column in grid.columns %}
-    <td>
+    <td
+      data-type="{{ column.type }}"
+      data-column-id="{{ column.id }}"
+    >
       {% if loop.first and grid.actions.bulk|length > 0 %}
         {{ include('@PrestaShop/Admin/Common/Grid/Blocks/bulk_actions_select_all.html.twig', {'grid': grid}) }}
       {% endif %}

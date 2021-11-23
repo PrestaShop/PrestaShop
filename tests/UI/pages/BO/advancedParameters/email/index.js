@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Email page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Email extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on email page
+   */
   constructor() {
     super();
 
@@ -41,6 +50,17 @@ class Email extends BOBasePage {
     this.logEmailsToggleInput = toggle => `#form_log_emails_${toggle}`;
     this.saveEmailFormButton = '#form-log-email-save-button';
 
+    // Email form Radio buttons
+    this.sendMailParametersRadioButton = '#form_mail_method_0';
+    this.smtpParametersRadioButton = '#form_mail_method_1';
+
+    // Email form input fields
+    this.smtpServerFormField = '#form_smtp_config_server';
+    this.smtpUsernameFormField = '#form_smtp_config_username';
+    this.smtpPasswordFormField = '#form_smtp_config_password';
+    this.smtpPortFormField = '#form_smtp_config_port';
+    this.smtpEncryptionFormField = '#form_smtp_config_encryption';
+
     // Test your email configuration form
     this.sendTestEmailForm = 'form[name=\'test_email_sending\']';
     this.sendTestEmailInput = '#test_email_sending_send_email_to';
@@ -64,7 +84,7 @@ class Email extends BOBasePage {
    */
   /**
    * Reset input filters
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
@@ -75,7 +95,7 @@ class Email extends BOBasePage {
 
   /**
    * Get total of email created
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getTotalElementInGrid(page) {
@@ -84,7 +104,7 @@ class Email extends BOBasePage {
 
   /**
    * Get number of elements in grid (displayed in one page)
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -93,7 +113,7 @@ class Email extends BOBasePage {
 
   /**
    * Reset and get number of lines
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -105,17 +125,17 @@ class Email extends BOBasePage {
 
   /**
    * Filter list of email logs
-   * @param page
-   * @param filterType, input or select to choose method of filter
-   * @param filterBy, column to filter
-   * @param value, value to filter with
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @returns {Promise<void>}
    */
   async filterEmailLogs(page, filterType, filterBy, value = '') {
     await this.resetFilter(page);
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.emailFilterColumnInput(filterBy), value.toString());
+        await this.setValue(page, this.emailFilterColumnInput(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.emailFilterColumnInput(filterBy), value);
@@ -129,9 +149,9 @@ class Email extends BOBasePage {
 
   /**
    * Get text from column
-   * @param page
-   * @param columnName
-   * @param row
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get text content
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   getTextColumn(page, columnName, row) {
@@ -140,9 +160,9 @@ class Email extends BOBasePage {
 
   /**
    * Filter email logs by date
-   * @param page
-   * @param dateFrom
-   * @param dateTo
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Value of date from to filter with
+   * @param dateTo {string} Value of date to to filter with
    * @returns {Promise<void>}
    */
   async filterEmailLogsByDate(page, dateFrom, dateTo) {
@@ -154,8 +174,8 @@ class Email extends BOBasePage {
 
   /**
    * Delete email logs
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<string>}
    */
   async deleteEmailLog(page, row) {
@@ -165,12 +185,13 @@ class Email extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Delete email logs by bulk actions
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteEmailLogsBulkActions(page) {
@@ -191,13 +212,56 @@ class Email extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.confirmDeleteModal}.show`),
     ]);
     await this.clickAndWaitForNavigation(page, this.confirmDeleteButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Setup the smtp parameters
+   * @param page {Page} Browser tab
+   * @param server {string} Value of server name to set on smtp server input
+   * @param username {string} Value of username to set on smtp username input
+   * @param pass {string} Value of password to set on smtp password input
+   * @param port {string} Value of port to set on smtp port input
+   * @param encryption {string} Value of encryption to select from smtp encryption select
+   * @returns {Promise<string>}
+   */
+  async setupSmtpParameters(page, server, username, pass, port, encryption = 'None') {
+    // Click on smtp radio button
+    await page.click(this.smtpParametersRadioButton);
+    await this.waitForVisibleSelector(page, this.smtpServerFormField);
+    // fill the form field
+    await this.setValue(page, this.smtpServerFormField, server);
+    await this.setValue(page, this.smtpUsernameFormField, username);
+    await this.setValue(page, this.smtpPasswordFormField, pass);
+    await this.setValue(page, this.smtpPortFormField, port);
+    await this.selectByVisibleText(page, this.smtpEncryptionFormField, encryption);
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Reset the mail parameters to default config
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async resetDefaultParameters(page) {
+    // Click on smtp radio button
+    await page.click(this.sendMailParametersRadioButton);
+    await this.waitForHiddenSelector(page, this.smtpServerFormField);
+
+    // Click on Save button
+    await this.clickAndWaitForNavigation(page, this.saveEmailFormButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Send a test email
-   * @param page
-   * @param email
+   * @param page {Page} Browser tab
+   * @param email {string} Value of email to set on email input
    * @returns {Promise<string>}
    */
   async sendTestEmail(page, email) {
@@ -208,20 +272,21 @@ class Email extends BOBasePage {
 
   /**
    * Enable/Disable log emails
-   * @param page
-   * @param toEnable
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable log emails, false if not
    * @returns {Promise<string>}
    */
   async setLogEmails(page, toEnable) {
-    await page.check(this.logEmailsToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Is log emails table visible
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async isLogEmailsTableVisible(page) {
@@ -230,7 +295,7 @@ class Email extends BOBasePage {
 
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -239,8 +304,8 @@ class Email extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -254,7 +319,7 @@ class Email extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -265,7 +330,7 @@ class Email extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -276,9 +341,9 @@ class Email extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param column
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param column {string} Column name to get all rows column
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -286,7 +351,7 @@ class Email extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;

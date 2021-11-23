@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add group page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddGroup extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add group page
+   */
   constructor() {
     super();
 
@@ -13,7 +22,7 @@ class AddGroup extends BOBasePage {
     this.nameInput = idLang => `#name_${idLang}`;
     this.discountInput = '#reduction';
     this.priceDisplayMethodSelect = '#price_display_method';
-    this.showPricesToggle = toggle => `${this.groupForm} label[for='show_prices_${toggle}']`;
+    this.showPricesToggle = toggle => `${this.groupForm} #show_prices_${toggle}`;
     this.saveButton = '#group_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
 
@@ -29,8 +38,8 @@ class AddGroup extends BOBasePage {
 
   /**
    * Change language in form
-   * @param page
-   * @param idLang
+   * @param page {Page} Browser tab
+   * @param idLang {number} Language to change 1 for 'EN' 2 for 'FR'
    * @return {Promise<void>}
    */
   async changeLanguage(page, idLang) {
@@ -41,14 +50,14 @@ class AddGroup extends BOBasePage {
 
     await Promise.all([
       page.click(this.dropdownMenuItemLink(idLang)),
-      page.waitForSelector(this.dropdownMenuItemLink(idLang), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }
 
   /**
    * Fill group form and get successful message
-   * @param page
-   * @param groupData
+   * @param page {Page} Browser tab
+   * @param groupData {GroupData} Data to set on create/edit form
    * @return {Promise<string>}
    */
   async createEditGroup(page, groupData) {
@@ -62,7 +71,7 @@ class AddGroup extends BOBasePage {
 
     await this.selectByVisibleText(page, this.priceDisplayMethodSelect, groupData.priceDisplayMethod);
 
-    await page.click(this.showPricesToggle(groupData ? 'on' : 'off'));
+    await this.setChecked(page, this.showPricesToggle(groupData ? 'on' : 'off'));
 
     // Save group
     await this.clickAndWaitForNavigation(page, this.saveButton);
@@ -73,8 +82,8 @@ class AddGroup extends BOBasePage {
 
   /**
    * Set price display method and save the form
-   * @param page
-   * @param priceDisplayMethod
+   * @param page {Page} Browser tab
+   * @param priceDisplayMethod {string} Value to select on price display method select
    * @returns {Promise<void>}
    */
   async setPriceDisplayMethod(page, priceDisplayMethod) {

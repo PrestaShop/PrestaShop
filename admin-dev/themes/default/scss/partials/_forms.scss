@@ -1,40 +1,52 @@
 //form
 label.control-label {
-  font-size: 13px;
-  font-weight: normal;
-  color: #666;
-}
-label.control-label span.label-tooltip {
-  text-decoration: none;
-  font-size: 13px;
-  color: #3586AE;
-  background-color: lighten(#D8EDF7,5%);
-  border: none;
-  border-bottom: solid 1px #D8EDF7;
-  padding: 0 5px;
-  @include border-radius(3px);
-}
-label.required:before {
-  content: '*';
-  color: red;
   font-size: 14px;
+  font-weight: 500;
+  color: $main-color;
+}
+
+label.control-label span.label-tooltip {
+  padding: 0 5px;
+  font-size: 14px;
+  color: $main-color;
+  text-decoration: none;
+  border: none;
+}
+
+label.required::before {
   position: relative;
+  font-size: 14px;
   line-height: 12px;
+  color: #f00;
+  content: "*";
 }
+
 .tooltip {
-  font-size: 12px;
   font-family: $font-family-sans-serif;
+  font-size: 12px;
   white-space: normal;
+
+  &-inner {
+    padding: 10px;
+    background-color: $main-color;
+  }
+
+  &.top .tooltip-arrow {
+    border-top-color: $main-color;
+  }
 }
+
 select.input-tiny,
 input[type="text"].input-tiny,
 input[type="password"].input-tiny {
   width: 80px;
   @include float(left);
 }
+
 textarea {
   resize: none;
 }
+
 textarea:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -55,6 +67,7 @@ input[type="color"]:focus,
   border-color: $input-focus-border;
   @include box-shadow(none);
 }
+
 textarea:hover,
 input[type="text"]:hover,
 input[type="password"]:focus,
@@ -78,77 +91,95 @@ input[type="color"]:hover,
   .caret {
     border-top-color: $gray-dark !important;
   }
+
   &:hover {
     .caret {
-      border-top-color: white !important;
+      border-top-color: #fff !important;
     }
   }
+
   &.btn-default {
     i {
       color: $gray;
     }
+
     &:hover {
-      color: white;
+      color: #fff;
       background-color: $brand-primary;
-      border-color: darken($brand-primary,10%);
+      border-color: darken($brand-primary, 10%);
       @include box-shadow(none);
+
       i {
-        color: white;
+        color: #fff;
       }
     }
   }
+
   &.btn-primary {
     i {
-      color: white;
+      color: #fff;
     }
-    background-color: $brand-primary;
-    color: white;
+    color: #fff;
     text-transform: uppercase;
+    background-color: $brand-primary;
+
     &:hover {
-      background-color: darken($brand-primary,10%);
+      background-color: darken($brand-primary, 10%);
       @include box-shadow(none);
     }
   }
+
   &.btn-default[disabled] {
-    border-color: $gray-light;
     color: $gray-light;
-    background-color: lighten($gray-light,35%);
+    background-color: lighten($gray-light, 35%);
+    border-color: $gray-light;
   }
 }
+
 .dropdown-menu {
   @include text-align(left);
+
   > li a {
     padding: 5px 10px;
+
     &:hover {
       i {
-        color: white;
+        color: #fff;
       }
     }
   }
 }
+
 .btn-group-action {
   line-height: 0;
+
   .btn {
     font-family: $font-family-sans-serif;
   }
+
   .btn-group {
     white-space: nowrap;
+
     > a,
     button {
-      text-decoration: none;
       display: inline-block;
       float: none;
+      text-decoration: none;
     }
+
     > a:first-child {
       @include margin-right(-3px);
     }
+
     i {
       font-size: 14px;
     }//form file upload
   }
 }
+
 .dummyfile {
   position: relative;
+
   .hide-file-upload {
     position: absolute;
     top: 0;
@@ -157,68 +188,79 @@ input[type="color"]:hover,
     height: 100%;
     @include opacity(0);
   }
-//typeahead
+  //typeahead
 }
+
 .tt-query {
   @include border-right-radius(3px!important);
 }
+
 .tt-dropdown-menu {
-  background-color: white;
-  border: solid 1px #ccc;
   font-size: 0.9em;
   text-transform: none;
+  background-color: #fff;
+  border: solid 1px #ccc;
 }
+
 .tt-suggestions {
   padding: 0 6px;
   @include box-shadow(rgba(black,0.25) 0 1px 4px);
 }
+
 .tt-suggestion p {
-  border-bottom: solid 1px #ccc;
-  margin: 0 !important;
   padding: 0 !important;
+  margin: 0 !important;
+  border-bottom: solid 1px #ccc;
 }
+
 .tt-suggestion:last-child p {
   border-bottom: none;
 }
 //tag
 .tagify-container {
-  background-color: white;
-  padding: 0px 3px;
   min-height: 30px;
+  padding: 0 3px;
   overflow: auto;
+  background-color: #fff;
   border: solid 1px #ccc;
   @include border-radius(3px);
   @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px inset);
+
   span {
     @include float(left);
   }
+
   > span {
     display: inline-block;
     padding: 2px 5px;
     margin: 3px;
-    border-radius: 2px;
+    color: #fff;
+    background-color: lighten($brand-primary, 15%);
     border: 1px solid $brand-primary;
-    background-color: lighten($brand-primary,15%);
-    color: white;
+    border-radius: 2px;
+
     > a {
+      font-weight: 700;
       color: $brand-primary;
       text-decoration: none;
-      font-weight: bold;
       @include padding-left(5px);
     }
   }
+
   > input {
-    margin-top: 2px;
-    border: 0 none;
     width: 140px;
     height: auto;
+    margin-top: 2px;
+    border: 0 none;
     @include box-shadow(none);
   }
+
   > input:focus {
     outline: 0;
     @include box-shadow(none);
   }
 }
+
 .form-group {
   @media (max-width: $screen-lg) {
     input[type="text"],
@@ -228,10 +270,10 @@ input[type="color"]:hover,
     select {
       margin: 4px 0;
     }
+
     .input-group {
       margin: 4px 0;
-    }
-    .input-group {
+
       input[type="text"],
       input[type="search"],
       input[type="password"],
@@ -241,11 +283,50 @@ input[type="color"]:hover,
       }
     }
   }
+
+  .input-group {
+    &-btn {
+      > .btn {
+        height: $input-height-base;
+      }
+    }
+  }
+
+  .translatable-field {
+    .btn.dropdown-toggle {
+      height: $input-height-base;
+      white-space: nowrap;
+    }
+  }
 }
+
 input[type="text"],
 input[type="search"],
 input[type="password"],
 input[type="email"],
 input[type="tel"] {
   font-family: $url-font-content-name, Helvetica, Arial, $icon-font-family, sans-serif !important;
+}
+
+
+@media (min-width: $screen-sm-min) {
+  .control-label {
+    padding-top: 7px;
+    padding-right: 25px;
+  }
+}
+
+.form-horizontal {
+  .form-wrapper {
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%;
+    padding: 14px 0;
+    margin: auto;
+  }
+
+  .form-group {
+    .btn[id^="add_condition_"] {
+      white-space: nowrap;
+    }
+  }
 }

@@ -1,26 +1,27 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
 
-// Import
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
 
-// Importing data
-const {DefaultAccount} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
+// Import data
+const {DefaultCustomer} = require('@data/demo/customer');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customer_redisplayCartAtLogin';
-
 
 let browserContext;
 let page;
@@ -33,7 +34,7 @@ Disable re-display cart at login
 Login FO and add a product to the cart
 Logout FO then Login and check that the cart is empty
  */
-describe('Enable re-display cart at login', async () => {
+describe('BO - Shop Parameters - Customer Settings : Enable/Disable re-display cart at login', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -94,7 +95,7 @@ describe('Enable re-display cart at login', async () => {
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultAccount);
+      await loginFOPage.customerLogin(page, DefaultCustomer);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
@@ -112,7 +113,7 @@ describe('Enable re-display cart at login', async () => {
       await homePage.logout(page);
     });
 
-    it('should login FO and check the cart', async function () {
+    it('should login FO and check the cart then logout', async function () {
       await testContext.addContextItem(
         this,
         'testIdentifier',
@@ -122,7 +123,7 @@ describe('Enable re-display cart at login', async () => {
 
       // Login FO
       await homePage.goToLoginPage(page);
-      await loginFOPage.customerLogin(page, DefaultAccount);
+      await loginFOPage.customerLogin(page, DefaultCustomer);
 
       const connected = await homePage.isCustomerConnected(page);
       await expect(connected, 'Customer is not connected in FO').to.be.true;
@@ -138,9 +139,16 @@ describe('Enable re-display cart at login', async () => {
 
       // Logout from FO
       await homePage.logout(page);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO_${index}`, baseContext);
 
       // Go back to BO
       page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

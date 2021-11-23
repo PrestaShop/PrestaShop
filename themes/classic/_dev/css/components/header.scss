@@ -2,11 +2,12 @@
   position: relative;
   z-index: 999;
   color: $gray;
-  background: #fff;
+  background: $white;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.11);
 
   .logo {
     max-width: 100%;
+    height: auto;
   }
 
   #_desktop_logo {
@@ -82,7 +83,7 @@
 
         a,
         i {
-          color: #fff;
+          color: $white;
         }
       }
 
@@ -114,7 +115,7 @@
 
       &.active {
         a:hover {
-          color: #fff;
+          color: $white;
         }
       }
 
@@ -182,5 +183,22 @@
 
   .top-menu-link {
     margin-left: $medium-space;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .top-logo {
+      display: flex;
+      align-items: center;
+      min-height: 50px;
+
+      img {
+        width: auto;
+        max-height: 2rem;
+      }
+
+      > h1 {
+        margin: 0;
+      }
+    }
   }
 }

@@ -25,13 +25,14 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block content %}
-
   {% set hooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': id_product }) %}
-
+  <div class="header-toolbar d-print-none">
+    {{ multistoreHeader() }}
+  </div>
   <form name="form" id="form" method="post" class="form-horizontal product-page row justify-content-md-center" novalidate="novalidate">
 
     {% if not editable %} <fieldset disabled id="field-disabled"> {% endif %}
@@ -43,7 +44,8 @@
         'is_multishop_context': is_multishop_context,
         'languages': languages,
         'help_link': help_link,
-        'stats_link': stats_link
+        'stats_link': stats_link,
+        'isCreationMode': isCreationMode,
         })
       }}
     {% endblock %}
@@ -295,7 +297,6 @@
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/catalog_product.bundle.js') }}"></script>
 
   <script src="{{ asset('themes/default/js/bundle/product/product-manufacturer.js') }}"></script>
@@ -307,6 +308,9 @@
   <script src="{{ asset('themes/default/js/bundle/module/module_card.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/modal-confirmation.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/product_page.bundle.js') }}"></script>
+
+  <script src="{{ asset('themes/default/js/bundle/product/form.js') }}"></script>
+
   <script src="{{ asset('../js/tiny_mce/tiny_mce.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce.inc.js') }}"></script>
   <script src="{{ asset('../js/admin/tinymce_loader.js') }}"></script>
@@ -354,4 +358,5 @@
 "tax excl.": "tax excl."|trans({}, 'Admin.Catalog.Feature'),
 "You can't create pack product with variations. Are you sure to disable variations ? they will all be deleted.": "A pack of products can't have combinations."|trans({}, "Admin.Catalog.Notification") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
 "You can't create virtual product with variations. Are you sure to disable variations ? they will all be deleted.": "A virtual product can't have combinations."|trans({}, "Admin.Catalog.Notification") ~ ' ' ~ js_translatable['Are you sure to disable variations ? they will all be deleted'],
+"Are you sure you want to delete the selected item(s)?": "Are you sure you want to delete the selected item(s)?"|trans({}, 'Admin.Global'),
 }|merge(js_translatable) %}

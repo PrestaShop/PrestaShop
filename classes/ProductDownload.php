@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
+
 /**
  * Class ProductDownloadCore.
  */
@@ -51,10 +53,10 @@ class ProductDownloadCore extends ObjectModel
     public $nb_downloadable;
 
     /** @var bool Active if file is accessible or not */
-    public $active = 1;
+    public $active = true;
 
     /** @var bool is_shareable indicates whether the product can be shared */
-    public $is_shareable = 0;
+    public $is_shareable = false;
 
     protected static $_productIds = [];
 
@@ -66,10 +68,10 @@ class ProductDownloadCore extends ObjectModel
         'primary' => 'id_product_download',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255],
-            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
-            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull'],
             'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
             'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
@@ -174,8 +176,9 @@ class ProductDownloadCore extends ObjectModel
      * Return the id_product_download from an id_product.
      *
      * @param int $idProduct Product the id
+     * @param bool $active
      *
-     * @return int Product the id for this virtual product
+     * @return bool|int Product the id for this virtual product
      */
     public static function getIdFromIdProduct($idProduct, $active = true)
     {
@@ -204,10 +207,11 @@ class ProductDownloadCore extends ObjectModel
      */
     public static function getIdFromFilename($filename)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_product_download`
-		FROM `' . _DB_PREFIX_ . 'product_download`
-		WHERE `filename` = \'' . pSQL($filename) . '\'');
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_product_download`
+            FROM `' . _DB_PREFIX_ . 'product_download`
+            WHERE `filename` = \'' . pSQL($filename) . '\''
+        );
     }
 
     /**
@@ -245,8 +249,8 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optionnal)
-     * @param string $hash hash code in table order detail (optionnal)
+     * @param bool $admin specific to backend (optional)
+     * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
@@ -263,7 +267,7 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return html link.
      *
-     * @param string $class CSS selector
+     * @param string|bool $class CSS selector
      * @param bool $admin specific to backend
      * @param bool $hash hash code in table order detail
      *

@@ -1,8 +1,12 @@
 require('module-alias/register');
 
+// Import expect from chai
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -16,13 +20,7 @@ const addCarrierPage = require('@pages/BO/shipping/carriers/add');
 const CarrierFaker = require('@data/faker/carrier');
 const {Carriers} = require('@data/demo/carriers');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shipping_carriers_filterSortAndPagination';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -30,7 +28,7 @@ let page;
 
 let numberOfCarriers = 0;
 
-describe('Filter, sort and pagination carriers', async () => {
+describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +43,7 @@ describe('Filter, sort and pagination carriers', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shipping/Carriers\' page', async function () {
+  it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -66,7 +64,7 @@ describe('Filter, sort and pagination carriers', async () => {
   });
 
   // 1 - Filter carriers
-  describe('Filter carriers', async () => {
+  describe('Filter carriers table', async () => {
     const tests = [
       {
         args:
@@ -223,10 +221,9 @@ describe('Filter, sort and pagination carriers', async () => {
   });
 
   // 3 - Create 16 carriers
-  const creationTests = new Array(17).fill(0, 0, 17);
-
-  creationTests.forEach((test, index) => {
-    describe(`Create carrier n°${index + 1} in BO`, async () => {
+  describe('Create 16 carriers in BO', async () => {
+    const creationTests = new Array(17).fill(0, 0, 17);
+    creationTests.forEach((test, index) => {
       before(() => files.generateImage(`todelete${index}.jpg`));
 
       const carrierData = new CarrierFaker({name: `todelete${index}`});
@@ -239,7 +236,7 @@ describe('Filter, sort and pagination carriers', async () => {
         await expect(pageTitle).to.contains(addCarrierPage.pageTitleCreate);
       });
 
-      it('should create carrier and check result', async function () {
+      it(`should create carrier n°${index + 1} and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCarrier${index}`, baseContext);
 
         const textResult = await addCarrierPage.createEditCarrier(page, carrierData);
@@ -255,8 +252,8 @@ describe('Filter, sort and pagination carriers', async () => {
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await carriersPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -276,8 +273,8 @@ describe('Filter, sort and pagination carriers', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+    it('should change the items number to 50 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await carriersPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');

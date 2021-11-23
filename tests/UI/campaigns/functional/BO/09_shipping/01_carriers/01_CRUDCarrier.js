@@ -1,14 +1,22 @@
 require('module-alias/register');
 
+// Import expect from chai
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const carriersPage = require('@pages/BO/shipping/carriers');
 const addCarrierPage = require('@pages/BO/shipping/carriers/add');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
@@ -17,15 +25,9 @@ const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
 const CarrierFaker = require('@data/faker/carrier');
-const {DefaultAccount} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 const baseContext = 'functional_BO_shipping_carriers_CRUDCarrier';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -50,7 +52,7 @@ Update the created carrier
 Check the existence of the update carrier in FO
 Delete carrier
  */
-describe('Create, update and delete carrier in BO', async () => {
+describe('BO - Shipping - Carriers : CRUD carrier in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -77,7 +79,7 @@ describe('Create, update and delete carrier in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shipping/Carriers\' page', async function () {
+  it('should go to \'Shipping > Carriers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCarriersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -162,7 +164,7 @@ describe('Create, update and delete carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -295,7 +297,7 @@ describe('Create, update and delete carrier in BO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'secondSighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });

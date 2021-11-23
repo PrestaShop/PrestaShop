@@ -26,7 +26,8 @@
     background-image: url("img/helper-card/content-background@3x.png");
   }
 
-  &__category {
+  &__category,
+  &__carrier {
     background-image: url("img/helper-card/seo-background@3x.png");
   }
 
@@ -81,7 +82,7 @@
       padding: 7px 15px;
       font-weight: 600;
       color: #576c72;
-      background-color: #fff;
+      background-color: $white;
       border: 1px solid #899ea5;
       outline: 0;
     }
@@ -110,7 +111,7 @@
   &__header {
     font-size: 20px;
     font-weight: 600;
-    color: #363a41;
+    color: $gray-700;
     opacity: 0.7;
   }
 
@@ -118,6 +119,6 @@
     max-width: 540px;
     font-size: 14px;
     line-height: 1.43;
-    color: #6c868e;
+    color: $gray-500;
   }
 }

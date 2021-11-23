@@ -31,28 +31,28 @@ namespace PrestaShop\PrestaShop\Core\Domain\Shop\DTO;
  */
 class ShopLogoSettings
 {
-    const HEADER_LOGO_FILE_NAME = 'PS_LOGO';
+    public const HEADER_LOGO_FILE_NAME = 'PS_LOGO';
 
-    const MAIL_LOGO_FILE_NAME = 'PS_LOGO_MAIL';
+    public const MAIL_LOGO_FILE_NAME = 'PS_LOGO_MAIL';
 
-    const INVOICE_LOGO_FILE_NAME = 'PS_LOGO_INVOICE';
+    public const INVOICE_LOGO_FILE_NAME = 'PS_LOGO_INVOICE';
 
-    const FAVICON_FILE_NAME = 'PS_FAVICON';
+    public const FAVICON_FILE_NAME = 'PS_FAVICON';
 
     /**
-     * @var array - a list of available image mime types
+     * @var array<int, string> List of available image mime types
      */
-    const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
+    public const AVAILABLE_LOGO_IMAGE_EXTENSIONS = ['gif', 'jpg', 'jpeg', 'jpe', 'png', 'webp'];
 
     /**
      * @var string - a type used for icon images for shop logo
      */
-    const AVAILABLE_ICON_IMAGE_EXTENSION = 'ico';
+    public const AVAILABLE_ICON_IMAGE_EXTENSION = 'ico';
 
     /**
      * Gets the list of available extensions with dot attached to the front of the extension
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getLogoImageExtensionsWithDot()
     {

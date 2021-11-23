@@ -2,7 +2,7 @@ admin_manufacturers_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::indexAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers
 
@@ -13,15 +13,15 @@ admin_manufacturers_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:search'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::searchAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:submitFiltermanufacturer
 
 admin_manufacturers_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::createAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:addmanufacturer
 
@@ -29,7 +29,7 @@ admin_manufacturers_view:
   path: /{manufacturerId}/view
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:view'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::viewAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:viewmanufacturer
     _legacy_parameters:
@@ -39,9 +39,9 @@ admin_manufacturers_view:
 
 admin_manufacturers_edit:
   path: /{manufacturerId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::editAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:updatemanufacturer
     _legacy_parameters:
@@ -51,9 +51,9 @@ admin_manufacturers_edit:
 
 admin_manufacturers_delete:
   path: /{manufacturerId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::deleteAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:deletemanufacturer
     _legacy_parameters:
@@ -65,7 +65,7 @@ admin_manufacturers_bulk_delete:
   path: /bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::bulkDeleteAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:submitBulkdeletemanufacturer
 
@@ -73,7 +73,7 @@ admin_manufacturers_bulk_enable_status:
   path: /bulk-enable
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkEnable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::bulkEnableAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:submitBulkenableSelectionmanufacturer
 
@@ -81,7 +81,7 @@ admin_manufacturers_bulk_disable_status:
   path: /bulk-disable
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDisable'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::bulkDisableAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:submitBulkdisableSelectionmanufacturer
 
@@ -89,7 +89,7 @@ admin_manufacturers_toggle_status:
   path: /{manufacturerId}/toggle-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:toggleStatus'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::toggleStatusAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:statusmanufacturer
     _legacy_parameters:
@@ -101,7 +101,7 @@ admin_manufacturers_export:
   path: /export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:export'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::exportAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:exportmanufacturer
 
@@ -110,17 +110,17 @@ admin_manufacturers_export:
 #
 admin_manufacturer_addresses_create:
   path: addresses/new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:createAddress'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::createAddressAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:addaddress
 
 admin_manufacturer_addresses_edit:
   path: addresses/{addressId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:editAddress'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::editAddressAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:editaddresses
     _legacy_parameters:
@@ -130,9 +130,9 @@ admin_manufacturer_addresses_edit:
 
 admin_manufacturer_addresses_delete:
   path: addresses/{addressId}/delete
-  methods: [POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:deleteAddress'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::deleteAddressAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:deleteaddress
     _legacy_parameters:
@@ -144,7 +144,7 @@ admin_manufacturer_addresses_bulk_delete:
   path: addresses/bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:bulkDeleteAddress'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::bulkDeleteAddressAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:submitBulkdeleteaddress
 
@@ -152,6 +152,6 @@ admin_manufacturer_addresses_export:
   path: addresses/export
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Catalog/Manufacturer:exportAddress'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\ManufacturerController::exportAddressAction'
     _legacy_controller: AdminManufacturers
     _legacy_link: AdminManufacturers:exportaddress

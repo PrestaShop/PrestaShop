@@ -36,6 +36,9 @@ class CategoryControllerCore extends ProductListingFrontController
     /** @var bool If set to false, customer cannot view the current category. */
     public $customer_access = true;
 
+    /** @var bool */
+    protected $notFound = false;
+
     /**
      * @var Category
      */
@@ -48,24 +51,30 @@ class CategoryControllerCore extends ProductListingFrontController
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCanonicalURL()
     {
+        if (!Validate::isLoadedObject($this->category)) {
+            return '';
+        }
         $canonicalUrl = $this->context->link->getCategoryLink($this->category);
         $parsedUrl = parse_url($canonicalUrl);
+        $params = [];
+        $page = (int) Tools::getValue('page');
+
         if (isset($parsedUrl['query'])) {
             parse_str($parsedUrl['query'], $params);
-        } else {
-            $params = [];
         }
-        $page = (int) Tools::getValue('page');
+
         if ($page > 1) {
             $params['page'] = $page;
         } else {
             unset($params['page']);
         }
-        $canonicalUrl = http_build_url($parsedUrl, ['query' => http_build_query($params)]);
 
-        return $canonicalUrl;
+        return http_build_url($parsedUrl, ['query' => http_build_query($params)]);
     }
 
     /**
@@ -88,8 +97,8 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category) || !$this->category->active) {
             header('HTTP/1.1 404 Not Found');
             header('Status: 404 Not Found');
-            $this->errors[] = $this->trans('This category does not exist.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
+            $this->notFound = true;
 
             return;
         } elseif (!$this->category->checkAccess($this->context->customer->id)) {
@@ -130,7 +139,11 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         parent::initContent();
 
-        if ($this->category->checkAccess($this->context->customer->id)) {
+        if (
+            Validate::isLoadedObject($this->category)
+            && $this->category->active
+            && $this->category->checkAccess($this->context->customer->id)
+        ) {
             $this->doProductSearch(
                 'catalog/listing/category',
                 [
@@ -148,7 +161,7 @@ class CategoryControllerCore extends ProductListingFrontController
      */
     public function getLayout()
     {
-        if (!$this->category->checkAccess($this->context->customer->id)) {
+        if (!$this->category->checkAccess($this->context->customer->id) || $this->notFound) {
             return 'layouts/layout-full-width.tpl';
         }
 
@@ -168,6 +181,7 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $query = new ProductSearchQuery();
         $query
+            ->setQueryType('category')
             ->setIdCategory($this->category->id)
             ->setSortOrder(new SortOrder('product', Tools::getProductsOrder('by'), Tools::getProductsOrder('way')));
 
@@ -229,13 +243,19 @@ class CategoryControllerCore extends ProductListingFrontController
         $breadcrumb = parent::getBreadcrumbLinks();
 
         foreach ($this->category->getAllParents() as $category) {
-            if ($category->id_parent != 0 && !$category->is_root_category) {
-                $breadcrumb['links'][] = $this->getCategoryPath($category);
+            if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
+                $breadcrumb['links'][] = [
+                    'title' => $category->name,
+                    'url' => $this->context->link->getCategoryLink($category),
+                ];
             }
         }
 
-        if ($this->category->id_parent != 0 && !$this->category->is_root_category) {
-            $breadcrumb['links'][] = $this->getCategoryPath($this->category);
+        if ($this->category->id_parent != 0 && !$this->category->is_root_category && $this->category->active) {
+            $breadcrumb['links'][] = [
+                'title' => $this->category->name,
+                'url' => $this->context->link->getCategoryLink($this->category),
+            ];
         }
 
         return $breadcrumb;
@@ -250,10 +270,16 @@ class CategoryControllerCore extends ProductListingFrontController
     {
         $page = parent::getTemplateVarPage();
 
-        $page['body_classes']['category-id-' . $this->category->id] = true;
-        $page['body_classes']['category-' . $this->category->name] = true;
-        $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
-        $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+        if ($this->notFound) {
+            $page['page_name'] = 'pagenotfound';
+            $page['body_classes']['pagenotfound'] = true;
+            $page['title'] = $this->trans('The page you are looking for was not found.', [], 'Shop.Theme.Global');
+        } else {
+            $page['body_classes']['category-id-' . $this->category->id] = true;
+            $page['body_classes']['category-' . $this->category->name] = true;
+            $page['body_classes']['category-id-parent-' . $this->category->id_parent] = true;
+            $page['body_classes']['category-depth-level-' . $this->category->level_depth] = true;
+        }
 
         return $page;
     }

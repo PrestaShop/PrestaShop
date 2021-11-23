@@ -32,11 +32,14 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
@@ -118,8 +121,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             $data['pack_stock_type'] = $this->convertPackStockTypeToInt($data['pack_stock_type']);
         }
 
-        $this->assertBoolProperty($productForEditing, $data, 'use_advanced_stock_management');
-        $this->assertBoolProperty($productForEditing, $data, 'depends_on_stock');
         $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
         $this->assertIntegerProperty($productForEditing, $data, 'out_of_stock_type');
         $this->assertIntegerProperty($productForEditing, $data, 'quantity');
@@ -136,29 +137,93 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
+     * @Then product :productReference should have no stock movements
+     *
+     * @param string $productReference
+     */
+    public function assertNoEmployeesStockMovement(string $productReference): void
+    {
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+
+        /** @var StockMovement[] $stockMovements */
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+            $productId
+        ));
+        Assert::assertEmpty($stockMovements, 'Expected to find no stock movements');
+    }
+
+    /**
+     * @Then product :productReference last employees stock movements should be:
      *
      * @param string $productReference
      * @param TableNode $table
      */
+    public function assertLastEmployeesStockMovement(string $productReference, TableNode $table): void
+    {
+        $productId = (int) $this->getSharedStorage()->get($productReference);
+
+        /** @var EmployeeStockMovement[] $stockMovements */
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+            $productId
+        ));
+        $movementsData = $table->getColumnsHash();
+
+        Assert::assertEquals(count($movementsData), count($stockMovements));
+        $index = 0;
+        foreach ($movementsData as $movementDatum) {
+            $stockMovement = $stockMovements[$index];
+            Assert::assertEquals(
+                $movementDatum['first_name'],
+                $stockMovement->getFirstName(),
+                sprintf(
+                    'Invalid stock movement first name, expected %s instead of %s',
+                    $movementDatum['first_name'],
+                    $stockMovement->getFirstName()
+                )
+            );
+            Assert::assertEquals(
+                $movementDatum['last_name'],
+                $stockMovement->getLastName(),
+                sprintf(
+                    'Invalid stock movement last name, expected %s instead of %s',
+                    $movementDatum['last_name'],
+                    $stockMovement->getLastName()
+                )
+            );
+            Assert::assertEquals(
+                (int) $movementDatum['delta_quantity'],
+                $stockMovement->getDeltaQuantity(),
+                sprintf(
+                    'Invalid stock movement delta quantity, expected %d instead of %d',
+                    $movementDatum['delta_quantity'],
+                    $stockMovement->getDeltaQuantity()
+                )
+            );
+            Assert::assertNotNull($stockMovement->getDateAdd());
+            Assert::assertInstanceOf(DateTime::class, $stockMovement->getDateAdd());
+
+            ++$index;
+        }
+    }
+
+    /**
+     * @Then /^product "(.*)" last stock movement (increased|decreased) by (\d+)$/
+     *
+     * @param string $productReference
+     * @param string $movementType
+     * @param int $movementQuantity
+     */
     public function assertProductLastStockMovement(string $productReference, string $movementType, int $movementQuantity): void
     {
-        $productId = $this->getSharedStorage()->get($productReference);
+        $productId = (int) $this->getSharedStorage()->get($productReference);
 
-        /** @var StockMovementRepository $stockMovementRepository */
-        $stockMovementRepository = $this->getContainer()->get('prestashop.core.api.stock_movement.repository');
-        $params = new QueryStockMovementParamsCollection();
-        $params->fromArray([
-            'productId' => $productId,
-        ]);
-        $movements = $stockMovementRepository->getData($params);
-        if (count($movements) <= 0) {
-            throw new RuntimeException(sprintf('No stock movement found for product %s', $productReference));
-        }
+        /** @var StockMovement[] $stockMovements */
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+            $productId
+        ));
+        $lastMovement = $stockMovements[0];
 
-        $lastMovement = $movements[0];
-
-        $lastMovementType = (int) $lastMovement['sign'] < 0 ? 'decreased' : 'increased';
+        $lastMovementType = $lastMovement->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
         Assert::assertEquals(
             $movementType,
             $lastMovementType,
@@ -171,11 +236,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
         Assert::assertEquals(
             $movementQuantity,
-            $lastMovement['physical_quantity'],
+            abs($lastMovement->getDeltaQuantity()),
             sprintf(
                 'Invalid stock movement quantity, expected %d instead of %d',
                 $movementQuantity,
-                $lastMovement['physical_quantity']
+                abs($lastMovement->getDeltaQuantity())
             )
         );
     }
@@ -199,39 +264,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         if (count($movements) > 0) {
             throw new RuntimeException(sprintf('Unexpected stock movement found for product %s', $productReference));
         }
-    }
-
-    /**
-     * @Then I should get error that stock management is disabled
-     */
-    public function assertStockManagementDisabledError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_CONFIGURATION_DISABLED
-        );
-    }
-
-    /**
-     * @Then I should get error that stock management is disabled on product
-     */
-    public function assertStockManagementDisabledOnProductError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::ADVANCED_STOCK_MANAGEMENT_PRODUCT_DISABLED
-        );
-    }
-
-    /**
-     * @Then I should get error that pack stock type is incompatible
-     */
-    public function assertIncompatiblePackStockTypeError(): void
-    {
-        $this->assertLastErrorIs(
-            ProductPackConstraintException::class,
-            ProductPackConstraintException::INCOMPATIBLE_STOCK_TYPE
-        );
     }
 
     /**
@@ -262,16 +294,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     private function setUpdateStockCommandData(array $data, UpdateProductStockInformationCommand $command): array
     {
-        if (isset($data['use_advanced_stock_management'])) {
-            $command->setUseAdvancedStockManagement(PrimitiveUtils::castStringBooleanIntoBoolean($data['use_advanced_stock_management']));
-            unset($data['use_advanced_stock_management']);
-        }
-
-        if (isset($data['depends_on_stock'])) {
-            $command->setDependsOnStock(PrimitiveUtils::castStringBooleanIntoBoolean($data['depends_on_stock']));
-            unset($data['depends_on_stock']);
-        }
-
         if (isset($data['pack_stock_type'])) {
             // If pack is involved we clear the cache because its products settings might have changed
             Pack::resetStaticCache();
@@ -284,9 +306,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             unset($data['out_of_stock_type']);
         }
 
-        if (isset($data['quantity'])) {
-            $command->setQuantity((int) $data['quantity']);
-            unset($data['quantity']);
+        if (isset($data['delta_quantity'])) {
+            $command->setDeltaQuantity((int) $data['delta_quantity']);
+            unset($data['delta_quantity']);
         }
 
         if (isset($data['minimal_quantity'])) {

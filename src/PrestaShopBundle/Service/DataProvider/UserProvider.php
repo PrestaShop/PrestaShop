@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Service\DataProvider;
 
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\User;
 
 /**
@@ -34,11 +34,11 @@ use Symfony\Component\Security\Core\User\User;
  */
 class UserProvider
 {
-    const ANONYMOUS_USER = 'ANONYMOUS_USER';
+    public const ANONYMOUS_USER = 'ANONYMOUS_USER';
 
     private $tokenStorage;
 
-    public function __construct(TokenStorage $tokenStorage)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }

@@ -98,6 +98,7 @@
             </footer>
           </div>
         </div>
+        <slot name="outside" />
       </div>
     </transition>
     <div

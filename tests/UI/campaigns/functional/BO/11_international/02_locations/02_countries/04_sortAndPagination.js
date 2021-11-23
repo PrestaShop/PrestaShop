@@ -26,7 +26,7 @@ let page;
 Sort countries table
 Paginate between pages
  */
-describe('Sort and pagination countries table', async () => {
+describe('BO - International - Countries : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -41,7 +41,7 @@ describe('Sort and pagination countries table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -54,7 +54,7 @@ describe('Sort and pagination countries table', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);

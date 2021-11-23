@@ -34,7 +34,6 @@ use Country;
 use Currency;
 use Customer;
 use Db;
-use Language;
 use Order;
 use OrderDetail;
 use PrestaShop\Decimal\DecimalNumber;
@@ -92,8 +91,22 @@ class OrderDetailUpdater
         list($roundType, $computingPrecision, $taxAddress) = $this->prepareOrderContext($order);
 
         try {
+            $ecotax = new DecimalNumber((string) $orderDetail->ecotax);
+
+            $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
+            $ecotaxTaxFactor = new DecimalNumber((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+            $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
+
+            // Prices coming from the backoffice : they are displayed with ecotax
+            // So we need to remove ecotax before having precise price
+            $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
+            $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
+
             $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
             $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
+            $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
+            $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotaxTaxIncluded);
 
             $this->applyOrderDetailPriceUpdate(
                 $orderDetail,
@@ -211,10 +224,7 @@ class OrderDetailUpdater
      */
     private function prepareOrderContext(Order $order): array
     {
-        $shopConstraint = new ShopConstraint(
-            (int) $order->id_shop,
-            (int) $order->id_shop_group
-        );
+        $shopConstraint = ShopConstraint::shop((int) $order->id_shop);
         $roundType = (int) $this->shopConfiguration->get('PS_ROUND_TYPE', null, $shopConstraint);
         $taxAddressType = $this->shopConfiguration->get('PS_TAX_ADDRESS_TYPE', null, $shopConstraint);
         $taxAddress = new Address($order->{$taxAddressType});
@@ -227,7 +237,7 @@ class OrderDetailUpdater
             ->saveCurrentContext()
             ->setCart(new Cart($order->id_cart))
             ->setCustomer(new Customer($order->id_customer))
-            ->setLanguage(new Language($order->id_lang))
+            ->setLanguage($order->getAssociatedLanguage())
             ->setCurrency($currency)
             ->setCountry($country)
             ->setShop($shop)
@@ -313,8 +323,22 @@ class OrderDetailUpdater
 
         // Get precise prices thanks to first OrderDetail (they all have the same price anyway)
         $orderDetail = $identicalOrderDetails[0];
+        $ecotax = new DecimalNumber($orderDetail->ecotax);
+
+        $ecotaxTaxCalculator = $this->getTaxCalculatorForEcotax($taxAddress);
+        $ecotaxTaxFactor = new DecimalNumber((string) (1 + ($ecotaxTaxCalculator->getTotalRate() / 100)));
+        $ecotaxTaxIncluded = $ecotax->times($ecotaxTaxFactor);
+
+        // Prices coming from the backoffice : they are display with ecotax
+        // So we need to remove ecotax before having precise price
+        $priceTaxExcluded = $priceTaxExcluded->minus($ecotax);
+        $priceTaxIncluded = $priceTaxIncluded->minus($ecotaxTaxIncluded);
+
         $precisePriceTaxExcluded = $this->getPrecisePriceTaxExcluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
         $precisePriceTaxIncluded = $this->getPrecisePriceTaxIncluded($priceTaxIncluded, $priceTaxExcluded, $order, $orderDetail, $taxAddress);
+
+        $precisePriceTaxExcluded = $precisePriceTaxExcluded->plus($ecotax);
+        $precisePriceTaxIncluded = $precisePriceTaxIncluded->plus($ecotaxTaxIncluded);
 
         foreach ($identicalOrderDetails as $identicalOrderDetail) {
             $this->applyOrderDetailPriceUpdate(
@@ -437,6 +461,7 @@ class OrderDetailUpdater
         Address $taxAddress
     ): DecimalNumber {
         // Get price via getPriceStatic so that the catalog price rules are applied
+        $null = null;
 
         return new DecimalNumber((string) Product::getPriceStatic(
             (int) $orderDetail->product_id,
@@ -450,7 +475,9 @@ class OrderDetailUpdater
             false,
             $order->id_customer, // We still use the customer ID in case this customer has some special prices
             null, // But we keep the cart null as we don't want this order overridden price
-            $taxAddress->id
+            $taxAddress->id,
+            $null,
+            false
         ));
     }
 
@@ -465,6 +492,23 @@ class OrderDetailUpdater
     private function getTaxCalculatorByAddress(Address $address, OrderDetail $orderDetail): TaxCalculator
     {
         $tax_manager = TaxManagerFactory::getManager($address, $orderDetail->getTaxRulesGroupId());
+
+        return $tax_manager->getTaxCalculator();
+    }
+
+    /**
+     * Get a TaxCalculator adapted for Ecotax
+     *
+     * @param Address $address
+     *
+     * @return TaxCalculator
+     */
+    private function getTaxCalculatorForEcotax(Address $address): TaxCalculator
+    {
+        $tax_manager = TaxManagerFactory::getManager(
+            $address,
+            (int) $this->shopConfiguration->get('PS_ECOTAX_TAX_RULES_GROUP_ID')
+        );
 
         return $tax_manager->getTaxCalculator();
     }

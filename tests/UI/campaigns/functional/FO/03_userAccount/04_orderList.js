@@ -5,7 +5,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Importing pages
 const foHomePage = require('@pages/FO/home');
@@ -29,7 +29,7 @@ Go to orders history page
 Check that number of orders is above 5 (default orders)
  */
 
-describe('Check number of orders in order history page', async () => {
+describe('FO - Account : Check number of orders in order history page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -59,7 +59,7 @@ describe('Check number of orders in order history page', async () => {
   it('Should sign in FO', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'signInFo', baseContext);
 
-    await foLoginPage.customerLogin(page, DefaultAccount);
+    await foLoginPage.customerLogin(page, DefaultCustomer);
     const isCustomerConnected = await foMyAccountPage.isCustomerConnected(page);
     await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
   });
@@ -67,12 +67,13 @@ describe('Check number of orders in order history page', async () => {
   it('should go to order history page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrderHistoryPage', baseContext);
 
+    await foHomePage.goToMyAccountPage(page);
     await foMyAccountPage.goToHistoryAndDetailsPage(page);
     const pageHeaderTitle = await foOrderHistoryPage.getPageTitle(page);
     await expect(pageHeaderTitle).to.equal(foOrderHistoryPage.pageTitle);
   });
 
-  it('should go to order history page', async function () {
+  it('should check number of orders', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkOrderList', baseContext);
 
     const numberOfOrders = await foOrderHistoryPage.getNumberOfOrders(page);

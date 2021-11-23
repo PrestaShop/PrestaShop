@@ -223,7 +223,7 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->render(
-            'PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig',
+            '@PrestaShop/Admin/Improve/Design/Cms/add.html.twig',
             [
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $categoryParentId,
@@ -352,6 +352,8 @@ class CmsPageController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig',
             [
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
         );
     }
@@ -415,6 +417,8 @@ class CmsPageController extends FrameworkBundleAdminController
             [
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'cmsCategoryParentId' => $cmsCategoryParentId,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
         );
     }

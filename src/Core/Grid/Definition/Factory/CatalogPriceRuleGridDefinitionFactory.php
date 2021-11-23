@@ -51,7 +51,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'catalog_price_rule';
+    public const GRID_ID = 'catalog_price_rule';
 
     public function __construct(
         HookDispatcherInterface $hookDispatcher
@@ -143,7 +143,7 @@ final class CatalogPriceRuleGridDefinitionFactory extends AbstractGridDefinition
             ->add((new DateTimeColumn('date_from'))
             ->setName($this->trans('Beginning', [], 'Admin.Catalog.Feature'))
             ->setOptions([
-                'format' => 'Y-m-d H:i',
+                'format' => 'Y‑m‑d H:i', // note the use of non-breaking hyphens (U+2011)
                 'field' => 'date_from',
             ])
             )

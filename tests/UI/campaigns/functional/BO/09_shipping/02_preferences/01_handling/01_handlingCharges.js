@@ -1,13 +1,17 @@
 require('module-alias/register');
 
+// Import expect from chai
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const groupsPage = require('@pages/BO/shopParameters/customerSettings/groups');
@@ -15,6 +19,8 @@ const addGroupPage = require('@pages/BO/shopParameters/customerSettings/groups/a
 const preferencesPage = require('@pages/BO/shipping/preferences');
 const carriersPage = require('@pages/BO/shipping/carriers');
 const addCarrierPage = require('@pages/BO/shipping/carriers/add');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
@@ -23,16 +29,10 @@ const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
 const {groupAccess} = require('@data/demo/groupAccess');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const CarrierFaker = require('@data/faker/carrier');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shipping_preferences_handling_handlingCharges';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -43,6 +43,7 @@ const createCarrierData = new CarrierFaker({
   allZones: true,
   handlingCosts: true,
   allZonesValue: 5.00,
+  rangeSup: 50,
 });
 const priceDisplayMethod = ['Tax excluded', 'Tax included'];
 const defaultHandlingChargesValue = 2.00;
@@ -58,7 +59,7 @@ Go back to default value : Handling charges
 Delete created carrier
 Go back to default value : tax included in Customer group page
  */
-describe('Test handling charges for carriers in FO', async () => {
+describe('BO - Shipping - Preferences : Test handling charges for carriers in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -203,7 +204,7 @@ describe('Test handling charges for carriers in FO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -302,7 +303,7 @@ describe('Test handling charges for carriers in FO', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'firstSighInFO2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });

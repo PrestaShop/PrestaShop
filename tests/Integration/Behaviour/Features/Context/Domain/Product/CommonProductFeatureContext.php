@@ -33,6 +33,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
@@ -157,13 +158,53 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
             $productTypeName,
-            $editableProduct->getBasicInformation()->getType()->getValue(),
+            $editableProduct->getType(),
             sprintf(
                 'Product type is not as expected. Expected %s but got %s instead',
                 $productTypeName,
-                $editableProduct->getBasicInformation()->getType()->getValue()
+                $editableProduct->getType()
             )
         );
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
+        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
+        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
+            Assert::assertEquals(0, $product->cache_default_attribute);
+        }
+    }
+
+    /**
+     * @Then product :productReference persisted type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertPersistedProductType(string $productReference, string $productTypeName): void
+    {
+        if ('undefined' === $productTypeName) {
+            $productTypeName = ProductType::TYPE_UNDEFINED;
+        }
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName, $product->product_type);
+    }
+
+    /**
+     * @Then product :productReference dynamic type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertDynamicProductType(string $productReference, string $productTypeName): void
+    {
+        if ('undefined' === $productTypeName) {
+            $productTypeName = ProductType::TYPE_UNDEFINED;
+        }
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName, $product->getDynamicProductType());
     }
 
     /**
@@ -228,5 +269,37 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         }
 
         return $constraintErrorFieldMap[$fieldName];
+    }
+
+    /**
+     * @Then product :productReference should be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            1,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should not be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsNotIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            0,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
     }
 }

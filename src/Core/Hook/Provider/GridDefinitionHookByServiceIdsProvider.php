@@ -38,12 +38,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class GridDefinitionHookByServiceIdsProvider implements HookByServiceIdsProviderInterface
 {
-    const HOOK_PREFIX = 'action';
-    const GRID_DEFINITION_HOOK_SUFFIX = 'GridDefinitionModifier';
-    const GRID_QUERY_BUILDER_HOOK_SUFFIX = 'GridQueryBuilderModifier';
-    const GRID_DATA_HOOK_SUFFIX = 'GridDataModifier';
-    const GRID_FILTER_FORM_SUFFIX = 'GridFilterFormModifier';
-    const GRID_PRESENTER_SUFFIX = 'GridPresenterModifier';
+    public const HOOK_PREFIX = 'action';
+    public const GRID_DEFINITION_HOOK_SUFFIX = 'GridDefinitionModifier';
+    public const GRID_QUERY_BUILDER_HOOK_SUFFIX = 'GridQueryBuilderModifier';
+    public const GRID_DATA_HOOK_SUFFIX = 'GridDataModifier';
+    public const GRID_FILTER_FORM_SUFFIX = 'GridFilterFormModifier';
+    public const GRID_PRESENTER_SUFFIX = 'GridPresenterModifier';
 
     /**
      * @var ContainerInterface

@@ -46,10 +46,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'sql_request';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'sql_request';
 
     /**
      * {@inheritdoc}
@@ -88,7 +88,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             )
             ->add(
                 (new DataColumn('name'))
-                    ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('SQL query name', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'name',
                     ])
@@ -107,6 +107,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('export'))
+                                    ->setName($this->trans('Export', [], 'Admin.Actions'))
                                     ->setIcon('cloud_download')
                                     ->setOptions([
                                         'route' => 'admin_sql_requests_export',

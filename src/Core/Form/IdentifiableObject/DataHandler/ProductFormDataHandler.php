@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
@@ -64,15 +63,15 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $data)
+    public function create(array $data): int
     {
         $createCommand = new AddProductCommand(
-            $data['basic']['name'],
-            $data['basic']['type'] === ProductType::TYPE_VIRTUAL
+            $data['header']['name'],
+            $data['header']['type']
         );
         // These are already set on creation no need to update them
-        unset($data['basic']['name']);
-        unset($data['basic']['type']);
+        unset($data['header']['name']);
+        unset($data['header']['type']);
 
         /** @var ProductId $productId */
         $productId = $this->bus->handle($createCommand);

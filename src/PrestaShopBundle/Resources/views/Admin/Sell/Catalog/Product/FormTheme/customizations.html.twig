@@ -1,0 +1,53 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{%- block customization_field_row -%}
+  <li class="form-group row customization-field-row">
+    {{ form_widget(form.id) }}
+    <div class="col-md-5">
+      {{ form_widget(form.name) }}
+      {{ form_errors(form.name) }}
+    </div>
+    <div class="col-md-4">
+      {{ form_widget(form.type) }}
+      {{ form_errors(form.type) }}
+    </div>
+    <div class="col-md-1">
+      {{ form_widget(form.remove) }}
+    </div>
+    <div class="col-md-2">
+      {{ form_widget(form.required) }}
+      {{ form_errors(form.required) }}
+    </div>
+  </li>
+{%- endblock customization_field_row -%}
+
+{%- block collection_row -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' list-unstyled')|trim }) -%}
+  <ul {{ block('widget_attributes') }}>
+    {{- block('form_rows') -}}
+  </ul>
+{%- endblock collection_row -%}

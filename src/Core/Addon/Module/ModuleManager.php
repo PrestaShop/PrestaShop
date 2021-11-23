@@ -28,13 +28,11 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
@@ -239,11 +237,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
      * @return bool
      */
-    protected function shouldRecommendConfigurationForModule(Module $installedProduct)
+    protected function shouldRecommendConfigurationForModule(ModuleInterface $installedProduct)
     {
         $warnings = $this->getModuleInstallationWarnings($installedProduct);
 
@@ -251,11 +249,11 @@ class ModuleManager implements AddonManagerInterface
     }
 
     /**
-     * @param Module $installedProduct
+     * @param ModuleInterface $installedProduct
      *
      * @return string|array
      */
-    protected function getModuleInstallationWarnings(Module $installedProduct)
+    protected function getModuleInstallationWarnings(ModuleInterface $installedProduct)
     {
         if ($installedProduct->hasValidInstance()) {
             return $installedProduct->getInstance()->warning;
@@ -289,7 +287,12 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            return $this->upgrade($name, 'latest', $source);
+            if ($source !== null) {
+                return $this->upgrade($name, 'latest', $source);
+            }
+
+            // Module is already installed
+            return true;
         }
 
         if (!empty($source)) {
@@ -308,11 +311,37 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
-        $this->checkConfirmationGiven(__FUNCTION__, $module);
         $result = $module->onInstall();
 
         $this->checkAndClearCache($result);
         $this->dispatch(ModuleManagementEvent::INSTALL, $module);
+
+        return $result;
+    }
+
+    /**
+     * Execute post install
+     *
+     * @param string $moduleName
+     *
+     * @return bool true for success
+     */
+    public function postInstall(string $moduleName): bool
+    {
+        if (!$this->moduleProvider->isInstalled($moduleName)) {
+            return false;
+        }
+
+        if (!$this->moduleProvider->isOnDisk($moduleName)) {
+            return false;
+        }
+
+        $module = $this->moduleRepository->getModule($moduleName);
+        /** @var ModuleInterface $module */
+        $result = $module->onPostInstall();
+
+        $this->checkAndClearCache($result);
+        $this->dispatch(ModuleManagementEvent::POST_INSTALL, $module);
 
         return $result;
     }
@@ -655,34 +684,17 @@ class ModuleManager implements AddonManagerInterface
      * This function is a refacto of the event dispatching.
      *
      * @param string $event
-     * @param Module $module
+     * @param ModuleInterface $module
      */
     private function dispatch($event, $module)
     {
-        $this->eventDispatcher->dispatch($event, new ModuleManagementEvent($module));
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
     }
 
     private function checkIsInstalled($name)
     {
         if (!$this->moduleProvider->isInstalled($name)) {
             throw new Exception($this->translator->trans('The module %module% must be installed first', ['%module%' => $name], 'Admin.Modules.Notification'));
-        }
-    }
-
-    /**
-     * We check the module does not ask for pre-requisites to be respected prior the action being executed.
-     *
-     * @param string $action
-     * @param Module $module
-     *
-     * @throws UnconfirmedModuleActionException
-     */
-    private function checkConfirmationGiven($action, Module $module)
-    {
-        if ($action === 'install') {
-            if ($module->attributes->has('prestatrust') && !$this->actionParams->has('confirmPrestaTrust')) {
-                throw (new UnconfirmedModuleActionException())->setModule($module)->setAction($action)->setSubject('PrestaTrust');
-            }
         }
     }
 

@@ -46,10 +46,15 @@ class OrderMessageProvider
         $this->contextLanguageId = $contextLanguageId;
     }
 
-    public function getMessages(): array
+    /**
+     * @param int|null $langId
+     *
+     * @return array
+     */
+    public function getMessages(int $langId = null): array
     {
-        $result = OrderMessage::getOrderMessages($this->contextLanguageId);
+        $result = OrderMessage::getOrderMessages($langId ?? $this->contextLanguageId);
 
-        return \is_array($result) ? $result : [];
+        return is_array($result) ? $result : [];
     }
 }

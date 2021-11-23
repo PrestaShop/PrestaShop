@@ -52,13 +52,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     /**
      * @var string
      */
     public const GRID_ID = 'supplier';
-
-    use BulkDeleteActionTrait;
-    use DeleteActionTrait;
 
     /**
      * {@inheritdoc}
@@ -192,11 +192,9 @@ final class SupplierGridDefinitionFactory extends AbstractFilterableGridDefiniti
                 'required' => false,
             ])
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
-            ->setTypeOptions([
-                'required' => false,
-            ])
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')

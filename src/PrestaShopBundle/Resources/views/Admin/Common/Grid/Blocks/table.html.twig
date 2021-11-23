@@ -50,7 +50,10 @@
       {% for record in grid.data.records %}
         <tr>
           {% for column in grid.columns %}
-            <td class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}">
+            <td
+              {% if column.type == 'identifier' %}data-identifier="{{ record[column.id] }}"{% endif %}
+              class="{{ column.type }}-type column-{{ column.id }}{% if column.options.clickable is defined and column.options.clickable %} clickable{% endif %}{% if column.options.alignment is defined and column.options.alignment %} text-{{ column.options.alignment }}{% endif %}"
+            >
               {{ column_content(record, column, grid) }}
             </td>
           {% endfor %}

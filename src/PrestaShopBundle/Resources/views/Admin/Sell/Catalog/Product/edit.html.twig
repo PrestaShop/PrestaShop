@@ -24,15 +24,31 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme productForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
+{% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
-{# @todo: starter for product page. Feel free to move/modify while appending more fields to form #}
+{# We empty the parent content header block because session alert is gonna be displayed inside the content #}
+{% block content_header %}
+{% endblock %}
+
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal product-page row justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {% set productType = productForm.vars.product_type %}
+  {% set productId = productForm.vars.product_id %}
+  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
+
+  <div class="header-toolbar d-print-none">
+    {{ multistoreHeader() }}
+  </div>
+
+  {{ form_start(productForm, {'attr': {
+    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
+    'data-product-id': productId,
+    'data-product-type': productType
+  }}) }}
 
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
@@ -45,35 +61,63 @@
   {% endblock %}
 
   <div class="col-xxl-10">
+
+  {{ block('session_alert') }}
+
+  <div class="alert alert-info alert-experimental" role="alert">
+    <p class="mb-1">
+      <strong>{{ 'This is the experimental product page.'|trans({}, 'Admin.Catalog.Notification') }}</strong>
+    </p>
+    <p class="alert-text">
+      {{ 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.'|trans({}, 'Admin.Advparameters.Help') }}
+    </p>
+  </div>
+
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
-        'productForm': productForm
+        'productForm': productForm,
+        'productType': productType,
+        'extraModulesHooks': extraModulesHooks
       }) }}
     {% endblock %}
 
-    <div id="form_content" class="tab-content">
-      {% block product_tab_basic %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid active" id="basic-tab">
-          {{ form_widget(productForm.basic) }}
-        </div>
+    <div id="form_content" class="product-tabs tab-content">
+      {% block product_tab_description %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/description.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
-      {% block product_tab_stock %}
-        <div role="tabpanel" class="form-contenttab tab-pane" id="stock-tab">
-          {{ form_widget(productForm.stock) }}
-        </div>
+      {% block product_tab_specifications %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/specifications.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
+
+      {% if productType == 'combinations' %}
+        {% block product_tab_combinations %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig') }}
+        {% endblock %}
+      {% endif %}
+
+      {% if productForm.stock is defined %}
+        {% block product_tab_stock %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/stock.html.twig') }}
+        {% endblock %}
+      {% endif %}
+
+      {% if productForm.shipping is defined %}
+        {% block product_tab_shipping %}
+          {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/shipping.html.twig', {
+            'productForm': productForm,
+          }) }}
+        {% endblock %}
+      {% endif %}
 
       {% block product_tab_pricing %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
-          {{ form_widget(productForm.price) }}
-        </div>
-      {% endblock %}
-
-      {% block product_tab_shipping %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="shipping-tab">
-          {{ form_widget(productForm.shipping) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/pricing.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
       {% block product_tab_seo %}
@@ -83,22 +127,40 @@
       {% endblock %}
 
       {% block product_tab_options %}
-        <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="options-tab">
-          {{ form_widget(productForm.options) }}
-        </div>
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/options.html.twig', {
+          'productForm': productForm,
+        }) }}
       {% endblock %}
 
-      {% block product_extra_tabs %}
+      {% block product_extra_tab %}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Tabs/modules.html.twig', {
+          'productForm': productForm,
+          'extraModulesHooks': extraModulesHooks,
+        }) }}
       {% endblock %}
     </div>
   </div>
 
+  {% block product_footer %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
     'productForm': productForm,
-    'editable': editable
+    'editable': editable,
+    'productId': productId,
   }) }}
+  {% endblock %}
 
+  {% block product_rest %}
   {{ form_end(productForm) }}
+  {% endblock %}
+
+  {# We don't want the combinations input to be inside the product form which is why this tab is rendered after the form #}
+  {% block product_external_tab_combinations %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig') }}
+  {% endblock %}
+
+  {% block category_tree_form %}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}

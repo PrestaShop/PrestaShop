@@ -96,11 +96,13 @@ class TranslatedConfigurationCore extends Configuration
     public function update($nullValues = false)
     {
         $ishtml = false;
-        foreach ($this->value as $i18NValue) {
-            if (Validate::isCleanHtml($i18NValue)) {
-                $ishtml = true;
+        if (is_array($this->value)) {
+            foreach ($this->value as $i18NValue) {
+                if (Validate::isCleanHtml($i18NValue)) {
+                    $ishtml = true;
 
-                break;
+                    break;
+                }
             }
         }
         Configuration::updateValue($this->name, $this->value, $ishtml);

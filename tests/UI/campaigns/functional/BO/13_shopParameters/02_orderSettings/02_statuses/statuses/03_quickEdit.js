@@ -1,9 +1,12 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -11,16 +14,10 @@ const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
-const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_QuickEditOrderStatus';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
+
+const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_QuickEditOrderStatus';
 
 let browserContext;
 let page;
@@ -32,7 +29,7 @@ Quick edit send email to customer
 Quick edit delivery
 Quick edit invoice
  */
-describe('Quick edit order status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Quick edit order status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -81,7 +78,7 @@ describe('Quick edit order status in BO', async () => {
     await expect(numberOfLinesAfterFilter).to.be.above(0);
 
     for (let row = 1; row <= numberOfLinesAfterFilter; row++) {
-      const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name', 2);
+      const textColumn = await statusesPage.getTextColumn(page, tableName, row, 'name');
       await expect(textColumn).to.contains(Statuses.shipped.status);
     }
   });
@@ -89,32 +86,32 @@ describe('Quick edit order status in BO', async () => {
   const statuses = [
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Send email to customer', columnID: 4,
+        status: 'disable', enable: false, columnName: 'send_email',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Send email to customer', columnID: 4,
+        status: 'enable', enable: true, columnName: 'send_email',
       },
     },
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Delivery', columnID: 5,
+        status: 'disable', enable: false, columnName: 'delivery',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Delivery', columnID: 5,
+        status: 'enable', enable: true, columnName: 'delivery',
       },
     },
     {
       args: {
-        status: 'disable', enable: false, columnName: 'Invoice', columnID: 6,
+        status: 'disable', enable: false, columnName: 'invoice',
       },
     },
     {
       args: {
-        status: 'enable', enable: true, columnName: 'Invoice', columnID: 6,
+        status: 'enable', enable: true, columnName: 'invoice',
       },
     },
   ];
@@ -126,7 +123,7 @@ describe('Quick edit order status in BO', async () => {
       const isActionPerformed = await statusesPage.setStatus(
         page,
         1,
-        orderStatus.args.columnID,
+        orderStatus.args.columnName,
         orderStatus.args.enable,
       );
 
@@ -135,7 +132,7 @@ describe('Quick edit order status in BO', async () => {
         await expect(resultMessage).to.contains(statusesPage.successfulUpdateStatusMessage);
       }
 
-      const currentStatus = await statusesPage.getStatus(page, 1, orderStatus.args.columnID);
+      const currentStatus = await statusesPage.getStatus(page, 1, orderStatus.args.columnName);
       await expect(currentStatus).to.be.equal(orderStatus.args.enable);
     });
   });

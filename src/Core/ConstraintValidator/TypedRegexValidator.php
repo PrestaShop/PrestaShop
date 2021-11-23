@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use ReflectionClass;
@@ -45,10 +46,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
-    const CATALOG_CHARS = '<>;=#{}';
-    const GENERIC_NAME_CHARS = '<>={}';
-    const MESSAGE_CHARS = '<>{}';
-    const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
+    public const CATALOG_CHARS = '<>;=#{}';
+    public const GENERIC_NAME_CHARS = '<>={}';
+    public const MESSAGE_CHARS = '<>{}';
+    public const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
 
     /**
      * @var CharacterCleaner
@@ -134,6 +135,12 @@ class TypedRegexValidator extends ConstraintValidator
                 return Ean13::VALID_PATTERN;
             case TypedRegex::TYPE_ISBN:
                 return Isbn::VALID_PATTERN;
+            case TypedRegex::TYPE_REFERENCE:
+                return Reference::VALID_PATTERN;
+            case TypedRegex::TYPE_MODULE_NAME:
+                return '/^[a-zA-Z0-9_-]+$/';
+            case TypedRegex::TYPE_URL:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u');
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));

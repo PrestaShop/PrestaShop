@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Attributes page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class Attributes extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on attributes page
+   */
   constructor() {
     super();
 
@@ -16,6 +25,7 @@ class Attributes extends BOBasePage {
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
+    this.addNewValueLink = '#page-header-desc-attribute_group-new_value';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
@@ -81,7 +91,7 @@ class Attributes extends BOBasePage {
 
   /**
    * Click on features subtab and go to page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToFeaturesPage(page) {
@@ -90,17 +100,26 @@ class Attributes extends BOBasePage {
 
   /**
    * Go to add new attribute page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToAddAttributePage(page) {
     await this.clickAndWaitForNavigation(page, this.addNewAttributeLink);
   }
 
+  /**
+   * Go to add new value page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToAddNewValuePage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewValueLink);
+  }
+
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -111,8 +130,8 @@ class Attributes extends BOBasePage {
   }
 
   /**
-   * Get Number of attributes
-   * @param page
+   * Get number of attributes
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -121,7 +140,7 @@ class Attributes extends BOBasePage {
 
   /**
    * Reset and get number of attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -131,22 +150,22 @@ class Attributes extends BOBasePage {
 
   /**
    * Filter table
-   * @param page
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to put on filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterBy, value) {
-    await this.setValue(page, this.filterColumn(filterBy), value.toString());
+    await this.setValue(page, this.filterColumn(filterBy), value);
     await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 
   /* Column methods */
   /**
    * Get text column from table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column to get text value
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -178,8 +197,8 @@ class Attributes extends BOBasePage {
 
   /**
    * Go to view attribute page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async viewAttribute(page, row) {
@@ -188,8 +207,8 @@ class Attributes extends BOBasePage {
 
   /**
    * Open row actions dropdown menu
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async openRowActionsDropdown(page, row) {
@@ -201,8 +220,8 @@ class Attributes extends BOBasePage {
 
   /**
    * Go to edit attribute page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async goToEditAttributePage(page, row) {
@@ -213,8 +232,8 @@ class Attributes extends BOBasePage {
 
   /**
    * Delete attribute
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteAttribute(page, row) {
@@ -231,9 +250,9 @@ class Attributes extends BOBasePage {
 
   /**
    * Change attribute position
-   * @param page
-   * @param actualPosition
-   * @param newPosition
+   * @param page {Page} Browser tab
+   * @param actualPosition {number} Value of actual position
+   * @param newPosition {number} Value of new position
    * @return {Promise<string>}
    */
   async changePosition(page, actualPosition, newPosition) {
@@ -249,7 +268,7 @@ class Attributes extends BOBasePage {
   /* Bulk actions methods */
   /**
    * Bulk delete attributes
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteAttributes(page) {
@@ -264,7 +283,7 @@ class Attributes extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -282,7 +301,7 @@ class Attributes extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -291,8 +310,8 @@ class Attributes extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -304,7 +323,7 @@ class Attributes extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -315,7 +334,7 @@ class Attributes extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
@@ -327,9 +346,9 @@ class Attributes extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -358,9 +377,9 @@ class Attributes extends BOBasePage {
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column to get all rows content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -368,7 +387,7 @@ class Attributes extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -378,7 +397,7 @@ class Attributes extends BOBasePage {
   /**
    * @override
    * Open help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async openHelpSideBar(page) {
@@ -390,7 +409,7 @@ class Attributes extends BOBasePage {
   /**
    * @override
    * Close help side bar
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeHelpSideBar(page) {
@@ -402,7 +421,7 @@ class Attributes extends BOBasePage {
   /**
    * @override
    * Get help card URL
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async getHelpDocumentURL(page) {

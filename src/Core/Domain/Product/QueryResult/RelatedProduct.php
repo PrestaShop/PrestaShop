@@ -49,18 +49,26 @@ class RelatedProduct
     private $reference;
 
     /**
+     * @var string
+     */
+    private $imageUrl;
+
+    /**
      * @param int $productId
      * @param string $name
      * @param string $reference
+     * @param string $imageUrl
      */
     public function __construct(
         int $productId,
         string $name,
-        string $reference
+        string $reference,
+        string $imageUrl
     ) {
         $this->productId = $productId;
         $this->name = $name;
         $this->reference = $reference;
+        $this->imageUrl = $imageUrl;
     }
 
     /**
@@ -85,5 +93,13 @@ class RelatedProduct
     public function getReference(): string
     {
         return $this->reference;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrl(): string
+    {
+        return $this->imageUrl;
     }
 }

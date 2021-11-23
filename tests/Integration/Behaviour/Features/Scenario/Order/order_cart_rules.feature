@@ -665,3 +665,110 @@ Feature: Order from Back Office (BO)
     When I remove product "Test Product With Percent Discount" from order "bo_order1"
     Then order "bo_order1" should have 2 products in total
     Then order "bo_order1" should contain 0 product "Test Product With Percent Discount"
+
+  Scenario: When a cart rule is associated to a carrier, when I change the carrier the cart rule should be added/removed accordingly
+    Given there is a product in the catalog named "product1" with a price of 10.00 and 100 items in stock
+    And there is a product in the catalog named "product2" with a price of 15.00 and 100 items in stock
+    And there is a zone named "zone1"
+    And there is a country named "country1" and iso code "FR" in zone "zone1"
+    And there is a carrier named "carrier1"
+    And there is a carrier named "carrier2"
+    And carrier "carrier1" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
+    And carrier "carrier2" applies shipping fees of 0.0 in zone "zone1" for price between 0 and 10000
+    And there is a cart rule named "FreeGift" that applies no discount with priority 1, quantity of 1 and quantity per user 1
+    And cart rule "FreeGift" offers a gift product "product1"
+    And cart rule "FreeGift" is restricted to carrier "carrier1"
+    When I create an empty cart "dummy_cart_freegift" for customer "testCustomer"
+    And I select "FR" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_freegift"
+    And I add 1 products "product2" to the cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 1 products
+    When I select carrier "carrier1" for cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 2 products
+    When I select carrier "carrier2" for cart "dummy_cart_freegift"
+    Then cart "dummy_cart_freegift" should contain 1 products
+
+  Scenario: Add a cart rule with free shipping to an order with a total of 0
+    Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
+    When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I add 1 products "product1" to the cart "dummy_cart_free_shipping"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
+    Then cart "dummy_cart_free_shipping" should contain 1 products
+    When I add order "bo_order1" with the following details:
+      | cart                | dummy_cart_free_shipping   |
+      | message             |                            |
+      | payment module name | dummy_payment              |
+      | status              | Awaiting bank wire payment |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 7.000  |
+      | total_paid_tax_incl      | 7.420  |
+      | total_paid               | 7.420  |
+      | total_paid_real          | 0.000  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+    When I add discount to order "bo_order1" with following details:
+      | name      | Free Shipping |
+      | type      | free_shipping |
+    Then I should get no error
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 7.000  |
+      | total_discounts_tax_incl | 7.420  |
+      | total_paid_tax_excl      | 0.000  |
+      | total_paid_tax_incl      | 0.000  |
+      | total_paid               | 0.000  |
+      | total_paid_real          | 0.000  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+
+  @order-cart-rules1
+  Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
+    Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
+    When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
+    And I add 1 products "product1" to the cart "dummy_cart_free_shipping"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_free_shipping"
+    Then cart "dummy_cart_free_shipping" should contain 1 products
+    When I add order "bo_order1" with the following details:
+      | cart                | dummy_cart_free_shipping   |
+      | message             |                            |
+      | payment module name | dummy_payment              |
+      | status              | Payment accepted           |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 0.000  |
+      | total_discounts_tax_incl | 0.000  |
+      | total_paid_tax_excl      | 7.000  |
+      | total_paid_tax_incl      | 7.420  |
+      | total_paid               | 7.420  |
+      | total_paid_real          | 7.420  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |
+    And order "bo_order1" should have invoice
+    When I add discount to order "bo_order1" on first invoice and following details:
+      | name      | Free Shipping |
+      | type      | free_shipping |
+    Then I should get no error
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have following details:
+      | total_products           | 0.000  |
+      | total_products_wt        | 0.000  |
+      | total_discounts_tax_excl | 7.000  |
+      | total_discounts_tax_incl | 7.420  |
+      | total_paid_tax_excl      | 0.000  |
+      | total_paid_tax_incl      | 0.000  |
+      | total_paid               | 0.000  |
+      | total_paid_real          | 7.420  |
+      | total_shipping_tax_excl  | 7.000  |
+      | total_shipping_tax_incl  | 7.420  |

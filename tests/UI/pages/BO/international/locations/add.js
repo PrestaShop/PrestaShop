@@ -1,17 +1,26 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add zone page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddZone extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add zone page
+   */
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Zones > Add new •';
+    this.pageTitleCreate = 'Add new •';
     this.pageTitleEdit = 'Edit: ';
 
     // Selectors
-    this.nameInput = '#name';
-    this.statusToggle = toggle => `label[for='active_${toggle}']`;
-    this.saveZoneButton = '#zone_form_submit_btn';
+    this.nameInput = '#zone_name';
+    this.statusToggle = toggle => `#zone_enabled_${toggle}`;
+    this.saveZoneButton = '#save-button';
   }
 
   /*
@@ -19,19 +28,19 @@ class AddZone extends BOBasePage {
    */
   /**
    * Fill form for add/edit zone
-   * @param page
-   * @param zoneData
+   * @param page {Page} Browser tab
+   * @param zoneData {ZoneData} Data to set on new/edit zone page
    * @returns {Promise<string>}
    */
   async createEditZone(page, zoneData) {
     await this.setValue(page, this.nameInput, zoneData.name);
-    await page.click(this.statusToggle(zoneData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(zoneData.status ? 1 : 0));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveZoneButton);
 
     // Return successful message
-    return this.getAlertSuccessBlockContent(page);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

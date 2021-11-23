@@ -47,14 +47,14 @@
             {include file='catalog/_partials/product-prices.tpl'}
           {/block}
           {block name='product_description_short'}
-            <div id="product-description-short" itemprop="description">{$product.description_short nofilter}</div>
+            <div id="product-description-short">{$product.description_short nofilter}</div>
           {/block}
           {block name='product_buy'}
-            <div class="product-actions">
+            <div class="product-actions js-product-actions">
               <form action="{$urls.pages.cart}" method="post" id="add-to-cart-or-refresh">
                 <input type="hidden" name="token" value="{$static_token}">
                 <input type="hidden" name="id_product" value="{$product.id}" id="product_page_product_id">
-                <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id">
+                <input type="hidden" name="id_customization" value="{$product.id_customization}" id="product_customization_id" class="js-product-customization-id">
                 {block name='product_variants'}
                   {include file='catalog/_partials/product-variants.tpl'}
                 {/block}
@@ -72,7 +72,7 @@
       </div>
      </div>
      <div class="modal-footer">
-        <div class="product-additional-info">
+        <div class="product-additional-info js-product-additional-info">
           {hook h='displayProductAdditionalInfo' product=$product}
         </div>
     </div>

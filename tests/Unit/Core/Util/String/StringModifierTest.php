@@ -37,7 +37,7 @@ class StringModifierTest extends TestCase
      */
     private $stringModifier;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->stringModifier = new StringModifier();
     }

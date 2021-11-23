@@ -132,6 +132,11 @@ class MetaController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/create.html.twig', [
             'meta_form' => $metaForm->createView(),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]
         );
     }
@@ -234,15 +239,20 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function processSetUpUrlsFormAction(MetaFilters $filters, Request $request)
     {
-        $setUpUrlsForm = $this->processForm(
+        $formProcessResult = $this->processForm(
             $request,
             $this->getSetUpUrlsFormHandler(),
             'SetUpUrls'
         );
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
         $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
         $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
@@ -252,7 +262,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $formProcessResult, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -262,16 +272,21 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function processShopUrlsFormAction(MetaFilters $filters, Request $request)
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->processForm(
+        $formProcessResult = $this->processForm(
             $request,
             $this->getShopUrlsFormHandler(),
             'ShopUrls'
         );
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
         $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
         $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
@@ -280,7 +295,7 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $formProcessResult, $seoOptionsForm, $urlSchemaForm);
     }
 
     /**
@@ -290,21 +305,25 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function processUrlSchemaFormAction(MetaFilters $filters, Request $request)
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
-
-        $urlSchemaForm = $this->processForm(
+        $formProcessResult = $this->processForm(
             $request,
             $this->getUrlSchemaFormHandler(),
             'UrlSchema'
         );
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
+        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
+        $seoOptionsForm = $this->getSeoOptionsFormHandler()->getForm();
+
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $formProcessResult);
     }
 
     /**
@@ -314,17 +333,22 @@ class MetaController extends FrameworkBundleAdminController
      * @param MetaFilters $filters
      * @param Request $request
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function processSeoOptionsFormAction(MetaFilters $filters, Request $request)
     {
-        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
-        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
-        $seoOptionsForm = $this->processForm(
+        $formProcessResult = $this->processForm(
             $request,
             $this->getSeoOptionsFormHandler(),
             'SeoOptions'
         );
+
+        if ($formProcessResult instanceof RedirectResponse) {
+            return $formProcessResult;
+        }
+
+        $setUpUrlsForm = $this->getSetUpUrlsFormHandler()->getForm();
+        $shopUrlsForm = $this->getShopUrlsFormHandler()->getForm();
         $isRewriteSettingEnabled = $this->get('prestashop.adapter.legacy.configuration')->getBoolean('PS_REWRITING_SETTINGS');
 
         $urlSchemaForm = null;
@@ -332,13 +356,15 @@ class MetaController extends FrameworkBundleAdminController
             $urlSchemaForm = $this->getUrlSchemaFormHandler()->getForm();
         }
 
-        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $seoOptionsForm, $urlSchemaForm);
+        return $this->renderForm($request, $filters, $setUpUrlsForm, $shopUrlsForm, $formProcessResult, $urlSchemaForm);
     }
 
     /**
      * Generates robots.txt file for Front Office.
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse
@@ -403,8 +429,7 @@ class MetaController extends FrameworkBundleAdminController
         if ($isGridDisplayed) {
             $grid = $seoUrlsGridFactory->getGrid($filters);
 
-            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-            $presentedGrid = $gridPresenter->present($grid);
+            $presentedGrid = $this->presentGrid($grid);
         }
 
         $tools = $this->get('prestashop.adapter.tools');
@@ -462,7 +487,7 @@ class MetaController extends FrameworkBundleAdminController
      * @param FormHandlerInterface $formHandler
      * @param string $hookName
      *
-     * @return FormInterface
+     * @return FormInterface|RedirectResponse
      */
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
     {
@@ -482,6 +507,8 @@ class MetaController extends FrameworkBundleAdminController
 
             if (0 === count($saveErrors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_metas_index');
             } else {
                 $this->flashErrors($saveErrors);
             }

@@ -4,7 +4,7 @@
   font-size: 1em;
   line-height: 2.286em;
   cursor: pointer;
-  background: #fff;
+  background: $white;
 
   &.bordered {
     border: $gray-light 1px solid;
@@ -66,11 +66,11 @@
         }
 
         &:hover {
-          color: #fff;
+          color: $white;
           background-color: $primary;
 
           span {
-            color: #fff;
+            color: $white;
           }
         }
       }

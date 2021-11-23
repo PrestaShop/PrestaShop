@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -82,6 +83,20 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When pack :packReference should be empty
+     *
+     * @param string $packReference
+     */
+    public function assertPackEmpty(string $packReference): void
+    {
+        $packId = $this->getSharedStorage()->get($packReference);
+
+        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
+        Assert::assertEmpty($packedProducts);
+        Assert::assertFalse(Pack::isPack($packId));
     }
 
     /**

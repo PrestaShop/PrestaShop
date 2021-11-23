@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Vouchers page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class Vouchers extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on vouchers page
+   */
   constructor() {
     super();
 
@@ -20,10 +29,10 @@ class Vouchers extends FOBasePage {
    */
 
   /**
-   * Get
-   * @param page
-   * @param row
-   * @returns {string}
+   * Get voucher code from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row number in vouchers table
+   * @returns {Promise<string>}
    */
   getVoucherCodeFromTable(page, row) {
     return this.getTextContent(page, this.vouchersTableCodeColumn(row));

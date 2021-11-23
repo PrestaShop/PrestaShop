@@ -4,15 +4,14 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
-
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_sortAndPaginationSeoPages';
 
@@ -21,7 +20,7 @@ let numberOfSeoPages = 0;
 let browserContext;
 let page;
 
-describe('Sort and pagination of seo pages', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Sort and pagination seo pages', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -79,7 +78,7 @@ describe('Sort and pagination of seo pages', async () => {
     ];
 
     sortTests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await seoAndUrlsPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -105,7 +104,7 @@ describe('Sort and pagination of seo pages', async () => {
   });
 
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await seoAndUrlsPage.selectPaginationLimit(page, '10');
@@ -126,7 +125,7 @@ describe('Sort and pagination of seo pages', async () => {
       expect(paginationNumber).to.contains(`(page 1 / ${Math.ceil(numberOfSeoPages / 10)})`);
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await seoAndUrlsPage.selectPaginationLimit(page, '50');

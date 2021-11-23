@@ -272,6 +272,57 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @dataProvider getInvalidCharactersForReference
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForReferenceTypeWhenInvalidCharacterGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex('reference'), $invalidChar);
+    }
+
+    public function testItSucceedsForReferenceTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('product1', new TypedRegex('reference'));
+
+        $this->assertNoViolation();
+    }
+
+    public function testItSucceedsForUrlTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('test.com', new TypedRegex(['type' => 'url']));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForUrl
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForUrlTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => 'url']), $invalidChar);
+    }
+
+    public function testItSucceedsForModuleNameTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('my-name', new TypedRegex(['type' => 'module_name']));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForModuleName
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForModuleNameTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
+    }
+
+    /**
      * @return string[][]
      */
     public function getInvalidCharactersForNameType(): array
@@ -477,6 +528,75 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield [':'];
         yield ['.'];
         yield [','];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForReference(): Generator
+    {
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['<'];
+        yield ['>'];
+        yield [';'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForUrl(): Generator
+    {
+        yield ['!'];
+        yield ['"'];
+        yield ["'"];
+        yield ['*'];
+        yield ['§'];
+        yield ['{'];
+        yield ['['];
+        yield [']'];
+        yield ['}'];
+        yield ['\\'];
+        yield [';'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForModuleName(): Generator
+    {
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['@'];
+        yield ['#'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['?'];
+        yield ['`'];
+        yield ['\\'];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ["'"];
+        yield ['*'];
+        yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
     }
 
     /**

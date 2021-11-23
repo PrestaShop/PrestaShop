@@ -53,38 +53,39 @@
   </div>
 </template>
 
-<script>
-  import PSPagination from '@app/widgets/ps-pagination';
-  import StockHeader from './header/stock-header';
-  import Search from './header/search';
-  import LowFilter from './header/filters/low-filter';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSPagination from '@app/widgets/ps-pagination.vue';
+  import StockHeader from './header/stock-header.vue';
+  import Search from './header/search.vue';
+  import LowFilter from './header/filters/low-filter.vue';
 
   const FIRST_PAGE = 1;
 
-  export default {
+  export default Vue.extend({
     name: 'App',
     computed: {
-      isReady() {
+      isReady(): boolean {
         return this.$store.state.isReady;
       },
-      pagesCount() {
+      pagesCount(): number {
         return this.$store.state.totalPages;
       },
-      currentPagination() {
+      currentPagination(): number {
         return this.$store.state.pageIndex;
       },
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
     },
     methods: {
-      onPageChanged(pageIndex) {
+      onPageChanged(pageIndex: number): void {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch('asc');
       },
-      fetch(sortDirection) {
+      fetch(sortDirection?: string): void {
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        const sorting = (sortDirection === 'desc') ? ' desc' : '';
+        const sorting = sortDirection === 'desc' ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
         this.filters = {
@@ -97,23 +98,23 @@
 
         this.$store.dispatch(action, this.filters);
       },
-      onSearch(keywords) {
+      onSearch(keywords: any): void {
         this.$store.dispatch('updateKeywords', keywords);
         this.resetPagination();
         this.fetch();
       },
-      applyFilter(filters) {
+      applyFilter(filters: Record<string, any>): void {
         this.filters = filters;
         this.resetPagination();
         this.fetch();
       },
-      resetFilters() {
+      resetFilters(): void {
         this.filters = {};
       },
-      resetPagination() {
+      resetPagination(): void {
         this.$store.dispatch('updatePageIndex', FIRST_PAGE);
       },
-      onLowStockChecked(isChecked) {
+      onLowStockChecked(isChecked: boolean): void {
         this.filters = {...this.filters, low_stock: isChecked};
         this.fetch();
       },
@@ -127,13 +128,13 @@
     data: () => ({
       filters: {},
     }),
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
+// hide the layout header
+#main-div > .header-toolbar {
+  height: 0;
+  display: none;
+}
 </style>

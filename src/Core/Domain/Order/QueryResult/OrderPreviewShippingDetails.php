@@ -26,8 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Order\QueryResult;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 1.7.7.5 and will be removed in the next major version. Use %s::%s instead.',
+        OrderPreviewShippingDetails::class,
+        OrderPreview::class,
+        'getShippingAddressFormatted()'
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
  * DTO for order shipping details
+ *
+ * @deprecated Since 1.7.7.5 and will be removed in the next major.
  */
 class OrderPreviewShippingDetails
 {
@@ -97,6 +109,16 @@ class OrderPreviewShippingDetails
     private $vatNumber;
 
     /**
+     * @var string|null
+     */
+    private $dni;
+
+    /**
+     * @var string|null
+     */
+    private $trackingUrl;
+
+    /**
      * InvoiceDetails constructor.
      *
      * @param string $firstName
@@ -112,6 +134,8 @@ class OrderPreviewShippingDetails
      * @param string $phone
      * @param string|null $carrierName
      * @param string|null $trackingNumber
+     * @param string|null $dni
+     * @param string|null $trackingUrl
      */
     public function __construct(
         string $firstName,
@@ -126,7 +150,9 @@ class OrderPreviewShippingDetails
         string $country,
         string $phone,
         ?string $carrierName,
-        ?string $trackingNumber
+        ?string $trackingNumber,
+        ?string $dni = null,
+        ?string $trackingUrl = null
     ) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
@@ -141,6 +167,8 @@ class OrderPreviewShippingDetails
         $this->stateName = $stateName;
         $this->company = $company;
         $this->vatNumber = $vatNumber;
+        $this->dni = $dni;
+        $this->trackingUrl = $trackingUrl;
     }
 
     /**
@@ -245,5 +273,21 @@ class OrderPreviewShippingDetails
     public function getTrackingNumber(): ?string
     {
         return $this->trackingNumber;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDNI(): ?string
+    {
+        return $this->dni;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getTrackingUrl(): ?string
+    {
+        return $this->trackingUrl;
     }
 }

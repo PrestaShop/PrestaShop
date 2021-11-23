@@ -115,7 +115,7 @@ final class AddressGridDefinitionFactory extends AbstractFilterableGridDefinitio
             )
             ->add(
                 (new DataColumn('postcode'))
-                    ->setName($this->trans('Zip/postal code', [], 'Admin.Global'))
+                    ->setName($this->trans('Zip/Postal code', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'postcode',
                     ])

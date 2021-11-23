@@ -1,170 +1,145 @@
 name: PHP
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
   php-cs-fixer:
-    name: PHP Coding Standards Fixer
+    name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
       - uses: actions/checkout@v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: |
-              echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
         with:
-              path: ${{ steps.composer-cache.outputs.dir }}
-              key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-              restore-keys: |
-                  ${{ runner.os }}-composer-
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-      -   name: Composer Install
-          run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - name: Validate composer config
+        run: composer validate --strict
 
-      -   name: Run PHPCSFixer
-          run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Run PHPCSFixer
+        run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
+
+      - name: Run ergebnis/composer-normalize
+        run: composer normalize --dry-run --no-check-lock
 
   phpstan:
     name: PHP Static Analysis
-    runs-on: ubuntu-20.04
-    steps:
-        -   name: Setup PHP
-            uses: shivammathur/setup-php@v2
-            with:
-                php-version: '7.4'
-                extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        -   uses: actions/checkout@v2
-
-        -   name: Get Composer Cache Directory
-            id: composer-cache
-            run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-        -   name: Cache Composer Directory
-            uses: actions/cache@v2
-            with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                    ${{ runner.os }}-composer-
-
-        -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
-
-        -   name: Run phpstan
-            run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
-
-  phpunit:
-    name: PHPUnit Tests
     runs-on: ubuntu-latest
     strategy:
-        matrix:
-            php: ['7.1', '7.2', '7.3', '7.4']
-        fail-fast: false
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
+      fail-fast: false
     steps:
-        -   name: Setup PHP
-            uses: shivammathur/setup-php@v2
-            with:
-                php-version: ${{ matrix.php }}
-                extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        -   uses: actions/checkout@v2
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
 
-        -   name: PrestaShop Configuration
-            run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
-        -   name: Get Composer Cache Directory
-            id: composer-cache
-            run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/checkout@v2
 
-        -   name: Cache Composer Directory
-            uses: actions/cache@v2
-            with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                    ${{ runner.os }}-composer-
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-        -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - name: Cache Composer Directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-        -   name: Run phpunit
-            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
-  phpunit_with_db:
-      name: PHPUnit Tests (With DB)
-      runs-on: ubuntu-latest
-      strategy:
-          matrix:
-              php: ['7.1', '7.2', '7.3', '7.4']
-          fail-fast: false
-      steps:
-        -   name: Setup PHP
-            uses: shivammathur/setup-php@v2
-            with:
-                php-version: ${{ matrix.php }}
-                extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
-        -   name: Setup MySQL
-            uses: mirromutth/mysql-action@v1.1
-            with:
-                mysql version: '5.7'
-                mysql database: 'prestashop'
-                mysql root password: 'password'
+      - name: Run phpstan
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
-        -   uses: actions/checkout@v2
+      - name: Run phpstan on classes directory
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 3 classes/
 
-        -   name: PrestaShop Configuration
-            run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
+      fail-fast: false
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
-        -   name: Get Composer Cache Directory
-            id: composer-cache
-            run: |
-                echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/checkout@v2
 
-        -   name: Cache Composer Directory
-            uses: actions/cache@v2
-            with:
-                path: ${{ steps.composer-cache.outputs.dir }}
-                key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                restore-keys: |
-                    ${{ runner.os }}-composer-
+      - name: PrestaShop Configuration
+        run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
 
-        -   name: Composer Install
-            run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-        -   name: Install PrestaShop
-            run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
+      - name: Cache Composer Directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-        -   name: Run phpunit-legacy
-            run: composer run-script phpunit-legacy --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
-        -   name: Run phpunit-admin
-            run: composer run-script phpunit-admin --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Run phpunit (without DB)
+        run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled
 
-        -   name: Run phpunit-sf
-            run: composer run-script phpunit-sf --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql database: 'prestashop'
+          mysql root password: 'password'
 
-        -   name: Run phpunit-controllers
-            run: composer run-script phpunit-controllers --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Wait for MySQL
+        run: while ! mysqladmin ping -h127.0.0.1 --silent; do sleep 0.2; done && sleep 0.2
 
-        -   name: Run phpunit-endpoints
-            run: composer run-script phpunit-endpoints --timeout=0
-            env:
-                SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Change MySQL authentication method
+        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+
+      - name: Install PrestaShop
+        # yamllint disable-line rule:line-length
+        run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
+
+      - name: Run phpunit-endpoints
+        run: composer run-script phpunit-endpoints --timeout=0
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled

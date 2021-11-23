@@ -57,7 +57,7 @@ Reduction, Beginning, End
 Pagination next and previous
 Delete created catalog price rules by bulk actions
  */
-describe('Filter, sort and pagination catalog price rules', async () => {
+describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price rules table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -97,11 +97,11 @@ describe('Filter, sort and pagination catalog price rules', async () => {
   });
 
   // 1 - Create 21 catalog price rules
-  const creationTests = new Array(21).fill(0, 0, 21);
+  describe('Create 21 catalog price rules in BO', async () => {
+    const creationTests = new Array(21).fill(0, 0, 21);
+    creationTests.forEach((test, index) => {
+      const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
 
-  creationTests.forEach((test, index) => {
-    const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
-    describe(`Create price rule n°${index + 1} in BO`, async () => {
       it('should go to new catalog price rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
 
@@ -111,7 +111,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
         await expect(pageTitle).to.contains(addCatalogPriceRulePage.pageTitle);
       });
 
-      it('should create new catalog price rule', async function () {
+      it(`should create catalog price rule n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createCatalogPriceRule${index}`, baseContext);
 
         const validationMessage = await addCatalogPriceRulePage.setCatalogPriceRule(page, priceRuleData);
@@ -124,7 +124,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
   });
 
   // 2 - Filter catalog price rules table
-  describe('Filter catalog price rules', async () => {
+  describe('Filter catalog price rules table', async () => {
     const tests = [
       {
         args: {
@@ -203,12 +203,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
         await expect(numberOfPriceRulesAfterFilter).to.be.at.most(numberOfCatalogPriceRules + 21);
 
         for (let row = 1; row <= numberOfPriceRulesAfterFilter; row++) {
-          const textColumn = await catalogPriceRulesPage.getTextColumn(
-            page,
-            row,
-            test.args.filterBy,
-          );
-
+          const textColumn = await catalogPriceRulesPage.getTextColumn(page, row, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });
@@ -263,7 +258,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
   });
 
   // 3 - Sort Price rules table
-  describe('Sort price rules table', async () => {
+  describe('Sort catalog price rules table', async () => {
     const sortTests = [
       {
         args: {
@@ -405,8 +400,8 @@ describe('Filter, sort and pagination catalog price rules', async () => {
 
   // 4 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
+    it('should change the items number to 20 per page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo20', baseContext);
 
       const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, '20');
       expect(paginationNumber).to.equal('1');
@@ -427,7 +422,7 @@ describe('Filter, sort and pagination catalog price rules', async () => {
     });
 
     it('should change the item number to 50 per page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo50', baseContext);
 
       const paginationNumber = await catalogPriceRulesPage.selectPaginationLimit(page, '50');
       expect(paginationNumber).to.equal('1');

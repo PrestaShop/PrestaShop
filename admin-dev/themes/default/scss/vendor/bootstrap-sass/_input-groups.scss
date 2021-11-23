@@ -62,6 +62,11 @@
   width: 1%;
   white-space: nowrap;
   vertical-align: middle; // Match the inputs
+
+  // Do not wrap buttons child buttons (file selectors etc.)
+  > .btn {
+      white-space: nowrap;
+  }
 }
 
 // Text input groups

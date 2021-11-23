@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Address;
-use Attribute;
 use Carrier;
 use Cart;
 use CartRule;
@@ -57,6 +56,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCom
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\AddProductToOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
 use Product;
+use ProductAttribute;
 use Shop;
 use StockAvailable;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -141,11 +141,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
             throw new OrderException('Cart linked to the order cannot be found.');
         }
 
-        $product = $this->getProduct($command->getProductId(), (int) $order->id_lang);
+        $product = $this->getProduct($command->getProductId(), (int) $order->getAssociatedLanguage()->getId());
         $combination = null !== $command->getCombinationId() ? $this->getCombination($command->getCombinationId()->getValue()) : null;
         $combinationId = null !== $combination ? (int) $combination->id : 0;
-
-        $this->checkProductInStock($product, $command);
 
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
@@ -156,6 +154,8 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
         $this->computingPrecision = $this->getPrecisionFromCart($cart);
         try {
+            $this->checkProductInStock($product, $command, (int) $order->id_shop);
+
             $cartComparator = new CartProductsComparator($cart);
             $this->addProductToCart($cart, $product, $combination, $command->getProductQuantity());
             $updatedCartProducts = $cart->getProducts(true);
@@ -251,7 +251,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         $orderDetail->createList(
             $order,
             $cart,
-            $order->getCurrentOrderState(),
+            $order->getCurrentState(),
             $cartProducts,
             !empty($invoice->id) ? $invoice->id : 0
         );
@@ -311,9 +311,11 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         foreach ($creationUpdates as $additionalUpdate) {
             $updateProductId = $additionalUpdate->getProductId()->getValue();
             $updateCombinationId = null !== $additionalUpdate->getCombinationId() ? $additionalUpdate->getCombinationId()->getValue() : 0;
+            $updateCustomizationId = null !== $additionalUpdate->getCustomizationId() ? $additionalUpdate->getCustomizationId()->getValue() : 0;
             $cartProduct = $this->getMatchingProduct($cartProducts, [
                 'id_product' => $updateProductId,
                 'id_product_attribute' => $updateCombinationId,
+                'id_customization' => $updateCustomizationId,
             ]);
             $cartProduct['cart_quantity'] = $additionalUpdate->getDeltaQuantity();
             $additionalProducts[] = $cartProduct;
@@ -339,8 +341,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
 
             $productMatch = $item['id_product'] == $searchedProduct['id_product'];
             $combinationMatch = $item['id_product_attribute'] == $searchedProduct['id_product_attribute'];
+            $customizationMatch = $item['id_customization'] == $searchedProduct['id_customization'];
 
-            return $productMatch && $combinationMatch ? $item : null;
+            return $productMatch && $combinationMatch && $customizationMatch ? $item : null;
         });
     }
 
@@ -380,7 +383,7 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
         if ($result < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
             $minimalQuantity = $combination
-                ? Attribute::getAttributeMinimalQty($combination->id) :
+                ? ProductAttribute::getAttributeMinimalQty($combination->id) :
                 $product->minimal_quantity
             ;
 
@@ -552,15 +555,20 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
     /**
      * @param Product $product
      * @param AddProductToOrderCommand $command
+     * @param int $shopId
      *
      * @throws ProductOutOfStockException
      */
-    private function checkProductInStock(Product $product, AddProductToOrderCommand $command): void
+    private function checkProductInStock(Product $product, AddProductToOrderCommand $command, int $shopId): void
     {
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
             $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($command->getProductId()->getValue(), $combinationId);
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $command->getProductId()->getValue(),
+                $combinationId,
+                $shopId
+            );
 
             if ($availableQuantity < $command->getProductQuantity()) {
                 throw new ProductOutOfStockException(sprintf('Product with id "%s" is out of stock, thus cannot be added to cart', $product->id));

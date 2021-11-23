@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Configuration;
 use DateTime;
 use DateTimeInterface;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -43,6 +45,74 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/p/{image1}-small_default.jpg
+     *
+     * Where image1 is the reference to the image id in the shared storage, it allows to get the image
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/p/4/5/45-small_default.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $imageReference = $matches[1];
+
+        if ('no_picture' === $imageReference) {
+            $defaultIso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $defaultIso . '-default',
+                $imageUrl
+            );
+        } else {
+            // Now rebuild the image folder with image id appended
+            $imageId = $this->getSharedStorage()->get($imageReference);
+            $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $imageFolder,
+                $imageUrl
+            );
+        }
+
+        return $realImageUrl;
+    }
+
+    /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/c/{men}.jpg
+     *
+     * Where men is the reference to the category id in the shared storage, it allows to get the category
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/c/4.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealCategoryImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $categoryReference = $matches[1];
+
+        // Now rebuild the image folder with image id appended
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
+        $realImageUrl = str_replace(
+            '{' . $categoryReference . '}',
+            (string) $categoryId,
+            $imageUrl
+        );
+
+        return $realImageUrl;
+    }
+
     /**
      * @param string $reference
      *
@@ -194,7 +264,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
             'tags' => 'basicInformation.localizedTags',
-            'active' => 'options.active',
+            'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',

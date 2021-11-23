@@ -259,6 +259,17 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @Given /^the carrier "(.+)" uses "(.+)" as tracking url$/
+     */
+    public function setCarrierTrackingUrl(string $carrierName, string $url): void
+    {
+        $this->checkCarrierWithNameExists($carrierName);
+        $carrier = $this->carriers[$carrierName];
+        $carrier->url = $url;
+        $carrier->save();
+    }
+
+    /**
      * @param $carrierName
      */
     public function checkCarrierWithNameExists($carrierName)
@@ -372,6 +383,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkAddressWithNameExists($addresssName);
         $this->getCurrentCart()->id_address_delivery = $this->addresses[$addresssName]->id;
+        Context::getContext()->country = new Country((int) $this->addresses[$addresssName]->id_country);
     }
 
     /**

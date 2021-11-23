@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Adapter;
+namespace Tests\Unit\Adapter\Preferences;
 
 use Cookie;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +45,7 @@ class PreferencesConfigurationTest extends TestCase
      */
     private $mockConfiguration;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
             ->setMethods(['get', 'getBoolean', 'set'])

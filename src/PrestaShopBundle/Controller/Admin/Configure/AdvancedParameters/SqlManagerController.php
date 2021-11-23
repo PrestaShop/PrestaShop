@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Command\DeleteSqlRequestComm
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTableFields;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\DatabaseTablesList;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\CannotDeleteSqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFieldsList;
@@ -64,7 +65,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * Show list of saved SQL's.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param RequestSqlFilters $filters
@@ -92,7 +93,6 @@ class SqlManagerController extends FrameworkBundleAdminController
                 ],
             ],
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlSettingsForm' => $settingsForm->createView(),
@@ -103,7 +103,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_sql_requests_index")
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      *
      * @param Request $request
@@ -133,7 +133,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *      redirectRoute="admin_sql_requests_index"
      * )
      *
@@ -162,7 +162,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Show Request SQL create page.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *      message="You do not have permission to create this.",
      *      redirectRoute="admin_sql_requests_index"
      * )
@@ -178,21 +178,29 @@ class SqlManagerController extends FrameworkBundleAdminController
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getForm($data);
         $sqlRequestForm->handleRequest($request);
 
-        $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
+        try {
+            $result = $this->getSqlRequestFormHandler()->handle($sqlRequestForm);
 
-        if (null !== $result->getIdentifiableObjectId()) {
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            if (null !== $result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-            return $this->redirectToRoute('admin_sql_requests_index');
+                return $this->redirectToRoute('admin_sql_requests_index');
+            }
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/create.html.twig', [
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
             'dbTableNames' => $this->getDatabaseTables(),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
@@ -201,7 +209,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
@@ -213,10 +221,10 @@ class SqlManagerController extends FrameworkBundleAdminController
      */
     public function editAction($sqlRequestId, Request $request)
     {
-        try {
-            $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
-            $sqlRequestForm->handleRequest($request);
+        $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
+        $sqlRequestForm->handleRequest($request);
 
+        try {
             $result = $this->getSqlRequestFormHandler()->handleFor($sqlRequestId, $sqlRequestForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
@@ -231,11 +239,12 @@ class SqlManagerController extends FrameworkBundleAdminController
             );
 
             return $this->redirectToRoute('admin_sql_requests_index');
+        } catch (SqlRequestException $e) {
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/edit.html.twig', [
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'requestSqlForm' => $sqlRequestForm->createView(),
@@ -247,7 +256,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Delete selected Request SQL.
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
@@ -268,7 +277,7 @@ class SqlManagerController extends FrameworkBundleAdminController
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->redirectToRoute('admin_sql_requests_index');
@@ -278,7 +287,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Process bulk action delete of RequestSql's.
      *
      * @AdminSecurity(
-     *     "is_granted(['delete'], request.get('_legacy_controller'))",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to delete this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
@@ -301,7 +310,7 @@ class SqlManagerController extends FrameworkBundleAdminController
                 $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
             );
         } catch (SqlRequestException $e) {
-            $this->addFlash('error', $this->handleDeleteException($e));
+            $this->addFlash('error', $this->handleException($e));
         }
 
         return $this->redirectToRoute('admin_sql_requests_index');
@@ -311,7 +320,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * View Request SQL query data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     message="You do not have permission to view this.",
      *     redirectRoute="admin_sql_requests_index"
      * )
@@ -336,7 +345,6 @@ class SqlManagerController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/view.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('SQL Manager', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'sqlRequestResult' => $sqlRequestExecutionResult,
@@ -347,7 +355,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Export Request SQL data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_sql_requests_index"
      * )
      * @DemoRestricted(redirectRoute="admin_sql_requests_index")
@@ -390,7 +398,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      * Get MySQL table columns data.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_sql_requests_index"
      * )
      *
@@ -408,7 +416,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     }
 
     /**
-     * Get request sql repository.
+     * Get request SQL repository.
      *
      * @return \PrestaShopBundle\Entity\Repository\RequestSqlRepository
      */
@@ -472,13 +480,14 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return string Error message
      */
-    protected function handleDeleteException(SqlRequestException $e)
+    protected function handleException(SqlRequestException $e)
     {
         $code = $e->getCode();
         $type = get_class($e);
 
         $exceptionMessages = [
             SqlRequestNotFoundException::class => $this->trans('The object cannot be loaded (or found)', 'Admin.Notifications.Error'),
+            SqlRequestConstraintException::class => $e->getMessage(),
             SqlRequestException::class => $this->trans('An error occurred while deleting the object.', 'Admin.Notifications.Error'),
         ];
 

@@ -1,9 +1,12 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -15,13 +18,7 @@ const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings
 // Import data
 const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_CRUDOrderReturnStatus';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -36,7 +33,8 @@ Create new order return status
 Update order return status
 Delete order return status
  */
-describe('Create, update and delete order return status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
+  + 'and delete order return status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -122,14 +120,14 @@ describe('Create, update and delete order return status in BO', async () => {
         createOrderReturnStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
       await expect(textEmail).to.contains(createOrderReturnStatusData.name);
     });
 
     it('should go to edit order return status page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditOrderReturnStatusPage', baseContext);
 
-      await statusesPage.gotoEditPage(page, tableName, 1);
+      await statusesPage.goToEditPage(page, tableName, 1);
 
       const pageTitle = await addOrderReturnStatusPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addOrderReturnStatusPage.pageTitleEdit);
@@ -161,7 +159,7 @@ describe('Create, update and delete order return status in BO', async () => {
         editOrderStatusData.name,
       );
 
-      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name', 3);
+      const textEmail = await statusesPage.getTextColumn(page, tableName, 1, 'name');
       await expect(textEmail).to.contains(editOrderStatusData.name);
     });
 

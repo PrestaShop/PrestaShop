@@ -32,7 +32,6 @@ use AddressFormat;
 use Alias;
 use AppKernel;
 use Attachment;
-use Attribute;
 use AttributeGroup;
 use Cache;
 use Carrier;
@@ -55,6 +54,7 @@ use CustomizationField;
 use DateRange;
 use Employee;
 use EmployeeSession;
+use Exception;
 use Feature;
 use FeatureValue;
 use Gender;
@@ -64,7 +64,6 @@ use Hook;
 use Image;
 use ImageType;
 use Language;
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
 use Mail;
 use Manufacturer;
 use Message;
@@ -80,7 +79,10 @@ use OrderSlip;
 use OrderState;
 use Pack;
 use Page;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Install\DatabaseDump;
 use Product;
+use ProductAttribute;
 use ProductDownload;
 use ProductSupplier;
 use Profile;
@@ -114,6 +116,7 @@ use Tax;
 use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
+use Tests\Integration\Utility\ContextMocker;
 use Tests\Resources\ResourceResetter;
 use WarehouseProductLocation;
 use WebserviceKey;
@@ -129,6 +132,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      * @var AppKernel
      */
     protected static $kernel;
+
+    /**
+     * @var ContextMocker
+     */
+    protected static $contextMocker;
 
     /**
      * @BeforeSuite
@@ -154,7 +162,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareFeature()
     {
-        DatabaseCreator::restoreTestDB();
+        static::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -213,6 +221,38 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @BeforeScenario @mock-context-on-scenario
+     */
+    public static function mockContextBeforeScenario()
+    {
+        self::mockContext();
+    }
+
+    /**
+     * @AfterScenario @mock-context-on-scenario
+     */
+    public static function resetContextAfterScenario()
+    {
+        self::resetContext();
+    }
+
+    /**
+     * @BeforeFeature @mock-context-on-feature
+     */
+    public static function mockContextBeforeFeature()
+    {
+        self::mockContext();
+    }
+
+    /**
+     * @AfterFeature @mock-context-on-feature
+     */
+    public static function resetContextAfterFeature()
+    {
+        self::resetContext();
+    }
+
+    /**
      * @BeforeFeature @clear-cache-before-feature
      */
     public static function clearCacheBeforeFeature()
@@ -235,7 +275,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareScenario()
     {
-        DatabaseCreator::restoreTestDB();
+        static::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -246,7 +286,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function cleanDatabaseHardPrepare()
     {
-        DatabaseCreator::restoreTestDB();
+        static::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -268,6 +308,28 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         self::rebootKernel();
     }
 
+    private static function mockContext()
+    {
+        /** @var LegacyContext $localeRepository */
+        $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
+        /*
+         * We need to call this before initializing the ContextMocker because this method forcefully init
+         * the shop context thus overriding the expected value
+         */
+        $legacyContext->getContext();
+
+        self::$contextMocker = new ContextMocker();
+        self::$contextMocker->mockContext();
+    }
+
+    private static function resetContext()
+    {
+        if (empty(self::$contextMocker)) {
+            throw new \Exception('Context was not mocked');
+        }
+        self::$contextMocker->resetContext();
+    }
+
     /**
      * This method reboots Symfony kernel, this is used to force recreation of services
      * (e.g: when you add some currencies in the database, you may need to reset the CLDR
@@ -278,6 +340,15 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         $realCacheDir = self::$kernel->getContainer()->getParameter('kernel.cache_dir');
         $warmupDir = substr($realCacheDir, 0, -1) . ('_' === substr($realCacheDir, -1) ? '-' : '_');
         self::$kernel->reboot($warmupDir);
+    }
+
+    private static function restoreTestDB(): void
+    {
+        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
+            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+        }
+
+        DatabaseDump::restoreDb();
     }
 
     /**
@@ -301,7 +372,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         AddressFormat::resetStaticCache();
         Alias::resetStaticCache();
         Attachment::resetStaticCache();
-        Attribute::resetStaticCache();
+        ProductAttribute::resetStaticCache();
         AttributeGroup::resetStaticCache();
         CMS::resetStaticCache();
         CMSCategory::resetStaticCache();

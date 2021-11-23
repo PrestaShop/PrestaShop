@@ -33,9 +33,9 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 
 /**
@@ -74,52 +74,89 @@ class CombinationStockUpdater
     }
 
     /**
-     * @param Combination $combination
-     * @param array $propertiesToUpdate
+     * @param CombinationId $combinationId
+     * @param CombinationStockProperties $properties
      */
-    public function update(Combination $combination, array $propertiesToUpdate): void
+    public function update(CombinationId $combinationId, CombinationStockProperties $properties): void
     {
+        $combination = $this->combinationRepository->get($combinationId);
         $this->combinationRepository->partialUpdate(
             $combination,
-            $propertiesToUpdate,
+            $this->fillUpdatableProperties($combination, $properties),
             CannotUpdateCombinationException::FAILED_UPDATE_STOCK
         );
 
-        $this->updateStockAvailable($combination, $propertiesToUpdate);
+        $this->updateStockAvailable($combination, $properties);
     }
 
     /**
      * @param Combination $combination
-     * @param array $propertiesToUpdate
+     * @param CombinationStockProperties $properties
      *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
+     * @return string[]
      */
-    private function updateStockAvailable(Combination $combination, array $propertiesToUpdate): void
+    private function fillUpdatableProperties(Combination $combination, CombinationStockProperties $properties): array
     {
-        $updateQuantity = false;
-        $updateLocation = false;
+        $updatableProperties = [];
 
-        if (in_array('quantity', $propertiesToUpdate)) {
-            $updateQuantity = true;
+        if (null !== $properties->getQuantity()) {
+            $combination->quantity = $properties->getQuantity();
+            $updatableProperties[] = 'quantity';
         }
-        if (in_array('location', $propertiesToUpdate)) {
-            $updateLocation = true;
+
+        if (null !== $properties->getAvailableDate()) {
+            $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
+            $updatableProperties[] = 'available_date';
         }
+
+        if (null !== $properties->getLocation()) {
+            $combination->location = $properties->getLocation();
+            $updatableProperties[] = 'location';
+        }
+
+        if (null !== $properties->getLowStockThreshold()) {
+            $combination->low_stock_threshold = $properties->getLowStockThreshold();
+            $updatableProperties[] = 'low_stock_threshold';
+        }
+
+        if (null !== $properties->getMinimalQuantity()) {
+            $combination->minimal_quantity = $properties->getMinimalQuantity();
+            $updatableProperties[] = 'minimal_quantity';
+        }
+
+        if (null !== $properties->isLowStockAlertEnabled()) {
+            $combination->low_stock_alert = $properties->isLowStockAlertEnabled();
+            $updatableProperties[] = 'low_stock_alert';
+        }
+
+        return $updatableProperties;
+    }
+
+    /**
+     * @param Combination $combination
+     * @param CombinationStockProperties $properties
+     */
+    private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
+    {
+        $updateQuantity = null !== $properties->getQuantity();
+        $updateLocation = null !== $properties->getLocation();
+
         if (!$updateQuantity && !$updateLocation) {
             return;
         }
 
+        $newQuantity = $properties->getQuantity();
+        $newLocation = $properties->getLocation();
+
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
         if ($updateQuantity) {
-            $newQuantity = (int) $combination->quantity;
             $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
             $stockAvailable->quantity = $newQuantity;
         }
 
         if ($updateLocation) {
-            $stockAvailable->location = $combination->location;
+            $stockAvailable->location = $newLocation;
         }
 
         $this->stockAvailableRepository->update($stockAvailable);

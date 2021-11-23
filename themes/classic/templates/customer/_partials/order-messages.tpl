@@ -33,7 +33,7 @@
             {$message.message_date}
           </div>
           <div class="col-sm-8">
-            {$message.message nofilter}
+            {$message.message|escape:"html"}
           </div>
         </div>
       {/foreach}

@@ -27,9 +27,9 @@ abstract class ObjectModel extends ObjectModelCore
 {
     public static $debug_list = [];
 
-    public function __construct($id = null, $id_lang = null, $id_shop = null)
+    public function __construct($id = null, $id_lang = null, $id_shop = null, $translator = null)
     {
-        parent::__construct($id, $id_lang, $id_shop);
+        parent::__construct($id, $id_lang, $id_shop, $translator);
 
         $classname = get_class($this);
         if (!isset(self::$debug_list[$classname])) {
@@ -42,6 +42,9 @@ abstract class ObjectModel extends ObjectModelCore
             if (!isset($backtrace[$trace_id]['class']) || !in_array($backtrace[$trace_id]['class'], $class_list)) {
                 break;
             }
+        }
+        if (!isset($trace_id)) {
+            return;
         }
         --$trace_id;
 

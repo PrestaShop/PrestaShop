@@ -6,9 +6,9 @@ PrestaShop is an open-source e-commerce solution. Everyone is welcome and even e
 PrestaShop 1.7 is written mostly in PHP. Other languages used throughout are JavaScript, HTML, CSS, the Smarty & Twig templating languages, SQL, and XML.
 
 To contribute to the project, you should ideally be familiar with Git, the source code management system that PrestaShop uses, with the official repository being hosted on Github: 
-* You can learn more about Git here: https://try.github.io/ (there are many tutorials available on the Web).
-* You can get help on Github here: https://help.github.com/.
-* Windows users can get a nice interface for Git by installing TortoiseGit: https://tortoisegit.org/
+* You can learn more about [Git](https://try.github.io/) (there are many tutorials available on the Web).
+* You can get help on [Github](https://help.github.com/).
+* Windows users can get a nice interface for Git by installing [TortoiseGit](https://tortoisegit.org/).
 
 Contributors should follow the following process:
 
@@ -28,7 +28,7 @@ You don't exactly know where to start? Pick one of our [good first issues][9] to
 The PrestaShop documentation features a thorough explanation of the [complete process to your first pull request][4].
 
 If you don't feel comfortable forking the project or using Git, you can also either:
-* Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest to create a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
+* Edit a file directly within GitHub: browse to the target file, click the "Edit" button, make your changes in the editor then click on "Propose File Change". Github will automatically create a new fork and branch on your own Github account, then suggest creating a pull request to PrestaShop. Once the pull request is submitted, you just have to wait for a core developer to answer you.
 * [Submit an issue using GitHub][5]: this is the official ticket-tracker for PrestaShop, and the best place to write a bug ticket or request an improvement, while not having to be a developer at all. You will need to [create an account on GitHub][6].
 
 Thank you for your help in making PrestaShop even better!
@@ -50,4 +50,3 @@ Thank you for your help in making PrestaShop even better!
 [8]: https://opensource.org/licenses/AFL-3.0
 [9]: https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22
 [10]: https://build.prestashop.com/news/a-definition-of-the-good-first-issue-label
-

@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler\SetPackProductsHandlerInterface;
@@ -36,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\CommandHandler\SetPackProduct
 /**
  * Handles @see SetPackProductsCommand using legacy object model
  */
-final class SetPackProductsHandler extends AbstractProductHandler implements SetPackProductsHandlerInterface
+final class SetPackProductsHandler implements SetPackProductsHandlerInterface
 {
     /**
      * @var ProductPackUpdater

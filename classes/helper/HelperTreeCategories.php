@@ -143,7 +143,7 @@ class HelperTreeCategoriesCore extends TreeCore
                     }
                 }
 
-                $tree = Category::getCategoryInformations([$root_category], $lang);
+                $tree = Category::getCategoryInformation([$root_category], $lang);
 
                 $children = $this->fillTree($categories, $root_category);
 
@@ -256,6 +256,13 @@ class HelperTreeCategoriesCore extends TreeCore
         return $this->_root_category;
     }
 
+    /**
+     * @param array<int> $value
+     *
+     * @return self
+     *
+     * @throws PrestaShopException
+     */
     public function setSelectedCategories($value)
     {
         if (!is_array($value)) {

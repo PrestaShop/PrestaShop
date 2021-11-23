@@ -38,7 +38,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var int */
     public $delivery_number;
 
-    /** @var int */
+    /** @var string */
     public $delivery_date = '0000-00-00 00:00:00';
 
     /** @var float */
@@ -80,7 +80,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string note */
     public $note;
 
-    /** @var int */
+    /** @var string */
     public $date_add;
 
     /** @var array Total paid cache */
@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
+            'note' => ['type' => self::TYPE_HTML],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -129,7 +129,7 @@ class OrderInvoiceCore extends ObjectModel
     public function getProductsDetail()
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-        SELECT *
+        SELECT *, od.ecotax as od_ecotax, od.ecotax_tax_rate as od_ecotax_tax_rate
         FROM `' . _DB_PREFIX_ . 'order_detail` od
         LEFT JOIN `' . _DB_PREFIX_ . 'product` p
         ON p.id_product = od.product_id
@@ -207,8 +207,13 @@ class OrderInvoiceCore extends ObjectModel
             /* Ecotax */
             $round_mode = $order->round_mode;
 
-            $row['ecotax_tax_excl'] = $row['ecotax']; // alias for coherence
-            $row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) / 100;
+            // Use values from order_detail not from product because they are more accurate at the time the Order was made
+            // and they contain the true value for combinations
+            $ecotax = isset($row['od_ecotax']) ? $row['od_ecotax'] : $row['ecotax'];
+            $ecotaxRate = isset($row['od_ecotax_tax_rate']) ? $row['od_ecotax_tax_rate'] : $row['ecotax_tax_rate'];
+
+            $row['ecotax_tax_excl'] = $ecotax; // alias for coherence
+            $row['ecotax_tax_incl'] = $ecotax * (100 + $ecotaxRate) / 100;
             $row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
             if ($round_mode == Order::ROUND_ITEM) {
@@ -260,7 +265,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -276,7 +281,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -573,8 +578,8 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of OrderInvoice
      */
@@ -597,7 +602,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $id_order_state
+     * @param int $id_order_state
      *
      * @return array collection of OrderInvoice
      */
@@ -619,8 +624,8 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of invoice
      */
@@ -642,7 +647,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
     {
@@ -657,7 +662,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
     {
@@ -741,7 +746,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
@@ -778,7 +783,7 @@ class OrderInvoiceCore extends ObjectModel
         $query->innerJoin(
             'order_invoice_payment',
             'oip2',
-            'oip2.id_order_payment = oip1.id_order_payment 
+            'oip2.id_order_payment = oip1.id_order_payment
                 AND oip2.id_order_invoice <> oip1.id_order_invoice
                 AND oip2.id_order = oip1.id_order'
         );
@@ -920,7 +925,7 @@ class OrderInvoiceCore extends ObjectModel
         $address->postcode = Configuration::get('PS_SHOP_CODE', null, null, $id_shop);
         $address->city = Configuration::get('PS_SHOP_CITY', null, null, $id_shop);
         $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
-        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
+        $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, [], '<br />', ' ');
     }

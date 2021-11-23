@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Orders page, contains functions that can be used on orders page
+ * @class
+ * @extends BOBasePage
+ */
 class Order extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on orders page
+   */
   constructor() {
     super();
 
@@ -14,14 +23,17 @@ class Order extends BOBasePage {
     this.gridPanel = '#order_grid_panel';
     this.gridTable = '#order_grid_table';
     this.gridHeaderTitle = `${this.gridPanel} h3.card-header-title`;
+
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
     this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
     this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Filters
     this.filterColumn = filterBy => `${this.gridTable} #order_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -32,21 +44,25 @@ class Order extends BOBasePage {
     this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
+
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
     this.viewRowLink = row => `${this.actionsColumn(row)} a.grid-view-row-link`;
     this.viewInvoiceRowLink = row => `${this.actionsColumn(row)} a.grid-view-invoice-row-link`;
     this.viewDeliverySlipsRowLink = row => `${this.actionsColumn(row)} a.grid-view-delivery-slip-row-link`;
+
     // Grid Actions
     this.gridActionButton = '#order-grid-actions-button';
     this.gridActionDropDownMenu = '#order-grid-actions-dropdown-menu';
     this.gridActionExportLink = '#order-grid-action-export';
+
     // Bulk actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
     this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
+
     // Order status modal
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
@@ -58,40 +74,39 @@ class Order extends BOBasePage {
    */
   /**
    * Go to create new order page
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async goToCreateOrderPage(page) {
     await this.clickAndWaitForNavigation(page, this.createNewOrderButton);
   }
 
-
   /**
    * Click on lint to export orders to a csv file
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
    */
   async exportDataToCsv(page) {
     await Promise.all([
       page.click(this.gridActionButton),
       this.waitForVisibleSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.gridActionExportLink),
-      page.waitForSelector(`${this.gridActionDropDownMenu}.show`, {state: 'hidden'}),
+
+    const [downloadPath] = await Promise.all([
+      this.clickAndWaitForDownload(page, this.gridActionExportLink),
+      this.waitForHiddenSelector(page, `${this.gridActionDropDownMenu}.show`),
     ]);
 
-    return download.path();
+    return downloadPath;
   }
 
   /**
    * Filter Orders
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
+   * @returns {Promise<void>}
    */
   async filterOrders(page, filterType, filterBy, value = '') {
     switch (filterType) {
@@ -109,9 +124,23 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Filter orders by date from and date to
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Date from to filter with
+   * @param dateTo {string} Date to to filter with
+   * @returns {Promise<void>}
+   */
+  async filterOrdersByDate(page, dateFrom, dateTo) {
+    await page.type(this.filterColumn('date_add_from'), dateFrom);
+    await page.type(this.filterColumn('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
    * Reset filter in orders
-   * @param page
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
    */
   async resetFilter(page) {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
@@ -121,7 +150,7 @@ class Order extends BOBasePage {
 
   /**
    * Reset Filter And get number of elements in list
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -131,7 +160,7 @@ class Order extends BOBasePage {
 
   /**
    * Get number of orders in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfElementInGrid(page) {
@@ -140,9 +169,9 @@ class Order extends BOBasePage {
 
   /**
    * Go to orders Page
-   * @param page
-   * @param orderRow
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Order row on table
+   * @returns {Promise<void>}
    */
   async goToOrder(page, orderRow) {
     await this.clickAndWaitForNavigation(page, this.viewRowLink(orderRow));
@@ -150,24 +179,35 @@ class Order extends BOBasePage {
 
   /**
    * Get text from Column
-   * @param page
-   * @param columnName
-   * @param row
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} Order row in table
    * @returns {Promise<string>}
    */
   async getTextColumn(page, columnName, row) {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
     }
+
     return this.getTextContent(page, this.tableColumn(row, columnName));
   }
 
   /**
+   * Get order ID from table
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
+   * @returns {Promise<number>}
+   */
+  async getOrderIDNumber(page, row = 1) {
+    return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
+  }
+
+  /**
    * Get all row information from orders table
-   * @param page
-   * @param row
-   * @returns {Promise<{reference: string, newClient: string, delivery: string,
-   * totalPaid: string, payment: string, id: *, customer: string, status: string}>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<{id: number, reference: string, newClient:string, delivery: string, customer: string,
+   * totalPaid: string, payment: string, status: string}>}
    */
   async getOrderFromTable(page, row) {
     return {
@@ -184,9 +224,9 @@ class Order extends BOBasePage {
 
   /**
    * Get column content in all rows
-   * @param page
-   * @param column
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param column {string} Column name on table
+   * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -194,7 +234,7 @@ class Order extends BOBasePage {
 
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -202,9 +242,9 @@ class Order extends BOBasePage {
 
   /**
    * Get order from table in csv format
-   * @param page
-   * @param row
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<string>}
    */
   async getOrderInCsvFormat(page, row) {
     const order = await this.getOrderFromTable(page, row);
@@ -221,10 +261,10 @@ class Order extends BOBasePage {
 
   /**
    * Set order status
-   * @param page
-   * @param row, order row in table
-   * @param status, object{id, status} from demo orderStatuses
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row in table
+   * @param status {{id: number, name: string}} Order status on table
+   * @returns {Promise<string>}
    */
   async setOrderStatus(page, row, status) {
     await Promise.all([
@@ -240,40 +280,29 @@ class Order extends BOBasePage {
 
   /**
    * Click on view invoice to download it
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<string>}
    */
-  async downloadInvoice(page, row) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.viewInvoiceRowLink(row)),
-    ]);
-
-    return download.path();
+  downloadInvoice(page, row) {
+    return this.clickAndWaitForDownload(page, this.viewInvoiceRowLink(row));
   }
 
   /**
    * Click on view delivery slip to download it
-   * @param page
-   * @param row
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<string>}
    */
-  async downloadDeliverySlip(page, row) {
-    const [download] = await Promise.all([
-      page.waitForEvent('download'),
-      page.click(this.viewDeliverySlipsRowLink(row)),
-    ]);
-
-    return download.path();
+  downloadDeliverySlip(page, row) {
+    return this.clickAndWaitForDownload(page, this.viewDeliverySlipsRowLink(row));
   }
-
 
   /**
    * Click on customer link to open view page in a new tab
-   * @param page
-   * @param row
-   * @return {Promise<*>}, new browser tab to work with
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<Page>} New browser tab to work with
    */
   viewCustomer(page, row) {
     return this.openLinkWithTargetBlank(
@@ -285,9 +314,9 @@ class Order extends BOBasePage {
 
   /**
    * Get order total price
-   * @param page
-   * @param row
-   * @return {number}
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {number}
    */
   async getOrderATIPrice(page, row) {
     // Delete the first character (currency symbol) before getting price ATI
@@ -299,15 +328,15 @@ class Order extends BOBasePage {
 
   /**
    * Bulk change orders status
-   * @param page
-   * @param status, new status to give to orders
-   * @param allOrders, true if want to change all selectors
-   * @param rows, array of which orders rows to change (if allOrders = false)
-   * @return {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param status {string} New status to give to orders
+   * @param isAllOrders {boolean} True if want to update all orders status
+   * @param rows {Array<number>|boolean} Array of which orders rows to change (if allOrders = false)
+   * @returns {Promise<string>}
    */
-  async bulkUpdateOrdersStatus(page, status, allOrders = true, rows = []) {
+  async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {
     // Select all orders or some
-    if (allOrders) {
+    if (isAllOrders) {
       await Promise.all([
         page.click(this.selectAllRowsLabel),
         this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
@@ -326,7 +355,7 @@ class Order extends BOBasePage {
     // Click on change order status button
     await Promise.all([
       page.click(this.bulkUpdateOrdersStatusButton),
-      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true']`),
+      this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
@@ -338,10 +367,10 @@ class Order extends BOBasePage {
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
-   * @return {Promise<void>}
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @returns {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
     const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;

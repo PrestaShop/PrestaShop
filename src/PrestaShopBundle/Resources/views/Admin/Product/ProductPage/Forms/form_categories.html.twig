@@ -40,7 +40,7 @@
         <span class="form-control-label" id="categories-tree-expand"><i class="material-icons">expand_more</i>{{ "Expand"|trans({}, 'Admin.Actions') }}</span>
         <span class="form-control-label" id="categories-tree-reduce"><i class="material-icons">expand_less</i>{{ "Collapse"|trans({}, 'Admin.Actions') }}</span>
       </div>
-      {{ form_widget(form.categories, {'defaultCategory': true}) }} {# see bootstrap_4_layout.html.twig #}
+      {{ form_widget(form.categories, {'defaultCategory': true, defaultHidden: true}) }} {# see bootstrap_4_layout.html.twig #}
     </div>
   </fieldset>
   {{ form_errors(form.categories) }}

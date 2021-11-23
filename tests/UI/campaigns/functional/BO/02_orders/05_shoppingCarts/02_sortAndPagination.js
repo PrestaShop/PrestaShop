@@ -43,7 +43,7 @@ Sort shopping cart table by :
 Id, Order ID, Customer, carrier, date and Online
 Delete customers
 */
-describe('sort and pagination shopping carts', async () => {
+describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -127,7 +127,7 @@ describe('sort and pagination shopping carts', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Orders/Shopping carts\' page', async function () {
+    it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -140,7 +140,7 @@ describe('sort and pagination shopping carts', async () => {
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
     });
 
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '20');
@@ -161,7 +161,7 @@ describe('sort and pagination shopping carts', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 300 per page', async function () {
+    it('should change the items number to 300 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
 
       const paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '300');
@@ -171,6 +171,14 @@ describe('sort and pagination shopping carts', async () => {
 
   // 3 - Sort table
   describe('Sort shopping cart table', async () => {
+    it('should filter by customer \'todelete\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToSort', baseContext);
+
+      await shoppingCartsPage.filterTable(page, 'input', 'c!lastname', 'todelete');
+      const textColumn = await shoppingCartsPage.getTextColumn(page, 1, 'c!lastname');
+      await expect(textColumn).to.contains('todelete');
+    });
+
     const sortTests = [
       {
         args: {
@@ -225,6 +233,7 @@ describe('sort and pagination shopping carts', async () => {
         },
       },
     ];
+
     sortTests.forEach((test) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
@@ -249,11 +258,18 @@ describe('sort and pagination shopping carts', async () => {
         }
       });
     });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterSort', baseContext);
+
+      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfShoppingCartsAfterReset).to.be.above(1);
+    });
   });
 
   // 4 - Delete customers with bulk actions
   describe('Delete customers with bulk actions', async () => {
-    it('should go to customers page', async function () {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -289,7 +305,7 @@ describe('sort and pagination shopping carts', async () => {
       await expect(textResult).to.contains('todelete');
     });
 
-    it('should delete customers with Bulk Actions and check Result', async function () {
+    it('should delete customers with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
 
       const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);

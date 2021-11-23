@@ -36,5 +36,5 @@ class LanguageException extends DomainException
     /**
      * When language is not active
      */
-    const NOT_ACTIVE = 1;
+    public const NOT_ACTIVE = 1;
 }

@@ -26,8 +26,8 @@
   <!--  product line left content: image-->
   <div class="product-line-grid-left col-md-3 col-xs-4">
     <span class="product-image media-middle">
-      {if $product.cover}
-        <img src="{$product.cover.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}" loading="lazy">
+      {if $product.default_image}
+        <img src="{$product.default_image.bySize.cart_default.url}" alt="{$product.name|escape:'quotes'}" loading="lazy">
       {else}
         <img src="{$urls.no_picture_image.bySize.cart_default.url}" loading="lazy" />
       {/if}
@@ -67,7 +67,7 @@
     <br/>
 
     {foreach from=$product.attributes key="attribute" item="value"}
-      <div class="product-line-info">
+      <div class="product-line-info {$attribute|lower}">
         <span class="label">{$attribute}:</span>
         <span class="value">{$value}</span>
       </div>
@@ -136,6 +136,7 @@
                 pattern="[0-9]*"
                 value="{$product.quantity}"
                 name="product-quantity-spin"
+                aria-label="{l s='%productName% product quantity field' sprintf=['%productName%' => $product.name] d='Shop.Theme.Checkout'}"
               />
             {/if}
           </div>

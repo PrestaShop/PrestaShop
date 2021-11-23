@@ -38,6 +38,12 @@
     @extend .col-sm-10;
   }
 
+  .form-group {
+    > .alert {
+      margin-top: 0.75rem;
+    }
+  }
+
   .form-group.row {
     margin-bottom: 1.2rem;
 
@@ -57,20 +63,27 @@
         text-align: right;
       }
 
-      @include media-breakpoint-down("sm") {
-        padding-left: 0;
-      }
     }
 
     &.type-hidden {
       display: none;
     }
+
+    .form-control-label.disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+  }
+
+  .col-sm.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 
   // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
+  span.ps-switch:not(.ps-switch-lg) {
     @include media-breakpoint-up("sm") {
-      margin-top: 5px;
+      margin-top: 7px;
     }
   }
 
@@ -96,6 +109,35 @@
 
     .modal-dialog {
       top: 45%;
+    }
+  }
+}
+
+[class*="form-columns-"] {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1rem;
+
+  > .form-group {
+    width: 100%;
+    margin: 0.5rem 1rem;
+  }
+
+  @for $i from 2 through 12 {
+    &.form-columns-#{$i} {
+      > .form-group {
+        max-width: calc(100% / #{$i} - 2rem);
+
+        &.form-column-breaker {
+          flex-basis: 100%;
+          max-width: 100%;
+          height: 0;
+        }
+
+        @include media-breakpoint-down("sm") {
+          max-width: inherit;
+        }
+      }
     }
   }
 }

@@ -26,9 +26,8 @@
 
 namespace PrestaShopBundle\Routing\Linter;
 
-use Doctrine\Common\Inflector\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -37,32 +36,19 @@ use Symfony\Component\Routing\Route;
 final class NamingConventionLinter implements RouteLinterInterface
 {
     /**
-     * @var ControllerNameParser
-     */
-    private $controllerNameParser;
-
-    /**
-     * @param ControllerNameParser $controllerNameParser
-     */
-    public function __construct(ControllerNameParser $controllerNameParser)
-    {
-        $this->controllerNameParser = $controllerNameParser;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function lint($routeName, Route $route)
     {
         $controllerAndMethodName = $this->getControllerAndMethodName($route);
 
-        $pluralizedController = Inflector::tableize(
-            Inflector::pluralize($controllerAndMethodName['controller'])
+        $pluralizedController = Inflector::getInflector()->tableize(
+            Inflector::getInflector()->pluralize($controllerAndMethodName['controller'])
         );
 
         $expectedRouteName = strtr('admin_{resources}_{action}', [
             '{resources}' => $pluralizedController,
-            '{action}' => Inflector::tableize($controllerAndMethodName['method']),
+            '{action}' => Inflector::getInflector()->tableize($controllerAndMethodName['method']),
         ]);
 
         if ($routeName !== $expectedRouteName) {
@@ -83,10 +69,6 @@ final class NamingConventionLinter implements RouteLinterInterface
     private function getControllerAndMethodName(Route $route)
     {
         $controller = $route->getDefault('_controller');
-
-        if (strpos($controller, '::') === false) {
-            $controller = $this->controllerNameParser->parse($controller);
-        }
 
         list($controller, $method) = explode('::', $controller, 2);
 

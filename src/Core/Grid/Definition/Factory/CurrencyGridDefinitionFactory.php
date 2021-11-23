@@ -56,7 +56,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'currency';
+    public const GRID_ID = 'currency';
 
     /**
      * {@inheritdoc}
@@ -215,10 +215,6 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setAssociatedColumn('iso_code')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'choice_translation_domain' => false,
-            ])
             ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))

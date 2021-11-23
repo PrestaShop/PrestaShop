@@ -4,13 +4,18 @@ on: pull_request
 
 jobs:
   message-check:
-    if: "!contains(github.event.pull_request.title, '[merge]')"
+    if: "!endsWith(github.event.pull_request.title, '[merge]')"
     name: Block Merge Commits
 
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
       - name: Block Merge Commits
-        uses: z3by/block-merge-commits-action@master
+        uses: Morishiri/block-merge-commits-action@v1.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}

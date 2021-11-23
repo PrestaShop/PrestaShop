@@ -38,22 +38,22 @@ class DeliveryTimeNoteType
     /**
      * Represents case when additional delivery time note is not used
      */
-    const TYPE_NONE = 0;
+    public const TYPE_NONE = 0;
 
     /**
      * Represents case when additional delivery time notes should be taken from default settings
      */
-    const TYPE_DEFAULT = 1;
+    public const TYPE_DEFAULT = 1;
 
     /**
      * Represents case when specific additional delivery time notes should be used
      */
-    const TYPE_SPECIFIC = 2;
+    public const TYPE_SPECIFIC = 2;
 
     /**
      * A list of allowed type values
      */
-    const ALLOWED_TYPES = [
+    public const ALLOWED_TYPES = [
         'none' => self::TYPE_NONE,
         'default' => self::TYPE_DEFAULT,
         'specific' => self::TYPE_SPECIFIC,

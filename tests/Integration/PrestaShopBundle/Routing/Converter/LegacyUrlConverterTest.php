@@ -36,7 +36,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     /** @var Link */
     private $link;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         if (!$this->link) {
@@ -59,10 +59,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_backups_delete' => ['/configure/advanced/backups/backup_file.zip', 'AdminBackup', 'delete', ['filename' => 'backup_file.zip']],
             'admin_backups_bulk_delete' => ['/configure/advanced/backups/bulk-delete/', 'AdminBackup', 'submitBulkdeletebackup'],
 
-            'admin_module_catalog' => ['/improve/modules/catalog', 'AdminModulesCatalog'],
-            'admin_module_catalog_refresh' => ['/improve/modules/catalog/refresh', 'AdminModulesCatalog', 'refresh'],
-            'admin_module_catalog_post' => ['/improve/modules/catalog/recommended', 'AdminModulesCatalog', 'recommended'],
-
             'admin_module_manage' => ['/improve/modules/manage', 'AdminModulesManage'],
             'admin_module_manage_alias' => ['/improve/modules/manage', 'AdminModulesSf'],
 
@@ -70,8 +66,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_module_notification_count' => ['/improve/modules/alerts/count', 'AdminModulesNotifications', 'count'],
 
             'admin_module_updates' => ['/improve/modules/updates', 'AdminModulesUpdates'],
-
-            'admin_module_addons_store' => ['/improve/modules/addons-store', 'AdminAddonsCatalog'],
 
             'admin_modules_positions' => ['/improve/design/modules/positions/', 'AdminModulesPositions'],
             'admin_modules_positions_unhook' => ['/improve/design/modules/positions/unhook', 'AdminModulesPositions', 'unhook'],
@@ -131,12 +125,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
             'admin_preferences' => ['/configure/shop/preferences/preferences', 'AdminPreferences'],
             'admin_preferences_save' => ['/configure/shop/preferences/preferences', 'AdminPreferences', 'update'],
 
-            'admin_shipping_preferences' => ['/improve/shipping/preferences', 'AdminShipping'],
+            'admin_shipping_preferences' => ['/improve/shipping/preferences/', 'AdminShipping'],
             'admin_shipping_preferences_handling_save' => ['/improve/shipping/preferences/handling', 'AdminShipping', 'update'],
 
             'admin_stock_overview' => ['/sell/stocks/', 'AdminStockManagement'],
-
-            'admin_theme_catalog' => ['/improve/design/themes-catalog/', 'AdminThemesCatalog'],
 
             'admin_international_translation_overview' => ['/improve/international/translations/', 'AdminTranslationSf'],
 
@@ -254,10 +246,10 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     public static function getLegacyControllers()
     {
         return [
-            ['/Integration/index.php?controller=AdminLogin', 'AdminLogin'],
-            ['/Integration/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
-            ['/Integration/index.php?controller=AdminModules', 'AdminModules'],
-            ['/Integration/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
+            ['/admin-dev/index.php?controller=AdminLogin', 'AdminLogin'],
+            ['/admin-dev/index.php?controller=AdminModulesPositions&addToHook=', 'AdminModulesPositions', ['addToHook' => '']],
+            ['/admin-dev/index.php?controller=AdminModules', 'AdminModules'],
+            ['/admin-dev/index.php?controller=AdminModules&configure=ps_linklist', 'AdminModules', ['configure' => 'ps_linklist']],
         ];
     }
 
@@ -265,36 +257,6 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     {
         $converter = self::$kernel->getContainer()->get('prestashop.bundle.routing.converter.legacy_url_converter');
         $this->assertInstanceOf(LegacyUrlConverter::class, $converter);
-    }
-
-    public function testLegacyWithRoute()
-    {
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, ['route' => 'admin_module_catalog_post']);
-        $this->assertSameUrl('/improve/modules/catalog/recommended', $routeUrl, ['route']);
-    }
-
-    public function testDifferentLinkArguments()
-    {
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog');
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', false);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, []);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, null);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], []);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
-
-        $routeUrl = $this->link->getAdminLink('AdminModulesCatalog', true, [], null);
-        $this->assertSameUrl('/improve/modules/catalog', $routeUrl);
     }
 
     /**

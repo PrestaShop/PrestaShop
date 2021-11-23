@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    public: true
+
+  validator.unique.tinymce_max_length_validator:
+    class: PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLengthValidator
+    arguments:
+      - "@prestashop.adapter.validate"
+      - "@translator"
+    tags:
+      - { name: validator.constraint_validator, alias: tinymce_max_length_validator }

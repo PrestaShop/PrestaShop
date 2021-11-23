@@ -33,5 +33,5 @@ class HookConstraintException extends HookException
     /**
      * Code is used when invalid id is supplied.
      */
-    const INVALID_ID = 1;
+    public const INVALID_ID = 1;
 }

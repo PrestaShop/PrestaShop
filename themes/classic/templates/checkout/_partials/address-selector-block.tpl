@@ -25,7 +25,7 @@
 {block name='address_selector_blocks'}
   {foreach $addresses as $address}
     <article
-      class="address-item{if $address.id == $selected} selected{/if}"
+      class="js-address-item address-item{if $address.id == $selected} selected{/if}"
       id="{$name|classname}-address-{$address.id}"
     >
       <header class="h4">

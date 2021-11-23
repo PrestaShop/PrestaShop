@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Cart\Comparator;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class CartProductUpdate
@@ -42,6 +43,11 @@ class CartProductUpdate
      * @var CombinationId|null
      */
     private $combinationId;
+
+    /**
+     * @var CustomizationId|null
+     */
+    private $customizationId;
 
     /**
      * @var int
@@ -58,11 +64,13 @@ class CartProductUpdate
      * @param int $combinationId
      * @param int $deltaQuantity
      * @param bool $created
+     * @param int $customizationId
      */
-    public function __construct(int $productId, int $combinationId, int $deltaQuantity, bool $created)
+    public function __construct(int $productId, int $combinationId, int $deltaQuantity, bool $created, int $customizationId = 0)
     {
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId > 0 ? new CombinationId($combinationId) : null;
+        $this->customizationId = $customizationId > 0 ? new CustomizationId($customizationId) : null;
         $this->deltaQuantity = $deltaQuantity;
         $this->created = $created;
     }
@@ -78,9 +86,12 @@ class CartProductUpdate
             return false;
         }
         $combinationIdValue = null !== $this->getCombinationId() ? $this->getCombinationId()->getValue() : 0;
-        $checkedIdValue = null !== $cartProductUpdate->getCombinationId() ? $cartProductUpdate->getCombinationId()->getValue() : 0;
+        $checkedCombinationIdValue = null !== $cartProductUpdate->getCombinationId() ? $cartProductUpdate->getCombinationId()->getValue() : 0;
 
-        return $combinationIdValue === $checkedIdValue;
+        $customizationIdValue = null !== $this->getCustomizationId() ? $this->getCustomizationId()->getValue() : 0;
+        $checkedCustomizationIdValue = null !== $cartProductUpdate->getCustomizationId() ? $cartProductUpdate->getCustomizationId()->getValue() : 0;
+
+        return $combinationIdValue === $checkedCombinationIdValue && $customizationIdValue === $checkedCustomizationIdValue;
     }
 
     /**
@@ -97,6 +108,14 @@ class CartProductUpdate
     public function getCombinationId(): ?CombinationId
     {
         return $this->combinationId;
+    }
+
+    /**
+     * @return CustomizationId|null
+     */
+    public function getCustomizationId(): ?CustomizationId
+    {
+        return $this->customizationId;
     }
 
     /**
@@ -135,6 +154,7 @@ class CartProductUpdate
         return [
             'id_product' => $this->productId->getValue(),
             'id_product_attribute' => null !== $this->combinationId ? $this->combinationId->getValue() : 0,
+            'id_customization' => null !== $this->customizationId ? $this->customizationId->getValue() : 0,
             'delta_quantity' => $this->deltaQuantity,
             'created' => $this->created,
         ];

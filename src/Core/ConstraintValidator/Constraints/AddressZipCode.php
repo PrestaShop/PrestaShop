@@ -34,7 +34,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class AddressZipCode extends Constraint
 {
-    public $requiredMessage = 'A Zip/postal code is required.';
+    public $requiredMessage = 'A Zip/Postal code is required.';
 
     public $id_country;
 
