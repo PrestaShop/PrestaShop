@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import SubmittableInput, {SubmittableInputConfig} from '@components/form/submittable-input';
+import ComponentsMap from '@components/components-map';
+import ComponentsEventMap from '@components/components-event-map';
 import {EventEmitter} from 'events';
 
 import ChangeEvent = JQuery.ChangeEvent;
@@ -46,14 +48,15 @@ class DeltaQuantityInput {
   private eventEmitter: EventEmitter;
 
   constructor(config: InputDeltaQuantityConfig = {}) {
+    const componentMap = ComponentsMap.deltaQuantityInput;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.config = {
-      containerSelector: '.delta-quantity',
-      deltaInputSelector: '.delta-quantity-delta',
-      updateQuantitySelector: '.quantity-update',
-      modifiedQuantityClass: 'quantity-modified',
-      newQuantitySelector: '.new-quantity',
-      initialQuantityPreviewSelector: '.initial-quantity',
+      containerSelector: componentMap.containerSelector,
+      deltaInputSelector: componentMap.deltaInputSelector,
+      updateQuantitySelector: componentMap.updateQuantitySelector,
+      modifiedQuantityClass: componentMap.modifiedQuantityClass,
+      newQuantitySelector: componentMap.newQuantitySelector,
+      initialQuantityPreviewSelector: componentMap.initialQuantityPreviewSelector,
       submittableInputConfig: null,
       ...config,
     };
@@ -78,9 +81,7 @@ class DeltaQuantityInput {
 
     if (this.config.submittableInputConfig) {
       new SubmittableInput(this.config.submittableInputConfig);
-      this.eventEmitter.on('submittableInputSuccess', (input) => {
-        this.reset(input);
-      });
+      this.eventEmitter.on(ComponentsEventMap.submittableInput.submitSuccess, (input) => this.reset(input));
     }
   }
 
