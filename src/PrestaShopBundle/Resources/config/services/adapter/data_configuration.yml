@@ -218,6 +218,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.file.htaccess_file_generator'
       - '@translator'
 
@@ -232,12 +234,16 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@=service("prestashop.adapter.data_provider.default_route").getRules()'
 
   prestashop.adapter.meta.seo_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SEOOptionsDataConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.core.team.employee.configuration.employee_options_configuration:
     class: 'PrestaShop\PrestaShop\Core\Team\Employee\Configuration\EmployeeOptionsConfiguration'
