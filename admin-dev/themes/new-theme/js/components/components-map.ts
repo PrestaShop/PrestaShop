@@ -70,6 +70,10 @@ export default {
     selectChoice: (language: string): string => `select.translatable_choice[data-language="${language}"]`,
     selectLanguage: 'select.translatable_choice_language',
   },
+  submittableInput: {
+    inputSelector: '.submittable-input',
+    buttonSelector: '.check-button',
+  },
   currentLength: '.js-current-length',
   recommendedLengthInput: '.js-recommended-length-input',
   multistoreCheckbox: '.multistore-checkbox',
