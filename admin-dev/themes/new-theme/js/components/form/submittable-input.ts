@@ -26,6 +26,8 @@
 import {showGrowl} from '@app/utils/growl';
 import {EventEmitter} from 'events';
 
+import ClickEvent = JQuery.ClickEvent;
+
 const {$} = window;
 
 export type SubmittableInputConfig = {
@@ -47,14 +49,20 @@ export default class SubmittableInput {
 
   wrapperSelector: string;
 
+  inputsInContainerSelector: string;
+
   buttonSelector: string;
+
+  loading: boolean;
 
   constructor(config: SubmittableInputConfig) {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.inputSelector = '.submittable-input';
     this.buttonSelector = '.check-button';
     this.wrapperSelector = config.wrapperSelector;
+    this.inputsInContainerSelector = `${this.wrapperSelector} ${this.inputSelector}`;
     this.callback = config.callback;
+    this.loading = false;
 
     this.init();
   }
@@ -63,36 +71,42 @@ export default class SubmittableInput {
    * @private
    */
   private init(): void {
-    const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
-    const that = this;
-
-    $(document).on('focus', inputs, (e) => {
+    $(document).on('focus', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget, true);
     });
-    $(document).on('input blur', inputs, (e) => {
+    $(document).on('input blur', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on(
-      'click',
-      `${this.wrapperSelector} ${this.buttonSelector}`,
-      function () {
-        that.submitInput(this);
-      },
-    );
-    $(document).on('keyup', inputs, (e: JQueryEventObject) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        const button = this.findButton(e.target);
+    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e: ClickEvent) => {
+      e.stopImmediatePropagation();
+      this.submitInput(e.currentTarget);
+    });
+    this.onEnterKeyup();
+  }
 
-        this.submitInput(button);
+  private onEnterKeyup(): void {
+    $(document).on('keyup', this.inputsInContainerSelector, (e: JQueryEventObject) => {
+      // only on ENTER
+      if (e.keyCode !== 13) {
+        return;
       }
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      const input = e.target as HTMLInputElement;
+
+      if (this.loading || !this.inputValueChanged(input)) {
+        return;
+      }
+
+      this.submitInput(this.findButton(input));
     });
   }
 
   /**
    * @private
    */
-  private submitInput(button: Element): void {
+  private submitInput(button: HTMLButtonElement): void {
     const input: HTMLInputElement = this.findInput(button);
     // set local variable to be able to use it inside callback scope
     const {eventEmitter} = this;
@@ -101,7 +115,7 @@ export default class SubmittableInput {
 
     this.callback(input)
       .then((response: AjaxResponse) => {
-        $(input).data('initial-value', input.value);
+        $(input).data('initialValue', input.value);
         this.toggleButtonVisibility(button, false);
 
         if (response.message) {
@@ -171,65 +185,36 @@ export default class SubmittableInput {
     $button.toggleClass('d-none', !visible);
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
-  private toggleLoading(button: Element, loading: boolean): void {
-    if (loading) {
+  private toggleLoading(button: HTMLButtonElement, loading: boolean): void {
+    this.loading = loading;
+
+    if (this.loading) {
+      // eslint-disable-next-line no-param-reassign
+      button.disabled = true;
       $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
       $(button).html('<i class="material-icons">check</i>');
     }
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
-  private toggleError(button: Element, error: boolean): void {
+  private toggleError(button: HTMLButtonElement, error: boolean): void {
     const input = this.findInput(button);
 
     $(input).toggleClass('is-invalid', error);
   }
 
-  /**
-   * @param {HTMLElement} input
-   *
-   * @returns {HTMLElement}
-   *
-   * @private
-   */
   private findButton(input: Element): HTMLButtonElement {
     return <HTMLButtonElement>$(input)
       .closest(this.wrapperSelector)
       .find(this.buttonSelector)[0];
   }
 
-  /**
-   * @param {HTMLElement} domElement
-   *
-   * @returns {HTMLElement}
-   *
-   * @private
-   */
-  private findInput(button: Element): HTMLInputElement {
+  private findInput(button: HTMLButtonElement): HTMLInputElement {
     return <HTMLInputElement>$(button)
       .closest(this.wrapperSelector)
       .find(this.inputSelector)[0];
   }
 
-  /**
-   * @param {HTMLElement} input
-   *
-   * @returns {Boolean}
-   *
-   * @private
-   */
   private inputValueChanged(input: HTMLElement): boolean {
     const initialValue = $(input).data('initial-value');
     let newValue = $(input).val();
