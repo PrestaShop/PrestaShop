@@ -109,7 +109,7 @@ class ProductController extends FrameworkBundleAdminController
         if (isset($filters->getFilters()['id_category'])) {
             $idFilteredCategory = (int) $filters->getFilters()['id_category'];
             $category = $this->getCommandBus()->handle(new GetCategoryForEditing($idFilteredCategory));
-            $categoryName = $category->getName()[$this->getContextLangId()];
+            $categoryName = $category->getName()[$this->getContextLangId()] ?? null;
         }
 
         $categoriesForm = $this->createForm(ProductCategories::class);
@@ -327,13 +327,13 @@ class ProductController extends FrameworkBundleAdminController
                     $request->query->getInt('id_category')
                 )
             );
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         } catch (CannotUpdateProductPositionException $e) {
             $errors = $e->getErrors();
             $this->flashErrors($errors);
 
             return $this->redirectToRoute('admin_products_v2_index');
         }
-        $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_products_v2_index');
     }
@@ -469,7 +469,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return array
+     * @return array<int, int>
      */
     private function getProductIdsFromRequest(Request $request): array
     {

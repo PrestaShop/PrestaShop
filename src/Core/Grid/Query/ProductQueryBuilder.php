@@ -172,11 +172,11 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
             ->rightJoin(
-                       'p',
-                       $this->dbPrefix . 'category_product',
-                       'pc',
-                       'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
-                   )
+                   'p',
+                   $this->dbPrefix . 'category_product',
+                   'pc',
+                   'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+               )
             ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
             ->andWhere('p.`state`=1')
         ;

@@ -24,12 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 
 /**
  * Class Filter defines single filter for grid.
  */
-final class HiddenFilter implements FilterInterface
+class HiddenFilter implements FilterInterface
 {
     /**
      * @var string Fully qualified filter type class name

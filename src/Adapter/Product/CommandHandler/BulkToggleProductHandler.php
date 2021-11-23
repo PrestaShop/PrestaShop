@@ -39,7 +39,7 @@ use Product;
 /**
  * Handles command which deletes addresses in bulk action
  */
-final class BulkToggleProductHandler implements BulkToggleProductHandlerInterface
+class BulkToggleProductStatusHandler implements BulkToggleProductHandlerInterface
 {
     /**
      * @var ProductRepository

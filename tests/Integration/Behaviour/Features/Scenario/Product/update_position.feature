@@ -32,10 +32,10 @@ Feature: Update product position from BO (Back Office)
       | id reference           | name[en-US]            | is default |
       | category_for_positions | Category for positions | false      |
       | home                   | Home                   | default    |
-    And positions should be assigned accordingly:
-      | position | product_reference | category_reference     |
-      | 1        | product1          | category_for_positions |
-      | 2        | product2          | category_for_positions |
+    And products should have the following positions in category category_for_positions:
+      | position | product_reference |
+      | 1        | product1          |
+      | 2        | product2          |
   Scenario: I update standard product position
     When I update product position in category "category_for_positions" with following values:
       | row_id | old_position | new_position | product_reference|

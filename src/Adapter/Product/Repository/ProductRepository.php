@@ -338,6 +338,7 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param bool $status
      *
      * @throws CoreException
      */

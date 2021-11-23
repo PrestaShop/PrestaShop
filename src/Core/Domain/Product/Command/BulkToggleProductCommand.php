@@ -40,6 +40,7 @@ class BulkToggleProductCommand
      * @var ProductId[]
      */
     private $productIds;
+
     /**
      * @var bool
      */

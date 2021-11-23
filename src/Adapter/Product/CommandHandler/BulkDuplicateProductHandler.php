@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProduc
 /**
  * Handles command which deletes addresses in bulk action
  */
-final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterface
+class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterface
 {
     /**
      * @var ProductDuplicator

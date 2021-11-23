@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 /**
  * Updates category position using legacy object model
  */
-final class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterface
+class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterface
 {
     /**
      * @var PositionDefinition
