@@ -261,7 +261,20 @@ export default class CombinationsManager {
     });
 
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      new DeltaQuantityInput();
+      // Init DeltaQuantityInput when each container of deltaQuantity is already rendered in DOM.
+      new DeltaQuantityInput({
+        submittableInputConfig: {
+          wrapperSelector: CombinationsMap.quantityInputWrapper,
+          callback: input =>
+            this.combinationsService.updateListedCombination(
+              this.findCombinationId(input),
+              {
+                [CombinationsMap.combinationItemForm.quantityKey]: input.value,
+                [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken()
+              }
+            )
+        }
+      });
     });
   }
 
@@ -270,40 +283,34 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const { quantityKey } = CombinationsMap.combinationItemForm;
-    const { impactOnPriceKey } = CombinationsMap.combinationItemForm;
-    const { referenceKey } = CombinationsMap.combinationItemForm;
-    const { tokenKey } = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
+    const {referenceKey} = CombinationsMap.combinationItemForm;
+    const {tokenKey} = CombinationsMap.combinationItemForm;
 
     /* eslint-disable */
-    new SubmittableInput(CombinationsMap.quantityInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [quantityKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
-    );
+    new SubmittableInput({
+      wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,
+      callback: input =>
+        this.combinationsService.updateListedCombination(
+          this.findCombinationId(input),
+          {
+            [impactOnPriceKey]: input.value,
+            [tokenKey]: combinationToken
+          }
+        )
+    });
 
-    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [impactOnPriceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
-    );
-
-    new SubmittableInput(CombinationsMap.referenceInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [referenceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
+    new SubmittableInput({
+        wrapperSelector: CombinationsMap.referenceInputWrapper,
+        callback: input =>
+          this.combinationsService.updateListedCombination(
+            this.findCombinationId(input),
+            {
+              [referenceKey]: input.value,
+              [tokenKey]: combinationToken
+            }
+          )
+      },
     );
     /* eslint-enable */
   }
@@ -409,8 +416,8 @@ export default class CombinationsManager {
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
     await this.combinationsService.updateListedCombination(checkedDefaultId, {
-      'combination_item[is_default]': checkedInput.value,
-      'combination_item[_token]': this.getCombinationToken(),
+      [CombinationsMap.combinationItemForm.isDefaultKey]: checkedInput.value,
+      [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
     });
 
     $.each(checkedInputs, (index, input) => {

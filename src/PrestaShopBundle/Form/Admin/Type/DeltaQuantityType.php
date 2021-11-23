@@ -61,6 +61,9 @@ class DeltaQuantityType extends TranslatorAwareType
                 'attr' => [
                     'aria-label' => $this->trans('Add or subtract items', 'Admin.Global'),
                 ],
+                'data' => [
+                    'value' => 0,
+                ],
             ]);
         } else {
             $builder->add('delta', NumberType::class, [
