@@ -23,6 +23,10 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+/**
+ * Function to create simple order in FO
+ * @param baseContext {string} String to identify the test
+ */
 function createOrderFromFO(baseContext = 'commonTests-createOrderFO') {
   describe('PRE-TEST: Create order in FO', async () => {
     // before and after functions
