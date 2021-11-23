@@ -90,7 +90,7 @@ export default {
     sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
       isDefaultKey: 'combination_item[is_default]',
-      quantityKey: 'combination_item[quantity][delta][value]',
+      deltaQuantityKey: 'combination_item[quantity][delta][value]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
       referenceKey: 'combination_item[reference][value]',
       tokenKey: 'combination_item[_token]',
