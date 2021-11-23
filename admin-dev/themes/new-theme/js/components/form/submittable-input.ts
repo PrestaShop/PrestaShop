@@ -24,8 +24,14 @@
  */
 
 import {showGrowl} from '@app/utils/growl';
+import {EventEmitter} from 'events';
 
 const {$} = window;
+
+export type SubmittableInputConfig = {
+  wrapperSelector: string;
+  callback: (input: Element) => any;
+}
 
 /**
  * Activates, deactivates, shows, hides submit button inside an input
@@ -33,6 +39,8 @@ const {$} = window;
  * After button is clicked, component fires the callback function which was provided to constructor.
  */
 export default class SubmittableInput {
+  eventEmitter: EventEmitter;
+
   inputSelector: string;
 
   callback: (input: Element) => any;
@@ -41,17 +49,12 @@ export default class SubmittableInput {
 
   buttonSelector: string;
 
-  /**
-   * @param {String} wrapperSelector
-   * @param {Function} callback
-   *
-   * @returns {{}}
-   */
-  constructor(wrapperSelector: string, callback: () => any) {
+  constructor(config: SubmittableInputConfig) {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.inputSelector = '.submittable-input';
-    this.callback = callback;
-    this.wrapperSelector = wrapperSelector;
     this.buttonSelector = '.check-button';
+    this.wrapperSelector = config.wrapperSelector;
+    this.callback = config.callback;
 
     this.init();
   }
@@ -91,6 +94,8 @@ export default class SubmittableInput {
    */
   private submitInput(button: Element): void {
     const input: HTMLInputElement = this.findInput(button);
+    // set local variable to be able to use it inside callback scope
+    const {eventEmitter} = this;
 
     this.toggleLoading(button, true);
 
@@ -100,11 +105,13 @@ export default class SubmittableInput {
         this.toggleButtonVisibility(button, false);
 
         if (response.message) {
+          eventEmitter.emit('submittableInputSuccess', input);
           showGrowl('success', response.message);
         }
         this.toggleLoading(button, false);
       })
       .catch((error: AjaxError) => {
+        eventEmitter.emit('submittableInputError', {input, error});
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
         this.toggleLoading(button, false);
