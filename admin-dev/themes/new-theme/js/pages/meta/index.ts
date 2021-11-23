@@ -67,4 +67,10 @@ $(() => {
 
   new TranslatableInput();
   new MetaPageNameOptionHandler();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });
