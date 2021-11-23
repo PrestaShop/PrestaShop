@@ -25,6 +25,7 @@
 
 import {showGrowl} from '@app/utils/growl';
 import {EventEmitter} from 'events';
+import ComponentsEventMap from '@components/components-event-map';
 import ComponentsMap from '@components/components-map';
 
 import ClickEvent = JQuery.ClickEvent;
@@ -120,7 +121,7 @@ export default class SubmittableInput {
         this.toggleLoading(button, false);
       })
       .catch((error: AjaxError) => {
-        eventEmitter.emit('submittableInputError', {input, error});
+        eventEmitter.emit(ComponentsEventMap.submittableInput.submitError, {input, error});
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
         this.toggleLoading(button, false);
