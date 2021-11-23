@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
@@ -51,8 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -82,11 +79,6 @@ class ProductRepository extends AbstractObjectModelRepository
     private $productValidator;
 
     /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
      * @var TaxRulesGroupRepository
      */
     private $taxRulesGroupRepository;
@@ -100,7 +92,6 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
-     * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
      */
@@ -108,19 +99,21 @@ class ProductRepository extends AbstractObjectModelRepository
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId,
         TaxRulesGroupRepository $taxRulesGroupRepository,
         ManufacturerRepository $manufacturerRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
     }
 
     /**
+     * @todo: Not sure this should be in the repository as it gives a false feeling the the repository can duplicate a
+     *        product on its own, but you actually need to use the ProductDuplicator service to do it right, this method
+     *        should be removed and the duplicator service should rely on repository to add/update but it is the one that
+     *        must perform the required modifications on the object instance
      * Duplicates product entity without relations
      *
      * @param Product $product
@@ -173,6 +166,8 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws ProductNotFoundException
      */
     public function assertProductExists(ProductId $productId): void
     {
@@ -249,78 +244,14 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function get(ProductId $productId): Product
     {
-        return $this->getProductByDefaultShop($productId);
-    }
+        /** @var Product $product */
+        $product = $this->getObjectModel(
+            $productId->getValue(),
+            Product::class,
+            ProductNotFoundException::class
+        );
 
-    /**
-     * @param ProductId $productId
-     *
-     * @return ShopId
-     *
-     * @throws ProductNotFoundException
-     */
-    public function getProductDefaultShopId(ProductId $productId): ShopId
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop_default')
-            ->from($this->dbPrefix . 'product')
-            ->where('id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetch();
-        if (empty($result['id_shop_default'])) {
-            throw new ProductNotFoundException(sprintf(
-                'Could not find Product with id %d',
-                $productId->getValue()
-            ));
-        }
-
-        return new ShopId((int) $result['id_shop_default']);
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param ProductShopConstraint $shopConstraint
-     *
-     * @return Product
-     *
-     * @throws CoreException
-     */
-    public function getByShopConstraint(ProductId $productId, ProductShopConstraint $shopConstraint): Product
-    {
-        if ($shopConstraint->forAllShops() || $shopConstraint->forDefaultProductShop()) {
-            return $this->getProductByDefaultShop($productId);
-        }
-
-        return $this->getProductByShopId($productId, $shopConstraint->getShopId());
-    }
-
-    /**
-     * @param array<int, string> $localizedNames
-     * @param string $productType
-     *
-     * @return Product
-     *
-     * @throws CannotAddProductException
-     */
-    public function create(array $localizedNames, string $productType, ShopId $shopId): Product
-    {
-        $product = new Product(null, false, null, $shopId->getValue());
-        $product->active = false;
-        $product->id_category_default = $this->defaultCategoryId;
-        $product->name = $localizedNames;
-        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
-        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
-        $product->product_type = $productType;
-        $product->id_shop_default = $shopId->getValue();
-
-        $this->productValidator->validateCreation($product);
-        $this->addObjectModelToShop($product, $shopId->getValue(), CannotAddProductException::class);
-        $product->addToCategories([$product->id_category_default]);
-
-        return $product;
+        return $this->loadProduct($product);
     }
 
     /**
@@ -335,44 +266,6 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->partiallyUpdateObjectModel(
             $product,
             $propertiesToUpdate,
-            CannotUpdateProductException::class,
-            $errorCode
-        );
-    }
-
-    /**
-     * @param Product $product
-     * @param array $propertiesToUpdate
-     * @param ProductShopConstraint $shopConstraint
-     * @param int $errorCode
-     */
-    public function partialUpdateForShopConstraint(Product $product, array $propertiesToUpdate, ProductShopConstraint $shopConstraint, int $errorCode): void
-    {
-        $this->validateProduct($product, $propertiesToUpdate);
-        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
-
-        $this->partiallyUpdateObjectModelForShops(
-            $product,
-            $propertiesToUpdate,
-            $shopIds,
-            CannotUpdateProductException::class,
-            $errorCode
-        );
-    }
-
-    /**
-     * @param Product $product
-     * @param ProductShopConstraint $shopConstraint
-     * @param int $errorCode
-     */
-    public function updateForShopConstraint(Product $product, ProductShopConstraint $shopConstraint, int $errorCode): void
-    {
-        $this->validateProduct($product);
-        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
-
-        $this->updateObjectModelForShops(
-            $product,
-            $shopIds,
             CannotUpdateProductException::class,
             $errorCode
         );
@@ -515,34 +408,6 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     *
-     * @return ShopId[]
-     */
-    public function getAssociatedShopIds(ProductId $productId): array
-    {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('id_shop')
-            ->from($this->dbPrefix . 'product_shop')
-            ->where('id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-        ;
-
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
-            return [];
-        }
-
-        $shops = [];
-        foreach ($result as $shop) {
-            $shops[] = new ShopId((int) $shop['id_shop']);
-        }
-
-        return $shops;
-    }
-
-    /**
      * This override was needed because of the extra parameter in product constructor
      *
      * {@inheritDoc}
@@ -550,64 +415,6 @@ class ProductRepository extends AbstractObjectModelRepository
     protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
     {
         return new Product($id, false, null, $shopId);
-    }
-
-    /**
-     * @param Product $product
-     * @param ProductShopConstraint $shopConstraint
-     *
-     * @return int[]
-     */
-    private function getShopIdsByConstraint(Product $product, ProductShopConstraint $shopConstraint): array
-    {
-        $shopIds = [];
-        if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } elseif ($shopConstraint->forDefaultProductShop()) {
-            $shopIds = [$this->getProductDefaultShopId(new ProductId((int) $product->id))->getValue()];
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
-        }
-
-        return $shopIds;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param ShopId $shopId
-     *
-     * @return Product
-     *
-     * @throws CoreException
-     */
-    private function getProductByShopId(ProductId $productId, ShopId $shopId): Product
-    {
-        /** @var Product $product */
-        $product = $this->getObjectModelForShop(
-            $productId->getValue(),
-            Product::class,
-            ProductNotFoundException::class,
-            $shopId
-        );
-
-        return $this->loadProduct($product);
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return Product
-     *
-     * @throws ProductNotFoundException
-     */
-    private function getProductByDefaultShop(ProductId $productId): Product
-    {
-        $defaultShopId = $this->getProductDefaultShopId($productId);
-
-        return $this->getProductByShopId($productId, $defaultShopId);
     }
 
     /**
@@ -640,6 +447,8 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @todo: this should be removable soon once the deprecated stock properties have been removed see PR #26682
+     *
      * @param Product $product
      *
      * @return Product
