@@ -266,7 +266,7 @@ export default class CombinationsManager {
             this.combinationsService.updateListedCombination(
               this.findCombinationId(input),
               {
-                [CombinationsMap.combinationItemForm.quantityKey]: input.value,
+                [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
                 [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken()
               }
             )
@@ -321,7 +321,7 @@ export default class CombinationsManager {
         callback: input => this.combinationsService.updateListedCombination(
           this.findCombinationId(input),
           {
-            [CombinationsMap.combinationItemForm.quantityKey]: input.value,
+            [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
             [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
           },
         ),
