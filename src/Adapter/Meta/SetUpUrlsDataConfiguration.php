@@ -28,20 +28,17 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class SetUpUrlsDataConfiguration is responsible for saving, validating and getting configurations related with urls
  * configuration located in Shop parameters -> Traffic & Seo -> Seo & Urls.
  */
-final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
+final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
     /**
      * @var HtaccessFileGenerator
      */
@@ -56,15 +53,15 @@ final class SetUpUrlsDataConfiguration implements DataConfigurationInterface
      * SetUpUrlsDataConfiguration constructor.
      *
      * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      * @param HtaccessFileGenerator $htaccessFileGenerator
      * @param TranslatorInterface $translator
      */
-    public function __construct(
-        Configuration $configuration,
-        HtaccessFileGenerator $htaccessFileGenerator,
-        TranslatorInterface $translator
-    ) {
-        $this->configuration = $configuration;
+    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, HtaccessFileGenerator $htaccessFileGenerator, TranslatorInterface $translator)
+    {
+        parent::__construct($configuration, $shopContext, $multistoreFeature);
+
         $this->htaccessFileGenerator = $htaccessFileGenerator;
         $this->translator = $translator;
     }
