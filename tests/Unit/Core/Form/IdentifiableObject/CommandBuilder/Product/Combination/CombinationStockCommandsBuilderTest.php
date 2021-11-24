@@ -77,7 +77,11 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
             [
                 'stock' => [
                     'quantities' => [
-                        'quantity' => '100',
+                        'quantity' => [
+                            // quantity is used for view only, the real value that is used now is delta
+                            'quantity' => 1000000,
+                            'delta' => 100,
+                        ],
                         'minimal_quantity' => 1,
                     ],
                 ],
