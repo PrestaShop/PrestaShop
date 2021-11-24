@@ -45,7 +45,7 @@
         {$callstack = implode('<br>', $data['stack'])}
         {$callstack_md5 = md5($callstack)}
         <tr>
-          <td class="pre"><pre>{preg_replace("/(^[\s]*)/m", "", $data['query'])}</pre></td>
+          <td class="pre"><pre>{preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false))}</pre></td>
           <td data-value="{$data['time']}">
             {load_time data=($data['time'])}
           </td>

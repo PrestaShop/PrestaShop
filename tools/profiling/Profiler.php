@@ -243,8 +243,10 @@ class Profiler
                     $queryRow['filesort'] = true;
                 }
 
-                if (is_array($explain)) foreach ($explain as $row) {
-                    $queryRow['rows'] *= (int) $row['rows'];
+                if (is_array($explain)) {
+                    foreach ($explain as $row) {
+                        $queryRow['rows'] *= (int) $row['rows'];
+                    }
                 } else {
                     $queryRow['rows'] = 'N/A';
                 }
