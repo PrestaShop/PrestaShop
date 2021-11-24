@@ -2316,14 +2316,6 @@ class AdminControllerCore extends Controller
      */
     public function initFooter()
     {
-        //RTL Support
-        //rtl.js overrides inline styles
-        //iso_code.css overrides default fonts for every language (optional)
-        if ($this->context->language->is_rtl) {
-            $this->addJS(_PS_JS_DIR_ . 'rtl.js');
-            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->context->language->iso_code . '.css', 'all', false);
-        }
-
         // We assign js and css files on the last step before display template, because controller can add many js and css files
         $this->context->smarty->assign('css_files', $this->css_files);
         $this->context->smarty->assign('js_files', array_unique($this->js_files));
