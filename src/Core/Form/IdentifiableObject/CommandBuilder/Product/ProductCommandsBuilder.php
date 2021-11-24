@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This class builds a collection of product commands based on the form data and a list of ProductCommandBuilderInterface
@@ -52,11 +52,11 @@ class ProductCommandsBuilder implements MultistoreProductCommandsBuilderInterfac
     /**
      * @param ProductId $productId
      * @param array $formData
-     * @param ProductShopConstraint $singleShopConstraint
+     * @param ShopConstraint $singleShopConstraint
      *
      * @return array
      */
-    public function buildCommands(ProductId $productId, array $formData, ProductShopConstraint $singleShopConstraint): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         $commandCollection = [];
         foreach ($this->commandBuilders as $commandBuilder) {
