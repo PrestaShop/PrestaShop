@@ -177,13 +177,6 @@ class NullDateTimeTest extends TestCase
         $nullDateTime->getTimezone();
     }
 
-    public function testMethodWakeupShouldThrowException(): void
-    {
-        $this->expectUnusableMethodException('__wakeup');
-        $nullDateTime = new NullDateTime();
-        $nullDateTime->__wakeup();
-    }
-
     public function testMethodCreateFromInterfaceShouldThrowException(): void
     {
         $this->expectUnusableMethodException('createFromInterface');

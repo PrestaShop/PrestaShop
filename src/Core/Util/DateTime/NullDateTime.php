@@ -193,14 +193,6 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function __wakeup()
-    {
-        throw $this::buildUnusableMethodException('__wakeup');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public static function createFromInterface(DateTimeInterface $object): DateTimeImmutable
     {
         throw static::buildUnusableMethodException('createFromInterface');
