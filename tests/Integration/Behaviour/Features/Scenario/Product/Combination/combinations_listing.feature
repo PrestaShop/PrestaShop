@@ -136,15 +136,15 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     Given product "product1" combinations list search criteria is set to defaults
     And I update combination "product1SWhite" from list with following values:
       | impact on price | -1  |
-      | quantity        | 10  |
+      | delta quantity        | 10  |
       | reference       | AAA |
     And I update combination "product1SBlue" from list with following values:
       | impact on price | 1   |
-      | quantity        | 100 |
+      | delta quantity        | 100 |
       | reference       | BBB |
     And I update combination "product1SBlack" from list with following values:
       | impact on price | 10  |
-      | quantity        | 50  |
+      | delta quantity        | 50  |
       | reference       | CCC |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value           |
