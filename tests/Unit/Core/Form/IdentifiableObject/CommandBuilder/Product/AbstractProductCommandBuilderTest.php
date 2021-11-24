@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Base class to test a product command builder
@@ -40,7 +40,7 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
     public const SHOP_ID = 1;
 
     /**
-     * @var ProductShopConstraint
+     * @var ShopConstraint
      */
     protected $singleShopConstraint;
 
@@ -52,7 +52,7 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->singleShopConstraint = ProductShopConstraint::shop(self::SHOP_ID);
+        $this->singleShopConstraint = ShopConstraint::shop(self::SHOP_ID);
     }
 
     /**

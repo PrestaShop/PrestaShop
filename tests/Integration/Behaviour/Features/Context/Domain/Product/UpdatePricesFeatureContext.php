@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -55,7 +54,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     public function updateProductPricesForShop(string $productReference, string $shopReference, TableNode $table): void
     {
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
-        $shopConstraint = ProductShopConstraint::shop($shopId);
+        $shopConstraint = ShopConstraint::shop($shopId);
         $this->updatePrices($productReference, $table, $shopConstraint);
     }
 
@@ -67,7 +66,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPricesForAllShops(string $productReference, TableNode $table): void
     {
-        $this->updatePrices($productReference, $table, ProductShopConstraint::allShops());
+        $this->updatePrices($productReference, $table, ShopConstraint::allShops());
     }
 
     /**
@@ -78,7 +77,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPrices(string $productReference, TableNode $table): void
     {
-        $this->updatePrices($productReference, $table, ProductShopConstraint::defaultProductShop());
+        $this->updatePrices($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
     }
 
     /**
@@ -134,7 +133,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $command = new UpdateProductPricesCommand($productId, ProductShopConstraint::defaultProductShop());
+        $command = new UpdateProductPricesCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
         // this id value does not exist, it is used on purpose.
         $command->setTaxRulesGroupId(50000000);
 
