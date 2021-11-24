@@ -197,7 +197,6 @@ class MultistoreCheckboxEnabler
         $form->add($fieldName, CheckboxType::class, [
             'required' => false,
             'data' => $isOverriddenInCurrentContext,
-//            'multistore_configuration_key' => $configurationKey,
             'label' => false,
             'attr' => [
                 'material_design' => true,
