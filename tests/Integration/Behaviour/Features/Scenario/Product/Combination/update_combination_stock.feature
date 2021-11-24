@@ -28,6 +28,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And I generate combinations for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
+    And product "product1" should have no stock movements
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
@@ -59,6 +60,10 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
+    And combination "product1SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movement increased by 100
     When I update combination "product1SBlack" stock with following details:
       | delta quantity      | -101        |
       | minimal quantity    | 1           |
@@ -72,6 +77,11 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
+    And combination "product1SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -101           |
+      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movement decreased by 101
     When I update combination "product1SBlack" stock with following details:
       | delta quantity             | 1          |
       | minimal quantity           | 0          |
@@ -87,3 +97,9 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
+    And combination "product1SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 1              |
+      | Puff       | Daddy     | -101           |
+      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movement increased by 1

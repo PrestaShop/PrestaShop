@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use DateTime;
 use Pack;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
@@ -41,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovem
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
@@ -156,7 +158,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertLastEmployeesStockMovement(string $productReference, TableNode $table): void
+    public function assertLastEmployeesStockMovementForProduct(string $productReference, TableNode $table): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
@@ -164,44 +166,20 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
             $productId
         ));
-        $movementsData = $table->getColumnsHash();
+        $this->assertStockMovements($stockMovements, $table);
+    }
 
-        Assert::assertEquals(count($movementsData), count($stockMovements));
-        $index = 0;
-        foreach ($movementsData as $movementDatum) {
-            $stockMovement = $stockMovements[$index];
-            Assert::assertEquals(
-                $movementDatum['first_name'],
-                $stockMovement->getFirstName(),
-                sprintf(
-                    'Invalid stock movement first name, expected %s instead of %s',
-                    $movementDatum['first_name'],
-                    $stockMovement->getFirstName()
-                )
-            );
-            Assert::assertEquals(
-                $movementDatum['last_name'],
-                $stockMovement->getLastName(),
-                sprintf(
-                    'Invalid stock movement last name, expected %s instead of %s',
-                    $movementDatum['last_name'],
-                    $stockMovement->getLastName()
-                )
-            );
-            Assert::assertEquals(
-                (int) $movementDatum['delta_quantity'],
-                $stockMovement->getDeltaQuantity(),
-                sprintf(
-                    'Invalid stock movement delta quantity, expected %d instead of %d',
-                    $movementDatum['delta_quantity'],
-                    $stockMovement->getDeltaQuantity()
-                )
-            );
-            Assert::assertNotNull($stockMovement->getDateAdd());
-            Assert::assertInstanceOf(DateTime::class, $stockMovement->getDateAdd());
+    /**
+     * @Then combination :combinationReference last employees stock movements should be:
+     *
+     * @param string $combinationReference
+     * @param TableNode $table
+     */
+    public function assertLastEmployeesStockMovementForCombination(string $combinationReference, TableNode $table): void
+    {
+        $stockMovements = $this->getLastEmployeesStockMovementsForCombination($combinationReference);
 
-            ++$index;
-        }
+        $this->assertStockMovements($stockMovements, $table);
     }
 
     /**
@@ -215,32 +193,24 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
-        /** @var StockMovement[] $stockMovements */
+        /** @var EmployeeStockMovement[] $stockMovements */
         $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
             $productId
         ));
-        $lastMovement = $stockMovements[0];
+        $this->assertLastStockMovement($stockMovements[0], $movementType, $movementQuantity);
+    }
 
-        $lastMovementType = $lastMovement->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
-        Assert::assertEquals(
-            $movementType,
-            $lastMovementType,
-            sprintf(
-                'Invalid stock movement type, expected %s instead of %s',
-                $movementType,
-                $lastMovementType
-            )
-        );
-
-        Assert::assertEquals(
-            $movementQuantity,
-            abs($lastMovement->getDeltaQuantity()),
-            sprintf(
-                'Invalid stock movement quantity, expected %d instead of %d',
-                $movementQuantity,
-                abs($lastMovement->getDeltaQuantity())
-            )
-        );
+    /**
+     * @Then /^combination "(.*)" last stock movement (increased|decreased) by (\d+)$/
+     *
+     * @param string $combinationReference
+     * @param string $movementType
+     * @param int $movementQuantity
+     */
+    public function assertCombinationLastStockMovement(string $combinationReference, string $movementType, int $movementQuantity): void
+    {
+        $stockMovements = $this->getLastEmployeesStockMovementsForCombination($combinationReference);
+        $this->assertLastStockMovement($stockMovements[0], $movementType, $movementQuantity);
     }
 
     /**
@@ -380,5 +350,114 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         ];
 
         return $intValues[$outOfStock];
+    }
+
+    /**
+     * @param EmployeeStockMovement[] $stockMovements
+     * @param TableNode $table
+     */
+    private function assertStockMovements(array $stockMovements, TableNode $table): void
+    {
+        $movementsData = $table->getColumnsHash();
+
+        Assert::assertEquals(count($movementsData), count($stockMovements));
+        $index = 0;
+        foreach ($movementsData as $movementDatum) {
+            $stockMovement = $stockMovements[$index];
+            Assert::assertEquals(
+                $movementDatum['first_name'],
+                $stockMovement->getFirstName(),
+                sprintf(
+                    'Invalid stock movement first name, expected %s instead of %s',
+                    $movementDatum['first_name'],
+                    $stockMovement->getFirstName()
+                )
+            );
+            Assert::assertEquals(
+                $movementDatum['last_name'],
+                $stockMovement->getLastName(),
+                sprintf(
+                    'Invalid stock movement last name, expected %s instead of %s',
+                    $movementDatum['last_name'],
+                    $stockMovement->getLastName()
+                )
+            );
+            Assert::assertEquals(
+                (int) $movementDatum['delta_quantity'],
+                $stockMovement->getDeltaQuantity(),
+                sprintf(
+                    'Invalid stock movement delta quantity, expected %d instead of %d',
+                    $movementDatum['delta_quantity'],
+                    $stockMovement->getDeltaQuantity()
+                )
+            );
+            Assert::assertNotNull($stockMovement->getDateAdd());
+            Assert::assertInstanceOf(DateTime::class, $stockMovement->getDateAdd());
+
+            ++$index;
+        }
+    }
+
+    /**
+     * @param StockMovement $stockMovement
+     * @param string $movementType
+     * @param int $movementQuantity
+     */
+    private function assertLastStockMovement(StockMovement $stockMovement, string $movementType, int $movementQuantity): void
+    {
+        $lastMovementType = $stockMovement->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
+        Assert::assertEquals(
+            $movementType,
+            $lastMovementType,
+            sprintf(
+                'Invalid stock movement type, expected %s instead of %s',
+                $movementType,
+                $lastMovementType
+            )
+        );
+
+        Assert::assertEquals(
+            $movementQuantity,
+            abs($stockMovement->getDeltaQuantity()),
+            sprintf(
+                'Invalid stock movement quantity, expected %d instead of %d',
+                $movementQuantity,
+                abs($stockMovement->getDeltaQuantity())
+            )
+        );
+    }
+
+    /**
+     * @todo: refactor this method when query for combination stock movements is introduced
+     *
+     * @param string $combinationReference
+     *
+     * @return EmployeeStockMovement[]
+     */
+    private function getLastEmployeesStockMovementsForCombination(string $combinationReference): array
+    {
+        $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
+        $stockMovementRepository = $this->getContainer()->get('prestashop.adapter.product.stock.repository.stock_movement_repository');
+        $stockAvailableRepository = $this->getContainer()->get('prestashop.adapter.product.stock.repository.stock_available_repository');
+        $stockAvailable = $stockAvailableRepository->getForCombination(new CombinationId($combinationId));
+        $stockId = new StockId($stockAvailable->id);
+
+        $movementsData = $stockMovementRepository->getLastEmployeeStockMovements($stockId);
+
+        $movements = [];
+        foreach ($movementsData as $movementDatum) {
+            $movements[] = new EmployeeStockMovement(
+                (int) $movementDatum['id_stock_mvt'],
+                (int) $movementDatum['id_stock'],
+                (int) $movementDatum['id_stock_mvt_reason'],
+                (int) $movementDatum['physical_quantity'] * (int) $movementDatum['sign'],
+                (int) $movementDatum['id_employee'],
+                $movementDatum['employee_firstname'],
+                $movementDatum['employee_lastname'],
+                new DateTime($movementDatum['date_add'])
+            );
+        }
+
+        return $movements;
     }
 }
