@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
 /**
@@ -100,7 +100,7 @@ class ProductFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $shopConstraint = null !== $this->contextShopId ? ProductShopConstraint::shop($this->contextShopId) : ProductShopConstraint::defaultProductShop();
+        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         $commands = $this->commandsBuilder->buildCommands(
             new ProductId($id),
             $data,

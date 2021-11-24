@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This interface is similar to ProductCommandsBuilderInterface except it handles the product commands
@@ -38,9 +38,9 @@ interface MultistoreProductCommandsBuilderInterface
     /**
      * @param ProductId $productId
      * @param array $formData
-     * @param ProductShopConstraint $singleShopConstraint
+     * @param ShopConstraint $singleShopConstraint
      *
      * @return array Returns empty array if the required data for the command is absent
      */
-    public function buildCommands(ProductId $productId, array $formData, ProductShopConstraint $singleShopConstraint): array;
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array;
 }

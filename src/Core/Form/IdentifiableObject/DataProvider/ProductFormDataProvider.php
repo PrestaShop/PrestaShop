@@ -46,9 +46,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -89,6 +89,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @var int
      */
+    private $defaultShopId;
+
+    /**
+     * @var int
+     */
     private $contextShopId;
 
     /**
@@ -98,6 +103,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      * @param int $defaultCategoryId
      * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
+     * @param int $defaultShopId
      * @param int|null $contextShopId
      */
     public function __construct(
@@ -107,6 +113,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         int $defaultCategoryId,
         CategoryDataProvider $categoryDataProvider,
         int $contextLangId,
+        int $defaultShopId,
         ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
@@ -115,6 +122,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
     }
 
@@ -124,7 +132,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     public function getData($id): array
     {
         $productId = (int) $id;
-        $shopConstraint = null !== $this->contextShopId ? ProductShopConstraint::shop($this->contextShopId) : ProductShopConstraint::defaultProductShop();
+        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
 
