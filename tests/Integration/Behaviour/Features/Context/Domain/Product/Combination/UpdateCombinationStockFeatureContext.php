@@ -133,8 +133,8 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      */
     private function fillCommand(UpdateCombinationStockCommand $command, array $dataRows): void
     {
-        if (isset($dataRows['quantity'])) {
-            $command->setDeltaQuantity((int) $dataRows['quantity']);
+        if (isset($dataRows['delta quantity'])) {
+            $command->setDeltaQuantity((int) $dataRows['delta quantity']);
         }
         if (isset($dataRows['minimal quantity'])) {
             $command->setMinimalQuantity((int) $dataRows['minimal quantity']);
