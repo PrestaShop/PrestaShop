@@ -117,7 +117,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -181,7 +184,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -470,7 +476,9 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
-            'quantity' => 42,
+            'quantity' => [
+                'quantity' => 42,
+            ],
             'minimal_quantity' => 7,
             'location' => 'top shelf',
             'low_stock_threshold' => 5,
@@ -497,7 +505,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
             ],
         ];
-        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
@@ -1160,7 +1168,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
             $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
-            $product['quantity'] ?? static::DEFAULT_QUANTITY,
+            $product['quantity']['quantity'] ?? static::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
             $product['low_stock_alert'] ?? false,
@@ -1385,7 +1393,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
+                    'quantity' => [
+                        'quantity' => static::DEFAULT_QUANTITY,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
