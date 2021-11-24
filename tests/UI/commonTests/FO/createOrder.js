@@ -24,7 +24,7 @@ let page;
  * @param orderData {object} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByCustomerFromFO(orderData, baseContext = 'commonTests-createOrderByCustomerFO') {
+function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createOrderByCustomerTest') {
   describe('PRE-TEST: Create order by default customer in FO', async () => {
     // before and after functions
     before(async function () {
@@ -118,7 +118,7 @@ function createOrderByCustomerFromFO(orderData, baseContext = 'commonTests-creat
  * @param orderData {object} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
-function createOrderByGuestFromFO(orderData, baseContext = 'commonTests-createOrderByGuestFO') {
+function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrderByGuestTest') {
   describe('PRE-TEST: Create order by guest in FO', async () => {
     // before and after functions
     before(async function () {
@@ -192,4 +192,4 @@ function createOrderByGuestFromFO(orderData, baseContext = 'commonTests-createOr
   });
 }
 
-module.exports = {createOrderByCustomerFromFO, createOrderByGuestFromFO};
+module.exports = {createOrderByCustomerTest, createOrderByGuestTest};

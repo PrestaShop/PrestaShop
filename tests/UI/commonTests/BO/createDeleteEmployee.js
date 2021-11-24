@@ -26,7 +26,7 @@ let numberOfEmployees = 0;
  * @param employeeData {EmployeeData} Data to set in employee form
  * @param baseContext {string} String to identify the test
  */
-function createEmployee(employeeData, baseContext = 'commonTests-createEmployee') {
+function createEmployeeTest(employeeData, baseContext = 'commonTests-createEmployeeTest') {
   describe('PRE-TEST: Create employee', async () => {
     // before and after functions
     before(async function () {
@@ -84,7 +84,7 @@ function createEmployee(employeeData, baseContext = 'commonTests-createEmployee'
  * @param employeeData {EmployeeData} Data to set to delete employee
  * @param baseContext {string} String to identify the test
  */
-function deleteEmployee(employeeData, baseContext = 'commonTests-deleteEmployee') {
+function deleteEmployeeTest(employeeData, baseContext = 'commonTests-deleteEmployeeTest') {
   describe('POST-TEST: Delete employee', async () => {
     // before and after functions
     before(async function () {
@@ -138,4 +138,4 @@ function deleteEmployee(employeeData, baseContext = 'commonTests-deleteEmployee'
   });
 }
 
-module.exports = {createEmployee, deleteEmployee};
+module.exports = {createEmployeeTest, deleteEmployeeTest};

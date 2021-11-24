@@ -8,9 +8,9 @@ const mailHelper = require('@utils/mailHelper');
 
 // Import common tests
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
-const {createOrderByCustomerFromFO, createOrderByGuestFromFO} = require('@commonTests/FO/createOrder');
-const {createEmployee, deleteEmployee} = require('@commonTests/BO/createDeleteEmployee');
-const {deleteCustomer} = require('@commonTests/BO/createDeleteCustomer');
+const {createOrderByCustomerTest, createOrderByGuestTest} = require('@commonTests/FO/createOrder');
+const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/createDeleteEmployee');
+const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
@@ -108,13 +108,13 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   setupSmtpConfigTest(baseContext);
 
   // Pre-condition - Create new employee
-  createEmployee(createEmployeeData, baseContext);
+  createEmployeeTest(createEmployeeData, baseContext);
 
   // Pre-condition - Create order by guest
-  createOrderByGuestFromFO(orderByGuestData, baseContext);
+  createOrderByGuestTest(orderByGuestData, baseContext);
 
   // Pre-condition - Create order by default customer
-  createOrderByCustomerFromFO(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
@@ -261,8 +261,8 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     });
   });
 
-  // 3 - Check history table and order note after some edit by new employee
-  describe('Check history table and order note after some edit by new employee', async () => {
+  // 3 - Check history table and order note after some modifications by new employee
+  describe('Check history table and order note after some modifications by new employee', async () => {
     it('should login by new employee account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'loginWithNewEmployee', baseContext);
 
@@ -544,10 +544,10 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   });
 
   // Post-condition - Delete employee
-  deleteEmployee(createEmployeeData, baseContext);
+  deleteEmployeeTest(createEmployeeData, baseContext);
 
   // Post-condition - Delete guest account
-  deleteCustomer(customerData, baseContext);
+  deleteCustomerTest(customerData, baseContext);
 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(baseContext);

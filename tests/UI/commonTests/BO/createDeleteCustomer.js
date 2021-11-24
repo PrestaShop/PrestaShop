@@ -23,7 +23,7 @@ let page;
  * @param customerData {CustomerData} Data to set to delete customer
  * @param baseContext {string} String to identify the test
  */
-function deleteCustomer(customerData, baseContext = 'commonTests-deleteCustomer') {
+function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCustomerTest') {
   describe('POST-TEST: Delete customer', async () => {
     // before and after functions
     before(async function () {
@@ -75,4 +75,4 @@ function deleteCustomer(customerData, baseContext = 'commonTests-deleteCustomer'
   });
 }
 
-module.exports = {deleteCustomer};
+module.exports = {deleteCustomerTest};
