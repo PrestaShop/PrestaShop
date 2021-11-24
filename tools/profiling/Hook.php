@@ -63,6 +63,10 @@ class Hook extends HookCore
 
         $result = parent::coreRenderWidget($module, $registeredHookName, $params);
 
+        if (!$registeredHookName) {
+			$registeredHookName = 'directWidget';
+		}
+
         Profiler::getInstance()->interceptHook(
             $registeredHookName,
             [
