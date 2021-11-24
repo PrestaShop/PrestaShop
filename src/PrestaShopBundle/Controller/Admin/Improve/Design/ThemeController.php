@@ -602,7 +602,7 @@ class ThemeController extends AbstractAdminController
         );
 
         $mailAndInvoiceImageFormatError = $this->trans(
-            'Image format not recognized, allowed format(s) is(are): .%s',
+            'Image format not recognized, allowed formats are: %s',
             'Admin.Notifications.Error',
             [$availableMailAndInvoiceFormatsImploded]
         );
