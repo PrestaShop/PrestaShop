@@ -111,8 +111,9 @@ class MultistoreCheckboxEnabler
      * Adds multistore checkboxes to form fields if needed,
      *
      * @param FormInterface $form (passed by reference)
+     * @param array $data
      */
-    public function addMultistoreElements(FormInterface $form): void
+    public function addMultistoreElements(FormInterface $form, array $data = []): void
     {
         foreach ($form->all() as $child) {
             $options = $child->getConfig()->getOptions();
@@ -123,7 +124,7 @@ class MultistoreCheckboxEnabler
             $isOverriddenInCurrentContext = $this->isOverriddenInCurrentContext($options['multistore_configuration_key']);
 
             // update current field with disabled attribute
-            $this->updateCurrentField($form, $child, $options, $isOverriddenInCurrentContext);
+            $this->updateCurrentField($form, $child, $data, $options, $isOverriddenInCurrentContext);
 
             // for each field in the configuration form, we add a multistore checkbox (except in all shop context)
             if (!$this->multiStoreContext->isAllShopContext()) {
@@ -154,9 +155,17 @@ class MultistoreCheckboxEnabler
      * @param array $options
      * @param bool $isOverriddenInCurrentContext
      */
-    private function updateCurrentField(FormInterface $form, FormInterface $childElement, array &$options, bool $isOverriddenInCurrentContext): void
+    private function updateCurrentField(FormInterface $form, FormInterface $childElement, array $data, array &$options, bool $isOverriddenInCurrentContext): void
     {
-        $options['disabled'] = $options['attr']['disabled'] = !$this->multiStoreContext->isAllShopContext() && !$isOverriddenInCurrentContext;
+        $fieldName = $childElement->getName();
+        $enablerFieldName = self::MULTISTORE_FIELD_PREFIX . $fieldName;
+        if ($form->has($enablerFieldName) && !empty($data[$enablerFieldName])) {
+            $isDisabled = false;
+        } else {
+            $isDisabled = !$this->multiStoreContext->isAllShopContext() && !$isOverriddenInCurrentContext;
+        }
+
+        $options['disabled'] = $options['attr']['disabled'] = $isDisabled;
 
         // add multistore dropdown in field option
         if ($this->multiStoreContext->isAllShopContext() || $this->multiStoreContext->isGroupShopContext()) {
@@ -188,7 +197,7 @@ class MultistoreCheckboxEnabler
         $form->add($fieldName, CheckboxType::class, [
             'required' => false,
             'data' => $isOverriddenInCurrentContext,
-            'multistore_configuration_key' => $configurationKey,
+//            'multistore_configuration_key' => $configurationKey,
             'label' => false,
             'attr' => [
                 'material_design' => true,

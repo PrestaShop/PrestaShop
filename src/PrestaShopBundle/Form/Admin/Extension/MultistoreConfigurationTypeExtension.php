@@ -69,6 +69,11 @@ class MultistoreConfigurationTypeExtension extends AbstractTypeExtension
             $form = $event->getForm();
             $checkboxEnabler->addMultistoreElements($form);
         });
+
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) use ($checkboxEnabler) {
+            $form = $event->getForm();
+            $checkboxEnabler->addMultistoreElements($form, $event->getData());
+        });
     }
 
     /**

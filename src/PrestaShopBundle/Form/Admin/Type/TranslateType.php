@@ -93,6 +93,10 @@ class TranslateType extends CommonAbstractType
                 unset($locale_options['constraints']);
             }
 
+            if (isset($options['disabled'])) {
+                $locale_options['disabled'] = $options['disabled'];
+            }
+
             $builder->add($locale['id_lang'], $options['type'], $locale_options);
             ++$i;
         }
