@@ -45,8 +45,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -161,15 +161,15 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param ProductShopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * @return Product
      *
      * @throws CoreException
      */
-    public function getByShopConstraint(ProductId $productId, ProductShopConstraint $shopConstraint): Product
+    public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
     {
-        if ($shopConstraint->forAllShops() || $shopConstraint->forDefaultProductShop()) {
+        if ($shopConstraint->forAllShops()) {
             return $this->getProductByDefaultShop($productId);
         }
 
@@ -205,10 +205,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     /**
      * @param Product $product
      * @param array $propertiesToUpdate
-     * @param ProductShopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      * @param int $errorCode
      */
-    public function partialUpdate(Product $product, array $propertiesToUpdate, ProductShopConstraint $shopConstraint, int $errorCode): void
+    public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
     {
         $this->validateProduct($product, $propertiesToUpdate);
         $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
@@ -224,10 +224,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param Product $product
-     * @param ProductShopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      * @param int $errorCode
      */
-    public function update(Product $product, ProductShopConstraint $shopConstraint, int $errorCode): void
+    public function update(Product $product, ShopConstraint $shopConstraint, int $errorCode): void
     {
         $this->validateProduct($product);
         $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
@@ -305,11 +305,11 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param Product $product
-     * @param ProductShopConstraint $shopConstraint
+     * @param ShopConstraint $shopConstraint
      *
      * @return int[]
      */
-    private function getShopIdsByConstraint(Product $product, ProductShopConstraint $shopConstraint): array
+    private function getShopIdsByConstraint(Product $product, ShopConstraint $shopConstraint): array
     {
         $shopIds = [];
         if ($shopConstraint->forAllShops()) {
@@ -317,8 +317,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             foreach ($shops as $shopId) {
                 $shopIds[] = $shopId->getValue();
             }
-        } elseif ($shopConstraint->forDefaultProductShop()) {
-            $shopIds = [$this->getProductDefaultShopId(new ProductId((int) $product->id))->getValue()];
         } else {
             $shopIds = [$shopConstraint->getShopId()->getValue()];
         }
