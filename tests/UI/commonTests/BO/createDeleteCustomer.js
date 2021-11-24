@@ -39,7 +39,7 @@ function deleteCustomer(customerData, baseContext = 'commonTests-deleteCustomer'
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go \'Customers >  Customers\' page', async function () {
+    it('should go \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
