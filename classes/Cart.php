@@ -648,8 +648,8 @@ class CartCore extends ObjectModel
      * Return cart products.
      *
      * @param bool $refresh
-     * @param bool $id_product
-     * @param int $id_country
+     * @param bool|int $id_product
+     * @param int|null $id_country
      * @param bool $fullInfos
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
@@ -1862,7 +1862,7 @@ class CartCore extends ObjectModel
      * Delete a product from the cart.
      *
      * @param int $id_product Product ID
-     * @param int $id_product_attribute Attribute ID if needed
+     * @param int|null $id_product_attribute Attribute ID if needed
      * @param int $id_customization Customization id
      * @param int $id_address_delivery Delivery Address id
      * @param bool $preserveGiftsRemoval If true gift are not removed so product is still in cart
@@ -2324,20 +2324,11 @@ class CartCore extends ObjectModel
     /**
      * @param array $products
      *
-     * @return array
+     * @return int
      */
     protected function getDeliveryAddressId($products)
     {
-        $addressDeliveryId = 0;
-        if (isset($products[0])) {
-            if (null === $products) {
-                $addressDeliveryId = $this->id_address_delivery;
-            } else {
-                $addressDeliveryId = $products[0]['id_address_delivery'];
-            }
-        }
-
-        return $addressDeliveryId;
+        return $products[0]['id_address_delivery'] ?? $this->id_address_delivery;
     }
 
     /**
@@ -3890,11 +3881,7 @@ class CartCore extends ObjectModel
         if (null !== $products) {
             $total_weight = 0;
             foreach ($products as $product) {
-                if (!isset($product['weight_attribute']) || null === $product['weight_attribute']) {
-                    $total_weight += $product['weight'] * $product['cart_quantity'];
-                } else {
-                    $total_weight += $product['weight_attribute'] * $product['cart_quantity'];
-                }
+                $total_weight += ($product['weight_attribute'] ?? $product['weight']) * $product['cart_quantity'];
             }
 
             return $total_weight;
@@ -4363,8 +4350,8 @@ class CartCore extends ObjectModel
 
         // Delete customization picture if necessary
         if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result = $result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']) : true;
-            $result = $result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') ? @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small') : true;
+            $result = !file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']);
+            $result = !($result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small')) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small');
         }
 
         $result = $result && Db::getInstance()->execute(

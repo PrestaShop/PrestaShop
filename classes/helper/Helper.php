@@ -37,7 +37,7 @@ class HelperCore
     public $toolbar_scroll = false;
     public $bootstrap = false;
 
-    /** @var Module */
+    /** @var Module|null */
     public $module;
 
     /** @var string Helper tpl folder */

@@ -86,7 +86,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var array Total paid cache */
     protected static $_total_paid_cache = [];
 
-    /** @var Order * */
+    /** @var Order|null */
     private $order;
 
     /**

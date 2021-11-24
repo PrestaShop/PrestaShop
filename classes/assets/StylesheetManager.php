@@ -112,7 +112,6 @@ class StylesheetManagerCore extends AbstractAssetManager
      */
     protected function add($id, $fullPath, $media, $priority, $inline, $server, ?string $version)
     {
-        $priority = is_int($priority) ? $priority : self::DEFAULT_PRIORITY;
         $media = $this->getSanitizedMedia($media);
 
         $fullPath = $version ? $fullPath . '?' . $version : $fullPath;

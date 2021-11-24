@@ -187,6 +187,7 @@ abstract class ControllerCore
             ]
         );
 
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
@@ -710,8 +711,6 @@ abstract class ControllerCore
             case E_USER_ERROR:
             case E_ERROR:
                 die('Fatal error: ' . $errstr . ' in ' . $errfile . ' on line ' . $errline);
-
-                break;
             case E_USER_WARNING:
             case E_WARNING:
                 $type = 'Warning';

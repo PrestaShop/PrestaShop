@@ -262,7 +262,7 @@ class AttachmentCore extends ObjectModel
      * and remove eventual previous association.
      *
      * @param int $idProduct Product ID
-     * @param array $array Attachment IDs
+     * @param mixed $array Attachment IDs
      *
      * @return bool Whether the attachments have been successfully associated with the Product
      */

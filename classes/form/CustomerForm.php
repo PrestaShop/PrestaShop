@@ -282,7 +282,7 @@ class CustomerFormCore extends AbstractForm
                 $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
                 if (is_array($validatedCustomerFormFields)) {
-                    array_merge($this->formFields, $validatedCustomerFormFields);
+                    $this->formFields = array_merge($this->formFields, $validatedCustomerFormFields);
                 }
             }
         }

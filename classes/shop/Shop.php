@@ -60,8 +60,13 @@ class ShopCore extends ObjectModel
     /** @var string Domain SSL of main url (read only) */
     public $domain_ssl;
 
-    /** @var ShopGroup Shop group object */
+    /** @var ShopGroup|null Shop group object */
     protected $group;
+
+    /**
+     * @var Address|null
+     */
+    public $address;
 
     /**
      * @see ObjectModel::$definition
@@ -586,7 +591,7 @@ class ShopCore extends ObjectModel
     /**
      * Get the associated table if available.
      *
-     * @return array
+     * @return array|false
      */
     public static function getAssoTable($table)
     {
@@ -594,7 +599,7 @@ class ShopCore extends ObjectModel
             Shop::init();
         }
 
-        return isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false;
+        return Shop::$asso_tables[$table] ?? false;
     }
 
     /**

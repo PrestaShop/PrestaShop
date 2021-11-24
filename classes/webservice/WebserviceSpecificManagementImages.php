@@ -296,8 +296,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // general images management : like header's logo, invoice logo, etc...
             case 'general':
                 return $this->manageGeneralImages();
-
-                break;
             // normal images management : like the most entity images (categories, manufacturers..)...
             case 'categories':
                 return $this->manageDeclinatedImages(_PS_CAT_IMG_DIR_);
@@ -307,7 +305,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return $this->manageDeclinatedImages(_PS_SUPP_IMG_DIR_);
             case 'stores':
                 return $this->manageDeclinatedImages(_PS_STORE_IMG_DIR_);
-
             // product image management : many image for one entity (product)
             case 'products':
                 return $this->manageProductImages();
@@ -327,8 +324,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $this->output .= $this->objOutput->getObjectRender()->renderNodeFooter('image_types', []);
 
                 return true;
-
-                break;
             default:
                 $exception = new WebserviceException(sprintf('Image of type "%s" does not exist', $this->wsObject->urlSegment[1]), [48, 400]);
 
@@ -406,8 +401,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
                 return true;
 
-                break;
-
             // If the image type does not exist...
             default:
                 $exception = new WebserviceException(sprintf('General image of type "%s" does not exist', $this->wsObject->urlSegment[2]), [53, 400]);
@@ -421,8 +414,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
 
                 return true;
-
-                break;
             case 'PUT':
                 if ($this->writePostedImageOnDisk($path, null, null)) {
                     if ($this->wsObject->urlSegment[2] == 'header') {
@@ -437,8 +428,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('Error while copying image to the directory', [54, 400]);
                 }
-
-                break;
         }
     }
 
@@ -649,17 +638,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Match the default images
             case 'default':
                 return $this->manageDefaultDeclinatedImages($directory, $normal_image_sizes);
-
-                break;
             // Display the list of images
             case '':
                 return $this->manageListDeclinatedImages($directory, $normal_image_sizes);
-
-                break;
             default:
                 return $this->manageEntityDeclinatedImages($directory, $normal_image_sizes);
-
-                break;
         }
     }
 
@@ -824,9 +807,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('This image does not exist on disk', [63, 500]);
                 }
-
-                break;
             // Delete the image
+            // no break
             case 'DELETE':
                 // Delete products image in DB
                 if ($this->imageType == 'products') {
@@ -845,9 +827,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('This image does not exist on disk', [64, 500]);
                 }
-
-                break;
             // Add the image
+            // no break
             case 'POST':
                 if ($filename_exists) {
                     throw new WebserviceException('This image already exists. To modify it, please use the PUT method', [65, 400]);
@@ -858,8 +839,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         throw new WebserviceException('Unable to save this image', [66, 500]);
                     }
                 }
-
-                break;
+                // no break
             default:
                 throw new WebserviceException('This method is not allowed', [67, 405]);
         }
@@ -1216,7 +1196,5 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         }
 
         throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);
-
-        return false;
     }
 }

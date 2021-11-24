@@ -49,19 +49,19 @@ class ContextCore
     /** @var Context|null */
     protected static $instance;
 
-    /** @var Cart */
+    /** @var Cart|null */
     public $cart;
 
-    /** @var Customer */
+    /** @var Customer|null */
     public $customer;
 
-    /** @var Cookie */
+    /** @var Cookie|null */
     public $cookie;
 
     /** @var SessionInterface|null */
     public $session;
 
-    /** @var Link */
+    /** @var Link|null */
     public $link;
 
     /** @var Country */
@@ -70,7 +70,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController */
+    /** @var AdminController|FrontController|null */
     public $controller;
 
     /** @var string */
@@ -95,7 +95,7 @@ class ContextCore
     /** @var Shop */
     public $shop;
 
-    /** @var Smarty */
+    /** @var Smarty|null */
     public $smarty;
 
     /** @var \Mobile_Detect */
@@ -427,7 +427,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if ($locale === '' || null === $locale || count($translator->getCatalogue($locale)->all())) {
+        if (empty($locale) || count($translator->getCatalogue($locale)->all())) {
             return $translator;
         }
 

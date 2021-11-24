@@ -270,7 +270,7 @@ class OrderDetailCore extends ObjectModel
     /** @var Address object */
     protected $vat_address = null;
 
-    /** @var Address object */
+    /** @var Address|null */
     protected $specificPrice = null;
 
     /** @var Customer object */
@@ -952,7 +952,7 @@ class OrderDetailCore extends ObjectModel
 
         if ($this->product_attribute_id) {
             $combination = new Combination((int) $this->product_attribute_id);
-            if ($combination && $combination->wholesale_price != '0.000000') {
+            if ($combination->wholesale_price != '0.000000') {
                 $wholesale_price = $combination->wholesale_price;
             }
         }

@@ -186,7 +186,7 @@ class ToolsCore
      *
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
-     * @param Link $link
+     * @param Link|null $link
      * @param string|array $headers A list of headers to send before redirection
      */
     public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
@@ -1189,10 +1189,12 @@ class ToolsCore
                 ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
 
+        /* @phpstan-ignore-next-line */
         return $errorMessage;
     }
 
@@ -2202,6 +2204,7 @@ class ToolsCore
 
             $content = curl_exec($curl);
 
+            /* @phpstan-ignore-next-line */
             if (false === $content && _PS_MODE_DEV_) {
                 $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
@@ -3146,6 +3149,7 @@ exit;
 
     protected static function throwDeprecated($error, $message, $class)
     {
+        /* @phpstan-ignore-next-line */
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
             @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
@@ -3222,8 +3226,6 @@ exit;
      */
     public static function checkPhpVersion()
     {
-        $version = null;
-
         if (defined('PHP_VERSION')) {
             $version = PHP_VERSION;
         } else {
@@ -3320,7 +3322,7 @@ exit;
      * Get products order field name for queries.
      *
      * @param string $type by|way
-     * @param string|null $value If no index given, use default order from admin -> pref -> products
+     * @param string|bool|null $value If no index given, use default order from admin -> pref -> products
      * @param bool|string $prefix
      *
      * @return string Order by sql clause
@@ -3348,15 +3350,11 @@ exit;
 
                 return $order_by_prefix . $value;
 
-            break;
-
             case 'way':
                 $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = [0 => 'asc', 1 => 'desc'];
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
-
-            break;
         }
 
         return '';
@@ -3432,6 +3430,7 @@ exit;
      */
     public static function dieOrLog($msg, $die = true)
     {
+        /* @phpstan-ignore-next-line */
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);
@@ -3563,7 +3562,7 @@ exit;
      *
      * @since 1.4.5.0
      *
-     * @return int the memory limit value in octet
+     * @return int|string the memory limit value in octet
      */
     public static function getMemoryLimit()
     {
@@ -3577,7 +3576,9 @@ exit;
      *
      * @since 1.5.0
      *
-     * @return int the value of a configuration option in octets
+     * @param string $option
+     *
+     * @return int|string the value of a configuration option in octets
      */
     public static function getOctets($option)
     {
@@ -4010,7 +4011,8 @@ exit;
     public static function waitUntilFileIsModified($file_name, $timeout = 180)
     {
         @ini_set('max_execution_time', $timeout);
-        if (($time_limit = ini_get('max_execution_time')) === null) {
+        $time_limit = ini_get('max_execution_time');
+        if (!$time_limit) {
             $time_limit = 30;
         }
 

@@ -218,8 +218,8 @@ class ProductSupplierCore extends ObjectModel
     /**
      * For a given Supplier, Product, returns the purchased price.
      *
-     * @param int $idSupplier
-     * @param int $idProduct
+     * @param int|null $idSupplier
+     * @param int|null $idProduct
      * @param int $idProductAttribute Optional
      * @param bool $convertedPrice Optional
      *

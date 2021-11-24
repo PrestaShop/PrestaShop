@@ -288,7 +288,7 @@ class TagCore extends ObjectModel
                 foreach ($array as $idProduct) {
                     $ids[] = '(' . (int) $idProduct . ',' . (int) $this->id . ',' . (int) $this->id_lang . ')';
                 }
-                $result = $result && Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_tag (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
+                $result = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_tag (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
                 if (Configuration::get('PS_SEARCH_INDEXATION')) {
                     $result = $result && Search::indexation(false);
                 }

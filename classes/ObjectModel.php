@@ -56,7 +56,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int|null Object ID */
     public $id;
 
-    /** @var int Language ID */
+    /** @var int|null Language ID */
     protected $id_lang = null;
 
     /** @var int Shop ID */
@@ -2065,7 +2065,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * Returns object definition.
      *
-     * @param string $class Name of object
+     * @param string|object $class Name of object
      * @param string|null $field Name of field if we want the definition of one field only
      *
      * @return array

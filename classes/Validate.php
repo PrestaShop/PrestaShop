@@ -638,7 +638,7 @@ class ValidateCore
     /**
      * Check for boolean validity.
      *
-     * @param bool $bool Boolean to validate
+     * @param bool|string|null $bool Boolean to validate
      *
      * @return bool Validity is ok or not
      */
@@ -801,7 +801,7 @@ class ValidateCore
     /**
      * Check for an integer validity.
      *
-     * @param int $value Integer to validate
+     * @param int|bool $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -813,7 +813,7 @@ class ValidateCore
     /**
      * Check for an integer validity (unsigned).
      *
-     * @param int $value Integer to validate
+     * @param mixed $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1109,7 +1109,7 @@ class ValidateCore
     /**
      * Check for PHP serialized data.
      *
-     * @param string $data Serialized data to validate
+     * @param string|null $data Serialized data to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1135,7 +1135,7 @@ class ValidateCore
     /**
      * Check for Latitude/Longitude.
      *
-     * @param string $data Coordinate to validate
+     * @param string|null $data Coordinate to validate
      *
      * @return bool Validity is ok or not
      */

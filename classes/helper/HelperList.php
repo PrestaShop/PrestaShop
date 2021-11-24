@@ -177,7 +177,7 @@ class HelperListCore extends Helper
     /**
      * Return an html list given the data to fill it up.
      *
-     * @param array $list entries to display (rows)
+     * @param array|bool $list entries to display (rows)
      * @param array $fields_display fields (cols)
      *
      * @return string|bool

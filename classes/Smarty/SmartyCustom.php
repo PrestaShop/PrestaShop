@@ -129,7 +129,7 @@ class SmartyCustomCore extends Smarty
      * Handle the lazy template cache invalidation.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
+     * @param string|array|object|null $cache_id cache id
      * @param string $compile_id compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)

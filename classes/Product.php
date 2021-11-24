@@ -3576,7 +3576,7 @@ class ProductCore extends ObjectModel
      * @param bool $use_customer_price
      * @param int|null $id_customization Customization identifier
      *
-     * @return float Product price
+     * @return float|null Product price
      */
     public static function getPriceStatic(
         $id_product,
@@ -3680,7 +3680,7 @@ class ProductCore extends ObjectModel
             $id_customer = $context->customer->id;
         }
 
-        $return = Product::priceCalculation(
+        return Product::priceCalculation(
             $context->shop->id,
             $id_product,
             $id_product_attribute,
@@ -3703,8 +3703,6 @@ class ProductCore extends ObjectModel
             $cart_quantity,
             $id_customization
         );
-
-        return $return;
     }
 
     /**
@@ -3712,7 +3710,7 @@ class ProductCore extends ObjectModel
      *
      * @param int $id_shop Shop identifier
      * @param int $id_product Product identifier
-     * @param int $id_product_attribute Attribute identifier
+     * @param int|null $id_product_attribute Attribute identifier
      * @param int $id_country Country identifier
      * @param int $id_state State identifier
      * @param string $zipcode
@@ -3733,7 +3731,7 @@ class ProductCore extends ObjectModel
      * @param int $real_quantity
      * @param int $id_customization Customization identifier
      *
-     * @return float|void Product price, void if not found in cache $_pricesLevel2
+     * @return float|null Product price, void if not found in cache $_pricesLevel2
      */
     public static function priceCalculation(
         $id_shop,
@@ -3846,7 +3844,7 @@ class ProductCore extends ObjectModel
         }
 
         if (!isset(self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute])) {
-            return;
+            return null;
         }
 
         $result = self::$_pricesLevel2[$cache_id_2][(int) $id_product_attribute];
@@ -4068,8 +4066,7 @@ class ProductCore extends ObjectModel
 
         $id_group = $context->customer->id_default_group;
         $cart_quantity = !$context->cart ? 0 : Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-            SELECT SUM(`quantity`)
+            'SELECT SUM(`quantity`)
             FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_product` = ' . (int) $id_product . ' AND `id_cart` = ' . (int) $context->cart->id
         );
@@ -6527,20 +6524,16 @@ class ProductCore extends ObjectModel
         }
 
         $fields = $context->cart->getProductCustomization($this->id, null, true);
-        if (($required_fields = $this->getRequiredCustomizableFields()) === false) {
-            return false;
-        }
+        $required_fields = $this->getRequiredCustomizableFields();
 
         $fields_present = [];
         foreach ($fields as $field) {
             $fields_present[] = ['id_customization_field' => $field['index'], 'type' => $field['type']];
         }
 
-        if (is_array($required_fields) && count($required_fields)) {
-            foreach ($required_fields as $required_field) {
-                if (!in_array($required_field, $fields_present)) {
-                    return false;
-                }
+        foreach ($required_fields as $required_field) {
+            if (!in_array($required_field, $fields_present)) {
+                return false;
             }
         }
 
@@ -8209,13 +8202,9 @@ class ProductCore extends ObjectModel
             case RedirectType::TYPE_CATEGORY_TEMPORARY:
                 return 'category';
 
-                break;
-
             case RedirectType::TYPE_PRODUCT_PERMANENT:
             case RedirectType::TYPE_PRODUCT_TEMPORARY:
                 return 'product';
-
-                break;
         }
 
         return false;
