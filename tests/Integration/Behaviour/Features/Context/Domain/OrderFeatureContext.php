@@ -718,10 +718,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateOrdersToStatuses(string $orderReferencesString, string $status)
     {
-        /** @var string[] $orderReferencesString */
-        $orderReferencesString = explode(',', $orderReferencesString);
+        $orderReferences = explode(',', $orderReferencesString);
         $ordersIds = [];
-        foreach ($orderReferencesString as $orderReference) {
+        foreach ($orderReferences as $orderReference) {
             $ordersIds[] = SharedStorage::getStorage()->get($orderReference);
         }
 
