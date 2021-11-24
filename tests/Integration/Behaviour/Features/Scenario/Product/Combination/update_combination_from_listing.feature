@@ -32,6 +32,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | price | 0 |
     And I update product "product1" prices with following information:
       | price | 100.99 |
+    And product "product1" should have no stock movements
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
@@ -46,15 +47,32 @@ Feature: Update product combination from listing in Back Office (BO)
       | delta quantity  | 10     |
       | is default      | true   |
       | reference       | test_1 |
-    And I update combination "product1MWhite" from list with following values:
+    Then combination "product1SBlue" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 10             |
+    And combination "product1SBlue" last stock movement increased by 10
+    When I update combination "product1MWhite" from list with following values:
       | impact on price | -4.99  |
       | delta quantity  | 9      |
       | is default      | false  |
       | reference       | test 2 |
+    Then combination "product1MWhite" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 9              |
+    And combination "product1MWhite" last stock movement increased by 9
     And I update combination "product1MBlack" from list with following values:
       | delta quantity | -50 |
-    And I update combination "product1MBlack" from list with following values:
+    Then combination "product1MBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -50            |
+    And combination "product1MBlack" last stock movement decreased by 50
+    When I update combination "product1MBlack" from list with following values:
       | delta quantity | -60 |
+    Then combination "product1MBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -60            |
+      | Puff       | Daddy     | -50            |
+    And combination "product1MBlack" last stock movement decreased by 60
     Then product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
