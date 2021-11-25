@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\ErrorMessage;
 
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Controller\Exception\FieldLabelNotFoundException;
 use Symfony\Component\Form\FormInterface;
 
 class LabelProvider
@@ -39,7 +39,7 @@ class LabelProvider
      *
      * @return string
      *
-     * @throws FieldNotFoundException
+     * @throws FieldLabelNotFoundException
      */
     public function getLabel(FormInterface $form, string $fieldName): string
     {
@@ -47,7 +47,7 @@ class LabelProvider
         foreach ($view->children as $child) {
             if ($fieldName === $child->vars['name']) {
                 if (!isset($child->vars['label'])) {
-                    throw new FieldNotFoundException(
+                    throw new FieldLabelNotFoundException(
                         sprintf(
                             'Field %s doesn\'t have a label set in Form Type',
                             $fieldName
@@ -59,7 +59,7 @@ class LabelProvider
             }
         }
 
-        throw new FieldNotFoundException(
+        throw new FieldLabelNotFoundException(
             sprintf(
                 'Field name for field %s not found',
                 $fieldName
