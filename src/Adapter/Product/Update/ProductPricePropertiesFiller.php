@@ -64,6 +64,7 @@ class ProductPricePropertiesFiller
      */
     public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
     {
+        $updatableProperties = [];
         if (null !== $wholesalePrice) {
             $product->wholesale_price = (float) (string) $wholesalePrice;
             $updatableProperties[] = 'wholesale_price';
@@ -72,35 +73,41 @@ class ProductPricePropertiesFiller
         if (null !== $price) {
             $product->price = (float) (string) $price;
             $updatableProperties[] = 'price';
-        } else {
-            $price = $this->numberExtractor->extract($product, 'price');
         }
 
-        $this->fillUnitPriceRatio($product, $price, $unitPrice);
-        $updatableProperties[] = 'unit_price_ratio';
+        if (null !== $unitPrice) {
+            // When product price is zero unit price must be 0 as well
+            if ($product->price == 0) {
+                $unitPrice = new DecimalNumber('0');
+            }
+
+            $product->unit_price = (float) (string) $unitPrice;
+            $updatableProperties[] = 'unit_price';
+        }
+
+        // When price or unit price is changed the ratio must be updated
+        if (null !== $unitPrice || null !== $price) {
+            $this->fillUnitPriceRatio($product, $price, $unitPrice);
+        }
 
         return $updatableProperties;
     }
 
     /**
      * @param Product $product
-     * @param DecimalNumber $price
+     * @param DecimalNumber|null $price
      * @param DecimalNumber|null $unitPrice
      */
-    private function fillUnitPriceRatio(Product $product, DecimalNumber $price, ?DecimalNumber $unitPrice): void
+    private function fillUnitPriceRatio(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice): void
     {
-        // if price was reset then also reset unit_price_ratio
-        if ($price->equalsZero()) {
-            $this->setUnitPriceRatio($product, $price, $price);
-
-            return;
+        if (null === $price) {
+            $price = $this->numberExtractor->extract($product, 'price');
         }
 
         if (null === $unitPrice) {
             $unitPrice = $this->numberExtractor->extract($product, 'unit_price');
         }
 
-        // if price was not reset then allow setting new unit_price and unit_price_ratio
         $this->setUnitPriceRatio($product, $price, $unitPrice);
     }
 
@@ -117,11 +124,8 @@ class ProductPricePropertiesFiller
         } else {
             $ratio = $price->dividedBy($unitPrice);
         }
-        // unit_price_ratio is calculated based on input price and unit_price & then is saved to database,
-        // however - unit_price is not saved to database. When loading product it is calculated depending on price and unit_price_ratio
-        // so there is no static values saved, that's why unit_price is inaccurate
+
+        // Ratio is computed based on price and unit price, we update it so that the value is up-to-date in hooks
         $product->unit_price_ratio = (float) (string) $ratio;
-        //set unit_price to go through validation
-        $product->unit_price = (float) (string) $unitPrice;
     }
 }
