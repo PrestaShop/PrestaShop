@@ -51,9 +51,9 @@ final class DeleteCustomerHandler extends AbstractCustomerHandler implements Del
 
         $this->logger->notice(
             $this->translator->trans(
-                'Customer deleted: (' . $customer->id . ')',
+                'Customer deleted',
                 [],
-                'Admin.Advparameters.Notification'
+                'Admin.Advparameters.Feature'
             ),
             [
                 'allow_duplicate' => true,

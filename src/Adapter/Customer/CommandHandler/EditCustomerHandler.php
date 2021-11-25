@@ -118,9 +118,9 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
 
         $this->logger->notice(
             $this->translator->trans(
-                'Customer updated: (' . $customer->id . ')',
+                'Customer updated',
                 [],
-                'Admin.Advparameters.Notification'
+                'Admin.Advparameters.Feature'
             ),
             [
                 'allow_duplicate' => true,

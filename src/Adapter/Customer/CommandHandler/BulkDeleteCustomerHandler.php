@@ -51,9 +51,9 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
 
             $this->logger->notice(
                 $this->translator->trans(
-                    'Customer deleted: (' . $customer->id . ')',
+                    'Customer deleted',
                     [],
-                    'Admin.Advparameters.Notification'
+                    'Admin.Advparameters.Feature'
                 ),
                 [
                     'allow_duplicate' => true,

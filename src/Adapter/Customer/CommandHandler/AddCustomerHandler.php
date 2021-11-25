@@ -101,9 +101,9 @@ final class AddCustomerHandler extends AbstractCustomerHandler implements AddCus
 
         $this->logger->notice(
             $this->translator->trans(
-                'Customer created: (' . $customer->id . ')',
+                'Customer created',
                 [],
-                'Admin.Advparameters.Notification'
+                'Admin.Advparameters.Feature'
             ),
             [
                 'allow_duplicate' => true,
