@@ -59,7 +59,7 @@ class AdministrationConfigurationErrorFactory implements ConfigurationErrorFacto
      * @param ConfigurationErrorInterface $error
      * @param string $label
      *
-     * @return string
+     * @return string|null
      */
     public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string
     {

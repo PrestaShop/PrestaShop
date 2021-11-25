@@ -72,6 +72,8 @@ final class InvoiceOptionsDataProvider implements FormDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws DataProviderException|TypeException
      */
     public function setData(array $data)
     {

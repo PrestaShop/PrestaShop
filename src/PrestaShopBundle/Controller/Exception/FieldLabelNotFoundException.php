@@ -24,17 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
+namespace PrestaShopBundle\Controller\Exception;
 
-interface ConfigurationErrorFactoryInterface
+use Exception;
+
+/**
+ * Class FieldLabelNotFoundException
+ *
+ * Thrown when field label for error message is not found
+ */
+class FieldLabelNotFoundException extends Exception
 {
-    /**
-     * @param ConfigurationErrorInterface $error
-     * @param string $label
-     *
-     * @return string|null
-     */
-    public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string;
 }

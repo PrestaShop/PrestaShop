@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoiceOptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
 use PrestaShopBundle\Form\Exception\DataProviderException;
 
@@ -71,8 +70,6 @@ class InvoiceByDateDataProviderTest extends TestCase
      * Tests that no exceptions are thrown if data is correct
      *
      * @doesNotPerformAssertions
-     *
-     * @param array $data
      */
     public function testValidatePassesWithCorrectData(): void
     {
@@ -86,14 +83,5 @@ class InvoiceByDateDataProviderTest extends TestCase
             GenerateByDateType::FIELD_DATE_TO => '2021-07-09',
         ];
         $orderInvoiceByDateDataProvider->setData($data);
-    }
-
-    public function getInvoiceNoHtmlFields(): array
-    {
-        return [
-            [InvoiceOptionsType::FIELD_INVOICE_PREFIX],
-            [InvoiceOptionsType::FIELD_LEGAL_FREE_TEXT],
-            [InvoiceOptionsType::FIELD_FOOTER_TEXT],
-        ];
     }
 }

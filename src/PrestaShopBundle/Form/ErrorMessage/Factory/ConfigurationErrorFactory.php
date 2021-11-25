@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Controller\Exception\FieldLabelNotFoundException;
 use PrestaShopBundle\Form\ErrorMessage\LabelProvider;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -67,7 +67,7 @@ class ConfigurationErrorFactory
      *
      * @return array
      *
-     * @throws FieldNotFoundException
+     * @throws FieldLabelNotFoundException
      */
     public function getErrorMessages(ConfigurationErrorCollection $errors, FormInterface $form): array
     {
