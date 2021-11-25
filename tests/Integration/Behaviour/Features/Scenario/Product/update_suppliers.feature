@@ -151,8 +151,8 @@ Feature: Update product suppliers from Back Office (BO)
       | on_sale          | false |
       | wholesale_price  | 0     |
       | unit_price       | 0     |
-      | unity            |       |
       | unit_price_ratio | 0     |
+      | unity            |       |
     When I set product product3 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product3supplier1 | supplier1          | my first supplier for product3 | USD      | 10                 |
@@ -168,8 +168,8 @@ Feature: Update product suppliers from Back Office (BO)
       | on_sale          | false |
       | wholesale_price  | 10    |
       | unit_price       | 0     |
-      | unity            |       |
       | unit_price_ratio | 0     |
+      | unity            |       |
     When I remove all associated product "product3" suppliers
     Then product product3 should not have any suppliers assigned
     And product product3 should not have a default supplier
@@ -181,8 +181,8 @@ Feature: Update product suppliers from Back Office (BO)
       | on_sale          | false |
       | wholesale_price  | 10    |
       | unit_price       | 0     |
-      | unity            |       |
       | unit_price_ratio | 0     |
+      | unity            |       |
 
   Scenario: Updating standard product wholesale price should update default supplier price
     Given I add product "product4" with following information:
@@ -197,8 +197,8 @@ Feature: Update product suppliers from Back Office (BO)
       | on_sale          | false |
       | wholesale_price  | 0     |
       | unit_price       | 0     |
-      | unity            |       |
       | unit_price_ratio | 0     |
+      | unity            |       |
     When I set product product4 suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product4supplier1 | supplier1          | my first supplier for product4  | USD      | 10                 |
@@ -216,8 +216,8 @@ Feature: Update product suppliers from Back Office (BO)
       | on_sale          | false |
       | wholesale_price  | 10    |
       | unit_price       | 0     |
-      | unity            |       |
       | unit_price_ratio | 0     |
+      | unity            |       |
     When I update product "product4" prices with following information:
       | wholesale_price  | 20    |
     Then product product4 should have following suppliers:

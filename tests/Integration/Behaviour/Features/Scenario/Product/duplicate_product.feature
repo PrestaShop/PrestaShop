@@ -176,8 +176,8 @@ Feature: Duplicate product from Back Office (BO).
       # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
       | wholesale_price  | 10              |
       | unit_price       | 500             |
-      | unity            | bag of ten      |
       | unit_price_ratio | 0.2             |
+      | unity            | bag of ten      |
     And product "copy_of_product1" localized "meta_title" should be:
       | locale | value                 |
       | en-US  | SUNGLASSES meta title |
