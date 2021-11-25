@@ -35,9 +35,9 @@
   color: $gray-darker;
 
   .manufacturer-logo {
-    height: 3.125rem;
+    max-height: 4rem;
     margin-bottom: 1rem;
-    border: none;
+    border: 2px solid $gray-light;
   }
 
   .product-description {
