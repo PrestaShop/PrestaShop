@@ -54,10 +54,17 @@ class FOBasePage extends CommonPage {
     this.storesLink = '#link-static-page-stores-2';
     // Your account links selectors
     this.footerAccountList = '#footer_account_list';
-    this.personalInfoLink = `${this.footerAccountList} a[title='Personal info']`;
+    this.informationLink = `${this.footerAccountList} a[title='Information']`;
+    this.orderTrackingLink = `${this.footerAccountList} a[title='Order tracking']`;
+    this.signInLink = `${this.footerAccountList} a[title='Log in to your customer account']`;
+    this.createAccountLink = `${this.footerAccountList} a[title='Create account']`;
+    this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
     this.ordersLink = `${this.footerAccountList} a[title='Orders']`;
     this.creditSlipsLink = `${this.footerAccountList} a[title='Credit slips']`;
-    this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
+    this.vouchersLink = `${this.footerAccountList} a[title='Vouchers']`;
+    this.wishListLink = `${this.footerAccountList} a[title='My wishlists']`;
+    this.signOutLink = `${this.footerAccountList} a[title='Log me out']`;
+
     // Store information
     this.wrapperContactBlockDiv = '#footer div.block-contact';
 
@@ -384,8 +391,24 @@ class FOBasePage extends CommonPage {
         selector = this.storesLink;
         break;
 
-      case 'Personal info':
-        selector = this.personalInfoLink;
+      case 'Information':
+        selector = this.informationLink;
+        break;
+
+      case 'Order tracking':
+        selector = this.orderTrackingLink;
+        break;
+
+      case 'Sign in':
+        selector = this.signInLink;
+        break;
+
+      case 'Create account':
+        selector = this.createAccountLink;
+        break;
+
+      case 'Addresses':
+        selector = this.addressesLink;
         break;
 
       case 'Orders':
@@ -396,8 +419,16 @@ class FOBasePage extends CommonPage {
         selector = this.creditSlipsLink;
         break;
 
-      case 'Addresses':
-        selector = this.addressesLink;
+      case 'Vouchers':
+        selector = this.vouchersLink;
+        break;
+
+      case 'Wishlist':
+        selector = this.wishListLink;
+        break;
+
+      case 'Sign out':
+        selector = this.signOutLink;
         break;
 
       default:
