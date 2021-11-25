@@ -224,7 +224,7 @@ class Profiler
         // Sum querying time
         $queries = Db::getInstance()->queries;
         uasort($queries, [$this, 'sortByQueryTime']);
-        foreach ($queries as $data) {
+        foreach ($queries as $id => $data) {
             $this->totalQueryTime += $data['time'];
 
             $queryRow = [
@@ -235,6 +235,7 @@ class Profiler
                 'rows' => 1,
                 'group_by' => false,
                 'stack' => [],
+                'id' => $id,
             ];
 
             if (preg_match('/^\s*select\s+/i', $data['query'])) {
@@ -254,7 +255,7 @@ class Profiler
 
             array_shift($data['stack']);
             foreach ($data['stack'] as $call) {
-                $queryRow['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))) . ':' . $call['line'];
+                $queryRow['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))) . ':' . $call['line'] . ' (' . $call['function'] . ')';
             }
 
             $this->queries[] = $queryRow;

@@ -103,13 +103,17 @@ abstract class Db extends DbCore
         if (!$explain) {
             $end = microtime(true);
 
-            $stack = debug_backtrace(0);
+            $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $stack[0]['file'])) {
                 array_shift($stack);
             }
             $stack_light = [];
             foreach ($stack as $call) {
-                $stack_light[] = ['file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined'];
+                $stack_light[] = [
+                    'file' => isset($call['file']) ? $call['file'] : 'undefined',
+                    'line' => isset($call['line']) ? $call['line'] : 'undefined',
+                    'function' => isset($call['function']) ? $call['function'] : 'undefined',
+                ];
             }
 
             $this->queries[] = [
