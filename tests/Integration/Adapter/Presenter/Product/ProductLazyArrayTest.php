@@ -197,7 +197,7 @@ class ProductLazyArrayTest extends TestCase
         yield [$product, [
             'new' => [
                 'type' => 'new',
-                'label' => 'New product',
+                'label' => 'New',
             ],
         ]];
 
