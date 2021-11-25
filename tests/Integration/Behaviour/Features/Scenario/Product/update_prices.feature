@@ -16,8 +16,8 @@ Feature: Update product price fields from Back Office (BO).
       | on_sale            | false |
       | wholesale_price    | 0     |
       | unit_price         | 0     |
-      | unity              |       |
       | unit_price_ratio   | 0     |
+      | unity              |       |
 
   Scenario: I update product prices
     And tax rules group named "US-AL Rate (4%)" exists
@@ -40,10 +40,9 @@ Feature: Update product price fields from Back Office (BO).
       | tax rules group    | US-AL Rate (4%) |
       | on_sale            | true            |
       | wholesale_price    | 70              |
-#      #todo: rounding issue. #19620
-#      #| unit_price         | 900         |
-      | unity              | bag of ten      |
+      | unit_price         | 900             |
       | unit_price_ratio   | 0.112211        |
+      | unity              | bag of ten      |
 
   Scenario: I partially update product prices, providing only those values which I want to update
     Given I update product "product1" prices with following information:
@@ -61,10 +60,9 @@ Feature: Update product price fields from Back Office (BO).
       | tax rules group    | US-AL Rate (4%) |
       | on_sale            | true            |
       | wholesale_price    | 70              |
-#      #todo: rounding issue. #19620
-#      #| unit_price         | 900         |
-      | unity              | bag of ten      |
+      | unit_price         | 900             |
       | unit_price_ratio   | 0.112211        |
+      | unity              | bag of ten      |
     When I update product "product1" prices with following information:
       | price | 200 |
     Then product product1 should have following prices information:
@@ -74,10 +72,9 @@ Feature: Update product price fields from Back Office (BO).
       | tax rules group    | US-AL Rate (4%) |
       | on_sale            | true            |
       | wholesale_price    | 70              |
-#        #todo: rounding issue. #19620
-#        #| unit_price         | 900         |
-      | unity              | bag of ten      |
+      | unit_price         | 900             |
       | unit_price_ratio   | 0.222222        |
+      | unity              | bag of ten      |
     When I update product "product1" prices with following information:
       | ecotax  | 5.5   |
       | on_sale | false |
@@ -88,8 +85,7 @@ Feature: Update product price fields from Back Office (BO).
       | tax rules group    | US-AL Rate (4%) |
       | on_sale            | false           |
       | wholesale_price    | 70              |
-#        #todo: rounding issue. #19620
-#        #| unit_price         | 900         |
+      | unit_price         | 900             |
       | unity              | bag of ten      |
       | unit_price_ratio   | 0.222222        |
 
@@ -110,8 +106,8 @@ Feature: Update product price fields from Back Office (BO).
       | on_sale            | true            |
       | wholesale_price    | 10              |
       | unit_price         | 500             |
-      | unity              | bag of ten      |
       | unit_price_ratio   | 0.1             |
+      | unity              | bag of ten      |
     When I update product "product1" prices with following information:
       | price | -20 |
     Then I should get error that product "price" is invalid
@@ -132,8 +128,8 @@ Feature: Update product price fields from Back Office (BO).
       | on_sale            | true            |
       | wholesale_price    | 10              |
       | unit_price         | 500             |
-      | unity              | bag of ten      |
       | unit_price_ratio   | 0.1             |
+      | unity              | bag of ten      |
 
   Scenario: I update product unit price when product price is 0
     When I update product "product1" prices with following information:
@@ -149,8 +145,8 @@ Feature: Update product price fields from Back Office (BO).
       | on_sale            | false |
       | wholesale_price    | 0     |
       | unit_price         | 0     |
-      | unity              |       |
       | unit_price_ratio   | 0     |
+      | unity              |       |
 
   Scenario: I update product unit price along with product price
     When I update product "product1" prices with following information:
