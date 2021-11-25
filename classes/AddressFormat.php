@@ -323,7 +323,11 @@ class AddressFormatCore extends ObjectModel
                         }
                     }
 
-                    if ($formattedValue = preg_replace('/^' . $key . '$/', $formattedValueList[$key], $replacedValue, -1, $count)) {
+                    if (empty($formattedValueList[$key])) {
+                        return;
+                    }
+                    $formattedValue = preg_replace('/^' . $key . '$/', $formattedValueList[$key], $replacedValue, -1, $count);
+                    if ($formattedValue) {
                         if ($count) {
                             // Allow to check multiple key in the same pattern,
                             if (empty($mainFormattedKey)) {

@@ -157,7 +157,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {
         $themeName = '';
-        if (preg_match('#mails/themes/([^/]+)/#', $mailLayout->getHtmlPath(), $matches)) {
+        $htmlPath = $mailLayout->getHtmlPath();
+        if ($htmlPath !== null && preg_match('#mails/themes/([^/]+)/#', $htmlPath, $matches)) {
             $themeName = $matches[1];
         }
         $templateTransformations = new TransformationCollection();

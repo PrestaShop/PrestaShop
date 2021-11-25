@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Position\UpdateHandler;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ConnectionException;
-use Doctrine\DBAL\Statement;
+use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinitionInterface;
 
@@ -110,8 +110,9 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                         ->setParameter('parentId', $parentId);
                 }
 
-                $statement = $qb->execute();
-                if ($statement instanceof Statement && $statement->errorCode()) {
+                try {
+                    $qb->execute();
+                } catch (Exception $e) {
                     throw new PositionUpdateException('Could not update #%i', 'Admin.Catalog.Notification', [$rowId]);
                 }
                 ++$positionIndex;

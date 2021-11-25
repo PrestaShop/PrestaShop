@@ -132,6 +132,10 @@ class SearchCore
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
+        if (null === $string) {
+            return [];
+        }
+
         $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
         $words = explode(' ', $sanitizedString);
         if (strpos($string, '-') !== false) {
@@ -156,8 +160,7 @@ class SearchCore
 
     public static function sanitize($string, $id_lang, $indexation = false, $iso_code = false, $keepHyphens = false)
     {
-        $string = trim($string);
-        if (empty($string)) {
+        if (null === $string || empty($string = trim($string))) {
             return '';
         }
 

@@ -751,11 +751,11 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return int Validity is ok or not
+     * @return bool Validity is ok or not
      */
     public static function isOrderWay($way)
     {
-        return $way === 'ASC' | $way === 'DESC' | $way === 'asc' | $way === 'desc';
+        return !empty($way) && in_array(strtoupper($way), ['ASC', 'DESC']);
     }
 
     /**
@@ -768,7 +768,7 @@ class ValidateCore
      */
     public static function isOrderBy($order)
     {
-        return preg_match(static::ORDER_BY_REGEXP, $order);
+        return !empty($order) && preg_match(static::ORDER_BY_REGEXP, $order);
     }
 
     /**

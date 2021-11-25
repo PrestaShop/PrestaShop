@@ -1643,7 +1643,7 @@ class ToolsCore
 
     public static function strtolower($str)
     {
-        if (is_array($str)) {
+        if (null === $str || is_array($str)) {
             return false;
         }
 
@@ -1652,7 +1652,7 @@ class ToolsCore
 
     public static function strlen($str, $encoding = 'UTF-8')
     {
-        if (is_array($str)) {
+        if (null === $str || is_array($str)) {
             return false;
         }
 
@@ -3239,12 +3239,16 @@ exit;
     /**
      * Convert \n and \r\n and \r to <br />.
      *
-     * @param string $str String to transform
+     * @param string|null $str String to transform
      *
-     * @return string New string
+     * @return string|null New string
      */
     public static function nl2br($str)
     {
+        if (empty($str)) {
+            return $str;
+        }
+
         return str_replace(["\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
     }
 
@@ -3493,7 +3497,7 @@ exit;
         if (count($array) < 2) {
             return;
         }
-        $halfway = count($array) / 2;
+        $halfway = (int) (count($array) / 2);
         $array1 = array_slice($array, 0, $halfway, true);
         $array2 = array_slice($array, $halfway, null, true);
 

@@ -38,7 +38,7 @@ class OrderControllerCore extends FrontController
     public $php_self = 'order';
     /** @var string */
     public $page_name = 'checkout';
-    public $checkoutWarning = false;
+    public $checkoutWarning = [];
 
     /**
      * @var CheckoutProcess
@@ -188,7 +188,7 @@ class OrderControllerCore extends FrontController
         $rawData = Db::getInstance()->getValue(
             'SELECT checkout_session_data FROM ' . _DB_PREFIX_ . 'cart WHERE id_cart = ' . (int) $cart->id
         );
-        $data = json_decode($rawData, true);
+        $data = json_decode($rawData ?? '', true);
         if (!is_array($data)) {
             $data = [];
         }

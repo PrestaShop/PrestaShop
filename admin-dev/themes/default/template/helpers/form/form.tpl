@@ -69,7 +69,7 @@
 						{block name="input_row"}
 						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if $input.name == 'dni'} id="dni_required"{if !$dni_required} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|default|escape:'html':'UTF-8'}" />
 						{else}
 							{block name="label"}
 								{if isset($input.label)}
@@ -218,7 +218,7 @@
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|default|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|default|escape:'html':'UTF-8'}{/if}"
 											class="{if isset($input.class)}{$input.class}{/if}{if $input.type == 'tags'} tagify{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}
@@ -480,7 +480,7 @@
 												<span class="text-count-down">{$input.maxchar|intval}</span>
 											</span>
 										{/if}
-										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
+										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|default|escape:'html':'UTF-8'}</textarea>
 										{if isset($input.maxchar) && $input.maxchar}
 											<script type="text/javascript">
 											$(document).ready(function(){

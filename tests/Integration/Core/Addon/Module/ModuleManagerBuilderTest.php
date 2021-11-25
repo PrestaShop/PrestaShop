@@ -151,8 +151,13 @@ class ModuleManagerBuilderTest extends TestCase
             $this->assertTrue((bool) $this->moduleManager->uninstall($name));
         }
 
-        $this->assertFileNotExists($actual_override_cart);
-        $this->assertFileNotExists($actual_override_admin_product);
+        if (method_exists($this, 'assertFileDoesNotExist')) {
+            $this->assertFileDoesNotExist($actual_override_cart);
+            $this->assertFileDoesNotExist($actual_override_admin_product);
+        } else {
+            $this->assertFileNotExists($actual_override_cart);
+            $this->assertFileNotExists($actual_override_admin_product);
+        }
     }
 
     /**

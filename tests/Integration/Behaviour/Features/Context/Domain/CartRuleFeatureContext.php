@@ -285,7 +285,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleProperty(CartRule $cartRule, string $property, $value)
     {
-        $propertyToCheck = $cartRule->{$property};
+        $propertyToCheck = (string) $cartRule->{$property};
 
         if (is_bool($value)) {
             $propertyToCheck = (bool) $propertyToCheck;
