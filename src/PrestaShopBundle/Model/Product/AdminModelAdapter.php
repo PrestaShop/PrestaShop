@@ -554,9 +554,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
                 : $this->taxRuleDataProvider->getIdTaxRulesGroupMostUsed(),
             'on_sale' => (bool) $product->on_sale,
             'wholesale_price' => $product->wholesale_price,
-            'unit_price' => $product->unit_price_ratio != 0
-                ? $product->price / $product->unit_price_ratio
-                : 0,
+            'unit_price' => $product->unit_price,
             'unity' => $product->unity,
             'specific_price' => [ // extra form to be saved separately. Here this is the default form values.
                 'sp_from_quantity' => 1,

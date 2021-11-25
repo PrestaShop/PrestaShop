@@ -407,7 +407,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
-                'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
+                'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
                 'product_manufacturer' => $productManufacturer,
                 'manufacturer_image_url' => $manufacturerImageUrl,
                 'product_brand_url' => $productBrandUrl,
@@ -1130,9 +1130,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
-        if ($product_full['unit_price_ratio'] > 0) {
-            $unitPrice = ($productSettings->include_taxes) ? $product_full['price'] : $product_full['price_tax_exc'];
-            $product_full['unit_price'] = $unitPrice / $product_full['unit_price_ratio'];
+        $product_full['unit_price_ratio'] = $product_full['unit_price'] != 0 ? ($product_full['price_tax_exc'] / $product_full['unit_price']) : 0;
+        // Recompute unit_price so that it includes taxes
+        if ($product_full['unit_price'] > 0 && $productSettings->include_taxes) {
+            $product_full['unit_price'] = $product_full['price_tax_incl'] / $product_full['unit_price_ratio'];
         }
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
