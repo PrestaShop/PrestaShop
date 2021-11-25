@@ -440,14 +440,22 @@ class AddressCore extends ObjectModel
      *
      * @return bool The address exists
      */
-    public static function addressExists($id_address)
+    public static function addressExists($id_address, $refreshCache = false): bool
     {
-        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address`
-            FROM ' . _DB_PREFIX_ . 'address a
-            WHERE a.`id_address` = ' . (int) $id_address,
-            false
-        );
+        if ($id_address == 0) {
+            return false;
+        }
+        $cacheKey = 'address_exists_' . $id_address;
+        if ($refreshCache || !Cache::isStored($cacheKey)) {
+            $addressExists = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                'SELECT `id_address`
+                FROM ' . _DB_PREFIX_ . 'address a
+                WHERE a.`id_address` = ' . (int)$id_address,
+                false
+            );
+            Cache::store($cacheKey, $addressExists);
+        }
+        return Cache::retrieve($cacheKey);
     }
 
     /**
