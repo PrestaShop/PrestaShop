@@ -14,7 +14,7 @@ parameters:
     - download
     - img
     # - install-dev
-    # - js
+    - js
     - localization
     - mails
     # - modules
