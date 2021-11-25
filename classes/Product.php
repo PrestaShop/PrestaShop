@@ -514,7 +514,7 @@ class ProductCore extends ObjectModel
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true],
             'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
-            'unit_price_ratio' => ['type' => self::TYPE_FLOAT, 'shop' => true],
+            'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'additional_shipping_cost' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'customizable' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
             'text_fields' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
@@ -716,13 +716,6 @@ class ProductCore extends ObjectModel
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
-        $unitPriceRatio = new DecimalNumber((string) ($this->unit_price_ratio ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
-
-        if ($unitPriceRatio->isGreaterThanZero()) {
-            $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
-        }
-
         if ($full && $this->id) {
             if (!$context) {
                 $context = Context::getContext();
@@ -745,10 +738,15 @@ class ProductCore extends ObjectModel
             $this->base_price = $this->price;
 
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
-            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
             $this->tags = Tag::getProductTags((int) $this->id);
 
             $this->loadStockData();
+        }
+
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
+        if ($unitPrice->isGreaterThanZero()) {
+            $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
         }
 
         if ($this->id_category_default) {
@@ -764,9 +762,9 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-        if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price']))) {
-            if ($this->unit_price !== null) {
-                $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+        if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price_ratio']) && empty($this->update_fields['unit_price']))) {
+            if ($this->unit_price_ratio !== null) {
+                $fields['unit_price'] = (float) $this->unit_price_ratio > 0 ? $this->price / $this->unit_price_ratio : 0;
             }
         }
         $fields['unity'] = pSQL($this->unity);
@@ -5169,7 +5167,7 @@ class ProductCore extends ObjectModel
     public static function duplicatePrices($id_product_old, $id_product_new)
     {
         $query = new DbQuery();
-        $query->select('price, unit_price_ratio, id_shop');
+        $query->select('price, unit_price, id_shop');
         $query->from('product_shop');
         $query->where('`id_product` = ' . (int) $id_product_old);
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
@@ -5177,7 +5175,7 @@ class ProductCore extends ObjectModel
             foreach ($results as $result) {
                 if (!Db::getInstance()->update(
                     'product_shop',
-                    ['price' => pSQL($result['price']), 'unit_price_ratio' => pSQL($result['unit_price_ratio'])],
+                    ['price' => pSQL($result['price']), 'unit_price' => pSQL($result['unit_price'])],
                     'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
                 )) {
                     return false;
@@ -5814,16 +5812,18 @@ class ProductCore extends ObjectModel
 
         $combination = new Combination($id_product_attribute);
 
-        if (0 != $combination->unit_price_impact && 0 != $row['unit_price_ratio']) {
-            $unitPrice = ($row['price_tax_exc'] / $row['unit_price_ratio']) + $combination->unit_price_impact;
-            $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
+        $unitPrice = 0.0;
+        if (isset($row['unit_price'])) {
+            $unitPrice = $row['unit_price'];
+        } elseif (isset($row['unit_price_ratio']) && 0 != $row['unit_price_ratio']) {
+            $unitPrice = ($row['price_tax_exc'] / $row['unit_price_ratio']);
+        }
+        if (0 != $combination->unit_price_impact && 0 != $unitPrice) {
+            $unitPrice = $unitPrice + $combination->unit_price_impact;
         }
 
-        if (isset($row['unit_price_ratio'])) {
-            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
-        } else {
-            $row['unit_price'] = 0.0;
-        }
+        $row['unit_price'] = $unitPrice;
+        $row['unit_price_ratio'] = $unitPrice != 0 ? ($row['price_tax_exc'] / $unitPrice) : 0.0;
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
             'id_lang' => $id_lang,
@@ -7641,8 +7641,8 @@ class ProductCore extends ObjectModel
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
         }
 
-        if (null === $this->unit_price) {
-            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
+        if (null === $this->unit_price_ratio) {
+            $this->unit_price_ratio = ($this->unit_price != 0 ? $this->price / $this->unit_price : 0);
         }
 
         $success = parent::update($null_values);
