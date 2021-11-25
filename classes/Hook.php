@@ -61,6 +61,11 @@ class HookCore extends ObjectModel
     public static $native_module;
 
     /**
+     * @var array|null Names of active hooks
+     */
+    protected static $active_hooks = null;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -1262,11 +1267,14 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $sql = new DbQuery();
-        $sql->select('active');
-        $sql->from('hook', 'h');
-        $sql->where('h.name = "' . pSQL($hook_name) . '"');
+        if (is_null(self::$active_hooks)) {
+            $sql = new DbQuery();
+            $sql->select('name');
+            $sql->from('hook', 'h');
+            $sql->where('h.active = 1');
+            self::$active_hooks = array_column(Db::getInstance()->executeS($sql), 'name');
+        }
 
-        return (bool) Db::getInstance()->getValue($sql);
+        return in_array($hook_name, self::$active_hooks);
     }
 }
