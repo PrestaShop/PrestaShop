@@ -598,17 +598,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     false /*'day'*/
                 );
 
-                // $data = array();
-                // $from = strtotime(date('Y-m-d 00:00:00', strtotime('-31 day')));
-                // $to = strtotime(date('Y-m-d 23:59:59', strtotime('-1 day')));
-                // for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
-                // if (isset($visitors[$date]) && $visitors[$date])
-                // $data[$date] = round(100 * ((isset($orders[$date]) && $orders[$date]) ? $orders[$date] : 0) / $visitors[$date], 2);
-                // else
-                // $data[$date] = 0;
-
-                $visits_sum = $visitors; //array_sum($visitors);
-                $orders_sum = $orders; //array_sum($orders);
+                $visits_sum = $visitors;
+                $orders_sum = $orders;
                 if ($visits_sum) {
                     $value = round(100 * $orders_sum / $visits_sum, 2);
                 } elseif ($orders_sum) {
@@ -618,7 +609,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 }
                 $value .= '%';
 
-                // ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', json_encode($data));
                 ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
                 ConfigurationKPI::updateValue(
                     'CONVERSION_RATE_EXPIRE',
@@ -989,11 +979,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 $value = false;
         }
         if ($value !== false) {
-            $array = ['value' => $value, 'tooltip' => $tooltip];
-            if (isset($data)) {
-                $array['data'] = $data;
-            }
-            die(json_encode($array));
+            die(json_encode([
+                'value' => $value,
+                'tooltip' => $tooltip,
+            ]));
         }
         die(json_encode(['has_errors' => true]));
     }

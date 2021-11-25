@@ -513,10 +513,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function initContent()
     {
         if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_ . $_GET['filename']) && Validate::isFileName($_GET['filename'])) {
-            AdminCustomerThreadsController::openUploadedFile();
+            $this->openUploadedFile();
         }
 
-        return parent::initContent();
+        parent::initContent();
     }
 
     protected function openUploadedFile()

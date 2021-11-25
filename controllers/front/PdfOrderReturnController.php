@@ -29,6 +29,11 @@ class PdfOrderReturnControllerCore extends FrontController
     protected $display_header = false;
     protected $display_footer = false;
 
+    /**
+     * @var OrderReturn
+     */
+    public $orderReturn;
+
     public function postProcess()
     {
         $from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn' . (int) Tab::getIdFromClassName('AdminReturn') . (int) Tools::getValue('id_employee')));

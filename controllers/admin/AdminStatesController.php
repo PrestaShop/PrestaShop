@@ -35,7 +35,6 @@ class AdminStatesControllerCore extends AdminController
         $this->table = 'state';
         $this->className = 'State';
         $this->lang = false;
-        $this->requiredDatabase = true;
 
         parent::__construct();
 
@@ -58,12 +57,10 @@ class AdminStatesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $countries_array = $zones_array = [];
-        $this->zones = Zone::getZones();
-        $this->countries = Country::getCountries($this->context->language->id, false, true, false);
-        foreach ($this->zones as $zone) {
+        foreach (Zone::getZones() as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
         }
-        foreach ($this->countries as $country) {
+        foreach (Country::getCountries($this->context->language->id, false, true, false) as $country) {
             $countries_array[$country['id_country']] = $country['name'];
         }
 

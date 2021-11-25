@@ -146,7 +146,7 @@ class OrderControllerCore extends FrontController
     protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $addressValidator = new AddressValidator($this->context);
+        $addressValidator = new AddressValidator();
         $customer = $this->context->customer;
         $cart = $this->context->cart;
 
