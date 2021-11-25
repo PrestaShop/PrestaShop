@@ -612,7 +612,6 @@ class ConfigurationCore extends ObjectModel
 
     /**
      * @param mixed $key
-     * @param int|null $configurationId
      * @param int|null $idShopGroup
      * @param int|null $idShop
      */
@@ -626,10 +625,10 @@ class ConfigurationCore extends ObjectModel
     {
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $configurationId);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $configurationId);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
