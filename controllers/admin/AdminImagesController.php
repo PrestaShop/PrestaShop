@@ -85,8 +85,8 @@ class AdminImagesControllerCore extends AdminController
                 'icon' => 'icon-picture',
                 'top' => '',
                 'bottom' => '',
-                'description' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.', [], 'Admin.Design.Help') . '
-					<br /><br />' . $this->trans('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".', [], 'Admin.Design.Help'),
+                'description' => $this->trans('JPEG images have a small file size and standard quality. PNG images have a larger file size, a higher quality and support transparency. Note that in all cases the image files will have the .jpg extension.', [], 'Admin.Design.Help') .
+                    '<br /><br />' . $this->trans('WARNING: This feature may not be compatible with your theme, or with some of your modules. In particular, PNG mode is not compatible with the Watermark module. If you encounter any issues, turn it off by selecting "Use JPEG".', [], 'Admin.Design.Help'),
                 'fields' => [
                     'PS_IMAGE_QUALITY' => [
                         'title' => $this->trans('Image format', [], 'Admin.Design.Feature'),
@@ -102,8 +102,8 @@ class AdminImagesControllerCore extends AdminController
                         ],
                         'hint' => $this->trans('Use this format to save images internally.', [], 'Admin.Design.Help'),
                         'desc' => implode('<br>', [
-                            $this->trans('WebP only: [check browser compatibility](https://caniuse.com/webp).', [], 'Admin.Design.Help'),
-                            $this->trans('WebP with fallback: must be supported by template.', [], 'Admin.Design.Help'),
+                            $this->trans('WebP for all images: check browser compatibility (https://caniuse.com/webp)', [], 'Admin.Design.Help'),
+                            $this->trans('WebP with fallback: make sure your template is compatible.', [], 'Admin.Design.Help'),
                         ]),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
@@ -201,11 +201,11 @@ class AdminImagesControllerCore extends AdminController
                 'fields' => [
                     'PS_IMAGEOPT_NO_ENLARGE' => [
                         'type' => 'bool',
-                        'title' => $this->trans('Never create images larger than the base image', [], 'Admin.Design.Feature'),
+                        'title' => $this->trans('Do not upscale images', [], 'Admin.Design.Feature'),
                         'required' => false,
                         'is_bool' => true,
-                        'hint' => $this->trans('Never add a white or transparent border around an image.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Optimizes bandwidth and disk usage, adds flexibility to template, resizing is handled by the browser. May not be compatible with all templates.', [], 'Admin.Design.Help'),
+                        'hint' => $this->trans('If the thumbnail is larger than the base image, keep the original size and do not upscale it.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Resizing is handled by the browser. May not be compatible with all templates.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_IMAGEOPT_SYMLINK' => [
@@ -214,25 +214,25 @@ class AdminImagesControllerCore extends AdminController
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Useful if previous option is selected.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Optimizes disk usage. Must be supported by server, but probably is.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('This feature must be supported by your server.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_IMAGEOPT_PNGQUANT' => [
                         'type' => 'bool',
-                        'title' => $this->trans('Optimize pngs with pngquant.', [], 'Admin.Design.Feature'),
+                        'title' => $this->trans('Use pngquant for PNGs', [], 'Admin.Design.Feature'),
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Lossy compression using adaptive dithering and optimized palettes. If possible use together with optipng.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package pngquant must be available in the path for the apache user.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Package pngquant must be available in the path for the apache user.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                     'PS_IMAGEOPT_OPTIPNG' => [
                         'type' => 'bool',
-                        'title' => $this->trans('Optimize pngs with optipng.', [], 'Admin.Design.Feature'),
+                        'title' => $this->trans('Use optipng for PNGs', [], 'Admin.Design.Feature'),
                         'required' => false,
                         'is_bool' => true,
                         'hint' => $this->trans('Lossless compression by optimized reencoding. If possible use together with pngquant.', [], 'Admin.Design.Help'),
-                        'desc' => $this->trans('Efficient bandwidth and disk usage optimization. Package optipng must be available in the path for the apache user.', [], 'Admin.Design.Help'),
+                        'desc' => $this->trans('Package optipng must be available in the path for the apache user.', [], 'Admin.Design.Help'),
                         'visibility' => Shop::CONTEXT_ALL,
                     ],
                 ],
