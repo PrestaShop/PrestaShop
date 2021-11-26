@@ -796,7 +796,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     $_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 }
                 $_POST['id_parent'] = 0;
-                $this->processSave($this->token);
+                $this->processSave();
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
@@ -930,7 +930,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             if (isset($pos[2]) && (int) $pos[2] === $id_attribute_group) {
                 if ($group_attribute = new AttributeGroup((int) $pos[2])) {
-                    if (isset($position) && $group_attribute->updatePosition($way, $position)) {
+                    if ($group_attribute->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for attribute group ' . (int) $pos[2] . '\r\n';
                     } else {
                         echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute_group . ' attribute group to position ' . (int) $position . ' "}';
@@ -958,7 +958,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
                 if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new ProductAttribute((int) $pos[2])) {
-                        if (isset($position) && $attribute->updatePosition($way, $position)) {
+                        if ($attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute . ' attribute to position ' . (int) $position . ' "}';

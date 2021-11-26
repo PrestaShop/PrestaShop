@@ -222,6 +222,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
         $view = [];
         if ($results = Db::getInstance()->executeS($obj->sql)) {
+            $tab_key = [];
             foreach (array_keys($results[0]) as $key) {
                 $tab_key[] = $key;
             }
@@ -345,6 +346,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
             if ($sql) {
                 $results = Db::getInstance()->executeS($sql[0]['sql']);
+                $tab_key = [];
                 foreach (array_keys($results[0]) as $key) {
                     $tab_key[] = $key;
                     fwrite($csv, $key . ';');

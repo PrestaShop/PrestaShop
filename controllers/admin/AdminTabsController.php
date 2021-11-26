@@ -282,9 +282,10 @@ class AdminTabsControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
             }
         } elseif (Tools::getValue('position') && !Tools::isSubmit('submitAdd' . $this->table)) {
+            $object = new Tab((int) Tools::getValue($this->identifier));
             if ($this->access('edit') !== '1') {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
-            } elseif (!Validate::isLoadedObject($object = new Tab((int) Tools::getValue($this->identifier)))) {
+            } elseif (!Validate::isLoadedObject($object)) {
                 $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
             }

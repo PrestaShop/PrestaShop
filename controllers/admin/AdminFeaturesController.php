@@ -637,7 +637,7 @@ class AdminFeaturesControllerCore extends AdminController
 
                 if (isset($pos[2]) && (int) $pos[2] === $id_feature) {
                     if ($feature = new Feature((int) $pos[2])) {
-                        if (isset($position) && $feature->updatePosition($way, $position, $id_feature)) {
+                        if ($feature->updatePosition($way, $position, $id_feature)) {
                             echo 'ok position ' . (int) $position . ' for feature ' . (int) $pos[1] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update feature ' . (int) $id_feature . ' to position ' . (int) $position . ' "}';
