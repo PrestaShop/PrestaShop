@@ -37,7 +37,7 @@ abstract class ObjectModel extends ObjectModelCore
         }
 
         $class_list = ['ObjectModel', 'ObjectModelCore', $classname, $classname . 'Core'];
-        $backtrace = debug_backtrace();
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         foreach ($backtrace as $trace_id => $row) {
             if (!isset($backtrace[$trace_id]['class']) || !in_array($backtrace[$trace_id]['class'], $class_list)) {
                 break;
@@ -49,8 +49,10 @@ abstract class ObjectModel extends ObjectModelCore
         --$trace_id;
 
         self::$debug_list[$classname][] = [
-            'file' => @$backtrace[$trace_id]['file'],
-            'line' => @$backtrace[$trace_id]['line'],
+            'file' => $backtrace[$trace_id]['file'] ?? '',
+            'line' => $backtrace[$trace_id]['line'] ?? 0,
+            'function' => $backtrace[$trace_id]['function'] ?? 0,
+            'id' => $id,
         ];
     }
 }
