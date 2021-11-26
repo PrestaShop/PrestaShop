@@ -61,6 +61,11 @@ class SearchControllerCore extends ProductListingFrontController
         );
     }
 
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('search', null, null, ['s' => $this->search_string]));
+    }
+
     /**
      * Ensure that no search results page is indexed by search engines.
      */

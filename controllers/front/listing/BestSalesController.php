@@ -31,6 +31,11 @@ class BestSalesControllerCore extends ProductListingFrontController
 {
     public $php_self = 'best-sales';
 
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('best-sales'));
+    }
+
     /**
      * Initializes controller.
      *

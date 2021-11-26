@@ -31,6 +31,11 @@ class PricesDropControllerCore extends ProductListingFrontController
 {
     public $php_self = 'prices-drop';
 
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('prices-drop'));
+    }
+
     /**
      * {@inheritdoc}
      */

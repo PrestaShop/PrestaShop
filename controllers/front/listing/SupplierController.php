@@ -44,6 +44,15 @@ class SupplierControllerCore extends ProductListingFrontController
         }
     }
 
+    public function getCanonicalURL(): string
+    {
+        if (Validate::isLoadedObject($this->supplier)) {
+            return $this->buildPaginatedUrl($this->context->link->getSupplierLink($this->supplier));
+        }
+
+        return $this->context->link->getPageLink('supplier');
+    }
+
     /**
      * Initialize supplier controller.
      *

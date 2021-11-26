@@ -43,6 +43,15 @@ class ManufacturerControllerCore extends ProductListingFrontController
         }
     }
 
+    public function getCanonicalURL(): string
+    {
+        if (Validate::isLoadedObject($this->manufacturer)) {
+            return $this->buildPaginatedUrl($this->context->link->getManufacturerLink($this->manufacturer));
+        }
+
+        return $this->context->link->getPageLink('manufacturer');
+    }
+
     /**
      * Initialize manufaturer controller.
      *
