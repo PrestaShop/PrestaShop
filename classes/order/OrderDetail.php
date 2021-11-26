@@ -754,9 +754,13 @@ class OrderDetailCore extends ObjectModel
         $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
         $this->id_warehouse = $id_warehouse;
 
-        $product_quantity = (int) Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
-        $this->product_quantity_in_stock = ($product_quantity - (int) $product['cart_quantity'] < 0) ?
-            $product_quantity : (int) $product['cart_quantity'];
+        // We get the real quantity of the product in stock and save how much of the ordered quantity was in stock
+        $product_quantity_in_stock = (int) Product::getQuantity($this->product_id, $this->product_attribute_id);
+
+        // Ordered 3 pcs, in stock 10 pcs, result is 3
+        // Ordered 3 pcs, in stock 1 pcs, result is 1
+        $this->product_quantity_in_stock = ($product_quantity_in_stock - (int) $product['cart_quantity'] < 0) ?
+            $product_quantity_in_stock : (int) $product['cart_quantity'];
 
         $this->setVirtualProductInformation($product);
         $this->checkProductStock($product, $id_order_state);
