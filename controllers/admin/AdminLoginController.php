@@ -313,7 +313,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        if (!count($this->errors)) {
+        if (!count($this->errors) && isset($employee)) {
             if (!$employee->hasRecentResetPasswordToken()) {
                 $employee->stampResetPasswordToken();
                 $employee->update();
@@ -419,7 +419,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        if (!count($this->errors)) {
+        if (!count($this->errors) && isset($employee)) {
             $employee->passwd = $this->get('hashing')->hash($reset_password, _COOKIE_KEY_);
             $employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 

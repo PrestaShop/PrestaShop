@@ -278,10 +278,9 @@ class AdminModulesPositionsControllerCore extends AdminController
         // Init toolbar
         $this->initToolbarTitle();
 
-        $admin_dir = basename(_PS_ADMIN_DIR_);
         $modules = Module::getModulesInstalled();
 
-        $assoc_modules_id = [];
+        $assoc_modules_id = $module_instances = [];
         foreach ($modules as $module) {
             if ($tmp_instance = Module::getInstanceById((int) $module['id_module'])) {
                 // We want to be able to sort modules by display name
@@ -414,7 +413,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'hooks' => $hooks,
             'exception_list' => $this->displayModuleExceptionList(array_shift($excepts_list), 0),
             'exception_list_diff' => $exception_list_diff,
-            'except_diff' => isset($excepts_diff) ? $excepts_diff : null,
+            'except_diff' => $excepts_diff,
             'display_key' => $this->display_key,
             'modules' => $modules,
             'show_toolbar' => true,

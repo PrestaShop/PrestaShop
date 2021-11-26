@@ -396,7 +396,7 @@ class AdminSearchConfControllerCore extends AdminController
     public function renderOptions()
     {
         if ($this->fields_options && is_array($this->fields_options)) {
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = ['save' => [

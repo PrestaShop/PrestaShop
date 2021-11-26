@@ -394,9 +394,14 @@ class AdminTranslationsControllerCore extends AdminController
 
     public function submitCopyLang()
     {
-        if (!($from_lang = Tools::getValue('fromLang')) || !($to_lang = Tools::getValue('toLang'))) {
+        $from_lang = Tools::getValue('fromLang');
+        $to_lang = Tools::getValue('toLang');
+        $from_theme = Tools::getValue('fromTheme');
+        $to_theme = Tools::getValue('toTheme');
+
+        if (!$from_lang || !$to_lang) {
             $this->errors[] = $this->trans('You must select two languages in order to copy data from one to another.', [], 'Admin.International.Notification');
-        } elseif (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme'))) {
+        } elseif (!$from_theme || !$to_theme) {
             $this->errors[] = $this->trans('You must select two themes in order to copy data from one to another.', [], 'Admin.International.Notification');
         } elseif (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang))) {
             $this->errors[] = $this->trans('An error occurred while copying data.', [], 'Admin.International.Notification');
@@ -1125,10 +1130,6 @@ class AdminTranslationsControllerCore extends AdminController
                     unset($directories['tpl'][_PS_THEME_SELECTED_DIR_ . 'pdf/']);
                 }
 
-                if (Tools::file_exists_cache(_PS_THEME_OVERRIDE_DIR_)) {
-                    $directories['tpl'] = array_merge($directories['tpl'], $this->listFiles(_PS_THEME_OVERRIDE_DIR_));
-                }
-
                 break;
 
             case 'back':
@@ -1279,6 +1280,8 @@ class AdminTranslationsControllerCore extends AdminController
                 }
 
                 break;
+            default:
+                $regex = [];
         }
 
         if (!is_array($regex)) {
@@ -1815,9 +1818,6 @@ class AdminTranslationsControllerCore extends AdminController
         foreach ($files_by_directory as $file_type => $root_directory) {
             foreach ($root_directory as $dir => $files) {
                 $prefix = '';
-                if ($dir == _PS_THEME_OVERRIDE_DIR_) {
-                    $prefix = 'override_';
-                }
 
                 foreach ($files as $file) {
                     if (preg_match('/^(.*).(tpl|php)$/', $file) && (Tools::file_exists_cache($file_path = $dir . $file))) {
@@ -1898,6 +1898,7 @@ class AdminTranslationsControllerCore extends AdminController
             '/->transchoice\(([\'\"])' . _PS_TRANS_PATTERN_ . '([\'\"])(,\s*?(.*))(,\s*?[\[|array\(](.*)[\]|\)])(,\s*?([\'\"])(.*)([\'\"]))?\)/Us',
         ];
 
+        $tabs_array = [];
         foreach ($files_per_directory['php-sf2'] as $dir => $files) {
             foreach ($files as $file) {
                 // Get content for this file
@@ -2121,7 +2122,7 @@ class AdminTranslationsControllerCore extends AdminController
                                     }
                                 }
                             }
-                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($key);
+                            $new_lang[$english_string]['use_sprintf'] = $this->checkIfKeyUseSprintf($key ?? '');
                         }
                     }
                     if (isset($tabs_array[$prefix_key])) {
@@ -2170,7 +2171,7 @@ class AdminTranslationsControllerCore extends AdminController
             throw new PrestaShopException($this->trans('The module directory must be writable.', [], 'Admin.International.Notification'));
         }
 
-        $modules = [];
+        $module_instances = [];
         // Get all module which are installed for to have a minimum of POST
         $modules = Module::getModulesInstalled();
         if ($withInstance) {
@@ -3060,9 +3061,11 @@ class AdminTranslationsControllerCore extends AdminController
                 } elseif (Tools::file_exists_cache($root_dir . $module . '/' . $lang . '.php')) {
                     $lang_file = $root_dir . $module . '/' . $lang . '.php';
                 }
-                @include $lang_file;
-                $this->getModuleTranslations();
-                $this->recursiveGetModuleFiles($root_dir . $module . '/', $array_files, $module, $lang_file, $is_default);
+                if (!empty($lang_file)) {
+                    @include $lang_file;
+                    $this->getModuleTranslations();
+                    $this->recursiveGetModuleFiles($root_dir . $module . '/', $array_files, $module, $lang_file, $is_default);
+                }
             }
         }
 

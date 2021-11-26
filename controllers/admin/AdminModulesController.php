@@ -200,6 +200,7 @@ class AdminModulesControllerCore extends AdminController
         if ($back) {
             $back .= '&tab_modules_open=1';
         }
+        $modules_list_unsort = [];
         if ($tab_modules_list) {
             $tab_modules_list = explode(',', $tab_modules_list);
             $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
@@ -258,11 +259,12 @@ class AdminModulesControllerCore extends AdminController
         $module = Tools::getValue('module_pref');
         $id_module_preference = (int) Db::getInstance()->getValue('SELECT `id_module_preference` FROM `' . _DB_PREFIX_ . 'module_preference` WHERE `id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'');
         if ($id_module_preference > 0) {
+            $update = [];
             if ($action == 'i') {
-                $update = ['interest' => ($value == '' ? null : (int) $value)];
+                $update['interest'] = ($value == '' ? null : (int) $value);
             }
             if ($action == 'f') {
-                $update = ['favorite' => ($value == '' ? null : (int) $value)];
+                $update['favorite'] = ($value == '' ? null : (int) $value);
             }
             Db::getInstance()->update('module_preference', $update, '`id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'', 0, true);
         } else {
@@ -360,7 +362,7 @@ class AdminModulesControllerCore extends AdminController
         $this->recursiveDeleteOnDisk($tmp_folder);
 
         if ($success && $redirect) {
-            Tools::redirectAdmin(self::$currentIndex . '&conf=8&anchor=' . ucfirst($folder) . '&token=' . $this->token);
+            Tools::redirectAdmin(self::$currentIndex . '&conf=8&anchor=' . ucfirst($folder ?? '') . '&token=' . $this->token);
         }
 
         return $success;
@@ -638,6 +640,8 @@ class AdminModulesControllerCore extends AdminController
     {
         $return = false;
         $installed_modules = [];
+        $module_upgraded = [];
+        $key = '';
 
         foreach ($this->map as $key => $method) {
             if (!Tools::getValue($key)) {
@@ -679,7 +683,6 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
 
-            $module_upgraded = [];
             $module_errors = [];
             if (isset($modules)) {
                 foreach ($modules as $name) {
@@ -882,7 +885,9 @@ class AdminModulesControllerCore extends AdminController
             if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
                 Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('module_name') . '&token=' . Tools::getValue('token') . '&module_name=' . Tools::getValue('module_name') . $params);
             }
-            Tools::redirectAdmin(self::$currentIndex . '&conf=' . $return . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : '') . $params);
+            if (isset($module)) {
+                Tools::redirectAdmin(self::$currentIndex . '&conf=' . $return . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : '') . $params);
+            }
         }
 
         if (Tools::getValue('update') || Tools::getValue('updateAll')) {
@@ -892,7 +897,7 @@ class AdminModulesControllerCore extends AdminController
 
             if ($key == 'updateAll') {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&allUpdated=1');
-            } elseif (isset($module_upgraded) && $module_upgraded != '') {
+            } elseif ($module_upgraded != '') {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $module_upgraded);
             } elseif (isset($modules_list_save)) {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $modules_list_save);
@@ -1314,6 +1319,10 @@ class AdminModulesControllerCore extends AdminController
             if ($module->name == Tools::getValue('module')) {
                 break;
             }
+        }
+
+        if (!isset($module)) {
+            return;
         }
 
         $url = $module->url;

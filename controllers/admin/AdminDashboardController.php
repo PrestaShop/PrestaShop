@@ -456,7 +456,8 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
         ];
 
-        if (Validate::isModuleName($module) && $module_obj = Module::getInstanceByName($module)) {
+        $module_obj = Module::getInstanceByName($module);
+        if (Validate::isModuleName($module) && $module_obj) {
             $return['errors'] = $module_obj->validateDashConfig($configs);
             if (count($return['errors'])) {
                 $return['has_errors'] = true;
