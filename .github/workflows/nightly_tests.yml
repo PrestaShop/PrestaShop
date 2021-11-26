@@ -1,0 +1,178 @@
+name: Nightly Test and report
+
+on:
+  workflow_run:
+    workflows: ['Nightly Build']
+    types:
+      - requested
+
+env:
+  NODE_VERSION: '14'
+  TESTS_DIR: './tests/UI'
+  API_NIGHTLY_IMPORT_HOOK: "https://api-nightly.prestashop.com/hook/reports/import"
+  GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
+  GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
+  NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}
+
+jobs:
+
+  # First job: Run tests in parallel
+  nightly-test:
+    name: Nightly tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 1.7.8.x
+        CAMPAIGN:
+          - 'sanity'
+          - 'regression'
+          - 'functional:FO'
+          - 'functional:BO:login'
+          - 'functional:BO:orders'
+          - 'functional:BO:catalog'
+          - 'functional:BO:customer'
+          - 'functional:BO:customer-service'
+          - 'functional:BO:modules'
+          - 'functional:BO:design'
+          - 'functional:BO:shipping'
+          - 'functional:BO:payment'
+          - 'functional:BO:international'
+          - 'functional:BO:shop-parameters'
+          - 'functional:BO:advanced-parameters'
+          - 'functional:BO:header'
+
+    env:
+      GH_BRANCH: ${{ matrix.branch }}
+      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'
+      REPORTS_DIR: '/reports_${{ matrix.branch }}'
+      PS_INSTALL_AUTO: 0
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      # Use docker to create shop
+      - name: Start shop with Docker
+        timeout-minutes: 15
+        run: |
+          docker-compose -f docker-compose.yml up --build -d --force-recreate
+          bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
+        env:
+          PS_LANGUAGE: 'en'
+
+      # Begin running tests
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ env.TESTS_DIR }}
+
+      - name: Run tests
+        run: npm run ${{ env.TEST_CAMPAIGN }}
+        continue-on-error: true
+        working-directory: ${{ env.TESTS_DIR }}
+        env:
+          URL_FO: 'http://localhost:8001/'
+          SMTP_SERVER: '172.17.0.1'
+          DB_USER: 'prestashop'
+          DB_PASSWD: 'prestashop'
+
+      # Rename and upload report as artifact
+      - name: Rename file reports
+        run: |
+          mkdir -p ${{ env.REPORTS_DIR }}
+          FILENAME=$( echo -e "${{ env.TEST_CAMPAIGN }}" | tr  ':' '-'  )"
+          mv ./mochawesome-report/mochawesome.json ${{ env.REPORTS_DIR }}/${FILENAME}.json
+        working-directory: ${{ env.TESTS_DIR }}
+
+      - uses: actions/upload-artifact@v2
+        name: Upload report
+        with:
+          name: reports_${{ env.GH_BRANCH }}
+          path: ${{ env.REPORTS_DIR }}
+
+  merge-upload-reports:
+    name: Combine all reports and upload them
+    needs:
+      - nightly-test
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 1.7.8.x
+
+    env:
+      GH_BRANCH: ${{ matrix.branch }}
+      REPORTS_DIR: '/reports_${{ matrix.branch }}'
+      COMBINED_REPORT_DIR: '/combined_reports'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      - uses: actions/download-artifact@v2
+        name: Download reports
+        with:
+          name: reports_${{ env.GH_BRANCH }}
+          path: ${{ env.REPORTS_DIR }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        working-directory: ${{ env.TESTS_DIR }}
+        run: npm install
+
+      - name: Combine reports
+        working-directory: ${{ env.TESTS_DIR }}
+        shell: bash
+        run: |
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
+          npx mochawesome-merge "${{ env.REPORTS_DIR }}/*.json" -o "${{ env.COMBINED_REPORT_DIR }}/${REPORT_NAME}.json"
+          I don't know if it's needed anymore
+          nodejs ./node_modules/mochawesome-report-generator/bin/cli.js"${{ env.COMBINED_REPORT_DIR }}/${REPORT_NAME}.json" -o "${{ env.COMBINED_REPORT_DIR }}" -f "${REPORT_NAME}.html"
+
+      - uses: google-github-actions/setup-gcloud@master
+        name: Setup Cloud Sdk
+        with:
+          service_account_key: ${{ env.GC_SERVICE_KEY }}
+          project_id: ${{ env.GC_PROJECT_ID }}
+
+      - name: Upload to Google Cloud Storage (GCS)
+        run: gsutil cp -r "${{ env.COMBINED_REPORT_DIR }}/**" gs://prestashop-core-nightly/reports
+
+  push-nightly-reports:
+    name: Push reports to nightly.prestashop.com
+    needs:
+      - merge-upload-reports
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 1.7.8.x
+
+    steps:
+      - name: Push reports
+        run: |
+          REPORT_NAME="$(date +%Y-%m-%d)-${{ env.GH_BRANCH }}"
+          curl -v "${{ env.API_NIGHTLY_IMPORT_HOOK }}?token=${{ env.NIGHTLY_TOKEN }}&filename=${REPORT_NAME}.json"
