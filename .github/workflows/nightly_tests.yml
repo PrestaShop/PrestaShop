@@ -5,6 +5,7 @@ on:
     workflows: ['Nightly Build']
     types:
       - requested
+  push:
 
 env:
   NODE_VERSION: '14'
@@ -24,8 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 1.7.8.x
+          - "nightly/workflows"
         CAMPAIGN:
           - 'sanity'
           - 'regression'
@@ -64,6 +64,8 @@ jobs:
           bash -c 'while [[ "$(curl -L -s -o /dev/null -w %{http_code} http://localhost:8001/en/)" != "200" ]]; do sleep 5; done'
         env:
           PS_LANGUAGE: 'en'
+          USER_ID: '1001'
+          GROUP_ID: '1001'
 
       # Begin running tests
       - name: Setup Node
@@ -110,8 +112,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 1.7.8.x
+          - "nightly/workflows"
 
     env:
       GH_BRANCH: ${{ matrix.branch }}
@@ -168,8 +169,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - develop
-          - 1.7.8.x
+          - "nightly/workflows"
 
     steps:
       - name: Push reports
