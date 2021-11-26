@@ -764,6 +764,7 @@ class CartCore extends ObjectModel
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
         $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
+        /** @var array<string, mixed> $result */
         $result = Db::getInstance()->executeS($sql);
 
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
