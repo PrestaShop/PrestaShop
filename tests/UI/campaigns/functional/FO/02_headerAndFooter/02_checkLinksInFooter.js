@@ -22,6 +22,10 @@ const personalInfoPage = require('@pages/FO/myAccount/identity');
 const ordersPage = require('@pages/FO/myAccount/orderHistory');
 const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
 const addressesPage = require('@pages/FO/myAccount/addresses');
+const createAccountPage = require('@pages/FO/myAccount/add');
+const guestOrderTrackingPage = require('@pages/FO/orderTracking/guestOrderTracking');
+const vouchersPage = require('@pages/FO/myAccount/vouchers');
+const myWishlistPage = require('@pages/FO/myAccount/myWishlists');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -74,7 +78,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await pricesDropPage.getPageTitle(page);
+        const pageTitle = await homePage.getPageTitle(page);
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });
@@ -97,7 +101,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await pricesDropPage.getPageTitle(page);
+        const pageTitle = await homePage.getPageTitle(page);
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });
@@ -105,10 +109,9 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
 
   describe('Check \'Your Account\' footer links before login', async () => {
     [
-      {linkSelector: 'Personal info', pageTitle: loginPage.pageTitle},
-      {linkSelector: 'Orders', pageTitle: loginPage.pageTitle},
-      {linkSelector: 'Credit slips', pageTitle: loginPage.pageTitle},
-      {linkSelector: 'Addresses', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
+      {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Create account', pageTitle: createAccountPage.pageTitle},
     ].forEach((args, index) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
@@ -116,7 +119,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await pricesDropPage.getPageTitle(page);
+        const pageTitle = await homePage.getPageTitle(page);
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });
@@ -134,10 +137,13 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     });
 
     [
-      {linkSelector: 'Personal info', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
-      {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
+      {linkSelector: 'Vouchers', pageTitle: vouchersPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
     ].forEach((args, index) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
@@ -145,7 +151,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await pricesDropPage.getPageTitle(page);
+        let pageTitle = '';
+        if (args.linkSelector === 'Wishlist') {
+          pageTitle = await myWishlistPage.getPageTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });
