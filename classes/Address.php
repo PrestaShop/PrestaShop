@@ -447,14 +447,15 @@ class AddressCore extends ObjectModel
         }
         $cacheKey = 'address_exists_' . $id_address;
         if ($refreshCache || !Cache::isStored($cacheKey)) {
-            $addressExists = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            $addressExists = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT `id_address`
                 FROM ' . _DB_PREFIX_ . 'address a
-                WHERE a.`id_address` = ' . (int)$id_address,
+                WHERE a.`id_address` = ' . (int) $id_address,
                 false
             );
             Cache::store($cacheKey, $addressExists);
         }
+
         return Cache::retrieve($cacheKey);
     }
 
