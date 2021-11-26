@@ -36,4 +36,4 @@ services:
     ports:
       - "8001:80"
     volumes:
-      - ./:/var/www/html/:delegated
+      - ./:/var/www/html:delegated
