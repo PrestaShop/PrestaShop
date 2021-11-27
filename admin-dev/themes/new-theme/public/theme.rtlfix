@@ -99,6 +99,7 @@ body.lang-rtl, .lang-rtl h1, .lang-rtl h2, .lang-rtl .modal-title, .lang-rtl h3,
 
 /* Fix order status dropdown width */
 #order_grid_table .dropdown-menu {
+  left: 0 !important;
   right: auto;
 }
 
@@ -109,8 +110,9 @@ body.lang-rtl, .lang-rtl h1, .lang-rtl h2, .lang-rtl .modal-title, .lang-rtl h3,
   border-left-style: solid;
 }
 
-/* Fix category filter dropdown overflow for catalog */
-.products-catalog #product_catalog_category_tree_filter .dropdown-menu {
+/* Fix dropdown menu placement */
+.dropdown-menu[x-placement="top-start"],
+.dropdown-menu[x-placement="bottom-start"] {
   left: auto !important;
   right: 0;
 }
@@ -118,6 +120,13 @@ body.lang-rtl, .lang-rtl h1, .lang-rtl h2, .lang-rtl .modal-title, .lang-rtl h3,
 /* Fix header search dropdown width */
 .main-header #header-search-container .dropdown-menu {
   right: auto;
+  left: 0 !important;
+}
+
+/* Fix bootstrap date picker arrows direction */
+.bootstrap-datetimepicker-widget table th.next,
+.bootstrap-datetimepicker-widget table th.prev {
+  transform: scaleX(-1);
 }
 
 /* Fix TinyMCE dropdown and popup position */
