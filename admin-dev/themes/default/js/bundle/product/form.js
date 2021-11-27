@@ -396,7 +396,14 @@ const featuresCollection = (function () {
   /** Add a feature */
   function add() {
     const newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
-    collectionHolder.append(newForm);
+    
+    const $newFormJquery = $(newForm);
+    //we need to put in disabled the custom
+    const $customValueSelector = $newFormJquery.find('input[type=text]');
+    const $featurevalueSelector = $newFormJquery.find('select');
+    $customValueSelector.prop('disabled', true);
+    collectionHolder.append($newFormJquery);
+   
     maxCollectionChildren += 1;
     prestaShopUiKit.initSelects();
   }
@@ -426,17 +433,44 @@ const featuresCollection = (function () {
         return url.replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, `/${newId}`);
       }
 
+      //adding events to the preloaded features
+      $(document).on('change', '.feature-collection select.feature-value-selector', function (event) {
+        const that = event.currentTarget;
+        const $row = $($(that).parents('.row')[0]);
+
+        const $customValueSelector = $row.find('input[type=text]');
+        $customValueSelector.val('');
+      });
+
+      $(document).on('keyup', '.feature-collection input[type=text]', function (event) {
+        const that = event.currentTarget;
+        const $row = $($(that).parents('.row')[0]);
+        const $selector = $row.find('.feature-value-selector');
+        if($selector.hasClass('select2-hidden-accessible'))
+        {
+          $selector.val('').trigger('change.select2');
+        } else
+        {
+          $selector.val(0);
+        }
+      });
+
       /** On feature selector event change, refresh possible values list */
       $(document).on('change', '.feature-collection select.feature-selector', function (event) {
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
         const $selector = $row.find('.feature-value-selector');
 
+        const $customValueSelector = $row.find('input[type=text]');
+
         if ($(this).val() !== '') {
           $.ajax({
             url: replaceEndingIdFromUrl($(this).attr('data-action'), $(this).val()),
             success(response) {
               $selector.prop('disabled', response.length === 0);
+
+              $customValueSelector.prop('disabled', false);
+
               $selector.empty();
               $.each(response, (index, elt) => {
                 // the placeholder shouldn't be posted.
@@ -447,6 +481,13 @@ const featuresCollection = (function () {
               });
             },
           });
+        }
+
+        //we need to put all in disabled
+        else
+        {
+          $selector.prop('disabled', true);
+          $customValueSelector.prop('disabled', true);
         }
       });
 
