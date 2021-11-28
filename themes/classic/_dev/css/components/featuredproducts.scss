@@ -94,13 +94,10 @@ $product-description-height: 70px;
 
       img {
         position: relative;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
         max-width: 100%;
-        max-height: 100%;
+        height: auto;
         margin: auto;
+        display: block;
       }
     }
   }
