@@ -1,4 +1,3 @@
-/*
 require('module-alias/register');
 
 // Import expect from chai
@@ -50,7 +49,7 @@ const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
 const todayDate = `${mm}/${dd}/${yyyy}`;
 
-/!*
+/*
 Create order in FO
 Enable merchandise returns and check 'Return products' button
 Change order status to 'Shipped'
@@ -61,7 +60,7 @@ Update status of merchandise return
 - Return complete
 Check the new status on BO and FO
 Disable merchandise returns
- *!/
+ */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
   // before and after functions
   before(async function () {
@@ -561,4 +560,3 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
   });
 });
-*/
