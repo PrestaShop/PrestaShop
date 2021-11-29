@@ -23,55 +23,41 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
- * Quantity field that displays the initial quantity (not editable) and allows editing with delta quantity
- * instead (ex: +5, -8). The input data of this form type is the initial (as a plain integer) however its output
- * on submit is the delta quantity.
+ * Wraps SubmittableInput and DeltaQuantity components to work together.
+ * admin-dev/themes/new-theme/js/components/form/delta-quantity-input.ts responsible for javascript part.
+ *
+ * @see DeltaQuantityType
+ * @see SubmittableInputType
  */
-class DeltaQuantityType extends TranslatorAwareType
+class SubmittableDeltaQuantityType extends DeltaQuantityType
 {
-    /**
-     * {@inheritDoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('quantity', TextPreviewType::class, [
-                'block_prefix' => 'delta_quantity_quantity',
-            ])
-            ->add('delta', NumberType::class, [
-                'scale' => 0,
-                'default_empty_data' => 0,
-                'label' => $this->trans('Add or subtract items', 'Admin.Global'),
-                'block_prefix' => 'delta_quantity_delta',
-                'row_attr' => [
-                    'class' => 'delta-quantity-delta-container',
-                ],
+        parent::buildForm($builder, $options);
+        $builder->add('delta', SubmittableInputType::class, [
+            'block_prefix' => 'submittable_delta_quantity_delta',
+            'label' => false,
+            'attr' => [
+                'aria-label' => $this->trans('Add or subtract items', 'Admin.Global'),
+            ],
+            'data' => [
+                'value' => 0,
+            ],
+            'type_options' => [
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                 ],
-            ]);
-
-        $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'delta_quantity';
+            ],
+        ]);
     }
 }

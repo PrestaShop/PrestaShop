@@ -1272,11 +1272,12 @@
 {% block delta_quantity_delta_widget %}
   {%- set type = 'number' -%}
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
-  {% if (form.parent.vars.submittable) %}
-    {{- block('submittable_input_widget') -}}
-  {% else %}
-    {{- block('form_widget_simple') -}}
-  {% endif %}
+  {{- block('form_widget_simple') -}}
+{% endblock %}
+
+{% block submittable_delta_quantity_delta_widget %}
+{%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
+  {{- block('submittable_input_widget') -}}
 {% endblock %}
 
 {% block submittable_input_widget %}
