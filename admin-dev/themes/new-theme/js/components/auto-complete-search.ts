@@ -86,7 +86,7 @@ export default class AutoCompleteSearch {
 
   private config: AutoCompleteSearchConfig;
 
-  constructor($searchInput: JQuery, inputConfig: InputAutoCompleteSearchConfig) {
+  constructor($searchInput: JQuery, inputConfig: Partial<InputAutoCompleteSearchConfig>) {
     this.$searchInput = $searchInput;
     this.searchInputId = this.$searchInput.prop('id');
 
@@ -120,7 +120,7 @@ export default class AutoCompleteSearch {
     };
 
     // Merge default and input config
-    this.config = {
+    this.config = <AutoCompleteSearchConfig>{
       minLength: 2,
       highlight: true,
       hint: false,
