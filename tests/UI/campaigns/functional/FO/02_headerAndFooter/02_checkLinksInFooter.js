@@ -141,7 +141,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
-      {linkSelector: 'Vouchers', pageTitle: vouchersPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
     ].forEach((args, index) => {
