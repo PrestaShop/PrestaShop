@@ -6,8 +6,9 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -18,9 +19,6 @@ const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 // Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
 const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
@@ -29,7 +27,7 @@ const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_messageBlock';
+const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_messagesBlock';
 
 let browserContext;
 let page;
@@ -45,6 +43,14 @@ const dd = (`0${today.getDate()}`).slice(-2); // Current day
 const yyyy = today.getFullYear(); // Current year
 const todayDate = `${mm}/${dd}/${yyyy}`;
 
+// New order by customer data
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
 const messageToSendData = {product: '', message: 'Test customer message'};
 /*
 Pre-condition :
@@ -59,7 +65,10 @@ Scenario :
 - Check configure predefined message link
  */
 
-describe('BO - Orders - View and edit order : Check message block', async () => {
+describe('BO - Orders - View and edit order : Check messages block', async () => {
+  // Pre-condition - Create order by default customer
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -68,96 +77,6 @@ describe('BO - Orders - View and edit order : Check message block', async () => 
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });
-
-  // Pre-condition - Create order by default customer
-  describe('Create order by default customer in FO', async () => {
-    it('should open the shop page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      await foHomePage.goToFo(page);
-
-      // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
-
-      const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
-
-      await foHomePage.goToHomePage(page);
-
-      await foHomePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
-
-      await foHomePage.goToHomePage(page);
-
-      // Go to the first product page
-      await foHomePage.goToProductPage(page, 1);
-
-      // Add the product to the cart
-      await foProductPage.addProductToTheCart(page);
-
-      const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber, 'Notification number is not correct!').to.be.equal(1);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Address step is not completed!').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Address step is not completed!').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle, 'Payment step is not completed!')
-        .to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO1', baseContext);
-
-      await foOrderConfirmationPage.logout(page);
-
-      const isCustomerConnected = await foOrderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-    });
   });
 
   // 1 - Go to view order page
