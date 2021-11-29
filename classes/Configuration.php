@@ -611,11 +611,11 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
-     * @param mixed $key
+     * @param string $key
      * @param int|null $idShopGroup
      * @param int|null $idShop
      */
-    public static function deleteFromGivenContext($key, ?int $idShopGroup, ?int $idShop): void
+    public static function deleteFromGivenContext(string $key, ?int $idShopGroup, ?int $idShop): void
     {
         $configurationId = Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
         self::deleteById($configurationId);

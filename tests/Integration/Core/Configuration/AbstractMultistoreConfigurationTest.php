@@ -79,7 +79,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      * @param array $data
      * @param array $checkList
      */
-    public function testUpdate(ShopConstraint $shopConstraint, array $data, array $checkList)
+    public function testUpdate(ShopConstraint $shopConstraint, array $data, array $checkList): void
     {
         $testedObject = $this->getConfiguration($shopConstraint);
         $testedObject->updateConfiguration($data);
