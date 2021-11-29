@@ -502,8 +502,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
 
-        $invoiceNumber = $this->order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop);
-
-        return $invoiceNumber . '.pdf';
+        return sprintf(
+            '%s.pdf',
+            $this->order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop)
+        );
     }
 }
