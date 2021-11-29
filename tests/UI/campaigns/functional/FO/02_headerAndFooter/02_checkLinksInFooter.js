@@ -24,7 +24,6 @@ const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
 const addressesPage = require('@pages/FO/myAccount/addresses');
 const createAccountPage = require('@pages/FO/myAccount/add');
 const guestOrderTrackingPage = require('@pages/FO/orderTracking/guestOrderTracking');
-const vouchersPage = require('@pages/FO/myAccount/vouchers');
 const myWishlistPage = require('@pages/FO/myAccount/myWishlists');
 
 // Import data
@@ -141,7 +140,6 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
       {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
       {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
       {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
-      {linkSelector: 'Vouchers', pageTitle: vouchersPage.pageTitle},
       {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
       {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
     ].forEach((args, index) => {
