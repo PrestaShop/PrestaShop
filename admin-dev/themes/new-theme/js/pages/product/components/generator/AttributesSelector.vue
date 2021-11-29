@@ -126,7 +126,7 @@
   import PerfectScrollbar from 'perfect-scrollbar';
   // @ts-ignore
   import Bloodhound from 'typeahead.js';
-  import AutoCompleteSearch from '@components/auto-complete-search';
+  import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
 
   const {$} = window;
@@ -134,7 +134,7 @@
   const CombinationsMap = ProductMap.combinations;
 
   export interface AttributesSelectorStates {
-    dataSetConfig: Record<string, any>;
+    dataSetConfig: AutoCompleteSearchConfig | {};
     searchSource: Record<string, any>;
     scrollbar: PerfectScrollbar | null;
     hasGeneratedCombinations: boolean;
@@ -184,7 +184,7 @@
       this.initDataSetConfig();
       this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
       const $searchInput = $(CombinationsMap.searchInput);
-      new AutoCompleteSearch($searchInput, this.dataSetConfig);
+      new AutoCompleteSearch($searchInput, <Partial<AutoCompleteSearchConfig>> this.dataSetConfig);
     },
     watch: {
       selectedAttributeGroups(value: any): void {
@@ -227,6 +227,8 @@
 
             // This resets the search input or else previous search is cached and can be added again
             $searchInput.typeahead('val', '');
+
+            return true;
           },
         };
       },

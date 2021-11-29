@@ -382,11 +382,13 @@ export default class CategoriesManager {
       source,
       display: 'breadcrumb',
       value: 'id',
-      onSelect: (selectedItem: Record<string, any>, e: any, $searchInput: JQuery) => {
+      onSelect: (selectedItem: Record<string, any>, e: any, $searchInput: JQuery): boolean => {
         this.selectCategory(selectedItem.id);
 
         // This resets the search input or else previous search is cached and can be added again
         $searchInput.typeahead('val', '');
+
+        return true;
       },
     };
 
