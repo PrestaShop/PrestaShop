@@ -10,7 +10,7 @@ const files = require('@utils/files');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
-const {createOrderFromFO} = require('@commonTests/FO/createOrder');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -20,12 +20,21 @@ const viewOrderPage = require('@pages/BO/orders/view');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_changeStatus';
 
 let browserContext;
 let page;
 let filePath;
+
+// New order by customer data
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
 
 /*
 Pre-condition :
@@ -38,7 +47,7 @@ Scenario :
  */
 describe('BO - Orders - View and edit order : Change order status', async () => {
   // Pre-Condition : Create order from FO
-  createOrderFromFO(baseContext);
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
