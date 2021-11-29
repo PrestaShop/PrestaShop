@@ -144,7 +144,9 @@ class SpecificPriceCore extends ObjectModel
         self::$_specificPriceCache = [];
         self::$_couldHaveSpecificPriceCache = [];
         self::$_hasGlobalProductRules = null;
+        self::$_filterOutCache = [];
         self::$_cache_priorities = [];
+        self::$_no_specific_values = [];
         self::$psQtyDiscountOnCombination = null;
         Product::flushPriceCache();
     }
@@ -273,11 +275,47 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function filterOutField($field_name, $field_value, $threshold = 1000)
     {
-        if ($field_name == 'id_product' && self::$_hasGlobalProductRules) {
-            return "AND `$field_name` = $field_value ";
+        $name = Db::getInstance()->escape($field_name, false, true);
+        $query_extra = 'AND `' . $name . '` = 0 ';
+        if ($field_value == 0 || array_key_exists($field_name, self::$_no_specific_values)) {
+            return $query_extra;
+        }
+        $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
+        $specific_list = [];
+        if (!array_key_exists($key_cache, self::$_filterOutCache)) {
+            $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $has_product_specific_price = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            if ($has_product_specific_price == 0) {
+                self::$_no_specific_values[$field_name] = true;
+
+                return $query_extra;
+            }
+            $query_count = 'EXPLAIN SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query_count);
+            $specific_count = $specific_count_result['rows'];
+
+            if ($specific_count < $threshold) {
+                $query = 'SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+                $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+                foreach ($tmp_specific_list as $key => $value) {
+                    $specific_list[] = $value[$field_name];
+                }
+            }
+            self::$_filterOutCache[$key_cache] = $specific_list;
+        } else {
+            $specific_list = self::$_filterOutCache[$key_cache];
         }
 
-        return $field_value == 0 ? "AND `$field_name` = 0 " : "AND `$field_name` in (0, $field_value) ";
+        // $specific_list is empty if the threshold is reached
+        if (empty($specific_list) || in_array($field_value, $specific_list)) {
+            if ($name == 'id_product' && !self::$_hasGlobalProductRules) {
+                $query_extra = 'AND `' . $name . '` = ' . (int) $field_value . ' ';
+            } else {
+                $query_extra = 'AND `' . $name . '` ' . self::formatIntInQuery(0, $field_value) . ' ';
+            }
+        }
+
+        return $query_extra;
     }
 
     /**
@@ -293,6 +331,8 @@ class SpecificPriceCore extends ObjectModel
      */
     protected static function computeExtraConditions($id_product, $id_product_attribute, $id_customer, $id_cart, $beginning = null, $ending = null)
     {
+        $first_date = date('Y-m-d 00:00:00');
+        $last_date = date('Y-m-d 23:59:59');
         $now = date('Y-m-d H:i:00');
         if ($beginning === null) {
             $beginning = $now;
@@ -318,6 +358,31 @@ class SpecificPriceCore extends ObjectModel
         }
 
         $query_extra .= self::filterOutField('id_cart', $id_cart);
+
+        if ($ending == $now && $beginning == $now) {
+            $key = __FUNCTION__ . '-' . $first_date . '-' . $last_date;
+            if (!array_key_exists($key, self::$_filterOutCache)) {
+                $query_from_count = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `from` BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
+                $from_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_from_count);
+
+                $query_to_count = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `to` BETWEEN \'' . $first_date . '\' AND \'' . $last_date . '\'';
+
+                $to_specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_to_count);
+                self::$_filterOutCache[$key] = [$from_specific_count, $to_specific_count];
+            } else {
+                list($from_specific_count, $to_specific_count) = self::$_filterOutCache[$key];
+            }
+        } else {
+            $from_specific_count = $to_specific_count = 1;
+        }
+
+        // if the from and to is not reached during the current day, just change $ending & $beginning to any date of the day to improve the cache
+        if (!$from_specific_count && !$to_specific_count) {
+            $ending = $beginning = $first_date;
+        }
+        $db = Db::getInstance();
+        $beginning = $db->escape($beginning);
+        $ending = $db->escape($ending);
 
         $query_extra .= ' AND (`from` = \'0000-00-00 00:00:00\' OR \'' . $beginning . '\' >= `from`)'
                        . ' AND (`to` = \'0000-00-00 00:00:00\' OR \'' . $ending . '\' <= `to`)';
@@ -391,6 +456,17 @@ class SpecificPriceCore extends ObjectModel
         $id_cart,
         $real_quantity
     ) {
+        if (self::$_no_specific_values !== null) {
+            // $_no_specific_values contains the fieldName from the DB which don't have values != 0
+            // So it's ok the set the value to 0 for those fields to improve the cache efficiency
+            // Note that the variableName from the DB needs to match the function args name
+            // I.e. if the computeKey args are converted at some point in camelCase, we will need to introduce a
+            // snakeCase to camelCase conversion of $variableName
+            foreach (array_keys(self::$_no_specific_values) as $variableName) {
+                ${$variableName} = 0;
+            }
+        }
+
         return (int) $id_product . '-' . (int) $id_shop . '-' . (int) $id_currency . '-' . (int) $id_country . '-' .
             (int) $id_group . '-' . (int) $quantity . '-' . (int) $id_product_attribute . '-' . (int) $id_cart . '-' .
             (int) $id_customer . '-' . (int) $real_quantity;
