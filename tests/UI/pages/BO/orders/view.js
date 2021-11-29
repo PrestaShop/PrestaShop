@@ -200,7 +200,6 @@ class Order extends BOBasePage {
   /**
    * Get order status
    * @param page {Page} Browser tab
-   * @param row {number} Product row on table
    * @returns {Promise<string>}
    */
   async getOrderStatus(page) {
