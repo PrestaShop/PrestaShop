@@ -27,7 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -49,15 +51,37 @@ class SubmittableDeltaQuantityType extends DeltaQuantityType
             'attr' => [
                 'aria-label' => $this->trans('Add or subtract items', 'Admin.Global'),
             ],
-            'data' => [
-                'value' => 0,
-            ],
             'type_options' => [
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                 ],
             ],
+        ])->addModelTransformer(new CallbackTransformer(
+            function (array $data) {
+                return [
+                    'quantity' => (int) $data['quantity'],
+                    'delta' => [
+                        'value' => (int) $data['delta'],
+                    ],
+                ];
+            },
+            function (array $inputData) {
+                return [
+                    'quantity' => (int) $inputData['quantity'],
+                    'delta' => (int) $inputData['delta']['value'],
+                ];
+            }
+        ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setAllowedTypes('data', 'array');
+        $resolver->setDefault('data', [
+            'quantity' => 0,
+            'delta' => 0,
         ]);
     }
 }
