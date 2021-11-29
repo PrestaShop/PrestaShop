@@ -3,7 +3,6 @@ extends: default
 ignore: |
   /themes/classic/_dev/node_modules/
   /themes/node_modules/
-  .github/ISSUE_TEMPLATE/
 
 rules:
   braces:
@@ -16,7 +15,5 @@ rules:
   indentation:
     ## Check .editorconfig
     spaces: 2
-  line-length:
-    max: 200
-    level: warning
+  line-length: disable
   truthy: disable
