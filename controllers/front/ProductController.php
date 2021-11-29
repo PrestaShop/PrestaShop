@@ -1133,7 +1133,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['unit_price_ratio'] = $product_full['unit_price'] != 0 ? ($product_full['price_tax_exc'] / $product_full['unit_price']) : 0;
         // Recompute unit_price so that it includes taxes
         if ($product_full['unit_price'] > 0 && $productSettings->include_taxes && $product_full['unit_price_ratio'] != 0) {
-            $product_full['unit_price'] = $product_full['price_tax_incl'] / $product_full['unit_price_ratio'];
+            $product_full['unit_price'] = $product_full['price'] / $product_full['unit_price_ratio'];
         }
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
