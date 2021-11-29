@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
-use Carrier;
 use Cart;
 use CartRule;
 use Category;
