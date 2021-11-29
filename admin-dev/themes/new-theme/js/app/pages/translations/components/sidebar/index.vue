@@ -40,8 +40,8 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSTree from '@app/widgets/ps-tree/ps-tree';
-  import PSSpinner from '@app/widgets/ps-spinner';
+  import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
+  import PSSpinner from '@app/widgets/ps-spinner.vue';
   import {EventBus} from '@app/utils/event-bus';
 
   export default Vue.extend({

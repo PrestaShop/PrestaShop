@@ -121,11 +121,11 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSButton from '@app/widgets/ps-button';
-  import PSPagination from '@app/widgets/ps-pagination';
-  import PSAlert from '@app/widgets/ps-alert';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSPagination from '@app/widgets/ps-pagination.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import TranslationInput from './translation-input';
+  import TranslationInput from './translation-input.vue';
 
   export default Vue.extend({
     props: {

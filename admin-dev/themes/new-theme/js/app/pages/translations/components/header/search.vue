@@ -56,8 +56,8 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import PSTags from '@app/widgets/ps-tags';
-  import PSButton from '@app/widgets/ps-button';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
 
   export default Vue.extend({
     components: {

@@ -60,10 +60,10 @@
 
 <script lang="ts">
   import Vue from 'vue';
-  import Search from '@app/pages/translations/components/header/search';
-  import Sidebar from '@app/pages/translations/components/sidebar';
-  import Principal from '@app/pages/translations/components/principal';
-  import PSModal from '@app/widgets/ps-modal';
+  import Search from '@app/pages/translations/components/header/search.vue';
+  import Sidebar from '@app/pages/translations/components/sidebar/index.vue';
+  import Principal from '@app/pages/translations/components/principal/index.vue';
+  import PSModal from '@app/widgets/ps-modal.vue';
 
   export default Vue.extend({
     name: 'App',
