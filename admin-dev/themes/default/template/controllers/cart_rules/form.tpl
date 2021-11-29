@@ -82,7 +82,7 @@
 	    // This cart rule creation is done through a Fancy box.
 	    // The cart rule is created and then we need to apply it to the cart
 	    // This need to be done in JS before refreshing the cart
-		window.parent.order_create.addCreatedCartRuleToCart({$created_cart_rule_id});
+	    window.parent.order_create.addCreatedCartRuleToCart({$created_cart_rule_id});
       }
       window.parent.$.fancybox.close();
     {/if}
