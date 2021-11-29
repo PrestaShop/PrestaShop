@@ -1,4 +1,3 @@
-/*
 require('module-alias/register');
 
 // Import expect from chai
@@ -45,7 +44,7 @@ let orderID = 1;
 let trackingNumber = 1;
 const today = getDateFormat('mm/dd/yyyy');
 
-/!*
+/*
 Create order in FO
 Enable merchandise returns and check 'Return products' button
 Change order status to 'Shipped'
@@ -56,7 +55,7 @@ Update status of merchandise return
 - Return complete
 Check the new status on BO and FO
 Disable merchandise returns
- *!/
+ */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
   // before and after functions
   before(async function () {
@@ -556,4 +555,3 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
   });
 });
-*/
