@@ -51,7 +51,7 @@
     "vue-i18n": "^8.15.1",
     "vue-resource": "^1.5.1",
     "vue-router": "^2.8.1",
-    "vuex": "^2.5.0"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.15.7",

@@ -22,10 +22,30 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-export default {
-  methods: {
-    trans(key) {
-      return this.$store.state.translations[key];
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Overview from '@app/pages/stock/components/overview/index.vue';
+import Movements from '@app/pages/stock/components/movements/index.vue';
+
+Vue.use(VueRouter);
+
+export default new VueRouter({
+  mode: 'history',
+  base: (() => {
+    const hasIndex = /(index\.php)/.exec(window.location.href);
+
+    return `${window.data.baseUrl}${hasIndex ? '/index.php' : ''}/sell/stocks`;
+  })(),
+  routes: [
+    {
+      path: '/',
+      name: 'overview',
+      component: async () => Overview,
     },
-  },
-};
+    {
+      path: '/movements',
+      name: 'movements',
+      component: async () => Movements,
+    },
+  ],
+});
