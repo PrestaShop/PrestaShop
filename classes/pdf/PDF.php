@@ -116,7 +116,7 @@ class PDFCore
             $this->send_bulk_flag = true;
         }
 
-        $this->getFilename();
+        $this->setFilename();
     }
 
     /**
@@ -195,10 +195,20 @@ class PDFCore
      */
     public function getFilename(): string
     {
-        if (!empty($this->filename)) {
-            return $this->filename;
+        if (empty($this->filename)) {
+            $this->setFilename();
         }
 
+        return $this->filename;
+    }
+
+    /**
+     * Set the PDF filename based on the objects.
+     *
+     * @return bool
+     */
+    public function setFilename(): bool
+    {
         foreach ($this->objects as $object) {
             $template = $this->getTemplateObject($object);
             if (!$template) {
@@ -211,6 +221,6 @@ class PDFCore
             }
         }
 
-        return $this->filename;
+        return !empty($this->filename);
     }
 }
