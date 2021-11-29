@@ -103,7 +103,7 @@ class Version
         $preReleaseVersion = '',
         $buildMetadata = ''
     ) {
-        $this->version = $this->removeLegacyPrefix($version, $majorVersionString);
+        $this->version = $version;
         $this->majorVersionString = $majorVersionString;
         $this->majorVersion = $majorVersion;
         $this->minorVersion = $minorVersion;
@@ -130,12 +130,18 @@ class Version
             throw new InvalidVersionException($version);
         }
 
+        $isLegacy = false;
         if (isset($matches['legacy']) && '' !== $matches['legacy']) {
             // legacy version like "1.7.5.0"
+            $isLegacy = true;
             $major = (int) $matches[2];
             $minor = (int) $matches[3];
             $patch = (int) $matches['legacy'];
-            $version = substr($version, strpos($version, '.') + 1);
+        } elseif (self::matchLegacyPattern($version)) {
+            $isLegacy = true;
+            $major = (int) $matches[1];
+            $minor = isset($matches[2]) ? (int) $matches[2] : '0';
+            $patch = isset($matches[3]) ? (int) $matches[3] : '0';
         } else {
             $major = (int) $matches[1];
             $minor = isset($matches[2]) ? (int) $matches[2] : 0;
@@ -144,12 +150,12 @@ class Version
 
         return new self(
             $version,
-            "1.$major",
+            $isLegacy ? "1.$major" : (string) $major,
             $major,
             $minor,
             $patch,
-            isset($matches['prerelease']) ? $matches['prerelease'] : '',
-            isset($matches['build']) ? $matches['build'] : ''
+            $matches['prerelease'] ?? '',
+            $matches['build'] ?? ''
         );
     }
 
@@ -162,14 +168,12 @@ class Version
      */
     public function getVersion($full = false)
     {
-        $version = '1.' . $this->version;
-
         if (!$full) {
             // remove extra parts
-            return preg_replace('/[-\+].*/', '', $version);
+            return preg_replace('/[-\+].*/', '', $this->version);
         }
 
-        return $version;
+        return $this->version;
     }
 
     /**
@@ -179,7 +183,7 @@ class Version
      */
     public function getSemVersion()
     {
-        return $this->version;
+        return $this->removeLegacyPrefix($this->version, $this->majorVersionString);
     }
 
     /**
@@ -370,9 +374,7 @@ class Version
         $first = $this->getSemVersion();
         $other = $otherVersion->getSemVersion();
 
-        $result = version_compare($first, $other, $operator);
-
-        return $result;
+        return version_compare($first, $other, $operator);
     }
 
     /**
@@ -390,5 +392,15 @@ class Version
         }
 
         return $version;
+    }
+
+    /**
+     * Checks if the version number matches old PS version styles (1.X.X)
+     */
+    private static function matchLegacyPattern(string $version): bool
+    {
+        $result = preg_match('/^1\.(.*)$/', $version); // version starting with "1."
+
+        return false !== $result && 0 !== $result;
     }
 }
