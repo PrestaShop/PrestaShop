@@ -5349,16 +5349,16 @@
         },
         {
             "name": "prestashop/graphnvd3",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/graphnvd3.git",
-                "reference": "c4b8fa0d82d047b63be02e74e84a27f46a746065"
+                "reference": "ba9d68f6a66aca7b8750977d034e2adcceaa4167"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/c4b8fa0d82d047b63be02e74e84a27f46a746065",
-                "reference": "c4b8fa0d82d047b63be02e74e84a27f46a746065",
+                "url": "https://api.github.com/repos/PrestaShop/graphnvd3/zipball/ba9d68f6a66aca7b8750977d034e2adcceaa4167",
+                "reference": "ba9d68f6a66aca7b8750977d034e2adcceaa4167",
                 "shasum": ""
             },
             "require": {
@@ -5367,7 +5367,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -5378,22 +5378,22 @@
             "description": "PrestaShop module graphnvd3",
             "homepage": "https://github.com/PrestaShop/graphnvd3",
             "support": {
-                "source": "https://github.com/PrestaShop/graphnvd3/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/graphnvd3/tree/v2.0.2"
             },
-            "time": "2019-04-03T08:19:54+00:00"
+            "time": "2021-11-19T14:55:33+00:00"
         },
         {
             "name": "prestashop/gridhtml",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/gridhtml.git",
-                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9"
+                "reference": "184ed2be93b84dea56c98a9042cafd66ac48458b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/bbd3985d5919a0c4dec622eb716cf157769eaab9",
-                "reference": "bbd3985d5919a0c4dec622eb716cf157769eaab9",
+                "url": "https://api.github.com/repos/PrestaShop/gridhtml/zipball/184ed2be93b84dea56c98a9042cafd66ac48458b",
+                "reference": "184ed2be93b84dea56c98a9042cafd66ac48458b",
                 "shasum": ""
             },
             "require": {
@@ -5416,9 +5416,9 @@
             "description": "PrestaShop module gridhtml",
             "homepage": "https://github.com/PrestaShop/gridhtml",
             "support": {
-                "source": "https://github.com/PrestaShop/gridhtml/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/gridhtml/tree/v2.0.2"
             },
-            "time": "2020-12-09T14:23:53+00:00"
+            "time": "2021-11-19T15:48:55+00:00"
         },
         {
             "name": "prestashop/gsitemap",
