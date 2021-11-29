@@ -78,7 +78,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     public function dispatch($eventName, Event $event = null)
     {
         if ($event === null) {
-            $event = $this->createHookEventWithContextParameters();
+            $event = new HookEvent($this->getHookEventContextParameters());
         }
 
         if (!$event instanceof HookEvent) {
@@ -118,7 +118,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
         foreach ($eventNames as $name) {
             $this->dispatch(
                 $name,
-                ($this->createHookEventWithContextParameters())->setHookParameters($eventParameters)
+                (new HookEvent($this->getHookEventContextParameters()))->setHookParameters($eventParameters)
             );
         }
     }
@@ -164,7 +164,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     public function dispatchForParameters($eventName, array $parameters = [])
     {
-        $event = $this->createHookEventWithContextParameters();
+        $event = new HookEvent($this->getHookEventContextParameters());
         $event->setHookParameters($parameters);
 
         return $this->dispatch($eventName, $event);
@@ -182,7 +182,7 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     public function renderForParameters($eventName, array $parameters = [])
     {
-        $event = new RenderingHookEvent();
+        $event = new RenderingHookEvent($this->getHookEventContextParameters());
         $event->setHookParameters($parameters);
 
         /** @var RenderingHookEvent $eventDispatched */
@@ -221,28 +221,28 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     }
 
     /**
-     * @return hookEvent
+     * @return array
      *
-     * Context parameters are injected into the new HookEvent
+     * Returns context parameters that will be injected into the new HookEvent
      *
      * Note: _ps_version contains PrestaShop version, and is here only if the Hook is triggered by Symfony architecture
      */
-    private function createHookEventWithContextParameters(): HookEvent
+    private function getHookEventContextParameters(): array
     {
         $globalParameters = ['_ps_version' => \AppKernel::VERSION];
 
         if (null === $this->requestStack) {
-            return new HookEvent($globalParameters);
+            return $globalParameters;
         }
 
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
-            return new HookEvent($globalParameters);
+            return $globalParameters;
         }
 
         $globalParameters['request'] = $request;
         $globalParameters['route'] = $request->get('_route');
 
-        return new HookEvent($globalParameters);
+        return $globalParameters;
     }
 }
