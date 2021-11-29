@@ -24,7 +24,6 @@ const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
 const addressesPage = require('@pages/FO/myAccount/addresses');
 const createAccountPage = require('@pages/FO/myAccount/add');
 const guestOrderTrackingPage = require('@pages/FO/orderTracking/guestOrderTracking');
-const vouchersPage = require('@pages/FO/myAccount/vouchers');
 const myWishlistPage = require('@pages/FO/myAccount/myWishlists');
 
 // Import data
