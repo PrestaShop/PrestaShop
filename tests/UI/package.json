@@ -18,7 +18,7 @@
 
     "// Specific test": "Script to run a specific test/folder",
     "test:specific": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
-    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
 
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
