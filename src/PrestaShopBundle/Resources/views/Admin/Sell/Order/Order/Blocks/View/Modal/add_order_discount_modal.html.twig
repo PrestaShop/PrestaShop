@@ -36,16 +36,12 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="row">
-              <div class="col">
-                <div class="form-group">
-                  <label class="form-control-label" for="{{ addOrderCartRuleForm.name.vars.id }}">
-                    {{ 'Name'|trans({}, 'Admin.Global') }}
-                  </label>
 
-                  {{ form_widget(addOrderCartRuleForm.name) }}
-                </div>
-              </div>
+            <div class="form-group">
+              <label class="form-control-label" for="{{ addOrderCartRuleForm.name.vars.id }}">
+                {{ 'Name'|trans({}, 'Admin.Global') }}
+              </label>
+              {{ form_widget(addOrderCartRuleForm.name) }}
             </div>
 
             <div class="row">
@@ -54,7 +50,6 @@
                   <label class="form-control-label" for="{{ addOrderCartRuleForm.type.vars.id }}">
                     {{ 'Type'|trans({}, 'Admin.Global') }}
                   </label>
-
                   {{ form_widget(addOrderCartRuleForm.type) }}
                 </div>
               </div>
@@ -77,21 +72,15 @@
               </div>
             </div>
 
-            <div class="{% if not orderForViewing.hasInvoice %}d-none{% endif %}">
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label class="form-control-label" for="{{ addOrderCartRuleForm.invoice_id.vars.id }}">
-                      {{ 'Invoice'|trans({}, 'Admin.Global') }}
-                    </label>
-
-                    {{ form_widget(addOrderCartRuleForm.invoice_id, {'attr': {
-                      'disabled': not orderForViewing.hasInvoice
-                    }}) }}
-                  </div>
-                </div>
-              </div>
+            <div class="form-group {% if not orderForViewing.hasInvoice %}d-none{% endif %}">
+              <label class="form-control-label" for="{{ addOrderCartRuleForm.invoice_id.vars.id }}">
+                {{ 'Invoice'|trans({}, 'Admin.Global') }}
+              </label>
+              {{ form_widget(addOrderCartRuleForm.invoice_id, {'attr': {
+                'disabled': not orderForViewing.hasInvoice
+              }}) }}
             </div>
+            
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
