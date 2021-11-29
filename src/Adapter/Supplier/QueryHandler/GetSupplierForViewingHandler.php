@@ -134,6 +134,9 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                             $product->id,
                             $combination['id_product_attribute']
                         );
+                        if (!$productInfo) {
+                            continue;
+                        }
                         $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
                             ?: $this->defaultCurrencyIsoCode;
                         $formattedWholesalePrice = null !== $productInfo['product_supplier_price_te']
@@ -162,11 +165,10 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                     $combinations[$attributeId]['attributes'] = $attribute;
                 }
 
-                $productInfo = Supplier::getProductInformationsBySupplier(
-                    $supplier->id,
-                    $product->id,
-                    0
-                );
+                $productInfo = Supplier::getProductInformationsBySupplier($supplier->id, $product->id);
+                if (!$productInfo) {
+                    continue;
+                }
                 $product->wholesale_price = $productInfo['product_supplier_price_te'];
                 $product->supplier_reference = $productInfo['product_supplier_reference'];
                 $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
