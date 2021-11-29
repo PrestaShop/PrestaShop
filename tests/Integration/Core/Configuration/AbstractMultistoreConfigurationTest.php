@@ -71,49 +71,31 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $this->multistoreFeature = self::$kernel->getContainer()->get('prestashop.adapter.multistore_feature');
     }
 
+
     /**
-     * @dataProvider provideShopConstraints
+     * @dataProvider updateDataProvider
      *
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
+     * @param array $data
+     * @param array $checkList
      */
-    public function testUpdate(ShopConstraint $shopConstraint, bool $isAllShopContext): void
+    public function testUpdate(ShopConstraint $shopConstraint, array $data, array $checkList)
     {
-        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
+        $testedObject = $this->getConfiguration($shopConstraint);
+        $testedObject->updateConfiguration($data);
 
-        if ($isAllShopContext) {
-            // in all shop we test without multistore checkboxes (it would throw an exception, this is tested elsewhere)
-            $testedObject->updateConfiguration(['test_conf_1' => true, 'test_conf_2' => 'string_result']);
-        // $testedObject->updateConfiguration(['test_conf_2' => 'string_result']);
-        } else {
-            // Test with multistore checkboxes, data should be saved for current context
-            $testedObject->updateConfiguration(
-                [
-                    'test_conf_1' => true,
-                    MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_1' => true,
-                    'test_conf_2' => 'string_result',
-                    MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_2' => true,
-                ]
-            );
-            // $testedObject->updateConfiguration(['test_conf_2' => 'string_result', MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_2' => true]);
+        foreach ($checkList as $expectedValues) {
+            $testedObject = $this->getConfiguration($expectedValues[0]);
+            $testResults = $testedObject->getConfiguration();
+
+            foreach ($expectedValues[1] as $key => $value) {
+                $this->assertSame($value, $testResults[$key], 'errorrr bog');
+            }
         }
 
-        $res = $testedObject->getConfiguration();
-        $this->assertSame(true, $res['test_conf_1']);
-        $this->assertSame('string_result', $res['test_conf_2']);
-
-        if ($isAllShopContext) {
-            // further assertions are for group and single shop contexts
-            return;
-        }
-
-        // test without multistore checkboxes, previously saved data should be removed for current context,
-        // we get data previously saved for all shop context
-        $testedObject->updateConfiguration(['test_conf_1' => false]);
-        $testedObject->updateConfiguration(['test_conf_2' => 'string_result_not_saved']);
-        $res = $testedObject->getConfiguration();
-        $this->assertSame(true, $res['test_conf_1']);
-        $this->assertSame('string_result', $res['test_conf_2']);
+        // clean before next tests
+        //LegacyConfiguration::deleteByName('test_conf_1');
+        // LegacyConfiguration::deleteByName('test_conf_2');
     }
 
     /**
@@ -122,9 +104,10 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      * @param ShopConstraint $shopConstraint
      * @param bool $isAllShopContext
      */
-    public function testUndefinedOptionsException(ShopConstraint $shopConstraint, bool $isAllShopContext): void
+    public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
     {
-        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
+        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
+        $testedObject = $this->getConfiguration($shopConstraint);
         $this->expectException(UndefinedOptionsException::class);
 
         if ($isAllShopContext) {
@@ -142,8 +125,9 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      * @param ShopConstraint $shopConstraint
      * @param bool $isAllShopContext
      */
-    public function testInvalidOptionsException(ShopConstraint $shopConstraint, bool $isAllShopContext): void
+    public function testInvalidOptionsException(ShopConstraint $shopConstraint): void
     {
+        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
         $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
         $this->expectException(InvalidOptionsException::class);
         $confValues = [
@@ -164,8 +148,9 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
      *
      * @return DummyMultistoreConfiguration
      */
-    private function getConfiguration(ShopConstraint $shopConstraint, bool $isAllShopContext): DummyMultistoreConfiguration
+    private function getConfiguration(ShopConstraint $shopConstraint): DummyMultistoreConfiguration
     {
+        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
         // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
         $this->shopContext = $this->createShopContextMock();
         $this->shopContext
@@ -189,11 +174,62 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     public function provideShopConstraints(): array
     {
         return [
-            [ShopConstraint::allShops(), true],
-            [ShopConstraint::shopGroup(1), false],
-            [ShopConstraint::shop(1), false],
+            [ShopConstraint::allShops()],
+            [ShopConstraint::shopGroup(1)],
+            [ShopConstraint::shop(1)],
         ];
     }
+
+    /**
+     * @return iterable
+     */
+    public function updateDataProvider(): iterable
+    {
+        // First test changes the config for all shops which impacts also shop and shopGroup
+        yield [
+            // Shop constraint used for update
+            ShopConstraint::allShops(),
+            // Data for update
+            ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+            // List of checks to do (for different shop constraints, which implies creating a Configuration object for each one, in a loop)
+            [
+                [
+                    ShopConstraint::allShops(),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+                [
+                    ShopConstraint::shopGroup(1),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+                [
+                    ShopConstraint::shop(1),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+            ]
+        ];
+
+        // Second test changes the config for single shop which does not impact all shops and shopGroup, only one field is checked
+        yield [
+            ShopConstraint::shop(1),
+            ['test_conf_1' => false, 'test_conf_2' => 'single_shop_conf2', 'multistore_test_conf_2' => true],
+            [
+                [
+                    ShopConstraint::allShops(),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+                [
+                    ShopConstraint::shopGroup(1),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+                [
+                    ShopConstraint::shop(1),
+                    // Only test_conf_2 is modified since it was the only checkbox enabled
+                    ['test_conf_1' => true, 'test_conf_2' => 'single_shop_conf2'],
+                ],
+            ]
+        ];
+    }
+
 
     /**
      * @return ShopContext
