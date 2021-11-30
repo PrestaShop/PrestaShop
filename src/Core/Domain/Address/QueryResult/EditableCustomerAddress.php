@@ -169,7 +169,7 @@ class EditableCustomerAddress
         string $address2,
         StateId $stateId,
         string $homePhone,
-        string $mobilePhone,
+        ?string $mobilePhone,
         string $other,
         array $requiredFields
     ) {

@@ -102,7 +102,7 @@ class OrderInvoiceAddressForViewing
     private $phoneNumber;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mobilePhoneNumber;
 
@@ -123,7 +123,7 @@ class OrderInvoiceAddressForViewing
      * @param string $countryName
      * @param string $postCode
      * @param string $phone
-     * @param string $phoneMobile
+     * @param string|null $phoneMobile
      * @param string|null $vatNumber
      * @param string|null $dni If null the DNI is not required for the country, else string
      */
@@ -139,7 +139,7 @@ class OrderInvoiceAddressForViewing
         string $countryName,
         string $postCode,
         string $phone,
-        string $phoneMobile,
+        ?string $phoneMobile = null,
         ?string $vatNumber = null,
         ?string $dni = null
     ) {
@@ -274,9 +274,9 @@ class OrderInvoiceAddressForViewing
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getMobilePhoneNumber(): string
+    public function getMobilePhoneNumber(): ?string
     {
         return $this->mobilePhoneNumber;
     }
