@@ -123,6 +123,15 @@ class Version
      */
     public static function buildFromString($version)
     {
+        // If the version number is composed by 4 digits like in 1.7.5.0, it's legacy notation way
+        // major = 7, minor = 5, patch = 0. SemverVersion = 7.5.0 and fullVersion is 1.7.5.0
+
+        // If the version number is composed by 3 digits but the first digit is < 8 (0-7)
+        // For example 7.6.1 : major = 7, minor = 6 and patch = 1. SemverVersion = fullVersion = 7.1.6
+
+        // Otherwise, it's the common way of defining version
+        // For example 8.1.2 : major = 8, minor = 1 and patch = 2. SemverVersion = fullVersion = 8.1.2
+
         $matches = [];
         $regex = '/^([\d]+)(?:\.([\d]+))?(?:\.([\d]+))?(?:\.(?<legacy>[\d]+))?(?:-(?<prerelease>[0-9A-Za-z-.]+))?(?:\+(?<build>[0-9A-Za-z-.]+))?$/';
 
@@ -137,11 +146,12 @@ class Version
             $major = (int) $matches[2];
             $minor = (int) $matches[3];
             $patch = (int) $matches['legacy'];
-        } elseif (self::matchLegacyPattern($version)) {
+        } elseif (8 > (int) $matches[1]) {
             $isLegacy = true;
             $major = (int) $matches[1];
             $minor = isset($matches[2]) ? (int) $matches[2] : '0';
             $patch = isset($matches[3]) ? (int) $matches[3] : '0';
+            $version = "1.$version";
         } else {
             $major = (int) $matches[1];
             $minor = isset($matches[2]) ? (int) $matches[2] : 0;
@@ -385,22 +395,12 @@ class Version
      *
      * @return string
      */
-    private function removeLegacyPrefix($version, $majorVersionString)
+    private function removeLegacyPrefix(string $version, string $majorVersionString): string
     {
         if ('1.' === substr($version, 0, 2) && substr($version, 0, strlen($majorVersionString)) === $majorVersionString) {
             $version = substr($version, 2);
         }
 
         return $version;
-    }
-
-    /**
-     * Checks if the version number matches old PS version styles (1.X.X)
-     */
-    private static function matchLegacyPattern(string $version): bool
-    {
-        $result = preg_match('/^1\.(.*)$/', $version); // version starting with "1."
-
-        return false !== $result && 0 !== $result;
     }
 }

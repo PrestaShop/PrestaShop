@@ -414,10 +414,10 @@ class VersionTest extends TestCase
             '7.5.0' => [
                 '7.5.0',
                 [
-                    'version' => '7.5.0',
-                    'fullVersion' => '7.5.0',
+                    'version' => '1.7.5.0',
+                    'fullVersion' => '1.7.5.0',
                     'semVersion' => '7.5.0',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 5,
                     'patch' => 0,
@@ -428,10 +428,10 @@ class VersionTest extends TestCase
             '7.5.1' => [
                 '7.5.1',
                 [
-                    'version' => '7.5.1',
-                    'fullVersion' => '7.5.1',
+                    'version' => '1.7.5.1',
+                    'fullVersion' => '1.7.5.1',
                     'semVersion' => '7.5.1',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 5,
                     'patch' => 1,
@@ -442,10 +442,10 @@ class VersionTest extends TestCase
             '7.6.0' => [
                 '7.6.0',
                 [
-                    'version' => '7.6.0',
-                    'fullVersion' => '7.6.0',
+                    'version' => '1.7.6.0',
+                    'fullVersion' => '1.7.6.0',
                     'semVersion' => '7.6.0',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 6,
                     'patch' => 0,
@@ -456,10 +456,10 @@ class VersionTest extends TestCase
             '7.6.0-dev' => [
                 '7.6.0-dev',
                 [
-                    'version' => '7.6.0',
-                    'fullVersion' => '7.6.0-dev',
+                    'version' => '1.7.6.0',
+                    'fullVersion' => '1.7.6.0-dev',
                     'semVersion' => '7.6.0-dev',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 6,
                     'patch' => 0,
@@ -470,10 +470,10 @@ class VersionTest extends TestCase
             '7.6.0+test.build' => [
                 '7.6.0+test.build',
                 [
-                    'version' => '7.6.0',
-                    'fullVersion' => '7.6.0+test.build',
+                    'version' => '1.7.6.0',
+                    'fullVersion' => '1.7.6.0+test.build',
                     'semVersion' => '7.6.0+test.build',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 6,
                     'patch' => 0,
@@ -484,10 +484,10 @@ class VersionTest extends TestCase
             '7.7.0-beta.1+build.156' => [
                 '7.7.0-beta.1+build.156',
                 [
-                    'version' => '7.7.0',
-                    'fullVersion' => '7.7.0-beta.1+build.156',
+                    'version' => '1.7.7.0',
+                    'fullVersion' => '1.7.7.0-beta.1+build.156',
                     'semVersion' => '7.7.0-beta.1+build.156',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 7,
                     'patch' => 0,
@@ -498,10 +498,10 @@ class VersionTest extends TestCase
             '7.7.0-dev+nightly.20190526' => [
                 '7.7.0-dev+nightly.20190526',
                 [
-                    'version' => '7.7.0',
-                    'fullVersion' => '7.7.0-dev+nightly.20190526',
+                    'version' => '1.7.7.0',
+                    'fullVersion' => '1.7.7.0-dev+nightly.20190526',
                     'semVersion' => '7.7.0-dev+nightly.20190526',
-                    'majorString' => '7',
+                    'majorString' => '1.7',
                     'major' => 7,
                     'minor' => 7,
                     'patch' => 0,
@@ -521,6 +521,20 @@ class VersionTest extends TestCase
                     'patch' => 2,
                     'preRelease' => '',
                     'buildMeta' => '',
+                ],
+            ],
+            '10.4.5-beta.1+build.156' => [
+                '10.4.5-beta.1+build.156',
+                [
+                    'version' => '10.4.5',
+                    'fullVersion' => '10.4.5-beta.1+build.156',
+                    'semVersion' => '10.4.5-beta.1+build.156',
+                    'majorString' => '10',
+                    'major' => 10,
+                    'minor' => 4,
+                    'patch' => 5,
+                    'preRelease' => 'beta.1',
+                    'buildMeta' => 'build.156',
                 ],
             ],
         ];
