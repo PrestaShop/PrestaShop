@@ -34,11 +34,11 @@ $(() => {
   new IncludeTaxFieldToggle(SpecificPriceMap.reductionTypeSelect, SpecificPriceMap.includeTaxInputContainer);
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
-      if (!response) {
+      if (!response || response.customers.length === 0) {
         return [];
       }
 
-      return response.customers;
+      return Object.values(response.customers);
     },
   });
 });
