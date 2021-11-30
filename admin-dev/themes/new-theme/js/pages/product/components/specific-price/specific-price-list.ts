@@ -27,6 +27,7 @@ export default class SpecificPriceList {
 
     getSpecificPrices(this.productId).then((response) => {
       const specificPrices = response.specificPrices as Array<SpecificPriceForListing>;
+      this.toggleListVisibility(specificPrices.length > 0);
 
       specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
         const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
@@ -66,6 +67,14 @@ export default class SpecificPriceList {
         tbody.append(trClone);
       });
     });
+  }
+
+  private toggleListVisibility(show: boolean): void {
+    if (show) {
+      this.listContainer.classList.remove('d-none');
+    } else {
+      this.listContainer.classList.add('d-none');
+    }
   }
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
