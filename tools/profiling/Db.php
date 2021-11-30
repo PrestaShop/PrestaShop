@@ -110,9 +110,9 @@ abstract class Db extends DbCore
             $stack_light = [];
             foreach ($stack as $call) {
                 $stack_light[] = [
-                    'file' => isset($call['file']) ? $call['file'] : 'undefined',
-                    'line' => isset($call['line']) ? $call['line'] : 'undefined',
-                    'function' => isset($call['function']) ? $call['function'] : 'undefined',
+                    'file' => $call['file'] ?? 'undefined',
+                    'line' => $call['line'] ?? 'undefined',
+                    'function' => $call['function'] ?? 'undefined',
                 ];
             }
 
