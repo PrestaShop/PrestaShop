@@ -71,6 +71,11 @@ class ProductPricesInformation
     private $unitPrice;
 
     /**
+     * @var DecimalNumber
+     */
+    private $unitPriceTaxIncluded;
+
+    /**
      * @var string
      */
     private $unity;
@@ -88,6 +93,7 @@ class ProductPricesInformation
      * @param bool $onSale
      * @param DecimalNumber $wholesalePrice
      * @param DecimalNumber $unitPrice
+     * @param DecimalNumber $unitPriceTaxIncluded
      * @param string $unity
      * @param DecimalNumber $unitPriceRatio
      */
@@ -99,6 +105,7 @@ class ProductPricesInformation
         bool $onSale,
         DecimalNumber $wholesalePrice,
         DecimalNumber $unitPrice,
+        DecimalNumber $unitPriceTaxIncluded,
         string $unity,
         DecimalNumber $unitPriceRatio
     ) {
@@ -109,6 +116,7 @@ class ProductPricesInformation
         $this->onSale = $onSale;
         $this->wholesalePrice = $wholesalePrice;
         $this->unitPrice = $unitPrice;
+        $this->unitPriceTaxIncluded = $unitPriceTaxIncluded;
         $this->unity = $unity;
         $this->unitPriceRatio = $unitPriceRatio;
     }
@@ -167,6 +175,14 @@ class ProductPricesInformation
     public function getUnitPrice(): DecimalNumber
     {
         return $this->unitPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getUnitPriceTaxIncluded(): DecimalNumber
+    {
+        return $this->unitPriceTaxIncluded;
     }
 
     /**
