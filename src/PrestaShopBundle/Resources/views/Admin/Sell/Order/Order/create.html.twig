@@ -49,3 +49,10 @@
 
   <script src="{{ asset('themes/new-theme/public/order_create.bundle.js') }}"></script>
 {% endblock %}
+
+{% set js_translatable = {
+  "Customer search - group default": 'default'|trans({}, 'Admin.Orderscustomers.Feature'),
+  "Customer search - group label single": 'Group'|trans({}, 'Admin.Orderscustomers.Feature'),
+  "Customer search - group label multiple": 'Groups'|trans({}, 'Admin.Orderscustomers.Feature'),
+}|merge(js_translatable)
+%}
