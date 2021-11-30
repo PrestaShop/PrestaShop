@@ -63,8 +63,8 @@ class PricesCommandsBuilder implements ProductCommandsBuilderInterface
         if (isset($priceData['wholesale_price'])) {
             $command->setWholesalePrice((string) $priceData['wholesale_price']);
         }
-        if (isset($priceData['unit_price']['price'])) {
-            $command->setUnitPrice((string) $priceData['unit_price']['price']);
+        if (isset($priceData['unit_price']['price_tax_excluded'])) {
+            $command->setUnitPrice((string) $priceData['unit_price']['price_tax_excluded']);
         }
         if (isset($priceData['unit_price']['unity'])) {
             $command->setUnity((string) $priceData['unit_price']['unity']);
