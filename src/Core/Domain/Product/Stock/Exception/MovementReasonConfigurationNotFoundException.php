@@ -30,6 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 /**
  * Thrown when configuration is missing for movement reason
  */
-class MovementReasonConfigurationMissingException extends ProductStockException
+class MovementReasonConfigurationNotFoundException extends ProductStockException
 {
 }
