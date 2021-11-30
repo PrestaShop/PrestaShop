@@ -64,7 +64,6 @@
 
         {{ form_row(employeeForm.has_enabled_gravatar) }}
         {{ form_row(employeeForm.email) }}
-        {% set passwordHelpMessage = 'Password should be at least %num% characters long.'|trans({ '%num%': passwordMinLength }, 'Admin.Advparameters.Help') %}
 
         {% if isRestrictedAccess %}
           {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/change_password.html.twig' with {'change_password':employeeForm.change_password} %}
