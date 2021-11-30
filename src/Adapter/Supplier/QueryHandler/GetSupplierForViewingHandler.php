@@ -188,42 +188,45 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         foreach ($productCombinations as $combination) {
             $attributeId = $combination['id_product_attribute'];
             if (!isset($combinations[$attributeId])) {
-                $productInfo = Supplier::getProductInformationsBySupplier(
+                $combinationSupplierInfo = Supplier::getProductInformationsBySupplier(
                     $supplier->id,
                     $product->id,
                     $combination['id_product_attribute']
                 );
-                if (!$productInfo) {
+                if (!$combinationSupplierInfo) {
                     continue;
                 }
-                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
+                $isoCode = Currency::getIsoCodeById((int) $combinationSupplierInfo['id_currency'])
                     ?: $this->defaultCurrencyIsoCode;
-                $formattedWholesalePrice = null !== $productInfo['product_supplier_price_te']
-                    ? $this->locale->formatPrice($productInfo['product_supplier_price_te'], $isoCode)
+                $formattedWholesalePrice = null !== $combinationSupplierInfo['product_supplier_price_te']
+                    ? $this->locale->formatPrice($combinationSupplierInfo['product_supplier_price_te'], $isoCode)
                     : null;
                 $combinations[$attributeId] = [
                     'reference' => $combination['reference'],
-                    'supplier_reference' => $combination['supplier_reference'],
+                    'supplier_reference' => $combinationSupplierInfo['product_supplier_reference'],
                     'wholesale_price' => $formattedWholesalePrice,
                     'ean13' => $combination['ean13'],
                     'upc' => $combination['upc'],
                     'quantity' => $combination['quantity'],
-                    'attributes' => '',
+                    'attributes' => $this->buildCombinationName($combination),
                 ];
-            }
-            $attribute = sprintf(
-                '%s - %s',
-                $combination['group_name'],
-                $combination['attribute_name']
-            );
-
-            if (!empty($combinations[$attributeId]['attributes'])) {
-                $attribute = sprintf(', %s', $attribute);
+                continue;
             }
 
-            $combinations[$attributeId]['attributes'] = $attribute;
+            // if combination info already filled, we only append attributes to combination name
+            $combinations[$attributeId]['attributes'] .= sprintf(', %s', $this->buildCombinationName($combination));
         }
 
         return $combinations;
+    }
+
+    /**
+     * @param array<string, mixed> $attributesInfo
+     *
+     * @return string
+     */
+    private function buildCombinationName(array $attributesInfo): string
+    {
+        return sprintf('%s - %s', $attributesInfo['group_name'], $attributesInfo['attribute_name']);
     }
 }
