@@ -39,8 +39,8 @@
         <i class="material-icons">business_center</i>
         {{ 'Smarty'|trans }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_smarty_cache_form %}
             {{ form_widget(smartyForm) }}
           {% endblock %}
@@ -62,8 +62,8 @@
         <i class="material-icons">bug_report</i>
         {{ 'Debug mode'|trans }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_debug_mode_form %}
             {{ form_widget(debugModeForm) }}
           {% endblock %}
@@ -94,8 +94,8 @@
               title="">
         </span>
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_optional_features_form %}
             {{ form_widget(optionalFeaturesForm) }}
           {% endblock %}
@@ -126,8 +126,8 @@
               title="">
         </span>
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_ccc_form %}
             {{ form_widget(combineCompressCacheForm) }}
           {% endblock %}
@@ -158,8 +158,8 @@
               title="">
         </span>
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_media_servers_form %}
             {{ form_widget(mediaServersForm) }}
           {% endblock %}
@@ -181,8 +181,8 @@
         <i class="material-icons">link</i>
         {{ 'Caching'|trans }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% block perfs_form_caching_form %}
             {{ form_widget(cachingForm) }}
           {% endblock %}

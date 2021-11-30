@@ -30,8 +30,8 @@
   <h3 class="card-header">
     {{ 'Tax options'|trans({}, 'Admin.International.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {% block tax_options_form_widget %}
         {{ form_widget(taxOptionsForm) }}
       {% endblock %}

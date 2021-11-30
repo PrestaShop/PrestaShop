@@ -31,8 +31,8 @@
     <i class="material-icons">attach_money</i>
     {{ 'Catalog price rules'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ ps.form_group_row(catalogPriceRuleForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global'),
       }) }}
