@@ -24,7 +24,7 @@
  */
 
 import ChoiceTree from '@components/form/choice-tree';
-import AddonsConnector from '../../components/addons-connector';
+import AddonsConnector from '@components/addons-connector';
 import employeeFormMap from './employee-form-map';
 
 /**

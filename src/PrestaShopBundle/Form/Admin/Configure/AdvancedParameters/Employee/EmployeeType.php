@@ -54,15 +54,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 final class EmployeeType extends TranslatorAwareType
 {
+    public const MINIMUM_SEARCH_RESULTS = 7;
+
     public const AVAILABLE_IMAGE_FORMATS = [
         'gif',
         'jpg',
         'jpeg',
         'jpe',
         'png',
+        'webp',
     ];
 
-    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png';
+    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png, webp';
 
     /**
      * @var array
@@ -244,7 +247,7 @@ final class EmployeeType extends TranslatorAwareType
                 'label' => $this->trans('Default page', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('This page will be displayed just after login.', 'Admin.Advparameters.Help'),
                 'attr' => [
-                    'data-minimumResultsForSearch' => '7',
+                    'data-minimumResultsForSearch' => (string) self::MINIMUM_SEARCH_RESULTS,
                     'data-toggle' => 'select2',
                 ],
             ])

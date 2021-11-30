@@ -79,7 +79,7 @@
       {% set disabledField = true %}
     {% endif %}
 
-    <div {{ block('form_row_attr') }}{% if (attr.visible is defined and not attr.visible) %} style="display: none;"{% endif %}>
+    <div {{ block('form_row_attr') }}>
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
         {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
@@ -114,6 +114,10 @@
   {% set classes = 'form-group row' %}
   {% if (not compound or force_error|default(false)) and not valid %}
     {% set classes = classes ~ ' has-error' %}
+  {% endif %}
+
+  {% if attr.visible is defined and not attr.visible %}
+    {% set classes = classes ~ ' d-none' %}
   {% endif %}
 
   {% if row_attr.class is defined %}
