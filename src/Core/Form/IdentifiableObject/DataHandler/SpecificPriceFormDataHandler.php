@@ -140,6 +140,6 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         $customerInput = $data['customer'];
         $firstItem = reset($customerInput);
 
-        return (int) $firstItem['id_customer'] ?? 0;
+        return isset($firstItem['id_customer']) ? (int) $firstItem['id_customer'] : 0;
     }
 }
