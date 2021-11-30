@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
@@ -42,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -70,7 +70,7 @@ class AddProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var DecimalNumber
+     * @var Price
      */
     private $price;
 
@@ -150,7 +150,7 @@ class AddProductSpecificPriceCommand
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includesTax = $includeTax;
-        $this->price = new DecimalNumber($price);
+        $this->price = new Price($price);
         $this->fromQuantity = $fromQuantity;
         $this->shopId = new NoShopId();
         $this->combinationId = new NoCombinationId();
@@ -185,9 +185,9 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return DecimalNumber
+     * @return Price
      */
-    public function getPrice(): DecimalNumber
+    public function getPrice(): Price
     {
         return $this->price;
     }

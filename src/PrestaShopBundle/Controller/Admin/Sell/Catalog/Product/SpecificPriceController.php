@@ -134,6 +134,14 @@ class SpecificPriceController extends FrameworkBundleAdminController
                     'A specific price already exists for these parameters.',
                     'Admin.Catalog.Notification'
                 ),
+                SpecificPriceConstraintException::REDUCTION_OR_PRICE_MUST_BE_SET => $this->trans(
+                    sprintf(
+                        '%s or %s must be set',
+                        $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
+                        $this->trans('Reduction', 'Admin.Catalog.Feature')
+                    ),
+                    'Admin.Catalog.Notification'
+                ),
             ],
         ];
     }

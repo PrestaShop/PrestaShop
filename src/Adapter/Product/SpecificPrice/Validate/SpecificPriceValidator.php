@@ -48,7 +48,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
@@ -222,7 +221,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         if (null !== $specificPrice->reduction) {
             $reduction = $this->numberExtractor->extract($specificPrice, 'reduction');
         }
-        if (null !== $specificPrice->price && (string) $specificPrice->price !== Price::LEAVE_PRODUCT_INITIAL_PRICE_VALUE) {
+        if (null !== $specificPrice->price) {
             $price = $this->numberExtractor->extract($specificPrice, 'price');
         }
 
