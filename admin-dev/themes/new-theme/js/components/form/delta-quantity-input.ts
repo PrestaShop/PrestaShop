@@ -89,9 +89,10 @@ class DeltaQuantityInput {
     const $container: JQuery = $(submittableDeltaInput).closest(this.config.containerSelector);
     const deltaQuantity = this.getDeltaQuantity(submittableDeltaInput);
     const initialQuantity = this.getInitialQuantity($container);
+    const newQuantity = initialQuantity + deltaQuantity;
 
-    $container.data('initialQuantity', initialQuantity + deltaQuantity);
-    $container.find(this.config.initialQuantityPreviewSelector).text(initialQuantity + deltaQuantity);
+    $container.data('initialQuantity', newQuantity);
+    $container.find(this.config.initialQuantityPreviewSelector).text(newQuantity);
     $(submittableDeltaInput).val(0);
     $(submittableDeltaInput).data('initialValue', 0);
     $container.find(this.config.newQuantitySelector).text(0);

@@ -34,7 +34,7 @@ const {$} = window;
 
 export type SubmittableInputConfig = {
   wrapperSelector: string;
-  callback: (input: Element) => any;
+  submitCallback: (input: Element) => any;
 }
 
 /**
@@ -47,7 +47,7 @@ export default class SubmittableInput {
 
   inputSelector: string;
 
-  callback: (input: Element) => any;
+  submitCallback: (input: Element) => any;
 
   wrapperSelector: string;
 
@@ -63,7 +63,7 @@ export default class SubmittableInput {
     this.buttonSelector = ComponentsMap.submittableInput.buttonSelector;
     this.wrapperSelector = config.wrapperSelector;
     this.inputsInContainerSelector = `${this.wrapperSelector} ${this.inputSelector}`;
-    this.callback = config.callback;
+    this.submitCallback = config.submitCallback;
     this.loading = false;
 
     this.init();
@@ -78,12 +78,8 @@ export default class SubmittableInput {
     });
     $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e: ClickEvent) => {
       e.stopImmediatePropagation();
-      this.submitInput(e.currentTarget);
+      this.submitInput(this.findInput(e.currentTarget));
     });
-    this.onEnterKeyup();
-  }
-
-  private onEnterKeyup(): void {
     $(document).on('keyup', this.inputsInContainerSelector, (e: JQueryEventObject) => {
       // only on ENTER
       if (e.keyCode !== 13) {
@@ -92,24 +88,21 @@ export default class SubmittableInput {
 
       e.preventDefault();
       e.stopImmediatePropagation();
-      const input = e.target as HTMLInputElement;
-
-      if (this.loading || !this.inputValueChanged(input)) {
-        return;
-      }
-
-      this.submitInput(this.findButton(input));
+      this.submitInput(e.target as HTMLInputElement);
     });
   }
 
-  private submitInput(button: HTMLButtonElement): void {
-    const input: HTMLInputElement = this.findInput(button);
+  private submitInput(input: HTMLInputElement): void {
+    if (this.loading || !this.inputValueChanged(input)) {
+      return;
+    }
     // set local variable to be able to use it inside callback scope
     const {eventEmitter} = this;
 
-    this.toggleLoading(button, true);
+    this.toggleLoading(input, true);
+    const button = this.findButton(input);
 
-    this.callback(input)
+    this.submitCallback(input)
       .then((response: AjaxResponse) => {
         $(input).data('initialValue', input.value);
         this.toggleButtonVisibility(button, false);
@@ -118,13 +111,13 @@ export default class SubmittableInput {
           eventEmitter.emit('submittableInputSuccess', input);
           showGrowl('success', response.message);
         }
-        this.toggleLoading(button, false);
+        this.toggleLoading(input, false);
       })
       .catch((error: AjaxError) => {
         eventEmitter.emit(ComponentsEventMap.submittableInput.submitError, {input, error});
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
-        this.toggleLoading(button, false);
+        this.toggleLoading(input, false);
         if (typeof error.responseJSON.errors === 'undefined') {
           return;
         }
@@ -163,16 +156,16 @@ export default class SubmittableInput {
     $button.toggleClass('d-none', !visible);
   }
 
-  private toggleLoading(button: HTMLButtonElement, loading: boolean): void {
+  private toggleLoading(input: HTMLInputElement, loading: boolean): void {
     this.loading = loading;
+    const button = this.findButton(input);
+    // eslint-disable-next-line no-param-reassign
+    input.disabled = this.loading;
+    button.disabled = this.loading;
 
     if (this.loading) {
-      // eslint-disable-next-line no-param-reassign
-      button.disabled = true;
       $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
-      // eslint-disable-next-line no-param-reassign
-      button.disabled = false;
       $(button).html('<i class="material-icons">check</i>');
     }
   }
