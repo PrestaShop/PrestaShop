@@ -99,6 +99,11 @@ class GeneralType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Recalculate shipping costs after editing the order', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Automatically updates the shipping costs when you edit an order.', 'Admin.Shopparameters.Help'),
+            ])
+            ->add('autoremove_not_valid_cartrules', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Autoremove cart rules not valid from cart', 'Admin.Shopparameters.Feature'),
+                'help' => $this->trans('Automatically removes expired or no valid cart rules from cart.', 'Admin.Shopparameters.Help'),
             ]);
 
         if ($isMultishippingEnabled) {

@@ -490,6 +490,11 @@ class CartCore extends ObjectModel
             return [];
         }
         if ($autoAdd) {
+            $cache_key = 'Cart::getCartRules_autoRemoveFromCart';
+            if (!Cache::isStored($cache_key)) {
+                //CartRule::autoRemoveFromCart($virtual_context, $useOrderPrices, false);
+                Cache::store($cache_key, true);
+            }
             CartRule::autoAddToCart($virtual_context, $useOrderPrices);
         }
 

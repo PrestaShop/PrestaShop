@@ -650,11 +650,12 @@ class CartRuleCore extends ObjectModel
 
         // All these checks are necessary when you add the cart rule the first time, so when it's not in cart yet
         // However when it's in the cart and you are checking if the cart rule is still valid (when performing auto remove)
-        // these rules are outdated For example:
+        // these rules are outdated, unless you check to true the PS_AUTOREMOVE_NOT_VALID_CARTRULES config.
+        // For example:
         //  - the cart rule can now be disabled but it was at the time it was applied, so it doesn't need to be removed
         //  - the current date is not in the range any more but it was at the time
         //  - the quantity is now zero but it was not when it was added
-        if (!$alreadyInCart) {
+        if (!$alreadyInCart || Configuration::get('PS_AUTOREMOVE_NOT_VALID_CARTRULES')) {
             if (!$this->active) {
                 return (!$display_error) ? false : $this->trans('This voucher is disabled', [], 'Shop.Notifications.Error');
             }
@@ -1689,7 +1690,7 @@ class CartRuleCore extends ObjectModel
      *
      * @return array Error messages
      */
-    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false)
+    public static function autoRemoveFromCart(Context $context = null, bool $useOrderPrice = false, $autoAdd = true)
     {
         if (!$context) {
             $context = Context::getContext();
@@ -1699,8 +1700,8 @@ class CartRuleCore extends ObjectModel
         }
 
         static $errors = [];
-        foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, true, $useOrderPrice) as $cart_rule) {
-            if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice)) {
+        foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_ALL, $autoAdd, $useOrderPrice) as $cart_rule) {
+            if ($error = $cart_rule['obj']->checkValidity($context, true, true, true, $useOrderPrice, true)) {
                 $context->cart->removeCartRule($cart_rule['obj']->id, $useOrderPrice);
                 $context->cart->update();
                 $errors[] = $error;

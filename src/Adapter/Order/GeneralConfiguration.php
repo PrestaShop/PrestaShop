@@ -55,6 +55,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'disable_reordering_option' => $this->configuration->getBoolean('PS_DISALLOW_HISTORY_REORDERING'),
             'purchase_minimum_value' => $this->configuration->get('PS_PURCHASE_MINIMUM'),
             'recalculate_shipping_cost' => $this->configuration->getBoolean('PS_ORDER_RECALCULATE_SHIPPING'),
+            'autoremove_not_valid_cartrules' => $this->configuration->getBoolean('PS_AUTOREMOVE_NOT_VALID_CARTRULES'),
             'allow_multishipping' => $this->configuration->getBoolean('PS_ALLOW_MULTISHIPPING'),
             'allow_delayed_shipping' => $this->configuration->getBoolean('PS_SHIP_WHEN_AVAILABLE'),
             'enable_tos' => $this->configuration->getBoolean('PS_CONDITIONS'),
@@ -73,6 +74,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_DISALLOW_HISTORY_REORDERING', $configuration['disable_reordering_option']);
             $this->configuration->set('PS_PURCHASE_MINIMUM', $configuration['purchase_minimum_value']);
             $this->configuration->set('PS_ORDER_RECALCULATE_SHIPPING', $configuration['recalculate_shipping_cost']);
+            $this->configuration->set('PS_AUTOREMOVE_NOT_VALID_CARTRULES', $configuration['autoremove_not_valid_cartrules']);
             $this->configuration->set('PS_ALLOW_MULTISHIPPING', $configuration['allow_multishipping']);
             $this->configuration->set('PS_SHIP_WHEN_AVAILABLE', $configuration['allow_delayed_shipping']);
             $this->configuration->set('PS_CONDITIONS', $configuration['enable_tos']);
@@ -93,6 +95,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $configuration['disable_reordering_option'],
             $configuration['purchase_minimum_value'],
             $configuration['recalculate_shipping_cost'],
+            $configuration['autoremove_not_valid_cartrules'],
             $configuration['allow_multishipping'],
             $configuration['allow_delayed_shipping'],
             $configuration['enable_tos'],
