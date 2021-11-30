@@ -85,7 +85,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         if ($command->getPrice()) {
-            $specificPrice->price = (float) (string) $command->getPrice();
+            $specificPrice->price = (string) $command->getPrice();
             $updatableProperties[] = 'price';
         }
 
