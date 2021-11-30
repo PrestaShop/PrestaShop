@@ -41,5 +41,7 @@ export default {
     // 'product[shortcuts][retail_price][tax_rules_group_id]',
   ],
   'product.price.wholesalePrice': 'product[pricing][wholesale_price]',
+  'product.price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
+  'product.price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
   'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
 };
