@@ -38,7 +38,7 @@ export type DeltaQuantityConfig = {
   modifiedQuantityClass: string;
   newQuantitySelector: string;
   initialQuantityPreviewSelector: string;
-  submittableInputConfig: null|SubmittableInputConfig;
+  submittableInputConfig: SubmittableInputConfig|null;
 }
 export type InputDeltaQuantityConfig = Partial<DeltaQuantityConfig>;
 

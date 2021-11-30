@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 
@@ -97,7 +98,7 @@ export default class CombinationsGridRenderer {
       $referenceInput.data('initial-value', combination.reference);
       $quantityInput.val(combination.quantity);
       $quantityInput.data('initial-value', combination.quantity);
-      $quantityInput.find('.initial-quantity').text(combination.quantity);
+      $quantityInput.find(ComponentsMap.deltaQuantityInput.initialQuantityPreviewSelector).text(combination.quantity);
       $deltaQuantityContainer.data('initial-quantity', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
