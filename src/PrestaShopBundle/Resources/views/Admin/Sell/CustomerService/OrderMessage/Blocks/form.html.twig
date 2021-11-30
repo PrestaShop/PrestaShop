@@ -31,8 +31,8 @@
     <i class="material-icons">person</i>
     {{ 'Order messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_errors(orderMessageForm) }}
       {% block order_message_form_widget %}
         {{ form_widget(orderMessageForm) }}

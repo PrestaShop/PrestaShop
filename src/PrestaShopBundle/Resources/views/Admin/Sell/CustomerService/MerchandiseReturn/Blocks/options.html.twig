@@ -30,8 +30,8 @@
     <h3 class="card-header">
       {{ 'Merchandise return (RMA) options'|trans({}, 'Admin.Orderscustomers.Feature') }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ ps.form_group_row(merchandiseReturnsOptionsForm.enable_order_return, {}, {
           label: 'Enable returns'|trans({}, 'Admin.Orderscustomers.Feature'),
           help: 'Would you like to allow merchandise returns in your shop?'|trans({}, 'Admin.Orderscustomers.Help')

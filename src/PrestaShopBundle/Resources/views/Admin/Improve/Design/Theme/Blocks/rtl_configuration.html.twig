@@ -30,8 +30,8 @@
   <h3 class="card-header">
     {{ 'Adaptation to Right-to-Left languages'|trans({}, 'Admin.Design.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       <div class="alert alert-info">
         <p class="alert-text">
           {{ 'Be careful! Please check your theme in an RTL language before generating the RTL stylesheet: your theme could be already adapted to RTL.\nOnce you enable the "%generate_rtl_label%" option, any RTL-specific file that you might have added to your theme might be deleted by the created stylesheet.'|trans({'%generate_rtl_label%': 'Generate RTL stylesheet'|trans({}, 'Admin.Design.Feature')}, 'Admin.Design.Help') }}
@@ -50,8 +50,8 @@
 
   {% if isMultiShopFeatureUsed and isSingleShopContext %}
     <hr>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ ps.multistore_switch(shopLogosForm, {
           'label': 'Multistore'|trans({}, 'Admin.Global'),
         }) }}
