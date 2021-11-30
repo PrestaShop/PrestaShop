@@ -437,10 +437,11 @@ class AddressCore extends ObjectModel
      * Specify if an address is already in base.
      *
      * @param int $id_address Address id
+     * @param bool $refreshCache default false
      *
      * @return bool The address exists
      */
-    public static function addressExists($id_address, $refreshCache = false): bool
+    public static function addressExists($id_address, bool $refreshCache)
     {
         if ($id_address == 0) {
             return false;
