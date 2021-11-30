@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
-use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
 
@@ -55,11 +54,6 @@ class CombinationStockUpdater
     private $combinationRepository;
 
     /**
-     * @var StockManager
-     */
-    private $stockManager;
-
-    /**
      * @var ConfigurationInterface
      */
     private $configuration;
@@ -67,18 +61,15 @@ class CombinationStockUpdater
     /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
-     * @param StockManager $stockManager
      * @param ConfigurationInterface $configuration
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
-        StockManager $stockManager,
         ConfigurationInterface $configuration
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
-        $this->stockManager = $stockManager;
         $this->configuration = $configuration;
     }
 
@@ -107,11 +98,6 @@ class CombinationStockUpdater
     private function fillUpdatableProperties(Combination $combination, CombinationStockProperties $properties): array
     {
         $updatableProperties = [];
-
-        if (null !== $properties->getDeltaQuantity()) {
-            $combination->quantity = $combination->quantity + $properties->getDeltaQuantity()->getDeltaQuantity();
-            $updatableProperties[] = 'quantity';
-        }
 
         if (null !== $properties->getAvailableDate()) {
             $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
