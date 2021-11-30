@@ -1194,7 +1194,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     protected function getEncoding($structure)
     {
         foreach ($structure->parameters as $parameter) {
-            if ($parameter->attribute == 'CHARSET') {
+            if (strtoupper($parameter->attribute) == 'CHARSET') {
                 return $parameter->value;
             }
         }
