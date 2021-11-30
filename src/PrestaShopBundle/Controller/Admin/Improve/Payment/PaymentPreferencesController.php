@@ -103,9 +103,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function processPaymentCarrierRestrictionsFormAction(Request $request): RedirectResponse
     {
-        $carrierRestrictionsFormHandler = $this->getPaymentCarrierRestrictionsFormHandler();
-
-        return $this->processForm($carrierRestrictionsFormHandler, $request);
+        return $this->processForm($this->getPaymentCarrierRestrictionsFormHandler(), $request);
     }
 
     /**
@@ -123,9 +121,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function processPaymentCountryRestrictionsFormAction(Request $request): RedirectResponse
     {
-        $countryRestrictionsFormHandler = $this->getPaymentCountryRestrictionsFormHandler();
-
-        return $this->processForm($countryRestrictionsFormHandler, $request);
+        return $this->processForm($this->getPaymentCountryRestrictionsFormHandler(), $request);
     }
 
     /**
@@ -143,9 +139,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function processPaymentCurrencyRestrictionsFormAction(Request $request): RedirectResponse
     {
-        $currencyRestrictionsFormHandler = $this->getPaymentCurrencyRestrictionsFormHandler();
-
-        return $this->processForm($currencyRestrictionsFormHandler, $request);
+        return $this->processForm($this->getPaymentCurrencyRestrictionsFormHandler(), $request);
     }
 
     /**
@@ -163,9 +157,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      */
     public function processPaymentGroupRestrictionsFormAction(Request $request): RedirectResponse
     {
-        $groupRestrictionsFormHandler = $this->getPaymentGroupRestrictionsFormHandler();
-
-        return $this->processForm($groupRestrictionsFormHandler, $request);
+        return $this->processForm($this->getPaymentGroupRestrictionsFormHandler(), $request);
     }
 
     /**
