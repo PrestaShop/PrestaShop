@@ -178,7 +178,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'tax_rules_group_id' => $this->mostUsedTaxRulesGroupId,
                 'wholesale_price' => 0,
                 'unit_price' => [
-                    'price' => 0,
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
                 ],
             ],
             'shipping' => [
@@ -467,7 +468,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
             'unit_price' => [
-                'price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
+                'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
+                'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getUnitPriceTaxIncluded(),
                 'unity' => $productForEditing->getPricesInformation()->getUnity(),
             ],
         ];

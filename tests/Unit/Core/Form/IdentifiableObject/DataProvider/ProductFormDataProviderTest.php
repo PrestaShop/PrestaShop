@@ -130,7 +130,8 @@ class ProductFormDataProviderTest extends TestCase
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
                 'unit_price' => [
-                    'price' => 0,
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
                 ],
             ],
             'shipping' => [
@@ -203,7 +204,8 @@ class ProductFormDataProviderTest extends TestCase
                 'tax_rules_group_id' => 42,
                 'wholesale_price' => 0,
                 'unit_price' => [
-                    'price' => 0,
+                    'price_tax_excluded' => 0,
+                    'price_tax_included' => 0,
                 ],
             ],
             'shipping' => [
@@ -445,6 +447,7 @@ class ProductFormDataProviderTest extends TestCase
             'on_sale' => true,
             'wholesale_price' => new DecimalNumber('66.56'),
             'unit_price' => new DecimalNumber('6.656'),
+            'unit_price_tax_included' => new DecimalNumber('7.9872'),
             'unity' => 'candies',
             'unit_price_ratio' => new DecimalNumber('5'),
         ];
@@ -454,11 +457,9 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
-        $expectedOutputData['pricing']['unit_price']['price'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['price_tax_included'] = 7.9872;
         $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
-
-        // Not handled yet
-        // $expectedOutputData['price']['unit_price_ratio'] = 5;
 
         $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
@@ -1281,6 +1282,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
             $product['unit_price'] ?? new DecimalNumber('19.86'),
+            $product['unit_price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['unity'] ?? '',
             $product['unit_price_ratio'] ?? new DecimalNumber('1')
         );
@@ -1439,7 +1441,8 @@ class ProductFormDataProviderTest extends TestCase
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
                 'unit_price' => [
-                    'price' => 19.86,
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 23.832,
                     'unity' => '',
                 ],
             ],
