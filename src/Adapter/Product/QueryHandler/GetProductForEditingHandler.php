@@ -272,6 +272,13 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             new CountryId($this->countryId)
         );
 
+        $unitPriceTaxExcluded = $this->numberExtractor->extract($product, 'unit_price');
+        $unitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+            $unitPriceTaxExcluded,
+            new TaxRulesGroupId((int) $product->id_tax_rules_group),
+            new CountryId($this->countryId)
+        );
+
         return new ProductPricesInformation(
             $priceTaxExcluded,
             $priceTaxIncluded,
@@ -279,7 +286,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
             $this->numberExtractor->extract($product, 'wholesale_price'),
-            $this->numberExtractor->extract($product, 'unit_price'),
+            $unitPriceTaxExcluded,
+            $unitPriceTaxIncluded,
             (string) $product->unity,
             $this->numberExtractor->extract($product, 'unit_price_ratio')
         );
