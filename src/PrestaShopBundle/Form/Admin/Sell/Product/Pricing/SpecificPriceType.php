@@ -165,6 +165,9 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Customer', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
+                'entry_options' => [
+                    'block_prefix' => 'searched_customer',
+                ],
                 'remove_modal' => null,
                 'limit' => 1,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
