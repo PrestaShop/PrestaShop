@@ -65,8 +65,6 @@ final class EmployeeType extends TranslatorAwareType
         'webp',
     ];
 
-    public const AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION = 'gif, jpg, jpeg, jpe, png, webp';
-
     /**
      * @var array
      */

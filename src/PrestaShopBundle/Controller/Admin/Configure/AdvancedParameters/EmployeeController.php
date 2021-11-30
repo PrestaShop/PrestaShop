@@ -499,7 +499,7 @@ class EmployeeController extends FrameworkBundleAdminController
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
                     'Image format not recognized, allowed formats are: %s',
                     'Admin.Notifications.Error',
-                    [EmployeeType::AVAILABLE_IMAGE_FORMATS_STRING_FOR_TRANSLATION]
+                    [implode(', ', EmployeeType::AVAILABLE_IMAGE_FORMATS)]
                 ),
             ],
             AdminEmployeeException::class => [
