@@ -25,17 +25,17 @@
  */
 
 .form-horizontal {
-  .card-block {
-    justify-content: center;
+  .card-body {
     padding: 1.875rem $card-spacer-x;
-
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
-    }
   }
 
-  .card-text {
-    @extend .col-sm-10;
+  .form-wrapper {
+    padding: 0 $spacer * 0.5;
+
+    @include media-breakpoint-up(sm) {
+      width: 83%;
+      margin: auto;
+    }
   }
 
   .form-group {
