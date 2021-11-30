@@ -345,7 +345,7 @@ export default class FormObjectMapper {
     inputName: string,
     value: string | number | string[] | undefined,
   ): void {
-    const $input = $(`[name="${inputName}"]`, this.$form);
+    const $input: JQuery = $(`[name="${inputName}"]`, this.$form);
 
     if (!$input.length) {
       console.error(`Input with name ${inputName} is not present in form.`);
@@ -353,12 +353,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    // This check is important to avoid infinite loops,
-    // we don't use strict equality on purpose because it would result
-    // into a potential infinite loop if type don't match,
-    // which can easily happen with a number value and a text input.
-    // eslint-disable-next-line eqeqeq
-    if ($input.val() != value) {
+    if (!this.hasSameValue($input, value)) {
       $input.val(<string>value);
 
       if ($input.data('toggle') === 'select2') {
@@ -367,6 +362,30 @@ export default class FormObjectMapper {
         $input.trigger('change');
       }
     }
+  }
+
+  /**
+   * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
+   * into a potential infinite loop if type don't match, which can easily happen with a number value in a text input.
+   *
+   * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
+   * it's not written exactly the same way (like pending zeros)
+   *
+   * @param $input
+   * @param value
+   * @private
+   */
+  private hasSameValue(
+    $input: JQuery,
+    value: string | number | string[] | undefined,
+  ): boolean {
+    // eslint-disable-next-line eqeqeq
+    if (Number(value) == $input.val()) {
+      return true;
+    }
+
+    // eslint-disable-next-line eqeqeq
+    return value == $input.val();
   }
 
   /**
