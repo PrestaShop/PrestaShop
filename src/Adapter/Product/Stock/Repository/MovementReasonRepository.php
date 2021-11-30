@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConfigurationMissingException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\MovementReasonConfigurationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\MovementReasonId;
 
 class MovementReasonRepository
@@ -54,14 +54,14 @@ class MovementReasonRepository
      *
      * @return MovementReasonId
      *
-     * @throws MovementReasonConfigurationMissingException
+     * @throws MovementReasonConfigurationNotFoundException
      */
     public function getIdByConfiguration(string $configurationName): MovementReasonId
     {
         $id = (int) $this->configuration->get($configurationName);
 
         if (!$id) {
-            throw new MovementReasonConfigurationMissingException(sprintf(
+            throw new MovementReasonConfigurationNotFoundException(sprintf(
                 'Movement reason id is not configured by "%s"',
                 $configurationName
             ));
