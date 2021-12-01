@@ -2,7 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -11,8 +11,11 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 
-// Import data
+// Import and init data
 const {Orders} = require('@data/demo/orders');
+
+const today = getDateFormat('yyyy-mm-dd');
+const dateToCheck = getDateFormat('mm/dd/yyyy');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,8 +27,6 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let numberOfOrders;
-let today;
-let dateToCheck;
 
 /*
 Filter orders By :
@@ -36,8 +37,6 @@ describe('BO - Orders : Filter the Orders table', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    today = await date.getDate('yyyy-mm-dd');
-    dateToCheck = await date.getDate('mm/dd/yyyy');
   });
   after(async () => {
     await helper.closeBrowserContext(browserContext);

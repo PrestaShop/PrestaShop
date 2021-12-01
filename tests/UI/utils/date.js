@@ -1,46 +1,55 @@
-const today = new Date();
-const futureDate = new Date();
-const pastDate = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-futureDate.setFullYear(today.getFullYear() + 1); // Next year
-pastDate.setFullYear(today.getFullYear() - 1); // Previous year
+/**
+ * Get base date from which we get the format
+ * @param dateTime
+ * @return {Date}
+ */
+const getBaseDate = (dateTime = 'today') => {
+  let baseDate = new Date();
 
-module.exports = {
-  /**
-   * Get date on some formats and times
-   * @param format {string} Format of the date
-   * @param time {string} Time of the date (present, future, past)
-   * @returns {Promise<string>}
-   */
-  async getDate(format, time = 'today') {
-    let date = '';
-    switch (format) {
-      case 'mm/dd/yyyy':
-        if (time === 'today') {
-          date = `${mm}/${dd}/${yyyy}`;
-        }
-        break;
-      case 'yyyy/mm/dd':
-        if (time === 'today') {
-          date = `${yyyy}/${mm}/${dd}`;
-        }
-        break;
-      case 'yyyy-mm-dd':
-        if (time === 'today') {
-          date = today.toISOString().slice(0, 10);
-        }
-        if (time === 'future') {
-          date = futureDate.toISOString().slice(0, 10);
-        }
-        if (time === 'past') {
-          date = pastDate.toISOString().slice(0, 10);
-        }
-        break;
-      default:
-      // Do nothing
-    }
-    return date;
-  },
+  // Set base date : Dates from today, future, past or exact date passed to the function
+  switch (dateTime) {
+    case 'past':
+      baseDate.setFullYear(baseDate.getFullYear() + 1);
+      break;
+    case 'future':
+      baseDate.setFullYear(baseDate.getFullYear() - 1);
+      break;
+    case 'today':
+      break;
+    default:
+      baseDate = dateTime;
+  }
+
+  return baseDate;
 };
+
+/**
+ * Get date on some formats and times
+ * @param format {string} Format of the date
+ * @param time {string} Time of the date (present, future, past)
+ * @returns {string}
+ */
+const getDateFormat = (format, dateTime = 'today') => {
+  const date = getBaseDate(dateTime);
+
+  // Get day, month and year depending
+  const mm = (`0${date.getMonth() + 1}`).slice(-2); // Current month
+  const dd = (`0${date.getDate()}`).slice(-2); // Current day
+  const yyyy = date.getFullYear(); // Current year
+
+  switch (format) {
+    case 'mm/dd/yyyy':
+      return `${mm}/${dd}/${yyyy}`;
+
+    case 'yyyy/mm/dd':
+      return `${yyyy}/${mm}/${dd}`;
+
+    case 'yyyy-mm-dd':
+      return date.toISOString().slice(0, 10);
+
+    default:
+      throw new Error(`The format ${format} is not handled by this helper yet`);
+  }
+};
+
+module.exports = {getDateFormat};
