@@ -1267,9 +1267,9 @@ class HookCore extends ObjectModel
      *
      * @return bool
      */
-    public static function getHookStatusByName($hook_name, $refreshCache = false): bool
+    public static function getHookStatusByName($hook_name): bool
     {
-        if ($refreshCache || !Cache::isStored('hook_active')) {
+        if (!Cache::isStored('hook_active')) {
             $sql = new DbQuery();
             $sql->select('name');
             $sql->from('hook', 'h');
