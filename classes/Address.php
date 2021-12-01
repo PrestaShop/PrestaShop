@@ -437,17 +437,16 @@ class AddressCore extends ObjectModel
      * Specify if an address is already in base.
      *
      * @param int $id_address Address id
-     * @param bool $refreshCache default false
      *
      * @return bool The address exists
      */
-    public static function addressExists($id_address, bool $refreshCache)
+    public static function addressExists($id_address)
     {
         if ($id_address == 0) {
             return false;
         }
         $cacheKey = 'address_exists_' . $id_address;
-        if ($refreshCache || !Cache::isStored($cacheKey)) {
+        if (!Cache::isStored($cacheKey)) {
             $addressExists = (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                 'SELECT `id_address`
                 FROM ' . _DB_PREFIX_ . 'address a
