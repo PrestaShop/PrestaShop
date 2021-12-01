@@ -239,7 +239,9 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter E-mail table by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await emailPage.filterEmailLogsByDate(page, DateStartFourDigitYear.todayDateFormat2, DateStartFourDigitYear.todayDateFormat2);
+      await emailPage.filterEmailLogsByDate(
+        page,
+        DateStartFourDigitYear.todayDateFormat2, DateStartFourDigitYear.todayDateFormat2);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
