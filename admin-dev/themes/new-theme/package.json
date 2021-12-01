@@ -39,6 +39,7 @@
     "prestakit": "^1.2.3",
     "punycode": "^2.1.1",
     "tablednd": "^1.0.3",
+    "terser-webpack-plugin": "^5.2.5",
     "typeahead.js": "^0.11.1",
     "url-polyfill": "^1.1.7",
     "vue": "^2.6.14",
