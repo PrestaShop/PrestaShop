@@ -174,3 +174,8 @@ svg {
   left: 1rem;
 }
 
+/* Fix header overflow in mobile screen */
+.mobile #content.bootstrap {
+  overflow: hidden;
+}
+
