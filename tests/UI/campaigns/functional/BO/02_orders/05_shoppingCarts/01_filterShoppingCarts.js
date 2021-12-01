@@ -12,6 +12,7 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 
 // Import data
 const {ShoppingCarts} = require('@data/demo/shoppingCarts');
+const {DateStartTwoDigitMonth} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,21 +25,6 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (mm/dd/yyyy)
-const todayDate = `${month}/${day}/${year}`;
 
 /*
 Delete the non ordered shopping carts
@@ -204,7 +190,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter by date
-    await shoppingCartsPage.filterByDate(page, todayDate, todayDate);
+    await shoppingCartsPage.filterByDate(page, DateStartTwoDigitMonth.todayDate, DateStartTwoDigitMonth.todayDate);
 
     // Check number of element
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
@@ -212,7 +198,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
       const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date');
-      await expect(textColumn).to.contains(todayDate);
+      await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
     }
   });
 

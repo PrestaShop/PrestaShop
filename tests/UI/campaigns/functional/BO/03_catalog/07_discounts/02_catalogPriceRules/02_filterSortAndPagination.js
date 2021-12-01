@@ -12,6 +12,9 @@ const cartRulesPage = require('@pages/BO/catalog/discounts');
 const catalogPriceRulesPage = require('@pages/BO/catalog/discounts/catalogPriceRules');
 const addCatalogPriceRulePage = require('@pages/BO/catalog/discounts/catalogPriceRules/add');
 
+// Import data
+const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -29,25 +32,12 @@ let page;
 
 let numberOfCatalogPriceRules = 0;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyyy-mm-dd)
-const todayDate = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const todayDateToCheck = `${month}/${day}/${year}`;
-
-const priceRuleData = new PriceRuleFaker({fromDate: todayDate, toDate: todayDate});
+const priceRuleData = new PriceRuleFaker(
+  {
+    fromDate: DateStartFourDigitYear.todayDateFormat2,
+    toDate: DateStartFourDigitYear.todayDateFormat2,
+  },
+);
 /*
 Create 21 catalog price rules
 Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
@@ -100,7 +90,11 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   describe('Create 21 catalog price rules in BO', async () => {
     const creationTests = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test, index) => {
-      const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
+      const priceRuleData = new PriceRuleFaker({
+        name: `todelete${index}`,
+        fromDate: DateStartFourDigitYear.todayDateFormat2,
+        toDate: DateStartFourDigitYear.todayDateFormat2,
+      });
 
       it('should go to new catalog price rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
@@ -219,12 +213,18 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     const filterByDate = [
       {
         args: {
-          testIdentifier: 'filterDateBeginning', filterBy: 'from', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateBeginning',
+          filterBy: 'from',
+          firstDate: DateStartFourDigitYear.todayDateFormat2,
+          secondDate: DateStartFourDigitYear.todayDateFormat2,
         },
       },
       {
         args: {
-          testIdentifier: 'filterDateEnd', filterBy: 'to', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateEnd',
+          filterBy: 'to',
+          firstDate: DateStartFourDigitYear.todayDateFormat2,
+          secondDate: DateStartFourDigitYear.todayDateFormat2,
         },
       },
     ];
@@ -244,7 +244,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             row,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(todayDateToCheck);
+          await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
         }
       });
 

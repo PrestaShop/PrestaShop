@@ -15,6 +15,7 @@ const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -26,13 +27,6 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Get today date
-const today = new Date();
-
-// Create a future date that there is no delivery slips (yyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
 
 /*
 Update the last order status to shipped
@@ -121,7 +115,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
       // Generate delivery slips and get error message
-      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, DateStartFourDigitYear.futureDateFormat2, DateStartFourDigitYear.futureDateFormat2);
       await expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });

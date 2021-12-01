@@ -25,6 +25,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -36,24 +37,6 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const dateTodayToCheck = `${month}/${day}/${year}`;
 
 let numberOfCreditSlips = 0;
 
@@ -297,7 +280,11 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
 
       // Filter credit slips
-      await creditSlipsPage.filterCreditSlipsByDate(page, dateToday, dateToday);
+      await creditSlipsPage.filterCreditSlipsByDate(
+        page,
+        DateStartFourDigitYear.todayDateFormat1,
+        DateStartFourDigitYear.todayDateFormat1,
+      );
 
       // Check number of element
       const numberOfCreditSlipsAfterFilter = await creditSlipsPage.getNumberOfElementInGrid(page);
@@ -305,7 +292,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
         const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
-        await expect(textColumn).to.contains(dateTodayToCheck);
+        await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
       }
     });
 

@@ -20,6 +20,9 @@ const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');
 
+// Import data
+const {DateStartFourDigitYear} = require('@data/date');
+
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -27,12 +30,6 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 
 let browserContext;
 let page;
-
-
-const today = new Date();
-// Create a previous date for cart rules (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() - 1);
-const previousDate = today.toISOString().slice(0, 10);
 
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
@@ -48,7 +45,7 @@ const firstCartRule = new CartRuleFaker(
     customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
-    dateFrom: previousDate,
+    dateFrom: DateStartFourDigitYear.pastDateFormat2,
   },
 );
 
@@ -57,7 +54,7 @@ const secondCartRule = new CartRuleFaker(
     code: 'customerDataSecondCartRule',
     customer: customerData.email,
     freeShipping: true,
-    dateFrom: previousDate,
+    dateFrom: DateStartFourDigitYear.pastDateFormat2,
   },
 );
 
