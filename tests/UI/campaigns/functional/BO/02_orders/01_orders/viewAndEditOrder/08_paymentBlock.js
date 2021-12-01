@@ -120,7 +120,6 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       console.log(today);
-      console.log(paymentDataAmountEqualTotal.date);
       await foHomePage.goToFo(page);
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
@@ -280,8 +279,6 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayment', baseContext);
 
       const result = await viewOrderPage.getPaymentsDetails(page);
-      console.log(todayToCheck);
-      console.log(result.date);
       await Promise.all([
         expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
@@ -352,7 +349,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 5);
       await Promise.all([
-        expect(result.date).to.contain(today),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountSupTotal.amount}`),

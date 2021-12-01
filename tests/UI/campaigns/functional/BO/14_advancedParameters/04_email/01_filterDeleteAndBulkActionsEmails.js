@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -24,12 +25,12 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Languages} = require('@data/demo/languages');
-const {DateStartFourDigitYear} = require('@data/date');
 
 const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkActionsEmails';
 
 let browserContext;
 let page;
+let todayDate;
 
 let numberOfEmails = 0;
 
@@ -44,6 +45,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayDate = await date.getDate('yyyy-mm-dd');
   });
 
   after(async () => {
@@ -239,16 +241,14 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter E-mail table by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await emailPage.filterEmailLogsByDate(
-        page,
-        DateStartFourDigitYear.todayDateFormat2, DateStartFourDigitYear.todayDateFormat2);
+      await emailPage.filterEmailLogsByDate(page, todayDate, todayDate);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await emailPage.getTextColumn(page, 'date_add', row);
-        await expect(textColumn).to.contains(DateStartFourDigitYear.todayDateFormat2);
+        await expect(textColumn).to.contains(todayDate);
       }
     });
 

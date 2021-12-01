@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -15,7 +16,6 @@ const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
-const {DateStartFourDigitYear} = require('@data/date');
 
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -28,6 +28,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
+let todayDate;
+let futureDate;
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
@@ -35,6 +37,8 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayDate = await date.getDate('yyyy-mm-dd');
+    futureDate = await date.getDate('yyyy-mm-dd', 'future');
   });
 
   after(async () => {
@@ -104,11 +108,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByDateAndDownload(
-        page,
-        DateStartFourDigitYear.todayDateFormat2,
-        DateStartFourDigitYear.todayDateFormat2,
-      );
+      filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File does not exist').to.be.true;
@@ -118,11 +118,7 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
 
       // Generate PDF
-      const textMessage = await invoicesPage.generatePDFByDateAndFail(
-        page,
-        DateStartFourDigitYear.futureDateFormat2,
-        DateStartFourDigitYear.futureDateFormat2,
-      );
+      const textMessage = await invoicesPage.generatePDFByDateAndFail(page, futureDate, futureDate);
 
       await expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByDate);
     });

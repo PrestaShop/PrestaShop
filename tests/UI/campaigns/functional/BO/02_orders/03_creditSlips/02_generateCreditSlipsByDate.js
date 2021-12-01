@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -25,7 +26,6 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
-const {DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -37,6 +37,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
+let futureDate;
 
 const creditSlipDocumentName = 'Credit slip';
 
@@ -50,6 +51,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    futureDate = await date.getDate('yyyy-mm-dd', 'future');
   });
 
   after(async () => {
@@ -221,11 +223,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
 
       // Generate credit slip and get error message
-      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(
-        page,
-        DateStartFourDigitYear.futureDateFormat2,
-        DateStartFourDigitYear.futureDateFormat2,
-      );
+      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
       await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });

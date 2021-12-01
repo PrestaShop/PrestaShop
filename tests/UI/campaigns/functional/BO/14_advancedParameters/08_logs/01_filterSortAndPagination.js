@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -27,11 +28,10 @@ const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPaginati
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultEmployee} = require('@data/demo/employees');
-const {DateStartTwoDigitMonth} = require('@data/date');
 
 let browserContext;
 let page;
-
+let todayDate;
 let numberOfLogs = 0;
 
 /*
@@ -48,6 +48,7 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayDate = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {
@@ -334,14 +335,14 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await logsPage.filterLogsByDate(page, DateStartTwoDigitMonth.todayDate, DateStartTwoDigitMonth.todayDate);
+      await logsPage.filterLogsByDate(page, todayDate, todayDate);
 
       const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
-        await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
+        await expect(textColumn).to.contains(todayDate);
       }
     });
 

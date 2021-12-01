@@ -4,6 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const date = require('@utils/date');
+
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -20,9 +23,6 @@ const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');
 
-// Import data
-const {DateStartFourDigitYear} = require('@data/date');
-
 // Import test context
 const testContext = require('@utils/testContext');
 
@@ -30,6 +30,7 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 
 let browserContext;
 let page;
+let pastDate;
 
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
@@ -45,7 +46,7 @@ const firstCartRule = new CartRuleFaker(
     customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
-    dateFrom: DateStartFourDigitYear.pastDateFormat2,
+    dateFrom: pastDate,
   },
 );
 
@@ -54,7 +55,7 @@ const secondCartRule = new CartRuleFaker(
     code: 'customerDataSecondCartRule',
     customer: customerData.email,
     freeShipping: true,
-    dateFrom: DateStartFourDigitYear.pastDateFormat2,
+    dateFrom: pastDate,
   },
 );
 
@@ -72,6 +73,7 @@ describe('FO - Account : View vouchers', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    pastDate = await date.getDate('yyyy-mm-dd', 'past');
   });
 
   after(async () => {
