@@ -565,15 +565,13 @@ class OrderAmountUpdater
                 if ($freeShipping) {
                     $invoice->total_discount_tax_excl = $invoice->total_discount_tax_excl - $invoice->total_shipping_tax_excl + $totalShippingTaxExcluded;
                     $invoice->total_discount_tax_incl = $invoice->total_discount_tax_incl - $invoice->total_shipping_tax_incl + $totalShippingTaxIncluded;
+                } else {
+                    $invoice->total_paid_tax_incl -= ($invoice->total_shipping_tax_incl - $totalShippingTaxIncluded);
+                    $invoice->total_paid_tax_excl -= ($invoice->total_shipping_tax_excl - $totalShippingTaxExcluded);
                 }
 
                 $invoice->total_shipping_tax_incl = $totalShippingTaxIncluded;
                 $invoice->total_shipping_tax_excl = $totalShippingTaxExcluded;
-
-                if (!$freeShipping) {
-                    $invoice->total_paid_tax_incl -= ($invoice->total_shipping_tax_incl - $totalShippingTaxIncluded);
-                    $invoice->total_paid_tax_excl -= ($invoice->total_shipping_tax_excl - $totalShippingTaxExcluded);
-                }
             }
 
             if (!$invoice->update()) {

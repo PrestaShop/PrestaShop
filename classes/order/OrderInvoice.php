@@ -773,6 +773,8 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
      *
+     * @return float
+     *
      * @since 1.5.0.14
      */
     public function getSiblingTotal($mod = OrderInvoice::TAX_INCL)
