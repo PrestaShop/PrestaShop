@@ -87,6 +87,12 @@ class DeltaQuantityInput {
 
   private reset(submittableDeltaInput: HTMLInputElement): void {
     const $container: JQuery = $(submittableDeltaInput).closest(this.config.containerSelector);
+
+    if ($container.length === 0) {
+      console.error(`container not found by ${this.config.containerSelector}`);
+      return;
+    }
+
     const deltaQuantity = this.getDeltaQuantity(submittableDeltaInput);
     const initialQuantity = this.getInitialQuantity($container);
     const newQuantity = initialQuantity + deltaQuantity;
@@ -96,7 +102,7 @@ class DeltaQuantityInput {
     $(submittableDeltaInput).val(0);
     $(submittableDeltaInput).data('initialValue', 0);
     $container.find(this.config.newQuantitySelector).text(0);
-    $container.find(this.config.updateQuantitySelector).toggleClass(this.config.modifiedQuantityClass, false);
+    $container.find(this.config.updateQuantitySelector).removeClass(this.config.modifiedQuantityClass);
   }
 
   private getDeltaQuantity(deltaInput: HTMLElement): number {
