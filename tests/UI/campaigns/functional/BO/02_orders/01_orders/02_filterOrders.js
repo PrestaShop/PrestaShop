@@ -170,7 +170,11 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter orders
-    await ordersPage.filterOrdersByDate(page, DateStartFourDigitYear.todayDateFormat1, DateStartFourDigitYear.todayDateFormat1);
+    await ordersPage.filterOrdersByDate(
+      page,
+      DateStartFourDigitYear.todayDateFormat1,
+      DateStartFourDigitYear.todayDateFormat1,
+    );
 
     // Check number of element
     const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);

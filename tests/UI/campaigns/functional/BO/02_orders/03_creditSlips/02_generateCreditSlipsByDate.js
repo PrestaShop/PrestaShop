@@ -221,7 +221,11 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
 
       // Generate credit slip and get error message
-      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, DateStartFourDigitYear.futureDateFormat2, DateStartFourDigitYear.futureDateFormat2);
+      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(
+        page,
+        DateStartFourDigitYear.futureDateFormat2,
+        DateStartFourDigitYear.futureDateFormat2,
+      );
       await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
