@@ -151,21 +151,14 @@ class CartPresenter implements PresenterInterface
             }
         }
 
-        if ($rawProduct['price'] && $rawProduct['unit_price'] > 0) {
-            $rawProduct['unit_price_ratio'] = $rawProduct['price'] / $rawProduct['unit_price'];
-        } else {
-            $rawProduct['unit_price_ratio'] = 0;
-        }
-
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price_wt'];
             $rawProduct['price'] = $this->priceFormatter->format($rawProduct['price_wt']);
-
-            // Recompute unit price so that it includes taxes
-            $rawProduct['unit_price'] = $rawProduct['unit_price_ratio'] != 0 ? $rawProduct['price_amount'] / $rawProduct['unit_price_ratio'] : 0;
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];
         } else {
             $rawProduct['price_amount'] = $rawProduct['price'];
             $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_excluded'];
         }
 
         $rawProduct['total'] = $this->priceFormatter->format(

@@ -782,7 +782,6 @@ class CartCore extends ObjectModel
                 }
 
                 $result[$key] = array_merge($row, $reduction_type_row);
-                $result[$key]['unit_price_ratio'] = $row['unit_price'] != 0 ? $row['price'] / $row['unit_price'] : 0;
             }
         }
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
@@ -840,6 +839,9 @@ class CartCore extends ObjectModel
                 $row['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
                 $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
                 $row['specific_prices'] = $additionalRow['specific_prices'];
+                $row['unit_price_ratio'] = $additionalRow['unit_price_ratio'];
+                $row['unit_price'] = $row['unit_price_tax_excluded'] = $additionalRow['unit_price_tax_excluded'];
+                $row['unit_price_tax_included'] = $additionalRow['unit_price_tax_included'];
                 unset($additionalRow);
 
                 $givenAwayQuantity = 0;
