@@ -773,7 +773,7 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
      *
-     * @return float
+     * @return float|array
      *
      * @since 1.5.0.14
      */
