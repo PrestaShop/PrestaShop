@@ -37,6 +37,56 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
      */
     public $model_database;
 
+    /**
+     * @var string
+     */
+    public $database_server;
+
+    /**
+     * @var string
+     */
+    public $database_name;
+
+    /**
+     * @var string
+     */
+    public $database_login;
+
+    /**
+     * @var string
+     */
+    public $database_password;
+
+    /**
+     * @var string
+     */
+    public $database_engine;
+
+    /**
+     * @var string
+     */
+    public $database_prefix;
+
+    /**
+     * @var bool
+     */
+    public $database_clear;
+
+    /**
+     * @var bool
+     */
+    public $use_smtp;
+
+    /**
+     * @var string
+     */
+    public $smtp_encryption;
+
+    /**
+     * @var int
+     */
+    public $smtp_port;
+
     public function init()
     {
         $this->model_database = new Database();

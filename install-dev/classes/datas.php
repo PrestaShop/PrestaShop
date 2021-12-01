@@ -23,6 +23,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @property string $step
+ * @property string $language
+ * @property int $all_languages
+ * @property string $timezone
+ * @property string $base_uri
+ * @property string $http_host
+ * @property string $database_server
+ * @property string $database_login
+ * @property string $database_password
+ * @property string $database_name
+ * @property bool $database_clear
+ * @property int $database_create
+ * @property string $database_prefix
+ * @property string $database_engine
+ * @property string $shop_name
+ * @property int $shop_activity
+ * @property string $shop_country
+ * @property string $admin_firstname
+ * @property string $admin_lastname
+ * @property string $admin_password
+ * @property string $admin_email
+ * @property int $show_license
+ * @property string $theme
+ * @property int $enable_ssl
+ * @property int $rewrite_engine
+ * @property string $fixtures
+ * @property array $xml_loader_ids
+ */
 class Datas
 {
     private static $instance = null;
@@ -183,6 +213,9 @@ class Datas
         $this->datas[$key] = $value;
     }
 
+    /**
+     * @return Datas|null
+     */
     public static function getInstance()
     {
         if (static::$instance === null) {

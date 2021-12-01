@@ -41,7 +41,7 @@ class StepList implements IteratorAggregate
     private $stepNames = [];
 
     /**
-     * @param array $stepNames
+     * @param array $stepConfig
      */
     public function __construct(array $stepConfig)
     {
@@ -113,7 +113,7 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     * @return Step
+     * @return self
      */
     public function next()
     {
@@ -125,7 +125,7 @@ class StepList implements IteratorAggregate
     }
 
     /**
-     * @return Step
+     * @return self
      */
     public function previous()
     {

@@ -35,9 +35,10 @@ if (Tools::getValue('bo')) {
 }
 
 require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
-
+/** @phpstan-ignore-next-line */
 $smarty->setTemplateDir($directory);
 ob_start();
+/** @phpstan-ignore-next-line */
 $smarty->compileAllTemplates('.tpl', false);
 if (ob_get_level() && ob_get_length() > 0) {
     ob_end_clean();
