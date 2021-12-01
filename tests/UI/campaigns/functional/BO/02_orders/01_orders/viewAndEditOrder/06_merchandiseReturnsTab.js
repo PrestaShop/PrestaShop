@@ -6,6 +6,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -34,12 +35,12 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
-const {DateStartTwoDigitMonth} = require('@data/date');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseReturnsTab';
 
 let browserContext;
 let page;
+let today;
 let orderID = 1;
 let trackingNumber = 1;
 
@@ -60,6 +61,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    today = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {
@@ -370,7 +372,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
       const result = await viewOrderPage.getMerchandiseReturnsDetails(page);
       await Promise.all([
-        expect(result.date).to.contains(DateStartTwoDigitMonth.todayDate),
+        expect(result.date).to.contains(today),
         expect(result.type).to.equal('Return'),
         expect(result.carrier).to.equal('Waiting for confirmation'),
         expect(result.trackingNumber).to.equal(trackingNumber),

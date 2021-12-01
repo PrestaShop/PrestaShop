@@ -2,6 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -12,7 +13,6 @@ const ordersPage = require('@pages/BO/orders');
 
 // Import data
 const {Orders} = require('@data/demo/orders');
-const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -24,6 +24,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let numberOfOrders;
+let today;
+let dateToCheck;
 
 /*
 Filter orders By :
@@ -34,6 +36,8 @@ describe('BO - Orders : Filter the Orders table', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    today = await date.getDate('yyyy-mm-dd');
+    dateToCheck = await date.getDate('mm/dd/yyyy');
   });
   after(async () => {
     await helper.closeBrowserContext(browserContext);
@@ -170,11 +174,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter orders
-    await ordersPage.filterOrdersByDate(
-      page,
-      DateStartFourDigitYear.todayDateFormat1,
-      DateStartFourDigitYear.todayDateFormat1,
-    );
+    await ordersPage.filterOrdersByDate(page, today, today);
 
     // Check number of element
     const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
@@ -182,7 +182,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
     for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
       const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
-      await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
+      await expect(textColumn).to.contains(dateToCheck);
     }
   });
 
