@@ -267,9 +267,13 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $customerGroupIds = Customer::getGroupsStatic((int) $customer->id);
 
             // Go through customer groups and assign a name
-            // If it's the default group of the customer, we assign a suffix
+            // If it's the default group of the customer and there is more than 1 group, we assign a suffix
             foreach ($customerGroupIds as $id) {
-                $groups[] = $groupNames[$id] . ($id == $customer->id_default_group ? ' (' . $this->translator->trans('default', [], 'Admin.Orderscustomers.Feature') . ')' : '');
+                if ($id == $customer->id_default_group && count($customerGroupIds) > 1) {
+                    $groups[] = $groupNames[$id] . ' (' . $this->translator->trans('default', [], 'Admin.Orderscustomers.Feature') . ')';
+                } else {
+                    $groups[] = $groupNames[$id];
+                }
             }
         }
 
