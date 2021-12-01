@@ -165,3 +165,9 @@ ul.category-tree .more > .radio:before,
 .material-icons.rtl-flip {
   transform: scaleX(-1);
 }
+
+/* Fix combinations filter items */
+.combinations-filters-dropdown .dropdown-item .md-checkbox-container {
+  padding-left: 0 !important;
+  padding-right: 28px;
+}
