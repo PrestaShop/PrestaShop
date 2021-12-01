@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -25,7 +26,6 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
-const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -39,6 +39,8 @@ let browserContext;
 let page;
 
 let numberOfCreditSlips = 0;
+let todayDate;
+let todayDateToCheck;
 
 /*
 Create order
@@ -51,6 +53,8 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayDate = await date.getDate('yyyy-mm-dd');
+    todayDateToCheck = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {
@@ -280,11 +284,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
 
       // Filter credit slips
-      await creditSlipsPage.filterCreditSlipsByDate(
-        page,
-        DateStartFourDigitYear.todayDateFormat1,
-        DateStartFourDigitYear.todayDateFormat1,
-      );
+      await creditSlipsPage.filterCreditSlipsByDate(page, todayDate, todayDate);
 
       // Check number of element
       const numberOfCreditSlipsAfterFilter = await creditSlipsPage.getNumberOfElementInGrid(page);
@@ -292,7 +292,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
         const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
-        await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
+        await expect(textColumn).to.contains(todayDateToCheck);
       }
     });
 

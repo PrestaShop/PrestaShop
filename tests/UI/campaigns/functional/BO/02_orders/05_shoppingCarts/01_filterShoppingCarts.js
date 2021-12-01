@@ -2,6 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const date = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -12,7 +13,6 @@ const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 
 // Import data
 const {ShoppingCarts} = require('@data/demo/shoppingCarts');
-const {DateStartTwoDigitMonth} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -25,6 +25,7 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
+let todayDate;
 
 /*
 Delete the non ordered shopping carts
@@ -36,6 +37,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayDate = await date.getDate('mm-dd-yyyy');
   });
 
   after(async () => {
@@ -190,7 +192,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter by date
-    await shoppingCartsPage.filterByDate(page, DateStartTwoDigitMonth.todayDate, DateStartTwoDigitMonth.todayDate);
+    await shoppingCartsPage.filterByDate(page, todayDate, todayDate);
 
     // Check number of element
     const numberOfShoppingCartsAfterFilter = await shoppingCartsPage.getNumberOfElementInGrid(page);
@@ -198,7 +200,7 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
       const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date');
-      await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
+      await expect(textColumn).to.contains(todayDate);
     }
   });
 

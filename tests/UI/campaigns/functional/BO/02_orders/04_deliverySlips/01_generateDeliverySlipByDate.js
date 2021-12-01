@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -15,7 +16,6 @@ const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
-const {DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -27,6 +27,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
+let futureDate;
 
 /*
 Update the last order status to shipped
@@ -38,6 +39,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    futureDate = await date.getDate('yyyy-mm-dd', 'future');
   });
 
   after(async () => {
@@ -115,7 +117,7 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoDeliverySlipsErrorMessage', baseContext);
 
       // Generate delivery slips and get error message
-      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, DateStartFourDigitYear.futureDateFormat2, DateStartFourDigitYear.futureDateFormat2);
+      const textMessage = await deliverySlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
       await expect(textMessage).to.equal(deliverySlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
