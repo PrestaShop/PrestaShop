@@ -1044,12 +1044,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
         foreach ($result as $overview) {
             //check if message exist in database
             if (isset($overview->subject)) {
-                $subject = $overview->subject;
+                $subject = imap_utf8($overview->subject);
             } else {
                 $subject = '';
             }
             //Creating an md5 to check if message has been allready processed
-            $md5 = md5($overview->date . $overview->from . $subject . $overview->msgno);
+            $md5 = md5($overview->from . $subject . $overview->uid);
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
 						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
@@ -1161,6 +1161,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
                             try {
                                 $cm->message = $message;
                                 $cm->add();
+                                $ct->status = 'open';
+                                $ct->update();
                             } catch (PrestaShopException $pse) {
                                 $message_errors[] = $this->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
