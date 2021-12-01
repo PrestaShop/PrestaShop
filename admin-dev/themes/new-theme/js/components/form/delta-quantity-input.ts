@@ -22,7 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import SubmittableInput from '@components/form/submittable-input';
 import ComponentsMap from '@components/components-map';
 import {EventEmitter} from 'events';
 
@@ -37,22 +36,14 @@ export type DeltaQuantityConfig = {
   modifiedQuantityClass: string;
   newQuantitySelector: string;
   initialQuantityPreviewSelector: string;
-  submittableDeltaConfig: SubmittableDeltaConfig|null;
 }
 
-export type SubmittableDeltaConfig = {
-  wrapperSelector: string;
-  submitCallback: (input: Element) => any;
-}
-
-export type InputDeltaQuantityConfig = Partial<DeltaQuantityConfig>;
-
-class DeltaQuantityInput {
+export default class DeltaQuantityInput {
   private config: DeltaQuantityConfig;
 
   private eventEmitter: EventEmitter;
 
-  constructor(config: InputDeltaQuantityConfig = {}) {
+  constructor(config: Partial<DeltaQuantityConfig> = {}) {
     const componentMap = ComponentsMap.deltaQuantityInput;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.config = {
@@ -62,11 +53,28 @@ class DeltaQuantityInput {
       modifiedQuantityClass: componentMap.modifiedQuantityClass,
       newQuantitySelector: componentMap.newQuantitySelector,
       initialQuantityPreviewSelector: componentMap.initialQuantityPreviewSelector,
-      submittableDeltaConfig: null,
       ...config,
     };
 
     this.init();
+  }
+
+  public reset(input: HTMLInputElement): void {
+    const $container: JQuery = $(input).closest(this.config.containerSelector);
+
+    if ($container.length === 0) {
+      console.error(`container not found by ${this.config.containerSelector}`);
+      return;
+    }
+
+    const deltaQuantity = this.getDeltaQuantity(input);
+    const initialQuantity = this.getInitialQuantity($container);
+    const newQuantity = initialQuantity + deltaQuantity;
+
+    $container.data('initialQuantity', newQuantity);
+    $container.find(this.config.initialQuantityPreviewSelector).text(newQuantity);
+    $container.find(this.config.newQuantitySelector).text(0);
+    $container.find(this.config.updateQuantitySelector).removeClass(this.config.modifiedQuantityClass);
   }
 
   private init(): void {
@@ -83,34 +91,6 @@ class DeltaQuantityInput {
       const $updateElement = $container.find(this.config.updateQuantitySelector);
       $updateElement.toggleClass(this.config.modifiedQuantityClass, deltaQuantity !== 0);
     });
-
-    if (this.config.submittableDeltaConfig) {
-      new SubmittableInput({
-        wrapperSelector: this.config.submittableDeltaConfig.wrapperSelector,
-        submitCallback: this.config.submittableDeltaConfig.submitCallback,
-        afterSuccess: (input) => this.reset(input),
-      });
-    }
-  }
-
-  private reset(submittableDeltaInput: HTMLInputElement): void {
-    const $container: JQuery = $(submittableDeltaInput).closest(this.config.containerSelector);
-
-    if ($container.length === 0) {
-      console.error(`container not found by ${this.config.containerSelector}`);
-      return;
-    }
-
-    const deltaQuantity = this.getDeltaQuantity(submittableDeltaInput);
-    const initialQuantity = this.getInitialQuantity($container);
-    const newQuantity = initialQuantity + deltaQuantity;
-
-    $container.data('initialQuantity', newQuantity);
-    $container.find(this.config.initialQuantityPreviewSelector).text(newQuantity);
-    $(submittableDeltaInput).val(0);
-    $(submittableDeltaInput).data('initialValue', 0);
-    $container.find(this.config.newQuantitySelector).text(0);
-    $container.find(this.config.updateQuantitySelector).removeClass(this.config.modifiedQuantityClass);
   }
 
   private getDeltaQuantity(deltaInput: HTMLElement): number {
@@ -133,5 +113,3 @@ class DeltaQuantityInput {
     return initialQuantity;
   }
 }
-
-export default DeltaQuantityInput;

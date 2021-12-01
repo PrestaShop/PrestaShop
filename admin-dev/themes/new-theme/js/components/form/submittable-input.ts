@@ -35,7 +35,8 @@ const {$} = window;
 export type SubmittableInputConfig = {
   wrapperSelector: string;
   submitCallback: (input: Element) => any;
-  afterSuccess: ((input: HTMLInputElement, response: AjaxResponse) => any)|null;
+  afterSuccess?: ((input: HTMLInputElement, response: AjaxResponse) => any);
+  afterFailure?: ((input: HTMLInputElement, error: AjaxError) => any);
 }
 
 /**
@@ -65,6 +66,11 @@ export default class SubmittableInput {
     this.loading = false;
 
     this.init();
+  }
+
+  public reset(input: HTMLInputElement): void {
+    $(input).val(0);
+    $(input).data('initialValue', 0);
   }
 
   private init(): void {
@@ -104,12 +110,12 @@ export default class SubmittableInput {
       .then((response: AjaxResponse) => {
         $(input).data('initialValue', input.value);
         this.toggleButtonVisibility(button, false);
+        this.toggleLoading(input, false);
 
         if (response.message) {
-          eventEmitter.emit('submittableInputSuccess', input);
+          eventEmitter.emit(ComponentsEventMap.submittableInput.submitSuccess, input);
           showGrowl('success', response.message);
         }
-        this.toggleLoading(input, false);
 
         if (this.config.afterSuccess) {
           this.config.afterSuccess(input, response);
@@ -120,6 +126,7 @@ export default class SubmittableInput {
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
         this.toggleLoading(input, false);
+
         if (typeof error.responseJSON.errors === 'undefined') {
           return;
         }
@@ -128,6 +135,9 @@ export default class SubmittableInput {
         Object.keys(messages).forEach((key) => {
           showGrowl('error', messages[key]);
         });
+        if (this.config.afterFailure) {
+          this.config.afterFailure(input, error);
+        }
       });
   }
 
