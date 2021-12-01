@@ -298,7 +298,7 @@ export default class CombinationsManager {
   initDeltaQuantityInput() {
     new DeltaQuantityInput({
       containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
-      submittableInputConfig: {
+      submittableDeltaConfig: {
         wrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
         submitCallback: input => this.combinationsService.updateListedCombination(
           this.findCombinationId(input),

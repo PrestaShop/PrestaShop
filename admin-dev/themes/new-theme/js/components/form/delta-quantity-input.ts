@@ -22,9 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import SubmittableInput, {SubmittableInputConfig} from '@components/form/submittable-input';
+import SubmittableInput from '@components/form/submittable-input';
 import ComponentsMap from '@components/components-map';
-import ComponentsEventMap from '@components/components-event-map';
 import {EventEmitter} from 'events';
 
 import ChangeEvent = JQuery.ChangeEvent;
@@ -38,8 +37,14 @@ export type DeltaQuantityConfig = {
   modifiedQuantityClass: string;
   newQuantitySelector: string;
   initialQuantityPreviewSelector: string;
-  submittableInputConfig: SubmittableInputConfig|null;
+  submittableDeltaConfig: SubmittableDeltaConfig|null;
 }
+
+export type SubmittableDeltaConfig = {
+  wrapperSelector: string;
+  submitCallback: (input: Element) => any;
+}
+
 export type InputDeltaQuantityConfig = Partial<DeltaQuantityConfig>;
 
 class DeltaQuantityInput {
@@ -57,7 +62,7 @@ class DeltaQuantityInput {
       modifiedQuantityClass: componentMap.modifiedQuantityClass,
       newQuantitySelector: componentMap.newQuantitySelector,
       initialQuantityPreviewSelector: componentMap.initialQuantityPreviewSelector,
-      submittableInputConfig: null,
+      submittableDeltaConfig: null,
       ...config,
     };
 
@@ -79,9 +84,12 @@ class DeltaQuantityInput {
       $updateElement.toggleClass(this.config.modifiedQuantityClass, deltaQuantity !== 0);
     });
 
-    if (this.config.submittableInputConfig) {
-      new SubmittableInput(this.config.submittableInputConfig);
-      this.eventEmitter.on(ComponentsEventMap.submittableInput.submitSuccess, (input) => this.reset(input));
+    if (this.config.submittableDeltaConfig) {
+      new SubmittableInput({
+        wrapperSelector: this.config.submittableDeltaConfig.wrapperSelector,
+        submitCallback: this.config.submittableDeltaConfig.submitCallback,
+        afterSuccess: (input) => this.reset(input),
+      });
     }
   }
 
