@@ -171,3 +171,8 @@ ul.category-tree .more > .radio:before,
   padding-left: 0 !important;
   padding-right: 28px;
 }
+
+/* Fix header overflow in mobile screen */
+.mobile .content-div {
+  overflow: hidden;
+}
