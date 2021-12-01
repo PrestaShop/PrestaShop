@@ -999,12 +999,13 @@ class Order extends BOBasePage {
   /**
    * Download invoice
    * @param page {Page} Browser tab
+   * @param row {number} Row of the invoice
    * @returns {Promise<void>}
    */
-  async downloadInvoice(page) {
+  async downloadInvoice(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.downloadDocument(page, 1);
+    return this.downloadDocument(page, row);
   }
 
   /**
