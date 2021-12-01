@@ -161,17 +161,6 @@
       padding-left: 15px;
     }
 
-    &-right {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      @include media-breakpoint-down(md) {
-        flex-direction: column;
-        align-items: flex-end;
-      }
-    }
-
     .position-static {
       position: static;
     }
