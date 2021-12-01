@@ -31,10 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 use Combination;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
 
@@ -54,23 +54,23 @@ class CombinationStockUpdater
     private $combinationRepository;
 
     /**
-     * @var ConfigurationInterface
+     * @var StockManager
      */
-    private $configuration;
+    private $stockManager;
 
     /**
      * @param StockAvailableRepository $stockAvailableRepository
      * @param CombinationRepository $combinationRepository
-     * @param ConfigurationInterface $configuration
+     * @param StockManager $stockManager
      */
     public function __construct(
         StockAvailableRepository $stockAvailableRepository,
         CombinationRepository $combinationRepository,
-        ConfigurationInterface $configuration
+        StockManager $stockManager
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->combinationRepository = $combinationRepository;
-        $this->configuration = $configuration;
+        $this->stockManager = $stockManager;
     }
 
     /**
