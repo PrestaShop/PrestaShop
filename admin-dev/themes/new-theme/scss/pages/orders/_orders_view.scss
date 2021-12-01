@@ -183,11 +183,11 @@
     .customer-groups .badge {
       padding: 0.45rem 0.6rem;
       margin: 0.1rem 0;
-      color: #6c868e;
       font-size: 0.875rem;
       font-weight: 600;
-      background: #fff;
       white-space: normal;
+      color: #6c868e;
+      background: #fff;
       @include border-radius(1000px);
       box-shadow: 1px 1px 2px #00000014;
     }
