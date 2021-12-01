@@ -35,6 +35,7 @@ const {$} = window;
 export type SubmittableInputConfig = {
   wrapperSelector: string;
   submitCallback: (input: Element) => any;
+  afterSuccess: ((input: HTMLInputElement, response: AjaxResponse) => any)|null;
 }
 
 /**
@@ -43,13 +44,11 @@ export type SubmittableInputConfig = {
  * After button is clicked, component fires the callback function which was provided to constructor.
  */
 export default class SubmittableInput {
+  config: SubmittableInputConfig;
+
   eventEmitter: EventEmitter;
 
   inputSelector: string;
-
-  submitCallback: (input: Element) => any;
-
-  wrapperSelector: string;
 
   inputsInContainerSelector: string;
 
@@ -58,12 +57,11 @@ export default class SubmittableInput {
   loading: boolean;
 
   constructor(config: SubmittableInputConfig) {
+    this.config = config;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.inputSelector = ComponentsMap.submittableInput.inputSelector;
     this.buttonSelector = ComponentsMap.submittableInput.buttonSelector;
-    this.wrapperSelector = config.wrapperSelector;
-    this.inputsInContainerSelector = `${this.wrapperSelector} ${this.inputSelector}`;
-    this.submitCallback = config.submitCallback;
+    this.inputsInContainerSelector = `${this.config.wrapperSelector} ${this.inputSelector}`;
     this.loading = false;
 
     this.init();
@@ -76,7 +74,7 @@ export default class SubmittableInput {
     $(document).on('input blur', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on('click', `${this.wrapperSelector} ${this.buttonSelector}`, (e: ClickEvent) => {
+    $(document).on('click', `${this.config.wrapperSelector} ${this.buttonSelector}`, (e: ClickEvent) => {
       e.stopImmediatePropagation();
       this.submitInput(this.findInput(e.currentTarget));
     });
@@ -102,7 +100,7 @@ export default class SubmittableInput {
     this.toggleLoading(input, true);
     const button = this.findButton(input);
 
-    this.submitCallback(input)
+    this.config.submitCallback(input)
       .then((response: AjaxResponse) => {
         $(input).data('initialValue', input.value);
         this.toggleButtonVisibility(button, false);
@@ -112,6 +110,10 @@ export default class SubmittableInput {
           showGrowl('success', response.message);
         }
         this.toggleLoading(input, false);
+
+        if (this.config.afterSuccess) {
+          this.config.afterSuccess(input, response);
+        }
       })
       .catch((error: AjaxError) => {
         eventEmitter.emit(ComponentsEventMap.submittableInput.submitError, {input, error});
@@ -178,13 +180,13 @@ export default class SubmittableInput {
 
   private findButton(input: Element): HTMLButtonElement {
     return <HTMLButtonElement>$(input)
-      .closest(this.wrapperSelector)
+      .closest(this.config.wrapperSelector)
       .find(this.buttonSelector)[0];
   }
 
   private findInput(button: HTMLButtonElement): HTMLInputElement {
     return <HTMLInputElement>$(button)
-      .closest(this.wrapperSelector)
+      .closest(this.config.wrapperSelector)
       .find(this.inputSelector)[0];
   }
 
