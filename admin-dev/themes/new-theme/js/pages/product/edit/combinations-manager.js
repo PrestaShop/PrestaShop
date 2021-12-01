@@ -35,6 +35,7 @@ import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
+import {SubmittableDeltaQuantityInput} from "@components/form/submittable-delta-quantity-input";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -186,7 +187,7 @@ export default class CombinationsManager {
     );
 
     this.initSubmittableInputs();
-    this.initDeltaQuantityInput();
+    this.initSubmittableDeltaQuantityInput();
 
     this.$combinationsContainer.on(
       'change',
@@ -280,7 +281,7 @@ export default class CombinationsManager {
 
     new SubmittableInput({
         wrapperSelector: CombinationsMap.referenceInputWrapper,
-      submitCallback: input =>
+        submitCallback: input =>
           this.combinationsService.updateListedCombination(
             this.findCombinationId(input),
             {
@@ -295,20 +296,21 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  initDeltaQuantityInput() {
-    new DeltaQuantityInput({
+  initSubmittableDeltaQuantityInput() {
+    const deltaConfig = {
       containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
-      submittableDeltaConfig: {
-        wrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
-        submitCallback: input => this.combinationsService.updateListedCombination(
-          this.findCombinationId(input),
-          {
-            [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
-            [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
-          },
-        ),
-      },
-    });
+    };
+    const submittableConfig = {
+      wrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
+      submitCallback: input => this.combinationsService.updateListedCombination(
+        this.findCombinationId(input),
+        {
+          [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
+          [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
+        },
+      ),
+    }
+    new SubmittableDeltaQuantityInput(deltaConfig, submittableConfig);
   }
 
   /**
