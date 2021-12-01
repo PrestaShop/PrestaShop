@@ -268,7 +268,7 @@ export default class CombinationsManager {
 
     new SubmittableInput({
       wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,
-      callback: input =>
+      submitCallback: input =>
         this.combinationsService.updateListedCombination(
           this.findCombinationId(input),
           {
@@ -280,7 +280,7 @@ export default class CombinationsManager {
 
     new SubmittableInput({
         wrapperSelector: CombinationsMap.referenceInputWrapper,
-        callback: input =>
+      submitCallback: input =>
           this.combinationsService.updateListedCombination(
             this.findCombinationId(input),
             {
