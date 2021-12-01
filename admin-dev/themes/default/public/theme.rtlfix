@@ -167,3 +167,10 @@ svg {
 .material-icons.rtl-flip {
   transform: scaleX(-1);
 }
+
+/* Fix close button position in dropzone modal */
+#psthemecusto .modal .modal-header .close {
+  right: auto !important;
+  left: 1rem;
+}
+
