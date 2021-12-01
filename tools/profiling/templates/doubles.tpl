@@ -35,7 +35,7 @@
             {sql_queries data=$nb}
           </td>
           <td class="pre">
-            <pre>{$q nofilter}</pre>
+            <pre>{$q}</pre>
           </td>
         </tr>
       {/if}

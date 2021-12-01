@@ -73,11 +73,12 @@ abstract class Db extends DbCore
         }
 
         if (!$explain) {
-            $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
-            $uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
+            $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', 'XX', $sql);
+            $uniqSql = preg_replace('/[0-9]+/', 'XX', $uniqSql);
             if (!isset($this->uniqQueries[$uniqSql])) {
                 $this->uniqQueries[$uniqSql] = 0;
             }
+
             ++$this->uniqQueries[$uniqSql];
 
             // No cache for query
