@@ -230,7 +230,16 @@ function updateProductListDOM(data) {
   $(prestashop.themeSelectors.listing.listTop).replaceWith(
     data.rendered_products_top,
   );
-  $(prestashop.themeSelectors.listing.list).replaceWith(data.rendered_products);
+
+  const renderedProducts = $(data.rendered_products);
+  const productSelectors = $(prestashop.themeSelectors.listing.product, renderedProducts);
+
+  if (productSelectors.length > 0) {
+    productSelectors.removeClass().addClass($(prestashop.themeSelectors.listing.product).first().attr('class'));
+  }
+
+  $(prestashop.themeSelectors.listing.list).replaceWith(renderedProducts);
+
   $(prestashop.themeSelectors.listing.listBottom).replaceWith(
     data.rendered_products_bottom,
   );
