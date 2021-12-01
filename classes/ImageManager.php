@@ -58,6 +58,11 @@ class ImageManagerCore
     ];
 
     /**
+     * @var array - a list of svg mime types
+     */
+    protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
+
+    /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
      *
      * @param string $image Real image filename
@@ -719,4 +724,9 @@ class ImageManagerCore
 
         return $mimeType;
     }
+    
+    public static function isSvgMimeType(string $mimeType): bool
+    {
+        return in_array($mimeType, self::SVG_MIMETYPES);
+    }    
 }
