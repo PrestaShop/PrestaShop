@@ -398,8 +398,7 @@ class DbPDOCore extends Db
         }
 
         foreach ($enginesToTest as $engineToTest) {
-            $link->query('
-            CREATE TABLE `' . $prefix . 'test` (
+            $link->query('CREATE TABLE `' . $prefix . 'test` (
                 `test` tinyint(1) unsigned NOT NULL
             ) ENGINE=' . $engineToTest);
 
