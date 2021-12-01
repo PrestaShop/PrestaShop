@@ -175,10 +175,11 @@ Feature: Duplicate product from Back Office (BO).
       | tax rules group  | US-AL Rate (4%) |
       | on_sale          | true            |
       # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
-      | wholesale_price  | 10              |
-      | unit_price       | 500             |
-      | unit_price_ratio | 0.2             |
-      | unity            | bag of ten      |
+      | wholesale_price         | 10              |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 520             |
+      | unit_price_ratio        | 0.2             |
+      | unity                   | bag of ten      |
     And product "copy_of_product1" localized "meta_title" should be:
       | locale | value                 |
       | en-US  | SUNGLASSES meta title |
