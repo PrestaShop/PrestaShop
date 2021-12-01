@@ -724,9 +724,9 @@ class ImageManagerCore
 
         return $mimeType;
     }
-    
+
     public static function isSvgMimeType(string $mimeType): bool
     {
         return in_array($mimeType, self::SVG_MIMETYPES);
-    }    
+    }
 }
