@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
+const date = require('@utils/date');
 
 // Import common tests
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
@@ -24,7 +25,6 @@ const {DefaultEmployee} = require('@data/demo/employees');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
-const {DateStartTwoDigitMonth} = require('@data/date');
 
 // Import faker data
 const EmployeeFaker = require('@data/faker/employee');
@@ -38,6 +38,7 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 
 let browserContext;
 let page;
+let today;
 
 const orderNote = 'Test order note';
 
@@ -114,6 +115,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    today = await date.getDate('mm/dd/yyyy');
 
     // Start listening to maildev server
     mailListener = mailHelper.createMailListener();
@@ -240,7 +242,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(DateStartTwoDigitMonth.todayDate);
+      await expect(date).to.contain(today);
     });
 
     it('should check that the order note is closed', async function () {
@@ -339,7 +341,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(DateStartTwoDigitMonth.todayDate);
+      await expect(date).to.contain(today);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {

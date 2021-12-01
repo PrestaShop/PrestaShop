@@ -6,6 +6,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 const files = require('@utils/files');
+const date = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -32,18 +33,19 @@ const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Currencies} = require('@data/demo/currencies');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {Products} = require('@data/demo/products');
-const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_paymentBlock';
 
 let browserContext;
 let page;
 let filePath;
+let todayToCheck;
+let today;
 
 const totalOrder = 22.94;
 
 const paymentDataAmountInfTotal = {
-  date: DateStartFourDigitYear.todayDateFormat1,
+  date: today,
   paymentMethod: 'Payment by check',
   transactionID: '12156',
   amount: 12.25,
@@ -51,7 +53,7 @@ const paymentDataAmountInfTotal = {
 };
 
 const paymentDataAmountEqualTotal = {
-  date: DateStartFourDigitYear.todayDateFormat1,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12190',
   amount: (totalOrder - paymentDataAmountInfTotal.amount).toFixed(2),
@@ -59,7 +61,7 @@ const paymentDataAmountEqualTotal = {
 };
 
 const paymentDataAmountSupTotal = {
-  date: DateStartFourDigitYear.todayDateFormat1,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12639',
   amount: 30.56,
@@ -67,7 +69,7 @@ const paymentDataAmountSupTotal = {
 };
 
 const paymentDataWithNewCurrency = {
-  date: DateStartFourDigitYear.todayDateFormat1,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12640',
   amount: 5.25,
@@ -77,13 +79,12 @@ const paymentDataWithNewCurrency = {
 let invoiceID = 0;
 
 const paymentDataAmountEqualRest = {
-  date: DateStartFourDigitYear.todayDateFormat1,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12190',
   amount: Products.demo_5.priceTaxIncl,
   currency: '€',
 };
-
 /*
 Pre-condition :
 - Create 2 orders by default customer
@@ -104,6 +105,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    todayToCheck = await date.getDate('mm/dd/yyyy');
+    today = await date.getDate('yyyy-mm-dd');
   });
 
   after(async () => {
@@ -116,8 +119,9 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
+      console.log(today);
+      console.log(paymentDataAmountEqualTotal.date);
       await foHomePage.goToFo(page);
-
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
 
@@ -276,8 +280,10 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'checkPayment', baseContext);
 
       const result = await viewOrderPage.getPaymentsDetails(page);
+      console.log(todayToCheck);
+      console.log(result.date);
       await Promise.all([
-        expect(result.date).to.contain(DateStartTwoDigitMonth.todayDate),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountInfTotal.amount}`),
@@ -307,7 +313,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 3);
       await Promise.all([
-        expect(result.date).to.contain(DateStartTwoDigitMonth.todayDate),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountEqualTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountEqualTotal.amount}`),
@@ -346,7 +352,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 5);
       await Promise.all([
-        expect(result.date).to.contain(DateStartTwoDigitMonth.todayDate),
+        expect(result.date).to.contain(today),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountSupTotal.amount}`),
@@ -532,7 +538,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 1);
       await Promise.all([
-        expect(result.date).to.contain(DateStartTwoDigitMonth.todayDate),
+        expect(result.date).to.contain(today),
         expect(result.paymentMethod).to.equal('Bank transfer'),
         expect(result.transactionID).to.equal(''),
         expect(result.amount).to.equal(`€${totalOrder}`),
