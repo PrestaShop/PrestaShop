@@ -6,7 +6,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 const files = require('@utils/files');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -39,8 +39,9 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_paymentBlock';
 let browserContext;
 let page;
 let filePath;
-let todayToCheck;
-let today;
+
+const today = getDateFormat('yyyy-mm-dd');
+const todayToCheck = getDateFormat('mm/dd/yyyy');
 
 const totalOrder = 22.94;
 
@@ -105,8 +106,6 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    todayToCheck = await date.getDate('mm/dd/yyyy');
-    today = await date.getDate('yyyy-mm-dd');
   });
 
   after(async () => {
@@ -119,7 +118,6 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
-      console.log(today);
       await foHomePage.goToFo(page);
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
