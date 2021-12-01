@@ -24,6 +24,7 @@ const {DefaultEmployee} = require('@data/demo/employees');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DateStartTwoDigitMonth} = require('@data/date');
 
 // Import faker data
 const EmployeeFaker = require('@data/faker/employee');
@@ -39,13 +40,6 @@ let browserContext;
 let page;
 
 const orderNote = 'Test order note';
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 const addressData = new AddressFaker({country: 'France'});
 const customerData = new CustomerFaker({password: ''});
@@ -246,7 +240,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(todayDate);
+      await expect(date).to.contain(DateStartTwoDigitMonth.todayDate);
     });
 
     it('should check that the order note is closed', async function () {
@@ -345,7 +339,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(todayDate);
+      await expect(date).to.contain(DateStartTwoDigitMonth.todayDate);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {

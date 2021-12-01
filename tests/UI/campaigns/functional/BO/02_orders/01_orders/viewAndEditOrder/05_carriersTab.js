@@ -27,6 +27,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
+const {DateStartTwoDigitMonth} = require('@data/date');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
@@ -34,13 +35,6 @@ let browserContext;
 let page;
 
 const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 /*
 Pre-condition :
@@ -210,7 +204,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
 
       const result = await viewOrderPage.getCarrierDetails(page);
       await Promise.all([
-        expect(result.date).to.equal(todayDate),
+        expect(result.date).to.equal(DateStartTwoDigitMonth.todayDate),
         expect(result.carrier).to.equal(Carriers.default.name),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
         expect(result.shippingCost).to.equal('€0.00'),
@@ -239,7 +233,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
 
       const result = await viewOrderPage.getCarrierDetails(page);
       await Promise.all([
-        expect(result.date).to.equal(todayDate),
+        expect(result.date).to.equal(DateStartTwoDigitMonth.todayDate),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
         expect(result.shippingCost).to.equal(shippingDetailsData.shippingCost),

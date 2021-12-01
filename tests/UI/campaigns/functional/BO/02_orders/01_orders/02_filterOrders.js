@@ -12,6 +12,7 @@ const ordersPage = require('@pages/BO/orders');
 
 // Import data
 const {Orders} = require('@data/demo/orders');
+const {DateStartTwoDigitMonth, DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -23,24 +24,6 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let numberOfOrders;
-
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const dateTodayToCheck = `${month}/${day}/${year}`;
 
 /*
 Filter orders By :
@@ -187,7 +170,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
     // Filter orders
-    await ordersPage.filterOrdersByDate(page, dateToday, dateToday);
+    await ordersPage.filterOrdersByDate(page, DateStartFourDigitYear.todayDateFormat1, DateStartFourDigitYear.todayDateFormat1);
 
     // Check number of element
     const numberOfOrdersAfterFilter = await ordersPage.getNumberOfElementInGrid(page);
@@ -195,7 +178,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
     for (let i = 1; i <= numberOfOrdersAfterFilter; i++) {
       const textColumn = await ordersPage.getTextColumn(page, 'date_add', i);
-      await expect(textColumn).to.contains(dateTodayToCheck);
+      await expect(textColumn).to.contains(DateStartTwoDigitMonth.todayDate);
     }
   });
 

@@ -20,6 +20,7 @@ const cartPage = require('@pages/FO/cart');
 const CartRuleFaker = require('@data/faker/cartRule');
 const ProductData = require('@data/FO/product');
 const {Products} = require('@data/demo/products');
+const {DateStartFourDigitYear} = require('@data/date');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -32,20 +33,9 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-// Today date
-const now = new Date();
-// Day before
-const today = (`0${now.getDate()}`).slice(-2);
-// Current month
-const month = (`0${now.getMonth() + 1}`).slice(-2);
-// Current year
-const year = now.getFullYear();
-// Date yesterday format (yyyy-mm-dd)
-const dateFrom = `${year}-${month}-${today} 01:00:00`;
-
 const cartRuleWithoutCode = new CartRuleFaker(
   {
-    dateFrom,
+    dateFrom: DateStartFourDigitYear.pastDateFormat2,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,

@@ -34,6 +34,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {ReturnStatuses} = require('@data/demo/orderReturnStatuses');
+const {DateStartTwoDigitMonth} = require('@data/date');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseReturnsTab';
 
@@ -41,13 +42,6 @@ let browserContext;
 let page;
 let orderID = 1;
 let trackingNumber = 1;
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 /*
 Create order in FO
@@ -376,7 +370,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
       const result = await viewOrderPage.getMerchandiseReturnsDetails(page);
       await Promise.all([
-        expect(result.date).to.contains(todayDate),
+        expect(result.date).to.contains(DateStartTwoDigitMonth.todayDate),
         expect(result.type).to.equal('Return'),
         expect(result.carrier).to.equal('Waiting for confirmation'),
         expect(result.trackingNumber).to.equal(trackingNumber),

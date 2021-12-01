@@ -15,6 +15,7 @@ const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DateStartFourDigitYear} = require('@data/date');
 
 // Test context imports
 const testContext = require('@utils/testContext');
@@ -27,16 +28,6 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
-
-const today = new Date();
-
-// Get today date format (yyyy-mm-dd)
-const todayDate = today.toISOString().slice(0, 10);
-
-// Create a future date that there is no invoices (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
-
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
@@ -113,7 +104,11 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkGeneratedInvoicesPdfFile', baseContext);
 
       // Generate PDF
-      filePath = await invoicesPage.generatePDFByDateAndDownload(page, todayDate, todayDate);
+      filePath = await invoicesPage.generatePDFByDateAndDownload(
+        page,
+        DateStartFourDigitYear.todayDateFormat2,
+        DateStartFourDigitYear.todayDateFormat2,
+      );
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File does not exist').to.be.true;
@@ -123,7 +118,11 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentInvoice', baseContext);
 
       // Generate PDF
-      const textMessage = await invoicesPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      const textMessage = await invoicesPage.generatePDFByDateAndFail(
+        page,
+        DateStartFourDigitYear.futureDateFormat2,
+        DateStartFourDigitYear.futureDateFormat2,
+      );
 
       await expect(textMessage).to.equal(invoicesPage.errorMessageWhenGenerateFileByDate);
     });

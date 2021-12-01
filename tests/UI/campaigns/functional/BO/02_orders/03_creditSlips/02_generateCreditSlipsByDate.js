@@ -25,6 +25,7 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DateStartFourDigitYear} = require('@data/date');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -36,13 +37,6 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Get today date
-const today = new Date();
-
-// Create a future date that there is no credit slips (yyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
 
 const creditSlipDocumentName = 'Credit slip';
 
@@ -227,7 +221,7 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessageNonexistentCreditSlip', baseContext);
 
       // Generate credit slip and get error message
-      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, futureDate, futureDate);
+      const textMessage = await creditSlipsPage.generatePDFByDateAndFail(page, DateStartFourDigitYear.futureDateFormat2, DateStartFourDigitYear.futureDateFormat2);
       await expect(textMessage).to.equal(creditSlipsPage.errorMessageWhenGenerateFileByDate);
     });
   });
