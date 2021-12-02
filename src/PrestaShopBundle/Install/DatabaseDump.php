@@ -28,6 +28,7 @@
 namespace PrestaShopBundle\Install;
 
 use AppKernel;
+use Db;
 use Exception;
 
 class DatabaseDump
@@ -57,12 +58,12 @@ class DatabaseDump
             $this->port = $host_and_maybe_port[1];
         }
 
+        $this->databaseName = _DB_NAME_;
         if ($dumpFile === null) {
-            $this->dumpFile = sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION);
+            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, AppKernel::VERSION);
         } else {
             $this->dumpFile = $dumpFile;
         }
-        $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
     }
@@ -125,6 +126,35 @@ class DatabaseDump
         $this->exec($dumpCommand);
     }
 
+    private function dumpAllTables(): void
+    {
+        $db = Db::getInstance();
+        $tables = $db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $this->dumpTable(reset($table));
+        }
+    }
+
+    private function dumpTable(string $table): void
+    {
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName, $table]);
+        $tableDumpFile = $this->getTableDumpPath($table);
+        $dumpCommand .= ' > ' . escapeshellarg($tableDumpFile) . ' 2> /dev/null';
+        $this->exec($dumpCommand);
+    }
+
+    private function getTableDumpPath(string $table): string
+    {
+        return sprintf(
+            '%s/ps_dump_%s_%s_%s.sql',
+            sys_get_temp_dir(),
+            $this->databaseName,
+            AppKernel::VERSION,
+            $table
+        );
+    }
+
     /**
      * Restore the dump to the actual database.
      */
@@ -143,6 +173,16 @@ class DatabaseDump
         $dump = new static();
 
         $dump->dump();
+    }
+
+    /**
+     * Make dump for each table in the database.
+     */
+    public static function dumpTables()
+    {
+        $dump = new static();
+
+        $dump->dumpAllTables();
     }
 
     /**
