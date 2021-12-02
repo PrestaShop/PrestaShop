@@ -59,4 +59,14 @@
       {mailto address=$contact_infos.email encode="javascript"}
     </div>
   {/if}
+  {if $contact_infos.details}
+    <hr/>
+    <div class="block">
+      <div class="icon"><i class="material-icons">&#xE88E;</i></div>
+      <div class="data">
+        {l s='Details:' d='Shop.Theme.Global'}<br/>
+        {$contact_infos.details}
+      </div>
+    </div>
+  {/if}
 </div>
