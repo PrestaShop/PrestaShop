@@ -54,7 +54,6 @@ use CustomizationField;
 use DateRange;
 use Employee;
 use EmployeeSession;
-use Exception;
 use Feature;
 use FeatureValue;
 use Gender;
@@ -344,10 +343,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
     private static function restoreTestDB(): void
     {
-        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
-            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-
+        DatabaseDump::checkDump();
         DatabaseDump::restoreDb();
     }
 
