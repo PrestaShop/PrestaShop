@@ -186,7 +186,11 @@
     "scripts": {
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
-            "@php ./tests/bin/create-test-db.php"
+            "@php ./tests/bin/create-test-db.php",
+            "@php ./tests/bin/create-test-tables-dump.php"
+        ],
+        "create-test-table-dumps": [
+          "@php ./tests/bin/create-test-tables-dump.php"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
