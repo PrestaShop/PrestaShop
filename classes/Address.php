@@ -175,6 +175,7 @@ class AddressCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
+        Cache::clean('address_exists_*');
         static::$_idZones = [];
         static::$_idCountries = [];
     }
