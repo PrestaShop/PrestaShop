@@ -280,17 +280,12 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async doesStatusExist(page, statusName) {
-    let options = await page.$$eval(
+    const options = await page.$$eval(
       `${this.orderStatusesSelect} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
+      all => all.map(option => option.textContent),
     );
 
-    options = options.filter(option => statusName === option.textContent);
-    return options.length !== 0;
+    return options.indexOf(statusName) !== -1;
   }
 
   /**
