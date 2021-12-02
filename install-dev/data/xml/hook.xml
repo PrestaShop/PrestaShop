@@ -771,6 +771,11 @@
       <title>Display new elements in back office product page, Quantities/Combinations tab</title>
       <description>This hook launches modules when the back office product page is displayed</description>
     </hook>
+    <hook id="displayAdminProductsCombinationsBulkBottom">
+      <name>displayAdminProductsCombinationsBulkBottom</name>
+      <title>Display new elements in back office product page, bulk form of the Combinations tab</title>
+      <description>This hook launches modules when the back office product page is displayed</description>
+    </hook>
     <hook id="displayAdminProductsPriceStepBottom">
       <name>displayAdminProductsPriceStepBottom</name>
       <title>Display new elements in back office product page, Price tab</title>

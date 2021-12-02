@@ -268,6 +268,7 @@ class Combination {
         convertedInput = `${this.inputPattern}attribute_priceTI`;
         break;
       default:
+        convertedInput = `${this.inputPattern}${bulkInput}`;
     }
 
     return convertedInput;
