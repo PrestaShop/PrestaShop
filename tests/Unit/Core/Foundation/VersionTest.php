@@ -509,6 +509,20 @@ class VersionTest extends TestCase
                     'buildMeta' => 'nightly.20190526',
                 ],
             ],
+            '1.8.1.2' => [
+                '1.8.1.2',
+                [
+                    'version' => '1.8.1.2',
+                    'fullVersion' => '1.8.1.2',
+                    'semVersion' => '8.1.2',
+                    'majorString' => '1.8',
+                    'major' => 8,
+                    'minor' => 1,
+                    'patch' => 2,
+                    'preRelease' => '',
+                    'buildMeta' => '',
+                ],
+            ],
             '8.1.2' => [
                 '8.1.2',
                 [
