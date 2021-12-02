@@ -49,10 +49,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class WebserviceKeyDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'webservice_key';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'webservice_key';
 
     /**
      * @var array

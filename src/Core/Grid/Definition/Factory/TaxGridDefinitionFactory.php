@@ -48,10 +48,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class TaxGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    public const GRID_ID = 'tax';
-
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    public const GRID_ID = 'tax';
 
     /**
      * {@inheritdoc}
