@@ -43,7 +43,7 @@ export default {
       typeChoices: '.product-type-choice',
       defaultChoiceClass: 'btn-outline-secondary',
       selectedChoiceClass: 'btn-primary',
-      typeDescription: '.product-type-description',
+      typeDescription: '.product-type-description-content',
     },
   },
   invalidField: '.is-invalid',
