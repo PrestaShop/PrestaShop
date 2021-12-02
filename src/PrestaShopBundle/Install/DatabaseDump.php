@@ -126,6 +126,13 @@ class DatabaseDump
         $this->exec($dumpCommand);
     }
 
+    private function checkDumpFile(): void
+    {
+        if (!file_exists($this->dumpFile)) {
+            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+        }
+    }
+
     private function dumpAllTables(): void
     {
         $db = Db::getInstance();
@@ -183,6 +190,13 @@ class DatabaseDump
         $dump = new static();
 
         $dump->dumpAllTables();
+    }
+
+    public static function checkDump(): void
+    {
+        $dump = new static();
+
+        $dump->checkDumpFile();
     }
 
     /**

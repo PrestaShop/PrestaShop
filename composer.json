@@ -217,6 +217,7 @@
     "scripts-descriptions": {
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
         "create-test-db": "Create a Database for testing purposes",
+        "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
         "test-all": "Launch all PHPUnit test suites"
     }
 }
