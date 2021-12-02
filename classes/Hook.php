@@ -131,7 +131,7 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
-    public function clearCache(bool $all = false): bool
+    public function clearCache($all = false)
     {
         Cache::clean('hook_*');
         parent::clearCache($all);
