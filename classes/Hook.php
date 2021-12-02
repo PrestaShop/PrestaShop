@@ -131,7 +131,7 @@ class HookCore extends ObjectModel
         return parent::add($autodate, $null_values);
     }
 
-    public function clearCache($all = false)
+    public function clearCache(bool $all = false): bool
     {
         Cache::clean('hook_*');
         parent::clearCache($all);
@@ -1276,7 +1276,10 @@ class HookCore extends ObjectModel
             $sql->where('h.active = 1');
             $active_hooks = Db::getInstance()->executeS($sql);
             if (!empty($active_hooks)) {
-                Cache::store('hook_active', array_column($active_hooks, 'name'));
+                $hook_names = array_column($active_hooks, 'name');
+                if (is_array($hook_names)) {
+                    Cache::store('hook_active', $hook_names);
+                }
             }
         }
 
