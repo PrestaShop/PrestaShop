@@ -2,7 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -25,7 +25,7 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-let todayDate;
+const todayDate = getDateFormat('mm/dd/yyyy');
 
 /*
 Delete the non ordered shopping carts
@@ -37,7 +37,6 @@ describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    todayDate = await date.getDate('mm-dd-yyyy');
   });
 
   after(async () => {

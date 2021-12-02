@@ -5,7 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -31,8 +31,8 @@ const {DefaultEmployee} = require('@data/demo/employees');
 
 let browserContext;
 let page;
-let todayDate;
 let numberOfLogs = 0;
+const today = getDateFormat('mm/dd/yyyy');
 
 /*
 Erase all logs
@@ -48,7 +48,6 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    todayDate = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {
@@ -335,14 +334,14 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await logsPage.filterLogsByDate(page, todayDate, todayDate);
+      await logsPage.filterLogsByDate(page, today, today);
 
       const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
-        await expect(textColumn).to.contains(todayDate);
+        await expect(textColumn).to.contains(today);
       }
     });
 

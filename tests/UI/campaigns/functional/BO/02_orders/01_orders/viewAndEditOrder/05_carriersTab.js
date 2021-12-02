@@ -5,7 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
-const date = require('@data/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -33,7 +33,7 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
 let browserContext;
 let page;
-let today;
+const today = getDateFormat('mm/dd/yyyy');
 
 const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
 
@@ -51,7 +51,6 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    today = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {

@@ -533,7 +533,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 1);
       await Promise.all([
-        expect(result.date).to.contain(today),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal('Bank transfer'),
         expect(result.transactionID).to.equal(''),
         expect(result.amount).to.equal(`€${totalOrder}`),

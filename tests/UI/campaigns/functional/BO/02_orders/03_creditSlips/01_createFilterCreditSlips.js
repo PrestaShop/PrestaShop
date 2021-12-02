@@ -3,7 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -39,8 +39,8 @@ let browserContext;
 let page;
 
 let numberOfCreditSlips = 0;
-let todayDate;
-let todayDateToCheck;
+const todayDate = getDateFormat('yyyy-mm-dd');
+const todayDateToCheck = getDateFormat('mm/dd/yyyy');
 
 /*
 Create order
@@ -53,8 +53,6 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    todayDate = await date.getDate('yyyy-mm-dd');
-    todayDateToCheck = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {

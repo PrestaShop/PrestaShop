@@ -1,7 +1,8 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -20,7 +21,6 @@ const cartPage = require('@pages/FO/cart');
 const CartRuleFaker = require('@data/faker/cartRule');
 const ProductData = require('@data/FO/product');
 const {Products} = require('@data/demo/products');
-const {DateStartFourDigitYear} = require('@data/date');
 
 // import test context
 const testContext = require('@utils/testContext');
@@ -32,10 +32,11 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
+const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 
 const cartRuleWithoutCode = new CartRuleFaker(
   {
-    dateFrom: DateStartFourDigitYear.pastDateFormat2,
+    dateFrom: pastDate,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,

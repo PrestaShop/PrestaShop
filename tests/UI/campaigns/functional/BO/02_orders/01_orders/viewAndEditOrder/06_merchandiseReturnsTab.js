@@ -6,7 +6,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -40,9 +40,9 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseRet
 
 let browserContext;
 let page;
-let today;
 let orderID = 1;
 let trackingNumber = 1;
+const today = getDateFormat('mm/dd/yyyy');
 
 /*
 Create order in FO
@@ -61,7 +61,6 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    today = await date.getDate('mm/dd/yyyy');
   });
 
   after(async () => {

@@ -1,6 +1,6 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 

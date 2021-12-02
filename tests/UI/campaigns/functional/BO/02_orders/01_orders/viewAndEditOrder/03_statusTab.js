@@ -5,7 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
@@ -38,7 +38,7 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 
 let browserContext;
 let page;
-let today;
+const today = getDateFormat('mm/dd/yyyy');
 
 const orderNote = 'Test order note';
 
@@ -115,7 +115,6 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    today = await date.getDate('mm/dd/yyyy');
 
     // Start listening to maildev server
     mailListener = mailHelper.createMailListener();

@@ -3,7 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -37,7 +37,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-let futureDate;
+const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 
 const creditSlipDocumentName = 'Credit slip';
 
@@ -51,7 +51,6 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    futureDate = await date.getDate('yyyy-mm-dd', 'future');
   });
 
   after(async () => {

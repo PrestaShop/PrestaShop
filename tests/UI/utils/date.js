@@ -9,10 +9,10 @@ const getBaseDate = (dateTime = 'today') => {
   // Set base date : Dates from today, future, past or exact date passed to the function
   switch (dateTime) {
     case 'past':
-      baseDate.setFullYear(baseDate.getFullYear() + 1);
+      baseDate.setFullYear(baseDate.getFullYear() - 1);
       break;
     case 'future':
-      baseDate.setFullYear(baseDate.getFullYear() - 1);
+      baseDate.setFullYear(baseDate.getFullYear() + 1);
       break;
     case 'today':
       break;
@@ -26,7 +26,7 @@ const getBaseDate = (dateTime = 'today') => {
 /**
  * Get date on some formats and times
  * @param format {string} Format of the date
- * @param time {string} Time of the date (present, future, past)
+ * @param dateTime {string} Time of the date (present, future, past)
  * @returns {string}
  */
 const getDateFormat = (format, dateTime = 'today') => {
@@ -35,7 +35,7 @@ const getDateFormat = (format, dateTime = 'today') => {
   // Get day, month and year depending
   const mm = (`0${date.getMonth() + 1}`).slice(-2); // Current month
   const dd = (`0${date.getDate()}`).slice(-2); // Current day
-  const yyyy = date.getFullYear(); // Current year
+  const yyyy = date.getFullYear(); // Year
 
   switch (format) {
     case 'mm/dd/yyyy':

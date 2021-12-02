@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const date = require('@utils/date');
+const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -30,7 +30,7 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 
 let browserContext;
 let page;
-let pastDate;
+const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
@@ -73,7 +73,6 @@ describe('FO - Account : View vouchers', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
-    pastDate = await date.getDate('yyyy-mm-dd', 'past');
   });
 
   after(async () => {
