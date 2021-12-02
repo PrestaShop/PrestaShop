@@ -762,10 +762,13 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-        if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price_ratio']) && empty($this->update_fields['unit_price']))) {
-            if ($this->unit_price_ratio !== null) {
-                $fields['unit_price'] = (float) $this->unit_price_ratio > 0 ? $this->price / $this->unit_price_ratio : 0;
-            }
+
+        // In case unit_price is not in fields we can try and fallback with unit_price_ratio
+        if (null !== $this->unit_price_ratio && empty($fields['unit_price']) && (
+            null === $this->update_fields ||
+            (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price_ratio']) && empty($this->update_fields['unit_price']))
+        )) {
+            $fields['unit_price'] = (float) $this->unit_price_ratio > 0 ? $this->price / $this->unit_price_ratio : 0;
         }
         $fields['unity'] = pSQL($this->unity);
 
@@ -5817,7 +5820,7 @@ class ProductCore extends ObjectModel
         $unitPrice = 0.0;
         if (isset($row['unit_price'])) {
             // Unit price is supposed to be in DB and accessible in the row
-            $unitPrice = $row['unit_price'];
+            $unitPrice = (float) $row['unit_price'];
         } elseif (isset($row['unit_price_ratio']) && 0 != $row['unit_price_ratio']) {
             // In case unit_price is not defined but ratio is we recompute unit_price based on initial product price
             $unitPrice = ($row['price_without_reduction_without_tax'] / $row['unit_price_ratio']);

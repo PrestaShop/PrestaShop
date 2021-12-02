@@ -366,7 +366,7 @@ export default class FormObjectMapper {
 
   /**
    * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
-   * into a potential infinite loop if type don't match, which can easily happen with a number value in a text input.
+   * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
    *
    * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
    * it's not written exactly the same way (like pending zeros)
