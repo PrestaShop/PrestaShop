@@ -86,6 +86,7 @@ const paymentDataAmountEqualRest = {
   amount: Products.demo_5.priceTaxIncl,
   currency: '€',
 };
+
 /*
 Pre-condition :
 - Create 2 orders by default customer
@@ -119,6 +120,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       await foHomePage.goToFo(page);
+
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
 
