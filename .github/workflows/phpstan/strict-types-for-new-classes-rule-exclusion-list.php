@@ -356,7 +356,7 @@ $baseline = [
     'PrestaShopBundle\Cache\Factory\CacheSubscriberFactory',
     'PrestaShopBundle\Controller\Admin\Sell\Order\InvoicesController',
     'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\SqlManagerController',
-    'PrestaShopBundle\Controller\Admin\StockController',
+    'PrestaShopBundle\Controller\Admin\Sell\Catalog\StockController',
     'PrestaShopBundle\Controller\Admin\ProductImageController',
     'PrestaShopBundle\Controller\Admin\FeatureController',
     'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController',
