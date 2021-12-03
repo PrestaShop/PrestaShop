@@ -136,21 +136,26 @@ class LogoUploader
             $idShop = $this->shop->id;
             $idShopGroup = null;
 
-            // on updating PS_LOGO if the new file is an svg, keep old logo for mail and invoice
-            $deleteOldLogo = true;
+            // on updating PS_LOGO if the new file is an svg, copy old logo for mail and invoice
             if ($fieldName == 'PS_LOGO' && ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
                 if (empty(Configuration::get('PS_LOGO_MAIL'))) {
-                    Configuration::updateValue('PS_LOGO_MAIL', Configuration::get('PS_LOGO'));
-                    $deleteOldLogo = false;
+                    $newLogoMail = $this->getLogoName('logo_mail', '.' . pathinfo(_PS_IMG_DIR_ . Configuration::get($fieldName), \PATHINFO_EXTENSION));
+                    // copy old logo file for mail
+                    if (@copy(_PS_IMG_DIR_ . Configuration::get($fieldName), _PS_IMG_DIR_ . $newLogoMail)) {
+                        Configuration::updateValue('PS_LOGO_MAIL', $newLogoMail);
+                    }
                 }
                 if (empty(Configuration::get('PS_LOGO_INVOICE'))) {
-                    Configuration::updateValue('PS_LOGO_INVOICE', Configuration::get('PS_LOGO'));
-                    $deleteOldLogo = false;
+                    $newLogoInvoice = $this->getLogoName('logo_invoice', '.' . pathinfo(Configuration::get($fieldName), \PATHINFO_EXTENSION));
+                    // copy old logo file for invoice
+                    if (@copy(_PS_IMG_DIR_ . Configuration::get($fieldName), _PS_IMG_DIR_ . $newLogoInvoice)) {
+                        Configuration::updateValue('PS_LOGO_INVOICE', $newLogoInvoice);
+                    }
                 }
             }
 
             // manage deleting old logo
-            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName)) && $deleteOldLogo) {
+            if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName))) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);
                 } else {
