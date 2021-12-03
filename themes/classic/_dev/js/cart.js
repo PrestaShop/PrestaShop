@@ -178,6 +178,10 @@ $(document).ready(() => {
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
 
+    $('.customization-modal').on('show.bs.modal', (event) => {
+      event.preventDefault();
+    });
+
     return $.ajax({
       url: updateQuantityInCartUrl,
       method: 'POST',
@@ -189,6 +193,7 @@ $(document).ready(() => {
     })
       .then((resp) => {
         CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+
         $target.val(resp.quantity);
 
         let dataset;
