@@ -279,17 +279,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * This hook can be used to flag a scenario for database hard reset
-     *
-     * @BeforeScenario @database-scenario
-     */
-    public function cleanDatabaseHardPrepare()
-    {
-        static::restoreTestDB();
-        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
-    }
-
-    /**
      * @BeforeStep
      *
      * Clear Doctrine entity manager at each step in order to get fresh data
@@ -305,6 +294,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function rebootKernelOnDemand()
     {
         self::rebootKernel();
+    }
+
+    /**
+     * @Given I restore tables :tableNames
+     *
+     * @param string $tableNames
+     */
+    public function restoreTables(string $tableNames): void
+    {
+        $tables = explode(',', $tableNames);
+        DatabaseDump::restoreTables($tables);
     }
 
     private static function mockContext()
@@ -343,7 +343,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
     private static function restoreTestDB(): void
     {
-        DatabaseDump::checkDump();
         DatabaseDump::restoreDb();
     }
 
