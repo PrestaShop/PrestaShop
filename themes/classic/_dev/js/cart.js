@@ -178,7 +178,7 @@ $(document).ready(() => {
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
 
-    $('.customization-modal').on('show.bs.modal', (event) => {
+    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (event) => {
       event.preventDefault();
     });
 
