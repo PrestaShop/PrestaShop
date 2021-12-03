@@ -38,6 +38,7 @@ class DatabaseDump
     private $user;
     private $password;
     private $databaseName;
+    private $dbPrefix;
     private $dumpFile;
 
     /**
@@ -66,6 +67,35 @@ class DatabaseDump
         }
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
+        $this->dbPrefix = _DB_PREFIX_;
+    }
+
+    /**
+     * Restore the dump to the actual database.
+     */
+    public function restore()
+    {
+        $this->checkDumpFile();
+
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $this->exec($restoreCommand);
+    }
+
+    /**
+     * Restore a specific table in the database.
+     *
+     * @param string $table
+     */
+    public function restoreTable(string $table): void
+    {
+        $tableName = $this->dbPrefix . $table;
+        $this->checkTableDumpFile($tableName);
+        $dumpFile = $this->getTableDumpPath($tableName);
+
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
+        $this->exec($restoreCommand);
     }
 
     /**
@@ -126,13 +156,6 @@ class DatabaseDump
         $this->exec($dumpCommand);
     }
 
-    private function checkDumpFile(): void
-    {
-        if (!file_exists($this->dumpFile)) {
-            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-    }
-
     private function dumpAllTables(): void
     {
         $db = Db::getInstance();
@@ -162,14 +185,22 @@ class DatabaseDump
         );
     }
 
-    /**
-     * Restore the dump to the actual database.
-     */
-    public function restore()
+    private function checkDumpFile(): void
     {
-        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($restoreCommand);
+        if (!file_exists($this->dumpFile)) {
+            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+        }
+    }
+
+    private function checkTableDumpFile(string $tableName): void
+    {
+        $dumpFile = $this->getTableDumpPath($tableName);
+        if (!file_exists($dumpFile)) {
+            throw new Exception(sprintf(
+                'Cannot find dump for table %s, you need to run \'composer create-test-db\' to create the initial test database',
+                $tableName
+            ));
+        }
     }
 
     /**
@@ -192,6 +223,11 @@ class DatabaseDump
         $dump->dumpAllTables();
     }
 
+    /**
+     * Check that dump file exists
+     *
+     * @throws Exception
+     */
     public static function checkDump(): void
     {
         $dump = new static();
@@ -207,5 +243,19 @@ class DatabaseDump
         $dump = new static();
 
         $dump->restore();
+    }
+
+    /**
+     * Restore a list of tables in the database
+     *
+     * @param array $tableNames
+     */
+    public static function restoreTables(array $tableNames): void
+    {
+        $dump = new static();
+
+        foreach ($tableNames as $tableName) {
+            $dump->restoreTable($tableName);
+        }
     }
 }
