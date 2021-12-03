@@ -396,14 +396,12 @@ const featuresCollection = (function () {
   /** Add a feature */
   function add() {
     const newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
-    
     const $newFormJquery = $(newForm);
-    //we need to put in disabled the custom
+  // we need to put in disabled the custom
     const $customValueSelector = $newFormJquery.find('input[type=text]');
     const $featurevalueSelector = $newFormJquery.find('select');
     $customValueSelector.prop('disabled', true);
     collectionHolder.append($newFormJquery);
-   
     maxCollectionChildren += 1;
     prestaShopUiKit.initSelects();
   }
@@ -433,7 +431,7 @@ const featuresCollection = (function () {
         return url.replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, `/${newId}`);
       }
 
-      //adding events to the preloaded features
+    // adding events to the preloaded features
       $(document).on('change', '.feature-collection select.feature-value-selector', function (event) {
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
@@ -443,10 +441,11 @@ const featuresCollection = (function () {
       });
 
       $(document).on('keyup', '.feature-collection input[type=text]', function (event) {
+        
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
         const $selector = $row.find('.feature-value-selector');
-        if($selector.hasClass('select2-hidden-accessible'))
+        if ($selector.hasClass('select2-hidden-accessible'))
         {
           $selector.val('').trigger('change.select2');
         } else
