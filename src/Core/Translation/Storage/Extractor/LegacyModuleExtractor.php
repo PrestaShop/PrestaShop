@@ -32,7 +32,6 @@ use PrestaShop\TranslationToolsBundle\Translation\Extractor\PhpExtractor;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\SmartyExtractor;
 use PrestaShop\TranslationToolsBundle\Translation\Extractor\TwigExtractor;
 use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
-use Symfony\Component\Translation\Extractor\AbstractFileExtractor;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -74,9 +73,9 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
      * @param array $catalogueExtractExcludedDirectories
      */
     public function __construct(
-        AbstractFileExtractor $phpExtractor,
-        AbstractFileExtractor $smartyExtractor,
-        AbstractFileExtractor $twigExtractor,
+        PhpExtractor $phpExtractor,
+        SmartyExtractor $smartyExtractor,
+        TwigExtractor $twigExtractor,
         string $modulesDirectory,
         array $catalogueExtractExcludedDirectories
     ) {
