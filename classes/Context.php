@@ -95,6 +95,9 @@ class ContextCore
     /** @var Shop */
     public $shop;
 
+    /** @var Shop */
+    public $tmpOldShop;
+
     /** @var Smarty|null */
     public $smarty;
 

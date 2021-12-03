@@ -174,7 +174,7 @@ class CmsControllerCore extends FrontController
             }
         }
 
-        if ($this->assignCase == self::CMS_CASE_PAGE) {
+        if ($this->assignCase == self::CMS_CASE_PAGE && $this->context->controller instanceof CmsControllerCore) {
             $breadcrumb['links'][] = [
                 'title' => $this->context->controller->cms->meta_title,
                 'url' => $this->context->link->getCMSLink($this->context->controller->cms),

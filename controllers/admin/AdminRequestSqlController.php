@@ -215,11 +215,10 @@ class AdminRequestSqlControllerCore extends AdminController
 
     public function renderView()
     {
-        /** @var RequestSql $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
-
+        /** @var RequestSql $obj */
         $view = [];
         if ($results = Db::getInstance()->executeS($obj->sql)) {
             $tab_key = [];
@@ -262,7 +261,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display export action link.
      *
-     * @param $token
+     * @param string $token
      * @param int $id
      *
      * @return string
@@ -384,7 +383,7 @@ class AdminRequestSqlControllerCore extends AdminController
     /**
      * Display all errors.
      *
-     * @param $e : array of errors
+     * @param array $e Array of errors
      */
     public function displayError($e)
     {

@@ -496,7 +496,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
      *
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1158,7 +1158,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1210,7 +1210,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $combinationId
+     * @param int $combinationId
      *
      * @return ProductController|null
      */
@@ -1226,7 +1226,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */

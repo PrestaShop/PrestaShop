@@ -344,10 +344,10 @@ class AdminTabsControllerCore extends AdminController
 
     protected function afterImageUpload()
     {
-        /** @var Tab $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
+        /* @var Tab $obj */
         @rename(_PS_IMG_DIR_ . 't/' . $obj->id . '.gif', _PS_IMG_DIR_ . 't/' . $obj->class_name . '.gif');
     }
 

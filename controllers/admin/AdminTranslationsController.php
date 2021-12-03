@@ -125,7 +125,7 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * This function create vars by default and call the good method for generate form.
      *
-     * @param $method_name
+     * @param string $method_name
      *
      * @return mixed Call the method $this->method_name()
      */
@@ -676,7 +676,7 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * Add new translations tabs by code ISO.
      *
-     * @param array $iso_code
+     * @param string $iso_code
      * @param array $files
      *
      * @return array
@@ -1014,7 +1014,7 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * Clear the list of module file by type (file or directory).
      *
-     * @param $files : list of files
+     * @param array $files List of files
      * @param string $type_clear (file|directory)
      * @param string $path
      *
@@ -1219,10 +1219,10 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * This method parse a file by type of translation and type file.
      *
-     * @param $content
-     * @param $type_translation : front, back, errors, modules...
-     * @param string|bool $type_file : (tpl|php)
-     * @param string $module_name : name of the module
+     * @param string $content
+     * @param string $type_translation front, back, errors, modules...
+     * @param string|bool $type_file (tpl|php)
+     * @param string $module_name name of the module
      *
      * @return array
      */
@@ -1783,7 +1783,7 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * Find sentence which use %d, %s, %%, %1$d, %1$s...
      *
-     * @param $key : english sentence
+     * @param string $key English sentence
      *
      * @return array|bool return list of matches
      */
@@ -2903,9 +2903,9 @@ class AdminTranslationsControllerCore extends AdminController
     /**
      * Get list of subjects of mails.
      *
-     * @param $dir
-     * @param $file
-     * @param $subject_mail
+     * @param string $dir
+     * @param string $file
+     * @param array $subject_mail
      *
      * @return array : list of subjects of mails
      */
@@ -3315,7 +3315,7 @@ class AdminTranslationsControllerCore extends AdminController
     }
 
     /**
-     * @param $directory : name of directory
+     * @param string $directory Name of directory
      *
      * @return array
      */

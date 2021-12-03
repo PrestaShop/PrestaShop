@@ -907,6 +907,12 @@ class AdminModulesControllerCore extends AdminController
         }
     }
 
+    /**
+     * @param string|null $tab_modules_list
+     * @param false $install_source_tracking
+     *
+     * @return array<string, array<Module>>
+     */
     protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
     {
         $all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
@@ -1006,7 +1012,7 @@ class AdminModulesControllerCore extends AdminController
     /**
      * Generate html errors for a module process.
      *
-     * @param $module_errors
+     * @param array $module_errors
      *
      * @return string
      */
@@ -1055,6 +1061,9 @@ class AdminModulesControllerCore extends AdminController
         $this->serial_modules = urlencode($this->serial_modules);
     }
 
+    /**
+     * @param Module $module
+     */
     public function makeModulesStats($module)
     {
         // Count Installed Modules

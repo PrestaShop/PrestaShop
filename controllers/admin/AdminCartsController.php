@@ -222,10 +222,10 @@ class AdminCartsControllerCore extends AdminController
 
     public function renderView()
     {
-        /** @var Cart $cart */
         if (!($cart = $this->loadObject(true))) {
             return;
         }
+        /** @var Cart $cart */
         $customer = new Customer($cart->id_customer);
         $currency = new Currency($cart->id_currency);
         $this->context->cart = $cart;

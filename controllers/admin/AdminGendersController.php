@@ -184,8 +184,9 @@ class AdminGendersControllerCore extends AdminController
             ],
         ];
 
-        /** @var Gender $obj */
-        if (!($obj = $this->loadObject(true))) {
+        /** @var Gender|false $obj */
+        $obj = $this->loadObject(true);
+        if (!$obj) {
             return;
         }
 

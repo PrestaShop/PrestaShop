@@ -256,9 +256,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public static function get8020SalesCatalog($date_from, $date_to)
     {
-        $distinct_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-		SELECT COUNT(DISTINCT od.product_id)
+        $distinct_products = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(DISTINCT od.product_id)
 		FROM `' . _DB_PREFIX_ . 'orders` o
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
@@ -1004,6 +1003,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $id_employee = Tools::getValue('id_employee');
         $id_lang = Tools::getValue('id_lang');
 
+        /** @var ModuleGraph|false $graph */
         $graph = Module::getInstanceByName($module);
         if (false === $graph) {
             $this->ajaxRender(Tools::displayError());
@@ -1043,6 +1043,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $id_employee = (int) (Tools::getValue('id_employee'));
         $id_lang = (int) (Tools::getValue('id_lang'));
 
+        /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);
         if (false === $grid) {
             $this->ajaxRender(Tools::displayError());
