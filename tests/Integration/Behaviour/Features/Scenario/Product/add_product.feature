@@ -1,4 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add
+@reset-products-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
 @add
@@ -7,7 +8,6 @@ Feature: Add basic product from Back Office (BO)
   I need to be able to add new product with basic information from the BO
 
   Background:
-    Given I restore tables "product,product_lang,product_shop,product_attribute"
     Given language "language1" with locale "en-US" exists
     And category "home" in default language named "Home" exists
     And category "home" is the default one

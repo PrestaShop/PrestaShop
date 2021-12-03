@@ -34,6 +34,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
@@ -42,6 +43,34 @@ use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContex
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @BeforeFeature @reset-products-before-feature
+     */
+    public static function restoreProductTables(): void
+    {
+        DatabaseDump::restoreTables([
+            'product',
+            'product_attachment',
+            'product_attribute',
+            'product_attribute_combination',
+            'product_attribute_image',
+            'product_attribute_shop',
+            'product_carrier',
+            'product_country_tax',
+            'product_download',
+            'product_group_reduction_cache',
+            'product_lang',
+            'product_sale',
+            'product_shop',
+            'product_supplier',
+            'product_tag',
+
+            'category_product',
+            'feature_product',
+            'warehouse_product_location',
+        ]);
+    }
+
     /**
      * @Given product :productReference has following combinations:
      *
