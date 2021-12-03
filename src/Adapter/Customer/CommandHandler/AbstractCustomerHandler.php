@@ -50,9 +50,6 @@ abstract class AbstractCustomerHandler
      */
     protected $logger;
 
-    /**
-     * @var string
-     */
     protected $objectTypeLabel;
 
     /**
