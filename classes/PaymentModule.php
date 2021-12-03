@@ -198,6 +198,7 @@ abstract class PaymentModuleCore extends Module
      * @param bool $dont_touch_amount
      * @param string|bool $secure_key
      * @param Shop $shop
+     * @param string|null $order_reference if this parameter is not provided, a random order reference will be generated
      *
      * @return bool
      *
@@ -213,7 +214,8 @@ abstract class PaymentModuleCore extends Module
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        Shop $shop = null,
+        ?string $order_reference = null
     ) {
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
@@ -274,9 +276,13 @@ abstract class PaymentModuleCore extends Module
             $order_list = [];
             $order_detail_list = [];
 
-            do {
-                $reference = Order::generateReference();
-            } while (Order::getByReference($reference)->count());
+            if ($order_reference === null) {
+                do {
+                    $reference = Order::generateReference();
+                } while (Order::getByReference($reference)->count());
+            } else {
+                $reference = $order_reference;
+            }
 
             $this->currentOrderReference = $reference;
 
