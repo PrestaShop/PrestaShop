@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags legacy-product-type
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
 @legacy-product-type

@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags search-products
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @search-products
 Feature: Search products to associate them in the BO

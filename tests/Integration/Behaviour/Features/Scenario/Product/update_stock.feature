@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stock
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @update-stock

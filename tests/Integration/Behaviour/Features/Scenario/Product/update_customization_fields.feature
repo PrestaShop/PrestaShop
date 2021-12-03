@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-customization-fields
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @update-customization-fields
 Feature: Update product customization fields in Back Office (BO)

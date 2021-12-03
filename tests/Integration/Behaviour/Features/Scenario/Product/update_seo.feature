@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-seo
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @update-seo
 Feature: Update product SEO options from Back Office (BO)

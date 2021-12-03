@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-tags
-@reset-database-before-feature
+@reset-products-before-feature
 @update-tags
 Feature: Update product tags from Back Office (BO)
   As a BO user

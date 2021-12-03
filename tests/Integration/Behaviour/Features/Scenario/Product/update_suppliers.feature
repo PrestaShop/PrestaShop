@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-suppliers
-@reset-database-before-feature
+@reset-products-before-feature
 @clear-cache-before-feature
 @update-suppliers
 Feature: Update product suppliers from Back Office (BO)
