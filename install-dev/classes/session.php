@@ -41,7 +41,6 @@
  * @property string $database_engine
  * @property string $shop_name
  * @property array $xml_loader_ids
- * @property int $shop_activity
  * @property string $shop_country
  * @property string $admin_firstname
  * @property string $admin_lastname

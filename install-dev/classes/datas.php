@@ -40,7 +40,6 @@
  * @property string $database_prefix
  * @property string $database_engine
  * @property string $shop_name
- * @property int $shop_activity
  * @property string $shop_country
  * @property string $admin_firstname
  * @property string $admin_lastname
@@ -139,11 +138,6 @@ class Datas
             'name' => 'name',
             'validate' => 'isGenericName',
             'default' => 'PrestaShop',
-        ],
-        'shop_activity' => [
-            'name' => 'activity',
-            'default' => 0,
-            'validate' => 'isInt',
         ],
         'shop_country' => [
             'name' => 'country',
