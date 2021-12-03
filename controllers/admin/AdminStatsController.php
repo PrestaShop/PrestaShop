@@ -584,6 +584,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $tooltip = null;
+        $value = false;
         switch (Tools::getValue('kpi')) {
             case 'conversion_rate':
                 $visitors = AdminStatsController::getVisits(
@@ -974,9 +975,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     );
                 }
                 break;
-
-            default:
-                $value = false;
         }
         if ($value !== false) {
             die(json_encode([

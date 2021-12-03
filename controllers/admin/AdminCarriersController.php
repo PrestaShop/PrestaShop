@@ -427,7 +427,7 @@ class AdminCarriersControllerCore extends AdminController
                 $id = (int) Tools::getValue('id_' . $this->table);
 
                 /* Object update */
-                if (isset($id) && !empty($id)) {
+                if (!empty($id)) {
                     try {
                         if ($this->access('edit')) {
                             $current_carrier = new Carrier($id);

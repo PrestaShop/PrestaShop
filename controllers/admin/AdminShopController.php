@@ -444,14 +444,14 @@ class AdminShopControllerCore extends AdminController
             $this->fields_form['input'][] = [
                 'type' => 'hidden',
                 'name' => 'id_shop_group',
-                'default' => $group->name,
+                'default' => isset($group) ? $group->name : '',
             ];
             $this->fields_form['input'][] = [
                 'type' => 'textShopGroup',
                 'label' => $this->trans('Shop group', [], 'Admin.Shopparameters.Feature'),
                 'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', [], 'Admin.Shopparameters.Help'),
                 'name' => 'id_shop_group',
-                'value' => $group->name,
+                'value' => isset($group) ? $group->name : '',
             ];
         }
 
@@ -670,6 +670,7 @@ class AdminShopControllerCore extends AdminController
         /* Checking fields validity */
         $this->validateRules();
 
+        $this->errors = array_unique($this->errors);
         if (!count($this->errors)) {
             /** @var Shop $object */
             $object = new $this->className();
@@ -696,10 +697,7 @@ class AdminShopControllerCore extends AdminController
                     $this->redirect_after = self::$currentIndex . ($parent_id ? '&shop_id=' . $object->id : '') . '&conf=3&token=' . $this->token;
                 }
             }
-        }
-
-        $this->errors = array_unique($this->errors);
-        if (count($this->errors) > 0) {
+        } else {
             $this->display = 'add';
 
             return;
