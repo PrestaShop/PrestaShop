@@ -62,9 +62,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Context::getContext()->shop = new Shop(1);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Configuration::loadConfiguration();
-        Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
-        Context::getContext()->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
-        Context::getContext()->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        Context::getContext()->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        Context::getContext()->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
+        Context::getContext()->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         Context::getContext()->cart = new Cart();
         Context::getContext()->employee = new Employee(1);
         define('_PS_SMARTY_FAST_LOAD_', true);
@@ -108,6 +108,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processPostInstall();
             }
         } catch (\Exception $e) {
+            /** @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 // display stack trace
                 $message = (string) $e;
@@ -235,7 +236,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules(Tools::getValue('module', null));
+        $result = $this->model_install->installModules();
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }

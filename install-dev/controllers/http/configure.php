@@ -29,7 +29,17 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
+    /**
+     * @var array
+     */
+    public $list_activities = [];
+    /**
+     * @var array
+     */
     public $list_countries = [];
+    /**
+     * @var string
+     */
     public $install_type;
 
     /**
@@ -150,14 +160,17 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
                     list($src_width, $src_height, $type) = getimagesize($tmp_name);
                     $src_image = ImageManager::create($type, $tmp_name);
                     $dest_image = imagecreatetruecolor($src_width, $src_height);
+                    // @phpstan-ignore-next-line
                     $white = imagecolorallocate($dest_image, 255, 255, 255);
+                    // @phpstan-ignore-next-line
                     imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
+                    // @phpstan-ignore-next-line
                     imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
+                    // @phpstan-ignore-next-line
                     if (!imagejpeg($dest_image, _PS_ROOT_DIR_ . '/img/logo.jpg', 95)) {
-                        $error = $this->trans('An error occurred during logo copy.', [], 'Install');
+                        $error = $this->translator->trans('An error occurred during logo copy.', [], 'Install');
                     } else {
                         imagedestroy($dest_image);
-                        @chmod($filename, 0664);
                     }
                 }
             } else {
@@ -184,10 +197,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function getTimezones()
     {
-        if (null !== $this->cache_timezones) {
-            return;
-        }
-
         if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'xml/timezone.xml')) {
             return [];
         }

@@ -26,6 +26,7 @@
 
 use PrestaShopBundle\Install\AbstractInstall;
 use PrestaShopBundle\Install\LanguageList;
+use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class InstallControllerConsole
 {
@@ -67,6 +68,16 @@ abstract class InstallControllerConsole
      * @var \PrestaShopBundle\Install\Database
      */
     protected $model_database;
+
+    /**
+     * @var Datas|null
+     */
+    public $datas;
+
+    /**
+     * @var TranslatorComponent|null
+     */
+    public $translator;
 
     /**
      * Validate current step.

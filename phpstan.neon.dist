@@ -13,7 +13,7 @@ parameters:
     - docs
     - download
     - img
-    # - install-dev
+    - install-dev
     - js
     - localization
     - mails
@@ -31,6 +31,8 @@ parameters:
     - admin-dev/filemanager
     - admin-dev/themes
     - classes/lang/KeysReference
+    - install-dev/theme/views
+    - install-dev/theme/config.php
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
