@@ -437,11 +437,7 @@ class CustomerController extends AbstractAdminController
         $query = $request->query->get('customer_search');
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
 
-        if (!$configuration->get('PS_CUSTOMER_SEARCH_FULL')) {
-            $phrases = explode(' ', $query);
-        } else {
-            $phrases = [$query];
-        }
+        $phrases = $configuration->get('PS_CUSTOMER_SEARCH_FULL') ? [$query] : explode(' ', $query);
 
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
