@@ -44,9 +44,22 @@ use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContex
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @AfterSuite
+     */
+    public static function restoreProductTablesAfterSuite(): void
+    {
+        static::restoreProductTables();
+    }
+
+    /**
      * @BeforeFeature @restore-products-before-feature
      */
-    public static function restoreProductTables(): void
+    public static function restoreProductTablesBeforeFeature(): void
+    {
+        static::restoreProductTables();
+    }
+
+    private static function restoreProductTables(): void
     {
         DatabaseDump::restoreTables([
             // Product data
