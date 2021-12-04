@@ -89,7 +89,7 @@ class ResourceResetter
     }
 
     /**
-     * Resets test images directory to initial state
+     * Resets test downloads directory to initial state
      */
     public function resetDownloads(): void
     {
