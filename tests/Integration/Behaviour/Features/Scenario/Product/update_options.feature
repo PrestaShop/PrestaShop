@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-options
-@reset-products-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @update-options
 Feature: Update product options from Back Office (BO)

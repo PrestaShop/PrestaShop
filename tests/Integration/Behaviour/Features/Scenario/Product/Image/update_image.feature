@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-image
-@reset-products-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
 @product-image

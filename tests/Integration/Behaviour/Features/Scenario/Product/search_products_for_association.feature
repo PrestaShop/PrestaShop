@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags search-products
-@reset-products-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @clear-cache-before-feature
 @search-products
 Feature: Search products to associate them in the BO
@@ -8,7 +9,7 @@ Feature: Search products to associate them in the BO
 
   Background:
     Given language "english" with locale "en-US" exists
-    Given language "french" with locale "fr-FR" exists
+    And language "french" with locale "fr-FR" exists
     And language with iso code "en" is the default one
 
   Scenario: I can search products by name

@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-virtual-product-file
-@reset-products-before-feature
+@restore-products-before-feature
 @virtual-product-file
 @add-virtual-product-file
 @reset-downloads-after-feature

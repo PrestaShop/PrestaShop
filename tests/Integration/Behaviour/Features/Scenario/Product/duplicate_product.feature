@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
-@reset-products-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @duplicate-product
 @reset-downloads-after-feature
 @clear-cache-after-feature

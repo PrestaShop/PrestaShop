@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-suppliers
-@reset-products-before-feature
+@restore-products-before-feature
+@reset-currencies-after-feature
 @clear-cache-before-feature
 @product-combination
 @update-combination-suppliers

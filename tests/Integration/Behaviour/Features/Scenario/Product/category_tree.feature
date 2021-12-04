@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags category-tree
-@reset-products-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @category-tree
 Feature: Show category tree in product page (BO)

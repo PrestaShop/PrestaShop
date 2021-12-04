@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags search-combinations
-@reset-products-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @clear-cache-before-feature
 @search-combinations
 Feature: Search combinations to associate them in the BO
