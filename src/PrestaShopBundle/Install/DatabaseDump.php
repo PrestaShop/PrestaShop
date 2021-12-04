@@ -258,4 +258,25 @@ class DatabaseDump
             $dump->restoreTable($tableName);
         }
     }
+
+    /**
+     * Restore a list of tables in the database which name match th regexp
+     *
+     * @param string $regexp
+     */
+    public static function restoreMatchingTables(string $regexp): void
+    {
+        $dump = new static();
+
+        $db = Db::getInstance();
+        $tables = $db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            $tableName = substr($tableName, strlen($dump->dbPrefix));
+            if (preg_match($regexp, $tableName)) {
+                $dump->restoreTable($tableName);
+            }
+        }
+    }
 }

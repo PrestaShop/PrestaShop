@@ -28,10 +28,42 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
 use Language;
+use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    /**
+     * @BeforeFeature @restore-languages-before-feature
+     */
+    public static function restoreLanguagesTablesBeforeFeature(): void
+    {
+        static::restoreLanguagesTables();
+    }
+
+    /**
+     * @AfterFeature @restore-languages-after-feature
+     */
+    public static function restoreLanguagesTablesAfterFeature(): void
+    {
+        static::restoreLanguagesTables();
+    }
+
+    private static function restoreLanguagesTables(): void
+    {
+        // Removing Language manually includes cleaning all related lang tables which is faster than restoring
+        // each tables with a dump
+        $langIds = Language::getLanguages(false, false, true);
+        unset($langIds[0]);
+        foreach ($langIds as $langId) {
+            $lang = new Language($langId);
+            $lang->delete();
+        }
+
+        // We still restore lang table to reset increment ID
+        DatabaseDump::restoreTables(['lang']);
+    }
+
     /**
      *  @Given /^language with iso code "([^"]*)" is the default one$/
      */

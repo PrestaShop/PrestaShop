@@ -44,11 +44,12 @@ use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContex
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @BeforeFeature @reset-products-before-feature
+     * @BeforeFeature @restore-products-before-feature
      */
     public static function restoreProductTables(): void
     {
         DatabaseDump::restoreTables([
+            // Product data
             'product',
             'product_attachment',
             'product_attribute',
@@ -64,7 +65,23 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'product_shop',
             'product_supplier',
             'product_tag',
-
+            // Related products
+            'accessory',
+            // Customizations
+            'customization',
+            'customization_field',
+            'customization_field_lang',
+            'customized_data',
+            // Specific prices
+            'specific_price',
+            // Stock
+            'stock_available',
+            'stock_mvt',
+            // Images
+            'image',
+            'image_lang',
+            'image_shop',
+            // Miscellaneous relationships
             'category_product',
             'feature_product',
             'warehouse_product_location',
