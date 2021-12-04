@@ -192,6 +192,9 @@
         "create-test-table-dumps": [
           "@php ./tests/bin/create-test-tables-dump.php"
         ],
+      "restore-test-db": [
+        "@php ./tests/bin/restore-test-db.php"
+      ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
         "integration-behaviour-tests": [
