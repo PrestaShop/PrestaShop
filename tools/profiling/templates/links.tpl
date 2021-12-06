@@ -22,22 +22,23 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<div class="col-2">
-  <ol>
-    <li>
-      <a href="#stopwatch">Stopwatch SQL</a>
-    </li>
-    <li>
-      <a href="#doubles">Doubles</a>
-    </li>
-    <li>
-      <a href="#tables">Tables stress</a>
-    </li>
-    <li>
-      <a href="#objectModels">ObjectModel instances</a>
-    </li>
-    <li>
-      <a href="#includedFiles">Included Files</a>
-    </li>
-  </ol>
-</div>
+<ol>
+  <li>
+    <a href="#summary">Summary</a>
+  </li>
+  <li>
+    <a href="#stopwatch">Stopwatch SQL</a>
+  </li>
+  <li>
+    <a href="#doubles">Doubles</a>
+  </li>
+  <li>
+    <a href="#tables">Tables stress</a>
+  </li>
+  <li>
+    <a href="#objectModels">ObjectModel instances</a>
+  </li>
+  <li>
+    <a href="#includedFiles">Included Files</a>
+  </li>
+</ol>

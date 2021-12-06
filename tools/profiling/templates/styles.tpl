@@ -145,6 +145,20 @@
     }
   }
 
+  #prestashop-profiling ol {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    padding-left: 25px;
+    background: #EEE;
+    opacity: 0.2;
+  }
+
+  #prestashop-profiling ol:hover {
+    opacity: 1;
+  }
+
   .success {
     color: green;
   }
