@@ -55,7 +55,6 @@ final class GenderChoiceProvider implements FormChoiceProviderInterface
     public function getChoices(): array
     {
         return [
-            '--' => '',
             $this->translator->trans('Male', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_MALE,
             $this->translator->trans('Female', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_FEMALE,
             $this->translator->trans('Neutral', [], 'Admin.Shopparameters.Feature') => Gender::GENDER_NEUTRAL,

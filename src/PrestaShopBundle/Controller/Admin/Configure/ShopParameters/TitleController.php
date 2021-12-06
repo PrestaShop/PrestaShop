@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
-use Context;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -77,7 +76,7 @@ class TitleController extends FrameworkBundleAdminController
     public function createAction(): Response
     {
         return $this->redirect(
-            Context::getContext()->link->getAdminLink(
+            $this->getContext()->link->getAdminLink(
                 'AdminGenders',
                 true,
                 [],
@@ -102,7 +101,7 @@ class TitleController extends FrameworkBundleAdminController
     public function editAction(int $titleId): Response
     {
         return $this->redirect(
-            Context::getContext()->link->getAdminLink(
+            $this->getContext()->link->getAdminLink(
                 'AdminGenders',
                 true,
                 [],
@@ -129,7 +128,7 @@ class TitleController extends FrameworkBundleAdminController
     public function deleteAction(int $titleId): RedirectResponse
     {
         return $this->redirect(
-            Context::getContext()->link->getAdminLink(
+            $this->getContext()->link->getAdminLink(
                 'AdminGenders',
                 true,
                 [],
