@@ -28,6 +28,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const keepLicense = require('uglify-save-license');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -89,6 +91,18 @@ module.exports = (env, argv) => {
       }),
       new MiniCssExtractPlugin({
         filename: 'theme.css',
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'preload.tpl',
+        templateContent: '{{{preloadLinks}}}',
+        inject: false,
+      }),
+      new FontPreloadPlugin({
+        index: 'preload.tpl',
+        extensions: ['woff2', 'woff', 'ttf', 'eot'],
+        crossorigin: false,
+        // eslint-disable-next-line
+        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{"`$img_dir`../admin-dev/themes/default/public/"}')),
       }),
     ],
   };
