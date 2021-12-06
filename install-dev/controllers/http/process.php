@@ -83,6 +83,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         }
 
         try {
+            $validateFixturesInstallation = $this->session->install_type == 'full';
+            $fixturesInstalled = !empty($this->session->process_validated['installFixtures']);
+
             if (Tools::getValue('generateSettingsFile')) {
                 $this->processGenerateSettingsFile();
             } elseif (Tools::getValue('installDatabase') && !empty($this->session->process_validated['generateSettingsFile'])) {
@@ -104,7 +107,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processInstallTheme();
             } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installTheme'])) {
                 $this->processInstallFixtures();
-            } elseif (Tools::getValue('postInstall') && !empty($this->session->process_validated['installFixtures'])) {
+            } elseif (Tools::getValue('postInstall') && (!$validateFixturesInstallation || $fixturesInstalled)) {
                 $this->processPostInstall();
             }
         } catch (\Exception $e) {
