@@ -83,6 +83,11 @@
 		var search_product_msg = '{l|escape s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
 {/if}
+
+{$preloadFilePath = "../public/preload.tpl"}
+
+{include file=$preloadFilePath}
+
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
   <link href="{$css_uri|escape:'html':'UTF-8'}" rel="stylesheet" type="text/css"/>
