@@ -44,6 +44,18 @@ use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContex
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @todo: since product suite is the only one that has been properly optimized for now it is less resilient then
+     *        other suites which simply restore all tables. Each suite should be responsible for cleaning up its mess
+     *        but since it's not the case for now product suite needs to restore the DB itself.
+     *
+     * @BeforeSuite
+     */
+    public static function restoreAllTablesBeforeSuite(): void
+    {
+        DatabaseDump::restoreAllTables();
+    }
+
+    /**
      * @AfterSuite
      */
     public static function restoreProductTablesAfterSuite(): void
