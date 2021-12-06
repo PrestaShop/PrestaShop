@@ -386,7 +386,7 @@ module.exports = {
       extensions: ['woff2', 'woff', 'ttf', 'eot'],
       crossorigin: false,
       // eslint-disable-next-line
-      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$img_dir`../admin-dev/themes/new-theme/public/"}')),
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
     }),
   ],
 };
