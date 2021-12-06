@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-updating-product-pack
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @cart-updating-product-pack
 Feature: Add product pack in cart
   As a customer
