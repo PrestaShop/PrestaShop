@@ -27,8 +27,10 @@ class Order extends BOBasePage {
     this.updateSuccessfullMessage = 'Update successful';
     this.validationSendMessage = 'The message was successfully sent to the customer.';
     this.errorAssignSameStatus = 'The order has already been assigned this status.';
-    this.updateSuccessfullMessage = 'Update successful';
-
+    this.discountMustBeNumberErrorMessage = 'Discount value must be a number.';
+    this.invalidPercentValueErrorMessage = 'Percent value cannot exceed 100.';
+    this.percentValueNotPositiveErrorMessage = 'Percent value must be greater than 0.';
+    this.discountCannotExceedTotalErrorMessage = 'Discount value cannot exceed the total price of this order.';
     // Selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
 
@@ -645,6 +647,12 @@ class Order extends BOBasePage {
     };
   }
 
+  /**
+   * Add discount
+   * @param page {Page} Browser tab
+   * @param discountData {{name: string, type: string, value:number}} Data to set on discount form
+   * @returns {Promise<string>}
+   */
   async addDiscount(page, discountData) {
     await this.waitForSelectorAndClick(page, this.addDiscountButton);
     await this.waitForVisibleSelector(page, this.orderDiscountModal);
@@ -663,10 +671,22 @@ class Order extends BOBasePage {
     return this.getTextContent(page, this.alertBlock);
   }
 
+  /**
+   * Is discount table visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
   async isDiscountListTableVisible(page) {
     return this.elementVisible(page, this.discountListTable, 2000);
   }
 
+  /**
+   * Get text column from discount table
+   * @param page {Page} Browser tab
+   * @param column {string} Column name on the table
+   * @param row {number} Row on table
+   * @returns {Promise<string>}
+   */
   async getTextColumnFromDiscountTable(page, column, row = 1) {
     switch (column) {
       case 'name':
@@ -678,6 +698,12 @@ class Order extends BOBasePage {
     }
   }
 
+  /**
+   * Delete discount
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<string>}
+   */
   async deleteDiscount(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.discountDeleteIcon(row));
 
