@@ -47,7 +47,7 @@
           </td>
           <td>
             {foreach $info as $trace}
-              {str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file'])} [{$trace['line']}]
+              {str_replace([_PS_ROOT_DIR_, '\\'], ['', '/'], $trace['file'])}:{$trace['line']} ({$trace['function']}) [id: {$trace['id']}]
               <br />
             {/foreach}
           </td>
