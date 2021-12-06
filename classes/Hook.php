@@ -1269,7 +1269,10 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        if (!Cache::isStored('hook_active')) {
+        $hook_names = [];
+        if (Cache::isStored('hook_active')) {
+            $hook_names = Cache::retrieve('hook_active');
+        } else {
             $sql = new DbQuery();
             $sql->select('name');
             $sql->from('hook', 'h');
@@ -1283,6 +1286,6 @@ class HookCore extends ObjectModel
             }
         }
 
-        return in_array($hook_name, Cache::retrieve('hook_active'));
+        return in_array($hook_name, $hook_names);
     }
 }
