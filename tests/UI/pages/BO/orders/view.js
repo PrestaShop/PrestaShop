@@ -29,6 +29,9 @@ class Order extends BOBasePage {
     this.errorAssignSameStatus = 'The order has already been assigned this status.';
     this.updateSuccessfullMessage = 'Update successful';
 
+    // Selectors
+    this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
+
     // Order actions selectors
     this.updateStatusButton = '#update_order_status_action_btn';
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -97,6 +100,17 @@ class Order extends BOBasePage {
     this.addProductCancelButton = '#add_product_row_cancel';
     this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
     this.addProductCreateNewInvoiceButton = `${this.addProductModalConfirmNewInvoice} .btn-confirm-submit`;
+    this.addDiscountButton = 'button[data-target=\'#addOrderDiscountModal\']';
+    this.orderDiscountModal = '#addOrderDiscountModal';
+    this.addOrderCartRuleNameInput = '#add_order_cart_rule_name';
+    this.addOrderCartRuleTypeSelect = '#add_order_cart_rule_type';
+    this.addOrderCartRuleValueInput = '#add_order_cart_rule_value';
+    this.addOrderCartRuleAddButton = '#add_order_cart_rule_submit';
+    this.discountListTable = 'table.table.discountList';
+    this.discountListRowTable = row => `${this.discountListTable} tbody tr:nth-child(${row})`;
+    this.discountListNameColumn = row => `${this.discountListRowTable(row)} td.discountList-name`;
+    this.discountListDiscountColumn = row => `${this.discountListRowTable(row)} td[data-role='discountList-value']`;
+    this.discountDeleteIcon = row => `${this.discountListRowTable(row)} a.delete-cart-rule`;
 
     // Status tab
     this.historyTabContent = '#historyTabContent';
@@ -629,6 +643,45 @@ class Order extends BOBasePage {
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
+  }
+
+  async addDiscount(page, discountData) {
+    await this.waitForSelectorAndClick(page, this.addDiscountButton);
+    await this.waitForVisibleSelector(page, this.orderDiscountModal);
+
+    await this.waitForSelectorAndClick(page, this.addOrderCartRuleNameInput);
+    await this.setValue(page, this.addOrderCartRuleNameInput, discountData.name);
+    await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
+    if (discountData.type !== 'Free shipping') {
+      await this.setValue(page, this.addOrderCartRuleValueInput, discountData.value);
+    }
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`),
+      page.$eval(this.addOrderCartRuleAddButton, el => el.click()),
+    ]);
+
+    return this.getTextContent(page, this.alertBlock);
+  }
+
+  async isDiscountListTableVisible(page) {
+    return this.elementVisible(page, this.discountListTable, 2000);
+  }
+
+  async getTextColumnFromDiscountTable(page, column, row = 1) {
+    switch (column) {
+      case 'name':
+        return this.getTextContent(page, this.discountListNameColumn(row, 'name'));
+      case 'value':
+        return this.getTextContent(page, this.discountListDiscountColumn(row, 'value'));
+      default:
+        throw new Error(`The column ${column} is not visible in discount table`);
+    }
+  }
+
+  async deleteDiscount(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.discountDeleteIcon(row));
+
+    return this.getTextContent(page, this.alertBlock);
   }
 
   // Methods for product list pagination
