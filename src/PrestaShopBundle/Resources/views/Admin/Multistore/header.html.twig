@@ -24,15 +24,7 @@
  *#}
 {% block multistore_header %}
   {% if isMultistoreUsed and app.request is not null %}
-    <div
-            class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
-            data-translations="{{ {
-                'modal.confirm_leave.title': 'Switch context?'|trans({}, 'Admin.Notifications.Warning'),
-                'modal.confirm_leave.body': 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Notifications.Warning'),
-                'modal.confirm_leave.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-                'modal.confirm_leave.confirm': 'Switch context anyway'|trans({}, 'Admin.Actions')
-            }|json_encode }}"
-    >
+    <div class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}">
       <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
           {% if isShopContext %}
@@ -148,3 +140,10 @@
     <script src="{{ asset('themes/new-theme/public/multistore_form.bundle.js') }}"></script>
   {% endif %}
 {% endblock %}
+
+{% set js_translatable = {
+    'multistore.modal.confirm_leave.title': 'Switch context?'|trans({}, 'Admin.Notifications.Warning'),
+    'multistore.modal.confirm_leave.body': 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Notifications.Warning'),
+    'multistore.modal.confirm_leave.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+    'multistore.modal.confirm_leave.confirm': 'Switch context anyway'|trans({}, 'Admin.Actions')
+}|merge(js_translatable) %}

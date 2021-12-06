@@ -33,7 +33,6 @@ const initMultistoreForm = () => {
   const MultistoreHeaderMap = ComponentsMap.multistoreHeader;
   const multistoreForm = $(MultistoreFormMap.formRow).closest('form');
   const $modalItem = $(MultistoreHeaderMap.modal);
-  const translations = $(MultistoreHeaderMap.header).data('translations');
 
   const generateFormValuesHash = () => {
     const formValues = multistoreForm.serializeArray().reduce((obj: any, item: any) => {
@@ -66,10 +65,10 @@ const initMultistoreForm = () => {
   const showConfirmModal = (
     path: string,
   ) => {
-    const confirmTitle = translations['modal.confirm_leave.title'];
-    const confirmMessage = translations['modal.confirm_leave.body'];
-    const confirmButtonLabel = translations['modal.confirm_leave.confirm'];
-    const closeButtonLabel = translations['modal.confirm_leave.cancel'];
+    const confirmTitle = window.translate_javascripts['multistore.modal.confirm_leave.title'];
+    const confirmMessage = window.translate_javascripts['multistore.modal.confirm_leave.body'];
+    const confirmButtonLabel = window.translate_javascripts['multistore.modal.confirm_leave.confirm'];
+    const closeButtonLabel = window.translate_javascripts['multistore.modal.confirm_leave.cancel'];
     const confirmButtonClass = 'btn-primary';
 
     const modal = new ConfirmModal(
