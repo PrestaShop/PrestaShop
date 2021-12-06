@@ -147,6 +147,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
                     'pa.id_product_attribute = sa.id_product_attribute'
                 )
             ;
+            $qb->addOrderBy('pa.id_product_attribute', 'asc');
         }
 
         return $qb;
