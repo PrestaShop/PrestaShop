@@ -170,7 +170,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @restore-all-tables-before-feature
      */
-    public static function restoreAllTablesPrepareFeature()
+    public static function restoreAllTablesBeforeFeature()
     {
         DatabaseDump::restoreAllTables();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
