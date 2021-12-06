@@ -33,13 +33,60 @@ use Exception;
 
 class DatabaseDump
 {
+    /**
+     * Database host
+     *
+     * @var string
+     */
     private $host;
+
+    /**
+     * Database port
+     *
+     * @var int|string
+     */
     private $port;
+
+    /**
+     * Database user
+     *
+     * @var string
+     */
     private $user;
+
+    /**
+     * Database password
+     *
+     * @var string
+     */
     private $password;
+
+    /**
+     * Database name
+     *
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * Database prefix for table names
+     *
+     * @var string
+     */
     private $dbPrefix;
+
+    /**
+     * Generic dump file path (dump of the whole database)
+     *
+     * @var string
+     */
     private $dumpFile;
+
+    /**
+     * Db instance to perform queries
+     *
+     * @var Db
+     */
     private $db;
 
     /**
@@ -75,7 +122,7 @@ class DatabaseDump
     /**
      * Restore the dump to the actual database.
      */
-    public function restore()
+    public function restore(): void
     {
         $this->checkDumpFile();
 
@@ -115,7 +162,7 @@ class DatabaseDump
      *
      * @return string
      */
-    private function buildMySQLCommand($executable, array $arguments = [])
+    private function buildMySQLCommand($executable, array $arguments = []): string
     {
         $parts = [
             escapeshellarg($executable),
@@ -142,7 +189,7 @@ class DatabaseDump
      *
      * @throws Exception
      */
-    private function exec($command)
+    private function exec($command): array
     {
         $output = [];
         $ret = 1;
@@ -158,7 +205,7 @@ class DatabaseDump
     /**
      * The actual dump function.
      */
-    private function dump()
+    private function dump(): void
     {
         $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
         $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
@@ -236,7 +283,7 @@ class DatabaseDump
     /**
      * Make a database dump.
      */
-    public static function create()
+    public static function create(): void
     {
         $dump = new static();
 
@@ -246,7 +293,7 @@ class DatabaseDump
     /**
      * Make dump for each table in the database.
      */
-    public static function dumpTables()
+    public static function dumpTables(): void
     {
         $dump = new static();
 
@@ -268,7 +315,7 @@ class DatabaseDump
     /**
      * Restore a database dump.
      */
-    public static function restoreDb()
+    public static function restoreDb(): void
     {
         $dump = new static();
 
