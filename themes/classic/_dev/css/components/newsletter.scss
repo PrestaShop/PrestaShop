@@ -1,6 +1,7 @@
 .block_newsletter {
   @include search-box();
   float: inherit;
+  clear:both;
   width: 100%;
   max-width: 50rem;
   margin: auto;
