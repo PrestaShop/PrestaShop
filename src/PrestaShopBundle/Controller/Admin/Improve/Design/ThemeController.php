@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedMailAndInvoiceImageExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
@@ -591,12 +592,19 @@ class ThemeController extends AbstractAdminController
     private function getLogoUploadErrorMessages(DomainException $exception)
     {
         $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
+        $availableMailAndInvoiceFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS);
         $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
 
         $logoImageFormatError = $this->trans(
             'Image format not recognized, allowed format(s) is(are): .%s',
             'Admin.Notifications.Error',
             [$availableLogoFormatsImploded]
+        );
+
+        $mailAndInvoiceImageFormatError = $this->trans(
+            'Image format not recognized, allowed formats are: %s',
+            'Admin.Notifications.Error',
+            [$availableMailAndInvoiceFormatsImploded]
         );
 
         $iconFormatError = $this->trans(
@@ -607,6 +615,7 @@ class ThemeController extends AbstractAdminController
 
         return [
             NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
+            NotSupportedMailAndInvoiceImageExtensionException::class => $mailAndInvoiceImageFormatError,
             NotSupportedFaviconExtensionException::class => $iconFormatError,
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(

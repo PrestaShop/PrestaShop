@@ -26,20 +26,8 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Shop\DTO;
+namespace PrestaShop\PrestaShop\Core\Domain\Shop\Exception;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
-
-class ShopLogoSettingsTest extends TestCase
+class NotSupportedMailAndInvoiceImageExtensionException extends ShopException
 {
-    public function testGetLogoImageExtensionsWithDot(): void
-    {
-        $shopLogoSettings = new ShopLogoSettings();
-
-        self::assertSame(
-            ['.gif', '.jpg', '.jpeg', '.jpe', '.png', '.webp', '.svg'],
-            $shopLogoSettings->getLogoImageExtensionsWithDot()
-        );
-    }
 }

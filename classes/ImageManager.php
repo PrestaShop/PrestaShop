@@ -44,6 +44,8 @@ class ImageManagerCore
         'image/png',
         'image/x-png',
         'image/webp',
+        'image/svg+xml',
+        'image/svg',
     ];
 
     public const EXTENSIONS_SUPPORTED = [
@@ -54,6 +56,11 @@ class ImageManagerCore
         'png',
         'webp',
     ];
+
+    /**
+     * @var array - a list of svg mime types
+     */
+    protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -698,6 +705,7 @@ class ImageManagerCore
             'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
             'image/webp' => ['webp'],
+            'image/svg+xml' => ['svg'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
@@ -715,5 +723,10 @@ class ImageManagerCore
         }
 
         return $mimeType;
+    }
+
+    public static function isSvgMimeType(string $mimeType): bool
+    {
+        return in_array($mimeType, self::SVG_MIMETYPES);
     }
 }
