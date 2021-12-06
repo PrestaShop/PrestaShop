@@ -13,7 +13,6 @@ const ordersPage = require('@pages/BO/orders');
 
 // Import and init data
 const {Orders} = require('@data/demo/orders');
-
 const today = getDateFormat('yyyy-mm-dd');
 const dateToCheck = getDateFormat('mm/dd/yyyy');
 
