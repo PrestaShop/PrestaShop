@@ -73,7 +73,6 @@ export default {
   productModificationPosition: '#orderProductsModificationPosition',
   productsPanel: '#orderProductsPanel',
   productsCount: '#orderProductsPanelCount',
-  productsModificationRow: '.products-modification-row',
   productDeleteBtn: '.js-order-product-delete-btn',
   productsTable: '#orderProductsTable',
   productsPagination: '.order-product-pagination',
