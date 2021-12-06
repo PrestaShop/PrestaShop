@@ -32,6 +32,7 @@ use Configuration;
 use Db;
 use Language;
 use PHPUnit\Framework\TestCase;
+use PrestaShopBundle\Install\DatabaseDump;
 use Shop;
 use Tests\Resources\classes\TestableObjectModel;
 
@@ -113,6 +114,9 @@ class ObjectModelTest extends TestCase
         $this->assertEquals($localizedNames[$this->secondLanguageId], $secondLangObject->name);
     }
 
+    /**
+     * @depends testAdd
+     */
     public function testUpdate(): void
     {
         $quantity = 42;
@@ -165,6 +169,8 @@ class ObjectModelTest extends TestCase
     }
 
     /**
+     * @depends testUpdate
+     *
      * @dataProvider getPartialUpdates
      *
      * @param array $initialProperties
@@ -321,6 +327,8 @@ class ObjectModelTest extends TestCase
     }
 
     /**
+     * @depends testPartialUpdate
+     *
      * @dataProvider getMultiShopValues
      *
      * @param array $initialProperties
@@ -436,6 +444,8 @@ class ObjectModelTest extends TestCase
     }
 
     /**
+     * @depends testMultiShopUpdate
+     *
      * @dataProvider getPartialMultiShopValues
      *
      * @param array $initialProperties
@@ -591,6 +601,25 @@ class ObjectModelTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @depends testPartialMultiShopUpdate
+     *
+     * Since we can't properly use setUpBEforeClass and setUpAfterClass we cannot clear our data properly so we cheat
+     * on rely on the "depends" annotation so that all tests happen in the expected sequence when they all finished we
+     * know everything was tested and we can clear the database.
+     */
+    public function testCleanUp(): void
+    {
+        $db = Db::getInstance();
+        $db->execute(sprintf('DROP TABLE %stestable_object', _DB_PREFIX_));
+        $db->execute(sprintf('DROP TABLE %stestable_object_lang', _DB_PREFIX_));
+        $db->execute(sprintf('DROP TABLE %stestable_object_shop', _DB_PREFIX_));
+        DatabaseDump::restoreAllTables();
+
+        // Just to make PHPUnit happy ^^
+        $this->assertTrue(true);
     }
 
     /**
