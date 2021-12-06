@@ -1,5 +1,5 @@
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s supplier
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Supplier management
   As an employee
   I must be able to add, edit and delete suppliers from Back Office

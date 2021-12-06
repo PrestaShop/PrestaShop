@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s attachment --tags search-attachment
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @clear-cache-after-feature
 @reset-downloads-after-feature
 @attachment

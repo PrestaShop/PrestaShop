@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s webservice --tags webservice-endpoints-addresses
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @webservice-endpoints-addresses
 Feature: Webservice key management
   PrestaShop allows BO users to manage Webservice keys

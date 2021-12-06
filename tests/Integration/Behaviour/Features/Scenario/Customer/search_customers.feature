@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s customer --tags search-customers
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @clear-cache-before-feature
 @search-customers
 

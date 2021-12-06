@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Currency Management
   PrestaShop allows BO users to manage currencies
   As a BO user

@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency --tags currency-data
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Currency Data
   PrestaShop provides handlers for currency data
   As a BO user
