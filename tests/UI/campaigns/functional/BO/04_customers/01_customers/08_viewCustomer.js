@@ -74,7 +74,7 @@ describe('BO - Customers - Customers : View information about customer', async (
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext)
+    page = await helper.newTab(browserContext);
   });
 
   after(async () => {
