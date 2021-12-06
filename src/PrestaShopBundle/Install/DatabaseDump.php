@@ -40,6 +40,7 @@ class DatabaseDump
     private $databaseName;
     private $dbPrefix;
     private $dumpFile;
+    private $db;
 
     /**
      * Constructor extracts database connection info from PrestaShop's configuration,
@@ -68,6 +69,7 @@ class DatabaseDump
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
         $this->dbPrefix = _DB_PREFIX_;
+        $this->db = Db::getInstance();
     }
 
     /**
@@ -91,8 +93,15 @@ class DatabaseDump
     {
         $tableName = $this->dbPrefix . $table;
         $this->checkTableDumpFile($tableName);
-        $dumpFile = $this->getTableDumpPath($tableName);
 
+        $dumpChecksum = file_get_contents($this->getTableChecksumPath($tableName));
+        $checksum = $this->getTableChecksum($tableName);
+        // Table was not modified, no need to restore
+        if ($checksum === $dumpChecksum) {
+            return;
+        }
+
+        $dumpFile = $this->getTableDumpPath($tableName);
         $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
         $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
@@ -158,8 +167,7 @@ class DatabaseDump
 
     private function dumpAllTables(): void
     {
-        $db = Db::getInstance();
-        $tables = $db->executeS('SHOW TABLES;');
+        $tables = $this->db->executeS('SHOW TABLES;');
         foreach ($tables as $table) {
             // $table is an array looking like this [Tables_in_database_name => 'ps_access']
             $this->dumpTable(reset($table));
@@ -172,6 +180,10 @@ class DatabaseDump
         $tableDumpFile = $this->getTableDumpPath($table);
         $dumpCommand .= ' > ' . escapeshellarg($tableDumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
+
+        $checksum = $this->getTableChecksum($table);
+        $checksumFile = $this->getTableChecksumPath($table);
+        file_put_contents($checksumFile, $checksum);
     }
 
     private function getTableDumpPath(string $table): string
@@ -183,6 +195,24 @@ class DatabaseDump
             AppKernel::VERSION,
             $table
         );
+    }
+
+    private function getTableChecksumPath(string $table): string
+    {
+        return sprintf(
+            '%s/ps_dump_%s_%s_%s.md5',
+            sys_get_temp_dir(),
+            $this->databaseName,
+            AppKernel::VERSION,
+            $table
+        );
+    }
+
+    private function getTableChecksum(string $table): string
+    {
+        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE %s;', $table));
+
+        return $checksum[0]['Checksum'];
     }
 
     private function checkDumpFile(): void
@@ -268,8 +298,7 @@ class DatabaseDump
     {
         $dump = new static();
 
-        $db = Db::getInstance();
-        $tables = $db->executeS('SHOW TABLES;');
+        $tables = $dump->db->executeS('SHOW TABLES;');
         foreach ($tables as $table) {
             // $table is an array looking like this [Tables_in_database_name => 'ps_access']
             $tableName = reset($table);

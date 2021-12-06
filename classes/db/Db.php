@@ -602,7 +602,7 @@ abstract class DbCore
         }
 
         // This method must be used only with queries which display results
-        if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
+        if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc|checksum)\s#i', $sql)) {
             /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
