@@ -401,7 +401,7 @@ abstract class PaymentModuleCore extends Module
         foreach ($order_detail_list as $key => $order_detail) {
             /** @var Order $order */
             $order = $order_list[$key];
-            if (!isset($order->id)){
+            if (!isset($order->id)) {
                 $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
                 PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
                 die(Tools::displayError($error));
