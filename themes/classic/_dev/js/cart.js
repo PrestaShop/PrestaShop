@@ -310,7 +310,7 @@ const CheckUpdateQuantityOperations = {
     if (errorMsg !== '') {
       // eslint-disable-next-line
       const strError = ` <article class="alert alert-danger" role="alert" data-alert="danger"><ul><li>${errorMsg}</li></ul></article>`;
-      $('#notifications .notifications-container').html(strError);
+      $(prestashop.themeSelectors.notifications.container).html(strError);
       errorMsg = '';
       isUpdateOperation = false;
       if (hasError) {
