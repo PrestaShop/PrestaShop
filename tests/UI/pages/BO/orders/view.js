@@ -89,6 +89,7 @@ class Order extends BOBasePage {
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
+    this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
     this.addProductTableRow = '#addProductTableRow';
     this.addProductButton = '#addProductBtn';
@@ -541,6 +542,15 @@ class Order extends BOBasePage {
    */
   getOrderTotalPrice(page) {
     return this.getPriceFromText(page, this.orderTotalPriceSpan);
+  }
+
+  /**
+   * Get order total discounts
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getOrderTotalDiscounts(page) {
+    return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
   }
 
   /**

@@ -19,13 +19,13 @@ const cartRulesPage = require('@pages/BO/catalog/discounts');
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_addDiscount';
 
 let browserContext;
 let page;
+let totalOrder = 0;
 
 // New order by customer data
 const orderByCustomerData = {
@@ -96,7 +96,20 @@ const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarr
 Pre-condition :
 - Create order by default customer
 Scenario :
-
+- Create different cart rules :
+  - Incorrect percent value (text)
+  - Percent value > 100
+  - Percent value < 0
+  - Good percent value
+  - Incorrect amount value (text)
+  - Amount value < 0
+  - Amount value > total
+  - Good amount value
+  - Free shipping
+- Check discount table, discounts and total ordered on each created cart rule
+- Check created cart rules on discount page
+Post-condition
+- Delete created cart rules
  */
 
 describe('BO - Orders - View and edit order : Add discount', async () => {
@@ -181,6 +194,13 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle, 'Error when view order page!').to.contains(viewOrderPage.pageTitle);
     });
+
+    it('should get the total to pay', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getTotalToPay', baseContext);
+
+      totalOrder = await viewOrderPage.getOrderTotalPrice(page);
+      await expect(totalOrder).is.not.equal(0);
+    });
   });
 
   // 3 - Create discount
@@ -236,8 +256,23 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
 
       const discountValue = await viewOrderPage.getTextColumnFromDiscountTable(page, 'value');
       await expect(discountValue).to.equal(
-        `- €${Products.demo_1.finalPrice - (Products.demo_1.finalPrice * discountPercentGoodValue.value) / 100}`,
+        `- €${totalOrder - (totalOrder * discountPercentGoodValue.value) / 100}`,
       );
+    });
+
+    it('should check total after discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
+
+      const totalAfterDiscount = await viewOrderPage.getOrderTotalPrice(page);
+      await expect(totalAfterDiscount)
+        .to.be.equal(totalOrder - (totalOrder * discountPercentGoodValue.value) / 100);
+    });
+
+    it('should check the total discounts value', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
+
+      const discountValue = await viewOrderPage.getOrderTotalDiscounts(page);
+      await expect(discountValue).to.equal((totalOrder * discountPercentGoodValue.value) / 100 - totalOrder);
     });
 
     it('should delete the discount', async function () {
@@ -299,6 +334,20 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await expect(discountValue).to.equal(
         `- €${discountAmountGoodValue.value}`,
       );
+    });
+
+    it('should check total after discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
+
+      const totalAfterDiscount = await viewOrderPage.getOrderTotalPrice(page);
+      await expect(totalAfterDiscount).to.be.equal(totalOrder - discountAmountGoodValue.value);
+    });
+
+    it('should check the total discounts value', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
+
+      const discountValue = await viewOrderPage.getOrderTotalDiscounts(page);
+      await expect(discountValue).to.equal(discountAmountGoodValue.value * -1);
     });
   });
 
@@ -462,6 +511,20 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
 
       const discountValue = await viewOrderPage.getTextColumnFromDiscountTable(page, 'value');
       await expect(discountValue).to.equal(`- ${shippingDetailsData.shippingCost}`);
+    });
+
+    it('should check total after discount', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
+
+      const totalAfterDiscount = await viewOrderPage.getOrderTotalPrice(page);
+      await expect(totalAfterDiscount).to.be.equal(totalOrder);
+    });
+
+    it('should check the total discounts value', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
+
+      const discountValue = await viewOrderPage.getOrderTotalDiscounts(page);
+      await expect(discountValue).to.equal(-8.40);
     });
 
     it('should delete the created discount', async function () {
