@@ -276,6 +276,22 @@ class DatabaseDump
     }
 
     /**
+     * Restore all tables (only modified tables are restored)
+     */
+    public static function restoreAllTables(): void
+    {
+        $dump = new static();
+
+        $tables = $dump->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            $tableName = substr($tableName, strlen($dump->dbPrefix));
+            $dump->restoreTable($tableName);
+        }
+    }
+
+    /**
      * Restore a list of tables in the database
      *
      * @param array $tableNames
