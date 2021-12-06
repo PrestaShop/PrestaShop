@@ -52,7 +52,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
     use DeleteActionTrait;
     use BulkDeleteActionTrait;
 
-    const GRID_ID = 'image_type';
+    public const GRID_ID = 'image_type';
 
     /**
      * {@inheritdoc}
