@@ -84,10 +84,11 @@
 		var search_product_msg = '{l|escape s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
 {/if}
+{$admin_path = "{__PS_BASE_URI__}{basename(_PS_ADMIN_DIR_)}/themes/default/public/"}
 
 {$preloadFilePath = "../public/preload.tpl"}
 
-{include file=$preloadFilePath}
+{include file=$preloadFilePath admin_dir=$admin_path}
 
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
