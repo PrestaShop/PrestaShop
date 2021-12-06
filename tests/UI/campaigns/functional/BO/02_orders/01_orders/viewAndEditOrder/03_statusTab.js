@@ -20,7 +20,7 @@ const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
 
 // Import demo data
-const {DefaultEmployee} = require('@data/demo//employees');
+const {DefaultEmployee} = require('@data/demo/employees');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');

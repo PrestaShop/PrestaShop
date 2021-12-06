@@ -593,7 +593,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it('should add payment when amount is equal to the rest to the new invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal', baseContext);
 
-      const invoice = `#IN0000${invoiceID >= 10 ? '' : '0'}${invoiceID + 1}`;
+      const invoice = `#IN0000${(invoiceID + 1) >= 10 ? '' : '0'}${invoiceID + 1}`;
 
       const validationMessage = await viewOrderPage.addPayment(page, paymentDataAmountEqualRest, invoice);
       expect(validationMessage, 'Successful message is not correct!').to.equal(viewOrderPage.successfulUpdateMessage);
