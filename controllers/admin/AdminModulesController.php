@@ -816,27 +816,6 @@ class AdminModulesControllerCore extends AdminController
 
                             $output = $header . $echo;
 
-                            if (isset($this->_modules_ad[$module->name])) {
-                                $ad_modules = $this->getModulesByInstallation($this->_modules_ad[$module->name]);
-
-                                foreach ($ad_modules['not_installed'] as $key => &$module) {
-                                    if (isset($module->addons_buy_url)) {
-                                        $module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
-                                            . '&utm_medium=related-modules&utm_campaign=back-office-' . strtoupper($this->context->language->iso_code)
-                                            . '&utm_content=' . (($this->context->mode >= Context::MODE_HOST_CONTRIB) ? 'cloud' : 'download');
-                                    }
-                                    if (isset($module->description_full) && trim($module->description_full) != '') {
-                                        $module->show_quick_view = true;
-                                    }
-                                }
-                                $this->context->smarty->assign([
-                                    'ad_modules' => $ad_modules,
-                                    'currentIndex' => self::$currentIndex,
-                                ]);
-                                $ad_bar = $this->context->smarty->fetch('controllers/modules/ad_bar.tpl');
-                                $output .= $ad_bar;
-                            }
-
                             $this->context->smarty->assign('module_content', $output . $configuration_bar);
                         } elseif ($echo === true) {
                             $return = 13;
