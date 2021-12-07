@@ -28,9 +28,9 @@ admin_emails_save_options:
     path: /options
     methods: [ PATCH, POST ]
     defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::saveOptionsAction'
-        _legacy_controller: AdminEmails
-        _legacy_link: AdminEmails:update
+      _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\EmailController::saveOptionsAction'
+      _legacy_controller: AdminEmails
+      _legacy_link: AdminEmails:update
 
 admin_emails_send_test:
   path: /send-testing-email
