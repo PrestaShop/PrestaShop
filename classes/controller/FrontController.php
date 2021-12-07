@@ -1502,7 +1502,21 @@ class FrontControllerCore extends Controller
                 'css_url' => _THEME_CSS_DIR_,
                 'js_url' => _THEME_JS_DIR_,
                 'pic_url' => _THEME_PROD_PIC_DIR_,
+                'theme_assets' => _THEME_DIR_ . 'assets/',
             ];
+
+            $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
+
+            if (!empty($themeAssetsConfig['use_parent_assets'])) {
+                $assign_array['theme_assets'] = _PS_PARENT_THEME_URI_ . 'assets/';
+                $assign_array['img_url'] = $assign_array['theme_assets'] . 'img/';
+                $assign_array['css_url'] = $assign_array['theme_assets'] . 'css/';
+                $assign_array['js_url'] = $assign_array['theme_assets'] . 'js/';
+                $assign_array['child_theme_assets'] = _THEME_DIR_ . 'assets/';
+                $assign_array['child_img_url'] = $assign_array['child_theme_assets'] . 'img/';
+                $assign_array['child_css_url'] = $assign_array['child_theme_assets'] . 'css/';
+                $assign_array['child_js_url'] = $assign_array['child_theme_assets'] . 'js/';
+            }
 
             foreach ($assign_array as $assign_key => $assign_value) {
                 if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
@@ -1530,8 +1544,6 @@ class FrontControllerCore extends Controller
             $urls['pages'] = $pages;
 
             $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
-
-            $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
 
             $urls['actions'] = [
                 'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
