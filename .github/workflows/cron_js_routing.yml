@@ -41,7 +41,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-               ${{ runner.os }}-node-
+            ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
@@ -49,7 +49,7 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-                 ${{ runner.os }}-composer-
+            ${{ runner.os }}-composer-
 
       - name: Update npm
         run: npm install npm -g
