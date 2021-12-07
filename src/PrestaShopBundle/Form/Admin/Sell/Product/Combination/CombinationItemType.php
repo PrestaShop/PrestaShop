@@ -84,7 +84,7 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', SubmittableDeltaQuantityType::class)
+            ->add('delta_quantity', SubmittableDeltaQuantityType::class)
             ->add('is_default', RadioType::class, [
                 'label' => false,
                 'attr' => [
