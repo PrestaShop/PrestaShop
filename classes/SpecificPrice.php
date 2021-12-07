@@ -136,6 +136,12 @@ class SpecificPriceCore extends ObjectModel
 
     protected static $psQtyDiscountOnCombination = null;
 
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        static::flushCache();
+    }
+
     /**
      * Flush local cache.
      */
