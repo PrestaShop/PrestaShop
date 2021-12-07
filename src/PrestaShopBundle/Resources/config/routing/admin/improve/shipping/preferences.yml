@@ -17,7 +17,7 @@ admin_shipping_preferences_handling_save:
 
 admin_shipping_preferences_carrier_options_save:
   path: /carrier-options
-  methods: [PATCH, POST]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\PreferencesController::processCarrierOptionsFormAction'
     _legacy_controller: AdminShipping
