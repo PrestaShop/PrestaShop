@@ -26,12 +26,14 @@
 
 namespace Tests\TestCase;
 
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\DummyMultistoreConfiguration;
 
-abstract class AbstractConfigurationTestCase extends TestCase
+abstract class AbstractConfigurationTestCase extends KernelTestCase
 {
     /**
      * @var Configuration
@@ -82,5 +84,31 @@ abstract class AbstractConfigurationTestCase extends TestCase
     protected function createMultistoreFeatureMock(): FeatureInterface
     {
         return $this->getMockForAbstractClass(FeatureInterface::class);
+    }
+
+    /**
+     * @param ShopConstraint $shopConstraint
+     * @param bool $isAllShopContext
+     *
+     * @return DummyMultistoreConfiguration
+     */
+    protected function getDummyMultistoreConfiguration(ShopConstraint $shopConstraint): DummyMultistoreConfiguration
+    {
+        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
+        // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
+        $this->shopContext = $this->createShopContextMock();
+        $this->shopContext
+            ->method('getShopConstraint')
+            ->willReturn($shopConstraint);
+
+        $this->shopContext
+            ->method('isAllShopContext')
+            ->willReturn($isAllShopContext);
+
+        return new DummyMultistoreConfiguration(
+            $this->legacyConfigurationAdapter,
+            $this->shopContext,
+            $this->multistoreFeature
+        );
     }
 }

@@ -35,12 +35,11 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Shop;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-use Tests\Resources\DummyMultistoreConfiguration;
+use Tests\TestCase\AbstractConfigurationTestCase;
 
-class AbstractMultistoreConfigurationTest extends KernelTestCase
+class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
 {
     /**
      * @var Configuration
@@ -70,7 +69,6 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $this->initMultistore();
         $this->multistoreFeature = self::$kernel->getContainer()->get('prestashop.adapter.multistore_feature');
     }
-
 
     /**
      * @dataProvider updateDataProvider
@@ -105,7 +103,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
     {
         $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
-        $testedObject = $this->getConfiguration($shopConstraint);
+        $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
         $this->expectException(UndefinedOptionsException::class);
 
         if ($isAllShopContext) {
@@ -126,7 +124,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     public function testInvalidOptionsException(ShopConstraint $shopConstraint): void
     {
         $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
-        $testedObject = $this->getConfiguration($shopConstraint, $isAllShopContext);
+        $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
         $this->expectException(InvalidOptionsException::class);
         $confValues = [
             'test_conf_1' => 'wrong value type',
@@ -138,32 +136,6 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
             $confValues[MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . 'test_conf_2'] = true;
         }
         $testedObject->updateConfiguration($confValues);
-    }
-
-    /**
-     * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
-     *
-     * @return DummyMultistoreConfiguration
-     */
-    private function getConfiguration(ShopConstraint $shopConstraint): DummyMultistoreConfiguration
-    {
-        $isAllShopContext = ($shopConstraint->getShopGroupId() === null && $shopConstraint->getShopId() === null);
-        // we mock the shop context so that its `getShopConstraint` method returns the ShopConstraint from our provider
-        $this->shopContext = $this->createShopContextMock();
-        $this->shopContext
-            ->method('getShopConstraint')
-            ->willReturn($shopConstraint);
-
-        $this->shopContext
-            ->method('isAllShopContext')
-            ->willReturn($isAllShopContext);
-
-        return new DummyMultistoreConfiguration(
-            $this->legacyConfigurationAdapter,
-            $this->shopContext,
-            $this->multistoreFeature
-        );
     }
 
     /**
@@ -203,7 +175,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
                     ShopConstraint::shop(1),
                     ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
                 ],
-            ]
+            ],
         ];
 
         // Second test changes the config for single shop which does not impact all shops and shopGroup, only one field is checked
@@ -216,18 +188,17 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
                     ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
                 ],
                 [
-                     ShopConstraint::shopGroup(1),
-                     ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
-                 ],
-                 [
-                     ShopConstraint::shop(1),
-                     // Only test_conf_2 is modified since it was the only checkbox enabled
-                     ['test_conf_1' => true, 'test_conf_2' => 'single_shop_conf2'],
-                 ],
-            ]
+                    ShopConstraint::shopGroup(1),
+                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                ],
+                [
+                    ShopConstraint::shop(1),
+                    // Only test_conf_2 is modified since it was the only checkbox enabled
+                    ['test_conf_1' => true, 'test_conf_2' => 'single_shop_conf2'],
+                ],
+            ],
         ];
     }
-
 
     /**
      * @return ShopContext

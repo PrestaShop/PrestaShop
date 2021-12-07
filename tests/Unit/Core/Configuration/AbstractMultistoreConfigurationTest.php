@@ -27,7 +27,6 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
@@ -35,8 +34,9 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tests\TestCase\AbstractConfigurationTestCase;
 
-class AbstractMultistoreConfigurationTest extends TestCase
+class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
 {
     /**
      * @dataProvider provideForGetShopConstraint
