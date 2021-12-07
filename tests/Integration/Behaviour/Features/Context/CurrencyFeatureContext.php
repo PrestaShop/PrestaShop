@@ -44,6 +44,11 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
      */
     protected $currencies = [];
 
+    /**
+     * @var Currency[]
+     */
+    protected $addedCurrencies = [];
+
     protected $previousDefaultCurrencyId;
 
     /**
@@ -63,9 +68,12 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function cleanCurrencyFixtures()
     {
         Configuration::set('PS_CURRENCY_DEFAULT', $this->previousDefaultCurrencyId);
-        foreach ($this->currencies as $currency) {
+        // We only delete currencies that were added in the scenario, deleting the default currency would result in
+        // impacting the default currency
+        foreach ($this->addedCurrencies as $currency) {
             $currency->delete();
         }
+        $this->addedCurrencies = [];
         $this->currencies = [];
     }
 
@@ -84,6 +92,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
             $currency->active = 1;
             $currency->conversion_rate = $changeRate;
             $currency->add();
+            $this->addedCurrencies[] = $currency;
         } else {
             $currency = new Currency($currencyId);
             $currency->name = $currencyIsoCode;
