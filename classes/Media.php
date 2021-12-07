@@ -136,6 +136,7 @@ class MediaCore
             try {
                 $jsContent = JSMin::minify($jsContent);
             } catch (Exception $e) {
+                /* @phpstan-ignore-next-line */
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
                 }
@@ -245,8 +246,8 @@ class MediaCore
     /**
      * Get Media path.
      *
-     * @param string $mediaUri
-     * @param null $cssMediaType
+     * @param array|string|null $mediaUri
+     * @param string|null $cssMediaType
      *
      * @return array|bool|mixed|string
      */

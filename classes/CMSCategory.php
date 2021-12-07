@@ -145,7 +145,7 @@ class CMSCategoryCore extends ObjectModel
         // recursivity for subcategories
         $children = [];
         $subcats = $this->getSubCategories($id_lang, true);
-        if (($max_depth == 0 || $currentDepth < $max_depth) && $subcats && count($subcats)) {
+        if (($max_depth == 0 || $currentDepth < $max_depth) && count($subcats)) {
             foreach ($subcats as $subcat) {
                 if (!$subcat['id_cms_category']) {
                     break;
@@ -326,9 +326,6 @@ class CMSCategoryCore extends ObjectModel
     public function calcLevelDepth()
     {
         $parentCMSCategory = new CMSCategory($this->id_parent);
-        if (!$parentCMSCategory) {
-            die(Tools::displayError('parent CMS Category does not exist'));
-        }
 
         return $parentCMSCategory->level_depth + 1;
     }

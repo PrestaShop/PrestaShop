@@ -294,7 +294,7 @@ class CategoryCore extends ObjectModel
 
         $children = [];
         $subcats = $this->getSubCategories($idLang, true);
-        if (($maxDepth == 0 || $currentDepth < $maxDepth) && $subcats && count($subcats)) {
+        if (($maxDepth == 0 || $currentDepth < $maxDepth) && count($subcats)) {
             foreach ($subcats as $subcat) {
                 if (!$subcat['id_category']) {
                     break;
@@ -482,7 +482,7 @@ class CategoryCore extends ObjectModel
         }
         $n = 1;
 
-        if (isset($categoriesArray[0]) && $categoriesArray[0]['subcategories']) {
+        if (isset($categoriesArray[0]['subcategories'][0])) {
             $queries = Category::computeNTreeInfos($categoriesArray, $categoriesArray[0]['subcategories'][0], $n);
 
             // update by batch of 5000 categories
@@ -634,7 +634,7 @@ class CategoryCore extends ObjectModel
      * @param int $idRootCategory ID of root Category
      * @param int|bool $idLang Language ID `false` if language filter should not be applied
      * @param bool $active Only return active categories
-     * @param array|null $groups
+     * @param array|string|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
@@ -708,7 +708,7 @@ class CategoryCore extends ObjectModel
      * @param int|bool $idLang Language ID
      *                         `false` if language filter should not be used
      * @param bool $active Whether the category must be active
-     * @param array|null $groups
+     * @param array|string|null $groups
      * @param bool $useShopRestriction Restrict to current Shop
      * @param string $sqlFilter Additional SQL clause(s) to filter results
      * @param string $orderBy Change the default order by
@@ -1220,7 +1220,7 @@ class CategoryCore extends ObjectModel
             $shop = Context::getContext()->shop;
         }
 
-        $idShop = $shop->id ? $shop->id : Configuration::get('PS_SHOP_DEFAULT');
+        $idShop = $shop->id ?: Configuration::get('PS_SHOP_DEFAULT');
         $selectedCategory = explode(',', str_replace(' ', '', $selectedCategory));
         $sql = '
 		SELECT c.`id_category`, c.`level_depth`, cl.`name`,
@@ -1229,13 +1229,13 @@ class CategoryCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'category` c2
 			WHERE c2.`id_parent` = c.`id_category`
 		) > 0, 1, 0) AS has_children,
-		' . ($selectedCategory ? '(
+		(
 			SELECT count(c3.`id_category`)
 			FROM `' . _DB_PREFIX_ . 'category` c3
 			WHERE c3.`nleft` > c.`nleft`
 			AND c3.`nright` < c.`nright`
 			AND c3.`id_category`  IN (' . implode(',', array_map('intval', $selectedCategory)) . ')
-		)' : '0') . ' AS nbSelectedSubCat
+		) AS nbSelectedSubCat
 		FROM `' . _DB_PREFIX_ . 'category` c
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` ' . Shop::addSqlRestrictionOnLang('cl', (int) $idShop) . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = ' . (int) $idShop . ')
@@ -1318,8 +1318,6 @@ class CategoryCore extends ObjectModel
             }
             $i = $result['id_parent'];
         }
-
-        return false;
     }
 
     /**
@@ -1471,23 +1469,21 @@ class CategoryCore extends ObjectModel
     public static function searchByPath($idLang, $path, $objectToCreate = false, $methodToCreate = false)
     {
         $categories = explode('/', trim($path));
-        $category = $idParentCategory = false;
+        $idParentCategory = false;
 
-        if (is_array($categories) && count($categories)) {
-            foreach ($categories as $categoryName) {
-                if ($idParentCategory) {
-                    $category = Category::searchByNameAndParentCategoryId($idLang, $categoryName, $idParentCategory);
-                } else {
-                    $category = Category::searchByName($idLang, $categoryName, true, true);
-                }
+        foreach ($categories as $categoryName) {
+            if ($idParentCategory) {
+                $category = Category::searchByNameAndParentCategoryId($idLang, $categoryName, $idParentCategory);
+            } else {
+                $category = Category::searchByName($idLang, $categoryName, true, true);
+            }
 
-                if (!$category && $objectToCreate && $methodToCreate) {
-                    call_user_func_array([$objectToCreate, $methodToCreate], [$idLang, $categoryName, $idParentCategory]);
-                    $category = Category::searchByPath($idLang, $categoryName);
-                }
-                if (isset($category['id_category']) && $category['id_category']) {
-                    $idParentCategory = (int) $category['id_category'];
-                }
+            if (!$category && $objectToCreate && $methodToCreate) {
+                call_user_func_array([$objectToCreate, $methodToCreate], [$idLang, $categoryName, $idParentCategory]);
+                $category = Category::searchByPath($idLang, $categoryName);
+            }
+            if (isset($category['id_category']) && $category['id_category']) {
+                $idParentCategory = (int) $category['id_category'];
             }
         }
 
@@ -1720,7 +1716,7 @@ class CategoryCore extends ObjectModel
     /**
      * Update customer groups associated to the object. Don't update group access if list is null.
      *
-     * @param array $list groups
+     * @param array|null $list groups
      *
      * @return bool
      */
@@ -2308,11 +2304,10 @@ class CategoryCore extends ObjectModel
     /**
      * Update Categories for a shop.
      *
-     * @param string $categories Categories list to associate a shop
+     * @param array $categories Categories list to associate a shop
      * @param string $idShop Categories list to associate a shop
      *
-     * @return array|false Update/insertion result
-     *                     `false` if not successfully inserted/updated
+     * @return bool Update/insertion result (`false` if not successfully inserted/updated)
      */
     public static function updateFromShop($categories, $idShop)
     {

@@ -356,8 +356,11 @@ class FrontControllerCore extends Controller
             $has_country = isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country;
             $has_address_type = false;
 
-            if ((int) $this->context->cookie->id_cart && ($cart = new Cart($this->context->cookie->id_cart)) && Validate::isLoadedObject($cart)) {
-                $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+            if ((int) $this->context->cookie->id_cart) {
+                $cart = new Cart($this->context->cookie->id_cart);
+                if (Validate::isLoadedObject($cart)) {
+                    $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                }
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
@@ -838,6 +841,7 @@ class FrontControllerCore extends Controller
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
                 die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
@@ -1010,10 +1014,8 @@ class FrontControllerCore extends Controller
 
         // retrocompatibility
         $ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
-        if (is_array($ips_old) && count($ips_old)) {
-            foreach ($ips_old as $ip) {
-                $ips = array_merge($ips, explode("\n", $ip));
-            }
+        foreach ($ips_old as $ip) {
+            $ips = array_merge($ips, explode("\n", $ip));
         }
 
         $ips = array_map('trim', $ips);
@@ -1892,6 +1894,7 @@ class FrontControllerCore extends Controller
         } catch (PrestaShopException $e) {
             PrestaShopLogger::addLog($e->getMessage());
 
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 $this->warning[] = $e->getMessage();
                 $scope->assign(['notifications' => $this->prepareNotifications()]);

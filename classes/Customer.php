@@ -1147,14 +1147,12 @@ class CustomerCore extends ObjectModel
         if (!$cart) {
             $cart = Context::getContext()->cart;
         }
-        if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
-            $idAddress = (int) Db::getInstance()->getValue(
-                '
-                SELECT `id_address`
-                FROM `' . _DB_PREFIX_ . 'address`
-                WHERE `id_customer` = ' . (int) $idCustomer . '
-                AND `deleted` = 0 ORDER BY `id_address`'
-            );
+        if (!$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
+            $idAddress = (int) Db::getInstance()->getValue(sprintf(
+                'SELECT `id_address` FROM `%saddress` WHERE `id_customer` = %d AND `deleted` = 0 ORDER BY `id_address`',
+                _DB_PREFIX_,
+                (int) $idCustomer
+            ));
         } else {
             $idAddress = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }

@@ -91,7 +91,7 @@ class LocalizationPackCore
         $res = true;
 
         if (empty($selection)) {
-            $res = $res && $this->_installStates($xml);
+            $res = $this->_installStates($xml);
             $res = $res && $this->_installTaxes($xml);
             $res = $res && $this->_installCurrencies($xml, $install_mode);
             $res = $res && $this->installConfiguration($xml);
@@ -116,7 +116,7 @@ class LocalizationPackCore
 
             if ($install_mode && $res && isset($this->iso_currency)) {
                 Cache::clean('Currency::getIdByIsoCode_*');
-                $res = $res && Configuration::updateValue('PS_CURRENCY_DEFAULT', (int) Currency::getIdByIsoCode($this->iso_currency));
+                $res = Configuration::updateValue('PS_CURRENCY_DEFAULT', (int) Currency::getIdByIsoCode($this->iso_currency));
                 Currency::refreshCurrencies();
             }
         } else {
@@ -274,7 +274,7 @@ class LocalizationPackCore
                         continue;
                     }
 
-                    if (!isset($rule_attributes['id_tax']) || !array_key_exists((string) ($rule_attributes['id_tax']), $assoc_taxes)) {
+                    if (!isset($rule_attributes['id_tax']) || !array_key_exists((int) $rule_attributes['id_tax'], $assoc_taxes)) {
                         continue;
                     }
 
@@ -302,7 +302,7 @@ class LocalizationPackCore
                     $tr->zipcode_to = $zipcode_to;
                     $tr->behavior = (string) $behavior;
                     $tr->description = '';
-                    $tr->id_tax = $assoc_taxes[(string) ($rule_attributes['id_tax'])];
+                    $tr->id_tax = $assoc_taxes[(int) $rule_attributes['id_tax']];
                     $tr->save();
                 }
             }

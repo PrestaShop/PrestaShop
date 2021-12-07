@@ -100,7 +100,6 @@ class SpecificPriceFormatterCore
 
             // Since this price is set in default currency,
             // we need to convert it into current currency
-            $this->specificPrice['id_currency'];
             $currentPriceCurrentCurrency = \Tools::convertPrice($currentPriceDefaultCurrency, $this->currency, true);
 
             if ($this->specificPrice['reduction_type'] == 'amount') {

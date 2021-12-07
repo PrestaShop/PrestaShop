@@ -85,7 +85,7 @@ class DbQueryCore
     /**
      * Sets table for FROM clause.
      *
-     * @param string $table Table name
+     * @param string|DbQuery $table Table name
      * @param string|null $alias Table alias
      *
      * @return $this

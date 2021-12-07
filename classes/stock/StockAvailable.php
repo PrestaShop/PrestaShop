@@ -465,11 +465,11 @@ class StockAvailableCore extends ObjectModel
      */
     public function add($autodate = true, $null_values = false)
     {
-        if (!$result = parent::add($autodate, $null_values)) {
+        if (!parent::add($autodate, $null_values)) {
             return false;
         }
 
-        return $result && $this->postSave();
+        return $this->postSave();
     }
 
     /**
@@ -479,11 +479,11 @@ class StockAvailableCore extends ObjectModel
      */
     public function update($null_values = false)
     {
-        if (!$result = parent::update($null_values)) {
+        if (!parent::update($null_values)) {
             return false;
         }
 
-        return $result && $this->postSave();
+        return $this->postSave();
     }
 
     /**

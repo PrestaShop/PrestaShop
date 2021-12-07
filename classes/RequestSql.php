@@ -428,21 +428,9 @@ class RequestSqlCore extends ObjectModel
             }
             if ($table['ref_type'] == 'ON' && (trim($table['join_type']) == 'LEFT' || trim($table['join_type']) == 'JOIN')) {
                 $attrs = $this->cutJoin($table['ref_clause'], $from);
-                if (is_array($attrs)) {
-                    foreach ($attrs as $attr) {
-                        if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
-                            $this->error_sql['checkedFrom']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
-
-                            return false;
-                        }
-                    }
-                } else {
-                    if (isset($this->error_sql['returnNameTable'])) {
-                        $this->error_sql['checkedFrom'] = $this->error_sql['returnNameTable'];
-
-                        return false;
-                    } else {
-                        $this->error_sql['checkedFrom'] = false;
+                foreach ($attrs as $attr) {
+                    if (!$this->attributExistInTable($attr['attribut'], $attr['table'])) {
+                        $this->error_sql['checkedFrom']['attribut'] = [$attr['attribut'], implode(', ', $attr['table'])];
 
                         return false;
                     }
