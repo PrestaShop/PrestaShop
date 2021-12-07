@@ -35,6 +35,10 @@ export default class ProductSuppliersManager {
    * @param {ProductFormModel} productFormModel
    *
    * @returns {{}}
+   *
+   * @todo: productFormModel should not be used for combination suppliers.
+   *        It is now also initialized for combinations as temporary fix to, but should be fixed in other PR.
+   *        Dedicated issue- https://github.com/PrestaShop/PrestaShop/issues/26906
    */
   constructor(suppliersFormId, forceUpdateDefault, productFormModel) {
     this.productFormModel = productFormModel;
