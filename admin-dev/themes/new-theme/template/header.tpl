@@ -74,7 +74,6 @@
     var admin_notification_push_link = adminNotificationPushLink = '{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
     var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
     var update_success_msg = '{l s='Update successful' js=1 d='Admin.Notifications.Success'}';
-    var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
     var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
   </script>
 {/if}
