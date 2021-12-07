@@ -35,6 +35,8 @@ use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
+    public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+
     const ADMIN_PASSWORD_LENGTH = 8;
     const PASSWORD_LENGTH = 5;
 
@@ -774,7 +776,7 @@ class ValidateCore
      */
     public static function isOrderBy($order)
     {
-        return preg_match('/^[a-zA-Z0-9.!_-]+$/', $order);
+        return preg_match(static::ORDER_BY_REGEXP, $order);
     }
 
     /**
