@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-suppliers
 @restore-products-before-feature
-@reset-currencies-after-feature
+@restore-currencies-after-feature
 @clear-cache-before-feature
 @update-suppliers
 Feature: Update product suppliers from Back Office (BO)

@@ -52,7 +52,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @BeforeFeature @reset-currencies-before-feature
+     * @BeforeFeature @restore-currencies-before-feature
      */
     public static function restoreCurrenciesTablesBeforeFeature(): void
     {
@@ -60,7 +60,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @AfterFeature @reset-currencies-after-feature
+     * @AfterFeature @restore-currencies-after-feature
      */
     public static function restoreCurrenciesTablesAfterFeature(): void
     {

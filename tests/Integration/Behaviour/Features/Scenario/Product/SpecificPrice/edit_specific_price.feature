@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags edit-specific-price
 @restore-products-before-feature
-@reset-currencies-after-feature
+@restore-currencies-after-feature
 @clear-cache-before-feature
 @edit-specific-price
 @specific-prices
