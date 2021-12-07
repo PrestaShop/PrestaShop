@@ -78,7 +78,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'stock' => [
                     'quantities' => [
-                        'quantity' => [
+                        'delta_quantity' => [
                             'delta' => '100',
                         ],
                         'minimal_quantity' => 1,

@@ -129,9 +129,9 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         // First update the product with a few data
         $formData = [
-            'product[header][name][1]' => static::TEST_NAME,
-            'product[stock][quantities][quantity][delta]' => static::TEST_QUANTITY,
-            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_PRICE,
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][delta_quantity][delta]' => static::TEST_UPDATED_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
         ];
 
         $this->editEntityFromPage(['productId' => $productId], $formData);
@@ -139,9 +139,9 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Then check that it was correctly updated
         // Price is reformatted with 6 digits
         $expectedFormData = [
-            'product[header][name][1]' => static::TEST_NAME,
-            'product[stock][quantities][quantity][quantity]' => static::TEST_QUANTITY,
-            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_PRICE,
+            'product[header][name][1]' => static::TEST_UPDATED_NAME,
+            'product[stock][quantities][delta_quantity][quantity]' => static::TEST_UPDATED_QUANTITY + static::TEST_CREATION_QUANTITY,
+            'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
         ];
         $this->assertFormValuesFromPage(
             ['productId' => $productId],

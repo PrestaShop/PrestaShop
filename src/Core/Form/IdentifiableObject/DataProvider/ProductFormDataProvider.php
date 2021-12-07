@@ -163,7 +163,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => [
+                    'delta_quantity' => [
                         'quantity' => 0,
                         'delta' => 0,
                     ],

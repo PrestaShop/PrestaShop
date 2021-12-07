@@ -34,8 +34,7 @@ import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
-import DeltaQuantityInput from '@components/form/delta-quantity-input';
-import {SubmittableDeltaQuantityInput} from "@components/form/submittable-delta-quantity-input";
+import {SubmittableDeltaQuantityInput} from '@components/form/submittable-delta-quantity-input';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -263,9 +262,7 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {impactOnPriceKey} = CombinationsMap.combinationItemForm;
-    const {referenceKey} = CombinationsMap.combinationItemForm;
-    const {tokenKey} = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey, referenceKey, tokenKey} = CombinationsMap.combinationItemForm;
 
     new SubmittableInput({
       wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,

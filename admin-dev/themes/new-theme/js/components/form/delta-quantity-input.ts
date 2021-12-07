@@ -69,7 +69,7 @@ export default class DeltaQuantityInput {
 
     const deltaQuantity = this.getDeltaQuantity(input);
     const initialQuantity = this.getInitialQuantity($container);
-    const newQuantity = initialQuantity + deltaQuantity;
+    const newQuantity: number = initialQuantity + deltaQuantity;
 
     $container.data('initialQuantity', newQuantity);
     $container.find(this.config.initialQuantityPreviewSelector).text(newQuantity);
