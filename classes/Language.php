@@ -140,6 +140,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         'tabs' => 'tabs',
     ];
 
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = [];
+        static::resetCache();
+    }
+
     public static function resetCache()
     {
         static::$_checkedLangs = null;

@@ -188,7 +188,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @reboot-kernel-before-feature
      */
-    public static function rebootKernelPrepareFeature()
+    public static function rebootKernelBeforeFeature()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * This hook can be used to flag a feature for kernel reboot
+     *
+     * @AfterFeature @reboot-kernel-after-feature
+     */
+    public static function rebootKernelAfterFeature()
     {
         self::rebootKernel();
     }
@@ -238,6 +248,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
      * @BeforeScenario @mock-context-on-scenario
      */
     public static function mockContextBeforeScenario()
@@ -267,14 +285,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public static function resetContextAfterFeature()
     {
         self::resetContext();
-    }
-
-    /**
-     * @BeforeFeature @clear-cache-before-feature
-     */
-    public static function clearCacheBeforeFeature()
-    {
-        self::clearCache();
     }
 
     /**

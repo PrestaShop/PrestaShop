@@ -53,6 +53,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
     {
         // Removing Language manually includes cleaning all related lang tables which is faster than restoring
         // each tables with a dump
+        Language::resetStaticCache();
         $langIds = Language::getLanguages(false, false, true);
         unset($langIds[0]);
         foreach ($langIds as $langId) {
@@ -61,7 +62,10 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         // We still restore lang table to reset increment ID
-        DatabaseDump::restoreTables(['lang']);
+        DatabaseDump::restoreTables(['lang'], true);
+
+        // Restore static cache
+        Language::resetStaticCache();
     }
 
     /**

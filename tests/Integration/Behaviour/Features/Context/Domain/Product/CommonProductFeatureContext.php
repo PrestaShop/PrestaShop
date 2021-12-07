@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
@@ -61,6 +62,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     public static function restoreProductTablesAfterSuite(): void
     {
         static::restoreProductTables();
+        LanguageFeatureContext::restoreLanguagesTablesAfterFeature();
     }
 
     /**
