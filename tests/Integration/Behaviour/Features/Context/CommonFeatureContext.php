@@ -387,7 +387,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Category::resetStaticCache();
         Pack::resetStaticCache();
         Product::resetStaticCache();
-        Language::resetCache();
+        Language::resetStaticCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
         Group::clearCachedValues();
