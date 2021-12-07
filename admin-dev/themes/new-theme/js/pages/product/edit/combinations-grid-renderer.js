@@ -25,7 +25,6 @@
 
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
-import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -37,7 +36,6 @@ export default class CombinationsGridRenderer {
    * @returns {{render: (function(*=): void)}}
    */
   constructor() {
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
@@ -115,8 +113,6 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append($row);
       rowIndex += 1;
     });
-
-    this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
   }
 
   /**
