@@ -102,7 +102,7 @@ services:
 
   prestashop.adapter.smarty_cache.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
-    arguments: ['@prestashop.adapter.legacy.configuration']
+    arguments: [ '@prestashop.adapter.legacy.configuration' ]
 
   prestashop.adapter.logs.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
