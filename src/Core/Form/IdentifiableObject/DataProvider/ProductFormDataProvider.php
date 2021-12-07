@@ -165,7 +165,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => [
+                    'delta_quantity' => [
                         'quantity' => 0,
                         'delta' => 0,
                     ],
@@ -222,10 +222,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'tax_rules_group_id' => $productData['pricing']['tax_rules_group_id'],
             ],
             'stock' => [
-                'delta_quantity' => [
-                    'quantity' => $productData['stock']['quantities']['delta_quantity']['quantity'],
-                    'delta' => 0,
-                ],
+                'delta_quantity' => $productData['stock']['quantities']['delta_quantity'],
             ],
         ];
 

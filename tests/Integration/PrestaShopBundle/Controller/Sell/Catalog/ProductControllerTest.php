@@ -100,7 +100,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // First create product
         $formData = [
             'product[header][name][1]' => static::TEST_CREATION_NAME,
-            'product[stock][quantities][quantity][delta]' => static::TEST_CREATION_QUANTITY,
+            'product[stock][quantities][delta_quantity][delta]' => static::TEST_CREATION_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
         ];
         $createdProductId = $this->createEntityFromPage($formData);
@@ -114,7 +114,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Check that the product was correctly set with the expected type (the format in the form is not the same)
         $expectedFormData = [
             'product[header][name][1]' => static::TEST_CREATION_NAME,
-            'product[stock][quantities][quantity][quantity]' => static::TEST_CREATION_QUANTITY,
+            'product[stock][quantities][delta_quantity][quantity]' => static::TEST_CREATION_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_CREATION_PRICE,
         ];
         $this->assertFormValuesFromPage(
@@ -137,7 +137,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // First update the product with a few data
         $formData = [
             'product[header][name][1]' => static::TEST_UPDATED_NAME,
-            'product[stock][quantities][quantity][delta]' => static::TEST_UPDATED_QUANTITY,
+            'product[stock][quantities][delta_quantity][delta]' => static::TEST_UPDATED_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
         ];
 
@@ -147,7 +147,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Price is reformatted with 6 digits
         $expectedFormData = [
             'product[header][name][1]' => static::TEST_UPDATED_NAME,
-            'product[stock][quantities][quantity][quantity]' => static::TEST_UPDATED_QUANTITY + static::TEST_CREATION_QUANTITY,
+            'product[stock][quantities][delta_quantity][quantity]' => static::TEST_UPDATED_QUANTITY + static::TEST_CREATION_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_UPDATED_PRICE,
         ];
         $this->assertFormValuesFromPage(
