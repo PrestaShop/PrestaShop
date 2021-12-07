@@ -208,6 +208,9 @@
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
         ],
+        "restore-test-tables": [
+            "@php ./tests/bin/restore-test-tables.php"
+        ],
         "test-all": [
             "@composer unit-tests",
             "@composer integration-tests",
