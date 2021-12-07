@@ -22,6 +22,18 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
 
 Release Notes for PrestaShop 1.7
+
+####################################
+#   v1.7.8.2 - (2021-12-02)
+####################################
+- Core:
+  - Improvement:
+    - #21124: Bump version to 1.7.8.2 (by @matks)
+  - Bug fix:
+    - #26526: Fixed wishlist button disappear when products are filtered (by @alexandrebrubeyonds)
+    - #26524: Fix webpack production build (by @NeOMakinG)
+    - #GHSA-6xxj-gcjq-wgf4: Blind SQLi using Search filters (by @PierreRambaud)
+
 --------------------------------
 ####################################
 #   v1.7.8.1 - (2021-11-04)
