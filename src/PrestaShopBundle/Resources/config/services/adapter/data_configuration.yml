@@ -63,7 +63,7 @@ services:
 
   prestashop.adapter.media_servers.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Media\MediaServerConfiguration'
-    arguments: ['@prestashop.adapter.legacy.configuration']
+    arguments: [ '@prestashop.adapter.legacy.configuration' ]
 
   prestashop.adapter.caching.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Cache\CachingConfiguration'
