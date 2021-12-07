@@ -27,11 +27,6 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
 {
-    protected $_modules_ad = [
-        'blockcart' => ['cartabandonmentpro'],
-        /* 'bloctopmenu' => array('advancedtopmenu'), */
-        'blocklayered' => ['pm_advancedsearch4'],
-    ];
     /*
     ** @var array map with $_GET keywords and their callback
     */
