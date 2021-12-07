@@ -104,7 +104,8 @@ table .thead-default .column-headers th:last-child .grid-actions-header-text {
 }
 
 table .column-filters {
-  th .btn {
+  th .btn,
+  td .btn {
     white-space: nowrap;
   }
 
