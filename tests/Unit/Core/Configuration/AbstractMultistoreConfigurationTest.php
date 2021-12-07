@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Tests\Resources\DummyMultistoreConfiguration;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
@@ -125,33 +125,11 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
         int $shopGroupId = 1,
         int $shopId = 1
     ): AbstractMultistoreConfiguration {
-        return new class($this->createShopConfigurationMock($expectedCalledMethod), $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId), $this->getMultistoreFeatureMock($isMultistoreUsed)) extends AbstractMultistoreConfiguration {
-            public function getConfiguration()
-            {
-                return [];
-            }
-
-            public function validateConfiguration(array $configuration): bool
-            {
-                return true;
-            }
-
-            public function updateConfiguration(array $configuration)
-            {
-                return [];
-            }
-
-            public function buildResolver(): OptionsResolver
-            {
-                return new OptionsResolver();
-            }
-
-            // wrapper public method to test the protected "updateConfigurationValue" method
-            public function dummyUpdateConfigurationValue($fieldName, $inputValues, $shopConstraint)
-            {
-                $this->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $shopConstraint);
-            }
-        };
+        return new DummyMultistoreConfiguration(
+            $this->createShopConfigurationMock($expectedCalledMethod),
+            $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId),
+            $this->getMultistoreFeatureMock($isMultistoreUsed)
+        );
     }
 
     /**
