@@ -128,6 +128,10 @@ $(document).ready(() => {
   const handleCartAction = (event) => {
     event.preventDefault();
 
+    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
+      modalEvent.preventDefault();
+    });
+
     const $target = $(event.currentTarget);
     const {dataset} = event.currentTarget;
     const cartAction = parseCartAction($target, event.namespace);
