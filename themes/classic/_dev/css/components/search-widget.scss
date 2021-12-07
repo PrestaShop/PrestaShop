@@ -31,6 +31,13 @@
       }
     }
   }
+
+  // stylelint-disable-next-line
+  #search_widget {
+    input {
+      padding-right: 1rem;
+    }
+  }
 }
 
 #checkout {
@@ -76,5 +83,13 @@
 @include media-breakpoint-up(md) {
   .search-widget {
     min-width: 15.63rem;
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .header-top {
+    .search-widgets {
+      max-width: 13rem;
+    }
   }
 }
