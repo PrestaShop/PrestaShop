@@ -319,7 +319,7 @@ abstract class PaymentModuleCore extends Module
             // Amount paid by customer is not the right one -> Status = payment error
             // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
             // if ($order->total_paid != $order->total_paid_real)
-            // We use number_format in order to compare two string
+            // We use number_format to convert the numbers to strings and strcmp to compare them to avoid auto reconversions to numbers in PHP < 8.0
             $comp_precision = Context::getContext()->getComputingPrecision();
             if ($order_status->logable && (strcmp(number_format($cart_total_paid, $comp_precision), number_format($amount_paid, $comp_precision)) != 0)) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Total paid amount does not match cart total', 3, null, 'Cart', (int) $id_cart, true);
