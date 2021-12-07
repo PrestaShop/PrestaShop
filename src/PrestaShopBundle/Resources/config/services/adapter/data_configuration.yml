@@ -106,7 +106,7 @@ services:
 
   prestashop.adapter.logs.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Configuration\LogsConfiguration'
-    arguments: 
+    arguments:
       - '@prestashop.adapter.legacy.configuration'
       - '@translator'
       - '@prestashop.adapter.validate'
