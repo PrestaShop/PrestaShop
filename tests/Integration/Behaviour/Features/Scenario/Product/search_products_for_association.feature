@@ -1,6 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags search-products
 @restore-products-before-feature
 @restore-languages-after-feature
+@reset-img-after-feature
 @clear-cache-before-feature
 @search-products
 Feature: Search products to associate them in the BO
