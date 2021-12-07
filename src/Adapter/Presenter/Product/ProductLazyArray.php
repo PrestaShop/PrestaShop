@@ -931,7 +931,7 @@ class ProductLazyArray extends AbstractLazyArray
                 $this->product['availability_date'] = $product['available_date'];
 
                 if ($availableQuantity < $settings->lastRemainingItems) {
-                    $this->applyLastItemsInStockDisplayRule();
+                    $this->product['availability'] = 'last_remaining_items';
                 } else {
                     $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
                     $this->product['availability_message'] = $product['available_now'] ? $product['available_now']
