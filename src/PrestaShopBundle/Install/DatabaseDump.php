@@ -135,20 +135,17 @@ class DatabaseDump
      * Restore a specific table in the database.
      *
      * @param string $table
-     * @param bool $forceRestore
      */
-    public function restoreTable(string $table, bool $forceRestore = false): void
+    public function restoreTable(string $table): void
     {
         $tableName = $this->dbPrefix . $table;
         $this->checkTableDumpFile($tableName);
 
-        if (!$forceRestore) {
-            $dumpChecksum = file_get_contents($this->getTableChecksumPath($tableName));
-            $checksum = $this->getTableChecksum($tableName);
-            // Table was not modified, no need to restore
-            if ($checksum === $dumpChecksum) {
-                return;
-            }
+        $dumpChecksum = file_get_contents($this->getTableChecksumPath($tableName));
+        $checksum = $this->getTableChecksum($tableName);
+        // Table was not modified, no need to restore
+        if ($checksum === $dumpChecksum) {
+            return;
         }
 
         $dumpFile = $this->getTableDumpPath($tableName);
@@ -258,11 +255,30 @@ class DatabaseDump
         );
     }
 
+    /**
+     * Get checksum of the table to compare if the conent has been modified and needs to be restored. Since the checksum
+     * doesn't take the auto increment index into consideration we fetch it manually and append it to the original
+     * checksum, this allows to restore the index when needed as well.
+     *
+     * @param string $table
+     *
+     * @return string
+     */
     private function getTableChecksum(string $table): string
     {
         $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE %s;', $table));
+        $checksum = $checksum[0]['Checksum'];
 
-        return $checksum[0]['Checksum'];
+        // The content only is not enough we must make sure that the auto increment index is the same
+        $autoIncrement = $this->db->executeS(sprintf(
+            'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = "%s" AND TABLE_NAME = "%s";',
+            $this->databaseName,
+            $table
+        ));
+        // Some tables have no auto increment (like relation tables for example)
+        $autoIncrement = (int) ($autoIncrement[0]['AUTO_INCREMENT'] ?? 0);
+
+        return $checksum . $autoIncrement;
     }
 
     private function checkDumpFile(): void
@@ -327,10 +343,8 @@ class DatabaseDump
 
     /**
      * Restore all tables (only modified tables are restored)
-     *
-     * @param bool $forceRestore
      */
-    public static function restoreAllTables(bool $forceRestore = false): void
+    public static function restoreAllTables(): void
     {
         $dump = new static();
 
@@ -339,7 +353,7 @@ class DatabaseDump
             // $table is an array looking like this [Tables_in_database_name => 'ps_access']
             $tableName = reset($table);
             $tableName = substr($tableName, strlen($dump->dbPrefix));
-            $dump->restoreTable($tableName, $forceRestore);
+            $dump->restoreTable($tableName);
         }
     }
 
@@ -347,14 +361,13 @@ class DatabaseDump
      * Restore a list of tables in the database
      *
      * @param array $tableNames
-     * @param bool $forceRestore
      */
-    public static function restoreTables(array $tableNames, bool $forceRestore = false): void
+    public static function restoreTables(array $tableNames): void
     {
         $dump = new static();
 
         foreach ($tableNames as $tableName) {
-            $dump->restoreTable($tableName, $forceRestore);
+            $dump->restoreTable($tableName);
         }
     }
 
@@ -362,9 +375,8 @@ class DatabaseDump
      * Restore a list of tables in the database which name match th regexp
      *
      * @param string $regexp
-     * @param bool $forceRestore
      */
-    public static function restoreMatchingTables(string $regexp, bool $forceRestore = false): void
+    public static function restoreMatchingTables(string $regexp): void
     {
         $dump = new static();
 
@@ -374,7 +386,7 @@ class DatabaseDump
             $tableName = reset($table);
             $tableName = substr($tableName, strlen($dump->dbPrefix));
             if (preg_match($regexp, $tableName)) {
-                $dump->restoreTable($tableName, $forceRestore);
+                $dump->restoreTable($tableName);
             }
         }
     }
