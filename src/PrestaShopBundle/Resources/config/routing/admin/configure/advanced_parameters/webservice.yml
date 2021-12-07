@@ -17,12 +17,12 @@ admin_webservice_keys_search:
     _legacy_link: AdminWebservice:submitFilterwebservice_account
 
 admin_webservice_save_settings:
-    path: /settings
-    methods: [ PATCH, POST ]
-    defaults:
-        _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::saveSettingsAction'
-        _legacy_controller: AdminWebservice
-        _legacy_link: AdminWebservice:submitOptionswebservice_account
+  path: /settings
+  methods: [ PATCH, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::saveSettingsAction'
+    _legacy_controller: AdminWebservice
+    _legacy_link: AdminWebservice:submitOptionswebservice_account
 
 admin_webservice_keys_create:
   path: /new
