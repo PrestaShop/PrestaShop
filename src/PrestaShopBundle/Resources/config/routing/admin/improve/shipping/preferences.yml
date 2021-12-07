@@ -9,7 +9,7 @@ admin_shipping_preferences:
 
 admin_shipping_preferences_handling_save:
   path: /handling
-  methods: [PATCH, POST]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\PreferencesController::processHandlingFormAction'
     _legacy_controller: AdminShipping
