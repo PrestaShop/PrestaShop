@@ -387,7 +387,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'quantities' => [
-                'quantity' => [
+                'delta_quantity' => [
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
