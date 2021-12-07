@@ -45,7 +45,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     /**
      * @var Configuration
      */
-    protected $legacyConfiguration;
+    protected $legacyConfigurationAdapter;
 
     /**
      * @var Context
@@ -66,7 +66,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     {
         self::bootKernel();
         $this->entityManager = self::$kernel->getContainer()->get('doctrine.orm.entity_manager');
-        $this->legacyConfiguration = self::$kernel->getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->legacyConfigurationAdapter = self::$kernel->getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->initMultistore();
         $this->multistoreFeature = self::$kernel->getContainer()->get('prestashop.adapter.multistore_feature');
     }
@@ -84,18 +84,16 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $testedObject = $this->getConfiguration($shopConstraint);
         $testedObject->updateConfiguration($data);
 
+        LegacyConfiguration::clearConfigurationCacheForTesting();
+
         foreach ($checkList as $expectedValues) {
             $testedObject = $this->getConfiguration($expectedValues[0]);
+            Shop::resetContext();
             $testResults = $testedObject->getConfiguration();
-
             foreach ($expectedValues[1] as $key => $value) {
-                $this->assertSame($value, $testResults[$key], 'errorrr bog');
+                $this->assertTrue($value === $testResults[$key]);
             }
         }
-
-        // clean before next tests
-        //LegacyConfiguration::deleteByName('test_conf_1');
-        // LegacyConfiguration::deleteByName('test_conf_2');
     }
 
     /**
@@ -162,7 +160,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
             ->willReturn($isAllShopContext);
 
         return new DummyMultistoreConfiguration(
-            $this->legacyConfiguration,
+            $this->legacyConfigurationAdapter,
             $this->shopContext,
             $this->multistoreFeature
         );
@@ -218,14 +216,14 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
                     ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
                 ],
                 [
-                    ShopConstraint::shopGroup(1),
-                    ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
-                ],
-                [
-                    ShopConstraint::shop(1),
-                    // Only test_conf_2 is modified since it was the only checkbox enabled
-                    ['test_conf_1' => true, 'test_conf_2' => 'single_shop_conf2'],
-                ],
+                     ShopConstraint::shopGroup(1),
+                     ['test_conf_1' => true, 'test_conf_2' => 'all_shop_conf2'],
+                 ],
+                 [
+                     ShopConstraint::shop(1),
+                     // Only test_conf_2 is modified since it was the only checkbox enabled
+                     ['test_conf_1' => true, 'test_conf_2' => 'single_shop_conf2'],
+                 ],
             ]
         ];
     }
@@ -244,7 +242,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
     private function initMultistore(): void
     {
         // activate multistore
-        $this->legacyConfiguration->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
+        $this->legacyConfigurationAdapter->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
         $newShop = new Shop();
         $newShop->active = true;
         $newShop->id_category = 2;

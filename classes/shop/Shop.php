@@ -999,6 +999,7 @@ class ShopCore extends ObjectModel
     {
         self::$context = null;
         self::$feature_active = null;
+        self::$context_id_shop = null;
     }
 
     /**
