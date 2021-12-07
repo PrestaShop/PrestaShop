@@ -144,12 +144,24 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
+     * @deprecated 8.0.0 Use resetStaticCache method instead.
+     */
+    public static function clearConfigurationCacheForTesting()
+    {
+        self::$_cache = null;
+        self::$_new_cache_shop = null;
+        self::$_new_cache_group = null;
+        self::$_new_cache_global = null;
+        self::$_initialized = false;
+    }
+
+    /**
      * WARNING: For testing only. Do NOT rely on this method, it may be removed at any time.
      *
      * @todo Delegate static calls from Configuration to an instance
      * of a class to be created.
      */
-    public static function clearConfigurationCacheForTesting()
+    public static function resetStaticCache()
     {
         self::$_cache = null;
         self::$_new_cache_shop = null;

@@ -84,7 +84,7 @@ class AbstractMultistoreConfigurationTest extends KernelTestCase
         $testedObject = $this->getConfiguration($shopConstraint);
         $testedObject->updateConfiguration($data);
 
-        LegacyConfiguration::clearConfigurationCacheForTesting();
+        LegacyConfiguration::resetStaticCache();
 
         foreach ($checkList as $expectedValues) {
             $testedObject = $this->getConfiguration($expectedValues[0]);
