@@ -69,9 +69,11 @@ const textToLinkRewriteCopier = ({
   options = {eventName: 'input'},
 }: TextToLinkParams): void => {
   $(document).on(options.eventName, `${sourceElementSelector}`, (event) => {
-    $(destinationElementSelector).val(
-      window.str2url($(event.currentTarget).val(), 'UTF-8'),
-    );
+    if (!$(event.currentTarget).closest('form').data('id')) {
+      $(destinationElementSelector).val(
+        window.str2url($(event.currentTarget).val(), 'UTF-8'),
+      );
+    }
   });
 };
 
