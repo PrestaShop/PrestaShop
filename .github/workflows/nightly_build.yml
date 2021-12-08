@@ -1,3 +1,4 @@
+# This workflow aim to create nightly builds on active branches
 name: Nightly Build
 
 on:
