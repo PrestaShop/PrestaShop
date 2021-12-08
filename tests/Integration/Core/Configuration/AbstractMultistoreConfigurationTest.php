@@ -79,13 +79,13 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdate(ShopConstraint $shopConstraint, array $data, array $checkList): void
     {
-        $testedObject = $this->getConfiguration($shopConstraint);
+        $testedObject = $this->getDummyMultistoreConfiguration($shopConstraint);
         $testedObject->updateConfiguration($data);
 
         LegacyConfiguration::resetStaticCache();
 
         foreach ($checkList as $expectedValues) {
-            $testedObject = $this->getConfiguration($expectedValues[0]);
+            $testedObject = $this->getDummyMultistoreConfiguration($expectedValues[0]);
             Shop::resetContext();
             $testResults = $testedObject->getConfiguration();
             foreach ($expectedValues[1] as $key => $value) {
