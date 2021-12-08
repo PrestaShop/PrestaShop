@@ -1322,7 +1322,7 @@ class ProductCore extends ObjectModel
         if (is_array($products) && ($count = count($products))) {
             // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
             if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
-                ini_set('max_execution_time', round($count * 1.5));
+                ini_set('max_execution_time', (string) round($count * 1.5));
             }
 
             foreach ($products as $id_product) {
@@ -2252,13 +2252,13 @@ class ProductCore extends ObjectModel
             ]);
         }
 
-        $price = str_replace(',', '.', $price);
-        $weight = str_replace(',', '.', $weight);
+        $price = (float) str_replace(',', '.', (string) $price);
+        $weight = (float) str_replace(',', '.', (string) $weight);
 
-        $combination->price = (float) $price;
+        $combination->price = $price;
         $combination->wholesale_price = (float) $wholesale_price;
         $combination->ecotax = (float) $ecotax;
-        $combination->weight = (float) $weight;
+        $combination->weight = $weight;
         $combination->unit_price_impact = (float) $unit;
         $combination->reference = pSQL($reference);
         $combination->ean13 = pSQL($ean13);
@@ -2353,12 +2353,12 @@ class ProductCore extends ObjectModel
             return;
         }
 
-        $price = str_replace(',', '.', $price);
-        $weight = str_replace(',', '.', $weight);
+        $price = (float) str_replace(',', '.', (string) $price);
+        $weight = (float) str_replace(',', '.', (string) $weight);
 
         $combination = new Combination();
         $combination->id_product = (int) $this->id;
-        $combination->price = (float) $price;
+        $combination->price = $price;
         $combination->ecotax = (float) $ecotax;
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit_impact;
@@ -2384,8 +2384,7 @@ class ProductCore extends ObjectModel
         }
 
         $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-            SELECT SUM(quantity) as quantity
+            'SELECT SUM(quantity) as quantity
             FROM ' . _DB_PREFIX_ . 'stock_available
             WHERE id_product = ' . (int) $this->id . '
             AND id_product_attribute <> 0 '
@@ -4289,7 +4288,7 @@ class ProductCore extends ObjectModel
      * @param int $idProduct Product identifier
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
+     * @param CartCore|null $cart
      * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -4298,7 +4297,7 @@ class ProductCore extends ObjectModel
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        Cart $cart = null,
+        CartCore $cart = null,
         $idCustomization = null
     ) {
         // pack usecase: Pack::getQuantity() returns the pack quantity after cart quantities have been removed from stock
@@ -5623,7 +5622,7 @@ class ProductCore extends ObjectModel
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
         if (Combination::isFeatureActive() && $id_product_attribute === null
             && ((isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
-                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], !$row['allow_oosp'])))) {
+                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp'])))) {
             $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
         }
         if (!Combination::isFeatureActive() || !isset($row['id_product_attribute'])) {
@@ -6688,7 +6687,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @param int $id_product Product identifier
-     * @param int $id_customer Customer identifier
+     * @param int|bool $id_customer Customer identifier
      *
      * @return bool
      */

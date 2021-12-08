@@ -143,7 +143,7 @@ class ReferrerCore extends ObjectModel
     /**
      * Get some statistics on visitors connection for current referrer.
      *
-     * @param int $idProduct
+     * @param int|null $idProduct
      * @param Employee|null $employee
      *
      * @return array|bool|object|null
@@ -154,8 +154,7 @@ class ReferrerCore extends ObjectModel
         if ($idProduct) {
             $join = 'LEFT JOIN `' . _DB_PREFIX_ . 'page` p ON cp.`id_page` = p.`id_page`
 					 LEFT JOIN `' . _DB_PREFIX_ . 'page_type` pt ON pt.`id_page_type` = p.`id_page_type`';
-            $where = ' AND pt.`name` = \'product\'
-					  AND p.`id_object` = ' . (int) $idProduct;
+            $where = ' AND pt.`name` = \'product\' AND p.`id_object` = ' . (int) $idProduct;
         }
 
         $sql = 'SELECT COUNT(DISTINCT cs.id_connections_source) AS visits,
@@ -182,7 +181,7 @@ class ReferrerCore extends ObjectModel
     /**
      * Get some statistics on customers registrations for current referrer.
      *
-     * @param int $idProduct
+     * @param int|null $idProduct
      * @param Employee|null $employee
      */
     public function getRegistrations($idProduct, $employee)
@@ -219,7 +218,7 @@ class ReferrerCore extends ObjectModel
     /**
      * Get some statistics on orders for current referrer.
      *
-     * @param int $idProduct
+     * @param int|null $idProduct
      * @param Employee|null $employee
      *
      * @return array|bool|object|null
@@ -363,8 +362,8 @@ class ReferrerCore extends ObjectModel
      */
     public static function getAjaxProduct($idReferrer, $idProduct, $employee = null)
     {
-        $product = new Product($idProduct, false, Configuration::get('PS_LANG_DEFAULT'));
-        $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $product = new Product($idProduct, false, (int) Configuration::get('PS_LANG_DEFAULT'));
+        $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $referrer = new Referrer($idReferrer);
         $statsVisits = $referrer->getStatsVisits($idProduct, $employee);
         $registrations = $referrer->getRegistrations($idProduct, $employee);

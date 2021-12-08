@@ -168,10 +168,8 @@ class AddressFormatCore extends ObjectModel
      * if the separator is overview.
      *
      * @param string $patternName The composition of the class and field name
-     * @param string $fieldsValidate The list of available field for the Address class
-     * @todo: Why is $fieldsValidate unused?
      */
-    protected function _checkLiableAssociation($patternName, $fieldsValidate)
+    protected function _checkLiableAssociation($patternName)
     {
         $patternName = trim($patternName);
 
@@ -225,7 +223,7 @@ class AddressFormatCore extends ObjectModel
                 if (is_array($patternsName)) {
                     foreach ($patternsName as $patternName) {
                         if (!in_array($patternName, $usedKeyList)) {
-                            $this->_checkLiableAssociation($patternName, $fieldsValidate);
+                            $this->_checkLiableAssociation($patternName);
                             $usedKeyList[] = $patternName;
                         } else {
                             $this->_errorFormatList[] = $this->trans('This key has already been used.', [], 'Admin.Notifications.Error') .
@@ -626,7 +624,7 @@ class AddressFormatCore extends ObjectModel
     {
         $out = $this->getFormatDB($idCountry);
         if (empty($out)) {
-            $out = $this->getFormatDB(Configuration::get('PS_COUNTRY_DEFAULT'));
+            $out = $this->getFormatDB((int) Configuration::get('PS_COUNTRY_DEFAULT'));
         }
         if (Country::isNeedDniByCountryId($idCountry) && false === strpos($out, 'dni')) {
             $out .= AddressFormat::FORMAT_NEW_LINE . 'dni';

@@ -451,7 +451,10 @@ class OrderCore extends ObjectModel
             if (count($this->getProductsDetail()) == 0) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $this->id;
-                $history->changeIdOrderState(Configuration::get('PS_OS_CANCELED'), $this);
+                $history->changeIdOrderState(
+                    (int) Configuration::get('PS_OS_CANCELED'),
+                    $this
+                );
                 if (!$history->addWithemail()) {
                     return false;
                 }
@@ -616,7 +619,7 @@ class OrderCore extends ObjectModel
     /**
      * Get order products.
      *
-     * @param bool $products
+     * @param bool|array $products
      * @param bool|array $selected_products
      * @param bool|array $selected_qty
      * @param bool $fullInfos
@@ -751,7 +754,7 @@ class OrderCore extends ObjectModel
         $product['image_size'] = null;
 
         if ($id_image) {
-            $product['image'] = new Image($id_image);
+            $product['image'] = new Image((int) $id_image);
         }
     }
 
@@ -1355,7 +1358,7 @@ class OrderCore extends ObjectModel
                 AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
 
             if ($id_order_carrier) {
-                $order_carrier = new OrderCarrier($id_order_carrier);
+                $order_carrier = new OrderCarrier((int) $id_order_carrier);
                 $order_carrier->id_order_invoice = (int) $order_invoice->id;
                 $order_carrier->update();
             }
@@ -1715,7 +1718,17 @@ class OrderCore extends ObjectModel
         /** @var PaymentModule $payment_module */
         $payment_module = Module::getInstanceByName($this->module);
         $customer = new Customer($this->id_customer);
-        $payment_module->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, [], null, false, $customer->secure_key);
+        $payment_module->validateOrder(
+            $this->id_cart,
+            (int) Configuration::get('PS_OS_WS_PAYMENT'),
+            $this->total_paid,
+            $this->payment,
+            null,
+            [],
+            null,
+            false,
+            $customer->secure_key
+        );
         $this->id = $payment_module->currentOrder;
 
         return true;
@@ -1898,11 +1911,11 @@ class OrderCore extends ObjectModel
             $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
             if ($this->id_currency === $default_currency) {
                 $this->total_paid_real += Tools::ps_round(
-                    Tools::convertPrice($order_payment->amount, $this->id_currency, false),
+                    Tools::convertPrice((float) $order_payment->amount, $this->id_currency, false),
                     Context::getContext()->getComputingPrecision()
                 );
             } else {
-                $amountInDefaultCurrency = Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false);
+                $amountInDefaultCurrency = Tools::convertPrice((float) $order_payment->amount, $order_payment->id_currency, false);
                 $this->total_paid_real += Tools::ps_round(
                     Tools::convertPrice($amountInDefaultCurrency, $this->id_currency, true),
                     Context::getContext()->getComputingPrecision()
@@ -1989,7 +2002,7 @@ class OrderCore extends ObjectModel
             GROUP BY c.id_carrier'
         );
         foreach ($results as &$row) {
-            $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name'], null);
+            $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name']);
         }
 
         return $results;

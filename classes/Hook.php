@@ -508,7 +508,7 @@ class HookCore extends ObjectModel
     /**
      * Registers a module to a given hook
      *
-     * @param Module $module_instance The affected module
+     * @param ModuleCore $module_instance The affected module
      * @param string|string[] $hook_name Hook name(s) to register this module to
      * @param int[]|null $shop_list List of shop ids
      *

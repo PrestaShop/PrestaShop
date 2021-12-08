@@ -710,11 +710,11 @@ class StockManagerCore implements StockManagerInterface
         // Removes from warehouse_from
         $stocks = $this->removeProduct(
             $id_product,
-                                       $id_product_attribute,
-                                       $warehouse_from,
-                                       $quantity,
-                                       Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
-                                       $usable_from
+            $id_product_attribute,
+            $warehouse_from,
+            $quantity,
+            (int) Configuration::get('PS_STOCK_MVT_TRANSFER_FROM'),
+            $usable_from
         );
         if (!count($stocks)) {
             return false;
@@ -735,12 +735,12 @@ class StockManagerCore implements StockManagerInterface
 
             if (!$this->addProduct(
                 $id_product,
-                                   $id_product_attribute,
-                                   $warehouse_to,
-                                   $stock['quantity'],
-                                   Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
-                                   $price,
-                                   $usable_to
+                $id_product_attribute,
+                $warehouse_to,
+                $stock['quantity'],
+                (int) Configuration::get('PS_STOCK_MVT_TRANSFER_TO'),
+                $price,
+                $usable_to
             )) {
                 return false;
             }
@@ -823,7 +823,7 @@ class StockManagerCore implements StockManagerInterface
      * @param int $id_product
      * @param int $id_product_attribute
      * @param int $id_warehouse Optional
-     * @param int $price_te Optional
+     * @param float|int|null $price_te Optional
      *
      * @return PrestaShopCollection Collection of Stock
      */

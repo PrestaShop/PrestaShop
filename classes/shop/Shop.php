@@ -23,7 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 /**
  * @since 1.5.0
@@ -424,7 +426,7 @@ class ShopCore extends ObjectModel
             $shop = new Shop($id_shop);
             if (!Validate::isLoadedObject($shop) || !$shop->active) {
                 // No shop found ... too bad, let's redirect to default shop
-                $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+                $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
 
                 // Hmm there is something really bad in your Prestashop !
                 if (!Validate::isLoadedObject($default_shop)) {
@@ -495,9 +497,8 @@ class ShopCore extends ObjectModel
      */
     public function setTheme()
     {
-        $context = Context::getContext();
-        $db = Db::getInstance();
-        $themeRepository = (new PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder($context, $db))->buildRepository($this);
+        $themeManagerBuilder = new ThemeManagerBuilder(Context::getContext(), Db::getInstance());
+        $themeRepository = $themeManagerBuilder->buildRepository($this instanceof Shop ? $this : null);
         if (empty($this->theme_name)) {
             $this->theme_name = 'classic';
         }
@@ -1139,7 +1140,7 @@ class ShopCore extends ObjectModel
      * Add a restriction on id_shop for multishop lang table.
      *
      * @param string|null $alias
-     * @param int|null $id_shop
+     * @param string|int|null $id_shop
      *
      * @return string
      */

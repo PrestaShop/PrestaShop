@@ -477,7 +477,7 @@ class MailCore extends ObjectModel
             $templateTxt .= strip_tags(
                 html_entity_decode(
                     Tools::file_get_contents($templatePath . $isoTemplate . '.txt'),
-                    null,
+                    ENT_COMPAT,
                     'utf-8'
                 )
             );

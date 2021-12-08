@@ -393,7 +393,7 @@ class OrderSlipCore extends ObjectModel
             if (Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL) {
                 $tmp = explode('_', $key);
                 $address = Address::initialize((int) $tmp[1], true);
-                $tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
+                $tax_calculator = TaxManagerFactory::getManager($address, (int) $tmp[0])->getTaxCalculator();
                 $order_slip->{'total_products_tax_' . $inc_or_ex_2} += Tools::ps_round($tax_calculator->{$taxCalculatorMethod}($price), Context::getContext()->getComputingPrecision());
             } else {
                 $order_slip->{'total_products_tax_' . $inc_or_ex_2} += $price;

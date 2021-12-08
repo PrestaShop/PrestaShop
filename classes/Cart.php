@@ -1525,7 +1525,7 @@ class CartCore extends ObjectModel
         $quantity = (int) $quantity;
         $id_product = (int) $id_product;
         $id_product_attribute = (int) $id_product_attribute;
-        $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+        $product = new Product($id_product, false, (int) Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
         if ($id_product_attribute) {
             $combination = new Combination((int) $id_product_attribute);
@@ -1859,9 +1859,9 @@ class CartCore extends ObjectModel
 
         $result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = ' . (int) $id_cart_rule . ' AND `id_cart` = ' . (int) $this->id, 1);
 
-        $cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
+        $cart_rule = new CartRule($id_cart_rule, (int) Configuration::get('PS_LANG_DEFAULT'));
         if ((bool) $result && (int) $cart_rule->gift_product) {
-            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, null, 'down', 0, null, false, false, true, $useOrderPrices);
+            $this->updateQty(1, $cart_rule->gift_product, $cart_rule->gift_product_attribute, false, 'down', 0, null, false, false, true, $useOrderPrices);
         }
 
         return $result;
@@ -2252,7 +2252,12 @@ class CartCore extends ObjectModel
             $orderId = Order::getIdByCartId($this->id);
             $orderId = (int) $orderId ?: null;
         }
-        $calculator = new Calculator($this, $id_carrier, $computePrecision, $orderId);
+        $calculator = new Calculator(
+            $this,
+            $id_carrier,
+            $computePrecision,
+            $orderId
+        );
 
         /** @var PriceCalculator $priceCalculator */
         $priceCalculator = ServiceLocator::get(PriceCalculator::class);
@@ -2636,7 +2641,16 @@ class CartCore extends ObjectModel
             $id_warehouse = 0;
             foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val) {
                 if (array_key_exists((int) $id_war, $product['warehouse_list'])) {
-                    $product['carrier_list'] = array_replace($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
+                    $product['carrier_list'] = array_replace(
+                        $product['carrier_list'],
+                        Carrier::getAvailableCarrierList(
+                            new Product($product['id_product']),
+                            $id_war,
+                            $product['id_address_delivery'],
+                            null,
+                            $this
+                        )
+                    );
                     if (!$id_warehouse) {
                         $id_warehouse = (int) $id_war;
                     }
@@ -3023,7 +3037,15 @@ class CartCore extends ObjectModel
             }
         }
 
-        $cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this, true);
+        $cart_rules = CartRule::getCustomerCartRules(
+            (int) Context::getContext()->cookie->id_lang,
+            (int) Context::getContext()->cookie->id_customer,
+            true,
+            true,
+            false,
+            $this,
+            true
+        );
 
         $result = false;
         if ($this->id) {
@@ -3474,7 +3496,7 @@ class CartCore extends ObjectModel
     public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
     {
         if (isset(Context::getContext()->cookie->id_country)) {
-            $default_country = new Country(Context::getContext()->cookie->id_country);
+            $default_country = new Country((int) Context::getContext()->cookie->id_country);
         }
         if (null === $delivery_option) {
             $delivery_option = $this->getDeliveryOption($default_country, false, false);
@@ -3632,7 +3654,10 @@ class CartCore extends ObjectModel
                 $id_zone = Address::getZoneById((int) $this->id_address_delivery);
             } else {
                 if (!Validate::isLoadedObject($default_country)) {
-                    $default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+                    $default_country = new Country(
+                        (int) Configuration::get('PS_COUNTRY_DEFAULT'),
+                        (int) Configuration::get('PS_LANG_DEFAULT')
+                    );
                 }
 
                 $id_zone = (int) $default_country->id_zone;
@@ -3714,7 +3739,7 @@ class CartCore extends ObjectModel
         }
 
         if (!isset(self::$_carriers[$id_carrier])) {
-            self::$_carriers[$id_carrier] = new Carrier((int) $id_carrier, Configuration::get('PS_LANG_DEFAULT'));
+            self::$_carriers[$id_carrier] = new Carrier((int) $id_carrier, (int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
         $carrier = self::$_carriers[$id_carrier];
@@ -4441,12 +4466,10 @@ class CartCore extends ObjectModel
      * If the carrier name is 0, use this function to replace it with the shop name.
      *
      * @param string $echo Text to use
-     * @param string $tr Unused parameter
      *
      * @return string
-     * @todo: Remove unused parameter
      */
-    public static function replaceZeroByShopName($echo, $tr)
+    public static function replaceZeroByShopName($echo)
     {
         return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
     }
@@ -4551,7 +4574,7 @@ class CartCore extends ObjectModel
                 $customized_value = $custom['value'];
 
                 if ((int) $custom['type'] == Product::CUSTOMIZE_FILE) {
-                    $customized_value = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                    $customized_value = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'], _PS_UPLOAD_DIR_ . $customized_value);
                     Tools::copy(_PS_UPLOAD_DIR_ . $custom['value'] . '_small', _PS_UPLOAD_DIR_ . $customized_value . '_small');
                 }
@@ -4979,7 +5002,7 @@ class CartCore extends ObjectModel
      */
     public function isCarrierInRange($id_carrier, $id_zone)
     {
-        $carrier = new Carrier((int) $id_carrier, Configuration::get('PS_LANG_DEFAULT'));
+        $carrier = new Carrier((int) $id_carrier, (int) Configuration::get('PS_LANG_DEFAULT'));
         $shipping_method = $carrier->getShippingMethod();
         if (!$carrier->range_behavior) {
             return true;

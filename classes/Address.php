@@ -518,7 +518,7 @@ class AddressCore extends ObjectModel
             $context_hash = md5((int) $context->customer->geoloc_id_country . '-' . (int) $context->customer->id_state . '-' .
                                 $context->customer->postcode);
         } else {
-            $context_hash = md5((int) $context->country->id);
+            $context_hash = md5((string) $context->country->id);
         }
 
         $cache_id = 'Address::initialize_' . $context_hash;

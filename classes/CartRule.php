@@ -362,7 +362,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $active Active vouchers only
      * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
      * @param bool $inStock Vouchers in stock only
-     * @param Cart|null $cart Cart
+     * @param CartCore|null $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
      *
@@ -376,7 +376,7 @@ class CartRuleCore extends ObjectModel
         $active = false,
         $includeGeneric = true,
         $inStock = false,
-        Cart $cart = null,
+        CartCore $cart = null,
         $free_shipping_only = false,
         $highlight_only = false
     ) {
@@ -512,7 +512,7 @@ class CartRuleCore extends ObjectModel
     public static function getCustomerHighlightedDiscounts(
         $languageId,
         $customerId,
-        Cart $cart
+        CartCore $cart
     ) {
         return static::getCustomerCartRules(
            $languageId,
@@ -900,7 +900,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Checks if the products chosen by the customer are usable with the cart rule.
      *
-     * @param \Cart $cart
+     * @param CartCore $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
      *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError)
@@ -913,7 +913,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public function checkProductRestrictionsFromCart(Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
+    public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
         $selected_products = [];
 

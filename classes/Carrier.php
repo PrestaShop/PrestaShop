@@ -697,7 +697,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      * @param array|null $groups Group of the Customer
-     * @param Cart|null $cart Optional Cart object
+     * @param CartCore|null $cart Optional Cart object
      * @param array $error Contains an error message if an error occurs
      *
      * @return array Carriers for the order
@@ -742,7 +742,7 @@ class CarrierCore extends ObjectModel
                 if ($row['range_behavior']) {
                     // Get id zone
                     if (!$id_zone) {
-                        $id_zone = (int) Country::getIdZone(Configuration::get('PS_COUNTRY_DEFAULT'));
+                        $id_zone = (int) Country::getIdZone((int) Configuration::get('PS_COUNTRY_DEFAULT'));
                     }
 
                     // Get only carriers that have a range compatible with cart
@@ -1101,7 +1101,7 @@ class CarrierCore extends ObjectModel
             return false;
         }
 
-        return new Carrier($id_carrier, $id_lang);
+        return new Carrier((int) $id_carrier, $id_lang);
     }
 
     /**
@@ -1209,8 +1209,7 @@ class CarrierCore extends ObjectModel
      *
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxrulesGroup ID
-     *                           false if not found
+     * @return int TaxrulesGroup ID
      */
     public function getIdTaxRulesGroup(Context $context = null)
     {
@@ -1223,8 +1222,8 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxRulesGroup ID
-     *                           false if not found
+     * @return int TaxRulesGroup ID
+     *             false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
     {
@@ -1240,10 +1239,10 @@ class CarrierCore extends ObjectModel
                     WHERE `id_carrier` = ' . (int) $id_carrier . ' AND id_shop=' . (int) Context::getContext()->shop->id);
             Cache::store($key, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($key);
+        return (int) Cache::retrieve($key);
     }
 
     /**
@@ -1477,10 +1476,10 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
-     * @param int $id_warehouse Warehouse ID
+     * @param int|null $id_warehouse Warehouse ID
      * @param int|null $id_address_delivery Delivery Address ID
      * @param int|null$id_shop Shop ID
-     * @param Cart|null $cart Cart object
+     * @param CartCore|null $cart Cart object
      * @param array|null $error contain an error message if an error occurs
      *
      * @return array Available Carriers

@@ -844,7 +844,7 @@ abstract class ModuleCore implements ModuleInterface
 
         // Store the results in an array
         $items = [];
-        if ($results = Db::getInstance($sql)->executeS($sql)) {
+        if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $row) {
                 $items[] = $row['id_shop'];
             }
@@ -3269,7 +3269,7 @@ abstract class ModuleCore implements ModuleInterface
         foreach ($hooks_list as $current_hook) {
             $hook_name = $current_hook['name'];
 
-            if (!Hook::isAlias($hook_name) && Hook::isHookCallableOn($this, $hook_name)) {
+            if (!Hook::isAlias($hook_name) && $this instanceof Module && Hook::isHookCallableOn($this, $hook_name)) {
                 $possible_hooks_list[] = [
                     'id_hook' => $current_hook['id_hook'],
                     'name' => $hook_name,

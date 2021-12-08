@@ -186,7 +186,7 @@ class ConnectionCore extends ObjectModel
                 $connection->http_referer = substr($referer, 0, 254);
             }
             $connection->add();
-            $cookie->id_connections = $connection->id;
+            $cookie->id_connections = (int) $connection->id;
 
             return $connection->id_page;
         }

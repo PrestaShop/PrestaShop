@@ -170,7 +170,7 @@ class TabCore extends ObjectModel
 
         $access = new Access();
         foreach (['view', 'add', 'edit', 'delete'] as $action) {
-            $access->updateLgcAccess('1', $idTab, $action, true);
+            $access->updateLgcAccess(1, $idTab, $action, true);
 
             if ($context->employee && $context->employee->id_profile) {
                 $access->updateLgcAccess($context->employee->id_profile, $idTab, $action, true);

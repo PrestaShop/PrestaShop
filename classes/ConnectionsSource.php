@@ -76,7 +76,7 @@ class ConnectionsSourceCore extends ObjectModel
         if (!$cookie) {
             $cookie = Context::getContext()->cookie;
         }
-        if (!isset($cookie->id_connections) || !Validate::isUnsignedId($cookie->id_connections)) {
+        if (!isset($cookie->id_connections) || !Validate::isUnsignedInt($cookie->id_connections)) {
             return false;
         }
 

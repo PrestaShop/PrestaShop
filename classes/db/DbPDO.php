@@ -89,7 +89,7 @@ class DbPDOCore extends Db
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
         try {
-            $link = DbPDO::getPDO($host, $user, $password, false);
+            $link = DbPDO::getPDO($host, $user, $password, '');
             $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
             if ($dropit && ($link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`') !== false)) {
                 return true;
@@ -495,7 +495,7 @@ class DbPDOCore extends Db
     public static function tryUTF8($server, $user, $pwd)
     {
         try {
-            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, '', 5);
         } catch (PDOException $e) {
             return false;
         }
