@@ -194,7 +194,7 @@ $(document).ready(() => {
         let dataset;
 
         if ($target && $target.dataset) {
-          // eslint-disable-next-line
+          // eslint-disable-next-line prefer-destructuring
           dataset = $target.dataset;
         } else {
           dataset = resp;
@@ -247,19 +247,27 @@ $(document).ready(() => {
       return;
     }
 
-    $target.attr('value', targetValue);
-    sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
+    if (targetValue === '0') {
+      $target.closest('.product-line-actions').find('[data-link-action="delete-from-cart"]').click();
+    } else {
+      $target.attr('value', targetValue);
+      sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, getRequestData(qty), $target);
+    }
   }
 
   $body.on('focusout keyup', productLineInCartSelector, (event) => {
     if (event.type === 'keyup') {
       if (event.keyCode === 13) {
+        isUpdateOperation = true;
         updateProductQuantityInCart(event);
       }
+
       return false;
     }
 
-    updateProductQuantityInCart(event);
+    if (!isUpdateOperation) {
+      updateProductQuantityInCart(event);
+    }
 
     return false;
   });
