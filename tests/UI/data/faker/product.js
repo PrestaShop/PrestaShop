@@ -95,6 +95,13 @@ class ProductData {
 
     /** @type {string} Product behavior when it's out of stock */
     this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
+
+    /** @type {Object|{label: ?string, type: ?string, required: ?boolean}} Customized value of the product */
+    this.customization = productToCreate.customization || {
+      label: 'Type your text here',
+      type: 'Text',
+      required: true,
+    };
   }
 }
 
