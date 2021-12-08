@@ -99,7 +99,7 @@ module.exports = (env, argv) => {
       }),
       new FontPreloadPlugin({
         index: 'preload.tpl',
-        extensions: ['woff2', 'woff', 'ttf', 'eot'],
+        extensions: ['woff2'],
         // eslint-disable-next-line
         replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{"`$admin_dir`"}')),
       }),
