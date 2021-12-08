@@ -26,30 +26,45 @@
 <div class="js-product product{if !empty($productClasses)} {$productClasses}{/if}">
   <article class="product-miniature js-product-miniature" data-id-product="{$product.id_product}" data-id-product-attribute="{$product.id_product_attribute}">
     <div class="thumbnail-container">
-      {block name='product_thumbnail'}
-        {if $product.cover}
-          <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img
-              class="img-fluid"
-              src="{$product.cover.bySize.home_default.url}"
-              alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
-              loading="lazy"
-              data-full-size-image-url="{$product.cover.large.url}"
-              width="250"
-              height="250"
-            />
-          </a>
-        {else}
-          <a href="{$product.url}" class="thumbnail product-thumbnail">
-            <img
-              src="{$urls.no_picture_image.bySize.home_default.url}"
-              loading="lazy"
-              width="250"
-              height="250"
-            />
-          </a>
-        {/if}
-      {/block}
+      <div class="thumbnail-top">
+        {block name='product_thumbnail'}
+          {if $product.cover}
+            <a href="{$product.url}" class="thumbnail product-thumbnail">
+              <img
+                src="{$product.cover.bySize.home_default.url}"
+                alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
+                loading="lazy"
+                data-full-size-image-url="{$product.cover.large.url}"
+                width="{$product.cover.bySize.home_default.width}"
+                height="{$product.cover.bySize.home_default.height}"
+              />
+            </a>
+          {else}
+            <a href="{$product.url}" class="thumbnail product-thumbnail">
+              <img
+                src="{$urls.no_picture_image.bySize.home_default.url}"
+                loading="lazy"
+                width="{$urls.no_picture_image.bySize.home_default.width}"
+                height="{$urls.no_picture_image.bySize.home_default.height}"
+              />
+            </a>
+          {/if}
+        {/block}
+
+        <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
+          {block name='quick_view'}
+            <a class="quick-view js-quick-view" href="#" data-link-action="quickview">
+              <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
+            </a>
+          {/block}
+
+          {block name='product_variants'}
+            {if $product.main_variants}
+              {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}
+            {/if}
+          {/block}
+        </div>
+      </div>
 
       <div class="product-description">
         {block name='product_name'}
@@ -98,20 +113,6 @@
       </div>
 
       {include file='catalog/_partials/product-flags.tpl'}
-
-      <div class="highlighted-informations{if !$product.main_variants} no-variants{/if} hidden-sm-down">
-        {block name='quick_view'}
-          <a class="quick-view js-quick-view" href="#" data-link-action="quickview">
-            <i class="material-icons search">&#xE8B6;</i> {l s='Quick view' d='Shop.Theme.Actions'}
-          </a>
-        {/block}
-
-        {block name='product_variants'}
-          {if $product.main_variants}
-            {include file='catalog/_partials/variant-links.tpl' variants=$product.main_variants}
-          {/if}
-        {/block}
-      </div>
     </div>
   </article>
 </div>
