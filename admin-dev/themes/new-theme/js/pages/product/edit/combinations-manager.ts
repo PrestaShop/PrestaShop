@@ -308,45 +308,34 @@ export default class CombinationsManager {
     const { tokenKey } = CombinationsMap.combinationItemForm;
 
     /* eslint-disable */
-    new SubmittableInput(CombinationsMap.quantityInputWrapper, input => {
-        if (input) {
-          this.combinationsService.updateListedCombination(
-            this.findCombinationId(input),
-            {
-              [quantityKey]: input.value,
-              [tokenKey]: combinationToken
-            }
-          )
-        }
+  new SubmittableInput(CombinationsMap.quantityInputWrapper, input => 
+    this.combinationsService.updateListedCombination(
+      this.findCombinationId(<HTMLElement>input),
+      {
+        [quantityKey]: input!.value,
+        [tokenKey]: combinationToken
       }
-    );
+    )
+  );
 
     new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input =>
-      {
-        if(input) {
-          this.combinationsService.updateListedCombination(
-            this.findCombinationId(input),
-            {
-              [impactOnPriceKey]: input.value,
-              [tokenKey]: combinationToken
-            }
-          )
+      this.combinationsService.updateListedCombination(
+        this.findCombinationId(<HTMLElement>input),
+        {
+          [impactOnPriceKey]: input!.value,
+          [tokenKey]: combinationToken
         }
-      }
+      )
     );
 
     new SubmittableInput(CombinationsMap.referenceInputWrapper, input =>
-      {
-        if(input) {
-          this.combinationsService.updateListedCombination(
-            this.findCombinationId(input),
-            {
-              [referenceKey]: input.value,
-              [tokenKey]: combinationToken
-            }
-          )
+      this.combinationsService.updateListedCombination(
+        this.findCombinationId(<HTMLElement>input),
+        {
+          [referenceKey]: input!.value,
+          [tokenKey]: combinationToken
         }
-      }
+      )
     );
     /* eslint-enable */
   }
