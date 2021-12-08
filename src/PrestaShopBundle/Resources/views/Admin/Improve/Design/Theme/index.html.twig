@@ -138,23 +138,6 @@
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/delete_theme_modal.html.twig' %}
         {% endif %}
 
-        {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
-          {% block image %}
-            <img src="{{ asset('themes/new-theme/public/pages/themes/icon_themes.png') }}" alt="{{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}">
-          {% endblock %}
-
-          {% block description %}
-            {{ 'Explore more than a thousand themes'|trans({}, 'Admin.Design.Feature') }}
-          {% endblock %}
-
-          {% block button_container %}
-            <a class="btn btn-primary" href="{{ themeCatalogUrl }}" target="_blank">
-              {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
-            </a>
-          {% endblock %}
-
-        {% endembed %}
-
         {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/layouts_configuration.html.twig' %}
       </div>
     </div>
