@@ -33,7 +33,6 @@ export default class Header {
       this.initMultiStores();
       this.initNotificationsToggle();
       this.initSearch();
-      this.initContentDivOffset();
       refreshNotifications();
     });
   }
@@ -150,30 +149,5 @@ export default class Header {
     $.post(window.adminNotificationPushLink, {
       type: $('.notification-center .nav-link.active').attr('data-type'),
     });
-  }
-
-  /**
-   * Updates the offset of the content div in whenever the header changes size
-   */
-  initContentDivOffset() {
-    const onToolbarResize = function () {
-      const toolbar = $('.header-toolbar').last();
-      const header = $('.main-header');
-      const content = $('.content-div');
-      const spacing = 15;
-
-      if (toolbar.length && header.length && content.length) {
-        content.css('padding-top', toolbar.outerHeight() + header.outerHeight() + spacing);
-      }
-    };
-
-    // update the offset now
-    onToolbarResize();
-
-    // update when resizing the window
-    $(window).resize(onToolbarResize);
-
-    // update when replacing the header with a vue header
-    $(document).on('vueHeaderMounted', onToolbarResize);
   }
 }
