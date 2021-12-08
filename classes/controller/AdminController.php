@@ -986,7 +986,6 @@ class AdminControllerCore extends Controller
     {
         try {
             if ($this->ajax) {
-                // from ajax-tab.php
                 $action = Tools::getValue('action');
                 // no need to use displayConf() here
                 if (!empty($action) && method_exists($this, 'ajaxProcess' . Tools::toCamelCase($action))) {
