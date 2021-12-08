@@ -57,6 +57,7 @@
     },
     methods: {
       sendQty(): void {
+        this.$store.state.hasQty = false;
         this.$store.dispatch('updateQtyByProductsId');
       },
     },
