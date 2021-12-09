@@ -38,4 +38,13 @@ Feature: Supplier management
       | meta keywords[en-US]    | sup,1              |
       | meta keywords[fr-FR]    |                    |
       | shops                   | [shop1]            |
+
+  Scenario: Viewing supplier
+    Given supplier "fashion1" with name "Fashion supplier" exists
+    Then supplier "fashion1" should have 21 products associated
+    And supplier "fashion1" should have following details for product "Hummingbird printed t-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | available quantity |
+      | Size - S, Color - White | demo_1_46          | $5.49           | demo_1            | N/A   | N/A | 300                |
+
+
 #@todo: finish up create with optional params too, different cases + update and delete scenarios.

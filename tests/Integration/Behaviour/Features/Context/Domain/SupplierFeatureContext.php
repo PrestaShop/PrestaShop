@@ -33,13 +33,74 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use RuntimeException;
 use State;
+use Supplier;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @Given /^supplier "(.+)" with name "(.+)" exists$/
+     *
+     * @param string $reference
+     * @param string $supplierName
+     */
+    public function existsByName(string $reference, string $supplierName): void
+    {
+        $id = (int) Supplier::getIdByName($supplierName);
+
+        if (!$id) {
+            throw new RuntimeException(sprintf('Supplier with name "%s" doesnt exist', $supplierName));
+        }
+
+        $this->getSharedStorage()->set($reference, $id);
+    }
+
+    /**
+     * @Then /^supplier "(.+)" should have following details for product "(.+)":$/
+     *
+     * @param string $supplierReference
+     * @param string $productName
+     * @param TableNode $expectedDataTable
+     */
+    public function assertViewableSupplierProduct(string $supplierReference, string $productName, TableNode $expectedDataTable): void
+    {
+        $viewableSupplier = $this->getSupplierForViewing($supplierReference);
+        $product = null;
+
+        foreach ($viewableSupplier->getSupplierProducts() as $supplierProduct) {
+            if ($supplierProduct['name'] === $productName) {
+                $product = $supplierProduct;
+                break;
+            }
+        }
+
+        if (!$product) {
+            throw new RuntimeException(sprintf('Product by name "%s" not found in viewable supplier', $productName));
+        }
+
+        $this->assertProductFromViewableSupplier($product, $expectedDataTable);
+    }
+
+    /**
+     * @Given /^supplier "(.+)" should have (\d+) products associated$/
+     *
+     * @param string $reference
+     * @param int $productsCount
+     */
+    public function assertSupplierProductsCount(string $reference, int $productsCount): void
+    {
+        $viewableSupplier = $this->getSupplierForViewing($reference);
+        $products = $viewableSupplier->getSupplierProducts();
+
+        Assert::assertEquals($productsCount, count($products), 'Unexpected supplier products count');
+    }
+
     /**
      * @When I add new supplier :supplierReference with following properties:
      *
@@ -197,5 +258,43 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         }
 
         return $shopIds;
+    }
+
+    /**
+     * @param string $reference
+     * @param int|null $langId
+     *
+     * @return ViewableSupplier
+     */
+    private function getSupplierForViewing(string $reference, ?int $langId = null): ViewableSupplier
+    {
+        $langId = $langId ?? $this->getDefaultLangId();
+        $supplierId = $this->getSharedStorage()->get($reference);
+
+        /** @var ViewableSupplier $viewableSupplier */
+        $viewableSupplier = $this->getQueryBus()->handle(new GetSupplierForViewing($supplierId, $langId));
+
+        return $viewableSupplier;
+    }
+
+    /**
+     * @param array<string, mixed> $productData
+     * @param TableNode $expectedDataTable
+     */
+    private function assertProductFromViewableSupplier(array $productData, TableNode $expectedDataTable): void
+    {
+        if (isset($productData['combinations'])) {
+            // first row is hash, so actual records -1 row.
+            $expectedRowsCount = count($expectedDataTable->getRows()) -1;
+            $combinations = $productData['combinations'];
+            Assert::assertCount($expectedRowsCount, $combinations, 'Unexpected count of product combinations in viewable supplier');
+
+            foreach ($expectedDataTable->getRowsHash() as $key => $expectedRow) {
+                $combination = $combinations[$key];
+                Assert::assertEquals($combination['attributes'], $expectedRow['attribute name']);
+            }
+
+            return;
+        }
     }
 }
