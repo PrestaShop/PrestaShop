@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8102c815e2af40f4559ec5fd2412d5d1",
+    "content-hash": "03980fd765a8075e49451d209ba7b2e9",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -8071,50 +8071,6 @@
                 "source": "https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/v5.6.1"
             },
             "time": "2020-08-25T19:10:18+00:00"
-        },
-        {
-            "name": "shudrum/array-finder",
-            "version": "v1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Shudrum/ArrayFinder.git",
-                "reference": "42380f01017371b7a1e8e02b0bf12cb534e454d7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Shudrum/ArrayFinder/zipball/42380f01017371b7a1e8e02b0bf12cb534e454d7",
-                "reference": "42380f01017371b7a1e8e02b0bf12cb534e454d7",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Shudrum\\Component\\ArrayFinder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Julien Martin",
-                    "email": "martin.julien82@gmail.com"
-                }
-            ],
-            "description": "ArrayFinder component",
-            "homepage": "https://github.com/Shudrum/ArrayFinder",
-            "support": {
-                "issues": "https://github.com/Shudrum/ArrayFinder/issues",
-                "source": "https://github.com/Shudrum/ArrayFinder/tree/master"
-            },
-            "time": "2016-02-01T12:23:32+00:00"
         },
         {
             "name": "smarty/smarty",
