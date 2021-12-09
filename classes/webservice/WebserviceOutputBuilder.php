@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -75,7 +74,7 @@ class WebserviceOutputBuilderCore
         self::$wsUrl = $ws_url;
     }
 
-    public function getOutput()
+    public function getOutput(): ApiNode
     {
         return $this->output;
     }
@@ -287,7 +286,7 @@ class WebserviceOutputBuilderCore
     public function getErrors($errors)
     {
         if (empty($errors)) {
-            return;
+            return '';
         }
 
         if (!isset($this->objectRender)) {
@@ -407,7 +406,7 @@ class WebserviceOutputBuilderCore
                         $this->renderEntity($this->output, $object);
                     }
                 } elseif ($key == 'empty' && $this->objectRender->getContentType() == 'application/json') {
-                    $output .= $this->renderEntity($object, $depth);
+                    $this->renderEntity($this->output, $object);
                 }
             }
         } else {
@@ -421,7 +420,6 @@ class WebserviceOutputBuilderCore
      * Create the tree diagram with no details.
      *
      * @param ObjectModel $object create by the entity
-     * @param int $depth the depth for the tree diagram
      */
     public function renderEntityMinimum($object)
     {
@@ -444,7 +442,7 @@ class WebserviceOutputBuilderCore
         $parentNode = $this->output->addParentNode($ws_params['objectNodeName'], $ws_params);
 
         foreach ($ws_params['fields'] as $field_name => $field) {
-            $this->renderField($object, $ws_params, $field_name, $field, 0);
+            $this->renderField($parentNode, $object, $ws_params, $field_name, $field);
         }
         if (isset($ws_params['associations']) && count($ws_params['associations']) > 0) {
             $this->fieldsToDisplay = 'full';
@@ -458,9 +456,9 @@ class WebserviceOutputBuilderCore
      * @param ApiNode $parentNode node to which append entity
      * @param ObjectModel $object create by the entity
      *
-     * @return string
+     * @return void
      */
-    public function renderEntity(&$parentNode, $object)
+    public function renderEntity(ApiNode &$parentNode, ObjectModel $object): void
     {
         $ws_params = $this->loadWsParams($object);
 
@@ -512,7 +510,7 @@ class WebserviceOutputBuilderCore
      *
      * @return string
      */
-    protected function renderField(&$parentNode, $object, $ws_params, $field_name, $field)
+    protected function renderField(ApiNode &$parentNode, ObjectModel $object, array $ws_params, string $field_name, array $field)
     {
         $show_field = true;
 
