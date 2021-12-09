@@ -1530,6 +1530,15 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.pricing.specific_priority_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.seo.seo_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\SEOType'
     parent: 'form.type.translatable.aware'
