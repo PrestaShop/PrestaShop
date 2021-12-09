@@ -38,13 +38,17 @@ Feature: Supplier management
       | meta keywords[en-US]    | sup,1              |
       | meta keywords[fr-FR]    |                    |
       | shops                   | [shop1]            |
+#@todo: finish up create with optional params too, different cases + update and delete scenarios.
 
   Scenario: Viewing supplier
-    Given supplier "fashion1" with name "Fashion supplier" exists
-    Then supplier "fashion1" should have 21 products associated
-    And supplier "fashion1" should have following details for product "Hummingbird printed t-shirt":
-      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | available quantity |
-      | Size - S, Color - White | demo_1_46          | $5.49           | demo_1            | N/A   | N/A | 300                |
-
-
-#@todo: finish up create with optional params too, different cases + update and delete scenarios.
+    Given supplier "acc1" with name "Accessories supplier" exists
+    Then supplier "acc1" should have 17 products associated
+    And supplier "acc1" should have following details for product "Mountain fox notebook":
+      | attribute name        | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Paper Type - Ruled    | demo_8_85          | $5.49           | demo_8            |       |     | 300      |
+      | Paper Type - Plain    | demo_8_86          | $5.49           | demo_8            |       |     | 300      |
+      | Paper Type - Squarred | demo_8_87          | $5.49           | demo_8            |       |     | 300      |
+      | Paper Type - Doted    | demo_8_88          | $5.49           | demo_8            |       |     | 300      |
+    And supplier "acc1" should have following details for product "Mug The best is yet to come":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                | demo_11            | $5.49           | demo_11           |       |     | 300      |

@@ -283,18 +283,36 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      */
     private function assertProductFromViewableSupplier(array $productData, TableNode $expectedDataTable): void
     {
-        if (isset($productData['combinations'])) {
-            // first row is hash, so actual records -1 row.
-            $expectedRowsCount = count($expectedDataTable->getRows()) -1;
-            $combinations = $productData['combinations'];
-            Assert::assertCount($expectedRowsCount, $combinations, 'Unexpected count of product combinations in viewable supplier');
+        $expectedData = $expectedDataTable->getColumnsHash();
 
-            foreach ($expectedDataTable->getRowsHash() as $key => $expectedRow) {
-                $combination = $combinations[$key];
-                Assert::assertEquals($combination['attributes'], $expectedRow['attribute name']);
+        if (!empty($productData['combinations'])) {
+            // combinations are indexed by combinationId, but for cleaner assertion we need to have simple index here
+            $combinations = array_values($productData['combinations']);
+            Assert::assertCount(count($expectedData), $combinations, 'Unexpected count of product combinations in viewable supplier');
+
+            foreach ($expectedData as $key => $expectedRow) {
+                $actualData = $combinations[$key];
+                Assert::assertSame($actualData['attributes'], $expectedRow['attribute name']);
+                $this->assertSupplierProductRow($actualData, $expectedRow);
             }
 
             return;
         }
+
+        $expectedProductRow = reset($expectedData);
+        $this->assertSupplierProductRow($productData, $expectedProductRow);
+    }
+
+    /**
+     * @param array<string, mixed> $actualData
+     * @param array<string, mixed> $expectedData
+     */
+    private function assertSupplierProductRow(array $actualData, array $expectedData): void
+    {
+        Assert::assertSame($actualData['supplier_reference'], $expectedData['supplier reference']);
+        Assert::assertSame($actualData['wholesale_price'], $expectedData['wholesale price']);
+        Assert::assertSame($actualData['ean13'], $expectedData['ean13']);
+        Assert::assertSame($actualData['upc'], $expectedData['upc']);
+        Assert::assertSame($actualData['quantity'], (int) $expectedData['quantity']);
     }
 }
