@@ -298,10 +298,11 @@ class ApiNode
      * Transform $field array into ApiNode and appends it as child to current node
      *
      * @param array $field
-     *
-     * @return ApiNode
+     * @param string $schemaToDisplay
+     * 
+     * @return self
      */
-    public function addField(array $field): self
+    public function addField(array $field, string $schemaToDisplay = ''): self
     {
         $newNode = self::value($field['sqlId']);
 
@@ -309,7 +310,7 @@ class ApiNode
             $newNode->addAttribute('encode', $field['encode']);
         }
 
-        if (!empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank') {
+        if (!empty($field['synopsis_details']) && $schemaToDisplay !== 'blank') {
             foreach ($field['synopsis_details'] as $name => $detail) {
                 $newNode->addAttribute($name, is_array($detail) ? implode(' ', $detail) : $detail);
             }
@@ -322,7 +323,7 @@ class ApiNode
 
                 if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value']))) {
                     $langAttributes['xlink:href'] = WebserviceOutputBuilderCore::$wsUrl . 'languages/' . $language;
-                    if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank') {
+                    if (isset($field['synopsis_details']) && $schemaToDisplay != 'blank') {
                         $langAttributes['format'] = 'isUnsignedId';
                     }
                 }
@@ -333,7 +334,7 @@ class ApiNode
             }
         } else {
             // display not i18n fields value
-            if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
+            if (array_key_exists('xlink_resource', $field) && $schemaToDisplay != 'blank') {
                 if (!is_array($field['xlink_resource'])) {
                     $xlink = WebserviceOutputBuilderCore::$wsUrl . $field['xlink_resource'] . '/' . $field['value'];
                 } else {
@@ -348,11 +349,11 @@ class ApiNode
                 $newNode->addAttribute('xlink:href', $xlink);
             }
 
-            if (isset($field['getter']) && $this->schemaToDisplay != 'blank') {
+            if (isset($field['getter']) && $schemaToDisplay != 'blank') {
                 $newNode->addAttribute('notFilterable', 'true');
             }
 
-            if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay == 'synopsis') {
+            if (isset($field['setter']) && $field['setter'] == false && $schemaToDisplay == 'synopsis') {
                 $newNode->addAttribute('read_only', 'true');
             }
 

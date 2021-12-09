@@ -564,7 +564,7 @@ class WebserviceOutputBuilderCore
 
         // don't display the node id for a synopsis schema
         if ($show_field) {
-            $parentNode->addField($field);
+            $parentNode->addField($field, $this->schemaToDisplay);
         }
     }
 
@@ -712,7 +712,7 @@ class WebserviceOutputBuilderCore
                 $field['synopsis_details'] = $this->getSynopsisDetails($field);
             }
             $field['is_association'] = true;
-            $flatAssNode->addField($field);
+            $flatAssNode->addField($field, $this->schemaToDisplay);
         }
     }
 
