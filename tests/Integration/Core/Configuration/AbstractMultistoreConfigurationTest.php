@@ -86,7 +86,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
 
         foreach ($checkList as $expectedValues) {
             $testedObject = $this->getDummyMultistoreConfiguration($expectedValues[0]);
-            Shop::resetContext();
             $testResults = $testedObject->getConfiguration();
             foreach ($expectedValues[1] as $key => $value) {
                 $this->assertTrue($value === $testResults[$key]);
