@@ -298,10 +298,12 @@
       color: $brand-success;
     }
 
-    > .unit-price-cart {
+    .unit-price-cart {
       padding-left: 0.3125rem;
+      overflow: hidden;
       font-size: 0.875rem;
       color: $gray;
+      text-overflow: ellipsis;
     }
   }
 }
