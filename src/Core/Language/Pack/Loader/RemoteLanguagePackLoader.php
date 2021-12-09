@@ -56,7 +56,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackList()
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), self::PACK_LINK);
+        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
         $jsonResponse = file_get_contents($normalizedLink);
 
         $result = [];

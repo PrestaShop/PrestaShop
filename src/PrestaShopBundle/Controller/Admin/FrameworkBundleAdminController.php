@@ -176,7 +176,7 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function generateSidebarLink($section, $title = false)
     {
-        $version = $this->get('prestashop.core.foundation.version')->getVersion();
+        $version = $this->get('prestashop.core.foundation.version')->getSemVersion();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
