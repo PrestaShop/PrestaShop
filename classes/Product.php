@@ -5829,10 +5829,14 @@ class ProductCore extends ObjectModel
             $unitPrice = $unitPrice + $combination->unit_price_impact;
         }
 
+        // Finally, we apply the currency rate
+        $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $unitPrice = Tools::convertPrice($unitPrice, $currencyId);
+
         // Compute price ratio based on initial product price and initial unit price (without taxes and without discount)
         $row['unit_price_ratio'] = $unitPrice != 0 ? ($row['price_without_reduction_without_tax'] / $unitPrice) : 0.0;
         $row['unit_price_tax_excluded'] = $row['unit_price'] = $unitPrice;
-        // Compute unit price with tax included so that it can be accessed if necessary
+        // Always compute unit price with tax included so that it can be accessed if necessary
         $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0.0;
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
