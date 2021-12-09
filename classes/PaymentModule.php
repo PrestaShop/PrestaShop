@@ -321,7 +321,7 @@ abstract class PaymentModuleCore extends Module
             // if ($order->total_paid != $order->total_paid_real)
             // We use number_format to convert the numbers to strings and strcmp to compare them to avoid auto reconversions to numbers in PHP < 8.0
             $comp_precision = Context::getContext()->getComputingPrecision();
-            if ($order_status->logable && (strcmp(number_format($cart_total_paid, $comp_precision), number_format($amount_paid, $comp_precision)) != 0)) {
+            if ($order_status->logable && (number_format($cart_total_paid, $comp_precision) !== number_format($amount_paid, $comp_precision))) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Total paid amount does not match cart total', 3, null, 'Cart', (int) $id_cart, true);
                 $id_order_state = Configuration::get('PS_OS_ERROR');
             }
