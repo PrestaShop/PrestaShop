@@ -103,7 +103,7 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
 
         $this->shopContext
             ->method('isAllShopContext')
-            ->willReturn($isAllShopContext);
+            ->willReturn($shopConstraint->forAllShops());
 
         return new DummyMultistoreConfiguration(
             $this->legacyConfigurationAdapter,
