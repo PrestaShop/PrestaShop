@@ -600,10 +600,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                 $trackingUrl = $orderReturn['url'];
             }
 
-            $conf = $this->configuration->get('PS_RETURN_PREFIX');
+            $returnPrefixByLang = $this->configuration->get('PS_RETURN_PREFIX');
             $trackingNumber = sprintf(
                 '%s%06d',
-                $conf[$this->contextLanguageId] ?? '',
+                $returnPrefixByLang[$this->contextLanguageId] ?? '',
                 $orderReturn['id_order_return']
             );
 
