@@ -244,8 +244,12 @@ class Profiler
                     $queryRow['filesort'] = true;
                 }
 
-                foreach ($explain as $row) {
-                    $queryRow['rows'] *= (int) $row['rows'];
+                if (is_array($explain)) {
+                    foreach ($explain as $row) {
+                        $queryRow['rows'] *= (int) $row['rows'];
+                    }
+                } else {
+                    $queryRow['rows'] = 'N/A';
                 }
 
                 if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query'])) {
