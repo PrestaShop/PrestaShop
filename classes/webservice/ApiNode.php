@@ -32,13 +32,13 @@ class ApiNode
     public const TYPE_LIST = 'list';
 
     public static $languages;
-    private $type;
-    private $name;
-    private $value;
-    private $attributes;
-    private $nodes;
+    private string $type;
+    private ?string $name = null;
+    private ?string $value = null;
+    private array $attributes = [];
+    private array $nodes = [];
 
-    private function __construct($type, $name = null, $value = null, $attributes = [], $nodes = [])
+    private function __construct(string $type, ?string $name = null, ?string $value = null, array $attributes = [], array $nodes = [])
     {
         $this->type = $type;
         $this->name = $name;
@@ -55,7 +55,7 @@ class ApiNode
      *
      * @return \ApiNode
      */
-    private static function value($name, $value = null)
+    private static function value(string $name, ?string $value = null): self
     {
         return new ApiNode(self::TYPE_VALUE, $name, $value);
     }
@@ -68,7 +68,7 @@ class ApiNode
      *
      * @return \ApiNode
      */
-    private static function lang($name)
+    private static function lang(string $name): self
     {
         return new ApiNode(self::TYPE_LANGUAGE, $name);
     }
@@ -83,7 +83,7 @@ class ApiNode
      *
      * @return \ApiNode
      */
-    public static function parent($name = null, $attributes = [])
+    public static function parent(?string $name = null, array $attributes = []): self
     {
         return new ApiNode(self::TYPE_PARENT, $name, null, $attributes);
     }
@@ -98,37 +98,47 @@ class ApiNode
      *
      * @return \ApiNode
      */
-    public static function list($name = null, $attributes = [])
+    public static function list(?string $name = null, array $attributes = []): self
     {
         return new ApiNode(self::TYPE_LIST, $name, null, $attributes);
     }
 
-    /** @return string */
-    public function getType()
+    /**
+     * @return string
+     */
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /** @return string */
-    public function getName()
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /** @return string */
-    public function getValue()
+    /**
+     * @return string|null
+     */
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /** @return array|null */
-    public function getAttributes()
+    /**
+     * @return array
+     */
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
-    /** @return array|null */
-    public function getNodes()
+    /**
+     * @return array
+     */
+    public function getNodes(): array
     {
         return $this->nodes;
     }
@@ -138,7 +148,7 @@ class ApiNode
      *
      * @return self
      */
-    public function setType($type)
+    public function setType(string $type): self
     {
         $this->type = $type;
 
@@ -146,11 +156,11 @@ class ApiNode
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return self
      */
-    public function setName($name)
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -158,11 +168,11 @@ class ApiNode
     }
 
     /**
-     * @param string $value
+     * @param string|null $value
      *
      * @return self
      */
-    public function setValue($value)
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 
@@ -174,7 +184,7 @@ class ApiNode
      *
      * @return self
      */
-    public function setAttributes($attributes)
+    public function setAttributes(array $attributes): self
     {
         $this->attributes = $attributes;
 
@@ -186,7 +196,7 @@ class ApiNode
      *
      * @return self
      */
-    public function setNodes($nodes)
+    public function setNodes(array $nodes): self
     {
         $this->nodes = $nodes;
 
@@ -195,11 +205,11 @@ class ApiNode
 
     /**
      * @param string $name
-     * @param string $value
+     * @param string|null $value
      *
      * @return self
      */
-    public function addAttribute($name, $value)
+    public function addAttribute(string $name, ?string $value = null): self
     {
         $this->attributes[$name] = $value;
 
@@ -213,7 +223,7 @@ class ApiNode
      *
      * @return ApiNode self
      */
-    public function addApiNode($node)
+    public function addApiNode(ApiNode $node): self
     {
         $this->nodes[] = $node;
 
@@ -228,7 +238,7 @@ class ApiNode
      *
      * @return ApiNode Created child node
      */
-    public function addNode($name, $value = null)
+    public function addNode(string $name, ?string $value = null): self
     {
         $newNode = self::value($name, $value);
         $this->nodes[] = $newNode;
@@ -244,9 +254,9 @@ class ApiNode
      *
      * @return ApiNode Created child node
      */
-    public function addLanguageNode($name, $values)
+    public function addLanguageNode(string $name): self
     {
-        $newNode = self::lang($name, $values);
+        $newNode = self::lang($name);
         $this->nodes[] = $newNode;
 
         return $newNode;
@@ -256,11 +266,11 @@ class ApiNode
      * Create new ApiNode of type "parent" and appends it as child to current ApiNode
      *
      * @param string $name
-     * @param array|null $attributes
+     * @param array $attributes
      *
      * @return ApiNode Created child node
      */
-    public function addParentNode($name = null, $attributes = [])
+    public function addParentNode(string $name = null, array $attributes = []): self
     {
         $newNode = self::parent($name, $attributes);
         $this->nodes[] = $newNode;
@@ -272,11 +282,11 @@ class ApiNode
      * Create new ApiNode of type "list" and appends it as child to current ApiNode
      *
      * @param string $name
-     * @param array|null $attributes
+     * @param array $attributes
      *
      * @return ApiNode Created child node
      */
-    public function addListNode($name = null, $attributes = [])
+    public function addListNode(string $name = null, array $attributes = [])
     {
         $newNode = self::list($name, $attributes);
         $this->nodes[] = $newNode;
@@ -291,7 +301,7 @@ class ApiNode
      *
      * @return ApiNode
      */
-    public function addField($field)
+    public function addField(array $field): self
     {
         $newNode = self::value($field['sqlId']);
 
