@@ -186,14 +186,8 @@ class ProductValidator extends AbstractObjectModelValidator
      */
     private function validatePrices(Product $product): void
     {
-        if ($product->unit_price < 0) {
-            throw new ProductConstraintException(
-                sprintf('Invalid product unit_price. Got "%s"', $product->unit_price),
-                ProductConstraintException::INVALID_UNIT_PRICE
-            );
-        }
-
         $this->validateProductProperty($product, 'price', ProductConstraintException::INVALID_PRICE);
+        $this->validateProductProperty($product, 'unit_price', ProductConstraintException::INVALID_UNIT_PRICE);
         $this->validateProductProperty($product, 'unity', ProductConstraintException::INVALID_UNITY);
         $this->validateProductProperty($product, 'ecotax', ProductConstraintException::INVALID_ECOTAX);
         $this->validateProductProperty($product, 'wholesale_price', ProductConstraintException::INVALID_WHOLESALE_PRICE);
