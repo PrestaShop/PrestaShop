@@ -176,3 +176,8 @@ ul.category-tree .more > .radio:before,
 .mobile .content-div {
   overflow: hidden;
 }
+
+/* Fix the datepicker input group alignment */
+.column-filters .datepicker {
+  flex-wrap: nowrap;
+}
