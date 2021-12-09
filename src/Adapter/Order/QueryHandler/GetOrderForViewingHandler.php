@@ -593,15 +593,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         $orderReturns = [];
 
         foreach ($returns as $orderReturn) {
-            $trackingUrl = null;
-            $trackingNumber = null;
-
-            if (isset($orderReturn['url'], $orderReturn['tracking_number'])) {
-                $trackingUrl = $orderReturn['url'];
-            }
-
             $returnPrefixByLang = $this->configuration->get('PS_RETURN_PREFIX');
-            $trackingNumber = sprintf(
+            $orderReturnNumber = sprintf(
                 '%s%06d',
                 $returnPrefixByLang[$this->contextLanguageId] ?? '',
                 $orderReturn['id_order_return']
@@ -610,12 +603,10 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $orderReturns[] = new OrderReturnForViewing(
                 (int) $orderReturn['id_order_return'],
                 isset($orderReturn['id_order_invoice']) ? (int) $orderReturn['id_order_invoice'] : 0,
-                isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
                 new DateTimeImmutable($orderReturn['date_add']),
                 $orderReturn['type'],
                 $orderReturn['state_name'] ?? '',
-                $trackingUrl,
-                $trackingNumber
+                $orderReturnNumber
             );
         }
 

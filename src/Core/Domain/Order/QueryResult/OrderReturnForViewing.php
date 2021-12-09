@@ -36,11 +36,6 @@ class OrderReturnForViewing
     private $orderInvoiceId;
 
     /**
-     * @var int
-     */
-    private $carrierId;
-
-    /**
      * @var DateTimeImmutable
      */
     private $date;
@@ -56,14 +51,9 @@ class OrderReturnForViewing
     private $stateName;
 
     /**
-     * @var string|null
+     * @var string
      */
-    private $trackingUrl;
-
-    /**
-     * @var string|null
-     */
-    private $trackingNumber;
+    private $orderReturnNumber;
 
     /**
      * @var int
@@ -73,31 +63,25 @@ class OrderReturnForViewing
     /**
      * @param int $idOrderReturn
      * @param int $orderInvoiceId
-     * @param int $carrierId
      * @param DateTimeImmutable $date
      * @param string $type
      * @param string $stateName
-     * @param string|null $trackingUrl
-     * @param string|null $trackingNumber
+     * @param string $orderReturnNumber
      */
     public function __construct(
         int $idOrderReturn,
         int $orderInvoiceId,
-        int $carrierId,
         DateTimeImmutable $date,
         string $type,
         string $stateName,
-        ?string $trackingUrl,
-        ?string $trackingNumber
+        string $orderReturnNumber
     ) {
         $this->orderInvoiceId = $orderInvoiceId;
-        $this->carrierId = $carrierId;
         $this->date = $date;
         $this->type = $type;
         $this->stateName = $stateName;
-        $this->trackingUrl = $trackingUrl;
-        $this->trackingNumber = $trackingNumber;
         $this->idOrderReturn = $idOrderReturn;
+        $this->orderReturnNumber = $orderReturnNumber;
     }
 
     /**
@@ -106,14 +90,6 @@ class OrderReturnForViewing
     public function getOrderInvoiceId(): int
     {
         return $this->orderInvoiceId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCarrierId(): int
-    {
-        return $this->carrierId;
     }
 
     /**
@@ -141,19 +117,11 @@ class OrderReturnForViewing
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTrackingUrl(): ?string
+    public function getOrderReturnNumber(): string
     {
-        return $this->trackingUrl;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getTrackingNumber(): ?string
-    {
-        return $this->trackingNumber;
+        return $this->orderReturnNumber;
     }
 
     /**
