@@ -283,6 +283,7 @@ class SpecificPriceCore extends ObjectModel
         $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
         $specific_list = [];
         if (!array_key_exists($key_cache, self::$_filterOutCache)) {
+            // Check if a specific price with this key exists
             $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
             $has_product_specific_price = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
             if ($has_product_specific_price == 0) {
@@ -290,6 +291,7 @@ class SpecificPriceCore extends ObjectModel
 
                 return $query_extra;
             }
+            // Fetch the approximate count of specific price. explain can be 100x faster than count.
             $query_count = 'EXPLAIN SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
             $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query_count);
             $specific_count = $specific_count_result['rows'];
