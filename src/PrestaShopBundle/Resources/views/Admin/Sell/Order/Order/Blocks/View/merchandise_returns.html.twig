@@ -41,7 +41,7 @@
           <td data-role="merchandise-return-type">{{ return.type }}</td>
           <td data-role="merchandise-return-state">{{ return.stateName }}</td>
           <td data-role="merchandise-return-id">
-            <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {'id_order_return': return.orderReturnNumber, updateorder_return : '', 'back': app.request.uri}) }}">
+            <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {'id_order_return': return.idOrderReturn, updateorder_return : '', 'back': app.request.uri}) }}">
                 {{ return.orderReturnNumber }}
             </a>
           </td>
