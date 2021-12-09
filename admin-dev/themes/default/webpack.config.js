@@ -29,7 +29,7 @@ const keepLicense = require('uglify-save-license');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const FontPreloadPlugin = require('./.webpack/plugins/preload');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -68,15 +68,23 @@ module.exports = (env, argv) => {
             loader: 'sass-loader',
           },
         ],
-      }, {
-        test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[hash].[ext]',
-          },
-        }],
-      }],
+      },
+      {
+        test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+        },
+        exclude: /MaterialIcons-Regular.(woff2?|ttf)/,
+      },
+      {
+        test: /MaterialIcons-Regular.(woff2?|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].preload.[ext]',
+        },
+      },
+      ],
     },
     optimization: {
 

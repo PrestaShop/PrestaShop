@@ -32,7 +32,7 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const FontPreloadPlugin = require('./plugins/preload');
 
 module.exports = {
   externals: {
@@ -343,7 +343,15 @@ module.exports = {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
-          name: '[hash].[ext]',
+          name: '[name].[ext]',
+        },
+        exclude: /MaterialIcons-Regular.(woff2?|ttf)/,
+      },
+      {
+        test: /MaterialIcons-Regular.(woff2?|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].preload.[ext]',
         },
       },
     ],
