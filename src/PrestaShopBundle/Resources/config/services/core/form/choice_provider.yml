@@ -282,3 +282,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductImagesChoiceProvider'
     arguments:
       - '@prestashop.core.command_bus'
+
+  prestashop.core.form.choice_provider.specific_price_priority_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider'
+    arguments:
+      - '@translator'
