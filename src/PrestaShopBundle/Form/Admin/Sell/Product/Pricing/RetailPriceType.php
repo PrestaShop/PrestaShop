@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
 class RetailPriceType extends TranslatorAwareType
@@ -81,6 +82,7 @@ class RetailPriceType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
@@ -92,6 +94,7 @@ class RetailPriceType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
@@ -100,6 +103,11 @@ class RetailPriceType extends TranslatorAwareType
         if ($this->isEcotaxEnabled) {
             $builder->add('ecotax', UnavailableType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
+                ],
             ]);
         }
     }

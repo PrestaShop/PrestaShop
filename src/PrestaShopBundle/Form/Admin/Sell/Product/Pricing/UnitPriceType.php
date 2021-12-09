@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
 class UnitPriceType extends TranslatorAwareType
@@ -73,6 +74,7 @@ class UnitPriceType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
@@ -84,6 +86,7 @@ class UnitPriceType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
