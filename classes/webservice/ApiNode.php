@@ -51,7 +51,7 @@ class ApiNode
      * Create new ApiNode instance of type "value"
      *
      * @param string $name
-     * @param string $value
+     * @param string|null $value
      *
      * @return \ApiNode
      */
