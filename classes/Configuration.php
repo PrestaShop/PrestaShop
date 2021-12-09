@@ -148,11 +148,7 @@ class ConfigurationCore extends ObjectModel
      */
     public static function clearConfigurationCacheForTesting()
     {
-        self::$_cache = null;
-        self::$_new_cache_shop = null;
-        self::$_new_cache_group = null;
-        self::$_new_cache_global = null;
-        self::$_initialized = false;
+        self::resetStaticCache();
     }
 
     /**
