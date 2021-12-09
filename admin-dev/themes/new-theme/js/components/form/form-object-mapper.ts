@@ -267,7 +267,7 @@ export default class FormObjectMapper {
    */
   private watchUpdates(): void {
     this.$form.on(
-      'keyup change dp.change',
+      'change dp.change',
       ':input',
       _.debounce((event: JQueryEventObject) => this.inputUpdated(event), 350, {
         maxWait: 1500,
