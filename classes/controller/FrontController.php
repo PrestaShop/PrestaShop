@@ -1046,28 +1046,6 @@ class FrontControllerCore extends Controller
         return strcasecmp(Tools::getToken(false), Tools::getValue('token')) == 0;
     }
 
-    /**
-     * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
-     */
-    public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
-    }
-
-    /**
-     * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
-     */
-    public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
-    }
-
     public function registerStylesheet($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
