@@ -401,7 +401,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     {
         if ($shopConstraint->forAllShops()) {
             throw new ShopException(
-                'Configuration values cannot be deleted for all shop context',
+                sprintf('This method can not be used for all shops, if you want to completely delete a configuration use %s:: remove() instead', static::class),
             );
         }
 
