@@ -183,6 +183,6 @@ ul.category-tree .more > .radio:before,
 }
 
 /* Fix dropdown overflow inside grid table */
-.grid-table {
-  overflow-x: auto;
+.table-responsive {
+  overflow-y: hidden;
 }
