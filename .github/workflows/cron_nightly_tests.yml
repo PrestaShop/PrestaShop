@@ -4,17 +4,17 @@ name: Nightly tests and report
 
 on:
   workflow_run:
-    workflows: ['Nightly Build']
+    workflows: [ 'Nightly Build' ]
     types:
       - requested
 
 env:
-  GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }} # GCP project id
-  GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }} # GCP service key
-  NODE_VERSION: '14' # Node version on this workflow (For all jobs)
-  API_NIGHTLY_IMPORT_HOOK: 'https://api-nightly.prestashop.com/hook/reports/import' # Nightly hook to import report
-  NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }} # Nightly token to validate the import
-  TESTS_DIR: 'tests/UI' # Where UI tests are
+  GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}  # GCP project id
+  GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}  # GCP service key
+  NODE_VERSION: '14'  # Node version on this workflow (For all jobs)
+  API_NIGHTLY_IMPORT_HOOK: 'https://api-nightly.prestashop.com/hook/reports/import'  # Nightly hook to import report
+  NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}  # Nightly token to validate the import
+  TESTS_DIR: 'tests/UI'  # Where UI tests are
 
 jobs:
 
@@ -46,9 +46,9 @@ jobs:
           - 'functional:FO'
 
     env:
-      GH_BRANCH: ${{ matrix.BRANCH }} # Branch to test
-      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}' # Where to move test's reports
-      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}' # Command to execute from the matrix
+      GH_BRANCH: ${{ matrix.BRANCH }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      TEST_CAMPAIGN: 'test:${{ matrix.CAMPAIGN }}'  # Command to execute from the matrix
       PS_LANGUAGE: 'en'
       PS_INSTALL_AUTO: 1
       PS_DEV_MODE: 0
@@ -120,9 +120,9 @@ jobs:
           - develop
 
     env:
-      GH_BRANCH: ${{ matrix.branch }} # Branch to test
-      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}' # Where to move test's reports
-      COMBINED_REPORT_DIR: 'combined_reports' # Where to store the combined report
+      GH_BRANCH: ${{ matrix.branch }}  # Branch to test
+      REPORTS_DIR: 'reports_${{ matrix.BRANCH }}'  # Where to move test's reports
+      COMBINED_REPORT_DIR: 'combined_reports'  # Where to store the combined report
 
     steps:
       - uses: actions/checkout@v2
