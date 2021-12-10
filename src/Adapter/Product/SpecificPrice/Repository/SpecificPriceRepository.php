@@ -30,15 +30,19 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Exception;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
 use SpecificPrice;
 
 /**
@@ -62,18 +66,26 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param SpecificPriceValidator $specificPriceValidator
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        SpecificPriceValidator $specificPriceValidator
+        SpecificPriceValidator $specificPriceValidator,
+        ConfigurationInterface $configuration
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->specificPriceValidator = $specificPriceValidator;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -162,13 +174,55 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param PriorityList $priorityList
      */
-    public function removePriorityForProduct(ProductId $productId): void
+    public function setPrioritiesForProduct(ProductId $productId, PriorityList $priorityList): void
     {
-        $this->connection->delete(
-            $this->dbPrefix . 'specific_price_priority',
-            ['id_product' => $productId->getValue()]
-        );
+        $exception = new CoreException(sprintf(
+            'Error occurred when trying to set specific price priorities for product #%d',
+            $productId->getValue()
+        ));
+
+        try {
+            if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
+                throw $exception;
+            }
+        } catch (PrestaShopException $e) {
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    public function removePrioritiesForProduct(ProductId $productId): void
+    {
+        try {
+            $this->connection->delete(
+                $this->dbPrefix . 'specific_price_priority',
+                ['id_product' => $productId->getValue()]
+            );
+        } catch (Exception $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when trying to remove specific price priorities for product #%d',
+                $productId->getValue()
+            ));
+        }
+    }
+
+    /**
+     * @param PriorityList $priorityList
+     */
+    public function updateDefaultPriorities(PriorityList $priorityList): void
+    {
+        try {
+            $this->configuration->set(
+                'PS_SPECIFIC_PRICE_PRIORITIES',
+                implode(';', $priorityList->getPriorities())
+            );
+        } catch (Exception $e) {
+            throw new CoreException('Error occurred when trying to update specific price priorities');
+        }
     }
 
     /**

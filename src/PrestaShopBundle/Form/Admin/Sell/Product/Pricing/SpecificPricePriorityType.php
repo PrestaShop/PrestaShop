@@ -40,12 +40,15 @@ class SpecificPricePriorityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            //@todo: consider using radio checkboxes for better ux. (labels would indiacte that its either default or specific priorities that will be used)
             ->add('priority_type', SwitchType::class, [
                 'label' => $this->trans('Use specific priority for product', 'Admin.Catalog.Feature'),
             ])
+            //@todo: dynamic show/hide of priorities depending on type selection.
             ->add('priorities', PriorityListType::class, [
                 'label' => false,
             ])
+            //@todo. some help text and link to global settings (when its done)
         ;
     }
 }
