@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -576,8 +579,25 @@ class SpecificPriceCore extends ObjectModel
         return self::$_specificPriceCache[$key];
     }
 
+    /**
+     * @deprecated since 8.0 and will be removed in next major version.
+     * @see SpecificPriceRepository::updateDefaultPriorities()
+     *
+     * @param $priorities
+     *
+     * @return bool
+     */
     public static function setPriorities($priorities)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0. Use %s instead.',
+                __METHOD__,
+                SpecificPriceRepository::class . '::updateDefaultPriorities()'
+            ),
+            E_USER_DEPRECATED
+        );
+
         $value = '';
         if (is_array($priorities)) {
             foreach ($priorities as $priority) {

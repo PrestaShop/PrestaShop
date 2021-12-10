@@ -27,28 +27,31 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\RemoveSpecificPricePriorityForProductHandlerInterface;
 
 class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPricePriorityForProductHandlerInterface
 {
     /**
-     * @var SpecificPriceRepository
+     * @var SpecificPricePriorityUpdater
      */
-    private $specificPriceRepository;
+    private $specificPricePriorityUpdater;
 
     /**
-     * @param SpecificPriceRepository $specificPriceRepository
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
      */
     public function __construct(
-        SpecificPriceRepository $specificPriceRepository
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
     ) {
-        $this->specificPriceRepository = $specificPriceRepository;
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
     }
 
+    /**
+     * @param RemoveSpecificPricePriorityForProductCommand $command
+     */
     public function handle(RemoveSpecificPricePriorityForProductCommand $command): void
     {
-        $this->specificPriceRepository->removePriorityForProduct($command->getProductId());
+        $this->specificPricePriorityUpdater->removePrioritiesForProduct($command->getProductId());
     }
 }
