@@ -54,7 +54,6 @@ use CustomizationField;
 use DateRange;
 use Employee;
 use EmployeeSession;
-use Exception;
 use Feature;
 use FeatureValue;
 use Gender;
@@ -158,11 +157,29 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a feature for database hard reset
      *
+     * @deprecated since 8.0.0 and will be removed in next major.
+     *
      * @BeforeFeature @reset-database-before-feature
      */
     public static function cleanDatabaseHardPrepareFeature()
     {
+        @trigger_error(
+            'The @reset-database-before-feature tag is deprecated because there is a more optimized alternative use the @restore-all-tables-before-feature tag instead ',
+            E_USER_DEPRECATED
+        );
+
         static::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a feature for database hard reset
+     *
+     * @BeforeFeature @restore-all-tables-before-feature
+     */
+    public static function restoreAllTablesBeforeFeature()
+    {
+        DatabaseDump::restoreAllTables();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -171,7 +188,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @reboot-kernel-before-feature
      */
-    public static function rebootKernelPrepareFeature()
+    public static function rebootKernelBeforeFeature()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * This hook can be used to flag a feature for kernel reboot
+     *
+     * @AfterFeature @reboot-kernel-after-feature
+     */
+    public static function rebootKernelAfterFeature()
     {
         self::rebootKernel();
     }
@@ -221,6 +248,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
      * @BeforeScenario @mock-context-on-scenario
      */
     public static function mockContextBeforeScenario()
@@ -253,14 +288,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @BeforeFeature @clear-cache-before-feature
-     */
-    public static function clearCacheBeforeFeature()
-    {
-        self::clearCache();
-    }
-
-    /**
      * @BeforeScenario @clear-cache-before-scenario
      */
     public static function clearCacheBeforeScenario()
@@ -274,17 +301,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      * @BeforeScenario @reset-database-before-scenario
      */
     public static function cleanDatabaseHardPrepareScenario()
-    {
-        static::restoreTestDB();
-        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
-    }
-
-    /**
-     * This hook can be used to flag a scenario for database hard reset
-     *
-     * @BeforeScenario @database-scenario
-     */
-    public function cleanDatabaseHardPrepare()
     {
         static::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
@@ -306,6 +322,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     public function rebootKernelOnDemand()
     {
         self::rebootKernel();
+    }
+
+    /**
+     * @Given I restore tables :tableNames
+     *
+     * @param string $tableNames
+     */
+    public function restoreTables(string $tableNames): void
+    {
+        $tables = explode(',', $tableNames);
+        DatabaseDump::restoreTables($tables);
     }
 
     private static function mockContext()
@@ -344,10 +371,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
     private static function restoreTestDB(): void
     {
-        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
-            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-
         DatabaseDump::restoreDb();
     }
 
@@ -364,7 +387,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Category::resetStaticCache();
         Pack::resetStaticCache();
         Product::resetStaticCache();
-        Language::resetCache();
+        Language::resetStaticCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
         Group::clearCachedValues();

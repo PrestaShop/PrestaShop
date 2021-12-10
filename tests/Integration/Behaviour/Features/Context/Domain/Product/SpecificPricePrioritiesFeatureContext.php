@@ -33,10 +33,24 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use PrestaShopBundle\Install\DatabaseDump;
 use SpecificPrice;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @AfterFeature @restore-specific-prices-priorities-after-feature
+     */
+    public static function restoreSpecificPricesPrioritiesAfterFeature(): void
+    {
+        // Specific price priorities is store in configuration, so we restore it
+        DatabaseDump::restoreTables([
+            'configuration',
+            'configuration_lang',
+        ]);
+        SpecificPrice::resetStaticCache();
+    }
+
     /**
      * @When I set following specific price priorities for product :productReference:
      *

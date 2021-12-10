@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-attachments
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @update-attachments
 @clear-cache-after-feature
 @reset-downloads-after-feature

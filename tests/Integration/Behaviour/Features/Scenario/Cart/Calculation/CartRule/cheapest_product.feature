@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Cart rule (percent) calculation with one cart rule restricted to cheapest product
   As a customer
   I must be able to have correct cart total when adding cart rules

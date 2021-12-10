@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
 @order-from-bo
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers

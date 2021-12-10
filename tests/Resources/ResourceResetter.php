@@ -68,7 +68,7 @@ class ResourceResetter
      */
     public function backupImages(): void
     {
-        $this->filesystem->mirror(_PS_IMG_DIR_, $this->getBackupTestImgDir());
+        $this->filesystem->mirror(_PS_IMG_DIR_, $this->getBackupTestImgDir(), null, ['delete' => true]);
     }
 
     /**
@@ -76,7 +76,7 @@ class ResourceResetter
      */
     public function backupDownloads(): void
     {
-        $this->filesystem->mirror(_PS_DOWNLOAD_DIR_, $this->getBackupTestDownloadsDir());
+        $this->filesystem->mirror(_PS_DOWNLOAD_DIR_, $this->getBackupTestDownloadsDir(), null, ['delete' => true]);
     }
 
     /**
@@ -85,16 +85,16 @@ class ResourceResetter
     public function resetImages(): void
     {
         $this->filesystem->remove(_PS_IMG_DIR_);
-        $this->filesystem->mirror($this->getBackupTestImgDir(), _PS_IMG_DIR_);
+        $this->filesystem->mirror($this->getBackupTestImgDir(), _PS_IMG_DIR_, null, ['delete' => true]);
     }
 
     /**
-     * Resets test images directory to initial state
+     * Resets test downloads directory to initial state
      */
     public function resetDownloads(): void
     {
         $this->filesystem->remove(_PS_DOWNLOAD_DIR_);
-        $this->filesystem->mirror($this->getBackupTestDownloadsDir(), _PS_DOWNLOAD_DIR_);
+        $this->filesystem->mirror($this->getBackupTestDownloadsDir(), _PS_DOWNLOAD_DIR_, null, ['delete' => true]);
     }
 
     /**

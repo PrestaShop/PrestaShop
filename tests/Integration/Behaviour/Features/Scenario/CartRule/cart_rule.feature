@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart_rule
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Add cart rule
   PrestaShop allows BO users to create cart rules
   As a BO user

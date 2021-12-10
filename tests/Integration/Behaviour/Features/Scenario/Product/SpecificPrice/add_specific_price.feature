@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags add-specific-price
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-currencies-after-feature
 @add-specific-price
 @specific-prices
 Feature: Update product options from Back Office (BO)

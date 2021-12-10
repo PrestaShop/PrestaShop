@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags related-products
-@reset-database-before-feature
+@restore-products-before-feature
+@reset-img-after-feature
 @clear-cache-before-feature
 @related-products
 Feature: Update product related products from Back Office (BO)

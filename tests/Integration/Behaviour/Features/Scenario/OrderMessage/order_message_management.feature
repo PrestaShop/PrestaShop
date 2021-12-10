@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order_message
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Order message Management
   In order to have prepared reply messages about order
   As a BO user

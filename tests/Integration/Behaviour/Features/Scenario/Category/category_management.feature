@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s category
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Category Management
   PrestaShop allows BO users to manage categories for products
   As a BO user

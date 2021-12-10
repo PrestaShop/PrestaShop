@@ -237,9 +237,7 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
         $_GET['output_format'] = $output;
 
         if ($requestMethod == 'PUT' || $requestMethod == 'POST') {
-            // Reset all data send to php://input mock
-            stream_wrapper_unregister('php');
-            stream_wrapper_register('php', StreamWrapperPHP::class);
+            StreamWrapperPHP::register();
             file_put_contents('php://input', 'xml=' . $postFields);
         }
 
@@ -259,6 +257,8 @@ class WebserviceEndpointFeatureContext extends AbstractPrestaShopFeatureContext
             $_GET['url'],
             $_GET['output_format']
         );
+
+        StreamWrapperPHP::unregister();
 
         return $return;
     }

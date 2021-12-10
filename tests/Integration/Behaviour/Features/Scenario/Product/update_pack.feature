@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-pack
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-after-feature
 @update-pack
 Feature: Add product to pack from Back Office (BO)

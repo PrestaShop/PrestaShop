@@ -45,11 +45,37 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryResult\ReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CurrencyFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @BeforeFeature @restore-currencies-before-feature
+     */
+    public static function restoreCurrenciesTablesBeforeFeature(): void
+    {
+        static::restoreCurrenciesTables();
+    }
+
+    /**
+     * @AfterFeature @restore-currencies-after-feature
+     */
+    public static function restoreCurrenciesTablesAfterFeature(): void
+    {
+        static::restoreCurrenciesTables();
+    }
+
+    private static function restoreCurrenciesTables(): void
+    {
+        DatabaseDump::restoreTables([
+            'currency',
+            'currency_lang',
+            'currency_shop',
+        ]);
+    }
+
     /**
      * Random integer which should never exist in test database as currency id
      */
