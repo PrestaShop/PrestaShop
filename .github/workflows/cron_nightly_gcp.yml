@@ -1,5 +1,5 @@
----
-name: Nightly
+# Nightly on GCP for 1.7.8.x (Deprecated if 1.7.8.x is not an active branch)
+name: Nightly on 1.7.8.x
 
 on:
   workflow_run:

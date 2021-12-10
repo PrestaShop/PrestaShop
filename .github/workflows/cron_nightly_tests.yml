@@ -7,7 +7,6 @@ on:
     workflows: ['Nightly Build']
     types:
       - requested
-  push:
 
 env:
   GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }} # GCP project id
@@ -27,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - 'separate-workflows' # TODO
+          - develop
         CAMPAIGN:
           - 'sanity'
           - 'regression'
@@ -118,7 +117,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - 'separate-workflows' # TODO
+          - develop
 
     env:
       GH_BRANCH: ${{ matrix.branch }} # Branch to test
@@ -177,7 +176,7 @@ jobs:
       fail-fast: false
       matrix:
         BRANCH:
-          - 'separate-workflows' # TODO
+          - develop
 
     steps:
       - name: Push reports
