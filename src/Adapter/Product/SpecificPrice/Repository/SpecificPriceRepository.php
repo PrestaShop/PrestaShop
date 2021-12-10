@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -64,18 +65,26 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param SpecificPriceValidator $specificPriceValidator
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        SpecificPriceValidator $specificPriceValidator
+        SpecificPriceValidator $specificPriceValidator,
+        ConfigurationInterface $configuration
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->specificPriceValidator = $specificPriceValidator;
+        $this->configuration = $configuration;
     }
 
     /**

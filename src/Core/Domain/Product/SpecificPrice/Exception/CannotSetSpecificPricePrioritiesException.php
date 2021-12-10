@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception;
 
 /**
+ * @todo: can we get rid of this class at all? Its not usefull as we don't have a domain case were setting priorities would fail.
+ *      only case when priorities duplicates, but thats alraedy handled in SpecificPriceConstraintException
  * Thrown when setting specific price priorities fails
  */
 class CannotSetSpecificPricePrioritiesException extends SpecificPriceException
