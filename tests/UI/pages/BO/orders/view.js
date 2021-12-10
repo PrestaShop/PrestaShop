@@ -37,6 +37,7 @@ class Order extends BOBasePage {
     // Order actions selectors
     this.updateStatusButton = '#update_order_status_action_btn';
     this.orderStatusesSelect = '#update_order_status_action_input';
+    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
@@ -277,6 +278,15 @@ class Order extends BOBasePage {
    */
   isReturnProductsButtonVisible(page) {
     return this.elementVisible(page, this.returnProductsButton, 2000);
+  }
+
+  /**
+   * Click on view invoice button to download the invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async viewInvoice(page) {
+    return this.clickAndWaitForDownload(page, this.viewInvoiceButton);
   }
 
   // Methods for customer block
