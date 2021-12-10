@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -27,16 +28,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
-
-const today = new Date();
-
-// Get today date format (yyyy-mm-dd)
-const todayDate = today.toISOString().slice(0, 10);
-
-// Create a future date that there is no invoices (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
-
+const todayDate = getDateFormat('yyyy-mm-dd');
+const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {

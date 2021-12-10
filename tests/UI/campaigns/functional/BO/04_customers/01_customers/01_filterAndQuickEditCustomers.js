@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -21,13 +22,7 @@ const baseContext = 'functional_BO_customers_customers_filterAndQuickEditCustome
 let browserContext;
 let page;
 let numberOfCustomers = 0;
-
-// Get today date format (yyy-mm-dd)
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const dateToday = `${mm}/${dd}/${yyyy}`;
+const today = getDateFormat('mm/dd/yyyy');
 
 /*
 Filter customers table by Id, social title, first name, last name, email, active, newsletter and optin
@@ -215,14 +210,14 @@ describe('BO - Customers - Customers : Filter and quick edit Customers table', a
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDate', baseContext);
 
       // Filter orders
-      await customersPage.filterCustomersByRegistration(page, dateToday, dateToday);
+      await customersPage.filterCustomersByRegistration(page, today, today);
 
       // Get number of elements
       const numberOfCustomersAfterFilter = await customersPage.getNumberOfElementInGrid(page);
 
       for (let i = 1; i <= numberOfCustomersAfterFilter; i++) {
         const textColumn = await customersPage.getTextColumnFromTableCustomers(page, i, 'date_add');
-        await expect(textColumn).to.contains(dateToday);
+        await expect(textColumn).to.contains(today);
       }
     });
 

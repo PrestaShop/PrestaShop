@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
+const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
@@ -37,15 +38,9 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_statusTab';
 
 let browserContext;
 let page;
+const today = getDateFormat('mm/dd/yyyy');
 
 const orderNote = 'Test order note';
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 const addressData = new AddressFaker({country: 'France'});
 const customerData = new CustomerFaker({password: ''});
@@ -246,7 +241,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(todayDate);
+      await expect(date).to.contain(today);
     });
 
     it('should check that the order note is closed', async function () {
@@ -345,7 +340,7 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
       await testContext.addContextItem(this, 'testIdentifier', 'checkDate', baseContext);
 
       const date = await viewOrderPage.getTextColumnFromHistoryTable(page, 'date', 1);
-      await expect(date).to.contain(todayDate);
+      await expect(date).to.contain(today);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {

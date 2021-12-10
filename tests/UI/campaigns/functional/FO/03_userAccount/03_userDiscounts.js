@@ -4,6 +4,9 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
+
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -27,12 +30,7 @@ const baseContext = 'functional_FO_userAccount_userDiscounts';
 
 let browserContext;
 let page;
-
-
-const today = new Date();
-// Create a previous date for cart rules (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() - 1);
-const previousDate = today.toISOString().slice(0, 10);
+const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
@@ -48,7 +46,7 @@ const firstCartRule = new CartRuleFaker(
     customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
-    dateFrom: previousDate,
+    dateFrom: pastDate,
   },
 );
 
@@ -57,7 +55,7 @@ const secondCartRule = new CartRuleFaker(
     code: 'customerDataSecondCartRule',
     customer: customerData.email,
     freeShipping: true,
-    dateFrom: previousDate,
+    dateFrom: pastDate,
   },
 );
 

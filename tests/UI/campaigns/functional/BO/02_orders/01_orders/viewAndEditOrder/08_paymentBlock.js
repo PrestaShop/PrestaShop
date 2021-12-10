@@ -6,6 +6,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -39,19 +40,13 @@ let browserContext;
 let page;
 let filePath;
 
-// Get today date format 'yyy/mm/dd'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${yyyy}/${mm}/${dd}`;
-// Get today date format 'mm/dd/yyyy'
-const todayDateToCheck = `${mm}/${dd}/${yyyy}`;
+const today = getDateFormat('yyyy-mm-dd');
+const todayToCheck = getDateFormat('mm/dd/yyyy');
 
 const totalOrder = 22.94;
 
 const paymentDataAmountInfTotal = {
-  date: todayDate,
+  date: today,
   paymentMethod: 'Payment by check',
   transactionID: '12156',
   amount: 12.25,
@@ -59,7 +54,7 @@ const paymentDataAmountInfTotal = {
 };
 
 const paymentDataAmountEqualTotal = {
-  date: todayDate,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12190',
   amount: (totalOrder - paymentDataAmountInfTotal.amount).toFixed(2),
@@ -67,7 +62,7 @@ const paymentDataAmountEqualTotal = {
 };
 
 const paymentDataAmountSupTotal = {
-  date: todayDate,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12639',
   amount: 30.56,
@@ -75,7 +70,7 @@ const paymentDataAmountSupTotal = {
 };
 
 const paymentDataWithNewCurrency = {
-  date: todayDate,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12640',
   amount: 5.25,
@@ -85,7 +80,7 @@ const paymentDataWithNewCurrency = {
 let invoiceID = 0;
 
 const paymentDataAmountEqualRest = {
-  date: todayDate,
+  date: today,
   paymentMethod: 'Bank transfer',
   transactionID: '12190',
   amount: Products.demo_5.priceTaxIncl,
@@ -285,7 +280,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page);
       await Promise.all([
-        expect(result.date).to.contain(todayDateToCheck),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountInfTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountInfTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountInfTotal.amount}`),
@@ -315,7 +310,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 3);
       await Promise.all([
-        expect(result.date).to.contain(todayDateToCheck),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountEqualTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountEqualTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountEqualTotal.amount}`),
@@ -354,7 +349,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 5);
       await Promise.all([
-        expect(result.date).to.contain(todayDateToCheck),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal(paymentDataAmountSupTotal.paymentMethod),
         expect(result.transactionID).to.equal(paymentDataAmountSupTotal.transactionID),
         expect(result.amount).to.equal(`€${paymentDataAmountSupTotal.amount}`),
@@ -540,7 +535,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       const result = await viewOrderPage.getPaymentsDetails(page, 1);
       await Promise.all([
-        expect(result.date).to.contain(todayDateToCheck),
+        expect(result.date).to.contain(todayToCheck),
         expect(result.paymentMethod).to.equal('Bank transfer'),
         expect(result.transactionID).to.equal(''),
         expect(result.amount).to.equal(`€${totalOrder}`),
