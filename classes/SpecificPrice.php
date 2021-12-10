@@ -299,7 +299,7 @@ class SpecificPriceCore extends ObjectModel
             if ($specific_count < $threshold) {
                 $query = 'SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-                foreach ($tmp_specific_list as $key => $value) {
+                foreach ($tmp_specific_list as $value) {
                     $specific_list[] = $value[$field_name];
                 }
             }
