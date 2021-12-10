@@ -162,6 +162,17 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     */
+    public function removePriorityForProduct(ProductId $productId): void
+    {
+        $this->connection->delete(
+            $this->dbPrefix . 'specific_price_priority',
+            ['id_product' => $productId->getValue()]
+        );
+    }
+
+    /**
+     * @param ProductId $productId
      * @param array|null $filters
      *
      * @return QueryBuilder

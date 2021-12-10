@@ -51,6 +51,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand
 
+  prestashop.adapter.product.specific_price.command_handler.remove_specific_price_priority_for_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\RemoveSpecificPricePriorityForProductHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand
+
   prestashop.adapter.product.specific_price.update.specific_price_priority_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater
 
