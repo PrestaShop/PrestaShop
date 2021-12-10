@@ -102,7 +102,6 @@ class AdminCartsControllerCore extends AdminController
             'carrier' => [
                 'title' => $this->trans('Carrier', [], 'Admin.Shipping.Feature'),
                 'align' => 'text-left',
-                'callback' => 'replaceZeroByShopName',
                 'filter_key' => 'ca!name',
             ],
             'date_add' => [
@@ -916,11 +915,6 @@ class AdminCartsControllerCore extends AdminController
         $context->customer = new Customer((int) $context->cart->id_customer);
 
         return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
-    }
-
-    public static function replaceZeroByShopName($echo, $tr)
-    {
-        return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
     }
 
     public function displayDeleteLink($token, $id, $name = null)

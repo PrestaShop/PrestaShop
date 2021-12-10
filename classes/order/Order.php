@@ -1988,9 +1988,6 @@ class OrderCore extends ObjectModel
             WHERE o.`id_order` = ' . (int) $this->id . '
             GROUP BY c.id_carrier'
         );
-        foreach ($results as &$row) {
-            $row['carrier_name'] = Cart::replaceZeroByShopName($row['carrier_name'], null);
-        }
 
         return $results;
     }

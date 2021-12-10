@@ -193,10 +193,6 @@ class CarrierCore extends ObjectModel
             $this->shipping_method = ((int) Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
         }
 
-        if ($this->name == '0') {
-            $this->name = Carrier::getCarrierNameFromShopName();
-        }
-
         $this->image_dir = _PS_SHIP_IMG_DIR_;
     }
 
@@ -583,12 +579,6 @@ class CarrierCore extends ObjectModel
             $carriers = Cache::retrieve($cache_id);
         }
 
-        foreach ($carriers as $key => $carrier) {
-            if ($carrier['name'] == '0') {
-                $carriers[$key]['name'] = Carrier::getCarrierNameFromShopName();
-            }
-        }
-
         return $carriers;
     }
 
@@ -764,7 +754,6 @@ class CarrierCore extends ObjectModel
                 }
             }
 
-            $row['name'] = ((string) ($row['name']) != '0' ? $row['name'] : Carrier::getCarrierNameFromShopName());
             $row['price'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], true, null, null, $id_zone));
             $row['price_tax_exc'] = (($shipping_method == Carrier::SHIPPING_METHOD_FREE) ? 0 : $cart->getPackageShippingCost((int) $row['id_carrier'], false, null, null, $id_zone));
             $row['img'] = file_exists(_PS_SHIP_IMG_DIR_ . (int) $row['id_carrier'] . '.jpg') ? _THEME_SHIP_DIR_ . (int) $row['id_carrier'] . '.jpg' : '';
@@ -1702,21 +1691,5 @@ class CarrierCore extends ObjectModel
         }
 
         return Db::getInstance()->execute(rtrim($sql, ','));
-    }
-
-    /**
-     * Return the carrier name from the shop name (e.g. if the carrier name is '0').
-     *
-     * The returned carrier name is the shop name without '#' and ';' because this is not the same validation.
-     *
-     * @return string Carrier name
-     */
-    public static function getCarrierNameFromShopName()
-    {
-        return str_replace(
-            ['#', ';'],
-            '',
-            Configuration::get('PS_SHOP_NAME')
-        );
     }
 }

@@ -4423,20 +4423,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * If the carrier name is 0, use this function to replace it with the shop name.
-     *
-     * @param string $echo Text to use
-     * @param string $tr Unused parameter
-     *
-     * @return string
-     * @todo: Remove unused parameter
-     */
-    public static function replaceZeroByShopName($echo, $tr)
-    {
-        return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
-    }
-
-    /**
      * Duplicate this Cart in the database.
      *
      * @return array|bool Duplicated cart, with success bool
