@@ -630,32 +630,6 @@ class AdminCarriersControllerCore extends AdminController
         }
     }
 
-    /**
-     * Modifying initial getList method to display position feature (drag and drop).
-     *
-     * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
-     * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
-     *
-     * @throws PrestaShopException
-     */
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-    {
-        // Replace "0" by the name of the shop directly in SQL query (allowing sort without errors)
-        if (!empty($this->_select)) {
-            $this->_select .= ', ';
-        }
-        $this->_select .= sprintf(
-            'IF(name = "0", "%s", name) AS name',
-            pSQL(Carrier::getCarrierNameFromShopName())
-        );
-
-        parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-    }
-
     public function ajaxProcessUpdatePositions()
     {
         $way = (int) (Tools::getValue('way'));
