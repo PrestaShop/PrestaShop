@@ -25,26 +25,30 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\RemoveSpecificPricePriorityForProductHandlerInterface;
 
-class SpecificPricePriorityCommandsBuilder implements ProductCommandsBuilderInterface
+class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPricePriorityForProductHandlerInterface
 {
-    public function buildCommands(ProductId $productId, array $formData): array
+    /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
+     * @param SpecificPriceRepository $specificPriceRepository
+     */
+    public function __construct(
+        SpecificPriceRepository $specificPriceRepository
+    ) {
+        $this->specificPriceRepository = $specificPriceRepository;
+    }
+
+    public function handle(RemoveSpecificPricePriorityForProductCommand $command): void
     {
-        if (!isset($formData['pricing']['priority_management'])) {
-            return [];
-        }
-
-        if (!$formData['pricing']['priority_management']['priority_type']) {
-            return [new RemoveSpecificPricePriorityForProductCommand($productId->getValue())];
-        }
-
-        $priorityValues = $formData['pricing']['priority_management']['priorities'];
-
-        return [new SetSpecificPricePriorityForProductCommand($productId->getValue(), $priorityValues)];
+        $this->specificPriceRepository->removePriorityForProduct($command->getProductId());
     }
 }
