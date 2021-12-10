@@ -431,7 +431,7 @@ const featuresCollection = (function () {
         return url.replace(/\/\d+(?!.*\/\d+)((?=\?.*))?/, `/${newId}`);
       }
 
-    // adding events to the preloaded features
+      // adding events to the preloaded features
       $(document).on('change', '.feature-collection select.feature-value-selector', function (event) {
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
