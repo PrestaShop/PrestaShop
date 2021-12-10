@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -38,8 +39,13 @@ class SpecificPricePriorityType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('priorities', PriorityListType::class, [
-            'label' => false,
-        ]);
+        $builder
+            ->add('priority_type', SwitchType::class, [
+                'label' => $this->trans('Use specific priority for product', 'Admin.Catalog.Feature'),
+            ])
+            ->add('priorities', PriorityListType::class, [
+                'label' => false,
+            ])
+        ;
     }
 }
