@@ -23,28 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class SpecificPricePriorityCommandsBuilder implements ProductCommandsBuilderInterface
+interface RemoveSpecificPricePriorityForProductHandlerInterface
 {
-    public function buildCommands(ProductId $productId, array $formData): array
-    {
-        if (!isset($formData['pricing']['priority_management'])) {
-            return [];
-        }
-
-        if (!$formData['pricing']['priority_management']['priority_type']) {
-            return [new RemoveSpecificPricePriorityForProductCommand($productId->getValue())];
-        }
-
-        $priorityValues = $formData['pricing']['priority_management']['priorities'];
-
-        return [new SetSpecificPricePriorityForProductCommand($productId->getValue(), $priorityValues)];
-    }
+    public function handle(RemoveSpecificPricePriorityForProductCommand $command): void;
 }
