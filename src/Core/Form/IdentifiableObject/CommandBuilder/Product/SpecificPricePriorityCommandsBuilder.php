@@ -25,21 +25,21 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class SpecificPricePriorityType extends TranslatorAwareType
+class SpecificPricePriorityCommandsBuilder implements ProductCommandsBuilderInterface
 {
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array<string, mixed> $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        $builder->add('priorities', PriorityListType::class, [
-            'label' => false,
-        ]);
+        if (!isset($formData['pricing']['priority_management']['priorities'])) {
+            return [];
+        }
+
+        $priorityValues = $formData['pricing']['priority_management']['priorities'];
+
+        return [new SetSpecificPricePriorityForProductCommand($productId->getValue(), $priorityValues)];
     }
 }
