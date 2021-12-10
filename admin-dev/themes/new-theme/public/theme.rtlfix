@@ -181,3 +181,8 @@ ul.category-tree .more > .radio:before,
 .column-filters .datepicker {
   flex-wrap: nowrap;
 }
+
+/* Fix dropdown overflow inside grid table */
+.grid-table {
+  overflow-x: auto;
+}
