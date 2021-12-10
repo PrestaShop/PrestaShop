@@ -395,6 +395,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @param string $key
      * @param ShopConstraint $shopConstraint
+     *
      * @throws ShopException
      */
     public function deleteFromContext(string $key, ShopConstraint $shopConstraint): void
