@@ -48,6 +48,6 @@ class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPric
 
     public function handle(RemoveSpecificPricePriorityForProductCommand $command): void
     {
-        $this->specificPriceRepository->removePriorityForProduct($command->getProductId());
+        $this->specificPriceRepository->removePrioritiesForProduct($command->getProductId());
     }
 }
