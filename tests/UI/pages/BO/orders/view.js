@@ -38,11 +38,12 @@ class Order extends BOBasePage {
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
 
     // Order actions selectors
-    this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
     this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
     this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=\'view-delivery-slip\']';
     this.partialRefundButton = 'button.partial-refund-display';
+    this.orderStatusesSelect = '#update_order_status_action_input';
+    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
