@@ -29,18 +29,33 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
-use SpecificPrice;
 
 /**
  * Responsible for updates related to specific price priorities
+ *
+ * @todo: could we remove this service as it has no logic and just reuses repository?
  */
 class SpecificPricePriorityUpdater extends AbstractObjectModelRepository
 {
+    /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
+     * @param SpecificPriceRepository $specificPriceRepository
+     */
+    public function __construct(
+        SpecificPriceRepository $specificPriceRepository
+    ) {
+        $this->specificPriceRepository = $specificPriceRepository;
+    }
+
     /**
      * @param ProductId $productId
      * @param PriorityList $priorityList
@@ -50,35 +65,22 @@ class SpecificPricePriorityUpdater extends AbstractObjectModelRepository
      */
     public function setPrioritiesForProduct(ProductId $productId, PriorityList $priorityList): void
     {
-        try {
-            if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
-                throw new CannotSetSpecificPricePrioritiesException(sprintf(
-                    'Failed to set specific price priorities for product #%d',
-                    $productId->getValue()
-                ));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(sprintf(
-                'Error occurred when trying to set specific price priorities for product #%d',
-                $productId->getValue()
-            ));
-        }
+        $this->specificPriceRepository->setPrioritiesForProduct($productId, $priorityList);
     }
 
     /**
      * @param PriorityList $priorityList
-     *
-     * @throws CannotSetSpecificPricePrioritiesException
-     * @throws CoreException
      */
-    public function setGlobalPriorities(PriorityList $priorityList): void
+    public function updateDefaultPriorities(PriorityList $priorityList): void
     {
-        try {
-            if (!SpecificPrice::setPriorities($priorityList->getPriorities())) {
-                throw new CannotSetSpecificPricePrioritiesException('Failed to set specific price priorities');
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred when trying to set specific price priorities');
-        }
+        $this->specificPriceRepository->updateDefaultPriorities($priorityList);
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    public function removePrioritiesForProduct(ProductId $productId): void
+    {
+        $this->specificPriceRepository->removePrioritiesForProduct($productId);
     }
 }
