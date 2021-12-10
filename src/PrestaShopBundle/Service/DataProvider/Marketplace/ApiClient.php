@@ -98,29 +98,6 @@ class ApiClient
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
-    /**
-     * Check Addons client account credentials.
-     *
-     * @return object
-     */
-    public function getCheckCustomer()
-    {
-        $response = $this->setMethod('check_customer')
-            ->getResponse();
-
-        return json_decode($response);
-    }
-
-    public function getPreInstalledModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('install-modules')
-            ->getResponse();
-        $responseDecoded = json_decode($response);
-
-        return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
-    }
-
     public function getServices()
     {
         $response = $this->setMethod('listing')

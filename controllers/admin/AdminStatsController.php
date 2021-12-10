@@ -106,13 +106,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getModulesToUpdate()
     {
         $context = Context::getContext();
-        $logged_on_addons = false;
-        if (isset($context->cookie->username_addons, $context->cookie->password_addons)
-            && !empty($context->cookie->username_addons) && !empty($context->cookie->password_addons)
-        ) {
-            $logged_on_addons = true;
-        }
-        $modules = Module::getModulesOnDisk(true, $logged_on_addons, $context->employee->id);
+        $modules = Module::getModulesOnDisk(true, $context->employee->id);
         $upgrade_available = 0;
         foreach ($modules as $km => $module) {
             if ($module->installed && isset($module->version_addons) && $module->version_addons) { // SimpleXMLElement

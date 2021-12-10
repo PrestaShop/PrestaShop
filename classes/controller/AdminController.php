@@ -399,9 +399,6 @@ class AdminControllerCore extends Controller
     /** @var array */
     public $modals = [];
 
-    /** @var bool */
-    protected $logged_on_addons = false;
-
     /** @var bool if logged employee has access to AdminImport */
     protected $can_import = false;
 
@@ -560,9 +557,6 @@ class AdminControllerCore extends Controller
             $this->admin_webpath = preg_replace('/^' . preg_quote(DIRECTORY_SEPARATOR, '/') . '/', '', $this->admin_webpath);
         }
 
-        // Check if logged on Addons
-        $this->logged_on_addons = !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons);
-
         // Set context mode
         if (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
             $this->context->mode = Context::MODE_STD_CONTRIB;
@@ -578,7 +572,6 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
-            'logged_on_addons' => $this->logged_on_addons,
             'can_import' => $this->can_import,
         ]);
     }
@@ -2325,13 +2318,6 @@ class AdminControllerCore extends Controller
      */
     public function initModal()
     {
-        if ($this->logged_on_addons) {
-            $this->context->smarty->assign([
-                'logged_on_addons' => 1,
-                'username_addons' => $this->context->cookie->username_addons,
-            ]);
-        }
-
         $this->context->smarty->assign([
             'img_base_path' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/',
             'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
