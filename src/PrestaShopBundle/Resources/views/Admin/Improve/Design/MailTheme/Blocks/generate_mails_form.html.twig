@@ -57,12 +57,10 @@
           </div>
 
           <div class="form-group row">
-            <label class="form-control-label">
-              {{ ps.label_with_help(
-                ('Select the theme you want to overwrite'|trans({}, 'Admin.Design.Feature')),
-              ('PrestaShop\'s email templates are stored in the "mails" folder, but they can be overridden by your current theme\'s own "mails" folder. Using this option enables to overwrite emails from your current theme.'|trans({}, 'Admin.Design.Help'))
-              ) }}
-            </label>
+            {{ ps.label_with_help(
+              ('Select the theme you want to overwrite'|trans({}, 'Admin.Design.Feature')),
+            ('PrestaShop\'s email templates are stored in the "mails" folder, but they can be overridden by your current theme\'s own "mails" folder. Using this option enables to overwrite emails from your current theme.'|trans({}, 'Admin.Design.Help'))
+            ) }}
             <div class="col-sm">
               {{ form_errors(generateMailsForm.theme) }}
               {{ form_widget(generateMailsForm.theme) }}
