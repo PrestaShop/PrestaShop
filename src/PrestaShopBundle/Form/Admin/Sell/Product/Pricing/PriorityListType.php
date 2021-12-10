@@ -27,19 +27,44 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class SpecificPricePriorityType extends TranslatorAwareType
+class PriorityListType extends AbstractType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $priorityChoiceProvider;
+
+    /**
+     * @param FormChoiceProviderInterface $priorityChoiceProvider
+     */
+    public function __construct(
+        FormChoiceProviderInterface $priorityChoiceProvider
+    ) {
+        $this->priorityChoiceProvider = $priorityChoiceProvider;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array<string, mixed> $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('priorities', PriorityListType::class, [
-            'label' => false,
-        ]);
+        $choices = $this->priorityChoiceProvider->getChoices();
+
+        $priority = 0;
+        foreach ($choices as $choice) {
+            $builder->add($priority, ChoiceType::class, [
+                'choices' => $choices,
+                'label' => false,
+                'placeholder' => false,
+                'default_empty_data' => $choice,
+            ]);
+            ++$priority;
+        }
     }
 }
