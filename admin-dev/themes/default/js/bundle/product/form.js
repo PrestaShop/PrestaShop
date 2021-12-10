@@ -397,7 +397,7 @@ const featuresCollection = (function () {
   function add() {
     const newForm = collectionHolder.attr('data-prototype').replace(/__name__/g, maxCollectionChildren);
     const $newFormJquery = $(newForm);
-  // we need to put in disabled the custom
+    // we need to put in disabled the custom
     const $customValueSelector = $newFormJquery.find('input[type=text]');
     const $featurevalueSelector = $newFormJquery.find('select');
     $customValueSelector.prop('disabled', true);
