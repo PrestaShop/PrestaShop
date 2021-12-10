@@ -5823,7 +5823,7 @@ class ProductCore extends ObjectModel
             $unitPrice = (float) $row['unit_price'];
         } elseif (isset($row['unit_price_ratio']) && 0 != $row['unit_price_ratio']) {
             // In case unit_price is not defined but ratio is we recompute unit_price based on initial product price
-            $unitPrice = ($row['price_without_reduction_without_tax'] / $row['unit_price_ratio']);
+            $unitPrice = $row['price_without_reduction_without_tax'] / $row['unit_price_ratio'];
         }
 
         // Then if combination has an impact we apply it on unit price
@@ -5836,7 +5836,7 @@ class ProductCore extends ObjectModel
         $unitPrice = Tools::convertPrice($unitPrice, $currencyId);
 
         // Compute price ratio based on initial product price and initial unit price (without taxes and without discount)
-        $row['unit_price_ratio'] = $unitPrice != 0 ? ($row['price_without_reduction_without_tax'] / $unitPrice) : 0.0;
+        $row['unit_price_ratio'] = $unitPrice != 0 ? $row['price_without_reduction_without_tax'] / $unitPrice : 0.0;
         $row['unit_price_tax_excluded'] = $row['unit_price'] = $unitPrice;
         // Always compute unit price with tax included so that it can be accessed if necessary
         $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0.0;
