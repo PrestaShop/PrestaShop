@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\AddonManagerInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Theme\Exception\FailedToEnableThemeModuleException;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -297,17 +296,6 @@ class ModuleManager implements AddonManagerInterface
 
         if (!empty($source)) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } elseif (!$this->moduleProvider->isOnDisk($name)) {
-            if (!$this->moduleUpdater->setModuleOnDiskFromAddons($name)) {
-                throw new FailedToEnableThemeModuleException(
-                    $name,
-                    $this->translator->trans(
-                        'The module %name% could not be found on Addons.',
-                        ['%name%' => $name],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            }
         }
 
         $module = $this->moduleRepository->getModule($name);
@@ -402,11 +390,6 @@ class ModuleManager implements AddonManagerInterface
         // 1- From source
         if ($source != null) {
             $this->moduleZipManager->storeInModulesFolder($source);
-        } elseif ($module->canBeUpgradedFromAddons()) {
-            // 2- From Addons
-            // This step is not mandatory (in case of local module),
-            // we do not check the result
-            $this->moduleUpdater->setModuleOnDiskFromAddons($name);
         }
 
         // Load and execute upgrade files
