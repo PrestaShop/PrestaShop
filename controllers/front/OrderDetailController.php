@@ -183,15 +183,28 @@ class OrderDetailControllerCore extends FrontController
 
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
-                $this->order_to_display = (new OrderPresenter())->present($order);
+                $viewAccess = true;
+                if ($order->id_shop != $this->context->shop->id) {
+                    if ($this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
+                        $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
+                        if (!$shopGroup->share_order) {
+                            $viewAccess = false;
+                        }
+                    }
+                }
+                if ($viewAccess) {
+                    $this->order_to_display = (new OrderPresenter())->present($order);
 
-                $this->reference = $order->reference;
+                    $this->reference = $order->reference;
 
-                $this->context->smarty->assign([
-                    'order' => $this->order_to_display,
-                    'orderIsVirtual' => $order->isVirtual(),
-                    'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
-                ]);
+                    $this->context->smarty->assign([
+                        'order' => $this->order_to_display,
+                        'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $order]),
+                    ]);
+                } else {
+                    $this->redirect_after = '404';
+                    $this->redirect();
+                }
             } else {
                 $this->redirect_after = '404';
                 $this->redirect();
