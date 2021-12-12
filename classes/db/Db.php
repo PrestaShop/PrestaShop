@@ -58,6 +58,9 @@ abstract class DbCore
     /** @var PDO|mysqli|resource|null Resource link */
     protected $link;
 
+    /** @var int Transactions depth level */
+    protected $transactionsDepth = 0;
+
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
     protected $result;
 
@@ -201,6 +204,27 @@ abstract class DbCore
      * @return string
      */
     abstract public function getBestEngine();
+
+    /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    abstract protected function _beginTransaction();
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    abstract protected function _commit();
+
+    /**
+     * Roll back a transaction.
+     *
+     * @return bool
+     */
+    abstract protected function _rollBack();
 
     /**
      * Returns database object instance.
@@ -356,6 +380,72 @@ abstract class DbCore
         if ($this->link) {
             $this->disconnect();
         }
+    }
+
+    /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    public function beginTransaction()
+    {
+        if ($this->transactionsDepth > 0) {
+            ++$this->transactionsDepth;
+
+            return true;
+        }
+
+        if ($this->_beginTransaction()) {
+            ++$this->transactionsDepth;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    public function commit()
+    {
+        if ($this->transactionsDepth == 0) {
+            return false;
+        } elseif ($this->transactionsDepth > 1) {
+            --$this->transactionsDepth;
+
+            return true;
+        } elseif ($this->_commit()) {
+            --$this->transactionsDepth;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Roll back a transaction.
+     *
+     * @return bool
+     */
+    public function rollBack()
+    {
+        if ($this->transactionsDepth == 0) {
+            return false;
+        } elseif ($this->transactionsDepth > 1) {
+            --$this->transactionsDepth;
+
+            return true;
+        } elseif ($this->_rollBack()) {
+            --$this->transactionsDepth;
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

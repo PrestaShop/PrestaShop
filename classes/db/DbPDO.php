@@ -483,6 +483,36 @@ class DbPDOCore extends Db
     }
 
     /**
+     * Initiate a new transaction.
+     *
+     * @return bool
+     */
+    protected function _beginTransaction()
+    {
+        return $this->link->beginTransaction();
+    }
+
+    /**
+     * Commit a transaction.
+     *
+     * @return bool
+     */
+    protected function _commit()
+    {
+        return $this->link->commit();
+    }
+
+    /**
+     * Roll back a transaction.
+     *
+     * @return bool
+     */
+    protected function _rollBack()
+    {
+        return $this->link->rollBack();
+    }
+
+    /**
      * Try a connection to the database and set names to UTF-8.
      *
      * @see Db::checkEncoding()
