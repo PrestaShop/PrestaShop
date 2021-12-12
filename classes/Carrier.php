@@ -1390,7 +1390,9 @@ class CarrierCore extends ObjectModel
      */
     public function updatePosition($way, $position)
     {
-        if (!$res = Db::getInstance()->executeS(
+        $db = Db::getInstance();
+
+        if (!$res = $db->executeS(
             'SELECT `id_carrier`, `position`
             FROM `' . _DB_PREFIX_ . 'carrier`
             WHERE `deleted` = 0
@@ -1411,7 +1413,8 @@ class CarrierCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        return Db::getInstance()->execute('
+        return $db->beginTransaction()
+        && $db->execute('
             UPDATE `' . _DB_PREFIX_ . 'carrier`
             SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
             WHERE `position`
@@ -1419,10 +1422,11 @@ class CarrierCore extends ObjectModel
                 ? '> ' . (int) $moved_carrier['position'] . ' AND `position` <= ' . (int) $position
                 : '< ' . (int) $moved_carrier['position'] . ' AND `position` >= ' . (int) $position . '
             AND `deleted` = 0'))
-        && Db::getInstance()->execute('
+        && $db->execute('
             UPDATE `' . _DB_PREFIX_ . 'carrier`
             SET `position` = ' . (int) $position . '
-            WHERE `id_carrier` = ' . (int) $moved_carrier['id_carrier']);
+            WHERE `id_carrier` = ' . (int) $moved_carrier['id_carrier'])
+        && $db->commit();
     }
 
     /**
