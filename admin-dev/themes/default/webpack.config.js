@@ -82,7 +82,7 @@ module.exports = (env, argv) => {
         exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
       },
       {
-        test: /MaterialIcons-Regular.(woff2?|ttf)$/,
+        test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
         loader: 'file-loader',
         options: {
           name: '[hash].preload.[ext]',
