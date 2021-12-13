@@ -24,46 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Shop;
+declare(strict_types=1);
+
+namespace Tests\Resources;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * This class loads and saves data configuration for the Maintenance page.
- */
-class MaintenanceConfiguration extends AbstractMultistoreConfiguration
+class DummyMultistoreConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var array<int, string>
+     * @return array
      */
-    private const CONFIGURATION_FIELDS = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE', false, $shopConstraint),
-            'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP', null, $shopConstraint),
-            'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT', null, $shopConstraint),
+            'test_conf_1' => (bool) $this->configuration->get('TEST_CONF_1', null, $shopConstraint),
+            'test_conf_2' => $this->configuration->get('TEST_CONF_2', null, $shopConstraint),
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @param array $configurationInputValues
+     *
+     * @return array
      */
-    public function updateConfiguration(array $configurationInputValues)
+    public function updateConfiguration(array $configurationInputValues): array
     {
         if ($this->validateConfiguration($configurationInputValues)) {
             $shopConstraint = $this->getShopConstraint();
 
-            $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
+            $this->updateConfigurationValue('TEST_CONF_1', 'test_conf_1', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('TEST_CONF_2', 'test_conf_2', $configurationInputValues, $shopConstraint);
         }
 
         return [];
@@ -72,14 +66,19 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * @return OptionsResolver
      */
-    protected function buildResolver(): OptionsResolver
+    public function buildResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setDefined(self::CONFIGURATION_FIELDS);
-        $resolver->setAllowedTypes('enable_shop', 'bool');
-        $resolver->setAllowedTypes('maintenance_ip', 'string');
-        $resolver->setAllowedTypes('maintenance_text', 'array');
+        $resolver->setDefined(['test_conf_1', 'test_conf_2']);
+        $resolver->setAllowedTypes('test_conf_1', 'bool');
+        $resolver->setAllowedTypes('test_conf_2', 'string');
 
         return $resolver;
+    }
+
+    // wrapper public method to test the protected "updateConfigurationValue" method in unit tests
+    public function dummyUpdateConfigurationValue($fieldName, $inputValues, $shopConstraint)
+    {
+        $this->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $shopConstraint);
     }
 }

@@ -108,6 +108,9 @@ class ShopCore extends ObjectModel
     /** @var int|null ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
 
+    /** @var bool|null is multistore activated */
+    protected static $feature_active;
+
     /** @var Theme * */
     public $theme;
 
@@ -1000,6 +1003,8 @@ class ShopCore extends ObjectModel
     public static function resetContext()
     {
         self::$context = null;
+        self::$feature_active = null;
+        self::$context_id_shop = null;
     }
 
     /**
@@ -1158,14 +1163,12 @@ class ShopCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        static $feature_active = null;
-
-        if ($feature_active === null) {
-            $feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+        if (static::$feature_active === null) {
+            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
-        return $feature_active;
+        return static::$feature_active;
     }
 
     public function copyShopData($old_id, $tables_import = false, $deleted = false)

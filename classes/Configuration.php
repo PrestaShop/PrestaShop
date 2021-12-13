@@ -113,6 +113,18 @@ class ConfigurationCore extends ObjectModel
             $idShopGroup = Shop::getContextShopGroupID(true);
         }
 
+        return self::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
+    }
+
+    /**
+     * @param string $key
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
+     *
+     * @return int Configuration key ID
+     */
+    public static function getIdByNameFromGivenContext(string $key, ?int $idShopGroup, ?int $idShop): int
+    {
         $sql = 'SELECT `' . bqSQL(self::$definition['primary']) . '`
                 FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
                 WHERE name = \'' . pSQL($key) . '\'
@@ -132,12 +144,20 @@ class ConfigurationCore extends ObjectModel
     }
 
     /**
+     * @deprecated 8.0.0 Use resetStaticCache method instead.
+     */
+    public static function clearConfigurationCacheForTesting()
+    {
+        self::resetStaticCache();
+    }
+
+    /**
      * WARNING: For testing only. Do NOT rely on this method, it may be removed at any time.
      *
      * @todo Delegate static calls from Configuration to an instance
      * of a class to be created.
      */
-    public static function clearConfigurationCacheForTesting()
+    public static function resetStaticCache()
     {
         self::$_cache = null;
         self::$_new_cache_shop = null;
@@ -593,13 +613,30 @@ class ConfigurationCore extends ObjectModel
             $idShop = Shop::getContextShopID(true);
         }
 
-        $id = Configuration::getIdByName($key, $idShopGroup, $idShop);
+        $configurationId = Configuration::getIdByName($key, $idShopGroup, $idShop);
+
+        self::deleteById($configurationId);
+    }
+
+    /**
+     * @param string $key
+     * @param int|null $idShopGroup
+     * @param int|null $idShop
+     */
+    public static function deleteFromGivenContext(string $key, ?int $idShopGroup, ?int $idShop): void
+    {
+        $configurationId = Configuration::getIdByNameFromGivenContext($key, $idShopGroup, $idShop);
+        self::deleteById($configurationId);
+    }
+
+    public static function deleteById(int $configurationId): void
+    {
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $id);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
         Db::getInstance()->execute('
         DELETE FROM `' . _DB_PREFIX_ . bqSQL(self::$definition['table']) . '_lang`
-        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . (int) $id);
+        WHERE `' . bqSQL(self::$definition['primary']) . '` = ' . $configurationId);
 
         self::$_cache = null;
         self::$_new_cache_shop = null;
