@@ -190,13 +190,20 @@ class ProductStockUpdater
             $stockUpdateRequired = true;
         }
 
-        if (null !== $properties->getDeltaQuantity()) {
-            $this->updateQuantity($stockAvailable, $properties->getDeltaQuantity());
+        if ($properties->getDeltaQuantity()) {
+            $stockAvailable->quantity += $properties->getDeltaQuantity()->getDeltaQuantity();
             $stockUpdateRequired = true;
         }
 
-        if ($stockUpdateRequired) {
-            $this->stockAvailableRepository->update($stockAvailable);
+        if (!$stockUpdateRequired) {
+            return;
+        }
+
+        $this->stockAvailableRepository->update($stockAvailable);
+
+        if ($properties->getDeltaQuantity()) {
+            //Save movement only after stock has been updated
+            $this->saveMovement($stockAvailable, $properties->getDeltaQuantity());
         }
     }
 
@@ -204,21 +211,16 @@ class ProductStockUpdater
      * @param StockAvailable $stockAvailable
      * @param DeltaQuantity $deltaQuantity
      */
-    private function updateQuantity(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
     {
-        $deltaQuantityValue = $deltaQuantity->getDeltaQuantity();
-        $stockAvailable->quantity += $deltaQuantityValue;
-
-        if (0 !== $deltaQuantityValue) {
-            $this->stockManager->saveMovement(
-                $stockAvailable->id_product,
-                $stockAvailable->id_product_attribute,
-                $deltaQuantityValue,
-                [
-                    'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
-                ]
-            );
-        }
+        $this->stockManager->saveMovement(
+            $stockAvailable->id_product,
+            $stockAvailable->id_product_attribute,
+            $deltaQuantity->getDeltaQuantity(),
+            [
+                'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
+            ]
+        );
     }
 
     /**
