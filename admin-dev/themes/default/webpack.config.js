@@ -74,7 +74,7 @@ module.exports = (env, argv) => {
         ],
       },
       {
-        test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
+        test: /\.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
           name: '[hash].[ext]',
