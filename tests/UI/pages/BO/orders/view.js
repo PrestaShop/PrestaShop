@@ -736,7 +736,7 @@ class Order extends BOBasePage {
    */
   async getSearchedProductDetails(page) {
     return {
-      stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
+      //stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
