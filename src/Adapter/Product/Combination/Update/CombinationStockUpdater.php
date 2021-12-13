@@ -138,17 +138,18 @@ class CombinationStockUpdater
      */
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
-        $updateQuantity = null !== $properties->getDeltaQuantity();
         $updateLocation = null !== $properties->getLocation();
+        // We would skip zero delta quantity, so we check if its truthy instead of checking strictly against null.
+        $deltaQuantity = $properties->getDeltaQuantity();
 
-        if (!$updateQuantity && !$updateLocation) {
+        if (!$deltaQuantity && !$updateLocation) {
             return;
         }
 
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
-        if ($updateQuantity) {
-            $this->updateQuantity($stockAvailable, $properties->getDeltaQuantity());
+        if ($deltaQuantity) {
+            $stockAvailable->quantity += $deltaQuantity->getDeltaQuantity();
         }
 
         if ($updateLocation) {
@@ -156,25 +157,23 @@ class CombinationStockUpdater
         }
 
         $this->stockAvailableRepository->update($stockAvailable);
+
+        // save movement only after stockAvailable has been updated
+        if ($deltaQuantity) {
+            $this->saveMovement($stockAvailable, $deltaQuantity);
+        }
     }
 
     /**
      * @param StockAvailable $stockAvailable
      * @param DeltaQuantity $deltaQuantity
      */
-    private function updateQuantity(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
     {
-        $deltaQuantityValue = $deltaQuantity->getDeltaQuantity();
-        $stockAvailable->quantity += $deltaQuantityValue;
-
-        if (0 === $deltaQuantityValue) {
-            return;
-        }
-
         $this->stockManager->saveMovement(
             $stockAvailable->id_product,
             $stockAvailable->id_product_attribute,
-            $deltaQuantityValue,
+            $deltaQuantity->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
             ]
