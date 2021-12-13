@@ -119,6 +119,16 @@ class CombinationStockUpdater
             $updatableProperties[] = 'low_stock_alert';
         }
 
+        if (null !== $properties->getDeltaQuantity()) {
+            $combination->quantity += $properties->getDeltaQuantity()->getDeltaQuantity();
+            $updatableProperties[] = 'quantity';
+        }
+
+        if (null !== $properties->getLocation()) {
+            $combination->location = $properties->getLocation();
+            $updatableProperties[] = 'location';
+        }
+
         return $updatableProperties;
     }
 
