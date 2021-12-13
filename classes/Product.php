@@ -5821,9 +5821,6 @@ class ProductCore extends ObjectModel
         if (isset($row['unit_price'])) {
             // Unit price is supposed to be in DB and accessible in the row
             $baseUnitPrice = (float) $row['unit_price'];
-        } elseif (isset($row['unit_price_ratio']) && 0 != $row['unit_price_ratio']) {
-            // In case unit_price is not defined but ratio is we recompute unit_price based on initial product price
-            $baseUnitPrice = $row['price_without_reduction_without_tax'] / $row['unit_price_ratio'];
         }
 
         // Then if combination has an impact we apply it on unit price
@@ -5835,8 +5832,26 @@ class ProductCore extends ObjectModel
         $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
 
-        // Compute price ratio based on initial product price and initial unit price (without taxes and without discount)
-        $row['unit_price_ratio'] = $baseUnitPrice != 0 ? $row['price_without_reduction_without_tax'] / $baseUnitPrice : 0.0;
+        // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
+        $noSpecificPrice = null;
+        $baseProductPrice = Product::getPriceStatic(
+            (int) $row['id_product'],
+            false,
+            $id_product_attribute,
+            6,
+            null,
+            false,
+            false,
+            $quantity,
+            false,
+            null,
+            null,
+            null,
+            $noSpecificPrice,
+            true,
+            false
+        );
+        $row['unit_price_ratio'] = $baseUnitPrice != 0 ? $baseProductPrice / $baseUnitPrice : 0.0;
 
         // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
         $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_tax_exc'] / $row['unit_price_ratio'] : 0.0;
