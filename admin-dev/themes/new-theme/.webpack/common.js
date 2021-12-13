@@ -345,7 +345,7 @@ module.exports = {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]',
+          name: '[hash].[ext]',
         },
         exclude: /MaterialIcons-Regular.(woff2?|ttf)/,
       },
@@ -353,7 +353,7 @@ module.exports = {
         test: /MaterialIcons-Regular.(woff2?|ttf)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].preload.[ext]',
+          name: '[hash].preload.[ext]',
         },
       },
     ],

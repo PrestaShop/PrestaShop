@@ -29,7 +29,7 @@ const keepLicense = require('uglify-save-license');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FontPreloadPlugin = require('./.webpack/plugins/preload');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -40,7 +40,6 @@ module.exports = (env, argv) => {
     ],
     output: {
       path: path.resolve(__dirname, 'public'),
-      publicPath: '',
       filename: 'bundle.js',
     },
     module: {
@@ -57,7 +56,12 @@ module.exports = (env, argv) => {
       }, {
         test: /\.(scss|sass|css)$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: ''
+            }
+          },
           {
             loader: 'css-loader',
           },
@@ -73,7 +77,7 @@ module.exports = (env, argv) => {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].[ext]',
+          name: '[hash].[ext]',
         },
         exclude: /MaterialIcons-Regular.(woff2?|ttf)/,
       },
@@ -81,7 +85,7 @@ module.exports = (env, argv) => {
         test: /MaterialIcons-Regular.(woff2?|ttf)$/,
         loader: 'file-loader',
         options: {
-          name: '[name].preload.[ext]',
+          name: '[hash].preload.[ext]',
         },
       },
       ],
@@ -108,8 +112,9 @@ module.exports = (env, argv) => {
       new FontPreloadPlugin({
         index: 'preload.tpl',
         extensions: ['woff2'],
+        filter: /preload/,
         // eslint-disable-next-line
-        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{"`$admin_dir`"}')),
+        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
       }),
     ],
   };
