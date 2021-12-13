@@ -30,6 +30,11 @@ class StatisticsControllerCore extends FrontController
 
     protected $param_token;
 
+    public function display()
+    {
+        return null;
+    }
+
     public function postProcess()
     {
         $this->param_token = Tools::getValue('token');
