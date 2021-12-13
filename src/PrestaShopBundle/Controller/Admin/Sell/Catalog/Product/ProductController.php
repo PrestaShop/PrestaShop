@@ -132,7 +132,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderCreateProductForm($productForm);
+        return $this->renderCreateProductForm($productForm, $request->query->has('liteDisplaying'));
     }
 
     /**
@@ -338,9 +338,10 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    private function renderCreateProductForm(FormInterface $productForm): Response
+    private function renderCreateProductForm(FormInterface $productForm, bool $lightDisplay): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/create.html.twig', [
+            'lightDisplay' => $lightDisplay,
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
