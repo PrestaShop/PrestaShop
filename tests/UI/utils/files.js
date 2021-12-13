@@ -1,5 +1,5 @@
 const fs = require('fs');
-const pdfJs = require('pdfjs-dist/es5/build/pdf.js');
+const pdfJs = require('pdfjs-dist/legacy/build/pdf.js');
 const imgGen = require('js-image-generator');
 
 /**
