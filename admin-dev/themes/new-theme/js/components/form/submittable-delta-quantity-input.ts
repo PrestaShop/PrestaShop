@@ -76,7 +76,7 @@ export default class SubmittableDeltaQuantityInput {
     afterSuccess?: (deltaInput: HTMLInputElement, ajaxResponse: AjaxResponse) => any,
   ): void {
     this.deltaQuantityComponent.applyNewQuantity(input);
-    this.submittableInputComponent.reset(input);
+    this.submittableInputComponent.reset(input, 0);
 
     if (afterSuccess) {
       afterSuccess(input, response);
