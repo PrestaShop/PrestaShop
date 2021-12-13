@@ -347,7 +347,7 @@ module.exports = {
         options: {
           name: '[hash].[ext]',
         },
-        exclude: /MaterialIcons-Regular.(woff2?|ttf)/,
+        exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
       },
       {
         test: /MaterialIcons-Regular.(woff2?|ttf)$/,
