@@ -89,7 +89,7 @@ export default {
     sortableColumns: '.ps-sortable-column',
     combinationItemForm: {
       isDefaultKey: 'combination_item[is_default]',
-      deltaQuantityKey: 'combination_item[delta_quantity][delta][value]',
+      deltaQuantityKey: 'combination_item[delta_quantity][delta]',
       impactOnPriceKey: 'combination_item[impact_on_price][value]',
       referenceKey: 'combination_item[reference][value]',
       tokenKey: 'combination_item[_token]',
@@ -109,7 +109,7 @@ export default {
       impactOnPriceInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
       finalPriceTeInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
       quantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delta_quantity_quantity`,
-      deltaQuantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta_value`,
+      deltaQuantityInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
       isDefaultInput: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_default`,
       editButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_edit`,
       deleteButton: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_delete`,
