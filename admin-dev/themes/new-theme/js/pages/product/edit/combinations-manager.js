@@ -186,7 +186,6 @@ export default class CombinationsManager {
     );
 
     this.initSubmittableInputs();
-    this.initSubmittableDeltaQuantityInput();
 
     this.$combinationsContainer.on(
       'change',
@@ -262,7 +261,7 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const {impactOnPriceKey, referenceKey, tokenKey} = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey, referenceKey, tokenKey, deltaQuantityKey} = CombinationsMap.combinationItemForm;
 
     new SubmittableInput({
       wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,
@@ -288,19 +287,14 @@ export default class CombinationsManager {
           )
       },
     );
-  }
 
-  /**
-   * @private
-   */
-  initSubmittableDeltaQuantityInput() {
     new SubmittableDeltaQuantityInput({
       submittableWrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
       submitCallback: input => this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
         {
-          [CombinationsMap.combinationItemForm.deltaQuantityKey]: input.value,
-          [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
+          [deltaQuantityKey]: input.value,
+          [tokenKey]: combinationToken,
         },
       ),
       containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,

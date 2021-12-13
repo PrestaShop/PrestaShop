@@ -1265,11 +1265,6 @@
   {{- block('form_widget_simple') -}}
 {% endblock %}
 
-{% block submittable_delta_quantity_delta_widget %}
-{%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
-  {{- block('submittable_input_widget') -}}
-{% endblock %}
-
 {% block submittable_input_widget %}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
   <div {{ block('widget_attributes') }}>
@@ -1280,8 +1275,26 @@
     }) -%}
 
     {{ form_widget(form.value, {'attr': typeAttr}) }}
-    <button type="button" class="check-button d-none">
-      <i class="material-icons">check</i>
-    </button>
+    {{- block('submittable_input_button_widget') -}}
   </div>
 {% endblock submittable_input_widget %}
+
+{% block submittable_input_button_widget %}
+  <button type="button" class="check-button d-none">
+    <i class="material-icons">check</i>
+  </button>
+{% endblock submittable_input_button_widget %}
+
+{% block submittable_delta_quantity_delta_widget %}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta ps-submittable-input-wrapper')|trim}) -%}
+  <div {{ block('widget_attributes') }}>
+    {%- set attr = form.vars.attr|merge({
+      'class': (form.vars.attr.class|default('') ~ ' submittable-input')|trim,
+      'data-initial-value': form.vars.value,
+      'value': form.vars.value,
+    }) -%}
+
+    {{ form_widget(form, {'attr': attr}) }}
+    {{- block('submittable_input_button_widget') -}}
+  </div>
+{% endblock %}
