@@ -24,8 +24,6 @@
  */
 
 import {showGrowl} from '@app/utils/growl';
-import {EventEmitter} from 'events';
-import ComponentsEventMap from '@components/components-event-map';
 import ComponentsMap from '@components/components-map';
 
 import ClickEvent = JQuery.ClickEvent;
@@ -47,8 +45,6 @@ export type SubmittableInputConfig = {
 export default class SubmittableInput {
   config: SubmittableInputConfig;
 
-  eventEmitter: EventEmitter;
-
   inputSelector: string;
 
   inputsInContainerSelector: string;
@@ -59,7 +55,6 @@ export default class SubmittableInput {
 
   constructor(config: SubmittableInputConfig) {
     this.config = config;
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.inputSelector = ComponentsMap.submittableInput.inputSelector;
     this.buttonSelector = ComponentsMap.submittableInput.buttonSelector;
     this.inputsInContainerSelector = `${this.config.wrapperSelector} ${this.inputSelector}`;
@@ -68,9 +63,9 @@ export default class SubmittableInput {
     this.init();
   }
 
-  public reset(input: HTMLInputElement): void {
-    $(input).val(0);
-    $(input).data('initialValue', 0);
+  public reset(input: HTMLInputElement, value: string|number): void {
+    $(input).val(value);
+    $(input).data('initialValue', value);
   }
 
   private init(): void {
@@ -100,8 +95,6 @@ export default class SubmittableInput {
     if (this.loading || !this.inputValueChanged(input)) {
       return;
     }
-    // set local variable to be able to use it inside callback scope
-    const {eventEmitter} = this;
 
     this.toggleLoading(input, true);
     const button = this.findButton(input);
@@ -113,7 +106,6 @@ export default class SubmittableInput {
         this.toggleLoading(input, false);
 
         if (response.message) {
-          eventEmitter.emit(ComponentsEventMap.submittableInput.submitSuccess, input);
           showGrowl('success', response.message);
         }
 
@@ -122,7 +114,6 @@ export default class SubmittableInput {
         }
       })
       .catch((error: AjaxError) => {
-        eventEmitter.emit(ComponentsEventMap.submittableInput.submitError, {input, error});
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
         this.toggleLoading(input, false);
