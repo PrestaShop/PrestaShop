@@ -5817,28 +5817,29 @@ class ProductCore extends ObjectModel
 
         $combination = new Combination($id_product_attribute);
 
-        $unitPrice = 0.0;
+        $baseUnitPrice = 0.0;
         if (isset($row['unit_price'])) {
             // Unit price is supposed to be in DB and accessible in the row
-            $unitPrice = (float) $row['unit_price'];
+            $baseUnitPrice = (float) $row['unit_price'];
         } elseif (isset($row['unit_price_ratio']) && 0 != $row['unit_price_ratio']) {
             // In case unit_price is not defined but ratio is we recompute unit_price based on initial product price
-            $unitPrice = $row['price_without_reduction_without_tax'] / $row['unit_price_ratio'];
+            $baseUnitPrice = $row['price_without_reduction_without_tax'] / $row['unit_price_ratio'];
         }
 
         // Then if combination has an impact we apply it on unit price
-        if (0 != $combination->unit_price_impact && 0 != $unitPrice) {
-            $unitPrice = $unitPrice + $combination->unit_price_impact;
+        if (0 != $combination->unit_price_impact && 0 != $baseUnitPrice) {
+            $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
         }
 
         // Finally, we apply the currency rate
         $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
-        $unitPrice = Tools::convertPrice($unitPrice, $currencyId);
+        $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
 
         // Compute price ratio based on initial product price and initial unit price (without taxes and without discount)
-        $row['unit_price_ratio'] = $unitPrice != 0 ? $row['price_without_reduction_without_tax'] / $unitPrice : 0.0;
-        $row['unit_price_tax_excluded'] = $row['unit_price'] = $unitPrice;
-        // Always compute unit price with tax included so that it can be accessed if necessary
+        $row['unit_price_ratio'] = $baseUnitPrice != 0 ? $row['price_without_reduction_without_tax'] / $baseUnitPrice : 0.0;
+
+        // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
+        $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_tax_exc'] / $row['unit_price_ratio'] : 0.0;
         $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0.0;
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
