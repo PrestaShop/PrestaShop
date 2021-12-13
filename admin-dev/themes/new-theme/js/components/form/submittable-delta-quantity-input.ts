@@ -25,22 +25,48 @@
 import SubmittableInput, {SubmittableInputConfig} from '@components/form/submittable-input';
 import DeltaQuantityInput, {DeltaQuantityConfig} from '@components/form/delta-quantity-input';
 
+type SubmittableConfig = Omit<SubmittableInputConfig, 'wrapperSelector'> & {
+  submittableWrapperSelector: string;
+}
+
+export type SubmittableDeltaConfig = Partial<DeltaQuantityConfig> & SubmittableConfig;
+
 export default class SubmittableDeltaQuantityInput {
   private deltaQuantityComponent: DeltaQuantityInput;
 
   private submittableInputComponent: SubmittableInput;
 
-  constructor(deltaConfig: Partial<DeltaQuantityConfig> = {}, submittableConfig: SubmittableInputConfig) {
-    this.deltaQuantityComponent = new DeltaQuantityInput(deltaConfig);
+  constructor(deltaConfig: SubmittableDeltaConfig) {
+    const deltaQuantityConfig: Partial<DeltaQuantityConfig> = {};
+
+    if (deltaConfig.containerSelector) {
+      deltaQuantityConfig.containerSelector = deltaConfig.containerSelector;
+    }
+    if (deltaConfig.deltaInputSelector) {
+      deltaQuantityConfig.deltaInputSelector = deltaConfig.deltaInputSelector;
+    }
+    if (deltaConfig.updateQuantitySelector) {
+      deltaQuantityConfig.updateQuantitySelector = deltaConfig.updateQuantitySelector;
+    }
+    if (deltaConfig.modifiedQuantityClass) {
+      deltaQuantityConfig.modifiedQuantityClass = deltaConfig.modifiedQuantityClass;
+    }
+    if (deltaConfig.newQuantitySelector) {
+      deltaQuantityConfig.newQuantitySelector = deltaConfig.newQuantitySelector;
+    }
+    if (deltaConfig.initialQuantityPreviewSelector) {
+      deltaQuantityConfig.initialQuantityPreviewSelector = deltaConfig.initialQuantityPreviewSelector;
+    }
+
+    this.deltaQuantityComponent = new DeltaQuantityInput(deltaQuantityConfig);
 
     this.submittableInputComponent = new SubmittableInput({
-      wrapperSelector: submittableConfig.wrapperSelector,
-      submitCallback: submittableConfig.submitCallback,
+      wrapperSelector: deltaConfig.submittableWrapperSelector,
+      submitCallback: deltaConfig.submitCallback,
       afterSuccess: (
         input: HTMLInputElement,
         response: AjaxResponse,
-        afterSuccess?: (deltaInput: HTMLInputElement, ajaxResponse: AjaxResponse) => any,
-      ) => this.reset(input, response, afterSuccess),
+      ) => this.reset(input, response, deltaConfig.afterSuccess),
     });
   }
 
