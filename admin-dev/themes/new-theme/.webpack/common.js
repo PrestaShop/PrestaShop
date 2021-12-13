@@ -32,7 +32,7 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FontPreloadPlugin = require('./plugins/preload');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
 
 module.exports = {
   externals: {
@@ -392,6 +392,7 @@ module.exports = {
     new FontPreloadPlugin({
       index: 'preload.tpl',
       extensions: ['woff2'],
+      filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
     }),
