@@ -305,6 +305,12 @@
       color: $gray;
       text-overflow: ellipsis;
     }
+
+    &.has-discount {
+      .unit-price-cart {
+        color: $brand-secondary;
+      }
+    }
   }
 }
 
