@@ -39,28 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use RuntimeException;
 use State;
-use Supplier;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @Given /^supplier "(.+)" with name "(.+)" exists$/
-     *
-     * @param string $reference
-     * @param string $supplierName
-     */
-    public function existsByName(string $reference, string $supplierName): void
-    {
-        $id = (int) Supplier::getIdByName($supplierName);
-
-        if (!$id) {
-            throw new RuntimeException(sprintf('Supplier with name "%s" doesnt exist', $supplierName));
-        }
-
-        $this->getSharedStorage()->set($reference, $id);
-    }
-
     /**
      * @Then /^supplier "(.+)" should have following details for product "(.+)":$/
      *
