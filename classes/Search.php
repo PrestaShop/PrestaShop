@@ -132,7 +132,20 @@ class SearchCore
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
-        $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, false);
+        if (!stripos($string, '&')) {
+            $sanitizedString = Search::sanitize($string, $id_lang, false, Context::getContext()->language->iso_code);
+        } else {
+            $preWords = explode('&', $string);
+            $sanitizedWords = [];
+            $sanitizedString = '';
+
+            for ($i = 0; $i < count($preWords); ++$i) {
+                $wd = Search::sanitize($preWords[$i], $id_lang, false, Context::getContext()->language->iso_code);
+                array_push($sanitizedWords, $wd);
+                $sanitizedString .= $i < (count($preWords) - 1) ? $preWords[$i] . '&' : $preWords[$i];
+            }
+        }
+
         $words = explode(' ', $sanitizedString);
         if (strpos($string, '-') !== false) {
             $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
