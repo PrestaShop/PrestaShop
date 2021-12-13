@@ -15,6 +15,6 @@ RUN chown -R www-data:www-data /var/www/html/vendor
 RUN chown -R www-data:www-data /var/www/html/var
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt install -y nodejs npm
+RUN apt install -y nodejs
 
 CMD ["/tmp/docker_run_git.sh"]
