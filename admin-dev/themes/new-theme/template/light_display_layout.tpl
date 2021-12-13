@@ -10,7 +10,7 @@
   {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
 >
 
-<div id="main-div">
+<div id="main-div" class="light_display_layout">
     {if $install_dir_exists}
       <div class="alert alert-warning">
         {l|escape s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
