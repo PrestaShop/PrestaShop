@@ -42,6 +42,8 @@ use Store;
  */
 class ImageRetriever
 {
+    const HIGH_RES_URL_SUFFIX = '2x';
+
     /**
      * @var Link
      */
@@ -190,7 +192,7 @@ class ImageRetriever
             if ($generateHighDpiImages) {
                 $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . '2x.' . $ext,
+                    $id_image . '-' . $image_type['name'] . self::HIGH_RES_URL_SUFFIX . '.' . $ext,
                 ]);
                 if (!file_exists($resizedImagePathHighDpi)) {
                     ImageManager::resize(
@@ -205,7 +207,7 @@ class ImageRetriever
             $url = $this->link->$getImageURL(
                 isset($object->link_rewrite) ? $object->link_rewrite : $object->name,
                 $id_image,
-                $image_type['name'] . ($generateHighDpiImages ? '2x' : '')
+                $image_type['name'] . ($generateHighDpiImages ? self::HIGH_RES_URL_SUFFIX : '')
             );
 
             $urls[$image_type['name']] = [
