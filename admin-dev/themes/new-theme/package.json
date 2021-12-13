@@ -49,6 +49,7 @@
     "vuex": "^3.6.2"
   },
   "devDependencies": {
+    "@types/bootstrap": "^4.5.0",
     "@babel/eslint-parser": "^7.15.7",
     "@types/dropzone": "^5.7.4",
     "@types/jquery": "^3.5.5",
