@@ -122,6 +122,7 @@ class AttachmentController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Attachment/add.html.twig', [
+            'lightDisplay' => $request->query->has('liteDisplaying'),
             'enableSidebar' => true,
             'layoutTitle' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
             'attachmentForm' => $attachmentForm->createView(),
