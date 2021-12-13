@@ -27,12 +27,29 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class SpecificPricePriorityType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $priorityTypeChoiceProvider;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $priorityTypeChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
+        $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array<string, mixed> $options
@@ -40,9 +57,15 @@ class SpecificPricePriorityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            //@todo: consider using radio checkboxes for better ux. (labels would indiacte that its either default or specific priorities that will be used)
-            ->add('priority_type', SwitchType::class, [
-                'label' => $this->trans('Use specific priority for product', 'Admin.Catalog.Feature'),
+            //@todo: add link to general priorities settings when it exists
+            ->add('priority_type', ChoiceType::class, [
+                'choices' => $this->priorityTypeChoiceProvider->getChoices(),
+                'default_empty_data' => false,
+                'placeholder' => false,
+                'expanded' => true,
+                'multiple' => false,
+                'required' => false,
+                'label' => false,
             ])
             //@todo: dynamic show/hide of priorities depending on type selection.
             ->add('priorities', PriorityListType::class, [
