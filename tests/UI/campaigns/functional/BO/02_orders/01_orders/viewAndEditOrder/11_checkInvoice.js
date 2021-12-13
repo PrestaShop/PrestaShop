@@ -24,7 +24,7 @@ const viewOrderPage = require('@pages/BO/orders/view');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
-const {Address} = require('@data/demo/address');
+const Address = require('@data/demo/address');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
@@ -50,6 +50,7 @@ const virtualProduct = new ProductFaker({
   type: 'Virtual product',
   taxRule: 'No tax',
   quantity: 20,
+  stockLocation: 'stock 1',
 });
 
 const customizedProduct = new ProductFaker({
@@ -102,8 +103,8 @@ Post-condition
 
 */
 describe('BO - Orders - View and edit order : Check invoice', async () => {
-// Pre-condition - Create order from FO
-  //createOrderByCustomerTest(orderByCustomerData, baseContext);
+  // Pre-condition - Create order from FO
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
   before(async function () {
@@ -120,85 +121,85 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
   });
 
   // Pre-condition - Enable ecoTax
-  /* describe('POST-TEST: Enable ecoTax', async () => {
-     it('should go to \'International > Taxes\' page', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
+  /*describe('POST-TEST: Enable ecoTax', async () => {
+    it('should go to \'International > Taxes\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
-       await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
+      await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
 
-       await taxesPage.closeSfToolBar(page);
+      await taxesPage.closeSfToolBar(page);
 
-       const pageTitle = await taxesPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(taxesPage.pageTitle);
-     });
+      const pageTitle = await taxesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    });
 
-     it('should enable EcoTax', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'enableEcoTax', baseContext);
+    it('should enable EcoTax', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'enableEcoTax', baseContext);
 
-       const textResult = await taxesPage.enableEcoTax(page, true);
-       await expect(textResult).to.be.equal('Update successful');
-     });
-   });
+      const textResult = await taxesPage.enableEcoTax(page, true);
+      await expect(textResult).to.be.equal('Update successful');
+    });
+  });
 
-   // Pre-condition - Create 4 products
-   [virtualProduct,
-     customizedProduct,
-     productWithSpecificPrice,
-     productWithEcoTax,
-   ].forEach((product, index) => {
-     describe(`POST-TEST: Create product '${product.name}'`, async () => {
-       if (index === 0) {
-         it('should go to \'Catalog > Products\' page', async function () {
-           await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+  // Pre-condition - Create 4 products
+  [virtualProduct,
+    customizedProduct,
+    productWithSpecificPrice,
+    productWithEcoTax,
+  ].forEach((product, index) => {
+    describe(`POST-TEST: Create product '${product.name}'`, async () => {
+      if (index === 0) {
+        it('should go to \'Catalog > Products\' page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-           await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+          await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
 
-           await productsPage.closeSfToolBar(page);
+          await productsPage.closeSfToolBar(page);
 
-           const pageTitle = await productsPage.getPageTitle(page);
-           await expect(pageTitle).to.contains(productsPage.pageTitle);
-         });
+          const pageTitle = await productsPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(productsPage.pageTitle);
+        });
 
-         it('should reset all filters and get number of products', async function () {
-           await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
+        it('should reset all filters and get number of products', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
 
-           numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-           await expect(numberOfProducts).to.be.above(0);
-         });
-       }
+          numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+          await expect(numberOfProducts).to.be.above(0);
+        });
+      }
 
-       it('should go to add product page', async function () {
-         await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
+      it('should go to add product page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
 
-         if (index === 0) {
-           await productsPage.goToAddProductPage(page);
-         } else {
-           await addProductPage.goToAddProductPage(page);
-         }
+        if (index === 0) {
+          await productsPage.goToAddProductPage(page);
+        } else {
+          await addProductPage.goToAddProductPage(page);
+        }
 
-         const pageTitle = await addProductPage.getPageTitle(page);
-         await expect(pageTitle).to.contains(addProductPage.pageTitle);
-       });
+        const pageTitle = await addProductPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addProductPage.pageTitle);
+      });
 
-       it('should create Product', async function () {
-         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
+      it('should create Product', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-         const createProductMessage = await addProductPage.createEditBasicProduct(page, product);
+        const createProductMessage = await addProductPage.createEditBasicProduct(page, product);
 
-         if (product === customizedProduct) {
-           await addProductPage.addCustomization(page, product.customization);
-         }
+        if (product === customizedProduct) {
+          await addProductPage.addCustomization(page, product.customization);
+        }
 
-         if (product === productWithSpecificPrice) {
-           await addProductPage.addSpecificPrices(page, product.specificPrice);
-         }
-         if (product === productWithEcoTax) {
-           await addProductPage.addEcoTax(page, product.ecoTax);
-         }
-         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-       });
-     });
-   });*/
+        if (product === productWithSpecificPrice) {
+          await addProductPage.addSpecificPrices(page, product.specificPrice);
+        }
+        if (product === productWithEcoTax) {
+          await addProductPage.addEcoTax(page, product.ecoTax);
+        }
+        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+      });
+    });
+  });*/
 
   // 1 - Go to view order page
   describe('Go to view order page', async () => {
@@ -272,128 +273,188 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress', baseContext);
 
         const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-          + `${Address.third.postalCode} ${Address.third.city}`;
+          + `${Address.third.zipCode} ${Address.third.city}`;
 
         const alertMessage = await viewOrderPage.selectAnotherShippingAddress(page, addressToSelect);
         expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+      });
 
-        const shippingAddress = await viewOrderPage.getShippingAddress(page);
-        await expect(shippingAddress)
-          .to.contain(Address.third.firstName)
-          .and.to.contain(Address.third.lastName)
-          .and.to.contain(Address.third.address)
-          .and.to.contain(Address.third.postalCode)
-          .and.to.contain(Address.third.city)
-          .and.to.contain(Address.third.country);
+      it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
+
+        const textResult = await viewOrderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+        await expect(textResult).to.equal(Statuses.paymentAccepted.status);
+      });
+
+      it('should check that there is no carrier', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
+
+        const carriersNumber = await viewOrderPage.getCarriersNumber(page);
+        await expect(carriersNumber).to.be.equal(0);
+      });
+
+      it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice', baseContext);
+
+        filePath = await viewOrderPage.viewInvoice(page);
+
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        await expect(doesFileExist, 'File is not downloaded!').to.be.true;
       });
     });
 
-    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatusPaymentAccepted', baseContext);
+    describe('Check the invoice', async () => {
+      it('should check the header of the invoice', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkLogo', baseContext);
 
-      const textResult = await viewOrderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
-      await expect(textResult).to.equal(Statuses.paymentAccepted.status);
-    });
+        const isTitleVisible = await files.isTextInPDF(filePath, 'INVOICE');
+        await expect(isTitleVisible).to.be.true;
 
-    it('should check that there is no carrier', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
+        const imageNumber = await files.getImageNumberInPDF(filePath);
+        await expect(imageNumber).to.be.equal(1);
+      });
 
-      const carriersNumber = await viewOrderPage.getCarriersNumber(page);
-      await expect(carriersNumber).to.be.equal(0);
-    });
 
-    it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice', baseContext);
+      it('should check that the \'Delivery address\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
 
-      filePath = await viewOrderPage.viewInvoice(page);
+        // Check first name and lastname of the customer
+        const customerNameExist = await files.isTextInPDF(
+          filePath,
+          `${Address.third.firstName} ${Address.third.lastName}`,
+        );
+        await expect(customerNameExist, 'Customer name and lastname does not exist in invoice!').to.be.true;
 
-      const doesFileExist = await files.doesFileExist(filePath, 5000);
-      await expect(doesFileExist, 'File is not downloaded!').to.be.true;
+        // Check company
+        const customerCompanyExist = await files.isTextInPDF(filePath, Address.third.company);
+        await expect(customerCompanyExist, 'Customer name and lastname does not exist in invoice!').to.be.true;
+
+        const customerAddressExist = await files.isTextInPDF(
+          filePath,
+          `${Address.third.address} ${Address.third.secondAddress}`,
+        );
+        await expect(customerAddressExist, 'Customer address does not exist in invoice!').to.be.true;
+
+        // Check city, state zip code
+        const customerPostalAddressExist = await files.isTextInPDF(
+          filePath,
+          `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode}`,
+        );
+        await expect(
+          customerPostalAddressExist,
+          'Customer state, country and zip code does not exist in invoice!').to.be.true;
+
+        // Check country
+        const customerCountryExist = await files.isTextInPDF(filePath, Address.third.country);
+        await expect(customerCountryExist, 'Customer country does not exist in invoice!').to.be.true;
+
+        // Check phone
+        const customerPhoneExist = await files.isTextInPDF(filePath, Address.third.phone);
+        await expect(customerPhoneExist, 'Customer phone does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Billing address\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        // Check first name and lastname of the customer
+        const customerNameExist = await files.isTextInPDF(
+          filePath,
+          `${Address.second.firstName} ${Address.second.lastName}`,
+        );
+        await expect(customerNameExist, 'Customer name and lastname does not exist in invoice!').to.be.true;
+
+        // Check company
+        const customerCompanyExist = await files.isTextInPDF(filePath, Address.second.company);
+        await expect(customerCompanyExist, 'Customer name and lastname does not exist in invoice!').to.be.true;
+
+        const customerAddressExist = await files.isTextInPDF(
+          filePath,
+          `${Address.second.address} ${Address.second.secondAddress}`,
+        );
+        await expect(customerAddressExist, 'Customer address does not exist in invoice!').to.be.true;
+
+        // Check city, state zip code
+        const customerPostalAddressExist = await files.isTextInPDF(
+          filePath,
+          `${Address.second.zipCode} ${Address.second.city}`,
+        );
+        await expect(
+          customerPostalAddressExist,
+          'Customer state, country and zip code does not exist in invoice!').to.be.true;
+
+        // Check country
+        const customerCountryExist = await files.isTextInPDF(filePath, Address.second.country);
+        await expect(customerCountryExist, 'Customer country does not exist in invoice!').to.be.true;
+
+        // Check phone
+        const customerPhoneExist = await files.isTextInPDF(filePath, Address.second.phone);
+        await expect(customerPhoneExist, 'Customer phone does not exist in invoice!').to.be.true;
+      });
+
+      /*it('should check that the \'Invoice number\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const invoiceNumberExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(invoiceNumberExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Invoice date\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const invoiceDateExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(invoiceDateExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Order reference\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const orderReferenceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(orderReferenceExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Order date\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const orderDateExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(orderDateExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Product reference\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const productReferenceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(productReferenceExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Product name\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const productNameExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(productNameExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Product price\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const productPriceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(productPriceExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Product quantity\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const productQuantityExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(productQuantityExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });
+
+      it('should check that the \'Payment method\' is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
+
+        const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
+        await expect(paymentMethodExist, 'Payment amount does not exist in invoice!').to.be.true;
+      });*/
     });
   });
-
-  /* describe('Check the invoice', async () => {
-     it('should check that the \'Delivery address\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const customerNameExist = files.isTextInPDF(filePath, `${Address.second.firstName} ${Address.second.lastName}`);
-       await expect(customerNameExist, 'Customer name does not exist in invoice!').to.be.true;
-
-       const customerCompanyExist = files.isTextInPDF(filePath, Address.second.company);
-       await expect(customerCompanyExist, 'Customer company does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Billing address\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const billingAddressExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(billingAddressExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Invoice number\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const invoiceNumberExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(invoiceNumberExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Invoice date\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const invoiceDateExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(invoiceDateExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Order reference\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const orderReferenceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(orderReferenceExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Order date\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const orderDateExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(orderDateExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Product reference\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const productReferenceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(productReferenceExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Product name\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const productNameExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(productNameExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Product price\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const productPriceExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(productPriceExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Product quantity\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const productQuantityExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(productQuantityExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-
-     it('should check that the \'Payment method\' is correct', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoice', baseContext);
-
-       const paymentMethodExist = await files.isTextInPDF(filePath, paymentDataAmountEqualRest.amount);
-       await expect(paymentMethodExist, 'Payment amount does not exist in invoice!').to.be.true;
-     });
-   });*/
-
   /* // Post-condition - Delete the created products
    describe('Post-condition : Delete the created products', async () => {
      it('should go to \'Catalog > Products\' page', async function () {
