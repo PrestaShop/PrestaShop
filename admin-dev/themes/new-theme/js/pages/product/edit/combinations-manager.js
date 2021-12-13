@@ -294,11 +294,8 @@ export default class CombinationsManager {
    * @private
    */
   initSubmittableDeltaQuantityInput() {
-    const deltaConfig = {
-      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
-    };
-    const submittableConfig = {
-      wrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
+    new SubmittableDeltaQuantityInput({
+      submittableWrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
       submitCallback: input => this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
         {
@@ -306,8 +303,8 @@ export default class CombinationsManager {
           [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
         },
       ),
-    }
-    new SubmittableDeltaQuantityInput(deltaConfig, submittableConfig);
+      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
+    });
   }
 
   /**
