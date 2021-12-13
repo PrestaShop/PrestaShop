@@ -135,31 +135,31 @@ export default class ProductFormModel {
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = new BigNumber(this.getProduct().price.priceTaxIncluded);
+        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
         this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
         break;
       }
       case 'product.price.priceTaxExcluded': {
-        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded);
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
         this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
         break;
       }
 
       case 'product.price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = new BigNumber(this.getProduct().price.unitPriceTaxIncluded);
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
         this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
         break;
       }
       case 'product.price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = new BigNumber(this.getProduct().price.unitPriceTaxExcluded);
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
         this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
         break;
       }
 
       case 'product.price.taxRulesGroupId': {
-        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded);
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
         this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        const unitPriceTaxExcluded = new BigNumber(this.getProduct().price.unitPriceTaxExcluded);
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
         this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
         break;
       }

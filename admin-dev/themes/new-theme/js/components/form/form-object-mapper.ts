@@ -23,8 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import BigNumber from 'bignumber.js';
 import _ from 'lodash';
 import EventEmitter from '@components/event-emitter';
+import {transform as numberCommaTransform} from '@js/app/utils/number-comma-transformer';
 
 const {$} = window;
 
@@ -243,6 +245,17 @@ export default class FormObjectMapper {
   }
 
   /**
+   * Returns a model field by modelKey converted as a BigNumber instance, it also cleans
+   * any invalid comma to avoid conversion error (since some languages sue comma as a decimal
+   * separator).
+   *
+   * @param modelKey
+   */
+  getBigNumber(modelKey: string): BigNumber {
+    return new BigNumber(numberCommaTransform(this.getValue(modelKey)));
+  }
+
+  /**
    * Get a field from the object based on the model key,
    * you can even get a sub part of the whole model,
    * Get a field from the object based on the model key,
@@ -380,7 +393,7 @@ export default class FormObjectMapper {
     value: string | number | string[] | undefined,
   ): boolean {
     // eslint-disable-next-line eqeqeq
-    if (Number(value) == $input.val()) {
+    if (Number(numberCommaTransform(value)) == numberCommaTransform($input.val())) {
       return true;
     }
 
