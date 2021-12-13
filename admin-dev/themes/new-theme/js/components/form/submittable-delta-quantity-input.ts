@@ -23,31 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import SubmittableInput, {SubmittableInputConfig} from '@components/form/submittable-input';
-import {EventEmitter} from 'events';
 import DeltaQuantityInput, {DeltaQuantityConfig} from '@components/form/delta-quantity-input';
 
-export type SubmittableDeltaConfig = Omit<SubmittableInputConfig, 'afterSuccess'>
-
-export class SubmittableDeltaQuantityInput {
+export default class SubmittableDeltaQuantityInput {
   private deltaQuantityComponent: DeltaQuantityInput;
 
   private submittableInputComponent: SubmittableInput;
 
-  private eventEmitter: EventEmitter;
-
-  constructor(deltaConfig: Partial<DeltaQuantityConfig> = {}, submittableConfig: SubmittableDeltaConfig) {
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
+  constructor(deltaConfig: Partial<DeltaQuantityConfig> = {}, submittableConfig: SubmittableInputConfig) {
     this.deltaQuantityComponent = new DeltaQuantityInput(deltaConfig);
 
     this.submittableInputComponent = new SubmittableInput({
       wrapperSelector: submittableConfig.wrapperSelector,
       submitCallback: submittableConfig.submitCallback,
-      afterSuccess: (input: HTMLInputElement) => this.reset(input),
+      afterSuccess: (
+        input: HTMLInputElement,
+        response: AjaxResponse,
+        afterSuccess?: (deltaInput: HTMLInputElement, ajaxResponse: AjaxResponse) => any,
+      ) => this.reset(input, response, afterSuccess),
     });
   }
 
-  private reset(input: HTMLInputElement): void {
-    this.deltaQuantityComponent.reset(input);
+  private reset(
+    input: HTMLInputElement,
+    response: AjaxResponse,
+    afterSuccess?: (deltaInput: HTMLInputElement, ajaxResponse: AjaxResponse) => any,
+  ): void {
+    this.deltaQuantityComponent.applyNewQuantity(input);
     this.submittableInputComponent.reset(input);
+
+    if (afterSuccess) {
+      afterSuccess(input, response);
+    }
   }
 }

@@ -34,7 +34,7 @@ import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
-import {SubmittableDeltaQuantityInput} from '@components/form/submittable-delta-quantity-input';
+import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;

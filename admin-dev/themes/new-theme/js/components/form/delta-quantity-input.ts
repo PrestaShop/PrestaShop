@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ComponentsMap from '@components/components-map';
-import {EventEmitter} from 'events';
 
 import ChangeEvent = JQuery.ChangeEvent;
 
@@ -41,11 +40,8 @@ export type DeltaQuantityConfig = {
 export default class DeltaQuantityInput {
   private config: DeltaQuantityConfig;
 
-  private eventEmitter: EventEmitter;
-
   constructor(config: Partial<DeltaQuantityConfig> = {}) {
     const componentMap = ComponentsMap.deltaQuantityInput;
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.config = {
       containerSelector: componentMap.containerSelector,
       deltaInputSelector: componentMap.deltaInputSelector,
@@ -59,7 +55,7 @@ export default class DeltaQuantityInput {
     this.init();
   }
 
-  public reset(input: HTMLInputElement): void {
+  public applyNewQuantity(input: HTMLInputElement): void {
     const $container: JQuery = $(input).closest(this.config.containerSelector);
 
     if ($container.length === 0) {
