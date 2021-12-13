@@ -6276,22 +6276,31 @@
         },
         {
             "name": "prestashop/ps_featuredproducts",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_featuredproducts.git",
-                "reference": "a175279ce8fce9669fa1b22c5a13be86c4c1c334"
+                "reference": "693d106181eaaea14358ad035fe7166106b9a1a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/a175279ce8fce9669fa1b22c5a13be86c4c1c334",
-                "reference": "a175279ce8fce9669fa1b22c5a13be86c4c1c334",
+                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/693d106181eaaea14358ad035fe7166106b9a1a4",
+                "reference": "693d106181eaaea14358ad035fe7166106b9a1a4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_featuredproducts.php"
+                ],
+                "exclude-from-classmap": []
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -6305,9 +6314,9 @@
             "description": "PrestaShop - Featured products",
             "homepage": "https://github.com/PrestaShop/ps_featuredproducts",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.1"
             },
-            "time": "2020-07-22T16:21:40+00:00"
+            "time": "2021-12-10T13:44:29+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
@@ -12533,5 +12542,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.0.0"
+    "plugin-api-version": "2.1.0"
 }
