@@ -46,6 +46,8 @@ export default class ElementVisibilityByCheckboxToggler {
 
   private init(): void {
     const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll(this.checkboxesSelector);
+    const initiallyCheckedCheckbox: HTMLInputElement|null = document.querySelector(`${this.checkboxesSelector}:checked`);
+    this.toggle(initiallyCheckedCheckbox?.value === this.checkedValueForHiding);
 
     checkboxes.forEach((checkbox: HTMLInputElement) => {
       checkbox.addEventListener('change', () => {
