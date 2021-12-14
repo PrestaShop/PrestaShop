@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddS
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -245,6 +246,29 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         }
 
         return new SpecificPriceId($id);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return PriorityList|null
+     */
+    public function findPrioritiesForProduct(ProductId $productId): ?PriorityList
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('spp.priority')
+            ->from($this->dbPrefix . 'specific_price_priority', 'spp')
+            ->where('spp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchOne();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new PriorityList(explode(';', $result));
     }
 
     /**
