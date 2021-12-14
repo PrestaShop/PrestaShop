@@ -227,6 +227,29 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @return PriorityList|null
+     */
+    public function findPrioritiesForProduct(ProductId $productId): ?PriorityList
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('spp.priority')
+            ->from($this->dbPrefix . 'specific_price_priority', 'spp')
+            ->where('spp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchOne();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new PriorityList(explode(';', $result));
+    }
+
+    /**
+     * @param ProductId $productId
      * @param array|null $filters
      *
      * @return QueryBuilder
