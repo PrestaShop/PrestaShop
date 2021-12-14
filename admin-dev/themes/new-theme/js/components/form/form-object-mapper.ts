@@ -366,7 +366,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    if (!this.hasSameValue($input, value)) {
+    if (!this.hasSameValue($input.val(), value)) {
       $input.val(<string>value);
 
       if ($input.data('toggle') === 'select2') {
@@ -378,27 +378,31 @@ export default class FormObjectMapper {
   }
 
   /**
-   * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
-   * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
+   * Check if both values are equal regardless of their type.
    *
-   * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
-   * it's not written exactly the same way (like pending zeros)
-   *
-   * @param $input
-   * @param value
+   * @param inputValue
+   * @param referenceValue
    * @private
    */
   private hasSameValue(
-    $input: JQuery,
-    value: string | number | string[] | undefined,
+    inputValue: string | number | string[] | undefined,
+    referenceValue: string | number | string[] | undefined,
   ): boolean {
+    /*
+     * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
+     * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
+     *
+     * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
+     * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
+     * as numbers can be written with comma separator depending on the language.
+     */
     // eslint-disable-next-line eqeqeq
-    if (Number(numberCommaTransform(value)) == numberCommaTransform($input.val())) {
+    if (Number(numberCommaTransform(referenceValue)) == numberCommaTransform(inputValue)) {
       return true;
     }
 
     // eslint-disable-next-line eqeqeq
-    return value == $input.val();
+    return referenceValue == inputValue;
   }
 
   /**
