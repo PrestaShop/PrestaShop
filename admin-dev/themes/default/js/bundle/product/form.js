@@ -440,7 +440,6 @@ const featuresCollection = (function () {
       });
 
       $(document).on('keyup', '.feature-collection input[type=text]', function (event) {
-        
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
         const $selector = $row.find('.feature-value-selector');
