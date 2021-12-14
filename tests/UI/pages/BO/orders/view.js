@@ -34,8 +34,10 @@ class Order extends BOBasePage {
     this.invalidPercentValueErrorMessage = 'Percent value cannot exceed 100.';
     this.percentValueNotPositiveErrorMessage = 'Percent value must be greater than 0.';
     this.discountCannotExceedTotalErrorMessage = 'Discount value cannot exceed the total price of this order.';
+
     // Selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
+    this.orderReference = '.title-content strong[data-role=\'order-reference\']';
 
     // Order actions selectors
     this.updateStatusButton = '#update_order_status_action_btn';
@@ -225,6 +227,10 @@ class Order extends BOBasePage {
   /*
   Methods
    */
+
+  async getOrderReference(page) {
+    return this.getTextContent(page, this.orderReference);
+  }
 
   // Methods for order actions
   /**
@@ -827,7 +833,7 @@ class Order extends BOBasePage {
    */
   async getSearchedProductDetails(page) {
     return {
-      //stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
+      // stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
