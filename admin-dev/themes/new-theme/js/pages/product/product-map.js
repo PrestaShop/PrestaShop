@@ -225,4 +225,10 @@ export default {
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
+  specificPrice: {
+    priority: {
+      priorityListWrapper: '.js-specific-price-priority-list',
+      priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][priority_type]"]',
+    },
+  },
 };
