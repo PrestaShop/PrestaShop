@@ -40,6 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetProductSpecificPricePriorities;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -471,6 +473,29 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getUnitPriceTaxIncluded(),
                 'unity' => $productForEditing->getPricesInformation()->getUnity(),
             ],
+            'priority_management' => $this->getPriorityManagement($productForEditing->getProductId()),
+        ];
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<string, bool|string[]>
+     */
+    private function getPriorityManagement(int $productId): array
+    {
+        /** @var PriorityList|null $priorities */
+        $priorities = $this->queryBus->handle(new GetProductSpecificPricePriorities($productId));
+        if (!$priorities) {
+            return [
+                'priority_type' => false,
+                'priorities' => [],
+            ];
+        }
+
+        return [
+            'priority_type' => true,
+            'priorities' => $priorities->getPriorities(),
         ];
     }
 
