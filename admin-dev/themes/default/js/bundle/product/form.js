@@ -431,7 +431,7 @@ const featuresCollection = (function () {
       }
 
       // adding events to the preloaded features
-      $(document).on('change', '.feature-collection select.feature-value-selector', function (event) {
+      $(document).on('change', '.feature-collection select.feature-value-selector', (event) => {
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
 
@@ -439,15 +439,14 @@ const featuresCollection = (function () {
         $customValueSelector.val('');
       });
 
-      $(document).on('keyup', '.feature-collection input[type=text]', function (event) {
+      $(document).on('keyup', '.feature-collection input[type=text]', (event) => {
         const that = event.currentTarget;
         const $row = $($(that).parents('.row')[0]);
         const $selector = $row.find('.feature-value-selector');
-        if ($selector.hasClass('select2-hidden-accessible'))
-        {
+
+        if ($selector.hasClass('select2-hidden-accessible')) {
           $selector.val('').trigger('change.select2');
-        } else
-        {
+        } else {
           $selector.val(0);
         }
       });
@@ -478,11 +477,7 @@ const featuresCollection = (function () {
               });
             },
           });
-        }
-
-        //we need to put all in disabled
-        else
-        {
+        } else { // we need to put all in disabled
           $selector.prop('disabled', true);
           $customValueSelector.prop('disabled', true);
         }
