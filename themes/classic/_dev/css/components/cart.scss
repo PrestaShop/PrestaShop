@@ -302,13 +302,8 @@
       overflow: hidden;
       font-size: 0.875rem;
       font-weight: 500;
+      color: $gray;
       text-overflow: ellipsis;
-    }
-
-    &.has-discount {
-      .unit-price-cart {
-        color: $brand-secondary;
-      }
     }
   }
 }
