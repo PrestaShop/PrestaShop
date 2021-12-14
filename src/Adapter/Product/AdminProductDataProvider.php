@@ -315,7 +315,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         $sqlGroupBy = [];
-        
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
