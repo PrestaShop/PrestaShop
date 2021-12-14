@@ -67,9 +67,12 @@ class SpecificPricePriorityType extends TranslatorAwareType
                 'required' => false,
                 'label' => false,
             ])
-            //@todo: dynamic show/hide of priorities depending on type selection.
             ->add('priorities', PriorityListType::class, [
                 'label' => false,
+                'row_attr' => [
+                    // hide by default. Javascript handles visibility based on priority type choice
+                    'class' => 'js-specific-price-priority-list d-none',
+                ],
             ])
             //@todo. some help text and link to global settings (when its done)
         ;
