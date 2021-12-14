@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 
 /**
  * Holds information about product prices
@@ -81,6 +82,11 @@ class ProductPricesInformation
     private $unitPriceRatio;
 
     /**
+     * @var PriorityList|null
+     */
+    private $specificPricePriorities;
+
+    /**
      * @param DecimalNumber $price
      * @param DecimalNumber $priceTaxIncluded
      * @param DecimalNumber $ecotax
@@ -90,6 +96,7 @@ class ProductPricesInformation
      * @param DecimalNumber $unitPrice
      * @param string $unity
      * @param DecimalNumber $unitPriceRatio
+     * @param PriorityList|null $specificPricePriorities
      */
     public function __construct(
         DecimalNumber $price,
@@ -100,7 +107,8 @@ class ProductPricesInformation
         DecimalNumber $wholesalePrice,
         DecimalNumber $unitPrice,
         string $unity,
-        DecimalNumber $unitPriceRatio
+        DecimalNumber $unitPriceRatio,
+        ?PriorityList $specificPricePriorities
     ) {
         $this->price = $price;
         $this->priceTaxIncluded = $priceTaxIncluded;
@@ -111,6 +119,7 @@ class ProductPricesInformation
         $this->unitPrice = $unitPrice;
         $this->unity = $unity;
         $this->unitPriceRatio = $unitPriceRatio;
+        $this->specificPricePriorities = $specificPricePriorities;
     }
 
     /**
@@ -183,5 +192,13 @@ class ProductPricesInformation
     public function getUnitPriceRatio(): DecimalNumber
     {
         return $this->unitPriceRatio;
+    }
+
+    /**
+     * @return PriorityList|null
+     */
+    public function getSpecificPricePriorities(): ?PriorityList
+    {
+        return $this->specificPricePriorities;
     }
 }

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -129,6 +130,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $attachmentRepository;
 
     /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
      * @param CategoryRepository $categoryRepository
@@ -140,6 +146,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @param int $countryId
      * @param RedirectTargetProvider $targetProvider
      * @param ProductImagePathFactory $productImageUrlFactory
+     * @param SpecificPriceRepository $specificPriceRepository
      */
     public function __construct(
         NumberExtractor $numberExtractor,
@@ -152,7 +159,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         TaxComputer $taxComputer,
         int $countryId,
         RedirectTargetProvider $targetProvider,
-        ProductImagePathFactory $productImageUrlFactory
+        ProductImagePathFactory $productImageUrlFactory,
+        SpecificPriceRepository $specificPriceRepository
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
@@ -166,6 +174,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->targetProvider = $targetProvider;
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
+        $this->specificPriceRepository = $specificPriceRepository;
     }
 
     /**
@@ -265,6 +274,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getPricesInformation(Product $product): ProductPricesInformation
     {
+        $productId = new ProductId((int) $product->id);
         $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
         $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
             $priceTaxExcluded,
@@ -281,7 +291,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->numberExtractor->extract($product, 'wholesale_price'),
             $this->numberExtractor->extract($product, 'unit_price'),
             (string) $product->unity,
-            $this->numberExtractor->extract($product, 'unit_price_ratio')
+            $this->numberExtractor->extract($product, 'unit_price_ratio'),
+            $this->specificPriceRepository->findPrioritiesForProduct($productId)
         );
     }
 

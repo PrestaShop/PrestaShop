@@ -40,8 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetProductSpecificPricePriorities;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -472,19 +470,19 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'price' => (float) (string) $productForEditing->getPricesInformation()->getUnitPrice(),
                 'unity' => $productForEditing->getPricesInformation()->getUnity(),
             ],
-            'priority_management' => $this->getPriorityManagement($productForEditing->getProductId()),
+            'priority_management' => $this->getPriorityManagement($productForEditing),
         ];
     }
 
     /**
-     * @param int $productId
+     * @param ProductForEditing $productForEditing
      *
      * @return array<string, bool|string[]>
      */
-    private function getPriorityManagement(int $productId): array
+    private function getPriorityManagement(ProductForEditing $productForEditing): array
     {
-        /** @var PriorityList|null $priorities */
-        $priorities = $this->queryBus->handle(new GetProductSpecificPricePriorities($productId));
+        $priorities = $productForEditing->getPricesInformation()->getSpecificPricePriorities();
+
         if (!$priorities) {
             return [
                 'priority_type' => false,
