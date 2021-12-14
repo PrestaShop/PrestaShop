@@ -3284,11 +3284,15 @@ class ProductCore extends ObjectModel
         $ids_product = Product::_getProductIdByDate((!$beginning ? $current_date : $beginning), (!$ending ? $current_date : $ending), $context);
 
         $tab_id_product = [];
+
         foreach ($ids_product as $product) {
             if (is_array($product)) {
-                $tab_id_product[] = (int) $product['id_product'];
+                $productId = (int) $product['id_product'];
             } else {
-                $tab_id_product[] = (int) $product;
+                $productId = (int) $product;
+            }
+            if (!in_array($productId, $tab_id_product)) {
+                $tab_id_product[] = $productId;
             }
         }
 
