@@ -336,7 +336,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function processExport($textDelimiter = '"')
     {
         $id = Tools::getValue($this->identifier);
-        $export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ . '/export/' : _PS_ADMIN_DIR_ . '/export/';
+        $export_dir = _PS_ADMIN_DIR_ . '/export/';
         if (!Validate::isFileName($id)) {
             die(Tools::displayError());
         }

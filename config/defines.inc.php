@@ -53,10 +53,6 @@ if (!defined('_PS_MODE_DEMO_')) {
 
 $currentDir = dirname(__FILE__);
 
-if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_'))) {
-    define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
-}
-
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
     define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
 }
@@ -142,12 +138,7 @@ if (!defined('_PS_IMG_DIR_')) {
     define('_PS_IMG_DIR_', _PS_ROOT_DIR_.$dir);
 }
 
-if (!defined('_PS_HOST_MODE_')) {
-    define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
-} else {
-    define('_PS_CORE_IMG_DIR_', _PS_ROOT_DIR_.'/img/');
-}
-
+define('_PS_CORE_IMG_DIR_', _PS_CORE_DIR_.'/img/');
 define('_PS_CAT_IMG_DIR_', _PS_IMG_DIR_.'c/');
 define('_PS_COL_IMG_DIR_', _PS_IMG_DIR_.'co/');
 define('_PS_EMPLOYEE_IMG_DIR_', _PS_IMG_DIR_.'e/');

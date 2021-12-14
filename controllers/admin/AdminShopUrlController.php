@@ -233,6 +233,28 @@ class AdminShopUrlControllerCore extends AdminController
                             'name' => 'domain_ssl',
                             'size' => 50,
                         ],
+                        [
+                            'type' => 'text',
+                            'label' => $this->trans('Physical URL', [], 'Admin.Advparameters.Feature'),
+                            'name' => 'physical_uri',
+                            'desc' => $this->trans('This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.', [], 'Admin.Advparameters.Help'),
+                            'size' => 50,
+                        ],
+                        [
+                            'type' => 'text',
+                            'label' => $this->trans('Virtual URL', [], 'Admin.Advparameters.Feature'),
+                            'name' => 'virtual_uri',
+                            'desc' => $desc_virtual_uri,
+                            'size' => 50,
+                            'hint' => (!$update_htaccess) ? $this->trans('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn\'t work, please check with your hosting provider on how to activate URL rewriting.', [], 'Admin.Advparameters.Help') : null,
+                        ],
+                        [
+                            'type' => 'text',
+                            'label' => $this->trans('Final URL', [], 'Admin.Advparameters.Feature'),
+                            'name' => 'final_url',
+                            'size' => 76,
+                            'readonly' => true,
+                        ],
                     ],
                     'submit' => [
                         'title' => $this->trans('Save', [], 'Admin.Actions'),
@@ -240,42 +262,6 @@ class AdminShopUrlControllerCore extends AdminController
                 ],
             ],
         ];
-
-        if (!defined('_PS_HOST_MODE_')) {
-            $this->fields_form[1]['form']['input'] = array_merge(
-                $this->fields_form[1]['form']['input'],
-                [
-                    [
-                        'type' => 'text',
-                        'label' => $this->trans('Physical URL', [], 'Admin.Advparameters.Feature'),
-                        'name' => 'physical_uri',
-                        'desc' => $this->trans('This is the physical folder for your store on the web server. Leave this field empty if your store is installed on the root path. For instance, if your store is available at www.example.com/my-store/, you must input my-store/ in this field.', [], 'Admin.Advparameters.Help'),
-                        'size' => 50,
-                    ],
-                ]
-            );
-        }
-
-        $this->fields_form[1]['form']['input'] = array_merge(
-            $this->fields_form[1]['form']['input'],
-            [
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Virtual URL', [], 'Admin.Advparameters.Feature'),
-                    'name' => 'virtual_uri',
-                    'desc' => $desc_virtual_uri,
-                    'size' => 50,
-                    'hint' => (!$update_htaccess) ? $this->trans('Warning: URL rewriting (e.g. mod_rewrite for Apache) seems to be disabled. If your Virtual URL doesn\'t work, please check with your hosting provider on how to activate URL rewriting.', [], 'Admin.Advparameters.Help') : null,
-                ],
-                [
-                    'type' => 'text',
-                    'label' => $this->trans('Final URL', [], 'Admin.Advparameters.Feature'),
-                    'name' => 'final_url',
-                    'size' => 76,
-                    'readonly' => true,
-                ],
-            ]
-        );
 
         if (!($obj = $this->loadObject(true))) {
             return;

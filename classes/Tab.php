@@ -52,9 +52,6 @@ class TabCore extends ObjectModel
     /** @var bool enabled */
     public $enabled = true;
 
-    /** @var bool hide_host_mode */
-    public $hide_host_mode = false;
-
     /** @var string Icon font */
     public $icon;
 
@@ -84,7 +81,6 @@ class TabCore extends ObjectModel
             'route_name' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 256],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
             'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
@@ -262,12 +258,10 @@ class TabCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             /* Tabs selection */
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                '
-				SELECT *
+                'SELECT *
 				FROM `' . _DB_PREFIX_ . 'tab` t
-				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl
-					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				WHERE t.`id_tab` = ' . (int) $idTab . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
+				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
+				WHERE t.`id_tab` = ' . (int) $idTab
             );
             Cache::store($cacheId, $result);
 
@@ -317,7 +311,6 @@ class TabCore extends ObjectModel
 				SELECT t.*, tl.name
 				FROM `' . _DB_PREFIX_ . 'tab` t
 				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				WHERE 1 ' . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '') . '
 				ORDER BY t.`position` ASC'
             );
 
@@ -687,7 +680,6 @@ class TabCore extends ObjectModel
 			AND a.`delete` = 1
 			AND a.`add` = 1
 			AND t.`id_parent` != 0 AND t.`id_parent` != -1
-			' . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '') . '
 			ORDER BY t.`id_parent` ASC
 		');
     }

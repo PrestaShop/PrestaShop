@@ -564,13 +564,7 @@ class AdminControllerCore extends Controller
         $this->logged_on_addons = !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons);
 
         // Set context mode
-        if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-            if (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
-                $this->context->mode = Context::MODE_HOST_CONTRIB;
-            } else {
-                $this->context->mode = Context::MODE_HOST;
-            }
-        } elseif (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
+        if (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
             $this->context->mode = Context::MODE_STD_CONTRIB;
         } else {
             $this->context->mode = Context::MODE_STD;
@@ -1982,7 +1976,6 @@ class AdminControllerCore extends Controller
             'table' => $this->table,
             'current' => self::$currentIndex,
             'token' => $this->token,
-            'host_mode' => (int) defined('_PS_HOST_MODE_'),
             'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
             'no_order_tip' => $this->getNotificationTip('order'),
             'no_customer_tip' => $this->getNotificationTip('customer'),
@@ -2741,7 +2734,6 @@ class AdminControllerCore extends Controller
                 ['action' => 'formLanguage']
             ),
         ]);
-        Media::addJsDef(['host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)]);
         Media::addJsDef(['baseDir' => __PS_BASE_URI__]);
         Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [

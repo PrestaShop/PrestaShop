@@ -3286,9 +3286,7 @@ class AdminTranslationsControllerCore extends AdminController
 
     public static function getEmailHTML($email)
     {
-        if (defined('_PS_HOST_MODE_') && strpos($email, _PS_MAIL_DIR_) !== false) {
-            $email_file = $email;
-        } elseif (__PS_BASE_URI__ != '/') {
+        if (__PS_BASE_URI__ != '/') {
             $email_file = str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_ . '/', $email);
         } else {
             $email_file = _PS_ROOT_DIR_ . $email;

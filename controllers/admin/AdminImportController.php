@@ -4846,8 +4846,7 @@ class AdminImportControllerCore extends AdminController
 
     public static function getPath($file = '')
     {
-        return (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_) . DIRECTORY_SEPARATOR . 'import'
-            . DIRECTORY_SEPARATOR . $file;
+        return _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR . 'import' . DIRECTORY_SEPARATOR . $file;
     }
 
     public function ajaxProcessImport()

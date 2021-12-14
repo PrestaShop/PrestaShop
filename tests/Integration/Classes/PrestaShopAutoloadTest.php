@@ -79,12 +79,10 @@ class PrestaShopAutoloadTest extends TestCase
     {
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 1);
         @mkdir(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override/classes/', 0777, true);
-        define('_PS_HOST_MODE_', 1);
         file_put_contents(
             _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . 'override/classes/Connection.php',
             '<?php
-            class Connection extends ConnectionCore {
-        }'
+            class Connection extends ConnectionCore {}'
         );
         PrestaShopAutoload::getInstance()->generateIndex();
         $this->assertFileExists($this->file_index);
@@ -94,7 +92,7 @@ class PrestaShopAutoloadTest extends TestCase
         Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', 0);
         PrestaShopAutoload::getInstance()->generateIndex();
         $data = include $this->file_index;
-        $this->assertEquals($data['Connection']['override'], true);
+        $this->assertEquals($data['Connection']['override'], false);
     }
 
     public function testClassFromCoreDirShouldntBeLoaded(): void

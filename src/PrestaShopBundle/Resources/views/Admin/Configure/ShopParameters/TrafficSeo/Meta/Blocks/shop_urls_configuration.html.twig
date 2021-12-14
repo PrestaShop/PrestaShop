@@ -29,7 +29,7 @@
 {% block shop_urls_configuration %}
 
   {% set cardHeaderLabel = 'Set shop URL'|trans %}
-  {% if isShopFeatureActive and not isHostMode %}
+  {% if isShopFeatureActive %}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i>
@@ -49,18 +49,18 @@
     </div>
   {% endif %}
 
-  {% if not isShopFeatureActive and not isHostMode and doesMainShopUrlExist %}
+  {% if not isShopFeatureActive and doesMainShopUrlExist %}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i>
         {{ cardHeaderLabel }}
 
-        <span class="help-box" 
-              data-container="body" 
-              data-toggle="popover" 
-              data-trigger="hover" 
-              data-placement="right" 
-              data-content="{{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}" 
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}"
               title="">
         </span>
       </h3>
