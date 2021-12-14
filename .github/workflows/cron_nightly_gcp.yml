@@ -6,8 +6,6 @@ on:
     workflows: [ 'Nightly Build' ]
     types:
       - requested
-  # Allows maintainers to trigger nightly manually
-  # workflow_dispatch:
 
 jobs:
   nightly:

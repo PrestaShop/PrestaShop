@@ -19,6 +19,8 @@ jobs:
           - 1.7.8.x
 
     env:
+      PHP_VERSION: '7.4'
+      NODE_VERSION: '14'
       RELEASE_DIR: '/tmp/ps-release'
       GH_BRANCH: ${{ matrix.BRANCH }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
@@ -33,8 +35,13 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: ${{ env.PHP_VERSION }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Create Release directory
         run: mkdir -p ${{ env.RELEASE_DIR }}
