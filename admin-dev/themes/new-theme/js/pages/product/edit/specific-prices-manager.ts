@@ -22,7 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
@@ -31,9 +30,11 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
+import ElementVisibilityByCheckboxToggler from '@components/form/element-visibility-by-checkbox-toggler';
 
 Vue.use(VueI18n);
 const SpecificPriceMap = ProductMap.specificPrice;
+const PriorityMap = SpecificPriceMap.priority;
 
 export default class SpecificPricesManager {
   eventEmitter: EventEmitter;
@@ -48,11 +49,7 @@ export default class SpecificPricesManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceList = new SpecificPriceList(productId);
-    this.initSpecificPriceModal(
-      productId,
-      SpecificPriceMap.formModal,
-      this.eventEmitter,
-    );
+    this.initComponents();
     this.specificPriceList.renderList();
     this.initListeners();
   }
@@ -61,11 +58,20 @@ export default class SpecificPricesManager {
     this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
   }
 
+  private initComponents() {
+    this.initSpecificPriceModal(this.productId, SpecificPriceMap.formModal, this.eventEmitter);
+    new ElementVisibilityByCheckboxToggler(
+      PriorityMap.priorityTypeCheckboxesSelector,
+      '0',
+      PriorityMap.priorityListWrapper,
+    );
+  }
+
   private initSpecificPriceModal(
     productId: number,
     specificPriceModalSelector: string,
     eventEmitter: EventEmitter,
-  ): Vue|null {
+  ): Vue | null {
     const container = document.querySelector(specificPriceModalSelector);
 
     if (!(container instanceof HTMLElement)) {
