@@ -6276,16 +6276,16 @@
         },
         {
             "name": "prestashop/ps_featuredproducts",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_featuredproducts.git",
-                "reference": "693d106181eaaea14358ad035fe7166106b9a1a4"
+                "reference": "44e6567bd0419537d61389741c7e68ef90d8caf3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/693d106181eaaea14358ad035fe7166106b9a1a4",
-                "reference": "693d106181eaaea14358ad035fe7166106b9a1a4",
+                "url": "https://api.github.com/repos/PrestaShop/ps_featuredproducts/zipball/44e6567bd0419537d61389741c7e68ef90d8caf3",
+                "reference": "44e6567bd0419537d61389741c7e68ef90d8caf3",
                 "shasum": ""
             },
             "require": {
@@ -6314,9 +6314,9 @@
             "description": "PrestaShop - Featured products",
             "homepage": "https://github.com/PrestaShop/ps_featuredproducts",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.1"
+                "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.2"
             },
-            "time": "2021-12-10T13:44:29+00:00"
+            "time": "2021-12-14T09:04:39+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
