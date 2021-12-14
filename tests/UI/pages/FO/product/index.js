@@ -22,6 +22,8 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
+    this.custumizedTextarea = '#field-textField5.product-message';
+    this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -261,12 +263,22 @@ class Product extends FOBasePage {
    * @param quantity {number} Quantity of the product that customer wants
    * @param combination {{size: ?string, color: ?string}}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
+   * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
+  async addProductToTheCart(page, quantity = 1, combination = {
+    color: null,
+    size: null,
+  }, proceedToCheckout = true, customizedText = 'text') {
     await this.selectCombination(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
+    }
+
+    if (await this.elementVisible(page, this.custumizedTextarea, 2000)) {
+      console.log(customizedText);
+      await this.setValue(page, this.custumizedTextarea, customizedText);
+      await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
 
     await this.waitForSelectorAndClick(page, this.addToCartButton);

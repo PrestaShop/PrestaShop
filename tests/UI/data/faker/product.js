@@ -44,6 +44,9 @@ class ProductData {
     /** @type {string} Price tax included of the product */
     this.price = productToCreate.price === undefined ? faker.random.number({min: 10, max: 20}) : productToCreate.price;
 
+    /** @type {string} Price tax excluded of the product */
+    this.priceTaxExcluded = productToCreate.priceTaxExcluded || this.price;
+
     /** @type {boolean} True to create product with combination */
     this.productHasCombinations = productToCreate.productHasCombinations || false;
 
