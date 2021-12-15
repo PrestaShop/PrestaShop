@@ -5508,16 +5508,16 @@
         },
         {
             "name": "prestashop/pagesnotfound",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/pagesnotfound.git",
-                "reference": "8707d8184f0c6678a95c64b957aec6053ed069ef"
+                "reference": "b0a8ebdbf733128b6cf0454c41ea2a6edfa4c0cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/8707d8184f0c6678a95c64b957aec6053ed069ef",
-                "reference": "8707d8184f0c6678a95c64b957aec6053ed069ef",
+                "url": "https://api.github.com/repos/PrestaShop/pagesnotfound/zipball/b0a8ebdbf733128b6cf0454c41ea2a6edfa4c0cc",
+                "reference": "b0a8ebdbf733128b6cf0454c41ea2a6edfa4c0cc",
                 "shasum": ""
             },
             "require": {
@@ -5526,7 +5526,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -5537,9 +5537,9 @@
             "description": "PrestaShop module pagesnotfound",
             "homepage": "https://github.com/PrestaShop/pagesnotfound",
             "support": {
-                "source": "https://github.com/PrestaShop/pagesnotfound/tree/dev"
+                "source": "https://github.com/PrestaShop/pagesnotfound/tree/v2.0.1"
             },
-            "time": "2017-02-20T11:14:52+00:00"
+            "time": "2021-12-15T08:48:59+00:00"
         },
         {
             "name": "prestashop/php-dev-tools",
@@ -6589,16 +6589,16 @@
         },
         {
             "name": "prestashop/ps_shoppingcart",
-            "version": "v2.0.4",
+            "version": "v2.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_shoppingcart.git",
-                "reference": "b168cfcaf15724a17d7bbc862b2347730f79daa4"
+                "reference": "114e39589e84536af46cc344e05c0e8bc37355e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/b168cfcaf15724a17d7bbc862b2347730f79daa4",
-                "reference": "b168cfcaf15724a17d7bbc862b2347730f79daa4",
+                "url": "https://api.github.com/repos/PrestaShop/ps_shoppingcart/zipball/114e39589e84536af46cc344e05c0e8bc37355e3",
+                "reference": "114e39589e84536af46cc344e05c0e8bc37355e3",
                 "shasum": ""
             },
             "require": {
@@ -6627,9 +6627,9 @@
             "description": "PrestaShop module ps_shoppingcart",
             "homepage": "https://github.com/PrestaShop/ps_shoppingcart",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_shoppingcart/tree/v2.0.4"
+                "source": "https://github.com/PrestaShop/ps_shoppingcart/tree/v2.0.5"
             },
-            "time": "2021-01-07T15:52:21+00:00"
+            "time": "2021-12-15T08:46:24+00:00"
         },
         {
             "name": "prestashop/ps_socialfollow",
@@ -6786,16 +6786,16 @@
         },
         {
             "name": "prestashop/ps_viewedproduct",
-            "version": "v1.2.1",
+            "version": "v1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_viewedproduct.git",
-                "reference": "1a7078c46d423414b9d703daea15a0f6fd8268b0"
+                "reference": "2ea78388b13a49c18ce409870f32a44e88934456"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_viewedproduct/zipball/1a7078c46d423414b9d703daea15a0f6fd8268b0",
-                "reference": "1a7078c46d423414b9d703daea15a0f6fd8268b0",
+                "url": "https://api.github.com/repos/PrestaShop/ps_viewedproduct/zipball/2ea78388b13a49c18ce409870f32a44e88934456",
+                "reference": "2ea78388b13a49c18ce409870f32a44e88934456",
                 "shasum": ""
             },
             "require": {
@@ -6804,7 +6804,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -6815,9 +6815,9 @@
             "description": "PrestaShop - Viewed Products",
             "homepage": "https://github.com/PrestaShop/ps_viewedproduct",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_viewedproduct/tree/master"
+                "source": "https://github.com/PrestaShop/ps_viewedproduct/tree/v1.2.2"
             },
-            "time": "2019-02-06T10:45:05+00:00"
+            "time": "2021-10-26T14:04:09+00:00"
         },
         {
             "name": "prestashop/ps_wirepayment",
