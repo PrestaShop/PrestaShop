@@ -167,7 +167,7 @@ describe('Install Prestashop', async () => {
         {
           step: {
             name: 'Install addons modules',
-            timeout: 60000,
+            timeout: 120000,
           },
         },
     },
