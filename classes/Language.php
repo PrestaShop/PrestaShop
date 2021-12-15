@@ -155,6 +155,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         static::$_cache_language_installation_by_locale = null;
         static::$_cache_all_language_json = null;
         static::$_cache_all_languages_iso = null;
+        Cache::clean('Language::*');
     }
 
     /**
