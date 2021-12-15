@@ -45,7 +45,7 @@ class LabelProvider
     {
         $view = $form->createView();
         foreach ($view->children as $child) {
-            if ($fieldName === $child->vars['name']) {
+            if (isset($child->vars['name']) && $fieldName === $child->vars['name']) {
                 if (!isset($child->vars['label'])) {
                     throw new FieldLabelNotFoundException(
                         sprintf(
