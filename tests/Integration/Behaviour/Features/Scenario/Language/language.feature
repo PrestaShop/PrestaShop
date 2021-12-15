@@ -36,7 +36,6 @@ Feature: Language
       | isRtl           | 0                    |
       | isActive        | 1                    |
       | shop            | shop1                |
-    Then I should get no error
     And the language with ISOCode "ag" should have the following details:
       | name            | Español AR (Spanish) |
       | isoCode         | ag                   |
@@ -48,7 +47,6 @@ Feature: Language
       | shop            | shop1                |
     ## Reset
     When I delete the language with ISOCode "ag"
-    Then I should get no error
 
   Scenario: Edit language
     When I update the language with ISOCode "fr" with the following details:
@@ -59,7 +57,6 @@ Feature: Language
       | isRtl           | 0                 |
       | isActive        | 1                 |
       | shop            | shop1             |
-    Then I should get no error
     And the language with ISOCode "fr" should have the following details:
       | name            | Language          |
       | isoCode         | fr                |
@@ -72,7 +69,6 @@ Feature: Language
 
   Scenario: Delete language
     When I delete the language with ISOCode "fr"
-    Then I should get no error
     And the language with ISOCode "fr" shouldn't exist
 
   Scenario: Delete a default language
@@ -83,7 +79,6 @@ Feature: Language
 
   Scenario: Bulk Delete
     When I bulk delete languages with ISOCode "fr,gb"
-    Then I should get no error
     And the language with ISOCode "fr" shouldn't exist
     And the language with ISOCode "gb" shouldn't exist
 
@@ -115,11 +110,9 @@ Feature: Language
     Given the language with ISOCode "fr" should be enabled
     And the language with ISOCode "gb" should be enabled
     When I bulk disable languages with ISOCode "gb,fr"
-    Then I should get no error
     And the language with ISOCode "fr" should be disabled
     And the language with ISOCode "gb" should be disabled
     When I bulk enable languages with ISOCode "gb,fr"
-    Then I should get no error
     And the language with ISOCode "fr" should be enabled
     And the language with ISOCode "gb" should be enabled
 

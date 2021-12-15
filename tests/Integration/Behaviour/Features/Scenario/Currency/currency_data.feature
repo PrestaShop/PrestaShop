@@ -15,7 +15,6 @@ Feature: Currency Data
 
   Scenario: Get data from an official currency
     When I request reference data for "EUR"
-    Then I should get no error
     And I should get currency data:
       | iso_code         | EUR        |
       | numeric_iso_code | 978        |

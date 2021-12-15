@@ -20,7 +20,6 @@ Feature: Webservice key management
       | permission_PUT   | employees, customers, manufacturers |
       | permission_DELETE| suppliers, languages, countries     |
       | permission_HEAD  | taxes, zones                        |
-    Then I should get no error
     And webservice key "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7" key should be "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7"
     And webservice key "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7" description should be "Testing webservice key"
     And webservice key "DFS51LTKBBMBGF5QQRG523JMQYEHU4X7" should be enabled

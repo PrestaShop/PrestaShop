@@ -31,8 +31,6 @@ Feature: Update product price fields from Back Office (BO).
       | wholesale_price    | 70              |
       | unit_price         | 900             |
       | unity              | bag of ten      |
-    # Just check that no exception is triggered because no default supplier is associated
-    Then I should get no error
     Then product product1 should have following prices information:
       | price              | 100.99          |
       | price_tax_included | 105.0296        |

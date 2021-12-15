@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
-class LanguageFeatureContext extends CommonDomainFeatureContext
+class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @Given I add a new language with the following details:
