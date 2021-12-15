@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -50,8 +50,7 @@ class DeltaQuantityType extends TranslatorAwareType
             ->add('quantity', TextPreviewType::class, [
                 'block_prefix' => 'delta_quantity_quantity',
             ])
-            ->add('delta', NumberType::class, [
-                'scale' => 0,
+            ->add('delta', IntegerType::class, [
                 'default_empty_data' => 0,
                 'label' => $this->trans('Add or subtract items', 'Admin.Global'),
                 'block_prefix' => 'delta_quantity_delta',
