@@ -1089,14 +1089,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsMinimumQuantityWhichMustBeAddedToCart(int $minQuantity)
     {
-        $this->assertLastErrorIs(
+        /** @var MinimalQuantityException $lastError */
+        $lastError = $this->assertLastErrorIs(
             MinimalQuantityException::class
         );
-        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
+        if ($minQuantity !== $lastError->getMinimalQuantity()) {
             throw new RuntimeException(sprintf(
                 'Minimal quantity in exception, expected %s but got %s',
                 $minQuantity,
-                $this->getLastException()->getMinimalQuantity()
+                $lastError->getMinimalQuantity()
             ));
         }
     }
