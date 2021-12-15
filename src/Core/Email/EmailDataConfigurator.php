@@ -106,7 +106,7 @@ final class EmailDataConfigurator implements DataConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $config): bool
+    public function validateConfiguration(array $config)
     {
         return isset(
             $config['send_emails_to'],
