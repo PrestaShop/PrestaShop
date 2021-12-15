@@ -469,7 +469,7 @@ class ConfigurationCore extends ObjectModel
         foreach ($values as $lang => $value) {
             $storedValue = Configuration::get($key, $lang, $idShopGroup, $idShop);
             // if there isn't a $stored_value, we must insert $value
-            if ((!is_numeric($value) && $value === $storedValue) || (is_numeric($value) && $value == $storedValue && Configuration::hasKey($key, $lang))) {
+            if ((!is_numeric($value) && $value === $storedValue && Configuration::hasKey($key, $lang, $idShopGroup, $idShop)) || (is_numeric($value) && $value == $storedValue && Configuration::hasKey($key, $lang, $idShopGroup, $idShop))) {
                 continue;
             }
 
