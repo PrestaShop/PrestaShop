@@ -139,7 +139,6 @@ class CombinationStockUpdater
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
         $updateLocation = null !== $properties->getLocation();
-        // We would skip zero delta quantity, so we check if its truthy instead of checking strictly against null.
         $deltaQuantity = $properties->getDeltaQuantity();
 
         if (!$deltaQuantity && !$updateLocation) {

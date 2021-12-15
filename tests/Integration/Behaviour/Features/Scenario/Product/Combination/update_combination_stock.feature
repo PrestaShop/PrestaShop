@@ -103,3 +103,6 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 1
+    When I update combination "product1SBlack" stock with following details:
+      | delta quantity             | 0          |
+    Then I should get error that delta quantity is invalid

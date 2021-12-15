@@ -132,6 +132,16 @@ Feature: Update product stock from Back Office (BO)
       | Puff       | Daddy     | -9             |
       | Puff       | Daddy     | 51             |
     And product "product1" last stock movement decreased by 9
+    When I update product "product1" stock with following information:
+      | delta_quantity | 0 |
+#    Then I should get error that delta quantity is invalid
+    And product "product1" should have following stock information:
+      | quantity | 42 |
+    And product "product1" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -9             |
+      | Puff       | Daddy     | 51             |
+    And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields
     Given language "french" with locale "fr-FR" exists

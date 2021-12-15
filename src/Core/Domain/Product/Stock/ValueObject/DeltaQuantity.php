@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+
 /**
  * Holds delta quantity for a product update along with a stock movement reason
  */
@@ -50,6 +52,7 @@ class DeltaQuantity
         int $deltaQuantity,
         MovementReasonId $movementReasonId
     ) {
+        $this->assertValueIsNotZero($deltaQuantity);
         $this->deltaQuantity = $deltaQuantity;
         $this->movementReasonId = $movementReasonId;
     }
@@ -68,5 +71,18 @@ class DeltaQuantity
     public function getMovementReasonId(): MovementReasonId
     {
         return $this->movementReasonId;
+    }
+
+    /**
+     * @param int $value
+     */
+    private function assertValueIsNotZero(int $value): void
+    {
+        if (0 === $value) {
+            throw new ProductStockConstraintException(
+                'Delta quantity cannot be 0',
+                ProductStockConstraintException::INVALID_DELTA_QUANTITY
+            );
+        }
     }
 }
