@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage;
 
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use PrestaShopBundle\Controller\Exception\FieldLabelNotFoundException;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\ErrorMessage\LabelProvider;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -51,7 +51,7 @@ class LabelProviderTest extends TypeTestCase
         $form = $this->factory->create(TestFormType::class);
 
         $labelProvider = new LabelProvider();
-        $this->expectException(FieldNotFoundException::class);
+        $this->expectException(FieldLabelNotFoundException::class);
         $labelProvider->getLabel($form, 'non_existing_field');
     }
 }
