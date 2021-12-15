@@ -200,6 +200,26 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
+     * Tests that overriding an all shop config with the same value for a single shop context does work
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
+     */
+    public function testCanUpdateWithSameValueAsParent(): void
+    {
+        // set a value for test_conf_2 in all shop
+        $testedObject = $this->getDummyMultistoreConfiguration(ShopConstraint::allShops());
+        $testedObject->updateConfiguration(['test_conf_1' => true, 'test_conf_2' => 'all_shop_value']);
+
+        // set the same value for test_conf_2 in single shop
+        $shopId = 1;
+        $testedObject = $this->getDummyMultistoreConfiguration(ShopConstraint::shop($shopId));
+        $testedObject->updateConfiguration(['test_conf_1' => true, 'test_conf_2' => 'all_shop_value', 'multistore_test_conf_2' => true]);
+
+        // the configuration must have a specific entry for TEST_CONF_2 in shop 1 context
+        $this->assertTrue(LegacyConfiguration::hasKey('TEST_CONF_2', null, null, $shopId));
+    }
+
+    /**
      * @return ShopContext
      */
     protected function createShopContextMock(): Context
