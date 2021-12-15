@@ -1098,7 +1098,7 @@ class HookCore extends ObjectModel
         $sql = new DbQuery();
         $sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module');
         $sql->from('module', 'm');
-        if (!in_array($hookName, ['displayBackOfficeHeader', 'displayAdminLogin'])) {
+        if (!in_array($hookName, ['displayBackOfficeHeader', 'displayAdminLogin', 'actionAdminControllerSetMedia'])) {
             $sql->join(
                 Shop::addSqlAssociation(
                     'module',
