@@ -76,15 +76,17 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
-
         $qb
             ->select('cc.`id_cms_category`, cc.`id_parent`, cc.`active`, cc.`position`, ccl.`name`, ccl.`description`')
-            ->groupBy('cc.`id_cms_category`')
-            ->orderBy(
-                $this->getModifiedOrderBy($searchCriteria->getOrderBy()),
+            ->groupBy('cc.`id_cms_category`');
+
+        $orderBy = $this->getModifiedOrderBy($searchCriteria->getOrderBy());
+        if (!empty($orderBy)) {
+            $qb->orderBy(
+                $orderBy,
                 $searchCriteria->getOrderWay()
-            )
-        ;
+            );
+        }
 
         $this->searchCriteriaApplicator->applyPagination($searchCriteria, $qb);
 
@@ -189,7 +191,7 @@ final class CmsPageCategoryQueryBuilder extends AbstractDoctrineQueryBuilder
     private function getModifiedOrderBy($orderBy)
     {
         if ('id_cms_category' === $orderBy) {
-            $orderBy = 'cc.`id_cms_category`';
+            $orderBy = 'cc.id_cms_category';
         }
 
         return $orderBy;

@@ -11,14 +11,14 @@
     "lint": "eslint --ignore-path .gitignore .",
 
     "// Step identifiers": "Script to check step identifiers",
-    "check:step-identifiers": "node tools/stepIdentifiersChecker.js ",
+    "check:step-identifiers": "node campaigns/tools/stepIdentifiersChecker.js ",
 
     "// Linkchecker": "Script to run link checker",
-    "check:links": "./node_modules/mocha/bin/mocha tools/linkchecker.js",
+    "check:links": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
 
     "// Specific test": "Script to run a specific test/folder",
-    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/$TEST_PATH",
-    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
 
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
@@ -41,6 +41,7 @@
     "test:functional:BO:international": "TEST_PATH='functional/BO/11_international/*' npm run test:specific",
     "test:functional:BO:shop-parameters": "TEST_PATH='functional/BO/13_shopParameters/*' npm run test:specific",
     "test:functional:BO:advanced-parameters": "TEST_PATH='functional/BO/14_advancedParameters/*' npm run test:specific",
+    "test:functional:BO:header": "TEST_PATH='functional/BO/15_header/*' npm run test:specific",
 
     "// Functional FO": "Scripts to run functional FO tests",
     "test:functional:FO": "TEST_PATH='functional/FO/*' npm run test:specific",
@@ -49,7 +50,7 @@
     "test:regression": "TEST_PATH='regression/*' npm run test:specific",
 
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
+    "test:all": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",
