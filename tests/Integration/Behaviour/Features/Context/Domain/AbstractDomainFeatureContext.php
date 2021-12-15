@@ -138,12 +138,26 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getLastStepFromScope(StepScope $scope): StepNode
     {
         $scenario = $this->getScenarioFromScope($scope);
-        $steps = $scenario->getSteps();
+        if (null !== $scenario) {
+            $steps = $scenario->getSteps();
+        } else {
+            foreach ($scope->getFeature()->getBackground()->getSteps() as $step) {
+                if ($step === $scope->getStep()) {
+                    $steps = $scope->getFeature()->getBackground()->getSteps();
+                    break;
+                }
+            }
+        }
+
+        // The step was not found in any scenario nor the background
+        if (!isset($steps)) {
+            throw new RuntimeException('Could not find step in the feature');
+        }
 
         return $steps[count($steps) - 1];
     }
 
-    protected function getScenarioFromScope(StepScope $scope): ScenarioInterface
+    protected function getScenarioFromScope(StepScope $scope): ?ScenarioInterface
     {
         foreach ($scope->getFeature()->getScenarios() as $scenario) {
             foreach ($scenario->getSteps() as $step) {
@@ -153,7 +167,7 @@ abstract class AbstractDomainFeatureContext implements Context
             }
         }
 
-        throw new RuntimeException('Could not find step in the feature');
+        return null;
     }
 
     /**
@@ -208,20 +222,25 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     protected function assertLastErrorIs(string $expectedError, ?int $errorCode = null): Exception
     {
-        $e = $this->getExpectedException();
-
-        // The exception has been asserted, so it is indeed an expected one, and we can clean it
-        $this->cleanExpectedException();
-
-        if (!$e instanceof $expectedError) {
-            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $e ? get_class($e) : 'null'), 0, $e);
+        $lastException = $this->getExpectedException();
+        if (null === $lastException) {
+            // Sometimes the last exception is asserted in the same step, so it is not stored as expected yet
+            $lastException = $this->getLastException();
+            $this->cleanLastException();
+        } else {
+            // The exception has been asserted, so it is indeed an expected one, and we can clean it
+            $this->cleanExpectedException();
         }
 
-        if (null !== $errorCode && $e->getCode() !== $errorCode) {
-            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $e->getCode()), 0, $e);
+        if (!$lastException instanceof $expectedError) {
+            throw new RuntimeException(sprintf('Last error should be "%s", but got "%s"', $expectedError, $lastException ? get_class($lastException) : 'null'), 0, $lastException);
         }
 
-        return $e;
+        if (null !== $errorCode && $lastException->getCode() !== $errorCode) {
+            throw new RuntimeException(sprintf('Last error should have code "%s", but has "%s"', $errorCode, $lastException->getCode()), 0, $lastException);
+        }
+
+        return $lastException;
     }
 
     /**
