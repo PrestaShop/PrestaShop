@@ -110,7 +110,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences country restrictions form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )
@@ -128,7 +128,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences currency restrictions form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )
@@ -146,7 +146,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences group restrictions form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )
