@@ -48,7 +48,6 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $tableData = $table->getRowsHash();
         $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $this->getSharedStorage()->get($productReference),

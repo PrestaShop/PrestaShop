@@ -53,7 +53,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function removeAssociatedProductSuppliers(string $productReference): void
     {
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new RemoveAllAssociatedProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference))
@@ -71,7 +70,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductDefaultSupplier(string $productReference, string $defaultSupplierReference): void
     {
-        $this->cleanLastException();
         try {
             $command = new SetProductDefaultSupplierCommand(
                 $this->getSharedStorage()->get($productReference),
@@ -119,7 +117,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             ];
         }
 
-        $this->cleanLastException();
         try {
             $command = new SetProductSuppliersCommand(
                 $this->getSharedStorage()->get($productReference),
