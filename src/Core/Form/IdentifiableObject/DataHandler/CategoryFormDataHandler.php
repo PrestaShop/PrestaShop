@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
 /**
  * Creates/updates category from data submitted in category form
  */
-class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
+final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
     /**
      * Creates add category command from form data
