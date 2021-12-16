@@ -184,12 +184,10 @@ class OrderDetailControllerCore extends FrontController
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
                 $viewAccess = true;
-                if ($order->id_shop != $this->context->shop->id) {
-                    if ($this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
-                        $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
-                        if (!$shopGroup->share_order) {
-                            $viewAccess = false;
-                        }
+                if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
+                    $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
+                    if (!$shopGroup->share_order) {
+                        $viewAccess = false;
                     }
                 }
                 if ($viewAccess) {
