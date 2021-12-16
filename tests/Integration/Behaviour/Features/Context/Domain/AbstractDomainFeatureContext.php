@@ -76,7 +76,8 @@ abstract class AbstractDomainFeatureContext implements Context
      */
     public function checkLastExceptionAfterStep(AfterStepScope $scope): void
     {
-        if (null === $this->getLastException()) {
+        // If no exception nothing to do, if there is already an exception to handle we don't override it
+        if (null === $this->getLastException() || null !== $this->getExpectedException()) {
             return;
         }
 
