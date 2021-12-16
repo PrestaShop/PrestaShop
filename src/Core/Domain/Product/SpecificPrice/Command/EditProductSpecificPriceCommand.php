@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -64,7 +64,7 @@ class EditProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var Price|null
+     * @var FixedPrice|null
      */
     private $price;
 
@@ -180,9 +180,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return Price|null
+     * @return FixedPrice|null
      */
-    public function getPrice(): ?Price
+    public function getPrice(): ?FixedPrice
     {
         return $this->price;
     }
@@ -194,7 +194,7 @@ class EditProductSpecificPriceCommand
      */
     public function setPrice(string $price): self
     {
-        $this->price = new Price($price);
+        $this->price = new FixedPrice($price);
 
         return $this;
     }

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
 use PrestaShop\Decimal\DecimalNumber;
 
-class Price extends DecimalNumber
+class FixedPrice extends DecimalNumber
 {
     /**
      * Inherited from legacy.
@@ -39,6 +39,6 @@ class Price extends DecimalNumber
 
     public function isInitialPrice(): bool
     {
-        return $this->equals(new Price(self::LEAVE_PRODUCT_INITIAL_PRICE_VALUE));
+        return $this->equals(new FixedPrice(self::LEAVE_PRODUCT_INITIAL_PRICE_VALUE));
     }
 }

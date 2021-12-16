@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpecificPriceListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForListing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -123,7 +123,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
                 $specificPrice['reduction_type'],
                 new DecimalNumber($specificPrice['reduction']),
                 (bool) $specificPrice['reduction_tax'],
-                new Price($specificPrice['price']),
+                new FixedPrice($specificPrice['price']),
                 (int) $specificPrice['from_quantity'],
                 DateTimeUtil::buildNullableDateTime($specificPrice['from']),
                 DateTimeUtil::buildNullableDateTime($specificPrice['to']),
