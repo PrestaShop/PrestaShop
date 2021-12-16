@@ -24,7 +24,7 @@
  */
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import Overview from '@app/pages/translations/components/app';
+import Overview from '@app/pages/translations/components/app.vue';
 
 Vue.use(VueRouter);
 
@@ -35,7 +35,7 @@ export default new VueRouter({
     {
       path: '/',
       name: 'overview',
-      component: Overview,
+      component: async () => Overview,
     },
   ],
 });

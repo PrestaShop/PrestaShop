@@ -22,10 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-export default {
+import Vue from 'vue';
+
+export default Vue.extend({
   methods: {
-    trans(key) {
+    trans(key: string): string {
       return this.$store.getters.translations[key];
     },
   },
-};
+});

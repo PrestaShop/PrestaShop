@@ -38,12 +38,13 @@
   </div>
 </template>
 
-<script>
-  import PSTree from '@app/widgets/ps-tree/ps-tree';
-  import PSSpinner from '@app/widgets/ps-spinner';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
+  import PSSpinner from '@app/widgets/ps-spinner.vue';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  export default Vue.extend({
     props: {
       modal: {
         type: Object,
@@ -57,10 +58,10 @@
       },
     },
     computed: {
-      treeReady() {
+      treeReady(): boolean {
         return !this.$store.state.sidebarLoading;
       },
-      currentItem() {
+      currentItem(): string {
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
@@ -68,9 +69,9 @@
             this.$store.dispatch('updateCurrentDomain', domain);
 
             if (domain !== '') {
-              this.$store.dispatch('getCatalog', {url: domain.dataValue});
-              EventBus.$emit('setCurrentElement', domain.full_name);
-              return domain.full_name;
+              this.$store.dispatch('getCatalog', {url: (<Record<string, any>>domain).dataValue});
+              EventBus.$emit('setCurrentElement', (<Record<string, any>>domain).full_name);
+              return (<Record<string, any>>domain).full_name;
             }
 
             this.$store.dispatch('updatePrincipalLoading', false);
@@ -80,10 +81,10 @@
 
         return this.$store.getters.currentDomain;
       },
-      domainsTree() {
+      domainsTree(): Record<string, any> {
         return this.$store.getters.domainsTree;
       },
-      translations() {
+      translations(): Record<string, any> {
         return {
           expand: this.trans('sidebar_expand'),
           reduce: this.trans('sidebar_collapse'),
@@ -96,7 +97,7 @@
       this.$store.dispatch('getDomainsTree', {
         store: this.$store,
       });
-      EventBus.$on('lastTreeItemClick', (el) => {
+      EventBus.$on('lastTreeItemClick', (el: any): void => {
         if (this.edited()) {
           this.modal.showModal();
           this.modal.$once('save', () => {
@@ -117,13 +118,13 @@
        * and reset the modified translations
        * @param {object} el - Domain to set
        */
-      itemClick: function itemClick(el) {
+      itemClick: function itemClick(el: any): void {
         this.$store.dispatch('updateCurrentDomain', el.item);
         this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
         this.$store.state.modifiedTranslations = [];
       },
-      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
+      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree: any): string | Record<string, any> {
         const keys = Object.keys(tree);
         let toDisplay = '';
 
@@ -144,7 +145,7 @@
        * Check if some translations have been edited
        * @returns {boolean}
        */
-      edited: function edited() {
+      edited: function edited(): boolean {
         return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
@@ -152,7 +153,7 @@
       PSTree,
       PSSpinner,
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">
@@ -170,6 +171,7 @@
         color: $danger;
       }
     }
+
     .tree-extra-label {
       color: $danger;
       text-transform: uppercase;
@@ -192,13 +194,16 @@
       }
     }
   }
+
   .ps-loader {
     $loader-white-height: 20px;
     $loader-line-height: 16px;
+
     .animated-background {
       height: 144px!important;
       animation-duration: 2s!important;
     }
+
     .background-masker {
       &.header-left {
         left: 0;
@@ -206,21 +211,25 @@
         height: 108px;
         width: 20px;
       }
+
       &.content-top {
         left: 0;
         top: $loader-line-height;
         height: $loader-white-height;
       }
+
       &.content-first-end {
         left: 0;
         top: $loader-line-height*2+$loader-white-height;
         height: $loader-white-height;
       }
+
       &.content-second-end {
         left: 0;
         top: $loader-line-height*3+$loader-white-height*2;
         height: $loader-white-height;
       }
+
       &.content-third-end {
         left: 0;
         top: $loader-line-height*4+$loader-white-height*3;
