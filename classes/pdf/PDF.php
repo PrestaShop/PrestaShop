@@ -219,6 +219,10 @@ class PDFCore
             if (count($this->objects) > 1) {
                 $this->filename = $template->getBulkFilename();
             }
+
+            if (!empty($this->filename)) {
+                break;
+            }
         }
 
         return !empty($this->filename);
