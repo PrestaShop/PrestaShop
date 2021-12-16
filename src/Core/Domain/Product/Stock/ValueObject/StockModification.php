@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 /**
  * Holds delta quantity for a product update along with a stock movement reason
  */
-class DeltaQuantity
+class StockModification
 {
     /**
      * @var int

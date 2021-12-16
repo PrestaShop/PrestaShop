@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpd
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateCombinationStockCommand using legacy object model
@@ -67,16 +67,16 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
      */
     public function handle(UpdateCombinationStockCommand $command): void
     {
-        $deltaQuantity = null;
+        $stockModification = null;
         if (null !== $command->getDeltaQuantity()) {
-            $deltaQuantity = new DeltaQuantity(
+            $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
         }
 
         $properties = new CombinationStockProperties(
-            $deltaQuantity,
+            $stockModification,
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),

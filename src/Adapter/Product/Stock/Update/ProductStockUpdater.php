@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableReposit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -161,8 +161,8 @@ class ProductStockUpdater
             $product->pack_stock_type = $properties->getPackStockType()->getValue();
             $updatableProperties[] = 'pack_stock_type';
         }
-        if (null !== $properties->getDeltaQuantity()) {
-            $product->quantity = $stockAvailable->quantity + $properties->getDeltaQuantity()->getDeltaQuantity();
+        if (null !== $properties->getStockModification()) {
+            $product->quantity = $stockAvailable->quantity + $properties->getStockModification()->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
         if (null !== $properties->getAvailableDate()) {
@@ -190,8 +190,8 @@ class ProductStockUpdater
             $stockUpdateRequired = true;
         }
 
-        if ($properties->getDeltaQuantity()) {
-            $stockAvailable->quantity += $properties->getDeltaQuantity()->getDeltaQuantity();
+        if ($properties->getStockModification()) {
+            $stockAvailable->quantity += $properties->getStockModification()->getDeltaQuantity();
             $stockUpdateRequired = true;
         }
 
@@ -201,24 +201,24 @@ class ProductStockUpdater
 
         $this->stockAvailableRepository->update($stockAvailable);
 
-        if ($properties->getDeltaQuantity()) {
+        if ($properties->getStockModification()) {
             //Save movement only after stock has been updated
-            $this->saveMovement($stockAvailable, $properties->getDeltaQuantity());
+            $this->saveMovement($stockAvailable, $properties->getStockModification());
         }
     }
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param DeltaQuantity $deltaQuantity
+     * @param StockModification $stockModification
      */
-    private function saveMovement(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, StockModification $stockModification): void
     {
         $this->stockManager->saveMovement(
             $stockAvailable->id_product,
             $stockAvailable->id_product_attribute,
-            $deltaQuantity->getDeltaQuantity(),
+            $stockModification->getDeltaQuantity(),
             [
-                'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
+                'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
             ]
         );
     }

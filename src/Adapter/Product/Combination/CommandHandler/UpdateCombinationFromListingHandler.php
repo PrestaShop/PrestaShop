@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonReposit
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationFromListingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateCombinationFromListingCommand using legacy object model
@@ -102,11 +102,11 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             return;
         }
 
-        $deltaQuantity = new DeltaQuantity(
+        $stockModification = new StockModification(
             $command->getDeltaQuantity(),
             $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
         );
-        $this->combinationStockUpdater->update($command->getCombinationId(), new CombinationStockProperties($deltaQuantity));
+        $this->combinationStockUpdater->update($command->getCombinationId(), new CombinationStockProperties($stockModification));
     }
 
     /**

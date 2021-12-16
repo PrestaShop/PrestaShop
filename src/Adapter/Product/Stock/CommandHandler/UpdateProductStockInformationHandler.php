@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockInformationHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateProductStockInformationCommand using legacy object model
@@ -67,9 +67,9 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
      */
     public function handle(UpdateProductStockInformationCommand $command): void
     {
-        $deltaQuantity = null;
+        $stockModification = null;
         if (null !== $command->getDeltaQuantity()) {
-            $deltaQuantity = new DeltaQuantity(
+            $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
@@ -78,7 +78,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
             $command->getProductId(),
             new ProductStockProperties(
                 $command->getPackStockType(),
-                $deltaQuantity,
+                $stockModification,
                 $command->getOutOfStockType(),
                 $command->getMinimalQuantity(),
                 $command->getLocation(),

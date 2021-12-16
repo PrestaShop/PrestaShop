@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use StockAvailable;
@@ -119,8 +119,8 @@ class CombinationStockUpdater
             $updatableProperties[] = 'low_stock_alert';
         }
 
-        if (null !== $properties->getDeltaQuantity()) {
-            $combination->quantity += $properties->getDeltaQuantity()->getDeltaQuantity();
+        if (null !== $properties->getStockModification()) {
+            $combination->quantity += $properties->getStockModification()->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
 
@@ -139,16 +139,16 @@ class CombinationStockUpdater
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
         $updateLocation = null !== $properties->getLocation();
-        $deltaQuantity = $properties->getDeltaQuantity();
+        $stockModification = $properties->getStockModification();
 
-        if (!$deltaQuantity && !$updateLocation) {
+        if (!$stockModification && !$updateLocation) {
             return;
         }
 
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
-        if ($deltaQuantity) {
-            $stockAvailable->quantity += $deltaQuantity->getDeltaQuantity();
+        if ($stockModification) {
+            $stockAvailable->quantity += $stockModification->getDeltaQuantity();
         }
 
         if ($updateLocation) {
@@ -158,23 +158,23 @@ class CombinationStockUpdater
         $this->stockAvailableRepository->update($stockAvailable);
 
         // save movement only after stockAvailable has been updated
-        if ($deltaQuantity) {
-            $this->saveMovement($stockAvailable, $deltaQuantity);
+        if ($stockModification) {
+            $this->saveMovement($stockAvailable, $stockModification);
         }
     }
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param DeltaQuantity $deltaQuantity
+     * @param StockModification $stockModification
      */
-    private function saveMovement(StockAvailable $stockAvailable, DeltaQuantity $deltaQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, StockModification $stockModification): void
     {
         $this->stockManager->saveMovement(
             $stockAvailable->id_product,
             $stockAvailable->id_product_attribute,
-            $deltaQuantity->getDeltaQuantity(),
+            $stockModification->getDeltaQuantity(),
             [
-                'id_stock_mvt_reason' => $deltaQuantity->getMovementReasonId()->getValue(),
+                'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
             ]
         );
     }

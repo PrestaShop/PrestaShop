@@ -28,14 +28,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use DateTimeInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\DeltaQuantity;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class CombinationStockProperties
 {
     /**
-     * @var DeltaQuantity|null
+     * @var StockModification|null
      */
-    private $deltaQuantity;
+    private $stockModification;
 
     /**
      * @var int|null
@@ -63,7 +63,7 @@ class CombinationStockProperties
     private $availableDate;
 
     /**
-     * @param DeltaQuantity|null $deltaQuantity
+     * @param StockModification|null $stockModification
      * @param int|null $minimalQuantity
      * @param string|null $location
      * @param int|null $lowStockThreshold
@@ -71,28 +71,28 @@ class CombinationStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?DeltaQuantity $deltaQuantity = null,
+        ?StockModification $stockModification = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
         ?int $lowStockThreshold = null,
         ?bool $lowStockAlertEnabled = null,
         ?DateTimeInterface $availableDate = null
     ) {
-        $this->deltaQuantity = $deltaQuantity;
+        $this->stockModification = $stockModification;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
-        $this->deltaQuantity = $deltaQuantity;
+        $this->stockModification = $stockModification;
     }
 
     /**
-     * @return DeltaQuantity|null
+     * @return StockModification|null
      */
-    public function getDeltaQuantity(): ?DeltaQuantity
+    public function getStockModification(): ?StockModification
     {
-        return $this->deltaQuantity;
+        return $this->stockModification;
     }
 
     /**
