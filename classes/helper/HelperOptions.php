@@ -212,7 +212,7 @@ class HelperOptionsCore extends Helper
                                 }
                             }
                         </script>';
-                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> ' . $this->l('Add my IP', 'Helper') . '</button>';
+                    $field['link_remove_ip'] = '<button type="button" class="btn btn-default" onclick="addRemoteAddr();"><i class="icon-plus"></i> ' . Context::getContext()->getTranslator()->trans('Add my IP', [], 'Admin.Actions') . '</button>';
                 }
 
                 // Multishop default value
@@ -291,7 +291,7 @@ class HelperOptionsCore extends Helper
         if (method_exists($this, 'displayOptionTypeText')) {
             $this->displayOptionTypeText($key, $field, $value);
         }
-        echo $this->context->currency->getSign('right') . ' ' . $this->l('(tax excl.)', 'Helper');
+        echo $this->context->currency->getSign('right') . ' ' . Context::getContext()->getTranslator()->trans('(tax excl.)', [], 'Admin.Global');
     }
 
     /**
