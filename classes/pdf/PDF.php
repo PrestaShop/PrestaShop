@@ -209,15 +209,18 @@ class PDFCore
      */
     public function setFilename(): bool
     {
+        $bulk = (1 < count($this->objects));
+
         foreach ($this->objects as $object) {
             $template = $this->getTemplateObject($object);
             if (!$template) {
                 continue;
             }
 
-            $this->filename = $template->getFilename();
-            if (count($this->objects) > 1) {
+            if ($bulk) {
                 $this->filename = $template->getBulkFilename();
+            } else {
+                $this->filename = $template->getFilename();
             }
 
             if (!empty($this->filename)) {
