@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cldr
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @clear-cache-after-feature
 Feature: CLDR display for prices
 

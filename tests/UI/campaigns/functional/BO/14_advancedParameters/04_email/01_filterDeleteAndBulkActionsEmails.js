@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -29,19 +30,9 @@ const baseContext = 'functional_BO_advancedParameters_email_filterDeleteAndBulkA
 
 let browserContext;
 let page;
+const today = getDateFormat('yyyy-mm-dd');
 
 let numberOfEmails = 0;
-
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-// Current year
-const year = today.getFullYear();
-// Date today (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
 
 /*
 Create an order to have 2 email logs in email table
@@ -249,14 +240,14 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     it('should filter E-mail table by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await emailPage.filterEmailLogsByDate(page, dateToday, dateToday);
+      await emailPage.filterEmailLogsByDate(page, today, today);
 
       const numberOfEmailsAfterFilter = await emailPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfEmails);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await emailPage.getTextColumn(page, 'date_add', row);
-        await expect(textColumn).to.contains(dateToday);
+        await expect(textColumn).to.contains(today);
       }
     });
 

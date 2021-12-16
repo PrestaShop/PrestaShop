@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-basic-information
-@reset-database-before-feature
+@restore-products-before-feature
 @update-basic-information
 Feature: Update product basic information from Back Office (BO)
   As a BO user

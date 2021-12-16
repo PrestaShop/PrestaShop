@@ -1,7 +1,8 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -26,28 +27,12 @@ const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 // Browser and tab
 let browserContext;
 let page;
+const today = getDateFormat('yyyy-mm-dd');
+const dateToCheck = getDateFormat('mm/dd/yyyy');
 
 let numberOfCatalogPriceRules = 0;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyyy-mm-dd)
-const todayDate = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const todayDateToCheck = `${month}/${day}/${year}`;
-
-const priceRuleData = new PriceRuleFaker({fromDate: todayDate, toDate: todayDate});
+const priceRuleData = new PriceRuleFaker({fromDate: today, toDate: today});
 /*
 Create 21 catalog price rules
 Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
@@ -100,7 +85,11 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   describe('Create 21 catalog price rules in BO', async () => {
     const creationTests = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test, index) => {
-      const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
+      const priceRuleData = new PriceRuleFaker({
+        name: `todelete${index}`,
+        fromDate: today,
+        toDate: today,
+      });
 
       it('should go to new catalog price rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
@@ -219,12 +208,18 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     const filterByDate = [
       {
         args: {
-          testIdentifier: 'filterDateBeginning', filterBy: 'from', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateBeginning',
+          filterBy: 'from',
+          firstDate: today,
+          secondDate: today,
         },
       },
       {
         args: {
-          testIdentifier: 'filterDateEnd', filterBy: 'to', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateEnd',
+          filterBy: 'to',
+          firstDate: today,
+          secondDate: today,
         },
       },
     ];
@@ -244,7 +239,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             row,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(todayDateToCheck);
+          await expect(textColumn).to.contains(dateToCheck);
         }
       });
 

@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s language
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Language
 
   Background:

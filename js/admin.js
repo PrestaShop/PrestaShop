@@ -838,40 +838,6 @@ $(document).ready(function()
     });
   }); // end bind
 
-  $(document).on('click', '.untrustedaddon', function(e){
-    e.preventDefault();
-    var moduleName = $(this).data('module-name');
-    var moduleDisplayName = $(this).data('module-display-name');
-    var moduleImage = $(this).data('module-image');
-    var authorName = $(this).data('author-name');
-    var moduleLink = $(this).data('link');
-    var authorUri = $(this).data('author-uri');
-    var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
-    var addonsSearchLink = 'https://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
-
-    $('.modal #untrusted-module-logo').attr('src', moduleImage);
-    $('.modal .module-display-name-placeholder').text(moduleDisplayName);
-    $('.modal .author-name-placeholder').text(authorName);
-
-    if (isValidUri.test(authorUri))
-      $('.modal .author-name-placeholder').wrap('<a href="'+authorUri+'" onclick="window.open(this.href);return false;"></a>');
-
-    $('.modal #proceed-install-anyway').attr('href', moduleLink);
-    $('.modal .catalog-link').attr('href', addonsSearchLink);
-    $('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
-  });
-
-  $(document).on('click', '#untrusted-show-risk', function(e){
-    e.preventDefault();
-    $('.untrusted-content-action').hide();
-    $('.untrusted-content-more-info').show();
-  });
-  $(document).on('click', '#untrusted-show-action', function(e){
-    e.preventDefault();
-    $('.untrusted-content-more-info').hide();
-    $('.untrusted-content-action').show();
-  });
-
   // if count errors
   $('#hideError').on('click', function(e)
   {
@@ -1271,80 +1237,6 @@ function controllerQuickView()
       }
     });
   });
-}
-
-function bindAddonsButtons()
-{
-  // Method to log on PrestaShop Addons WebServices
-  $('#addons_login_button').click(function()
-  {
-    var username_addons = $("#username_addons").val();
-    var password_addons = $("#password_addons").val();
-    try
-    {
-      resAjax = $.ajax({
-        type:"POST",
-        url : admin_modules_link,
-        async: true,
-        data : {
-          ajax : "1",
-          controller : "AdminModules",
-          action : "logOnAddonsWebservices",
-          username_addons : username_addons,
-          password_addons : password_addons
-        },
-        beforeSend: function(xhr){
-          $('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-        },
-        success : function(data){
-          if (data == 'OK')
-          {
-            $('#addons_loading').html('');
-            $('#addons_login_div').fadeOut();
-            window.location.href = currentIndex + '&token=' + token + '&conf=32';
-          }
-          else
-            $('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
-        }
-      });
-    }
-    catch(e){}
-    return false;
-  });
-
-  // Method to log out PrestaShop Addons WebServices
-  $('#addons_logout_button').click(function()
-  {
-    try
-    {
-      resAjax = $.ajax({
-        type:"POST",
-        url : admin_modules_link,
-        async: true,
-        data : {
-          ajax : "1",
-          controller : "AdminModules",
-          action : "logOutAddonsWebservices"
-        },
-        beforeSend: function(xhr){
-          $('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-        },
-        success: function(data) {
-          if (data == 'OK')
-          {
-            $('#addons_loading').html('');
-            $('#addons_login_div').fadeOut();
-            window.location.reload();
-          }
-          else
-            $('#addons_loading').html(errorLogin);
-        }
-      });
-    }
-    catch(e){}
-    return false;
-  });
-
 }
 
 function ajaxStates(id_state_selected)

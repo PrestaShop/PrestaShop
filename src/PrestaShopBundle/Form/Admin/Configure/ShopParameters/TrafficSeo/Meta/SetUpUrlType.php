@@ -51,11 +51,6 @@ class SetUpUrlType extends TranslatorAwareType
     /**
      * @var bool
      */
-    private $isHostMode;
-
-    /**
-     * @var bool
-     */
     private $isModRewriteActive;
 
     /**
@@ -70,7 +65,6 @@ class SetUpUrlType extends TranslatorAwareType
      * @param array $locales
      * @param array $canonicalUrlChoices
      * @param bool $isHtaccessFileWritable
-     * @param bool $isHostMode
      * @param bool $doesMainShopUrlExist
      */
     public function __construct(
@@ -78,7 +72,6 @@ class SetUpUrlType extends TranslatorAwareType
         array $locales,
         array $canonicalUrlChoices,
         $isHtaccessFileWritable,
-        $isHostMode,
         $isModRewriteActive,
         $doesMainShopUrlExist
     ) {
@@ -86,7 +79,6 @@ class SetUpUrlType extends TranslatorAwareType
         $this->canonicalUrlChoices = $canonicalUrlChoices;
         $this->isHtaccessFileWritable = $isHtaccessFileWritable;
         $this->isModRewriteActive = $isModRewriteActive;
-        $this->isHostMode = $isHostMode;
         $this->doesMainShopUrlExist = $doesMainShopUrlExist;
     }
 
@@ -130,7 +122,7 @@ class SetUpUrlType extends TranslatorAwareType
                 ]
             );
 
-        if (!$this->isHostMode && $this->isHtaccessFileWritable && $this->doesMainShopUrlExist) {
+        if ($this->isHtaccessFileWritable && $this->doesMainShopUrlExist) {
             $builder
                 ->add('disable_apache_multiview', SwitchType::class, [
                     'label' => $this->trans('Disable Apache\'s MultiViews option', 'Admin.Shopparameters.Feature'),

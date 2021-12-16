@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Meta\QueryResult\LayoutCustomizationPage;
 use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedFaviconExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedLogoImageExtensionException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\NotSupportedMailAndInvoiceImageExtensionException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\LogosPaths;
 use PrestaShop\PrestaShop\Core\Domain\Theme\Command\AdaptThemeToRTLLanguagesCommand;
@@ -82,29 +83,12 @@ class ThemeController extends AbstractAdminController
      */
     public function indexAction(Request $request)
     {
-        $isHostMode = $this->get('prestashop.adapter.hosting_information')->isHostMode();
-        $isoCode = strtoupper($this->get('prestashop.adapter.legacy.context')->getLanguage()->iso_code);
-        $languagesAddons = ['de', 'en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ru'];
-        $languageAddons = in_array(strtolower($isoCode), $languagesAddons) ? strtolower($isoCode) : 'en';
-
-        $themeCatalogUrl = sprintf(
-            '%s?%s',
-            'https://addons.prestashop.com/' . $languageAddons . '/3-templates-prestashop',
-            http_build_query([
-                'utm_source' => 'back-office',
-                'utm_medium' => 'theme-button',
-                'utm_campaign' => 'back-office-' . $isoCode,
-                'utm_content' => $isHostMode ? 'cloud' : 'download',
-            ])
-        );
-
         $themeProvider = $this->get('prestashop.core.addon.theme.theme_provider');
         $installedRtlLanguageChecker = $this->get('prestashop.adapter.language.rtl.installed_language_checker');
         /** @var LogosPaths $logoProvider */
         $logoProvider = $this->getQueryBus()->handle(new GetLogosPaths());
 
         return $this->render('@PrestaShop/Admin/Improve/Design/Theme/index.html.twig', [
-            'themeCatalogUrl' => $themeCatalogUrl,
             'baseShopUrl' => $this->get('prestashop.adapter.shop.url.base_url_provider')->getUrl(),
             'shopLogosForm' => $this->getLogosUploadForm()->createView(),
             'headerLogoPath' => $logoProvider->getHeaderLogoPath(),
@@ -591,12 +575,19 @@ class ThemeController extends AbstractAdminController
     private function getLogoUploadErrorMessages(DomainException $exception)
     {
         $availableLogoFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS);
+        $availableMailAndInvoiceFormatsImploded = implode(', .', ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS);
         $availableIconFormat = ShopLogoSettings::AVAILABLE_ICON_IMAGE_EXTENSION;
 
         $logoImageFormatError = $this->trans(
             'Image format not recognized, allowed format(s) is(are): .%s',
             'Admin.Notifications.Error',
             [$availableLogoFormatsImploded]
+        );
+
+        $mailAndInvoiceImageFormatError = $this->trans(
+            'Image format not recognized, allowed formats are: %s',
+            'Admin.Notifications.Error',
+            [$availableMailAndInvoiceFormatsImploded]
         );
 
         $iconFormatError = $this->trans(
@@ -607,6 +598,7 @@ class ThemeController extends AbstractAdminController
 
         return [
             NotSupportedLogoImageExtensionException::class => $logoImageFormatError,
+            NotSupportedMailAndInvoiceImageExtensionException::class => $mailAndInvoiceImageFormatError,
             NotSupportedFaviconExtensionException::class => $iconFormatError,
             FileUploadException::class => [
                 UPLOAD_ERR_INI_SIZE => $this->trans(

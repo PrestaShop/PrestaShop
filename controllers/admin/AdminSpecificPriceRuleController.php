@@ -31,6 +31,11 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 {
     public $list_reduction_type;
 
+    /**
+     * @var int
+     */
+    public $id_shop;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -41,7 +46,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
         parent::__construct();
 
-        /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
+        /* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in hrefs */
         if ($this->id_shop = (int) Tools::getValue('shop_id')) {
             $_GET['id_shop'] = $this->id_shop;
             $_POST['id_shop'] = $this->id_shop;
@@ -356,8 +361,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
     public function processSave()
     {
         $_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
-        if (Validate::isLoadedObject(($object = parent::processSave()))) {
-            /* @var SpecificPriceRule $object */
+
+        /** @var SpecificPriceRule $object */
+        $object = parent::processSave();
+        if (Validate::isLoadedObject($object)) {
             $object->deleteConditions();
             foreach ($_POST as $key => $values) {
                 if (preg_match('/^condition_group_([0-9]+)$/Ui', $key, $condition_group)) {

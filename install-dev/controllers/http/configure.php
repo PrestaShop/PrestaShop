@@ -29,7 +29,17 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp implements HttpConfigureInterface
 {
+    /**
+     * @var array
+     */
+    public $list_activities = [];
+    /**
+     * @var array
+     */
     public $list_countries = [];
+    /**
+     * @var string
+     */
     public $install_type;
 
     /**
@@ -114,58 +124,9 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
 
     public function process()
     {
-        if (Tools::getValue('uploadLogo')) {
-            $this->processUploadLogo();
-        } elseif (Tools::getValue('timezoneByIso')) {
+        if (Tools::getValue('timezoneByIso')) {
             $this->processTimezoneByIso();
         }
-    }
-
-    /**
-     * Process the upload of new logo
-     */
-    public function processUploadLogo()
-    {
-        $error = '';
-        if (isset($_FILES['fileToUpload']['tmp_name']) && $_FILES['fileToUpload']['tmp_name']) {
-            $file = $_FILES['fileToUpload'];
-            $error = ImageManager::validateUpload($file, 300000);
-            if (!strlen($error)) {
-                $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
-                if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
-                    return false;
-                }
-
-                list($width, $height, $type) = getimagesize($tmp_name);
-
-                $newheight = ($height > 500) ? 500 : $height;
-                $percent = $newheight / $height;
-                $newwidth = $width * $percent;
-                $newheight = $height * $percent;
-
-                if (!is_writable(_PS_ROOT_DIR_ . '/img/')) {
-                    $error = $this->translator->trans('Image folder %s is not writable', [_PS_ROOT_DIR_ . '/img/'], 'Install');
-                }
-                if (!$error) {
-                    list($src_width, $src_height, $type) = getimagesize($tmp_name);
-                    $src_image = ImageManager::create($type, $tmp_name);
-                    $dest_image = imagecreatetruecolor($src_width, $src_height);
-                    $white = imagecolorallocate($dest_image, 255, 255, 255);
-                    imagefilledrectangle($dest_image, 0, 0, $src_width, $src_height, $white);
-                    imagecopyresampled($dest_image, $src_image, 0, 0, 0, 0, $src_width, $src_height, $src_width, $src_height);
-                    if (!imagejpeg($dest_image, _PS_ROOT_DIR_ . '/img/logo.jpg', 95)) {
-                        $error = $this->trans('An error occurred during logo copy.', [], 'Install');
-                    } else {
-                        imagedestroy($dest_image);
-                        @chmod($filename, 0664);
-                    }
-                }
-            } else {
-                $error = $this->translator->trans('An error occurred during logo upload.', [], 'Install');
-            }
-        }
-
-        $this->ajaxJsonAnswer(!$error, $error);
     }
 
     /**
@@ -184,10 +145,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
      */
     public function getTimezones()
     {
-        if (null !== $this->cache_timezones) {
-            return;
-        }
-
         if (!file_exists(_PS_INSTALL_DATA_PATH_ . 'xml/timezone.xml')) {
             return [];
         }

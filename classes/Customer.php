@@ -867,13 +867,15 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sql = 'SELECT *
-                FROM `' . _DB_PREFIX_ . 'customer`
+        $sql = 'SELECT c.*, 
+                GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids 
+                FROM `' . _DB_PREFIX_ . 'customer` c
+                LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';
         $search_items = explode(' ', $query);
-        $research_fields = ['id_customer', 'firstname', 'lastname', 'email'];
+        $research_fields = ['c.id_customer', 'c.firstname', 'c.lastname', 'c.email'];
         if (Configuration::get('PS_B2B_ENABLE')) {
-            $research_fields[] = 'company';
+            $research_fields[] = 'c.company';
         }
 
         $items = [];
@@ -888,6 +890,8 @@ class CustomerCore extends ObjectModel
         }
 
         $sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+
+        $sql .= ' GROUP BY c.id_customer ';
 
         if ($limit) {
             $sql .= ' LIMIT 0, ' . (int) $limit;
@@ -1143,14 +1147,12 @@ class CustomerCore extends ObjectModel
         if (!$cart) {
             $cart = Context::getContext()->cart;
         }
-        if (!$cart || !$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
-            $idAddress = (int) Db::getInstance()->getValue(
-                '
-                SELECT `id_address`
-                FROM `' . _DB_PREFIX_ . 'address`
-                WHERE `id_customer` = ' . (int) $idCustomer . '
-                AND `deleted` = 0 ORDER BY `id_address`'
-            );
+        if (!$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
+            $idAddress = (int) Db::getInstance()->getValue(sprintf(
+                'SELECT `id_address` FROM `%saddress` WHERE `id_customer` = %d AND `deleted` = 0 ORDER BY `id_address`',
+                _DB_PREFIX_,
+                (int) $idCustomer
+            ));
         } else {
             $idAddress = $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
         }

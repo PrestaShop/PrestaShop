@@ -102,7 +102,7 @@ class Step
     }
 
     /**
-     * @param string $name
+     * @param string $controllerName
      *
      * @return Step
      */

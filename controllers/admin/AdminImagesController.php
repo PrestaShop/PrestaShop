@@ -487,13 +487,15 @@ class AdminImagesControllerCore extends AdminController
                 }
             }
         }
+
+        return true;
     }
 
     /**
      * Regenerate images.
      *
-     * @param $dir
-     * @param $type
+     * @param string $dir
+     * @param array $type
      * @param bool $productsImages
      *
      * @return bool|string
@@ -596,9 +598,9 @@ class AdminImagesControllerCore extends AdminController
     /**
      * Regenerate no-pictures images.
      *
-     * @param $dir
-     * @param $type
-     * @param $languages
+     * @param string $dir
+     * @param array $type
+     * @param array $languages
      *
      * @return bool
      */

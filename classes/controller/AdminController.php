@@ -278,7 +278,7 @@ class AdminControllerCore extends Controller
      *
      * If your action is named 'actionName', you need to have a method named bulkactionName() that will be executed when the button is clicked.
      *
-     * @var array
+     * @var array|null
      */
     protected $bulk_actions;
 
@@ -357,7 +357,7 @@ class AdminControllerCore extends Controller
     /** @var string Image type */
     public $imageType = 'jpg';
 
-    /** @var ObjectModel Instantiation of the class associated with the AdminController */
+    /** @var ObjectModel|null Instantiation of the class associated with the AdminController */
     protected $object;
 
     /** @var int Current object ID */
@@ -372,7 +372,7 @@ class AdminControllerCore extends Controller
     /** @var bool */
     public $multishop_context_group = true;
 
-    /** @var array Current breadcrumb position as an array of tab names */
+    /** @var array|null Current breadcrumb position as an array of tab names */
     protected $breadcrumbs;
 
     /** @var bool Bootstrap variable */
@@ -564,13 +564,7 @@ class AdminControllerCore extends Controller
         $this->logged_on_addons = !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons);
 
         // Set context mode
-        if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) {
-            if (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
-                $this->context->mode = Context::MODE_HOST_CONTRIB;
-            } else {
-                $this->context->mode = Context::MODE_HOST;
-            }
-        } elseif (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
+        if (isset($this->context->cookie->is_contributor) && (int) $this->context->cookie->is_contributor === 1) {
             $this->context->mode = Context::MODE_STD_CONTRIB;
         } else {
             $this->context->mode = Context::MODE_STD;
@@ -739,8 +733,10 @@ class AdminControllerCore extends Controller
                     $field = $t['filter_key'];
                 }
 
-                if (($val = Tools::getValue($this->table . 'Filter_' . $field)) || $val = $this->context->cookie->{$this->getCookieFilterPrefix() . $this->table . 'Filter_' . $field}) {
+                if (($val = Tools::getValue($this->table . 'Filter_' . $field))
+                    || ($val = $this->context->cookie->{$this->getCookieFilterPrefix() . $this->table . 'Filter_' . $field})) {
                     if (!is_array($val)) {
+                        /** @var bool|string $val */
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
                             $filter_value = ((bool) $val) ? $this->trans('yes') : $this->trans('no');
@@ -984,7 +980,6 @@ class AdminControllerCore extends Controller
     {
         try {
             if ($this->ajax) {
-                // from ajax-tab.php
                 $action = Tools::getValue('action');
                 // no need to use displayConf() here
                 if (!empty($action) && method_exists($this, 'ajaxProcess' . Tools::toCamelCase($action))) {
@@ -1219,7 +1214,7 @@ class AdminControllerCore extends Controller
             if (method_exists($this->object, 'add') && !$this->object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
-            } elseif (($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
+            } elseif (($_POST[$this->identifier] = $this->object->id /* voluntary do affectation here */) && $this->postImage($this->object->id) && count($this->errors) === 0 && $this->_redirect) {
                 PrestaShopLogger::addLog(
                     $this->trans('%s addition', [$this->className]),
                     1,
@@ -1308,7 +1303,7 @@ class AdminControllerCore extends Controller
                     if (!$result) {
                         $this->errors[] = $this->trans('An error occurred while updating an object.', [], 'Admin.Notifications.Error') .
                             ' <b>' . $this->table . '</b> (' . Db::getInstance()->getMsgError() . ')';
-                    } elseif ($this->postImage($object->id) && !count($this->errors) && $this->_redirect) {
+                    } elseif ($this->postImage($object->id) && count($this->errors) === 0 && $this->_redirect) {
                         $parent_id = (int) Tools::getValue('id_parent', 1);
                         // Specific back redirect
                         if ($back = Tools::getValue('back')) {
@@ -1660,9 +1655,7 @@ class AdminControllerCore extends Controller
                 break;
         }
 
-        if (is_array($this->page_header_toolbar_btn)
-            && $this->page_header_toolbar_btn instanceof Traversable
-            || count($this->toolbar_title)) {
+        if (count($this->toolbar_title)) {
             $this->show_page_header_toolbar = true;
         }
 
@@ -1983,7 +1976,6 @@ class AdminControllerCore extends Controller
             'table' => $this->table,
             'current' => self::$currentIndex,
             'token' => $this->token,
-            'host_mode' => (int) defined('_PS_HOST_MODE_'),
             'stock_management' => (int) Configuration::get('PS_STOCK_MANAGEMENT'),
             'no_order_tip' => $this->getNotificationTip('order'),
             'no_customer_tip' => $this->getNotificationTip('customer'),
@@ -2316,14 +2308,6 @@ class AdminControllerCore extends Controller
      */
     public function initFooter()
     {
-        //RTL Support
-        //rtl.js overrides inline styles
-        //iso_code.css overrides default fonts for every language (optional)
-        if ($this->context->language->is_rtl) {
-            $this->addJS(_PS_JS_DIR_ . 'rtl.js');
-            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->context->language->iso_code . '.css', 'all', false);
-        }
-
         // We assign js and css files on the last step before display template, because controller can add many js and css files
         $this->context->smarty->assign('css_files', $this->css_files);
         $this->context->smarty->assign('js_files', array_unique($this->js_files));
@@ -2750,7 +2734,6 @@ class AdminControllerCore extends Controller
                 ['action' => 'formLanguage']
             ),
         ]);
-        Media::addJsDef(['host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)]);
         Media::addJsDef(['baseDir' => __PS_BASE_URI__]);
         Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [
@@ -3551,7 +3534,7 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param array|string $filter_modules_list
+     * @param array|string|null $filter_modules_list
      * @param string|bool $tracking_source
      *
      * @return bool
@@ -3681,7 +3664,7 @@ class AdminControllerCore extends Controller
      * @param string $key Field name
      * @param int|null $id_lang Language id (optional)
      *
-     * @return string
+     * @return string|false
      */
     public function getFieldValue($obj, $key, $id_lang = null)
     {
@@ -3947,7 +3930,7 @@ class AdminControllerCore extends Controller
     {
         if (isset($field['validation'])) {
             $valid_method_exists = method_exists('Validate', $field['validation']);
-            if ((!isset($field['empty']) || !$field['empty'] || (isset($field['empty']) && $field['empty'] && $value)) && $valid_method_exists) {
+            if ((!isset($field['empty']) || !$field['empty'] || $value) && $valid_method_exists) {
                 $field_validation = $field['validation'];
                 if (!Validate::$field_validation($value)) {
                     $this->errors[] = $this->trans('%s: Incorrect value', [$field['title']], 'Admin.Notifications.Error');
@@ -4665,13 +4648,14 @@ class AdminControllerCore extends Controller
     {
         $modules = Module::getModulesOnDisk();
 
+        /** @var Module[] $modules */
         foreach ($modules as $module) {
             if ($module->name == Tools::getValue('module')) {
                 break;
             }
         }
         if (isset($module) && $module instanceof Module) {
-            $url = $module->url ?? null;
+            $url = isset($module->url) ? $module->url : null;
 
             if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
                 $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
@@ -4679,7 +4663,7 @@ class AdminControllerCore extends Controller
 
             $this->context->smarty->assign([
                 'displayName' => $module->displayName,
-                'image' => $module->image ?? null,
+                'image' => isset($module->image) ? $module->image : null,
                 'nb_rates' => (int) $module->nb_rates[0],
                 'avg_rate' => (int) $module->avg_rate[0],
                 'badges' => $module->badges,
@@ -4688,7 +4672,7 @@ class AdminControllerCore extends Controller
                 'additional_description' => $module->additional_description,
                 'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
                 'url' => $url,
-                'price' => $module->price ?? null,
+                'price' => isset($module->price) ? $module->price : null,
             ]);
         }
         // Fetch the translations in the right place - they are not defined by our current controller!

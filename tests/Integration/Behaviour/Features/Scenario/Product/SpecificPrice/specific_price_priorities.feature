@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags specific-price-priorities
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-specific-prices-priorities-after-feature
 @clear-cache-before-feature
 @specific-price-priorities
 @specific-prices

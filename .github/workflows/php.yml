@@ -13,6 +13,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
+          php-version: 8.0
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
       - uses: actions/checkout@v2
 
@@ -78,7 +79,10 @@ jobs:
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
       - name: Run phpstan on classes directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 3 classes/
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 classes/
+
+      - name: Run phpstan on controllers directory
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 2 controllers/
 
   phpunit:
     name: PHPUnit

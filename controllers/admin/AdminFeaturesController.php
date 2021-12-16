@@ -379,10 +379,6 @@ class AdminFeaturesControllerCore extends AdminController
         // Create Object FeatureValue
         $feature_value = new FeatureValue(Tools::getValue('id_feature_value'));
 
-        $this->tpl_vars = [
-            'feature_value' => $feature_value,
-        ];
-
         $this->getlanguages();
         $helper = new HelperForm();
         $helper->show_cancel_button = true;
@@ -403,7 +399,9 @@ class AdminFeaturesControllerCore extends AdminController
         $helper->override_folder = 'feature_value/';
         $helper->id = $feature_value->id;
         $helper->toolbar_scroll = false;
-        $helper->tpl_vars = $this->tpl_vars;
+        $helper->tpl_vars = [
+            'feature_value' => $feature_value,
+        ];
         $helper->languages = $this->_languages;
         $helper->default_form_language = $this->default_form_language;
         $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
@@ -639,7 +637,7 @@ class AdminFeaturesControllerCore extends AdminController
 
                 if (isset($pos[2]) && (int) $pos[2] === $id_feature) {
                     if ($feature = new Feature((int) $pos[2])) {
-                        if (isset($position) && $feature->updatePosition($way, $position, $id_feature)) {
+                        if ($feature->updatePosition($way, $position, $id_feature)) {
                             echo 'ok position ' . (int) $position . ' for feature ' . (int) $pos[1] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update feature ' . (int) $id_feature . ' to position ' . (int) $position . ' "}';

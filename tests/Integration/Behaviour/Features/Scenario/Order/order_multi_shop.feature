@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-multi-shop
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @mock-context-on-scenario
 @clear-cache-before-feature
 @order-multi-shop

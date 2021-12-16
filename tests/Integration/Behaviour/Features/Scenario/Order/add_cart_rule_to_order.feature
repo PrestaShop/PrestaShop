@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-discounts-to-order
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @add-discounts-to-order
 Feature: Add discounts to order from Back Office (BO)

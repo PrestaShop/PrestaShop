@@ -29,6 +29,15 @@
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp implements HttpConfigureInterface
 {
+    /**
+     * @var bool
+     */
+    public $can_upgrade;
+    /**
+     * @var string
+     */
+    public $ps_version;
+
     public function processNextStep()
     {
     }
@@ -65,6 +74,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp implements Http
     {
         $this->can_upgrade = false;
         if (file_exists(_PS_ROOT_DIR_ . '/config/settings.inc.php')) {
+            /** @phpstan-ignore-next-line */
             if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<')) {
                 $this->can_upgrade = true;
                 $this->ps_version = _PS_VERSION_;

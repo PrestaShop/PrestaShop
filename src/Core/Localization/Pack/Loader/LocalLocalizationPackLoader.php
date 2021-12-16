@@ -66,11 +66,7 @@ final class LocalLocalizationPackLoader extends AbstractLocalizationPackLoader
      */
     public function getLocalizationPack($countryIso)
     {
-        $rootDir = $this->configuration->get('_PS_HOST_MODE_') ?
-            $this->configuration->get('_PS_CORE_DIR_') :
-            $this->configuration->get('_PS_ROOT_DIR_');
-
-        $localizationPackFile = sprintf('%s/localization/%s.xml', $rootDir, $countryIso);
+        $localizationPackFile = sprintf('%s/localization/%s.xml', $this->configuration->get('_PS_ROOT_DIR_'), $countryIso);
         if (!file_exists($localizationPackFile)) {
             return null;
         }

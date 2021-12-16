@@ -42,7 +42,7 @@ class PrestaShopExceptionCore extends Exception
         if (ToolsCore::isPHPCLI()) {
             echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
-        } elseif (_PS_MODE_DEV_) {
+        } elseif (_PS_MODE_DEV_) { /* @phpstan-ignore-line */
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}

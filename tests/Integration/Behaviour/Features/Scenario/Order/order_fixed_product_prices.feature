@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-fixed-product-prices
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @clear-cache-before-feature
 @order-fixed-product-prices
 Feature: Order from Back Office (BO)

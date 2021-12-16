@@ -96,9 +96,7 @@ abstract class HTMLTemplateCore
      */
     protected function getShopAddress()
     {
-        return $this->shop->getAddress() instanceof Address
-            ? AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ')
-            : '';
+        return AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ');
     }
 
     /**

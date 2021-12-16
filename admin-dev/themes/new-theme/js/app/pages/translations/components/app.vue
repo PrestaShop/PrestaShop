@@ -58,34 +58,35 @@
   </div>
 </template>
 
-<script>
-  import Search from '@app/pages/translations/components/header/search';
-  import Sidebar from '@app/pages/translations/components/sidebar';
-  import Principal from '@app/pages/translations/components/principal';
-  import PSModal from '@app/widgets/ps-modal';
+<script lang="ts">
+  import Vue from 'vue';
+  import Search from '@app/pages/translations/components/header/search.vue';
+  import Sidebar from '@app/pages/translations/components/sidebar/index.vue';
+  import Principal from '@app/pages/translations/components/principal/index.vue';
+  import PSModal from '@app/widgets/ps-modal.vue';
 
-  export default {
+  export default Vue.extend({
     name: 'App',
     computed: {
-      isReady() {
+      isReady(): boolean {
         return this.$store.getters.isReady;
       },
-      totalTranslations() {
+      totalTranslations(): string {
         return this.$store.state.totalTranslations <= 1
           ? this.trans('label_total_domain_singular')
             .replace('%nb_translation%', this.$store.state.totalTranslations)
           : this.trans('label_total_domain')
             .replace('%nb_translations%', this.$store.state.totalTranslations);
       },
-      totalMissingTranslations() {
+      totalMissingTranslations(): number {
         return this.$store.state.totalMissingTranslations;
       },
-      totalMissingTranslationsString() {
+      totalMissingTranslationsString(): string {
         return this.totalMissingTranslations === 1
           ? this.trans('label_missing_singular')
-          : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
+          : this.trans('label_missing').replace('%d', <string><unknown> this.totalMissingTranslations);
       },
-      translations() {
+      translations(): Record<string, any> {
         return {
           button_save: this.trans('button_save'),
           button_leave: this.trans('button_leave'),
@@ -95,12 +96,12 @@
       },
     },
     mounted() {
-      $('a').on('click', (e) => {
+      $('a').on('click', (e: JQueryEventObject): void => {
         if ($(e.currentTarget).attr('href')) {
-          this.destHref = $(e.currentTarget).attr('href');
+          this.destHref = <string>$(e.currentTarget).attr('href');
         }
       });
-      window.onbeforeunload = () => {
+      window.onbeforeunload = (): any => {
         if (!this.destHref && this.isEdited() && !this.leave) {
           return true;
         }
@@ -110,15 +111,18 @@
             window.stop();
           }, 500);
 
-          this.$refs.transModal.showModal();
-          this.$refs.transModal.$once('save', () => {
-            this.$refs.principal.saveTranslations();
-            this.leavePage();
-          });
+          if (this.$refs.transModal && this.$refs.principal) {
+            const refTransModal = this.$refs.transModal as VTransModal;
+            refTransModal.showModal();
+            refTransModal.$once('save', (): void => {
+              (this.$refs.principal as VPrincipal).saveTranslations();
+              this.leavePage();
+            });
 
-          this.$refs.transModal.$once('leave', () => {
-            this.leavePage();
-          });
+            refTransModal.$once('leave', () => {
+              this.leavePage();
+            });
+          }
           return null;
         }
 
@@ -126,25 +130,25 @@
       };
     },
     methods: {
-      onSearch() {
+      onSearch(): void {
         this.$store.dispatch('getDomainsTree', {
           store: this.$store,
         });
-        this.$store.currentDomain = '';
+        this.$store.state.currentDomain = '';
       },
       /**
        * Set leave to true and redirect the user to the new location
        */
-      leavePage() {
+      leavePage(): void {
         this.leave = true;
-        window.location.href = this.destHref;
+        window.location.href = <string> this.destHref;
       },
-      isEdited() {
-        return this.$refs.principal.edited();
+      isEdited(): boolean {
+        return (this.$refs.principal as VPrincipal).edited();
       },
     },
     data: () => ({
-      destHref: null,
+      destHref: null as null | string,
       leave: false,
     }),
     components: {
@@ -153,7 +157,7 @@
       Principal,
       PSModal,
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

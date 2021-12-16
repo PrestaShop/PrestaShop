@@ -80,9 +80,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
             ],
         ];
-        $this->fieldImageSettings = ['name' => 'texture', 'dir' => 'co'];
-
-        $this->image_dir = 'co';
+        $this->fieldImageSettings = [
+            'name' => 'texture',
+            'dir' => 'co',
+        ];
     }
 
     /**
@@ -357,9 +358,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $this->tpl_folder = 'attributes/';
 
         // Create object ProductAttribute
-        if (!$obj = new ProductAttribute((int) Tools::getValue($this->identifier))) {
-            return;
-        }
+        $obj = new ProductAttribute((int) Tools::getValue($this->identifier));
 
         $str_attributes_groups = '';
         foreach ($attributes_groups as $attribute_group) {
@@ -408,7 +407,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute(
+                if (ProductAttribute::isAttribute(
                     (int) Tools::getValue('id_attribute_group'),
                     Tools::getValue('name_' . $language['id_lang']),
                     $language['id_lang']
@@ -795,7 +794,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     $_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 }
                 $_POST['id_parent'] = 0;
-                $this->processSave($this->token);
+                $this->processSave();
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
@@ -929,7 +928,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             if (isset($pos[2]) && (int) $pos[2] === $id_attribute_group) {
                 if ($group_attribute = new AttributeGroup((int) $pos[2])) {
-                    if (isset($position) && $group_attribute->updatePosition($way, $position)) {
+                    if ($group_attribute->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for attribute group ' . (int) $pos[2] . '\r\n';
                     } else {
                         echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute_group . ' attribute group to position ' . (int) $position . ' "}';
@@ -957,7 +956,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
                 if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
                     if ($attribute = new ProductAttribute((int) $pos[2])) {
-                        if (isset($position) && $attribute->updatePosition($way, $position)) {
+                        if ($attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute . ' attribute to position ' . (int) $position . ' "}';

@@ -394,13 +394,10 @@ class CombinationCore extends ObjectModel
                 $sqlValues[] = '(' . (int) $this->id . ', ' . (int) $value . ')';
             }
 
-            if (is_array($sqlValues) && count($sqlValues)) {
-                Db::getInstance()->execute(
-                    '
-					INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
+            Db::getInstance()->execute(
+                'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES ' . implode(',', $sqlValues)
-                );
-            }
+            );
         }
 
         return true;

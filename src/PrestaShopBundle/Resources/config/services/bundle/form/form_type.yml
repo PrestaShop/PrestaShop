@@ -617,7 +617,6 @@ services:
     arguments:
       - '@=service("prestashop.core.form.choice_provider.canonical_redirect_type").getChoices()'
       - '@=service("prestashop.core.util.url.url_file_checker").isHtaccessFileWritable()'
-      - '@=service("prestashop.adapter.hosting_information").isHostMode()'
       - '@=service("prestashop.adapter.tools").isModRewriteActive()'
       - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
     tags:
@@ -628,7 +627,6 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@=service("prestashop.adapter.hosting_information").isHostMode()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.shop_url").doesMainShopUrlExist()'
     tags:

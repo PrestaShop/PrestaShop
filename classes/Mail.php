@@ -123,9 +123,9 @@ class MailCore extends ObjectModel
      * @param string $templatePath Template path
      * @param bool $die Die after error
      * @param int $idShop Shop ID
-     * @param string $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
-     * @param string $replyTo Reply-To recipient address
-     * @param string $replyToName Reply-To recipient name
+     * @param string|array<string>|null $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string|null $replyTo Reply-To recipient address
+     * @param string|null $replyToName Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -390,10 +390,6 @@ class MailCore extends ObjectModel
                 $connection = new Swift_SendmailTransport();
             }
 
-            if (!$connection) {
-                return false;
-            }
-
             $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
@@ -531,7 +527,7 @@ class MailCore extends ObjectModel
                 $templateVars['{shop_logo}'] = $message->embed(\Swift_Image::fromPath($logo));
             }
 
-            if ((Context::getContext()->link instanceof Link) === false) {
+            if (!(Context::getContext()->link instanceof Link)) {
                 Context::getContext()->link = new Link();
             }
 

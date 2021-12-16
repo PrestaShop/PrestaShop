@@ -33,26 +33,14 @@
   {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/change_orders_status_modal.html.twig' %}
 
   {% block orders_kpi %}
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-kpis">
-          <div class="row orders-kpi">
-            {{ render(controller(
-              'PrestaShopBundle:Admin\\Common:renderKpiRow',
-              { 'kpiRow': orderKpi }
-            )) }}
-          </div>
-        </div>
-      </div>
-    </div>
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      { 'kpiRow': orderKpi }
+    )) }}
   {% endblock %}
 
   {% block order_grid_row %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderGrid} %}
   {% endblock %}
 {% endblock %}
 

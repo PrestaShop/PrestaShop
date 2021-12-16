@@ -36,7 +36,7 @@ abstract class PaymentModuleCore extends Module
 
     const DEBUG_MODE = false;
 
-    /** @var MailPartialTemplateRenderer */
+    /** @var MailPartialTemplateRenderer|null */
     protected $partialRenderer;
 
     public function install()
@@ -198,6 +198,7 @@ abstract class PaymentModuleCore extends Module
      * @param bool $dont_touch_amount
      * @param string|bool $secure_key
      * @param Shop $shop
+     * @param string|null $order_reference if this parameter is not provided, a random order reference will be generated
      *
      * @return bool
      *
@@ -213,8 +214,10 @@ abstract class PaymentModuleCore extends Module
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        Shop $shop = null,
+        ?string $order_reference = null
     ) {
+        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -274,9 +277,13 @@ abstract class PaymentModuleCore extends Module
             $order_list = [];
             $order_detail_list = [];
 
-            do {
-                $reference = Order::generateReference();
-            } while (Order::getByReference($reference)->count());
+            if ($order_reference === null) {
+                do {
+                    $reference = Order::generateReference();
+                } while (Order::getByReference($reference)->count());
+            } else {
+                $reference = $order_reference;
+            }
 
             $this->currentOrderReference = $reference;
 
@@ -298,7 +305,8 @@ abstract class PaymentModuleCore extends Module
             CartRule::cleanCache();
             $cart_rules = $this->context->cart->getCartRules();
             foreach ($cart_rules as $cart_rule) {
-                if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
+                $rule = new CartRule((int) $cart_rule['obj']->id);
+                if (Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
                         if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
@@ -358,6 +366,7 @@ abstract class PaymentModuleCore extends Module
                 throw new PrestaShopException('The order address country is not active.');
             }
 
+            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -381,7 +390,6 @@ abstract class PaymentModuleCore extends Module
             }
 
             // Next !
-            $only_one_gift = false;
             $products = $this->context->cart->getProducts();
 
             // Make sure CartRule caches are empty
@@ -397,6 +405,7 @@ abstract class PaymentModuleCore extends Module
                     if (!empty($message)) {
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
+                            /* @phpstan-ignore-next-line */
                             if (self::DEBUG_MODE) {
                                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                             }
@@ -415,7 +424,6 @@ abstract class PaymentModuleCore extends Module
                     //$orderDetail->createList($order, $this->context->cart, $id_order_state);
 
                     // Construct order detail table for the email
-                    $products_list = '';
                     $virtual_product = true;
 
                     $product_var_tpl_list = [];
@@ -473,7 +481,7 @@ abstract class PaymentModuleCore extends Module
                         if (!$product['is_virtual']) {
                             $virtual_product &= false;
                         }
-                    } // end foreach ($products)
+                    }
 
                     $product_list_txt = '';
                     $product_list_html = '';
@@ -531,6 +539,7 @@ abstract class PaymentModuleCore extends Module
                         }
                     }
 
+                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -550,6 +559,7 @@ abstract class PaymentModuleCore extends Module
                         }
                     }
 
+                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -601,6 +611,7 @@ abstract class PaymentModuleCore extends Module
                             $file_attachement = null;
                         }
 
+                        /* @phpstan-ignore-next-line */
                         if (self::DEBUG_MODE) {
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                         }
@@ -724,6 +735,7 @@ abstract class PaymentModuleCore extends Module
                 $this->currentOrder = (int) $order->id;
             }
 
+            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -882,7 +894,7 @@ abstract class PaymentModuleCore extends Module
     {
         if (($module_instance = Module::getInstanceByName($module_name))) {
             /** @var PaymentModule $module_instance */
-            if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {
+            if (!$module_instance->currencies || count(Currency::checkPaymentCurrencies($module_instance->id))) {
                 return true;
             }
         }

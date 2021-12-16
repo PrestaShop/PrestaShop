@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -32,15 +33,9 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_carriersTab';
 
 let browserContext;
 let page;
+const today = getDateFormat('mm/dd/yyyy');
 
 const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 /*
 Pre-condition :
@@ -68,7 +63,6 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       await foHomePage.goToFo(page);
-      await foHomePage.changeLanguage(page, 'en');
 
       // Change FO language
       await foHomePage.changeLanguage(page, 'en');
@@ -211,7 +205,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
 
       const result = await viewOrderPage.getCarrierDetails(page);
       await Promise.all([
-        expect(result.date).to.equal(todayDate),
+        expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(Carriers.default.name),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
         expect(result.shippingCost).to.equal('€0.00'),
@@ -240,7 +234,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
 
       const result = await viewOrderPage.getCarrierDetails(page);
       await Promise.all([
-        expect(result.date).to.equal(todayDate),
+        expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
         expect(result.weight).to.equal(`${Products.demo_1.weight}00 kg`),
         expect(result.shippingCost).to.equal(shippingDetailsData.shippingCost),

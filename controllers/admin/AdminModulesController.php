@@ -27,11 +27,6 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
 {
-    protected $_modules_ad = [
-        'blockcart' => ['cartabandonmentpro'],
-        /* 'bloctopmenu' => array('advancedtopmenu'), */
-        'blocklayered' => ['pm_advancedsearch4'],
-    ];
     /*
     ** @var array map with $_GET keywords and their callback
     */
@@ -200,6 +195,7 @@ class AdminModulesControllerCore extends AdminController
         if ($back) {
             $back .= '&tab_modules_open=1';
         }
+        $modules_list_unsort = [];
         if ($tab_modules_list) {
             $tab_modules_list = explode(',', $tab_modules_list);
             $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
@@ -234,7 +230,6 @@ class AdminModulesControllerCore extends AdminController
             'tab_modules_list' => $modules_list_sort,
             'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules') . '&select=favorites',
             'lang_iso' => $this->context->language->iso_code,
-            'host_mode' => defined('_PS_HOST_MODE_') ? 1 : 0,
         ]);
 
         if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
@@ -258,11 +253,12 @@ class AdminModulesControllerCore extends AdminController
         $module = Tools::getValue('module_pref');
         $id_module_preference = (int) Db::getInstance()->getValue('SELECT `id_module_preference` FROM `' . _DB_PREFIX_ . 'module_preference` WHERE `id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'');
         if ($id_module_preference > 0) {
+            $update = [];
             if ($action == 'i') {
-                $update = ['interest' => ($value == '' ? null : (int) $value)];
+                $update['interest'] = ($value == '' ? null : (int) $value);
             }
             if ($action == 'f') {
-                $update = ['favorite' => ($value == '' ? null : (int) $value)];
+                $update['favorite'] = ($value == '' ? null : (int) $value);
             }
             Db::getInstance()->update('module_preference', $update, '`id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'', 0, true);
         } else {
@@ -360,7 +356,7 @@ class AdminModulesControllerCore extends AdminController
         $this->recursiveDeleteOnDisk($tmp_folder);
 
         if ($success && $redirect) {
-            Tools::redirectAdmin(self::$currentIndex . '&conf=8&anchor=' . ucfirst($folder) . '&token=' . $this->token);
+            Tools::redirectAdmin(self::$currentIndex . '&conf=8&anchor=' . ucfirst($folder ?? '') . '&token=' . $this->token);
         }
 
         return $success;
@@ -638,6 +634,8 @@ class AdminModulesControllerCore extends AdminController
     {
         $return = false;
         $installed_modules = [];
+        $module_upgraded = [];
+        $key = '';
 
         foreach ($this->map as $key => $method) {
             if (!Tools::getValue($key)) {
@@ -679,7 +677,6 @@ class AdminModulesControllerCore extends AdminController
                 }
             }
 
-            $module_upgraded = [];
             $module_errors = [];
             if (isset($modules)) {
                 foreach ($modules as $name) {
@@ -692,8 +689,6 @@ class AdminModulesControllerCore extends AdminController
                     } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
                         $this->errors[] = $this->trans('You do not have permission to access this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'install' && !$this->access('add')) {
-                        $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name)) {
                         $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
                     } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
                         $this->errors[] = $this->trans('You do not have permission to delete this module.', [], 'Admin.Modules.Notification');
@@ -818,27 +813,6 @@ class AdminModulesControllerCore extends AdminController
 
                             $output = $header . $echo;
 
-                            if (isset($this->_modules_ad[$module->name])) {
-                                $ad_modules = $this->getModulesByInstallation($this->_modules_ad[$module->name]);
-
-                                foreach ($ad_modules['not_installed'] as $key => &$module) {
-                                    if (isset($module->addons_buy_url)) {
-                                        $module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
-                                            . '&utm_medium=related-modules&utm_campaign=back-office-' . strtoupper($this->context->language->iso_code)
-                                            . '&utm_content=' . (($this->context->mode >= Context::MODE_HOST_CONTRIB) ? 'cloud' : 'download');
-                                    }
-                                    if (isset($module->description_full) && trim($module->description_full) != '') {
-                                        $module->show_quick_view = true;
-                                    }
-                                }
-                                $this->context->smarty->assign([
-                                    'ad_modules' => $ad_modules,
-                                    'currentIndex' => self::$currentIndex,
-                                ]);
-                                $ad_bar = $this->context->smarty->fetch('controllers/modules/ad_bar.tpl');
-                                $output .= $ad_bar;
-                            }
-
                             $this->context->smarty->assign('module_content', $output . $configuration_bar);
                         } elseif ($echo === true) {
                             $return = 13;
@@ -882,7 +856,9 @@ class AdminModulesControllerCore extends AdminController
             if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $return == '12' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
                 Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('module_name') . '&token=' . Tools::getValue('token') . '&module_name=' . Tools::getValue('module_name') . $params);
             }
-            Tools::redirectAdmin(self::$currentIndex . '&conf=' . $return . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : '') . $params);
+            if (isset($module)) {
+                Tools::redirectAdmin(self::$currentIndex . '&conf=' . $return . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : '') . $params);
+            }
         }
 
         if (Tools::getValue('update') || Tools::getValue('updateAll')) {
@@ -892,7 +868,7 @@ class AdminModulesControllerCore extends AdminController
 
             if ($key == 'updateAll') {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&allUpdated=1');
-            } elseif (isset($module_upgraded) && $module_upgraded != '') {
+            } elseif ($module_upgraded != '') {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $module_upgraded);
             } elseif (isset($modules_list_save)) {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $modules_list_save);
@@ -902,6 +878,12 @@ class AdminModulesControllerCore extends AdminController
         }
     }
 
+    /**
+     * @param string|null $tab_modules_list
+     * @param false $install_source_tracking
+     *
+     * @return array<string, array<Module>>
+     */
     protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
     {
         $all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
@@ -1001,7 +983,7 @@ class AdminModulesControllerCore extends AdminController
     /**
      * Generate html errors for a module process.
      *
-     * @param $module_errors
+     * @param array $module_errors
      *
      * @return string
      */
@@ -1050,6 +1032,9 @@ class AdminModulesControllerCore extends AdminController
         $this->serial_modules = urlencode($this->serial_modules);
     }
 
+    /**
+     * @param Module $module
+     */
     public function makeModulesStats($module)
     {
         // Count Installed Modules
@@ -1266,22 +1251,6 @@ class AdminModulesControllerCore extends AdminController
             'modal_title' => $this->trans('Translate this module'),
             'modal_content' => $modal_content,
         ];
-
-        $modal_content = $this->context->smarty->fetch('controllers/modules/' . (($this->context->mode == Context::MODE_HOST) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
-        $this->modals[] = [
-            'modal_id' => 'moduleNotTrusted',
-            'modal_class' => 'modal-lg',
-            'modal_title' => ($this->context->mode == Context::MODE_HOST) ? $this->trans('This module cannot be installed') : $this->trans('Important Notice'),
-            'modal_content' => $modal_content,
-        ];
-
-        $modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted_country.tpl');
-        $this->modals[] = [
-            'modal_id' => 'moduleNotTrustedCountry',
-            'modal_class' => 'modal-lg',
-            'modal_title' => $this->trans('This module is Untrusted for your country', [], 'Admin.Modules.Feature'),
-            'modal_content' => $modal_content,
-        ];
     }
 
     public function initContent()
@@ -1314,6 +1283,10 @@ class AdminModulesControllerCore extends AdminController
             if ($module->name == Tools::getValue('module')) {
                 break;
             }
+        }
+
+        if (!isset($module)) {
+            return;
         }
 
         $url = $module->url;
@@ -1363,7 +1336,7 @@ class AdminModulesControllerCore extends AdminController
     {
         $this->assignReadMoreSmartyVar();
 
-        die(Tools::jsonEncode([
+        die(json_encode([
             'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
             'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl'),
         ]));

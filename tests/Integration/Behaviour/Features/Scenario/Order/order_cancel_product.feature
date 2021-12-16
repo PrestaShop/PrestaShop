@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-cancel-product
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-cancel-product
 @clear-cache-before-feature
 Feature: Cancel Order Product from Back Office (BO)

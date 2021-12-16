@@ -40,7 +40,7 @@ class DispatcherCore
     const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
 
     /**
-     * @var Dispatcher
+     * @var Dispatcher|null
      */
     public static $instance = null;
 
@@ -1103,7 +1103,7 @@ class DispatcherCore
      * Get list of all available Module Front controllers.
      *
      * @param string $type
-     * @param string $module
+     * @param string|array|null $module
      *
      * @return array
      */

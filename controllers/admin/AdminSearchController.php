@@ -28,6 +28,11 @@ class AdminSearchControllerCore extends AdminController
     const TOKEN_CHECK_START_POS = 34;
     const TOKEN_CHECK_LENGTH = 8;
 
+    /**
+     * @var string
+     */
+    public $query;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -210,8 +215,6 @@ class AdminSearchControllerCore extends AdminController
 
     /**
      * Search a specific string in the products and categories.
-     *
-     * @param string $query String to find in the catalog
      */
     public function searchCatalog()
     {
@@ -222,8 +225,6 @@ class AdminSearchControllerCore extends AdminController
 
     /**
      * Search a specific name in the customers.
-     *
-     * @param string $query String to find in the catalog
      */
     public function searchCustomer()
     {
@@ -240,25 +241,10 @@ class AdminSearchControllerCore extends AdminController
                 $this->_list['modules'][] = $module;
             }
         }
-
-        if (!is_numeric(trim($this->query)) && !Validate::isEmail($this->query)) {
-            $iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
-            $iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-            if (($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/' . _PS_VERSION_ . '/search/' . urlencode($this->query) . '/' . $iso_country . '/' . $iso_lang . '/')) != false) {
-                $results = json_decode($json_content, true);
-                if (isset($results['id'])) {
-                    $this->_list['addons'] = [$results];
-                } else {
-                    $this->_list['addons'] = $results;
-                }
-            }
-        }
     }
 
     /**
      * Search a feature in all store.
-     *
-     * @param string $query String to find in the catalog
      */
     public function searchFeatures()
     {
@@ -456,10 +442,6 @@ class AdminSearchControllerCore extends AdminController
 
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
-            }
-
-            if ($this->isCountableAndNotEmpty($this->_list, 'addons')) {
-                $this->tpl_view_vars['addons'] = $this->_list['addons'];
             }
 
             return parent::renderView();

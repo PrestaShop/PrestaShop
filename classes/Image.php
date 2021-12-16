@@ -76,6 +76,9 @@ class ImageCore extends ObjectModel
         ],
     ];
 
+    /**
+     * @var array
+     */
     protected static $_cacheGetSize = [];
 
     /**
@@ -505,7 +508,7 @@ class ImageCore extends ObjectModel
      */
     public static function getSize($type)
     {
-        if (!isset(self::$_cacheGetSize[$type]) || self::$_cacheGetSize[$type] === null) {
+        if (!isset(self::$_cacheGetSize[$type])) {
             self::$_cacheGetSize[$type] = Db::getInstance()->getRow('
 				SELECT `width`, `height`
 				FROM ' . _DB_PREFIX_ . 'image_type

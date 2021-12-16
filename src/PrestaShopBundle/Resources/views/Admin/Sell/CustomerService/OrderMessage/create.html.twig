@@ -27,15 +27,10 @@
 
 {% block content %}
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/CustomerService/OrderMessage/Blocks/form.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Sell/CustomerService/OrderMessage/Blocks/form.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
   <script src="{{ asset('themes/new-theme/public/order_message_form.bundle.js') }}"></script>
 {% endblock %}

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Util;
 
 use ArrayAccess;
 use Countable;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 
@@ -88,7 +89,12 @@ class ArrayFinder implements ArrayAccess, Countable
         }
         $path = $this->convertDotPathToArrayPath($path);
 
-        $value = $this->propertyAccessor->getValue($this->array, $path);
+        try {
+            $value = $this->propertyAccessor->getValue($this->array, $path);
+        } catch (UnexpectedTypeException $e) {
+            // If a value within the path is neither object nor array
+            return null;
+        }
 
         if (null !== $value) {
             return $value;
@@ -202,6 +208,6 @@ class ArrayFinder implements ArrayAccess, Countable
         $expl = explode('.', $dotPath);
         $in = implode('][', $expl);
 
-        return '[' . $in . ']';
+        return str_replace('[]', '[0]', '[' . $in . ']');
     }
 }

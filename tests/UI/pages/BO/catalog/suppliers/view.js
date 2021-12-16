@@ -15,8 +15,7 @@ class ViewSupplier extends BOBasePage {
     super();
 
     // Selectors
-    this.contentDiv = 'div.content-div';
-    this.productsGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(2)`;
+    this.productsGrid = '[data-role=products-card]';
     this.productsGridHeader = `${this.productsGrid} h3.card-header`;
   }
 

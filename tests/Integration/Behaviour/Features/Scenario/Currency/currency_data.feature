@@ -1,5 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency --tags currency-data
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
+@reboot-kernel-before-feature
+@currency-data
 Feature: Currency Data
   PrestaShop provides handlers for currency data
   As a BO user
@@ -10,7 +13,6 @@ Feature: Currency Data
     And language "language1" with locale "en-US" exists
     And language "language2" with locale "fr-FR" exists
 
-  @currency-data
   Scenario: Get data from an official currency
     When I request reference data for "EUR"
     Then I should get no error
@@ -25,7 +27,6 @@ Feature: Currency Data
       | patterns[en-US]  | ¤#,##0.00  |
       | patterns[fr-FR]  | #,##0.00 ¤ |
 
-  @currency-data
   Scenario: Get data from an unofficial currency
     When I request reference data for "BTC"
     Then I should get error that currency was not found
@@ -41,7 +42,6 @@ Feature: Currency Data
     When I request reference data for "BTC"
     Then I should get error that currency was not found
 
-  @currency-data
   Scenario: Get data from a customized currency
     When I add new currency "currency1" with following properties:
       | iso_code         | JPY        |

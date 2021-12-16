@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s feature_flag --tags feature-flag
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Feature Flag
   As a BO user
   I want to be able to try experimental features by toggling feature flags in the Back Office

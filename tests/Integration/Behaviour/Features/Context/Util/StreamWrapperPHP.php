@@ -22,6 +22,38 @@ class StreamWrapperPHP
 
     public $context;
 
+    /**
+     * Register this wrapper as a replacement for php protocol
+     *
+     * VERY IMPORTANT do not forget to unregister after use or any use to php protocol might fail this includes
+     * php://memory php://temp php://std* and many others which are heavily used by third party libraries like PHPUnit
+     */
+    public static function register(): void
+    {
+        // Unregister default stream wrapper for protocol php
+        stream_wrapper_unregister('php');
+
+        /*
+         * Register itself as the new stream wrapper for php protocol, from now any write/read operations on the php
+         * protocol will be intercepted by this class it means that
+         *
+         *     file_put_contents('php://input', 'xml=' . $postFields);
+         *
+         * will actually write in the file handled internally by this class instead of the usual input, this allows
+         * mocking the input I/O stream thus mocking an input request header
+         */
+        stream_wrapper_register('php', static::class);
+    }
+
+    /**
+     * Unregister this wrapper and restores the default one to roll back to usual behaviour
+     */
+    public static function unregister(): void
+    {
+        stream_wrapper_unregister('php');
+        stream_wrapper_restore('php');
+    }
+
     public function __construct()
     {
         if (file_exists($this->buffer_filename())) {

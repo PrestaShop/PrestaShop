@@ -31,6 +31,16 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public $process_steps = [];
     public $previous_button = false;
 
+    /**
+     * @var Install
+     */
+    protected $model_install;
+
+    /**
+     * @var Database
+     */
+    protected $model_database;
+
     public function init()
     {
         $this->model_install = new Install();

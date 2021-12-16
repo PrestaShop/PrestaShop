@@ -34,7 +34,6 @@ import 'magnific-popup';
 import 'dropzone';
 import 'typeahead.js/dist/typeahead.jquery';
 import 'typeahead.js/dist/bloodhound.min';
-import 'sprintf-js';
 import 'jquery-serializejson';
 
 import '@scss/theme.scss';

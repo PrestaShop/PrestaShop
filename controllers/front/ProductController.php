@@ -428,7 +428,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->setQuickViewMode();
 
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'quickview_html' => $this->render(
                 'catalog/_partials/quickview',
                 $productForTemplate instanceof AbstractLazyArray ?
@@ -452,7 +452,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -496,7 +496,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
      *
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1158,7 +1158,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1210,7 +1210,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $combinationId
+     * @param int $combinationId
      *
      * @return ProductController|null
      */
@@ -1226,7 +1226,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */

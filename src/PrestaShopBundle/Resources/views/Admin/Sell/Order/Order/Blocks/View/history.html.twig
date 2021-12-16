@@ -23,28 +23,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<table class="table">
+<table class="table" data-role="history-grid-table">
   <tbody>
     {% for status in orderForViewing.history.statuses %}
     <tr>
-      <td>
+      <td data-role="status-column">
         <span class="badge rounded badge-print-light"
               style="background-color: {{ status.color }}; color: {{ is_color_bright(status.color) ? 'black' : 'white' }};"
         >
           {{ status.name }}
         </span>
       </td>
-      <td class="text-right">
+      <td class="text-right" data-role="employee-column">
         {% if status.employeeLastName is not empty %}
           {{ status.employeeFirstName ~ ' ' ~ status.employeeLastName }}
         {% endif %}
       </td>
-      <td class="text-right">
+      <td class="text-right" data-role="date-column">
         {{ status.createdAt|date_format_full }}
       </td>
       <td class="text-right">
         {% if status.withEmail %}
-          <form method="post" action="{{ path('admin_orders_resend_email', {'orderId': orderForViewing.id, 'orderHistoryId': status.orderHistoryId, 'orderStatusId': status.orderStatusId}) }}">
+          <form method="post" 
+                action="{{ path('admin_orders_resend_email', {'orderId': orderForViewing.id, 'orderHistoryId': status.orderHistoryId, 'orderStatusId': status.orderStatusId}) }}">
             <button class="btn btn-link pt-0 pb-0">
               {{ 'Resend email'|trans({}, 'Admin.Orderscustomers.Feature') }}
             </button>

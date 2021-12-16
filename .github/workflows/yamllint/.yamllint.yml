@@ -15,7 +15,5 @@ rules:
   indentation:
     ## Check .editorconfig
     spaces: 2
-  line-length:
-    max: 200
-    level: warning
+  line-length: disable
   truthy: disable

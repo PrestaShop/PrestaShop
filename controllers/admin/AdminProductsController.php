@@ -684,7 +684,7 @@ class AdminProductsControllerCore extends AdminController
                              * - physical stock for this product
                              * - supply order(s) for this product
                              */
-                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management) {
+                            if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management && isset($stock_manager)) {
                                 $physical_quantity = $stock_manager->getProductPhysicalQuantities($product->id, 0);
                                 $real_quantity = $stock_manager->getProductRealQuantities($product->id, 0);
                                 if ($physical_quantity > 0 || $real_quantity > $physical_quantity) {
@@ -857,9 +857,7 @@ class AdminProductsControllerCore extends AdminController
                     $product->checkDefaultAttributes();
                     if (Tools::getValue('attribute_default')) {
                         Product::updateDefaultAttribute((int) $product->id);
-                        if (isset($id_product_attribute)) {
-                            $product->cache_default_attribute = (int) $id_product_attribute;
-                        }
+                        $product->cache_default_attribute = (int) $id_product_attribute;
 
                         if ($available_date = Tools::getValue('available_date_attribute')) {
                             $product->setAvailableDate($available_date);
@@ -1116,8 +1114,9 @@ class AdminProductsControllerCore extends AdminController
      */
     public function processPosition()
     {
+        $object = $this->loadObject();
         /** @var Product $object */
-        if (!Validate::isLoadedObject($object = $this->loadObject())) {
+        if (!Validate::isLoadedObject($object)) {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                 ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
         } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
@@ -1439,43 +1438,46 @@ class AdminProductsControllerCore extends AdminController
 
     public function ajaxProcessUpdateProductImageShopAsso()
     {
-        $id_product = Tools::getValue('id_product');
-        if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int) Tools::getValue('id_shop'))) {
+        $id_product = (int) Tools::getValue('id_product');
+        $id_image = (int) Tools::getValue('id_image');
+        $id_shop = (int) Tools::getValue('id_shop');
+
+        if ($id_image && $id_shop) {
             if (Tools::getValue('active') == 'true') {
-                $res = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . (int) $id_product . ', ' . (int) $id_image . ', ' . (int) $id_shop . ', NULL)');
+                $res = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'image_shop (`id_product`, `id_image`, `id_shop`, `cover`) VALUES(' . $id_product . ', ' . $id_image . ', ' . $id_shop . ', NULL)');
             } else {
-                $res = Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'image_shop WHERE `id_image` = ' . (int) $id_image . ' AND `id_shop` = ' . (int) $id_shop);
+                $res = Db::getInstance()->execute('DELETE FROM ' . _DB_PREFIX_ . 'image_shop WHERE `id_image` = ' . $id_image . ' AND `id_shop` = ' . $id_shop);
             }
         }
 
         // Clean covers in image table
         $count_cover_image = Db::getInstance()->getValue('
 			SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'image i
-			INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
-			WHERE i.cover = 1 AND i.`id_product` = ' . (int) $id_product);
+			INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . $id_shop . ')
+			WHERE i.cover = 1 AND i.`id_product` = ' . $id_product);
 
         if (!$id_image) {
             $id_image = Db::getInstance()->getValue('
                 SELECT i.`id_image` FROM ' . _DB_PREFIX_ . 'image i
-                INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . (int) $id_shop . ')
-                WHERE i.`id_product` = ' . (int) $id_product);
+                INNER JOIN ' . _DB_PREFIX_ . 'image_shop ish ON (i.id_image = ish.id_image AND ish.id_shop = ' . $id_shop . ')
+                WHERE i.`id_product` = ' . $id_product);
         }
 
         if ($count_cover_image < 1) {
-            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image i SET i.cover = 1 WHERE i.id_image = ' . (int) $id_image . ' AND i.`id_product` = ' . (int) $id_product . ' LIMIT 1');
+            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image i SET i.cover = 1 WHERE i.id_image = ' . $id_image . ' AND i.`id_product` = ' . $id_product . ' LIMIT 1');
         }
 
         // Clean covers in image_shop table
         $count_cover_image_shop = Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM ' . _DB_PREFIX_ . 'image_shop ish
-			WHERE ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop = ' . (int) $id_shop . ' AND ish.cover = 1');
+			WHERE ish.`id_product` = ' . $id_product . ' AND ish.id_shop = ' . $id_shop . ' AND ish.cover = 1');
 
         if ($count_cover_image_shop < 1) {
-            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image_shop ish SET ish.cover = 1 WHERE ish.id_image = ' . (int) $id_image . ' AND ish.`id_product` = ' . (int) $id_product . ' AND ish.id_shop =  ' . (int) $id_shop . ' LIMIT 1');
+            Db::getInstance()->execute('UPDATE ' . _DB_PREFIX_ . 'image_shop ish SET ish.cover = 1 WHERE ish.id_image = ' . $id_image . ' AND ish.`id_product` = ' . $id_product . ' AND ish.id_shop =  ' . (int) $id_shop . ' LIMIT 1');
         }
 
-        if ($res) {
+        if (isset($res) && $res) {
             $this->jsonConfirmation($this->_conf[27]);
         } else {
             $this->jsonError($this->trans('An error occurred while attempting to associate this image with your shop. ', [], 'Admin.Catalog.Notification'));
@@ -1672,7 +1674,7 @@ class AdminProductsControllerCore extends AdminController
         @unlink(_PS_TMP_IMG_DIR_ . 'product_' . $product->id . '.jpg');
         @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . $product->id . '_' . $this->context->shop->id . '.jpg');
 
-        return (isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false;
+        return (is_int($id_image) && $id_image) ? $id_image : false;
     }
 
     /**
@@ -1867,7 +1869,7 @@ class AdminProductsControllerCore extends AdminController
 
         $id = (int) Tools::getValue('id_' . $this->table);
         /* Update an existing product */
-        if (isset($id) && !empty($id)) {
+        if (!empty($id)) {
             /** @var Product $object */
             $object = new $this->className((int) $id);
             $this->object = $object;
@@ -2114,7 +2116,7 @@ class AdminProductsControllerCore extends AdminController
             }
         }
 
-        if ($this->isProductFieldUpdated('description_short') && isset($_POST['description_short'])) {
+        if ($this->isProductFieldUpdated('description_short') && isset($_POST['description_short'], $saveShort)) {
             $_POST['description_short'] = $saveShort;
         }
 
@@ -2377,24 +2379,6 @@ class AdminProductsControllerCore extends AdminController
         }
 
         die('[' . implode(',', $jsonArray) . ']');
-    }
-
-    /**
-     * Build a categories tree.
-     *
-     * @param $id_obj
-     * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-     * @param array $categories Categories to list
-     * @param $current
-     * @param null $id_category Current category ID
-     * @param null $id_category_default
-     * @param array $has_suite
-     *
-     * @return string
-     */
-    public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = [])
-    {
-        @trigger_error('This function is deprecated since 1.7.0.', E_USER_DEPRECATED);
     }
 
     public function getPreviewUrl(Product $product)
@@ -3071,11 +3055,10 @@ class AdminProductsControllerCore extends AdminController
 
     public function getCombinationImagesJS()
     {
-        /** @var Product $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
-
+        /** @var Product $obj */
         $content = 'var combination_images = new Array();';
         if (!$allCombinationImages = $obj->getCombinationImages($this->context->language->id)) {
             return $content;
@@ -3133,8 +3116,6 @@ class AdminProductsControllerCore extends AdminController
      * if yes, add the pack items from input "inputPackItems".
      *
      * @param Product $product
-     *
-     * @return bool
      */
     public function updatePackItems($product)
     {
@@ -3151,7 +3132,7 @@ class AdminProductsControllerCore extends AdminController
                     if (!empty($line)) {
                         $item_id_attribute = 0;
                         count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
-                        if ($qty > 0 && isset($item_id)) {
+                        if ($qty > 0) {
                             if (Pack::isPack((int) $item_id)) {
                                 $this->errors[] = $this->trans('You can\'t add product packs into a pack', [], 'Admin.Catalog.Notification');
                             } elseif (!Pack::addItem((int) $product->id, (int) $item_id, (int) $qty, (int) $item_id_attribute)) {
@@ -3207,7 +3188,7 @@ class AdminProductsControllerCore extends AdminController
                         }
 
                         if ($product = new Product((int) $pos[2])) {
-                            if (isset($position) && $product->updatePosition($way, $position)) {
+                            if ($product->updatePosition($way, $position)) {
                                 $category = new Category((int) $id_category);
                                 if (Validate::isLoadedObject($category)) {
                                     Hook::exec('actionCategoryUpdate', ['category' => $category]);

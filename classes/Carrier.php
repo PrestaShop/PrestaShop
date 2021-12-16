@@ -470,7 +470,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      *
-     * @return float Maximum delivery price
+     * @return false|string Maximum delivery price
      */
     public function getMaxDeliveryPriceByPrice($id_zone)
     {
@@ -523,13 +523,14 @@ class CarrierCore extends ObjectModel
      *                             - PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
      *                             - ALL_CARRIERS
      * @param bool $active Returns only active carriers when true
+     * @param array|string|null $ids_group
      *
      * @return array Carriers
      */
     public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
     {
         // Filter by groups and no groups => return empty array
-        if ($ids_group && (!is_array($ids_group) || !count($ids_group))) {
+        if ($ids_group && (!is_array($ids_group) || empty($ids_group))) {
             return [];
         }
 
@@ -547,10 +548,11 @@ class CarrierCore extends ObjectModel
             $sql .= ' AND cz.`id_zone` = ' . (int) $id_zone . ' AND z.`active` = 1 ';
         }
         if ($ids_group) {
-            $sql .= ' AND EXISTS (
-                            SELECT 1 FROM ' . _DB_PREFIX_ . 'carrier_group
-                            WHERE ' . _DB_PREFIX_ . 'carrier_group.id_carrier = c.id_carrier
-                            AND id_group IN (' . implode(',', array_map('intval', $ids_group)) . ')) ';
+            $sql .= ' AND EXISTS ('
+                . 'SELECT 1 FROM ' . _DB_PREFIX_ . 'carrier_group '
+                . 'WHERE ' . _DB_PREFIX_ . 'carrier_group.id_carrier = c.id_carrier '
+                . 'AND id_group IN (' . implode(',', array_map('intval', $ids_group)) . ')'
+                . ') ';
         }
 
         switch ($modules_filters) {
@@ -601,7 +603,7 @@ class CarrierCore extends ObjectModel
             'SELECT id_tax_rules_group
             FROM (
                 SELECT COUNT(*) n, c.id_tax_rules_group
-                FROM ' . _DB_PREFIX_ . 'carrier c
+                FROM ' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop c
                 JOIN ' . _DB_PREFIX_ . 'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
                 WHERE trg.active = 1 AND trg.deleted = 0
                 GROUP BY c.id_tax_rules_group
@@ -617,7 +619,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_lang Language ID
      * @param bool $active_countries Only return active countries when true
      * @param bool $active_carriers Only return active carriers when true
-     * @param null $contain_states Only return countries with states
+     * @param int|null $contain_states Only return countries with states
      *
      * @return array Countries to which can be delivered
      */
@@ -1479,7 +1481,7 @@ class CarrierCore extends ObjectModel
      * @param int|null $id_address_delivery Delivery Address ID
      * @param int|null$id_shop Shop ID
      * @param Cart|null $cart Cart object
-     * @param array $error contain an error message if an error occurs
+     * @param array|null $error contain an error message if an error occurs
      *
      * @return array Available Carriers
      *

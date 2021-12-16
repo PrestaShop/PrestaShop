@@ -121,9 +121,6 @@ abstract class ModuleCore implements ModuleInterface
     /** @var bool Status */
     public $active = false;
 
-    /** @var bool Is the module certified by addons.prestashop.com */
-    public $trusted = false;
-
     /** @var string Fill it if the module is installed but not yet set up */
     public $warning;
 
@@ -137,6 +134,9 @@ abstract class ModuleCore implements ModuleInterface
 
     /** @var bool */
     public $installed;
+
+    /** @var bool */
+    public $show_quick_view = false;
 
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
@@ -229,9 +229,6 @@ abstract class ModuleCore implements ModuleInterface
     const CACHE_FILE_TAB_MODULES_LIST = '/config/xml/tab_modules_list.xml';
 
     const CACHE_FILE_ALL_COUNTRY_MODULES_LIST = '/config/xml/modules_native_addons.xml';
-
-    const CACHE_FILE_TRUSTED_MODULES_LIST = '/config/xml/trusted_modules_list.xml';
-    const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
     public const MULTISTORE_COMPATIBILITY_NO = -20;
     public const MULTISTORE_COMPATIBILITY_NOT_CONCERNED = -10;
@@ -1180,11 +1177,16 @@ abstract class ModuleCore implements ModuleInterface
     public static function getInstanceByName($module_name)
     {
         if (!Validate::isModuleName($module_name)) {
-            if (_PS_MODE_DEV_) {
-                die(Tools::displayError(Context::getContext()->getTranslator()->trans('%1$s is not a valid module name.', [Tools::safeOutput($module_name)], 'Admin.Modules.Notification')));
+            /* @phpstan-ignore-next-line */
+            if (!_PS_MODE_DEV_) {
+                return false;
             }
 
-            return false;
+            die(Tools::displayError(Context::getContext()->getTranslator()->trans(
+                '%1$s is not a valid module name.',
+                [Tools::safeOutput($module_name)],
+                'Admin.Modules.Notification'
+            )));
         }
 
         if (!isset(static::$_INSTANCE[$module_name])) {
@@ -1416,7 +1418,6 @@ abstract class ModuleCore implements ModuleInterface
 
                     $item->active = 0;
                     $item->onclick_option = false;
-                    $item->trusted = Module::isModuleTrusted($item->name);
 
                     $module_list[$item->name . '_disk'] = $item;
 
@@ -1470,7 +1471,6 @@ abstract class ModuleCore implements ModuleInterface
                         $item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
                         $item->need_instance = isset($tmp_module->need_instance) ? $tmp_module->need_instance : 0;
                         $item->active = $tmp_module->active;
-                        $item->trusted = Module::isModuleTrusted($tmp_module->name);
                         $item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
                         $item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
                         $item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
@@ -1541,9 +1541,7 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset($module->tab)) {
                 $module->tab = 'others';
             }
-            if (defined('_PS_HOST_MODE_') && in_array($module->name, static::$hosted_modules_blacklist)) {
-                unset($module_list[$key]);
-            } elseif (isset($modules_installed[$module->name])) {
+            if (isset($modules_installed[$module->name])) {
                 $module->installed = true;
                 $module->database_version = $modules_installed[$module->name]['version'];
                 $module->interest = $modules_installed[$module->name]['interest'];
@@ -1663,174 +1661,6 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         return Db::getInstance()->executeS($sql);
-    }
-
-    /**
-     * Return if the module is provided by addons.prestashop.com or not.
-     *
-     * @param string $module_name The module name (the folder name)
-     *
-     * @return int
-     */
-    final public static function isModuleTrusted($module_name)
-    {
-        static $trusted_modules_list_content = null;
-        static $untrusted_modules_list_content = null;
-
-        $context = Context::getContext();
-
-        // Check whether the xml file exist, is not empty, is not too old
-        // and if the theme has not changed
-        // If conditions are not met, refresh file
-        if (!(
-            file_exists(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)
-            && filesize(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST) > 0
-            && ((time() - filemtime(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
-            )) {
-            static::generateTrustedXml();
-        }
-
-        if ($trusted_modules_list_content === null) {
-            $trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST);
-            if (strpos($trusted_modules_list_content, $context->shop->theme->getName()) === false) {
-                static::generateTrustedXml();
-            }
-        }
-
-        if ($untrusted_modules_list_content === null) {
-            $untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST);
-        }
-
-        // If the module is trusted, which includes both partner modules and modules bought on Addons
-
-        if (stripos($trusted_modules_list_content, $module_name) !== false) {
-            // The module seems to be trusted, but it does not seem to be dedicated to this country
-            return 2;
-        } elseif (stripos($untrusted_modules_list_content, $module_name) !== false) {
-            // If the module is already in the untrusted list, then return 0 (untrusted)
-            return 0;
-        } else {
-            // If the module is not registered in xml files
-            // It might have been uploaded recently so we check
-            // Addons API and clear XML files to be regenerated next time
-            static::deleteTrustedXmlCache();
-
-            return (int) Module::checkModuleFromAddonsApi($module_name);
-        }
-    }
-
-    /**
-     * Delete the trusted / untrusted XML files, generated by generateTrustedXml().
-     */
-    final public static function deleteTrustedXmlCache()
-    {
-        Tools::deleteFile(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST);
-        Tools::deleteFile(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST);
-    }
-
-    /**
-     * Generate XML files for trusted and untrusted modules.
-     */
-    final public static function generateTrustedXml()
-    {
-        $modules_on_disk = Module::getModulesDirOnDisk();
-        $trusted = [];
-        $untrusted = [];
-
-        $trusted_modules_xml = [
-            _PS_ROOT_DIR_ . static::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-        ];
-
-        // Create 2 arrays with trusted and untrusted modules
-        foreach ($trusted_modules_xml as $file) {
-            $content = Tools::file_get_contents($file);
-            $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-
-            if ($xml && isset($xml->module)) {
-                foreach ($xml->module as $modaddons) {
-                    $trusted[] = Tools::strtolower((string) $modaddons->name);
-                }
-            }
-        }
-
-        foreach (glob(_PS_ROOT_DIR_ . '/config/xml/themes/*.xml') as $theme_xml) {
-            if (file_exists($theme_xml)) {
-                $content = Tools::file_get_contents($theme_xml);
-                $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-
-                if ($xml) {
-                    foreach ($xml->modules->module as $modaddons) {
-                        if ((string) $modaddons['action'] == 'install') {
-                            $trusted[] = Tools::strtolower((string) $modaddons['name']);
-                        }
-                    }
-                }
-            }
-        }
-
-        foreach ($modules_on_disk as $name) {
-            if (!in_array($name, $trusted)) {
-                if (Module::checkModuleFromAddonsApi($name)) {
-                    $trusted[] = Tools::strtolower($name);
-                } else {
-                    $untrusted[] = Tools::strtolower($name);
-                }
-            }
-        }
-
-        $context = Context::getContext();
-
-        // Save the 2 arrays into XML files
-        $trusted_xml = new SimpleXMLElement('<modules_list/>');
-        $trusted_xml->addAttribute('theme', $context->shop->theme->getName());
-        $modules = $trusted_xml->addChild('modules');
-        $modules->addAttribute('type', 'trusted');
-        foreach ($trusted as $key => $name) {
-            $module = $modules->addChild('module');
-            $module->addAttribute('name', $name);
-        }
-        $success = file_put_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_TRUSTED_MODULES_LIST, $trusted_xml->asXML());
-
-        $untrusted_xml = new SimpleXMLElement('<modules_list/>');
-        $modules = $untrusted_xml->addChild('modules');
-        $modules->addAttribute('type', 'untrusted');
-        foreach ($untrusted as $key => $name) {
-            $module = $modules->addChild('module');
-            $module->addAttribute('name', $name);
-        }
-        $success &= file_put_contents(_PS_ROOT_DIR_ . static::CACHE_FILE_UNTRUSTED_MODULES_LIST, $untrusted_xml->asXML());
-
-        if ($success) {
-            return true;
-        } else {
-            Context::getContext()->getTranslator()->trans('Trusted and Untrusted XML have not been generated properly', [], 'Admin.Modules.Notification');
-        }
-    }
-
-    /**
-     * Create the Addons API call from the module name only.
-     *
-     * @param string $module_name Module dir name
-     *
-     * @return bool Returns if the module is trusted by addons.prestashop.com
-     */
-    final public static function checkModuleFromAddonsApi($module_name)
-    {
-        $obj = Module::getInstanceByName($module_name);
-
-        if (!is_object($obj)) {
-            return false;
-        } elseif ($obj->module_key === '') {
-            return false;
-        } else {
-            $params = [
-                'module_name' => $obj->name,
-                'module_key' => $obj->module_key,
-            ];
-            $xml = Tools::addonsRequest('check_module', $params);
-
-            return (bool) (strpos($xml, 'success') !== false);
-        }
     }
 
     /**
@@ -2351,6 +2181,7 @@ abstract class ModuleCore implements ModuleInterface
     public function display($file, $template, $cache_id = null, $compile_id = null)
     {
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
+            /* @phpstan-ignore-next-line */
             return Context::getContext()->getTranslator()->trans('No template found for module', [], 'Admin.Modules.Notification') . ' ' . basename($file, '.php') . (_PS_MODE_DEV_ ? ' (' . $template . ')' : '');
         } else {
             $this->smarty->assign([

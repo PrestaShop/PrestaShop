@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combinations-listing
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
 @combinations-listing

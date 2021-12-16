@@ -39,6 +39,11 @@ class InstallControllerHttpSystem extends InstallControllerHttp implements HttpC
     public $model_system;
 
     /**
+     * @var array
+     */
+    public $tests_render;
+
+    /**
      * @see HttpConfigureInterface::init()
      */
     public function init()

@@ -1736,7 +1736,7 @@ class CartRuleCore extends ObjectModel
      *                     - attributes
      *                     - manufacturers
      *                     - suppliers
-     * @param array $list Entities
+     * @param array|int $list Entities
      *
      * @return bool Indicates whether the cleanup was successful
      */

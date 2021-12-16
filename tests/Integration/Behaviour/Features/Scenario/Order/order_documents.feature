@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-documents
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
 @order-documents

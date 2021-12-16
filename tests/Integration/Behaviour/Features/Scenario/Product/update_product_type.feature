@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-product-type
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature
 @update-product-type

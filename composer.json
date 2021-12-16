@@ -118,7 +118,6 @@
         "prestashop/statsstock": "^2",
         "prestashop/translationtools-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^5.1",
-        "shudrum/array-finder": "^1.1.0",
         "smarty/smarty": "^3.1.39",
         "soundasleep/html2text": "^0.5.0",
         "swiftmailer/swiftmailer": "~6.2",
@@ -186,7 +185,11 @@
     "scripts": {
         "create-release": "@php tools/build/CreateRelease.php",
         "create-test-db": [
-            "@php ./tests/bin/create-test-db.php"
+            "@php ./tests/bin/create-test-db.php",
+            "@php ./tests/bin/create-test-tables-dump.php"
+        ],
+        "create-test-table-dumps": [
+            "@php ./tests/bin/create-test-tables-dump.php"
         ],
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
@@ -201,6 +204,12 @@
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
+        "restore-test-db": [
+            "@php ./tests/bin/restore-test-db.php"
+        ],
+        "restore-test-tables": [
+            "@php ./tests/bin/restore-test-tables.php"
+        ],
         "test-all": [
             "@composer unit-tests",
             "@composer integration-tests",
@@ -213,6 +222,9 @@
     "scripts-descriptions": {
         "create-release": "Create a release of PrestaShop, run the command with -h/--help argument for more information.",
         "create-test-db": "Create a Database for testing purposes",
+        "create-test-table-dumps": "Create a dump of each table in the Database for testing purposes",
+        "restore-test-db": "Restore the whole DB in a single dump",
+        "restore-test-tables": "Restore all tables one by one, only when they have been modified",
         "test-all": "Launch all PHPUnit test suites"
     }
 }

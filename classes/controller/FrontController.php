@@ -356,8 +356,11 @@ class FrontControllerCore extends Controller
             $has_country = isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country;
             $has_address_type = false;
 
-            if ((int) $this->context->cookie->id_cart && ($cart = new Cart($this->context->cookie->id_cart)) && Validate::isLoadedObject($cart)) {
-                $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+            if ((int) $this->context->cookie->id_cart) {
+                $cart = new Cart($this->context->cookie->id_cart);
+                if (Validate::isLoadedObject($cart)) {
+                    $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                }
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
@@ -838,6 +841,7 @@ class FrontControllerCore extends Controller
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
                 die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
@@ -1010,10 +1014,8 @@ class FrontControllerCore extends Controller
 
         // retrocompatibility
         $ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
-        if (is_array($ips_old) && count($ips_old)) {
-            foreach ($ips_old as $ip) {
-                $ips = array_merge($ips, explode("\n", $ip));
-            }
+        foreach ($ips_old as $ip) {
+            $ips = array_merge($ips, explode("\n", $ip));
         }
 
         $ips = array_map('trim', $ips);
@@ -1042,28 +1044,6 @@ class FrontControllerCore extends Controller
         }
 
         return strcasecmp(Tools::getToken(false), Tools::getValue('token')) == 0;
-    }
-
-    /**
-     * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
-     */
-    public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
-    }
-
-    /**
-     * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
-     */
-    public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
     }
 
     public function registerStylesheet($id, $relativePath, $params = [])
@@ -1502,7 +1482,21 @@ class FrontControllerCore extends Controller
                 'css_url' => _THEME_CSS_DIR_,
                 'js_url' => _THEME_JS_DIR_,
                 'pic_url' => _THEME_PROD_PIC_DIR_,
+                'theme_assets' => _THEME_DIR_ . 'assets/',
             ];
+
+            $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
+
+            if (!empty($themeAssetsConfig['use_parent_assets'])) {
+                $assign_array['theme_assets'] = _PS_PARENT_THEME_URI_ . 'assets/';
+                $assign_array['img_url'] = $assign_array['theme_assets'] . 'img/';
+                $assign_array['css_url'] = $assign_array['theme_assets'] . 'css/';
+                $assign_array['js_url'] = $assign_array['theme_assets'] . 'js/';
+                $assign_array['child_theme_assets'] = _THEME_DIR_ . 'assets/';
+                $assign_array['child_img_url'] = $assign_array['child_theme_assets'] . 'img/';
+                $assign_array['child_css_url'] = $assign_array['child_theme_assets'] . 'css/';
+                $assign_array['child_js_url'] = $assign_array['child_theme_assets'] . 'js/';
+            }
 
             foreach ($assign_array as $assign_key => $assign_value) {
                 if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
@@ -1530,8 +1524,6 @@ class FrontControllerCore extends Controller
             $urls['pages'] = $pages;
 
             $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
-
-            $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
 
             $urls['actions'] = [
                 'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
@@ -1880,6 +1872,7 @@ class FrontControllerCore extends Controller
         } catch (PrestaShopException $e) {
             PrestaShopLogger::addLog($e->getMessage());
 
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 $this->warning[] = $e->getMessage();
                 $scope->assign(['notifications' => $this->prepareNotifications()]);

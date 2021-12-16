@@ -174,7 +174,7 @@ class FeatureCore extends ObjectModel
                 );
         }
         if ($result) {
-            $result = $result && parent::update($nullValues);
+            $result = parent::update($nullValues);
             if ($result) {
                 Hook::exec('actionFeatureSave', ['id_feature' => $this->id]);
             }
@@ -247,7 +247,7 @@ class FeatureCore extends ObjectModel
      * Create a feature from import.
      *
      * @param string $name Feature name
-     * @param bool $position Feature position
+     * @param bool|int $position Feature position
      *
      * @return int Feature ID
      */
@@ -272,7 +272,8 @@ class FeatureCore extends ObjectModel
 
             return $feature->id;
         } elseif (isset($rq['id_feature']) && $rq['id_feature']) {
-            if (is_numeric($position) && $feature = new Feature((int) $rq['id_feature'])) {
+            if (is_numeric($position)) {
+                $feature = new Feature((int) $rq['id_feature']);
                 $feature->position = (int) $position;
                 if (Validate::isLoadedObject($feature)) {
                     $feature->update();

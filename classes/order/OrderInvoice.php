@@ -86,7 +86,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var array Total paid cache */
     protected static $_total_paid_cache = [];
 
-    /** @var Order * */
+    /** @var Order|null */
     private $order;
 
     /**
@@ -772,6 +772,8 @@ class OrderInvoiceCore extends ObjectModel
      * Return total to paid of sibling invoices.
      *
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
+     *
+     * @return float|array
      *
      * @since 1.5.0.14
      */

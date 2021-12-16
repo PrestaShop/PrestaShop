@@ -140,6 +140,12 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         'tabs' => 'tabs',
     ];
 
+    public static function resetStaticCache()
+    {
+        static::$loaded_classes = [];
+        static::resetCache();
+    }
+
     public static function resetCache()
     {
         static::$_checkedLangs = null;
@@ -408,7 +414,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         // and modules files which are not override by theme.
         if (!$copy || $iso_from != $iso_to) {
             // Translations files
-            if (!$check || ($check && (string) $iso_from != 'en')) {
+            if (!$check || ((string) $iso_from) != 'en') {
                 foreach ($lFiles as $file) {
                     $files_tr[$lPath_from . $file] = ($copy ? $lPath_to . $file : ++$number);
                 }
@@ -419,7 +425,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $files = array_merge($files, $files_tr);
 
             // Mail files
-            if (!$check || ($check && (string) $iso_from != 'en')) {
+            if (!$check || ((string) $iso_from) != 'en') {
                 $files_mail[$mPath_from . 'lang.php'] = ($copy ? $mPath_to . 'lang.php' : ++$number);
             }
             foreach ($mFiles as $file) {
@@ -463,7 +469,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // Theme files
-        if (!$check || ($check && (string) $iso_from != 'en')) {
+        if (!$check || ((string) $iso_from) != 'en') {
             $files_theme[$tPath_from . 'lang/' . (string) $iso_from . '.php'] = ($copy ? $tPath_to . 'lang/' . (string) $iso_to . '.php' : ++$number);
 
             // Override for pdf files in the theme

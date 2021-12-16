@@ -895,7 +895,7 @@ product_tabs['Associations'] = new function(){
 	 */
 	this.getManufacturers = function(){
 		$.ajax({
-				url: 'ajax-tab.php',
+				url: 'index.php',
 				cache: false,
 				dataType: 'json',
 				data: {
@@ -1428,7 +1428,7 @@ product_tabs['Quantities'] = new function(){
 
 		$.ajax({
 			type: "POST",
-			url: "ajax-tab.php",
+			url: "index.php",
 			data: data,
 			dataType: 'json',
 			async : true,

@@ -47,8 +47,6 @@
   {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/shop_urls_configuration.html.twig' %}
   {{ form_end(shopUrlsForm) }}
 
-  {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/domain_name_management.html.twig' %}
-
   {% if urlSchemaForm is not empty %}
     {{ form_start(urlSchemaForm, {attr : {class: 'form'}, action: path('admin_metas_url_schema_save') }) }}
     {% include '@PrestaShop/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/url_schema_configuration.html.twig' %}

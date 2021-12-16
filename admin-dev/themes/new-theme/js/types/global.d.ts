@@ -105,3 +105,13 @@ type VCheckboxDatas = Vue & {
 interface SelectorsMap extends Record<string, string> {
   [key: string]: string;
 }
+
+type VTransModal = Vue & { 
+  showModal: () => void;
+  $once: any;
+};
+
+type VPrincipal = Vue & { 
+  saveTranslations: () => void;
+  edited: () => boolean;
+};

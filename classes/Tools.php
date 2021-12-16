@@ -186,7 +186,7 @@ class ToolsCore
      *
      * @param string $url Desired URL
      * @param string $base_uri Base URI (optional)
-     * @param Link $link
+     * @param Link|null $link
      * @param string|array $headers A list of headers to send before redirection
      */
     public static function redirect($url, $base_uri = __PS_BASE_URI__, Link $link = null, $headers = null)
@@ -1189,10 +1189,12 @@ class ToolsCore
                 ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
 
+        /* @phpstan-ignore-next-line */
         return $errorMessage;
     }
 
@@ -2202,6 +2204,7 @@ class ToolsCore
 
             $content = curl_exec($curl);
 
+            /* @phpstan-ignore-next-line */
             if (false === $content && _PS_MODE_DEV_) {
                 $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
@@ -3100,39 +3103,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
-     * Use json_decode instead
-     * jsonDecode convert json string to php array / object
-     *
-     * @param string $data
-     * @param bool $assoc (since 1.4.2.4) if true, convert to associative array
-     * @param int $depth
-     * @param int $options
-     *
-     * @return array
-     */
-    public static function jsonDecode($data, $assoc = false, $depth = 512, $options = 0)
-    {
-        return json_decode($data, $assoc, $depth, $options);
-    }
-
-    /**
-     * @deprecated Deprecated since 1.7.0
-     * Use json_encode instead
-     * Convert an array to json string
-     *
-     * @param mixed $data
-     * @param int $depth
-     * @param int $options
-     *
-     * @return string json
-     */
-    public static function jsonEncode($data, $options = 0, $depth = 512)
-    {
-        return json_encode($data, $options, $depth);
-    }
-
-    /**
      * Display a warning message indicating that the method is deprecated.
      *
      * @param string $message
@@ -3179,6 +3149,7 @@ exit;
 
     protected static function throwDeprecated($error, $message, $class)
     {
+        /* @phpstan-ignore-next-line */
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
             @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
@@ -3255,8 +3226,6 @@ exit;
      */
     public static function checkPhpVersion()
     {
-        $version = null;
-
         if (defined('PHP_VERSION')) {
             $version = PHP_VERSION;
         } else {
@@ -3353,7 +3322,7 @@ exit;
      * Get products order field name for queries.
      *
      * @param string $type by|way
-     * @param string|null $value If no index given, use default order from admin -> pref -> products
+     * @param string|bool|null $value If no index given, use default order from admin -> pref -> products
      * @param bool|string $prefix
      *
      * @return string Order by sql clause
@@ -3381,15 +3350,11 @@ exit;
 
                 return $order_by_prefix . $value;
 
-            break;
-
             case 'way':
                 $value = (null === $value || $value === false || $value === '') ? (int) Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
                 $list = [0 => 'asc', 1 => 'desc'];
 
                 return (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc');
-
-            break;
         }
 
         return '';
@@ -3465,6 +3430,7 @@ exit;
      */
     public static function dieOrLog($msg, $die = true)
     {
+        /* @phpstan-ignore-next-line */
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);
@@ -3596,7 +3562,7 @@ exit;
      *
      * @since 1.4.5.0
      *
-     * @return int the memory limit value in octet
+     * @return int|string the memory limit value in octet
      */
     public static function getMemoryLimit()
     {
@@ -3610,7 +3576,9 @@ exit;
      *
      * @since 1.5.0
      *
-     * @return int the value of a configuration option in octets
+     * @param string $option
+     *
+     * @return int|string the value of a configuration option in octets
      */
     public static function getOctets($option)
     {
@@ -3970,10 +3938,6 @@ exit;
                 $post_data .= '&method=check_customer&username=' . urlencode($params['username_addons']) . '&password=' . urlencode($params['password_addons']);
 
                 break;
-            case 'check_module':
-                $post_data .= '&method=check&module_name=' . urlencode($params['module_name']) . '&module_key=' . urlencode($params['module_key']);
-
-                break;
             case 'module':
                 $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
                 if (isset($params['username_addons'], $params['password_addons'])) {
@@ -3983,7 +3947,6 @@ exit;
                 break;
             case 'install-modules':
                 $post_data .= '&method=listing&action=install-modules';
-                $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
 
                 break;
             default:
@@ -4043,7 +4006,8 @@ exit;
     public static function waitUntilFileIsModified($file_name, $timeout = 180)
     {
         @ini_set('max_execution_time', $timeout);
-        if (($time_limit = ini_get('max_execution_time')) === null) {
+        $time_limit = ini_get('max_execution_time');
+        if (!$time_limit) {
             $time_limit = 30;
         }
 

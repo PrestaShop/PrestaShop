@@ -26,8 +26,6 @@
 
 namespace Tests\TestCase;
 
-use AppKernel;
-use Exception;
 use PrestaShopBundle\Install\DatabaseDump;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -76,10 +74,6 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
     private static function restoreTestDB(): void
     {
-        if (!file_exists(sprintf('%s/ps_dump_%s.sql', sys_get_temp_dir(), AppKernel::VERSION))) {
-            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
-        }
-
         DatabaseDump::restoreDb();
     }
 }

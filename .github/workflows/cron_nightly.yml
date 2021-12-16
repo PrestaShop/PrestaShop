@@ -34,6 +34,14 @@ jobs:
           fetch-depth: 0
           ref: ${{ env.GH_BRANCH }}
 
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Update npm
+        run: npm install npm -g
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:

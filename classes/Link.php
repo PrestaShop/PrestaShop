@@ -1298,9 +1298,9 @@ class LinkCore
                 if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang')) {
                     continue;
                 }
-                $ifNb = (!$nb || ($nb && !in_array($k, $varsNb)));
-                $ifSort = (!$sort || ($sort && !in_array($k, $varsSort)));
-                $ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
+                $ifNb = (!$nb || !in_array($k, $varsNb));
+                $ifSort = (!$sort || !in_array($k, $varsSort));
+                $ifPagination = (!$pagination || !in_array($k, $varsPagination));
                 if ($ifNb && $ifSort && $ifPagination) {
                     if (!is_array($value)) {
                         $vars[urlencode($k)] = $value;

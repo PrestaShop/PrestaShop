@@ -468,7 +468,6 @@ class MetaController extends FrameworkBundleAdminController
                 'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
                 'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
                 'isShopFeatureActive' => $isShopFeatureActive,
-                'isHostMode' => $hostingInformation->isHostMode(),
                 'doesMainShopUrlExist' => $doesMainShopUrlExist,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

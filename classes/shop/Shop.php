@@ -60,8 +60,13 @@ class ShopCore extends ObjectModel
     /** @var string Domain SSL of main url (read only) */
     public $domain_ssl;
 
-    /** @var ShopGroup Shop group object */
+    /** @var ShopGroup|null Shop group object */
     protected $group;
+
+    /**
+     * @var Address|null
+     */
+    public $address;
 
     /**
      * @see ObjectModel::$definition
@@ -102,6 +107,9 @@ class ShopCore extends ObjectModel
 
     /** @var int|null ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
+
+    /** @var bool|null is multistore activated */
+    protected static $feature_active;
 
     /** @var Theme * */
     public $theme;
@@ -586,7 +594,7 @@ class ShopCore extends ObjectModel
     /**
      * Get the associated table if available.
      *
-     * @return array
+     * @return array|false
      */
     public static function getAssoTable($table)
     {
@@ -594,7 +602,7 @@ class ShopCore extends ObjectModel
             Shop::init();
         }
 
-        return isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false;
+        return Shop::$asso_tables[$table] ?? false;
     }
 
     /**
@@ -995,6 +1003,8 @@ class ShopCore extends ObjectModel
     public static function resetContext()
     {
         self::$context = null;
+        self::$feature_active = null;
+        self::$context_id_shop = null;
     }
 
     /**
@@ -1153,14 +1163,12 @@ class ShopCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        static $feature_active = null;
-
-        if ($feature_active === null) {
-            $feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+        if (static::$feature_active === null) {
+            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
-        return $feature_active;
+        return static::$feature_active;
     }
 
     public function copyShopData($old_id, $tables_import = false, $deleted = false)

@@ -218,10 +218,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             return;
         }
         if (!isset($obj->id)) {
-            $this->no_back = false;
             $content = parent::renderForm();
         } else {
-            $this->no_back = true;
             $this->page_header_toolbar_btn['new'] = [
                 'href' => '#',
                 'desc' => $this->trans('Add a new tax rule', [], 'Admin.International.Feature'),
@@ -441,7 +439,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 $tr = new TaxRule();
 
                 // update or creation?
-                if (isset($id_rule) && $first) {
+                if ($first) {
                     $tr->id = $id_rule;
                     $first = false;
                 }
@@ -528,9 +526,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 }
             }
         }
+        $idTaxRulesGroup = isset($tax_rules_group) ? (int) $tax_rules_group->id : 0;
 
         Tools::redirectAdmin(
-            self::$currentIndex . '&' . $this->identifier . '=' . (int) $tax_rules_group->id . '&conf=4&update' . $this->table . '&token=' . $this->token
+            self::$currentIndex . '&' . $this->identifier . '=' . $idTaxRulesGroup . '&conf=4&update' . $this->table . '&token=' . $this->token
         );
     }
 

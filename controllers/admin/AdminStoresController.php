@@ -391,7 +391,7 @@ class AdminStoresControllerCore extends AdminController
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours ?? []);
         }
 
         if (!count($this->errors)) {
@@ -406,7 +406,7 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(
