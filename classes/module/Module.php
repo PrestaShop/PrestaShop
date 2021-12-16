@@ -135,6 +135,9 @@ abstract class ModuleCore implements ModuleInterface
     /** @var bool */
     public $installed;
 
+    /** @var bool */
+    public $show_quick_view = false;
+
     /** @var array used by AdminTab to determine which lang file to use (admin.php or module lang file) */
     public static $classInModule = [];
 

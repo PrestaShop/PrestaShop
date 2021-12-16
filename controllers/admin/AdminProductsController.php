@@ -1114,8 +1114,9 @@ class AdminProductsControllerCore extends AdminController
      */
     public function processPosition()
     {
+        $object = $this->loadObject();
         /** @var Product $object */
-        if (!Validate::isLoadedObject($object = $this->loadObject())) {
+        if (!Validate::isLoadedObject($object)) {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                 ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
         } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
@@ -2380,24 +2381,6 @@ class AdminProductsControllerCore extends AdminController
         die('[' . implode(',', $jsonArray) . ']');
     }
 
-    /**
-     * Build a categories tree.
-     *
-     * @param $id_obj
-     * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-     * @param array $categories Categories to list
-     * @param $current
-     * @param null $id_category Current category ID
-     * @param null $id_category_default
-     * @param array $has_suite
-     *
-     * @return string
-     */
-    public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = [])
-    {
-        @trigger_error('This function is deprecated since 1.7.0.', E_USER_DEPRECATED);
-    }
-
     public function getPreviewUrl(Product $product)
     {
         $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, Context::getContext()->shop->id);
@@ -3072,11 +3055,10 @@ class AdminProductsControllerCore extends AdminController
 
     public function getCombinationImagesJS()
     {
-        /** @var Product $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
-
+        /** @var Product $obj */
         $content = 'var combination_images = new Array();';
         if (!$allCombinationImages = $obj->getCombinationImages($this->context->language->id)) {
             return $content;
@@ -3134,8 +3116,6 @@ class AdminProductsControllerCore extends AdminController
      * if yes, add the pack items from input "inputPackItems".
      *
      * @param Product $product
-     *
-     * @return bool
      */
     public function updatePackItems($product)
     {

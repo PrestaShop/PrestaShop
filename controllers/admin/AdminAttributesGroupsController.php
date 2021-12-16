@@ -358,9 +358,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         $this->tpl_folder = 'attributes/';
 
         // Create object ProductAttribute
-        if (!$obj = new ProductAttribute((int) Tools::getValue($this->identifier))) {
-            return;
-        }
+        $obj = new ProductAttribute((int) Tools::getValue($this->identifier));
 
         $str_attributes_groups = '';
         foreach ($attributes_groups as $attribute_group) {
@@ -409,7 +407,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute(
+                if (ProductAttribute::isAttribute(
                     (int) Tools::getValue('id_attribute_group'),
                     Tools::getValue('name_' . $language['id_lang']),
                     $language['id_lang']

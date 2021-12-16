@@ -364,10 +364,10 @@ class AdminShopControllerCore extends AdminController
 
     public function renderForm()
     {
-        /** @var Shop $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
+        /* @var Shop $obj */
 
         $this->fields_form = [
             'legend' => [

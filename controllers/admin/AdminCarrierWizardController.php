@@ -32,7 +32,7 @@ class AdminCarrierWizardControllerCore extends AdminController
     protected $wizard_access;
 
     /**
-     * @var int
+     * @var Context
      */
     public $old_context;
 

@@ -533,7 +533,7 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * @param $productInCart
+     * @param array $productInCart
      *
      * @return bool
      */

@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 @ini_set('max_execution_time', 0);
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
@@ -1048,7 +1049,7 @@ class AdminImportControllerCore extends AdminController
     /**
      * Return fields to be display AS piece of advise
      *
-     * @param $in_array boolean
+     * @param bool $in_array
      *
      * @return string|array
      */
@@ -1141,9 +1142,8 @@ class AdminImportControllerCore extends AdminController
     }
 
     /**
-     * @param $array
-     * @param $funcname
-     * @param mixed $user_data
+     * @param array $array
+     * @param callable $funcname
      *
      * @return bool
      */
@@ -1388,6 +1388,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $category);
 
+        /** @var Category $category */
         // Parent category
         if (isset($category->parent) && is_numeric($category->parent)) {
             // Validation for parenting itself
@@ -1765,6 +1766,11 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setEntityDefaultValues($product);
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $product);
 
+        /** @var Product $product */
+        if (!$product) {
+            return;
+        }
+
         if (!$shop_is_feature_active) {
             $product->shop = (int) Configuration::get('PS_SHOP_DEFAULT');
         } elseif (!isset($product->shop) || empty($product->shop)) {
@@ -1778,7 +1784,6 @@ class AdminImportControllerCore extends AdminController
         }
 
         // link product to shops
-        $product->id_shop_list = [];
         foreach (explode($this->multiple_value_separator, $product->shop) as $shop) {
             if (!empty($shop) && !is_numeric($shop)) {
                 $product->id_shop_list[] = Shop::getIdByName($shop);
@@ -2095,7 +2100,7 @@ class AdminImportControllerCore extends AdminController
                 !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
                 !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID'
             );
-            $this->errors[] = ($field_error !== true ? $field_error : '') . (isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '') .
+            $this->errors[] = ($field_error !== true ? $field_error : '') . ($lang_field_error !== true ? $lang_field_error : '') .
                 Db::getInstance()->getMsgError();
         } else {
             // Product supplier
@@ -2397,7 +2402,7 @@ class AdminImportControllerCore extends AdminController
                     if ($product->depends_on_stock == 1) {
                         $stock_manager = StockManagerFactory::getManager();
                         $price = str_replace(',', '.', $product->wholesale_price);
-                        if ($price == 0) {
+                        if ($price == '0') {
                             $price = 0.000001;
                         }
                         $price = round((float) $price, 6);
@@ -2982,7 +2987,7 @@ class AdminImportControllerCore extends AdminController
                     if ($info['depends_on_stock'] == 1) {
                         $stock_manager = StockManagerFactory::getManager();
                         $price = str_replace(',', '.', $info['wholesale_price']);
-                        if ($price == 0) {
+                        if ($price == '0') {
                             $price = 0.000001;
                         }
                         $price = round((float) $price, 6);
@@ -3334,6 +3339,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $address);
 
+        /** @var Address $address */
         if (isset($address->country) && is_numeric($address->country)) {
             if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int) $address->country)) {
                 $address->id_country = (int) $address->country;
@@ -3653,6 +3659,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $manufacturer);
 
+        /** @var Manufacturer $manufacturer */
         $res = false;
         if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
             ($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
@@ -3766,6 +3773,8 @@ class AdminImportControllerCore extends AdminController
         }
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supplier);
+
+        /** @var Supplier $supplier */
         if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
             ($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
             $res = false;
@@ -3871,6 +3880,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $alias);
 
+        /** @var Alias $alias */
         $res = false;
         if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true &&
             ($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true) {
@@ -3950,6 +3960,7 @@ class AdminImportControllerCore extends AdminController
 
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $store);
 
+        /** @var Store $store */
         if (isset($store->image) && !empty($store->image)) {
             if (!(AdminImportController::copyImg($store->id, null, $store->image, 'stores', !$regenerate))) {
                 $this->warnings[] = $store->image . ' ' . $this->trans('cannot be copied.', [], 'Admin.Advparameters.Notification');
@@ -4179,10 +4190,7 @@ class AdminImportControllerCore extends AdminController
             // sets parameters
             AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supply_order);
 
-            // updatesd($supply_order);
-
-            $res = false;
-
+            /** @var SupplyOrder $supply_order */
             if ((int) $supply_order->id && ($supply_order->exists((int) $supply_order->id) || $supply_order->exists($supply_order->reference))) {
                 $res = ($validateOnly || $supply_order->update());
             } else {
@@ -4335,6 +4343,8 @@ class AdminImportControllerCore extends AdminController
             $supply_order_detail = new SupplyOrderDetail();
             AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $supply_order_detail);
 
+            /* @var SupplyOrderDetail $supply_order_detail */
+
             // sets parameters
             $supply_order_detail->id_supply_order = $supply_order->id;
             $currency = new Currency($supply_order->id_ref_currency);
@@ -4452,6 +4462,7 @@ class AdminImportControllerCore extends AdminController
                 $reader_excel->setReadDataOnly(true);
                 $excel_file = $reader_excel->load($csv_folder . $filename);
 
+                /** @var Csv $csv_writer */
                 $csv_writer = IOFactory::createWriter($excel_file, 'Csv');
 
                 $csv_writer->setSheetIndex(0);
