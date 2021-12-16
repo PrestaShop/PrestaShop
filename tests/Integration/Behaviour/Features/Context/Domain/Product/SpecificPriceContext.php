@@ -48,7 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPri
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Price;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -86,7 +86,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            new Price($dataRows['price']),
+            new FixedPrice($dataRows['price']),
             (int) $dataRows['from quantity'],
             DateTimeUtil::buildNullableDateTime($dataRows['from']),
             DateTimeUtil::buildNullableDateTime($dataRows['to']),
