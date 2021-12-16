@@ -52,7 +52,7 @@ class StockModification
         int $deltaQuantity,
         MovementReasonId $movementReasonId
     ) {
-        $this->assertValueIsNotZero($deltaQuantity);
+        $this->assertDeltaQuantityIsNotZero($deltaQuantity);
         $this->deltaQuantity = $deltaQuantity;
         $this->movementReasonId = $movementReasonId;
     }
@@ -74,11 +74,11 @@ class StockModification
     }
 
     /**
-     * @param int $value
+     * @param int $quantity
      */
-    private function assertValueIsNotZero(int $value): void
+    private function assertDeltaQuantityIsNotZero(int $quantity): void
     {
-        if (0 === $value) {
+        if (0 === $quantity) {
             throw new ProductStockConstraintException(
                 'Delta quantity cannot be 0',
                 ProductStockConstraintException::INVALID_DELTA_QUANTITY
