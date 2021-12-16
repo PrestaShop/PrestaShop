@@ -98,7 +98,7 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
             $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
         }
 
-        if (null === $command->getDeltaQuantity()) {
+        if (!$command->getDeltaQuantity()) {
             return;
         }
 

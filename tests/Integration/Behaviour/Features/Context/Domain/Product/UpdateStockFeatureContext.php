@@ -104,17 +104,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then I should get error that delta quantity is invalid
-     */
-    public function assertLastErrorIsInvalidDeltaQuantity(): void
-    {
-        $this->assertLastErrorIs(
-            ProductStockConstraintException::class,
-            ProductStockConstraintException::INVALID_DELTA_QUANTITY
-        );
-    }
-
-    /**
      * @Then product :productReference should have following stock information:
      *
      * @param string $productReference

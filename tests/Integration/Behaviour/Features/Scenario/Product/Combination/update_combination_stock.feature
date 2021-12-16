@@ -103,6 +103,20 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 1
+#   Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update combination "product1SBlack" stock with following details:
-      | delta quantity             | 0          |
-    Then I should get error that delta quantity is invalid
+      | delta quantity | 0 |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value      |
+      | quantity                   | 0          |
+      | minimal quantity           | 0          |
+      | low stock threshold        | 0          |
+      | low stock alert is enabled | false      |
+      | location                   |            |
+      | available date             | 2020-01-01 |
+    And combination "product1SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 1              |
+      | Puff       | Daddy     | -101           |
+      | Puff       | Daddy     | 100            |
+    And combination "product1SBlack" last stock movement increased by 1

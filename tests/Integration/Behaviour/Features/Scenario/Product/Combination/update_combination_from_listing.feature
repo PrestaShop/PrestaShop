@@ -82,3 +82,31 @@ Feature: Update product combination from listing in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | -110     | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product product1 default combination should be "product1SBlue"
+
+  Scenario: Combination quantity is not updated and stock does not move when 0 is given as delta quantity
+    Given combination "product1MBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -60            |
+      | Puff       | Daddy     | -50            |
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  | test_1    | [Size:S,Color:Blue]  | 5               | 10       | true       |
+      | product1MWhite | Size - M, Color - White | test 2    | [Size:M,Color:White] | -4.99           | 9        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | -110     | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    When I update combination "product1SWhite" from list with following values:
+      | delta quantity | 0 |
+    Then combination "product1MBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -60            |
+      | Puff       | Daddy     | -50            |
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | false      |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  | test_1    | [Size:S,Color:Blue]  | 5               | 10       | true       |
+      | product1MWhite | Size - M, Color - White | test 2    | [Size:M,Color:White] | -4.99           | 9        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | -110     | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |

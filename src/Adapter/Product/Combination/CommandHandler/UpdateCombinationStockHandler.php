@@ -68,7 +68,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
     public function handle(UpdateCombinationStockCommand $command): void
     {
         $stockModification = null;
-        if (null !== $command->getDeltaQuantity()) {
+        if ($command->getDeltaQuantity()) {
             $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
