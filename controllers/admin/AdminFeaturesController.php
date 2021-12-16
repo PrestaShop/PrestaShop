@@ -25,7 +25,7 @@
  */
 
 /**
- * @property Feature $object
+ * @property FeatureValue $object
  */
 class AdminFeaturesControllerCore extends AdminController
 {

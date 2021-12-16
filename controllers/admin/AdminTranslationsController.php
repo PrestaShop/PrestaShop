@@ -1670,7 +1670,7 @@ class AdminTranslationsControllerCore extends AdminController
                     }
 
                     if (Validate::isCleanHTML($content)) {
-                        $path = $arr_mail_path[$group_name];
+                        $path = $arr_mail_path[$group_name] ?? '';
                         if ($module_name) {
                             $path = str_replace('{module}', $module_name, $path);
                         }
@@ -1696,7 +1696,7 @@ class AdminTranslationsControllerCore extends AdminController
         // Update subjects
         $array_subjects = [];
         if (($subjects = Tools::getValue('subject')) && is_array($subjects)) {
-            $array_subjects['core_and_modules'] = ['translations' => [], 'path' => $arr_mail_path['core_mail'] . 'lang.php'];
+            $array_subjects['core_and_modules'] = ['translations' => [], 'path' => ($arr_mail_path['core_mail'] ?? '') . 'lang.php'];
             foreach ($subjects as $subject_translation) {
                 $array_subjects['core_and_modules']['translations'] = array_merge($array_subjects['core_and_modules']['translations'], $subject_translation);
             }
@@ -1785,7 +1785,7 @@ class AdminTranslationsControllerCore extends AdminController
      *
      * @param string $key English sentence
      *
-     * @return array|bool return list of matches
+     * @return string|bool List of matches
      */
     public function checkIfKeyUseSprintf($key)
     {
@@ -2380,7 +2380,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $dir
      * @param string $group_name
      *
-     * @return array : list of mails
+     * @return array|false
      */
     public function getMailFiles($dir, $group_name = 'mail')
     {
@@ -2449,7 +2449,7 @@ class AdminTranslationsControllerCore extends AdminController
      * @param string $dir
      * @param string $file
      *
-     * @return array : content of file
+     * @return string|false
      */
     protected function getMailContent($dir, $file)
     {
