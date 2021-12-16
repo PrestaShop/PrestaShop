@@ -250,22 +250,28 @@ class AdminSearchControllerCore extends AdminController
     {
         $this->_list['features'] = [];
 
-        $result = Db::getInstance()->executeS(
-            'SELECT class_name, name, route_name
-            FROM ' . _DB_PREFIX_ . 'tab t
-            INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
-            WHERE active = 1'
+        $sql = sprintf(
+            'SELECT class_name, name, route_name FROM %stab t INNER JOIN %stab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = %d) WHERE active = 1',
+            _DB_PREFIX_,
+            _DB_PREFIX_,
+            (int) $this->context->employee->id_lang
         );
+        $result = Db::getInstance()->executeS($sql);
+
         foreach ($result as $row) {
-            if (
-                false !== stripos($row['name'], $this->query)
-                && Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)
-            ) {
-                $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
-                $this->_list['features'][$row['name']][] = [
-                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
-                ];
+            if (stripos($row['class_name'], 'AdminParent') === 0) {
+                continue;
             }
+            if (stripos($row['name'], $this->query) === false) {
+                continue;
+            }
+            if (!Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+                continue;
+            }
+            $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
+            $this->_list['features'][$row['name']][] = [
+                'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
+            ];
         }
     }
 
@@ -422,7 +428,6 @@ class AdminSearchControllerCore extends AdminController
             }
 
             if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
-                $view = '';
                 $this->initOrderList();
 
                 $helper = new HelperList();
@@ -435,8 +440,7 @@ class AdminSearchControllerCore extends AdminController
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
                 $helper->token = Tools::getAdminTokenLite('AdminOrders');
 
-                $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
-                $this->tpl_view_vars['orders'] = $view;
+                $this->tpl_view_vars['orders'] = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orderCount'] = count($this->_list['orders']);
             }
 
