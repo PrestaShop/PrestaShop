@@ -77,7 +77,6 @@ class BackupController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
             'backupGrid' => $this->presentGrid($backupGrid),
             'backupForm' => $backupForm->createView(),
-            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'dbPrefix' => $configuration->get('_DB_PREFIX_'),
             'hasDownloadFile' => $hasDownloadFile,
             'downloadFile' => $downloadFile,

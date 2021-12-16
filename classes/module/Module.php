@@ -1541,9 +1541,7 @@ abstract class ModuleCore implements ModuleInterface
             if (!isset($module->tab)) {
                 $module->tab = 'others';
             }
-            if (defined('_PS_HOST_MODE_') && in_array($module->name, static::$hosted_modules_blacklist)) {
-                unset($module_list[$key]);
-            } elseif (isset($modules_installed[$module->name])) {
+            if (isset($modules_installed[$module->name])) {
                 $module->installed = true;
                 $module->database_version = $modules_installed[$module->name]['version'];
                 $module->interest = $modules_installed[$module->name]['interest'];

@@ -3947,7 +3947,6 @@ exit;
                 break;
             case 'install-modules':
                 $post_data .= '&method=listing&action=install-modules';
-                $post_data .= defined('_PS_HOST_MODE_') ? '-od' : '';
 
                 break;
             default:

@@ -53,7 +53,7 @@ class ConfigurationTestCore
      */
     public static function getDefaultTests()
     {
-        $tests = [
+        return [
             'upload' => false,
             'cache_dir' => 'var/cache',
             'log_dir' => 'var/logs',
@@ -67,35 +67,28 @@ class ConfigurationTestCore
             'virtual_products_dir' => 'download',
             'config_sf2_dir' => 'app/config',
             'translations_sf2' => 'translations',
+            'system' => [
+                'fopen', 'fclose', 'fread', 'fwrite',
+                'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
+                'getcwd', 'chdir', 'chmod',
+            ],
+            'phpversion' => false,
+            'apache_mod_rewrite' => false,
+            'curl' => false,
+            'gd' => false,
+            'json' => false,
+            'pdo_mysql' => false,
+            'config_dir' => 'config',
+            'files' => false,
+            'mails_dir' => 'mails',
+            'openssl' => false,
+            'simplexml' => false,
+            'zip' => false,
+            'fileinfo' => false,
+            'intl' => false,
+            'memory_limit' => false,
+            'mbstring' => false,
         ];
-
-        if (!defined('_PS_HOST_MODE_')) {
-            $tests = array_merge($tests, [
-                'system' => [
-                    'fopen', 'fclose', 'fread', 'fwrite',
-                    'rename', 'file_exists', 'unlink', 'rmdir', 'mkdir',
-                    'getcwd', 'chdir', 'chmod',
-                ],
-                'phpversion' => false,
-                'apache_mod_rewrite' => false,
-                'curl' => false,
-                'gd' => false,
-                'json' => false,
-                'pdo_mysql' => false,
-                'config_dir' => 'config',
-                'files' => false,
-                'mails_dir' => 'mails',
-                'openssl' => false,
-                'simplexml' => false,
-                'zip' => false,
-                'fileinfo' => false,
-                'intl' => false,
-                'memory_limit' => false,
-                'mbstring' => false,
-            ]);
-        }
-
-        return $tests;
     }
 
     /**
