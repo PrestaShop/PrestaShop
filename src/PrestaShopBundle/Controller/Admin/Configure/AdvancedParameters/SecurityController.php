@@ -185,7 +185,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function clearCustomerSessionAction()
+    public function clearCustomerSessionAction(): RedirectResponse
     {
         try {
             $clearSessionCommand = new ClearCustomerSessionCommand();
@@ -205,7 +205,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function clearEmployeeSessionAction()
+    public function clearEmployeeSessionAction(): RedirectResponse
     {
         try {
             $clearSessionCommand = new ClearEmployeeSessionCommand();
