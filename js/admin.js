@@ -775,8 +775,6 @@ $(document).ready(function()
 
   bindTabModuleListAction();
 
-  bindAddonsButtons();
-
   //Check filters value on submit filter
   $("[name='submitFilter']").click(function(event) {
     var list_id = $(this).data('list-id');
