@@ -300,7 +300,6 @@ class AdminDashboardControllerCore extends AdminController
             'hookDashboardZoneThree' => Hook::exec('dashboardZoneThree', $params),
             'action' => '#',
             'warning' => $this->getWarningDomainName(),
-            'dashboard_use_push' => Configuration::get('PS_DASHBOARD_USE_PUSH'),
             'calendar' => $calendar_helper->generate(),
             'PS_DASHBOARD_SIMULATION' => Configuration::get('PS_DASHBOARD_SIMULATION'),
             'datepickerFrom' => Tools::getValue('datepickerFrom', $this->context->employee->stats_date_from),
@@ -313,18 +312,6 @@ class AdminDashboardControllerCore extends AdminController
 
     public function postProcess()
     {
-        if (Tools::isSubmit('submitDateRealTime')) {
-            if ($use_realtime = (int) Tools::getValue('submitDateRealTime')) {
-                $this->context->employee->stats_date_from = date('Y-m-d');
-                $this->context->employee->stats_date_to = date('Y-m-d');
-                $this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
-                $this->context->employee->stats_compare_from = null;
-                $this->context->employee->stats_compare_to = null;
-                $this->context->employee->update();
-            }
-            Configuration::updateValue('PS_DASHBOARD_USE_PUSH', $use_realtime);
-        }
-
         if (Tools::isSubmit('submitDateRange')) {
             if (!Validate::isDate(Tools::getValue('date_from'))
                 || !Validate::isDate(Tools::getValue('date_to'))) {
@@ -416,11 +403,10 @@ class AdminDashboardControllerCore extends AdminController
             'date_to' => $this->context->employee->stats_date_to,
             'compare_from' => $this->context->employee->stats_compare_from,
             'compare_to' => $this->context->employee->stats_compare_to,
-            'dashboard_use_push' => (int) Tools::getValue('dashboard_use_push'),
             'extra' => (int) Tools::getValue('extra'),
         ];
 
-        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true, true, (int) Tools::getValue('dashboard_use_push'))));
+        die(json_encode(Hook::exec('dashboardData', $params, $id_module, true)));
     }
 
     public function ajaxProcessSetSimulationMode()

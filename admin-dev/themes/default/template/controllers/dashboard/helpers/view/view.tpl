@@ -26,7 +26,6 @@
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
 	var no_results_translation = '{l s='No result' js=1}';
-	var dashboard_use_push = '{$dashboard_use_push|intval}';
 	var read_more = '{l s='Read more' js=1}';
 </script>
 
@@ -57,10 +56,6 @@
 						<button type="button" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev{if isset($preselect_date_range) && $preselect_date_range == 'prev-year'} active{/if}">
 							{l s='Year' d='Admin.Global'}-1
 						</button>
-						<!--
-						<button type="submit" name="submitDateRealTime" class="hide btn btn-default submitDateRealTime {if $dashboard_use_push}active{/if}" value="{!$dashboard_use_push|intval}">
-							{l s='Real Time'}
-						</button> -->
 					</div>
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
