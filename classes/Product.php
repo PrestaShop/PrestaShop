@@ -515,6 +515,7 @@ class ProductCore extends ObjectModel
             'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
             'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
+            'unit_price_ratio' => ['type' => self::TYPE_FLOAT, 'shop' => true],
             'additional_shipping_cost' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'customizable' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
             'text_fields' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
@@ -762,14 +763,6 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-
-        // In case unit_price is not in fields we can try and fallback with unit_price_ratio
-        if (null !== $this->unit_price_ratio && empty($fields['unit_price']) && (
-            null === $this->update_fields ||
-            (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price_ratio']) && empty($this->update_fields['unit_price']))
-        )) {
-            $fields['unit_price'] = (float) $this->unit_price_ratio > 0 ? $this->price / $this->unit_price_ratio : 0;
-        }
         $fields['unity'] = pSQL($this->unity);
 
         return $fields;
@@ -804,6 +797,8 @@ class ProductCore extends ObjectModel
         }
 
         $this->setGroupReduction();
+        $this->updateUnitRatio();
+
         Hook::exec('actionProductSave', ['id_product' => (int) $this->id, 'product' => $this]);
 
         return true;
@@ -820,6 +815,7 @@ class ProductCore extends ObjectModel
 
         $return = parent::update($null_values);
         $this->setGroupReduction();
+        $this->updateUnitRatio();
 
         // Sync stock Reference, EAN13, MPN and UPC
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
@@ -839,6 +835,32 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Unit price ratio is not edited anymore, the reference is handled via the unit_price field which is now saved
+     * in the DB we kept unit_price_ratio in the DB for backward compatibility but shouldn't be written anymore so
+     * it is automatically updated when product is saved
+     */
+    private function updateUnitRatio(): void
+    {
+        // Update instance field
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
+        if ($unitPrice->isGreaterThanZero()) {
+            $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
+        }
+
+        Db::getInstance()->execute(sprintf(
+            'UPDATE %sproduct SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+            _DB_PREFIX_,
+            $this->id
+        ));
+        Db::getInstance()->execute(sprintf(
+            'UPDATE %sproduct_shop SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+            _DB_PREFIX_,
+            $this->id
+        ));
     }
 
     /**
