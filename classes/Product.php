@@ -437,6 +437,9 @@ class ProductCore extends ObjectModel
      */
     protected static $cacheStock = [];
 
+    /** @var array */
+    protected static $_customers = [];
+
     /**
      * Product can be temporary saved in database
      */
@@ -852,7 +855,10 @@ class ProductCore extends ObjectModel
     public static function initPricesComputation($id_customer = null)
     {
         if ((int) $id_customer > 0) {
-            $customer = new Customer((int) $id_customer);
+            if (!isset(self::$_customers[$id_customer])) {
+                self::$_customers[$id_customer] = new Customer((int) $id_customer);
+            }
+            $customer = self::$_customers[$id_customer];
             if (!Validate::isLoadedObject($customer)) {
                 die(Tools::displayError());
             }
