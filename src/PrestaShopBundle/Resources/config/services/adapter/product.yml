@@ -125,6 +125,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
