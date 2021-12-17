@@ -516,6 +516,7 @@ class ProductCore extends ObjectModel
             'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
             'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             /*
+             * Only the DB field is deprecated because unit_price is the new reference, we need to keep the class field though
              * @deprecated in 8.0 this DB column will be removed in a future version
              */
             'unit_price_ratio' => ['type' => self::TYPE_FLOAT, 'shop' => true],
