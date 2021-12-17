@@ -1,20 +1,29 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View sql query page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewSQLQuery extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on view sql query page
+   */
   constructor() {
     super();
 
     this.pageTitle = 'SQL Manager';
 
     // Selectors
-    this.sqlQueryResultTitle = '#main-div  div.card-header h3';
-    this.resultsTable = '#main-div .table';
-    this.tableColumnName = id => `${this.resultsTable} th:nth-child(${id})`;
+    this.sqlQueryResultTitle = '#card-title';
+    this.resultsTable = '#grid-table';
+    this.tableColumnName = column => `${this.resultsTable} th:nth-child(${column})`;
     this.tableBody = `${this.resultsTable} tbody`;
     this.tableRows = `${this.tableBody} tr`;
     this.tableRow = row => `${this.tableRows}:nth-child(${row})`;
-    this.tableColumn = (row, column) => `${this.tableRow(row)} td:nth-child(${column})`;
+    this.tableColumn = (row, column) => `${this.tableRow(row)} td.grid-${column}-value`;
   }
 
   /*
@@ -22,7 +31,7 @@ class ViewSQLQuery extends BOBasePage {
    */
   /**
    * Get SQL query result number
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   getSQLQueryResultNumber(page) {
@@ -31,19 +40,19 @@ class ViewSQLQuery extends BOBasePage {
 
   /**
    * Get columns name
-   * @param page
-   * @param id
+   * @param page {Page} Browser tab
+   * @param column {number} Id of column to get column name
    * @returns {Promise<string>}
    */
-  getColumnName(page, id = 1) {
-    return this.getTextContent(page, this.tableColumnName(id));
+  getColumnName(page, column = 1) {
+    return this.getTextContent(page, this.tableColumnName(column));
   }
 
   /**
    * Get text from column in results table
-   * @param page
-   * @param row
-   * @param column
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param column {string} Name of the column
    * @return {Promise<string>}
    */
   getTextColumn(page, row, column) {

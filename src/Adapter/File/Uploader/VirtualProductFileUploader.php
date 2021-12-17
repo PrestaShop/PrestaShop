@@ -32,10 +32,11 @@ use ErrorException;
 use PrestaShop\PrestaShop\Adapter\File\Validator\VirtualProductFileValidator;
 use PrestaShop\PrestaShop\Core\File\Exception\CannotUnlinkFileException;
 use PrestaShop\PrestaShop\Core\File\Exception\FileUploadException;
-use ProductDownload;
+use ProductDownload as VirtualProductFile;
 
 /**
  * Uploads file for virtual product
+ * Legacy object ProductDownload is referred as VirtualProductFile in Core
  */
 class VirtualProductFileUploader
 {
@@ -47,7 +48,7 @@ class VirtualProductFileUploader
     /**
      * @var string
      */
-    private $downloadDir;
+    private $virtualProductFileDir;
 
     /**
      * @param VirtualProductFileValidator $virtualProductFileValidator
@@ -58,7 +59,7 @@ class VirtualProductFileUploader
         string $downloadDir
     ) {
         $this->virtualProductFileValidator = $virtualProductFileValidator;
-        $this->downloadDir = $downloadDir;
+        $this->virtualProductFileDir = $downloadDir;
     }
 
     /**
@@ -69,12 +70,35 @@ class VirtualProductFileUploader
     public function upload(string $filePath): string
     {
         $this->virtualProductFileValidator->validate($filePath);
-        $destination = $this->downloadDir . ProductDownload::getNewFilename();
+        $destination = $this->virtualProductFileDir . VirtualProductFile::getNewFilename();
 
         $this->copyFile($filePath, $destination);
         $this->removeFile($filePath);
 
         return $destination;
+    }
+
+    /**
+     * @param string $filename
+     */
+    public function remove(string $filename): void
+    {
+        $this->removeFile($this->virtualProductFileDir . $filename);
+    }
+
+    /**
+     * @param string $newFilepath
+     * @param string|null $oldFilename
+     *
+     * @return string
+     */
+    public function replace(string $newFilepath, ?string $oldFilename): string
+    {
+        if ($oldFilename) {
+            $this->removeFile($this->virtualProductFileDir . $oldFilename);
+        }
+
+        return $this->upload($newFilepath);
     }
 
     /**

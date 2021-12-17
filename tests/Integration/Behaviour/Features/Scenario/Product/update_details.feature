@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-details
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @update-details
 Feature: Update product details from Back Office (BO)
@@ -9,7 +9,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I update product details
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
-      | is_virtual  | false         |
+      | type        | standard      |
     And product "product1" should have following details:
       | product detail | value |
       | isbn           |       |
@@ -52,7 +52,7 @@ Feature: Update product details from Back Office (BO)
   Scenario: I update product details providing invalid values
     Given I add product "product2" with following information:
       | name[en-US] | 'The truth is out there' wallpaper |
-      | is_virtual  | true                               |
+      | type        | virtual                            |
     And product "product2" should have following details:
       | product detail | value |
       | isbn           |       |

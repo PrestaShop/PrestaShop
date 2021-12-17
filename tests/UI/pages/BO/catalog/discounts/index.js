@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Cart rules page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class CartRules extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on cart rules page
+   */
   constructor() {
     super();
 
@@ -77,8 +86,8 @@ class CartRules extends BOBasePage {
 
   /* Header methods */
   /**
-   * Change Tab to Catalog Price Rules in Discounts Page
-   * @param page
+   * Change tab to Catalog Price Rules in Discounts Page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToCatalogPriceRulesTab(page) {
@@ -88,7 +97,7 @@ class CartRules extends BOBasePage {
 
   /**
    * Go to add new cart rule page
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddNewCartRulesPage(page) {
@@ -98,8 +107,8 @@ class CartRules extends BOBasePage {
   /* Table methods */
   /**
    * Go to edit cart rule page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<void>}
    */
   async goToEditCartRulePage(page, row) {
@@ -108,8 +117,8 @@ class CartRules extends BOBasePage {
 
   /**
    * Delete cart rule
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @returns {Promise<unknown>}
    */
   async deleteCartRule(page, row = 1) {
@@ -121,14 +130,14 @@ class CartRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name to get text content
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -168,8 +177,8 @@ class CartRules extends BOBasePage {
 
   /**
    * Get cart rule status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   getCartRuleStatus(page, row) {
@@ -178,9 +187,9 @@ class CartRules extends BOBasePage {
 
   /**
    * Set cart rule status
-   * @param page
-   * @param row
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param wantedStatus {boolean} True if we need to enable status, false if not
    * @return {Promise<void>}
    */
   async setCartRuleStatus(page, row, wantedStatus) {
@@ -192,7 +201,7 @@ class CartRules extends BOBasePage {
   /* Filter methods */
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -205,8 +214,8 @@ class CartRules extends BOBasePage {
   }
 
   /**
-   * Get Number of cart rules
-   * @param page
+   * Get number of cart rules
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -215,7 +224,7 @@ class CartRules extends BOBasePage {
 
   /**
    * Reset and get number of cart rules
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -225,16 +234,16 @@ class CartRules extends BOBasePage {
 
   /**
    * Filter cart rules
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterCartRules(page, filterType, filterBy, value) {
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         await this.clickAndWaitForNavigation(page, this.filterSearchButton);
         break;
 
@@ -254,7 +263,7 @@ class CartRules extends BOBasePage {
 
   /**
    * Select all rows
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkSelectRows(page) {
@@ -262,13 +271,13 @@ class CartRules extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
 
   /**
    * Bulk delete cart rules
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async bulkDeleteCartRules(page) {
@@ -283,13 +292,13 @@ class CartRules extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getAlertSuccessBlockContent(page);
   }
 
   /**
    * Bulk set status
-   * @param page
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param wantedStatus {boolean} True if we need to bulk enable status, false if not
    * @return {Promise<void>}
    */
   async bulkSetStatus(page, wantedStatus) {
@@ -311,7 +320,7 @@ class CartRules extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -320,58 +329,63 @@ class CartRules extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
     await this.waitForSelectorAndClick(page, this.paginationDropdownButton);
     await this.waitForSelectorAndClick(page, this.paginationItems(number));
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
     await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
     return this.getPaginationLabel(page);
   }
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
     return this.getPaginationLabel(page);
   }
 
   // Sort methods
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name to get all rows content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -405,6 +419,7 @@ class CartRules extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }

@@ -28,12 +28,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Configuration;
+use DateTime;
 use DateTimeInterface;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
@@ -41,6 +45,74 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/p/{image1}-small_default.jpg
+     *
+     * Where image1 is the reference to the image id in the shared storage, it allows to get the image
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/p/4/5/45-small_default.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $imageReference = $matches[1];
+
+        if ('no_picture' === $imageReference) {
+            $defaultIso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $defaultIso . '-default',
+                $imageUrl
+            );
+        } else {
+            // Now rebuild the image folder with image id appended
+            $imageId = $this->getSharedStorage()->get($imageReference);
+            $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $imageFolder,
+                $imageUrl
+            );
+        }
+
+        return $realImageUrl;
+    }
+
+    /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/c/{men}.jpg
+     *
+     * Where men is the reference to the category id in the shared storage, it allows to get the category
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/c/4.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealCategoryImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $categoryReference = $matches[1];
+
+        // Now rebuild the image folder with image id appended
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
+        $realImageUrl = str_replace(
+            '{' . $categoryReference . '}',
+            (string) $categoryId,
+            $imageUrl
+        );
+
+        return $realImageUrl;
+    }
+
     /**
      * @param string $reference
      *
@@ -144,26 +216,37 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param array $data
      * @param string $propertyName
      */
-    protected function assertDateProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
     {
-        if (isset($data[$propertyName])) {
-            $expectedValue = PrimitiveUtils::castElementInType($data[$propertyName], PrimitiveUtils::TYPE_DATETIME);
-            $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+        if (!isset($data[$propertyName])) {
+            return;
+        }
+
+        $actualValue = $this->extractValueFromProductForEditing($productForEditing, $propertyName);
+
+        if ('' === $data[$propertyName]) {
+            Assert::assertEquals(
+                null,
+                $actualValue,
+                sprintf('Unexpected available_date. Expected NULL, got "%s"', var_export($actualValue, true))
+            );
+        } else {
+            $expectedDateTime = new DateTime($data[$propertyName]);
             if (!($actualValue instanceof DateTimeInterface)) {
                 throw new RuntimeException(sprintf('Unexpected type %s, expected DateTimeInterface', get_class($actualValue)));
             }
 
-            $formattedExpectedDate = $expectedValue->format('Y-m-d');
-            $formattedActualDate = $actualValue->format('Y-m-d');
+            $formattedExpectedDate = $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
+            $formattedActualDate = $actualValue->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
             Assert::assertSame(
                 $formattedExpectedDate,
                 $formattedActualDate,
                 sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
             );
-
-            // Unset the checked field from array so we can validate they havel all been asserted
-            unset($data[$propertyName]);
         }
+
+        // Unset the checked field from array so we can validate they havel all been asserted
+        unset($data[$propertyName]);
     }
 
     /**
@@ -181,7 +264,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
             'tags' => 'basicInformation.localizedTags',
-            'active' => 'options.active',
+            'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',
@@ -205,7 +288,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'minimal_quantity' => 'stockInformation.minimalQuantity',
             'location' => 'stockInformation.location',
             'low_stock_threshold' => 'stockInformation.lowStockThreshold',
-            'low_stock_alert' => 'stockInformation.lowStockAlert',
+            'low_stock_alert' => 'stockInformation.isLowStockAlertEnabled',
             'available_now_labels' => 'stockInformation.localizedAvailableNowLabels',
             'available_later_labels' => 'stockInformation.localizedAvailableLaterLabels',
             'available_date' => 'stockInformation.availableDate',

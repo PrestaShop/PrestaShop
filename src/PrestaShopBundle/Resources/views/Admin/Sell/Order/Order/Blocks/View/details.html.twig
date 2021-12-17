@@ -32,11 +32,11 @@
 {% endset %}
 
 {% set carriersTitle %}
-  {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} ({{ orderForViewing.shipping.carriers|length }})
+  {{ 'Carriers'|trans({}, 'Admin.Shipping.Feature') }} (<span class="count">{{ orderForViewing.shipping.carriers|length }}</span>)
 {% endset %}
 
 {% set merchantReturnsTitle %}
-  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span data-role="count">{{ orderForViewing.returns.orderReturns|length }}</span>)
 {% endset %}
 
 <div class="mt-2">

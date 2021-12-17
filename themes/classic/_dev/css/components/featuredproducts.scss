@@ -11,6 +11,11 @@ $product-description-height: 70px;
     justify-content: flex-start;
   }
 
+  .product {
+    display: flex;
+    justify-content: center;
+  }
+
   .product-thumbnail {
     display: block;
   }
@@ -25,11 +30,10 @@ $product-description-height: 70px;
 
   .thumbnail-container {
     position: relative;
-    width: $thumbnail-size;
     height: auto;
     margin-bottom: 1.563rem;
-    background: #fff;
-    @include box-shadow();
+    overflow: hidden;
+    background: $white;
 
     &:hover,
     &:focus {
@@ -42,8 +46,8 @@ $product-description-height: 70px;
         }
 
         &.no-variants {
-          top: calc(250px - 3.125rem);
-          bottom: 4.2rem;
+          top: calc(250px - 2.5rem);
+          bottom: 2.2rem;
         }
       }
 
@@ -104,7 +108,7 @@ $product-description-height: 70px;
     min-height: 2.5rem;
     padding-top: 0.1875rem;
     text-align: center;
-    background: #fff;
+    background: $white;
   }
 
   .highlighted-informations {
@@ -116,8 +120,7 @@ $product-description-height: 70px;
     height: auto;
     padding-top: 0.625rem;
     text-align: center;
-    background: #fff;
-    box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+    background: $white;
     transition: top 0.3s, bottom 0.3s;
 
     .quick-view {
@@ -134,16 +137,14 @@ $product-description-height: 70px;
     position: relative;
     bottom: 0;
     z-index: 3;
-    width: $thumbnail-size;
     height: auto;
-    padding-bottom: .7rem;
+    padding: 0.25rem;
+    padding-bottom: 0.7rem;
     overflow: hidden;
-    background: #fff;
+    background: $white;
   }
 
   .product-miniature {
-    margin: 0 0.8125rem;
-
     .product-flags {
       li.product-flag {
         min-width: 3.125rem;
@@ -182,18 +183,10 @@ $product-description-height: 70px;
     clear: both;
     font-weight: 500;
     color: $gray;
-  }
-}
 
-@include media-breakpoint-down(sm) {
-  #products,
-  .featured-products,
-  .product-accessories {
-    .thumbnail-container {
-      @include box-shadow();
-
-      .product-description {
-        box-shadow: 0 -5px 10px -5px rgba(0, 0, 0, 0.2);
+    @at-root .lang-rtl & {
+      .material-icons {
+        transform: rotate(-180deg);
       }
     }
   }

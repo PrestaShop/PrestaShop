@@ -51,6 +51,11 @@ class EditableCombinationForListing
     private $combinationName;
 
     /**
+     * @var string
+     */
+    private $reference;
+
+    /**
      * @var bool
      */
     private $default;
@@ -61,41 +66,43 @@ class EditableCombinationForListing
     private $impactOnPrice;
 
     /**
-     * @var DecimalNumber
-     */
-    private $finalPrice;
-
-    /**
      * @var int
      */
     private $quantity;
 
     /**
+     * @var string
+     */
+    private $imageUrl;
+
+    /**
      * @param int $combinationId
      * @param string $combinationName
+     * @param string $reference
      * @param CombinationAttributeInformation[] $attributesInformation
      * @param bool $default
      * @param DecimalNumber $impactOnPrice
-     * @param DecimalNumber $finalPrice
      * @param int $quantity
-     * @todo: add additional properties when needed (for update command)
+     * @param string $imageUrl
      */
     public function __construct(
         int $combinationId,
         string $combinationName,
+        string $reference,
         array $attributesInformation,
         bool $default,
         DecimalNumber $impactOnPrice,
-        DecimalNumber $finalPrice,
-        int $quantity
+        int $quantity,
+        string $imageUrl
     ) {
         $this->combinationId = $combinationId;
         $this->attributesInformation = $attributesInformation;
         $this->combinationName = $combinationName;
+        $this->reference = $reference;
         $this->default = $default;
         $this->impactOnPrice = $impactOnPrice;
-        $this->finalPrice = $finalPrice;
         $this->quantity = $quantity;
+        $this->imageUrl = $imageUrl;
     }
 
     /**
@@ -123,6 +130,14 @@ class EditableCombinationForListing
     }
 
     /**
+     * @return string
+     */
+    public function getReference(): string
+    {
+        return $this->reference;
+    }
+
+    /**
      * @return bool
      */
     public function isDefault(): bool
@@ -139,18 +154,18 @@ class EditableCombinationForListing
     }
 
     /**
-     * @return DecimalNumber
-     */
-    public function getFinalPrice(): DecimalNumber
-    {
-        return $this->finalPrice;
-    }
-
-    /**
      * @return int
      */
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImageUrl(): string
+    {
+        return $this->imageUrl;
     }
 }

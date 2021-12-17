@@ -1,5 +1,5 @@
 // stylelint-disable-next-line
-@import "@scss/pages/partials/_order-navigation";
+@import '@scss/pages/partials/_order-navigation';
 
 #order-view-page {
   #historyTabContent {
@@ -13,7 +13,15 @@
     .card-details-actions {
       display: flex;
       align-items: center;
+
+      .btn.update-status{
+        white-space: nowrap;
+      }
     }
+  }
+
+  .discount-action {
+    margin-bottom: 1rem;
   }
 
   .add-product {
@@ -43,10 +51,12 @@
     #order_payment_id_currency {
       flex: inherit;
       min-width: 75px;
+      height: auto;
     }
   }
 
-  .card,
+  .customer,
+  #orderProductsPanel,
   .product-row .tab-content {
     margin-bottom: 1.875rem;
   }
@@ -55,8 +65,16 @@
     .nav-tabs {
       position: relative;
       z-index: 5;
+      display: flex;
+      flex-wrap: nowrap;
       padding-left: 1px;
       margin-bottom: -2px;
+      overflow: auto;
+      overflow-y: hidden;
+
+      .nav-item {
+        flex-shrink: 0;
+      }
     }
 
     .tab-content {
@@ -70,15 +88,16 @@
   .select-status {
     position: relative;
     max-width: 280px;
-    color: #fff;
-    background: #fff;
+    color: $white;
+    background: $white;
     border: none;
     @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     @include transition(0.2s ease-out);
 
     .select-status-colored {
-      color: #fff;
+      padding: 0.375rem 2.2rem 0.375rem 0.4375rem;
+      color: $white;
       background: none;
       border: none;
 
@@ -94,7 +113,7 @@
       right: 10px;
       font-family: "Material Icons", Arial, sans-serif;
       font-size: 1.25rem;
-      color: #fff;
+      color: $white;
       pointer-events: none;
       cursor: pointer;
       content: "keyboard_arrow_down";
@@ -166,6 +185,7 @@
     &-actions {
       display: flex;
       flex-wrap: wrap;
+
       > * {
         margin-bottom: 0.9375rem;
 
@@ -204,6 +224,7 @@
     .card-details {
       border: none;
       box-shadow: none;
+
       .card-body {
         padding: 0;
       }
@@ -223,7 +244,7 @@
     }
 
     a {
-      color: #000;
+      color: $black;
       text-decoration: none;
     }
 
@@ -242,6 +263,7 @@
     .tab-content {
       padding: 0;
       background-color: inherit;
+
       .tab-pane {
         opacity: 1;
       }
@@ -255,19 +277,26 @@
 
     .badge-dark,
     .badge-secondary {
-      color: #000;
-      background-color: #fff;
+      color: $black;
+      background-color: $white;
     }
 
     .badge-print-light {
       font-weight: 500;
-      color: #000 !important; // stylelint-disable-line
-      background-color: #fff !important; // stylelint-disable-line
+      color: $black !important; // stylelint-disable-line
+      background-color: $white !important; // stylelint-disable-line
     }
   }
 }
 
 .adminorders {
+  .header-toolbar {
+    h1,
+    p {
+      margin-bottom: 0;
+    }
+  }
+
   .alert .alert-text {
     ol {
       margin-top: 5px;
@@ -313,13 +342,17 @@
   }
 
   #order-view-page {
-    .table {
-      display: block;
-    }
-
     #view_order_payments_block {
       .table {
-        overflow: scroll;
+        overflow: auto;
+
+        &:not(.discountList) {
+          display: block;
+
+          &.table-empty {
+            display: table;
+          }
+        }
 
         &-head {
           &-invoice {
@@ -349,6 +382,26 @@
   }
 
   #order-view-page {
+    .right-column .tab-content,
+    #orderProductsPanel {
+      table {
+        display: block;
+        overflow: auto;
+
+        &.table-empty {
+          display: table;
+        }
+      }
+    }
+
+    .order-product-pagination {
+      label {
+        margin-right: 1rem;
+        /* stylelint-disable-next-line */
+        margin-left: 0 !important;
+      }
+    }
+
     .card-details {
       &-form {
         width: 100%;
@@ -370,11 +423,12 @@
           order: 2;
         }
       }
+
       .nav-tabs {
         display: flex;
         flex-wrap: nowrap;
         align-items: flex-end;
-        overflow-y: scroll;
+        overflow: auto;
 
         .nav-item {
           min-width: 165px;
@@ -391,34 +445,15 @@
     }
 
     .order-actions {
-      #update_order_status_action_form {
-        .select-status {
-          margin-bottom: 0.9375rem;
-        }
-      }
+      justify-content: center;
 
       .select-status {
-        width: 100%;
-        max-width: inherit;
+        max-width: 206px;
 
         .select-status-colored {
           max-width: inherit;
-          /* stylelint-disable-next-line */
-          margin-right: 0 !important;
-        }
-      }
-
-      > * {
-        &:not(:last-child) {
-          margin-right: 0;
-        }
-
-        a,
-        button,
-        & {
-          width: 100%;
-          /* stylelint-disable-next-line */
-          margin-left: 0 !important;
+          padding-right: 2.5rem;
+          text-overflow: ellipsis;
         }
       }
 
@@ -428,6 +463,21 @@
 
         i {
           margin-right: 20px;
+        }
+      }
+
+      &-print {
+        width: 100%;
+        max-width: 242px;
+
+        > .input-group,
+        button {
+          width: 100%;
+          text-align: center;
+
+          i {
+            margin-right: 0.5rem;
+          }
         }
       }
     }
@@ -493,17 +543,19 @@
       }
 
       .input-group {
-        min-width: 90px;
+        min-width: 100px;
         max-width: 110px;
 
         .form-control {
-          min-width: 30px;
+          min-width: 44px;
           max-width: 76px;
           height: 35px;
         }
+
         .input-group-append {
           height: 35px;
         }
+
         .max-refund {
           flex-basis: 100%;
           padding-left: 10px;
@@ -522,7 +574,7 @@
 
 .voucher-refund-type-negative-error {
   display: none;
-  color: $color-error;
+  color: $danger;
 }
 
 input.refund-quantity {
@@ -550,5 +602,64 @@ input#partial_refund_shipping {
 .discountList {
   &-name {
     max-width: 400px;
+  }
+}
+
+@media (max-width: 390px) {
+  #order-view-page {
+    .right-column .tab-content,
+    #orderProductsPanel {
+      table {
+        &.table-empty {
+          display: block;
+        }
+      }
+    }
+
+    .order-actions {
+      &-print {
+        max-width: 186px;
+
+        button {
+          text-align: left;
+
+          i.material-icons {
+            margin-right: 20px;
+          }
+        }
+      }
+
+      &-invoice,
+      &-delivery {
+        width: 100%;
+        max-width: 286px;
+
+        a {
+          width: 100%;
+          max-width: 286px;
+          margin: auto;
+        }
+      }
+
+      &-invoice {
+        + .order-actions-print {
+          max-width: 286px;
+        }
+      }
+
+      .partial-refund-display {
+        width: 185px;
+      }
+
+      .select-status {
+        max-width: 148px;
+      }
+
+      > * {
+        &:not(:last-child) {
+          margin-right: 0;
+        }
+      }
+    }
   }
 }

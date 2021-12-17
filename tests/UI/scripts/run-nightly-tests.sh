@@ -2,7 +2,7 @@
 
 set -x
 
-BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/TRAVIS_BRANCH -H "Metadata-Flavor: Google")
+BRANCH=$(curl http://metadata.google.internal/computeMetadata/v1/instance/attributes/GH_BRANCH -H "Metadata-Flavor: Google")
 CURRENT_DATE=$([ -z "$1" ] && date +%Y-%m-%d || echo $1)
 DIR_PATH="/var/ps-reports/${CURRENT_DATE}"
 REPORT_NAME="${CURRENT_DATE}-${BRANCH}"
@@ -10,7 +10,6 @@ REPORT_PATH="${DIR_PATH}/campaigns"
 TESTS_DIR="${DIR_PATH}/prestashop/tests/UI"
 LOG_DIR="/var/log/ps-reports/"
 LOG_PATH="${LOG_DIR}${REPORT_NAME}.log"
-
 
 if [ ! -d $LOG_DIR ]; then
   mkdir -p $LOG_DIR
@@ -33,7 +32,9 @@ docker volume prune -f
 
 cd "${TESTS_DIR}"
 
-for command in "sanity-tests" "functional-tests"; do
+CAMPAIGNS=("sanity" "functional:BO" "functional:FO" "regression")
+
+for campaign in "${CAMPAIGNS[@]}"; do
   if [ -z "$(docker ps -qa)" ]; then
     # Make sure all containers are stopped
     docker stop $(docker ps -qa)
@@ -48,11 +49,14 @@ for command in "sanity-tests" "functional-tests"; do
 
   # Running command
   echo "Run ${command}"
-  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T -e COMMAND="${command}" tests bash /tmp/run-tests.sh
+  docker-compose -f docker-compose.nightly.yml -f docker-compose.tests.yml exec -T -e COMMAND="test:${campaign}" tests bash /tmp/run-tests.sh
 
   # Rename mochawesome Report
   if [ -f "${TESTS_DIR}/mochawesome-report/mochawesome.json" ]; then
-    cp "${TESTS_DIR}/mochawesome-report/mochawesome.json" "${REPORT_PATH}/${command}.json"
+    # Delete ':' from filename
+    campaign="$( echo -e "$campaign" | tr  ':' '-'  )"
+    # Copy the file
+    cp "${TESTS_DIR}/mochawesome-report/mochawesome.json" "${REPORT_PATH}/${campaign}.json"
   fi
 
   echo "Try to clear docker-compose instances..."

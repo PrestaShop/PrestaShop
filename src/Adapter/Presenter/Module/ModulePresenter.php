@@ -29,10 +29,11 @@ namespace PrestaShop\PrestaShop\Adapter\Presenter\Module;
 use Currency;
 use Exception;
 use Hook;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 
 class ModulePresenter implements PresenterInterface
 {
@@ -51,20 +52,26 @@ class ModulePresenter implements PresenterInterface
     }
 
     /**
-     * @param Module $module
+     * @param ModuleInterface $module
      *
      * @return array
      */
     public function present($module)
     {
-        if (!($module instanceof Module)) {
+        if (!($module instanceof ModuleInterface)) {
             throw new Exception('ModulePresenter can only present instance of Module');
         }
 
         $attributes = $module->attributes->all();
-        $attributes['picos'] = $this->addPicos($attributes);
         $attributes['price'] = $this->getModulePrice($attributes['price']);
-        $attributes['starsRate'] = str_replace('.', '', round($attributes['avgRate'] * 2) / 2); // Round to the nearest 0.5
+        // Round to the nearest 0.5
+        $attributes['starsRate'] = str_replace('.', '', (string) (round(floatval($attributes['avgRate']) * 2) / 2));
+
+        $moduleInstance = $module->getInstance();
+
+        if ($moduleInstance instanceof LegacyModule) {
+            $attributes['multistoreCompatibility'] = $moduleInstance->getMultistoreCompatibility();
+        }
 
         $result = [
             'attributes' => $attributes,
@@ -108,35 +115,5 @@ class ModulePresenter implements PresenterInterface
         }
 
         return $presentedProducts;
-    }
-
-    /**
-     * Generate the list of small icons to be displayed near the module name.
-     *
-     * @param array $attributes Attributes of presented module
-     *
-     * @return array
-     */
-    private function addPicos(array $attributes)
-    {
-        $picos = [];
-
-        // PrestaTrust display
-        if (!empty($attributes['prestatrust']) && !empty($attributes['prestatrust']->pico)) {
-            $text = '';
-            $class = '';
-            if (isset($attributes['prestatrust']->status)) {
-                $text = $attributes['prestatrust']->status ? 'OK' : 'KO';
-                $class = $attributes['prestatrust']->status ? 'text-success' : 'text-warning';
-            }
-            $picos['prestatrust'] = [
-                'img' => $attributes['prestatrust']->pico,
-                'label' => 'prestatrust',
-                'text' => $text,
-                'class' => $class,
-            ];
-        }
-
-        return $picos;
     }
 }

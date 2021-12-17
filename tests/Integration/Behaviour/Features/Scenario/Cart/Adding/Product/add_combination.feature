@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Add product combination in cart
   As a customer
   I must be able to correctly add product combinations in my cart

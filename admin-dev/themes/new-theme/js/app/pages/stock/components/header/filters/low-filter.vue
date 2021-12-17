@@ -24,7 +24,7 @@
  *-->
 
 <template>
-  <div class="container-fluid">
+  <div class="content-topbar container-fluid">
     <div class="row py-2">
       <div class="col row ml-1">
         <PSCheckbox
@@ -39,7 +39,7 @@
           >{{ trans('filter_low_stock') }}</span>
         </PSCheckbox>
       </div>
-      <div class="col mr-3 d-flex align-items-center justify-content-end">
+      <div class="content-topbar-right col mr-3 d-flex align-items-center justify-content-end">
         <a :href="stockExportUrl">
           <span
             data-toggle="pstooltip"
@@ -69,10 +69,11 @@
   </div>
 </template>
 
-<script>
-  import PSCheckbox from '@app/widgets/ps-checkbox';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
 
-  export default {
+  export default Vue.extend({
     props: {
       filters: {
         type: Object,
@@ -81,22 +82,23 @@
       },
     },
     computed: {
-      stockImportTitle() {
+      stockImportTitle(): string {
         return this.trans('title_import');
       },
-      stockExportTitle() {
+      stockExportTitle(): string {
         return this.trans('title_export');
       },
-      stockImportUrl() {
+      stockImportUrl(): string {
         return window.data.stockImportUrl;
       },
-      stockExportUrl() {
+      stockExportUrl(): string {
         const params = $.param(this.filters);
+
         return `${window.data.stockExportUrl}&${params}`;
       },
     },
     methods: {
-      onCheck(checkbox) {
+      onCheck(checkbox: HTMLInputElement): void {
         const isChecked = checkbox.checked ? 1 : 0;
         this.$emit('lowStockChecked', isChecked);
       },
@@ -107,5 +109,5 @@
     components: {
       PSCheckbox,
     },
-  };
+  });
 </script>

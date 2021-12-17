@@ -4,11 +4,16 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
@@ -16,18 +21,19 @@ const checkoutPage = require('@pages/FO/checkout');
 const foLoginPage = require('@pages/FO/login');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultFrTax} = require('@data/demo/tax');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
 
 let browserContext;
 let page;
 
-describe('Update gift options ', async () => {
+/*
+Update gift options
+Go to FO, login by default customer and check gift in every option
+ */
+describe('BO - Shop Parameters - Order Settings : Update gift options ', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -181,7 +187,7 @@ describe('Update gift options ', async () => {
           baseContext,
         );
 
-        await foLoginPage.customerLogin(page, DefaultAccount);
+        await foLoginPage.customerLogin(page, DefaultCustomer);
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
       });

@@ -157,6 +157,7 @@ function updateProduct(event, eventType, updateUrl) {
   // Most update need to occur (almost) instantly, but in some cases (like keyboard actions)
   // we need to delay the update a bit more
   let updateDelay = 30;
+
   if (eventType === 'updatedProductQuantity') {
     updateDelay = 750;
   }
@@ -317,6 +318,7 @@ function replaceAddToCartSection(replacement) {
   const destinationObject = $(
     replacement.$targetParent.find(replacement.targetSelector),
   );
+
   if (destinationObject.length <= 0) {
     return;
   }
@@ -457,11 +459,13 @@ $(document).ready(() => {
      * we don't change the url nor title
      */
     const quickView = $('.modal.quickview');
+
     if (quickView.length) {
       return;
     }
 
     let pageTitle = document.title;
+
     if (args.product_title) {
       pageTitle = args.product_title;
       $(document).attr('title', pageTitle);

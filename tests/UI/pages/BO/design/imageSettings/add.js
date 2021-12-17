@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add image type page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddImageType extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add image type page
+   */
   constructor() {
     super();
 
@@ -15,11 +24,11 @@ class AddImageType extends BOBasePage {
     this.nameInput = '#name';
     this.widthInput = '#width';
     this.heightInput = '#height';
-    this.productsToggle = toggle => `${this.imageTypeForm} label[for='products_${toggle}']`;
-    this.categoriesToggle = toggle => `${this.imageTypeForm} label[for='categories_${toggle}']`;
-    this.manufacturersToggle = toggle => `${this.imageTypeForm} label[for='manufacturers_${toggle}']`;
-    this.suppliersToggle = toggle => `${this.imageTypeForm} label[for='suppliers_${toggle}']`;
-    this.storesToggle = toggle => `${this.imageTypeForm} label[for='stores_${toggle}']`;
+    this.productsToggle = toggle => `${this.imageTypeForm} #products_${toggle}`;
+    this.categoriesToggle = toggle => `${this.imageTypeForm} #categories_${toggle}`;
+    this.manufacturersToggle = toggle => `${this.imageTypeForm} #manufacturers_${toggle}`;
+    this.suppliersToggle = toggle => `${this.imageTypeForm} #suppliers_${toggle}`;
+    this.storesToggle = toggle => `${this.imageTypeForm} #stores_${toggle}`;
     this.saveButton = '#image_type_form_submit_btn';
   }
 
@@ -27,8 +36,8 @@ class AddImageType extends BOBasePage {
 
   /**
    * Fill image type form in create or edit page and save
-   * @param page
-   * @param imageTypeData
+   * @param page {Page} Browser tab
+   * @param imageTypeData {ImageTypeData} Data to set on new/edit image type form
    * @return {Promise<string>}
    */
   async createEditImageType(page, imageTypeData) {
@@ -37,17 +46,17 @@ class AddImageType extends BOBasePage {
     await this.setValue(page, this.heightInput, imageTypeData.height.toString());
 
     // Set status for image type
-    await page.click(this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
-    await page.click(this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
-    await page.click(this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
-    await page.click(this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
-    await page.click(this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.productsToggle(imageTypeData.productsStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.categoriesToggle(imageTypeData.categoriesStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.manufacturersToggle(imageTypeData.manufacturersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.suppliersToggle(imageTypeData.suppliersStatus ? 'on' : 'off'));
+    await this.setChecked(page, this.storesToggle(imageTypeData.storesStatus ? 'on' : 'off'));
 
     // Save image type
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

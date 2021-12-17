@@ -38,8 +38,6 @@
   )
   )) %}
 
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
 {% block javascripts %}
   <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/right-sidebar.js') }}"></script>
@@ -54,6 +52,10 @@
 {% endblock %}
 
 {% block content_header %}
+  {{ block('session_alert') }}
+{% endblock %}
+
+{% block session_alert %}
   {% macro alert(type, flashbagContent) %}
     <div class="alert alert-{{ type }} d-print-none" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -88,13 +90,16 @@
   {% if app.session.flashbag.peek('warning')|length() > 0 %}
     {{ layout.alert('warning', app.session.flashbag.get('warning')) }}
   {% endif %}
+  {% if app.session.flashbag.peek('info')|length() > 0 %}
+    {{ layout.alert('info', app.session.flashbag.get('info')) }}
+  {% endif %}
 {% endblock %}
 
 {% block sidebar_right %}
   <nav
     id="right-sidebar"
     role="navigation"
-    class="col-xs-5 col-sm-4 col-md-4 col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
+    class="col-lg-3 sidebar sidebar-right sidebar-animate text-sm-center"
   >
     <img
       src="{{ asset('themes/default/img/bundle/dashboard_loading.gif') }}"

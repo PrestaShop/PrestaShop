@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
  *}
 {block name='cart_detailed_actions'}
-  <div class="checkout cart-detailed-actions card-block">
+  <div class="checkout cart-detailed-actions js-cart-detailed-actions card-block">
     {if $cart.minimalPurchaseRequired}
       <div class="alert alert-warning" role="alert">
         {$cart.minimalPurchaseRequired}

@@ -97,11 +97,12 @@ $(document).ready(() => {
   $body.on('click', '[data-button-action="add-to-cart"]', (event) => {
     event.preventDefault();
 
-    $('[data-button-action="add-to-cart"]').prop('disabled', true);
-
-    const $form = $(event.target.form);
+    const $form = $(event.currentTarget.form);
     const query = `${$form.serialize()}&add=1&action=update`;
     const actionURL = $form.attr('action');
+    const addToCartButton = $(event.currentTarget);
+
+    addToCartButton.prop('disabled', true);
 
     const isQuantityInputValid = ($input) => {
       let validInput = true;
@@ -109,6 +110,7 @@ $(document).ready(() => {
       $input.each((index, input) => {
         const $currentInput = $(input);
         const minimalValue = parseInt($currentInput.attr('min'), 10);
+
         if (minimalValue && $currentInput.val() < minimalValue) {
           onInvalidQuantity($currentInput);
           validInput = false;
@@ -131,6 +133,7 @@ $(document).ready(() => {
     };
 
     const $quantityInput = $form.find('input[min]');
+
     if (!isQuantityInputValid($quantityInput)) {
       onInvalidQuantity($quantityInput);
 
@@ -155,6 +158,11 @@ $(document).ready(() => {
           eventType: 'addProductToCart',
           resp,
         });
+      })
+      .always(() => {
+        setTimeout(() => {
+          addToCartButton.prop('disabled', false);
+        }, 1000);
       });
   });
 

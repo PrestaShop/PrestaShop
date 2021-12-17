@@ -26,10 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\RequestSqlGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 class RequestSqlFilters extends Filters
 {
+    /** @var string */
+    protected $filterId = RequestSqlGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

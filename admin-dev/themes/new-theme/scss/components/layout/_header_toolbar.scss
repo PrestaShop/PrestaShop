@@ -4,14 +4,14 @@
   right: 0;
   left: $size-navbar-width;
   z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
-  background: #fff;
+  background: $white;
   border-bottom: 0.0625rem solid $color-separator;
   @include transition(
     left 0.5s ease
   ); // transition when collapsing the nav menu
 
   .mobile & {
-    top: $size-header-height + ($header-mobile-padding-y * 2);
+    top: $size-header-height + ($header-mobile-padding-y / 2) - 0.1rem;
   }
 
   @include media-breakpoint-down(md) {
@@ -69,8 +69,7 @@
   // toolbar buttons
   .toolbar-icons {
     @include media-breakpoint-down(sm) {
-      float: none;
-      overflow-x: auto;
+      display: none;
     }
 
     > .wrapper {
@@ -80,6 +79,13 @@
 
       @include media-breakpoint-down(sm) {
         justify-content: flex-start;
+      }
+
+      @include media-breakpoint-down(sm) {
+        #recommended-modules-button,
+        .btn-help {
+          display: none;
+        }
       }
 
       a + a {
@@ -93,10 +99,22 @@
     @include clearfix();
     margin-bottom: $grid-gutter-width / 2;
   }
+
+  .btn-floating {
+    display: none;
+
+    &-menu {
+      max-width: calc(100vw - 2rem);
+    }
+
+    @include media-breakpoint-down(sm) {
+      display: block;
+    }
+  }
 }
 
 .page-head-tabs {
-  background: #fff;
+  background: $white;
 
   > ul {
     border-bottom: 0;

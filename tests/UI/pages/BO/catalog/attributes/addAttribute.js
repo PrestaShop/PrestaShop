@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add attribute page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddAttribute extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add attribute page
+   */
   constructor() {
     super();
 
@@ -15,15 +24,18 @@ class AddAttribute extends BOBasePage {
     this.publicNameInput = '#public_name_1';
     this.urlInput = 'input[name=\'url_name_1\']';
     this.metaTitleInput = 'input[name=\'meta_title_1\']';
-    this.indexableToggle = toggle => `label[for='indexable_${toggle}']`;
+    this.indexableToggle = toggle => `#indexable_${toggle}`;
     this.attributeTypeSelect = '#group_type';
     this.saveButton = '#attribute_group_form_submit_btn';
   }
+  /*
+  Methods
+   */
 
   /**
    * Fill attribute form and save it
-   * @param page
-   * @param attributeData
+   * @param page {Page} Browser tab
+   * @param attributeData {AttributeData} Data to set on new/edit attribute form
    * @return {Promise<string>}
    */
   async addEditAttribute(page, attributeData) {
@@ -36,7 +48,7 @@ class AddAttribute extends BOBasePage {
     await this.setValue(page, this.metaTitleInput, attributeData.metaTitle);
 
     // Set indexable toggle
-    await page.click(this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
+    await this.setChecked(page, this.indexableToggle(attributeData.indexable ? 'on' : 'off'));
 
     // Set attribute type
     await this.selectByVisibleText(page, this.attributeTypeSelect, attributeData.attributeType);
@@ -45,7 +57,7 @@ class AddAttribute extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

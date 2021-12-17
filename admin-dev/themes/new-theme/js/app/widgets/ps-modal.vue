@@ -72,11 +72,12 @@
   </div>
 </template>
 
-<script>
-  import PSButton from '@app/widgets/ps-button';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSButton from '@app/widgets/ps-button.vue';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  export default Vue.extend({
     props: {
       translations: {
         type: Object,
@@ -93,23 +94,23 @@
       });
     },
     methods: {
-      showModal() {
+      showModal(): void {
         $(this.$el).modal('show');
       },
-      hideModal() {
+      hideModal(): void {
         $(this.$el).modal('hide');
       },
-      onSave() {
+      onSave(): void {
         this.$emit('save');
       },
-      onLeave() {
+      onLeave(): void {
         this.$emit('leave');
       },
     },
     components: {
       PSButton,
     },
-  };
+  });
 
 </script>
 

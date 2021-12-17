@@ -11,13 +11,13 @@
   }
 
   .page-not-found {
-    @include box-shadow();
     max-width: 570px;
     padding: 1rem;
     margin: 0 auto;
+    overflow: auto;
     font-size: $font-size-sm;
     color: $gray;
-    background: #fff;
+    background: $white;
 
     h4 {
       margin: 0.5rem 0 1rem;

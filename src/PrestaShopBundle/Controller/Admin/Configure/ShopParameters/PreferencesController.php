@@ -40,7 +40,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class PreferencesController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'AdminPreferences';
+    public const CONTROLLER_NAME = 'AdminPreferences';
 
     /**
      * @param Request $request
@@ -61,7 +61,8 @@ class PreferencesController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_preferences")
      *
@@ -113,7 +114,6 @@ class PreferencesController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/preferences.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Preferences', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

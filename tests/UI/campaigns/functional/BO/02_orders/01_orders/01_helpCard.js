@@ -1,26 +1,34 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
+
+// Helpers to open and close browser
 const helper = require('@utils/helpers');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
-// Importing pages
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-// Test context imports
+
+// Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_orders_helperCard';
+const baseContext = 'functional_BO_orders_orders_helpCard';
+
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
 
 // Check help card language in orders page
-describe('Helper card in order page', async () => {
+describe('BO - Orders : Help card in order page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });

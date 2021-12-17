@@ -1,0 +1,7 @@
+admin_feature_flags_index:
+  path: /
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\FeatureFlagController::indexAction'
+    _legacy_controller: AdminFeatureFlag
+    _legacy_link: AdminFeatureFlag

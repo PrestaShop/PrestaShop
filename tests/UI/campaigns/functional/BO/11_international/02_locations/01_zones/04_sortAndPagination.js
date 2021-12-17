@@ -33,7 +33,7 @@ Paginate between pages
 Delete zones with bulk actions
  */
 
-describe('Sort and pagination zones table', async () => {
+describe('BO - International - Zones : Sort and pagination', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -70,30 +70,28 @@ describe('Sort and pagination zones table', async () => {
 
   // 1 : Sort zones
   describe('Sort zones table', async () => {
-    const sortTests = [
+    [
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_zone', sortDirection: 'down', isFloat: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_zone', sortDirection: 'desc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
+          testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
+          testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc',
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_zone', sortDirection: 'up', isFloat: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_zone', sortDirection: 'asc', isFloat: true,
         },
       },
-    ];
-
-    sortTests.forEach((test) => {
+    ].forEach((test) => {
       it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
@@ -110,7 +108,7 @@ describe('Sort and pagination zones table', async () => {
 
         const expectedResult = await zonesPage.sortArray(nonSortedTable, test.args.isFloat);
 
-        if (test.args.sortDirection === 'up') {
+        if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
           await expect(sortedTable).to.deep.equal(expectedResult.reverse());
@@ -152,28 +150,28 @@ describe('Sort and pagination zones table', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await zonesPage.selectPaginationLimit(page, '20');
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should click on next', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnNext', baseContext);
 
       const paginationNumber = await zonesPage.paginationNext(page);
-      expect(paginationNumber).to.equal('2');
+      expect(paginationNumber).to.contain('(page 2 / 2)');
     });
 
     it('should click on previous', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnPrevious', baseContext);
 
       const paginationNumber = await zonesPage.paginationPrevious(page);
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
     it('should change the item number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await zonesPage.selectPaginationLimit(page, '50');
-      expect(paginationNumber).to.equal('1');
+      expect(paginationNumber).to.contain('(page 1 / 1)');
     });
   });
 

@@ -64,16 +64,25 @@ class Fees
      */
     protected $isProcessed = false;
 
-    public function __construct()
+    /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
+     * @param int|null $orderId
+     */
+    public function __construct(?int $orderId = null)
     {
         $this->shippingFees = new AmountImmutable();
+        $this->orderId = $orderId;
     }
 
     /**
      * @param Cart $cart
      * @param CartRowCollection $cartRowCollection
      * @param int $computePrecision
-     * @param int $id_carrier
+     * @param int|null $id_carrier
      */
     public function processCalculation(
         Cart $cart,
@@ -93,13 +102,17 @@ class Fees
                     (int) $id_carrier,
                     true,
                     null,
-                    $products
+                    $products,
+                    null,
+                    null !== $this->orderId
                 ),
                 $cart->getPackageShippingCost(
                     (int) $id_carrier,
                     false,
                     null,
-                    $products
+                    $products,
+                    null,
+                    null !== $this->orderId
                 )
             );
         }

@@ -1,28 +1,36 @@
 require('module-alias/register');
-// Using chai
+
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_enableB2BMode';
-
 
 let browserContext;
 let page;
 
-describe('Enable B2B mode', async () => {
+/*
+Enable B2B mode
+Go to FO > create account page and check that company input is visible
+Disable B2B mode
+Go to FO > create account page and check that company input is not visible
+ */
+describe('BO - Shop Parameters - Customer Settings : Enable/Disable B2B mode', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +65,7 @@ describe('Enable B2B mode', async () => {
     {args: {action: 'disable', enable: false}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} B2B mode`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}B2BMode`, baseContext);
 
@@ -71,12 +79,7 @@ describe('Enable B2B mode', async () => {
     });
 
     it('should go to create customer page in FO and check company input', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkB2BMode${customerSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkB2BMode${index}`, baseContext);
 
       // Go to FO and change language
       page = await customerSettingsPage.viewMyShop(page);
@@ -87,11 +90,18 @@ describe('Enable B2B mode', async () => {
       await loginFOPage.goToCreateAccountPage(page);
 
       // Check B2B mode
-      const isCompanyInputVisible = await loginFOPage.isCompanyInputVisible(page);
+      const isCompanyInputVisible = await foCreateAccountPage.isCompanyInputVisible(page);
       await expect(isCompanyInputVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

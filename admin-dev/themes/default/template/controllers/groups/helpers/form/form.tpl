@@ -81,7 +81,7 @@
 				return;
 			$.ajax({
 				type:"POST",
-				url: "ajax-tab.php",
+				url: "index.php",
 				async: true,
 				dataType: "json",
 				data : {
@@ -127,7 +127,7 @@
 		}
 		</script>
 
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<a class="btn btn-default" href="#group_discount_category_fancybox" id="group_discount_category">{l s='Add a category discount' d='Admin.Shopparameters.Feature'}</a>
 			<table class="table" id="group_discount_category_table">
 				{foreach $input['values'] key=key item=category }

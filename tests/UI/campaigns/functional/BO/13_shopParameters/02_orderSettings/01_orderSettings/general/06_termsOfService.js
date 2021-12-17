@@ -4,28 +4,34 @@ const {expect} = require('chai');
 
 // Import test context
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
 // Import data
-const {DefaultAccount} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_termsOfService';
 
 let browserContext;
 let page;
 
-describe('Enable terms of service', async () => {
+/*
+Enable/Disable terms of service
+Go to FO payment step and check terms of service checkbox and page title
+ */
+describe('BO - Shop Parameters - Order Settings : Enable/Disable terms of service', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,24 +63,48 @@ describe('Enable terms of service', async () => {
 
   const tests = [
     {args: {action: 'disable', enable: false, pageName: ''}},
-    {args: {action: 'enable', enable: true, pageName: 'Terms and conditions of use'}},
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Delivery', title: 'Shipments and returns',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Legal Notice', title: 'Legal',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Terms and conditions of use', title: 'Terms and conditions of use',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'About us', title: 'About us',
+      },
+    },
+    {
+      args: {
+        action: 'enable', enable: true, pageName: 'Secure payment', title: 'Secure payment',
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
     it(`should ${test.args.action} terms of service`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}TermsOfService`, baseContext);
+      await testContext.addContextItem(
+        this,
+        'testIdentifier',
+        `${test.args.action}TermsOfService${index}`,
+        baseContext,
+      );
 
       const result = await orderSettingsPage.setTermsOfService(page, test.args.enable, test.args.pageName);
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should check terms of service checkbox', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkTermsOfService${orderSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfService${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
@@ -95,7 +125,7 @@ describe('Enable terms of service', async () => {
       if (index === 0) {
         // Personal information step - Login
         await checkoutPage.clickOnSignIn(page);
-        await checkoutPage.customerLogin(page, DefaultAccount);
+        await checkoutPage.customerLogin(page, DefaultCustomer);
       }
 
       // Address step - Go to delivery step
@@ -111,8 +141,17 @@ describe('Enable terms of service', async () => {
       await expect(isVisible).to.be.equal(test.args.enable);
     });
 
+    if (test.args.enable) {
+      it('should check the terms of service page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkTermsOfServicePage${index}`, baseContext);
+
+        const pageName = await checkoutPage.getTermsOfServicePageTitle(page);
+        await expect(pageName).to.contains(test.args.title);
+      });
+    }
+
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `checkAndBackToBO${index}`, baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 

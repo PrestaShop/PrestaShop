@@ -45,7 +45,7 @@ class Locale implements LocaleInterface
      * This is the default numbering system in PrestaShop, even for arabian or asian languages, until we
      * provide a way to configure this in admin.
      */
-    const NUMBERING_SYSTEM_LATIN = 'latn';
+    public const NUMBERING_SYSTEM_LATIN = 'latn';
 
     /**
      * The locale code (simplified IETF tag syntax)

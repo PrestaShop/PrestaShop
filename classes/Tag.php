@@ -281,16 +281,16 @@ class TagCore extends ObjectModel
         $result = Db::getInstance()->delete('product_tag', 'id_tag = ' . (int) $this->id);
         if (is_array($array)) {
             $array = array_map('intval', $array);
-            $result &= ObjectModel::updateMultishopTable('Product', ['indexed' => 0], 'a.id_product IN (' . implode(',', $array) . ')');
-            $ids = [];
-            foreach ($array as $idProduct) {
-                $ids[] = '(' . (int) $idProduct . ',' . (int) $this->id . ',' . (int) $this->id_lang . ')';
-            }
+            $result = $result && ObjectModel::updateMultishopTable('Product', ['indexed' => 0], 'a.id_product IN (' . implode(',', $array) . ')');
 
             if ($result) {
-                $result &= Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_tag (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
+                $ids = [];
+                foreach ($array as $idProduct) {
+                    $ids[] = '(' . (int) $idProduct . ',' . (int) $this->id . ',' . (int) $this->id_lang . ')';
+                }
+                $result = Db::getInstance()->execute('INSERT INTO ' . _DB_PREFIX_ . 'product_tag (id_product, id_tag, id_lang) VALUES ' . implode(',', $ids));
                 if (Configuration::get('PS_SEARCH_INDEXATION')) {
-                    $result &= Search::indexation(false);
+                    $result = $result && Search::indexation(false);
                 }
             }
         }
@@ -329,7 +329,7 @@ class TagCore extends ObjectModel
     /**
      * Deletes product tags.
      *
-     * @param $idProduct
+     * @param int $idProduct
      * @param int|null $langId if provided, only deletes tags in specific language
      *
      * @return bool

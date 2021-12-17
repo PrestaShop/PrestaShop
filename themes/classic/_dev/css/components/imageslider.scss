@@ -1,6 +1,5 @@
 .carousel {
   margin-bottom: 1.5rem;
-  box-shadow: 1px 1px 7px 0 rgba(0, 0, 0, 0.15);
 
   .direction {
     z-index: auto;
@@ -24,12 +23,12 @@
       bottom: 28px;
       left: 90px;
       max-width: 340px;
-      color: #fff;
+      color: $white;
 
       .caption-description {
         p {
           font-size: 1rem;
-          color: #fff;
+          color: $white;
         }
 
         h3 {
@@ -55,13 +54,20 @@
 
     .icon-next,
     .icon-prev {
+
+      @at-root .lang-rtl & {
+        .material-icons {
+          transform: rotate(-180deg);
+        }
+      }
+
       &::before {
         content: "";
       }
 
       i {
         font-size: 3.125rem;
-        color: #fff;
+        color: $white;
       }
 
       &:hover {
@@ -121,6 +127,14 @@
     background-color: $gray-light;
     box-shadow: none;
 
+    .carousel-control {
+      .icon-prev,
+      .icon-next {
+        width: auto;
+        height: auto;
+      }
+    }
+
     .carousel-item {
       .caption {
         position: static;
@@ -159,7 +173,7 @@
 
         .icon-next {
           right: 0;
-          margin-right: 0.78rem;
+          margin-right: 0;
         }
 
         i {

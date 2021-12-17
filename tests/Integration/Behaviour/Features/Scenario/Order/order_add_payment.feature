@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-payment-to-order
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @add-payment-to-order
 Feature: Add payment to Order from Back Office (BO)
@@ -73,10 +73,10 @@ Feature: Add payment to Order from Back Office (BO)
       | transaction_id | test123             |
       | currency       | USD                 |
       | amount         | 6.00                |
-    Then order "bo_order1" payments should have the following details:
+    Then order "bo_order1" payment in first position should have the following details:
       | date           | 2019-11-26 13:56:23 |
-      | payment_method | Payments by check   |
-      | transaction_id | test123             |
+      | paymentMethod  | Payments by check   |
+      | transactionId  | test123             |
       | amount         | $6.00               |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.000000 |
@@ -89,10 +89,10 @@ Feature: Add payment to Order from Back Office (BO)
       | transaction_id | test123             |
       | currency       | currency2           |
       | amount         | 6.00                |
-    Then order "bo_order1" payments should have the following details:
+    Then order "bo_order1" payment in first position should have the following details:
       | date           | 2019-11-26 13:56:23 |
-      | payment_method | Payments by check   |
-      | transaction_id | test123             |
+      | paymentMethod  | Payments by check   |
+      | transactionId  | test123             |
       | amount         | €6.00               |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.820000 |

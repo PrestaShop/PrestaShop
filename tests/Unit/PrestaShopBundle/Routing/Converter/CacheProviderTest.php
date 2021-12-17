@@ -55,7 +55,7 @@ class CacheProviderTest extends TestCase
      */
     private $legacyRoutes;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->expectedFlattenArray = [

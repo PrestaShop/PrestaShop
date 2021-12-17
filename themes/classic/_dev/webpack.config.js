@@ -24,37 +24,35 @@
  */
 const webpack = require('webpack');
 const path = require('path');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 let config = {
   entry: {
-    main: ['./js/theme.js', './css/theme.scss'],
+    theme: ['./js/theme.js', './css/theme.scss'],
+    error: ['./css/error.scss'],
   },
   output: {
     path: path.resolve(__dirname, '../assets/js'),
-    filename: 'theme.js',
+    filename: '[name].js',
+  },
+  resolve: {
+    preferRelative: true,
   },
   module: {
     rules: [
       {
         test: /\.js/,
-        loader: 'babel-loader',
+        loader: 'esbuild-loader',
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-              },
-            },
+        use:[ 
+            MiniCssExtractPlugin.loader,
+            'css-loader',
             'postcss-loader',
             'sass-loader',
           ],
-        }),
       },
       {
         test: /.(png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
@@ -69,7 +67,7 @@ let config = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: [MiniCssExtractPlugin.loader, 'style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
@@ -78,27 +76,32 @@ let config = {
     $: '$',
     jquery: 'jQuery',
   },
-  plugins: [new ExtractTextPlugin(path.join('..', 'css', 'theme.css'))],
+  plugins: [
+    new MiniCssExtractPlugin({filename: path.join('..', 'css', '[name].css')}),
+  ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true,
-      },
-      output: {
-        comments: false,
-      },
-      minimize: true,
-    })
-  );
+  config.optimization = {
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            sequences: true,
+            conditionals: true,
+            booleans: true,
+            if_return: true,
+            join_vars: true,
+            drop_console: true,
+          },
+          output: {
+            comments: false,
+          },
+        }
+      })
+    ]
+  }
 }
 
 module.exports = config;

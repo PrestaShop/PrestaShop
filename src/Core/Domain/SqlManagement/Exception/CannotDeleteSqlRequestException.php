@@ -34,10 +34,10 @@ class CannotDeleteSqlRequestException extends SqlRequestException
     /**
      * When deleting single SqlRequest
      */
-    const CANNOT_SINGLE_DELETE = 10;
+    public const CANNOT_SINGLE_DELETE = 10;
 
     /**
      * When deleting SqlRequest in bulk action
      */
-    const CANNOT_BULK_DELETE = 20;
+    public const CANNOT_BULK_DELETE = 20;
 }

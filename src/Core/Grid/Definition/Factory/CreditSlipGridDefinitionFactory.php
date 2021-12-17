@@ -45,7 +45,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CreditSlipGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'credit_slip';
+    public const GRID_ID = 'credit_slip';
 
     /**
      * @var string

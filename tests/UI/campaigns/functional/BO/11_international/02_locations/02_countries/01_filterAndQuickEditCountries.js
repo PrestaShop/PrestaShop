@@ -22,14 +22,17 @@ const baseContext = 'functional_BO_international_locations_countries_filterAndQu
 // Import expect from chai
 const {expect} = require('chai');
 
-
 // Browser and tab
 let browserContext;
 let page;
 
 let numberOfCountries = 0;
 
-describe('Filter and quick edit countries', async () => {
+/*
+Filter countries by : id, name, iso code, call prefix, id zone, status
+Quick Edit country
+ */
+describe('BO - International - Countries : Filter and quick edit', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +47,7 @@ describe('Filter and quick edit countries', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,7 +62,7 @@ describe('Filter and quick edit countries', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);
@@ -181,12 +184,10 @@ describe('Filter and quick edit countries', async () => {
       await expect(textColumn).to.contains(countries.germany.name);
     });
 
-    const statuses = [
+    [
       {args: {status: 'enable', enable: true}},
       {args: {status: 'disable', enable: false}},
-    ];
-
-    statuses.forEach((status) => {
+    ].forEach((status) => {
       it(`should ${status.args.status} the first country`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${status.args.status}Zone`, baseContext);
 

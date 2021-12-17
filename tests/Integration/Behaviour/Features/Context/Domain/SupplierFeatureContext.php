@@ -126,7 +126,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         Assert::assertEquals(
             $this->getShopIdsByReferences($data['shops']),
             $editableSupplier->getAssociatedShops(),
-            'Unexptected supplier shops association'
+            'Unexpected supplier shops association'
         );
 
         if (isset($data['address2'])) {
@@ -193,7 +193,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         $shopIds = [];
 
         foreach ($shopReferences as $shopReference) {
-            $shopIds[] = (int) ($this->getSharedStorage()->get($shopReference))->id;
+            $shopIds[] = $this->getSharedStorage()->get($shopReference);
         }
 
         return $shopIds;

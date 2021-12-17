@@ -13,6 +13,21 @@
 
 #product-description-short {
   color: $gray-darker;
+
+  ul,
+  ol {
+    padding-left: 0;
+    list-style-position: inside;
+
+    li {
+      font-size: 0.9375rem;
+      color: $gray;
+    }
+  }
+
+  ul {
+    list-style-type: disc;
+  }
 }
 
 .product-information {
@@ -20,9 +35,9 @@
   color: $gray-darker;
 
   .manufacturer-logo {
-    height: 3.125rem;
+    max-height: 4rem;
     margin-bottom: 1rem;
-    border: none;
+    border: 2px solid $gray-light;
   }
 
   .product-description {
@@ -31,10 +46,19 @@
       height: auto;
     }
 
-    ul {
+    ul,
+    ol {
       padding-left: 0.75rem;
-      list-style: inherit;
       list-style-position: inside;
+
+      li {
+        font-size: 0.9375rem;
+        color: $gray;
+      }
+    }
+
+    ul {
+      list-style-type: disc;
     }
   }
 }
@@ -69,12 +93,11 @@
 }
 
 .radio-label {
-  @include box-shadow();
   display: inline-block;
   padding: 0.125rem $small-space;
   font-weight: 600;
-  background: #fff;
-  border: 2px solid #fff;
+  background: $white;
+  border: 2px solid $white;
 }
 
 .product-actions {
@@ -114,7 +137,7 @@
     height: 2.75rem;
     padding: 0.175rem 0.5rem;
     color: $gray-darker;
-    background-color: #fff;
+    background-color: $white;
   }
 
   .input-group-btn-vertical {
@@ -149,7 +172,7 @@
       width: 33%;
       padding: $small-space $medium-space;
       text-align: center;
-      background: #fff;
+      background: $white;
       border: 0.3125rem $gray-light solid;
     }
 
@@ -157,7 +180,7 @@
       background: $gray-lighter;
 
       &:nth-of-type(even) {
-        background: #fff;
+        background: $white;
       }
 
       td {
@@ -214,7 +237,7 @@
     margin-left: $small-space;
     font-size: $font-size-base;
     font-weight: 600;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     background: $brand-secondary;
   }
@@ -227,10 +250,9 @@
 }
 
 .tabs {
-  @include box-shadow();
   padding: $medium-space $large-space;
   margin-top: 2rem;
-  background: #fff;
+  background: $white;
 
   .tab-pane {
     padding-top: $medium-space;
@@ -268,8 +290,7 @@
   margin-bottom: $medium-space;
 
   img {
-    @include box-shadow();
-    background: #fff;
+    background: $white;
   }
 
   .layer {
@@ -283,7 +304,7 @@
     height: 100%;
     text-align: center;
     cursor: pointer;
-    background: #000;
+    background: $black;
     background: rgba(0, 0, 0, 0.6);
     opacity: 0;
     @include transition(opacity 0.7s ease-in-out);
@@ -310,13 +331,13 @@
       margin-left: -30%;
 
       .product-cover-modal {
-        background: #fff;
+        background: $white;
       }
 
       .image-caption {
         width: 800px;
         padding: 0.625rem 1.25rem;
-        background: #fff;
+        background: $white;
         border-top: $gray-light 1px solid;
 
         p {
@@ -346,7 +367,7 @@
         img {
           width: 9.25rem;
           cursor: pointer;
-          background: #fff;
+          background: $white;
 
           &:hover {
             border: $brand-primary 3px solid;
@@ -361,7 +382,7 @@
         z-index: 0;
         width: 100%;
         height: 100%;
-        color: #fff;
+        color: $white;
         text-align: center;
         cursor: pointer;
 
@@ -389,7 +410,7 @@
   color: $gray-darker;
 
   .modal-header {
-    background: #fff;
+    background: $white;
 
     .close {
       opacity: 1;
@@ -399,6 +420,7 @@
       }
     }
   }
+
   .modal-body {
     padding: 3.125rem 1.875rem;
     background: $btn-warning-color;
@@ -436,6 +458,7 @@
       color: $brand-success;
     }
   }
+
   .product-name {
     font-size: 1.125rem;
     color: $brand-primary;
@@ -511,7 +534,6 @@
     display: inline;
 
     > .thumb {
-      @include box-shadow();
       margin-bottom: $small-space;
       cursor: pointer;
 
@@ -630,8 +652,7 @@
     select {
       width: auto;
       padding-right: 1.875rem;
-      background-color: #fff;
-      @include box-shadow-light();
+      background-color: $white;
     }
 
     ul li {
@@ -651,7 +672,7 @@
   left: 0;
   z-index: 2;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: wrap;
   width: 100%;
   pointer-events: none;
@@ -662,11 +683,10 @@
     margin-top: $small-space;
     font-size: $base-font-size;
     font-weight: 700;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     pointer-events: auto;
     background: $brand-primary;
-    @include box-shadow-light();
 
     &.online-only {
       position: absolute;
@@ -717,7 +737,7 @@
     border: none;
 
     &:focus {
-      background-color: #fff;
+      background-color: $white;
       outline: 0.1875rem solid $brand-primary;
     }
   }
@@ -735,6 +755,11 @@
 
   .customization-message {
     margin-top: 20px;
+
+    .customization-label {
+      text-align: left;
+      word-break: break-word;
+    }
   }
 
   .custom-file {
@@ -803,13 +828,12 @@
   }
 
   li {
-    @include box-shadow-light();
     display: inline-block;
     width: 2.5rem;
     height: 2.5rem;
     margin-left: 0.5rem;
     cursor: pointer;
-    background-color: #fff;
+    background-color: $white;
     background-repeat: no-repeat;
     background-position: 0.25rem 0.25rem;
     background-size: 2rem 2rem;
@@ -843,6 +867,7 @@
   .product-cover {
     img {
       width: 100%;
+      height: auto;
     }
   }
 

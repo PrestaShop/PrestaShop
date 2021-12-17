@@ -78,7 +78,7 @@ class SqlTranslationLoader implements LoaderInterface
             SELECT `key`, `translation`, `domain`
             FROM `' . _DB_PREFIX_ . 'translation`
             WHERE `id_lang` = ' . $localeResults[$locale]['id_lang'];
-        $translations = Db::getInstance()->executeS($selectTranslationsQuery);
+        $translations = Db::getInstance()->executeS($selectTranslationsQuery) ?: [];
 
         $catalogue = new MessageCatalogue($locale);
         $this->addTranslationsToCatalogue($translations, $catalogue);
@@ -87,7 +87,7 @@ class SqlTranslationLoader implements LoaderInterface
             $selectThemeTranslationsQuery =
                 $selectTranslationsQuery . "\n" .
                 "AND theme = '" . $this->theme->getName() . "'";
-            $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery);
+            $themeTranslations = Db::getInstance()->executeS($selectThemeTranslationsQuery) ?: [];
             $this->addTranslationsToCatalogue($themeTranslations, $catalogue);
         }
 

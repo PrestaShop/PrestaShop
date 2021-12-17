@@ -1,7 +1,11 @@
 require('module-alias/register');
 
+// Import expect from chai
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -16,15 +20,9 @@ const foCheckoutPage = require('@pages/FO/checkout');
 
 // Import data
 const {Carriers} = require('@data/demo/carriers');
-const {DefaultAccount} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 const baseContext = 'functional_BO_shipping_preferences_carriersOptions_defaultCarrier';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -37,7 +35,7 @@ Go to Fo and check the update
 Reset default carrier to 'PrestaShop'
 Go to Fo and check the reset
  */
-describe('Update default carrier and check it in FO', async () => {
+describe('BO - Shipping - Preferences : Update default carrier and check it in FO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -60,6 +58,8 @@ describe('Update default carrier and check it in FO', async () => {
       dashboardPage.shippingLink,
       dashboardPage.shippingPreferencesLink,
     );
+
+    await preferencesPage.closeSfToolBar(page);
 
     const pageTitle = await preferencesPage.getPageTitle(page);
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
@@ -108,7 +108,7 @@ describe('Update default carrier and check it in FO', async () => {
         if (index === 0) {
           // Personal information step - Login
           await foCheckoutPage.clickOnSignIn(page);
-          await foCheckoutPage.customerLogin(page, DefaultAccount);
+          await foCheckoutPage.customerLogin(page, DefaultCustomer);
         }
 
         // Address step - Go to delivery step

@@ -33,14 +33,88 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
+use Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @todo: since product suite is the only one that has been properly optimized for now it is less resilient then
+     *        other suites which simply restore all tables. Each suite should be responsible for cleaning up its mess
+     *        but since it's not the case for now product suite needs to restore the DB itself.
+     *
+     * @BeforeSuite
+     */
+    public static function restoreAllTablesBeforeSuite(): void
+    {
+        DatabaseDump::restoreAllTables();
+    }
+
+    /**
+     * @AfterSuite
+     */
+    public static function restoreProductTablesAfterSuite(): void
+    {
+        static::restoreProductTables();
+        LanguageFeatureContext::restoreLanguagesTablesAfterFeature();
+    }
+
+    /**
+     * @BeforeFeature @restore-products-before-feature
+     */
+    public static function restoreProductTablesBeforeFeature(): void
+    {
+        static::restoreProductTables();
+    }
+
+    private static function restoreProductTables(): void
+    {
+        DatabaseDump::restoreTables([
+            // Product data
+            'product',
+            'product_attachment',
+            'product_attribute',
+            'product_attribute_combination',
+            'product_attribute_image',
+            'product_attribute_shop',
+            'product_carrier',
+            'product_country_tax',
+            'product_download',
+            'product_group_reduction_cache',
+            'product_lang',
+            'product_sale',
+            'product_shop',
+            'product_supplier',
+            'product_tag',
+            // Related products
+            'accessory',
+            // Customizations
+            'customization',
+            'customization_field',
+            'customization_field_lang',
+            'customized_data',
+            // Specific prices
+            'specific_price',
+            // Stock
+            'stock_available',
+            'stock_mvt',
+            // Images
+            'image',
+            'image_lang',
+            'image_shop',
+            // Miscellaneous relationships
+            'category_product',
+            'feature_product',
+            'warehouse_product_location',
+        ]);
+    }
+
     /**
      * @Given product :productReference has following combinations:
      *
@@ -157,13 +231,53 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         $editableProduct = $this->getProductForEditing($productReference);
         Assert::assertEquals(
             $productTypeName,
-            $editableProduct->getBasicInformation()->getType()->getValue(),
+            $editableProduct->getType(),
             sprintf(
                 'Product type is not as expected. Expected %s but got %s instead',
                 $productTypeName,
-                $editableProduct->getBasicInformation()->getType()->getValue()
+                $editableProduct->getType()
             )
         );
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName === ProductType::TYPE_VIRTUAL, (bool) $product->is_virtual);
+        // cache_is_pack is automatically updated by legacy code when removing all pack items so it's not worth testing it for now
+        // Assert::assertEquals($productTypeName === ProductType::TYPE_PACK, (bool) $product->cache_is_pack);
+        if ($productTypeName !== ProductType::TYPE_COMBINATIONS) {
+            Assert::assertEquals(0, $product->cache_default_attribute);
+        }
+    }
+
+    /**
+     * @Then product :productReference persisted type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertPersistedProductType(string $productReference, string $productTypeName): void
+    {
+        if ('undefined' === $productTypeName) {
+            $productTypeName = ProductType::TYPE_UNDEFINED;
+        }
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName, $product->product_type);
+    }
+
+    /**
+     * @Then product :productReference dynamic type should be :productType
+     *
+     * @param string $productReference
+     * @param string $productTypeName
+     */
+    public function assertDynamicProductType(string $productReference, string $productTypeName): void
+    {
+        if ('undefined' === $productTypeName) {
+            $productTypeName = ProductType::TYPE_UNDEFINED;
+        }
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertEquals($productTypeName, $product->getDynamicProductType());
     }
 
     /**
@@ -216,7 +330,6 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'meta_description' => ProductConstraintException::INVALID_META_DESCRIPTION,
             'link_rewrite' => ProductConstraintException::INVALID_LINK_REWRITE,
             'minimal_quantity' => ProductConstraintException::INVALID_MINIMAL_QUANTITY,
-            'location' => ProductConstraintException::INVALID_LOCATION,
             'available_now_labels' => ProductConstraintException::INVALID_AVAILABLE_NOW,
             'available_later_labels' => ProductConstraintException::INVALID_AVAILABLE_LATER,
             'available_date' => ProductConstraintException::INVALID_AVAILABLE_DATE,
@@ -229,5 +342,37 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
         }
 
         return $constraintErrorFieldMap[$fieldName];
+    }
+
+    /**
+     * @Then product :productReference should be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            1,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should not be indexed
+     *
+     * @param string $productReference
+     */
+    public function assertIsNotIndexed(string $productReference): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId);
+        Assert::assertSame(
+            0,
+            (int) $product->indexed,
+            sprintf('Unexpected indexed field value %s for product "%s"', $product->indexed, $productReference)
+        );
     }
 }

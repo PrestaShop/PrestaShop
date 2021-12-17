@@ -650,7 +650,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
             foreach ($product->category as $value) {
                 if (is_numeric($value)) {
-                    if (Category::categoryExists($value)) {
+                    if (Category::categoryExists((int) $value)) {
                         $product->id_category[] = (int) $value;
                     } else {
                         $category = new Category();
@@ -758,7 +758,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 'Rewrite link for %1$s (ID %2$s): re-written as %3$s.',
                 [
                     '%1$s' => $product->name[$this->languageId],
-                    '%2$s' => !empty($info['id']) ? $info['id'] : 'null',
+                    '%2$s' => 'null',
                     '%3$s' => $linkRewrite,
                 ],
                 'Admin.Advparameters.Notification'
@@ -837,7 +837,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
             if ($productExistsByReference) {
                 $sqlPart .= 'p.`reference` = "' . pSQL($product->reference) . '"';
-            } elseif ($productExistsById) {
+            } else {
                 $sqlPart .= 'p.`id_product` = ' . (int) $product->id;
             }
 
@@ -1005,7 +1005,7 @@ final class ProductImportHandler extends AbstractImportHandler
         if (isset($product->id) && $product->id) {
             $tags = Tag::getProductTags($product->id);
             if (is_array($tags) && count($tags)) {
-                if (!empty($product->tags)) {
+                if (!empty($product->tags) && is_string($product->tags)) {
                     $product->tags = explode($multipleValueSeparator, $product->tags);
                 }
                 if (is_array($product->tags) && count($product->tags)) {
@@ -1028,9 +1028,9 @@ final class ProductImportHandler extends AbstractImportHandler
                 $isTagAdded = Tag::addTags($key, $product->id, $tags, $multipleValueSeparator);
                 if (!$isTagAdded) {
                     $this->addEntityWarning(
+                        $this->translator->trans('Tags list is invalid', [], 'Admin.Advparameters.Notification'),
                         $this->tools->sanitize($productName),
-                        $product->id,
-                        $this->translator->trans('Tags list is invalid', [], 'Admin.Advparameters.Notification')
+                        $product->id
                     );
                     break;
                 }
@@ -1048,15 +1048,15 @@ final class ProductImportHandler extends AbstractImportHandler
 
                 if (!$isTagAdded) {
                     $this->addEntityWarning(
-                        $this->tools->sanitize($productName),
-                        (int) $product->id,
                         $this->translator->trans(
                             'Invalid tag(s) (%s)',
                             [
                                 $str,
                             ],
                             'Admin.Notifications.Error'
-                        )
+                        ),
+                        $this->tools->sanitize($productName),
+                        (int) $product->id
                     );
                     break;
                 }
@@ -1247,7 +1247,7 @@ final class ProductImportHandler extends AbstractImportHandler
             }
             // automaticly disable depends on stock, if a_s_m set to disabled
             if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
-                StockAvailable::setProductDependsOnStock($product->id, 0);
+                StockAvailable::setProductDependsOnStock($product->id, false);
             }
         }
 
@@ -1322,7 +1322,7 @@ final class ProductImportHandler extends AbstractImportHandler
                 // if depends on stock and quantity, add quantity to stock
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();
-                    $price = str_replace(',', '.', $product->wholesale_price);
+                    $price = str_replace(',', '.', (string) $product->wholesale_price);
                     if ($price == 0) {
                         $price = 0.000001;
                     }

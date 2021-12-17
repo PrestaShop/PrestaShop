@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Currency\NameColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
@@ -55,7 +56,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'currency';
+    public const GRID_ID = 'currency';
 
     /**
      * {@inheritdoc}
@@ -92,7 +93,7 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'field' => 'id_currency',
                     ])
             )
-            ->add((new DataColumn('name'))
+            ->add((new NameColumn('name'))
             ->setName($this->trans('Currency', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'name',
@@ -214,10 +215,6 @@ final class CurrencyGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->setAssociatedColumn('iso_code')
             )
             ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setTypeOptions([
-                'required' => false,
-                'choice_translation_domain' => false,
-            ])
             ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))

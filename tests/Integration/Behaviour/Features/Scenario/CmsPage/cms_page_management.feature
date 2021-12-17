@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cms_page
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: CmsPage Management
   PrestaShop allows BO users to manage CMS pages
   As a BO user

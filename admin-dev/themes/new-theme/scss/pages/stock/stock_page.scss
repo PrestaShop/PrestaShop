@@ -20,7 +20,7 @@
   #search {
     .search-input {
       min-height: 35px;
-      background-color: #fff;
+      background-color: $white;
       border: $gray-light 1px solid;
       @include border-radius(4px);
       outline: none;
@@ -38,10 +38,12 @@
       z-index: 1000; // above header toolbar
       padding-top: 28px;
     }
+
     .fade-enter-active,
     .fade-leave-active {
       @include transition(opacity 0.5s);
     }
+
     .fade-enter,
     .fade-leave-to {
       opacity: 0;
@@ -52,6 +54,7 @@
     .collapse-button {
       width: 100%;
       text-align: left;
+
       .material-icons {
         font-size: 20px;
         color: $gray-medium;
@@ -84,10 +87,14 @@
 
   #filters {
     width: 150%;
-    background: #fff;
+    background: $white;
     border: solid 1px #b9cdd2;
     box-shadow: 1px 2px 3px 0 rgba(108, 134, 142, 0.3);
     @include border-radius(4px);
+
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+    }
 
     select.form-control {
       @include border-radius(4px);
@@ -132,9 +139,10 @@
       @include border-right-radius(4px);
 
       .material-icons {
-        color: #fff;
+        color: $white;
         vertical-align: middle;
       }
+
       &:hover {
         background: $primary-hover;
       }
@@ -164,7 +172,7 @@
       display: inline-block;
       min-width: 50px;
       padding: 2px 5px;
-      color: #fff;
+      color: $white;
       background-color: $gray-dark;
       @include border-radius(4px);
 
@@ -178,15 +186,21 @@
     .table {
       table-layout: fixed;
 
+      @include media-breakpoint-down(sm) {
+        table-layout: unset;
+      }
+
       thead {
         th {
           &.product-title {
             padding-left: 6rem;
           }
+
           &:last-child {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+
             .material-icons {
               margin-right: 5px;
             }
@@ -196,21 +210,27 @@
 
       .qty-update {
         color: $brand-primary;
+
         .material-icons {
           vertical-align: middle;
         }
       }
+
       .enable {
         color: $success;
       }
+
       .disable {
         color: $danger;
       }
+
       .low-stock {
         background: $danger-hover;
+
         .stock-warning {
           font-weight: 700;
           color: $danger;
+
           &.ico {
             padding: 0 5px;
             cursor: pointer;
@@ -225,15 +245,63 @@
       small {
         display: block;
       }
+
       .bulk-qty {
         max-width: 100px;
+
+        @include media-breakpoint-down(sm) {
+          max-width: 60px;
+        }
       }
+
       .update-qty {
-        color: #fff;
+        color: $white;
         @include transition(background-color 0.2s ease);
       }
+
       .qty {
         padding-left: 20px;
+      }
+
+
+      @include media-breakpoint-down(sm) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        > div {
+          width: 55%;
+
+          .update-qty {
+            display: flex;
+            align-items: center;
+            max-width: 90%;
+            // stylelint-disable-next-line
+            margin-right: 0 !important;
+            white-space: inherit;
+          }
+
+          &:first-of-type {
+            width: 45%;
+          }
+
+          &:last-of-type {
+            display: flex;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+
+  .content-topbar {
+    @include media-breakpoint-down(sm) {
+      padding: 0;
+      margin-bottom: 0.5rem;
+
+      &-right {
+        // stylelint-disable-next-line
+        display: none !important;
       }
     }
   }

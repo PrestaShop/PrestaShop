@@ -247,7 +247,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         }
         if (!empty($orderInvoices)) {
             foreach ($orderInvoices as $invoice) {
-                if ($invoice->total_paid_tax_incl <= $invoice->total_shipping_tax_incl) {
+                if ($invoice->total_paid_tax_incl < $invoice->total_shipping_tax_incl) {
                     throw new InvalidCartRuleDiscountValueException(
                         'Discount amount specified is too high',
                         InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING
@@ -255,7 +255,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
                 }
             }
         } else {
-            if ($order->total_paid_tax_incl <= $order->total_shipping_tax_incl) {
+            if ($order->total_paid_tax_incl < $order->total_shipping_tax_incl) {
                 throw new InvalidCartRuleDiscountValueException(
                     'Discount amount specified is too high',
                     InvalidCartRuleDiscountValueException::INVALID_FREE_SHIPPING

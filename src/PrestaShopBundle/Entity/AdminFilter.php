@@ -352,7 +352,10 @@ class AdminFilter
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_INT),
             ],
-            'filter_column_name' => FILTER_SANITIZE_STRING,
+            'filter_column_name' => [
+                'filter' => FILTER_SANITIZE_STRING,
+                'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
+            ],
             'filter_column_reference' => FILTER_SANITIZE_STRING,
             'filter_column_name_category' => FILTER_SANITIZE_STRING,
             'filter_column_price' => [

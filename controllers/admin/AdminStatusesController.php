@@ -613,6 +613,25 @@ class AdminStatusesControllerCore extends AdminController
                 return;
             }
 
+            $langIds = Language::getIDs(false);
+            $langDefault = (int) Configuration::get('PS_LANG_DEFAULT');
+            foreach ($langIds as $id_lang) {
+                $name = (string) Tools::getValue('name_' . $id_lang);
+                if (empty($name)) {
+                    $name = (string) Tools::getValue('name_' . $langDefault);
+                }
+
+                $exists = OrderState::existsLocalizedNameInDatabase(
+                    $name,
+                    (int) $id_lang,
+                    Tools::getIsset('id_order_state') ? (int) Tools::getValue('id_order_state') : null
+                );
+                if ($exists) {
+                    $this->errors[] = $this->trans('This name already exists.', [], 'Admin.Design.Notification');
+                    break;
+                }
+            }
+
             $this->deleted = false; // Disabling saving historisation
             $_POST['invoice'] = (int) Tools::getValue('invoice_on');
             $_POST['logable'] = (int) Tools::getValue('logable_on');
@@ -624,7 +643,7 @@ class AdminStatusesControllerCore extends AdminController
             $_POST['pdf_delivery'] = (int) Tools::getValue('pdf_delivery_on');
             $_POST['pdf_invoice'] = (int) Tools::getValue('pdf_invoice_on');
             if (!$_POST['send_email']) {
-                foreach (Language::getIDs(false) as $id_lang) {
+                foreach ($langIds as $id_lang) {
                     $_POST['template_' . $id_lang] = '';
                 }
             }
@@ -639,17 +658,7 @@ class AdminStatusesControllerCore extends AdminController
             if (!$order_state->isRemovable()) {
                 $this->errors[] = $this->trans('For security reasons, you cannot delete default order statuses.', [], 'Admin.Shopparameters.Notification');
             } else {
-                try {
-                    if (!$order_state->softDelete()) {
-                        throw new PrestaShopException('Error when soft deleting order status');
-                    }
-                } catch (PrestaShopException $e) { // see ObjectModel::softDelete too
-                    $this->errors[] = $this->trans('An error occurred during deletion.', [], 'Admin.Notifications.Error');
-
-                    return $order_state;
-                }
-
-                Tools::redirectAdmin(self::$currentIndex . '&conf=1&token=' . $this->token);
+                return parent::postProcess();
             }
         } elseif (Tools::isSubmit('submitBulkdelete' . $this->table)) {
             if (!$this->access('delete')) {
@@ -688,8 +697,9 @@ class AdminStatusesControllerCore extends AdminController
     {
         parent::afterImageUpload();
 
-        if (($id_order_state = (int) Tools::getValue('id_order_state')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_ORDER_STATE_IMG_DIR_ . $id_order_state . '.gif')) {
+        if (($id_order_state = (int) Tools::getValue('id_order_state'))
+            && count($_FILES)
+            && file_exists(_PS_ORDER_STATE_IMG_DIR_ . $id_order_state . '.gif')) {
             $current_file = _PS_TMP_IMG_DIR_ . 'order_state_mini_' . $id_order_state . '_' . $this->context->shop->id . '.gif';
 
             if (file_exists($current_file)) {

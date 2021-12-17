@@ -57,7 +57,7 @@
       class="dropdown-menu js-choice-options"
       data-url="{{ url(column.options.route, routeParams) }}"
     >
-      {% for name,value in choices if value != selectedChoice %}
+      {% for name,value in choices|filter(value => value != selectedChoice) %}
         <button class="js-dropdown-item dropdown-item" data-value="{{ value }}">{{ name }}</button>
       {% endfor %}
     </div>

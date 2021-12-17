@@ -19,4 +19,4 @@ indent_size = 4
 trim_trailing_whitespace = false
 
 [*.yml]
-indent_size = 4
+indent_size = 2

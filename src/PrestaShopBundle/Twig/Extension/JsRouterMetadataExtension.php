@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Twig\Extension;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Provides data needed for Javascript router component
@@ -72,7 +72,7 @@ class JsRouterMetadataExtension extends AbstractExtension
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('js_router_metadata', [$this, 'getJsRouterMetadata']),
+            new TwigFunction('js_router_metadata', [$this, 'getJsRouterMetadata']),
         ];
     }
 

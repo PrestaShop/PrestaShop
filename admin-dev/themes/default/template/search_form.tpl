@@ -75,7 +75,7 @@
 			{if isset($show_clear_btn) && $show_clear_btn}
 			<a href="#" class="clear_search hide"><i class="icon-remove"></i></a>
 			{/if}
-			<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search' d='Admin.Actions'}" />
+			<input id="bo_query" name="bo_query" type="text" class="form-control" value="{$bo_query}" placeholder="{l s='Search' d='Admin.Actions'}" aria-label="{l s='Search' d='Admin.Actions'}" />
 <!--  							<span class="input-group-btn">
 				<button type="submit" id="bo_search_submit" class="btn btn-primary">
 					<i class="icon-search"></i>

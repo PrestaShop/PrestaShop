@@ -202,14 +202,17 @@ class OrderLazyArray extends AbstractLazyArray
 
             foreach ($cartProducts['products'] as $cartProduct) {
                 if (($cartProduct['id_product'] === $orderProduct['id_product'])
-                    && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])) {
+                    && ($cartProduct['id_product_attribute'] === $orderProduct['id_product_attribute'])
+                ) {
                     if (isset($cartProduct['attributes'])) {
                         $orderProduct['attributes'] = $cartProduct['attributes'];
                     } else {
                         $orderProduct['attributes'] = [];
                     }
                     $orderProduct['cover'] = $cartProduct['cover'];
+                    $orderProduct['default_image'] = $cartProduct['default_image'];
                     $orderProduct['unit_price_full'] = $cartProduct['unit_price_full'];
+                    break;
                 }
             }
 
@@ -352,7 +355,7 @@ class OrderLazyArray extends AbstractLazyArray
     {
         $order = $this->order;
 
-        $carrier = new Carrier((int) $order->id_carrier, (int) $order->id_lang);
+        $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $orderCarrier = $this->objectPresenter->present($carrier);
         $orderCarrier['name'] = ($carrier->name == '0') ? Configuration::get('PS_SHOP_NAME') : $carrier->name;
         $orderCarrier['delay'] = $carrier->delay;
@@ -399,8 +402,8 @@ class OrderLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $carrier = $this->getCarrier();
-        if (!empty($carrier['url']) && !empty($order->shipping_number)) {
-            return str_replace('@', $order->shipping_number, $carrier['url']);
+        if (!empty($carrier['url']) && !empty($order->getShippingNumber())) {
+            return str_replace('@', $order->getShippingNumber(), $carrier['url']);
         }
 
         return '';

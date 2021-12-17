@@ -30,7 +30,12 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use ReflectionClass;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\InvalidArgumentException;
@@ -41,10 +46,10 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
  */
 class TypedRegexValidator extends ConstraintValidator
 {
-    const CATALOG_CHARS = '<>;=#{}';
-    const GENERIC_NAME_CHARS = '<>={}';
-    const MESSAGE_CHARS = '<>{}';
-    const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
+    public const CATALOG_CHARS = '<>;=#{}';
+    public const GENERIC_NAME_CHARS = '<>={}';
+    public const MESSAGE_CHARS = '<>{}';
+    public const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
 
     /**
      * @var CharacterCleaner
@@ -97,27 +102,49 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function getPattern($type)
     {
-        $typePatterns = [
-            TypedRegex::TYPE_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'),
-            TypedRegex::TYPE_CATALOG_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'),
-            TypedRegex::TYPE_GENERIC_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u'),
-            TypedRegex::TYPE_CITY_NAME => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'),
-            TypedRegex::TYPE_ADDRESS => $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'),
-            TypedRegex::TYPE_POST_CODE => '/^[a-zA-Z 0-9-]+$/',
-            TypedRegex::TYPE_PHONE_NUMBER => '/^[+0-9. ()\/-]*$/',
-            TypedRegex::TYPE_MESSAGE => '/[<>{}]/i',
-            TypedRegex::TYPE_LANGUAGE_ISO_CODE => IsoCode::PATTERN,
-            TypedRegex::TYPE_LANGUAGE_CODE => '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/',
-            TypedRegex::TYPE_CURRENCY_ISO_CODE => AlphaIsoCode::PATTERN,
-            TypedRegex::TYPE_FILE_NAME => '/^[a-zA-Z0-9_.-]+$/',
-            TypedRegex::TYPE_DNI_LITE => AddressConstraint::DNI_LITE_PATTERN,
-        ];
-
-        if (isset($typePatterns[$type])) {
-            return $typePatterns[$type];
+        switch ($type) {
+            case TypedRegex::TYPE_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u');
+            case TypedRegex::TYPE_CATALOG_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u');
+            case TypedRegex::TYPE_GENERIC_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u');
+            case TypedRegex::TYPE_CITY_NAME:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u');
+            case TypedRegex::TYPE_ADDRESS:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u');
+            case TypedRegex::TYPE_POST_CODE:
+                return '/^[a-zA-Z 0-9-]+$/';
+            case TypedRegex::TYPE_PHONE_NUMBER:
+                return '/^[+0-9. ()\/-]*$/';
+            case TypedRegex::TYPE_MESSAGE:
+                return '/[<>{}]/i';
+            case TypedRegex::TYPE_LANGUAGE_ISO_CODE:
+                return IsoCode::PATTERN;
+            case TypedRegex::TYPE_LANGUAGE_CODE:
+                return '/^[a-zA-Z]{2}(-[a-zA-Z]{2})?$/';
+            case TypedRegex::TYPE_CURRENCY_ISO_CODE:
+                return AlphaIsoCode::PATTERN;
+            case TypedRegex::TYPE_FILE_NAME:
+                return '/^[a-zA-Z0-9_.-]+$/';
+            case TypedRegex::TYPE_DNI_LITE:
+                return AddressConstraint::DNI_LITE_PATTERN;
+            case TypedRegex::TYPE_UPC:
+                return Upc::VALID_PATTERN;
+            case TypedRegex::TYPE_EAN_13:
+                return Ean13::VALID_PATTERN;
+            case TypedRegex::TYPE_ISBN:
+                return Isbn::VALID_PATTERN;
+            case TypedRegex::TYPE_REFERENCE:
+                return Reference::VALID_PATTERN;
+            case TypedRegex::TYPE_MODULE_NAME:
+                return '/^[a-zA-Z0-9_-]+$/';
+            case TypedRegex::TYPE_URL:
+                return $this->characterCleaner->cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u');
+            default:
+                $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
+                throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));
         }
-
-        throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, implode(',', array_keys($typePatterns))));
     }
 
     /**
@@ -130,7 +157,7 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function sanitize($value, $type)
     {
-        if ($type === 'name') {
+        if ($type === TypedRegex::TYPE_NAME) {
             $value = stripslashes($value);
         }
 
@@ -151,12 +178,13 @@ class TypedRegexValidator extends ConstraintValidator
      */
     private function match($pattern, $type, $value)
     {
-        $typesToInverseMatching = ['message'];
+        $match = preg_match($pattern, $value);
 
+        $typesToInverseMatching = [TypedRegex::TYPE_MESSAGE];
         if (in_array($type, $typesToInverseMatching, true)) {
-            return !preg_match($pattern, $value);
+            return !$match;
         }
 
-        return preg_match($pattern, $value);
+        return $match;
     }
 }

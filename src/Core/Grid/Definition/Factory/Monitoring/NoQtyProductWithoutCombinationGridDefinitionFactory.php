@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
  */
 final class NoQtyProductWithoutCombinationGridDefinitionFactory extends AbstractProductGridDefinitionFactory
 {
-    const GRID_ID = 'no_qty_product_without_combination';
+    public const GRID_ID = 'no_qty_product_without_combination';
 
     /**
      * {@inheritdoc}

@@ -1,0 +1,81 @@
+.btn {
+  font-weight: 600;
+  white-space: normal;
+
+  &.btn-default {
+    &,
+    i {
+      color: $medium-gray;
+      transition: 0.25s ease-out;
+    }
+
+    &:hover {
+      color: $btn-secondary-color;
+      background-color: $btn-secondary-hover;
+      border-color: $btn-secondary-hover;
+    }
+
+    &:active,
+    &:focus {
+      color: $btn-secondary-color;
+      background-color: $btn-secondary-active-color;
+      border-color: $btn-secondary-active-color !important;
+      outline: none;
+      box-shadow: 0 0 0 0.2rem rgba($btn-secondary-active-color, 0.5);
+
+      i {
+        color: $btn-secondary-color;
+      }
+    }
+  }
+
+  &-group {
+    .btn-default {
+      i {
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin-right: 2px;
+        font-size: 16px;
+      }
+
+      &:hover {
+        color: $btn-primary-color;
+        background: $primary-light-color;
+        border-color: $primary-light-color;
+      }
+
+      &:focus,
+      &:active {
+        color: $btn-primary-color;
+        background: $btn-primary-active-bg;
+        border-color: $btn-primary-active-bg;
+        box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+      }
+    }
+  }
+
+  &-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: $btn-primary-color;
+    background: $primary-color;
+    border-color: $primary-color;
+
+    &:hover {
+      color: $btn-primary-color;
+      background: $primary-light-color;
+      border-color: $primary-light-color;
+    }
+
+    &:focus,
+    &:active {
+      color: $btn-primary-color;
+      background: $btn-primary-active-bg;
+      // stylelint-disable-next-line
+      border-color: $btn-primary-active-bg !important;
+      box-shadow: 0 0 0 0.2rem rgba(70, 196, 221, 0.5);
+    }
+  }
+}

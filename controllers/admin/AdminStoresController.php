@@ -53,7 +53,7 @@ class AdminStoresControllerCore extends AdminController
             'name' => ['title' => $this->trans('Name', [], 'Admin.Global'), 'filter_key' => 'sl!name'],
             'address1' => ['title' => $this->trans('Address', [], 'Admin.Global'), 'filter_key' => 'sl!address1'],
             'city' => ['title' => $this->trans('City', [], 'Admin.Global')],
-            'postcode' => ['title' => $this->trans('Zip/postal code', [], 'Admin.Global')],
+            'postcode' => ['title' => $this->trans('Zip/Postal code', [], 'Admin.Global')],
             'state' => ['title' => $this->trans('State', [], 'Admin.Global'), 'filter_key' => 'st!name'],
             'country' => ['title' => $this->trans('Country', [], 'Admin.Global'), 'filter_key' => 'cl!name'],
             'phone' => ['title' => $this->trans('Phone', [], 'Admin.Global')],
@@ -186,7 +186,7 @@ class AdminStoresControllerCore extends AdminController
                 ],
                 [
                     'type' => 'text',
-                    'label' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                    'label' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                     'name' => 'postcode',
                     'required' => in_array('postcode', $required_fields),
                 ],
@@ -371,11 +371,11 @@ class AdminStoresControllerCore extends AdminController
             $postcode = Tools::getValue('postcode');
             /* Check zip code format */
             if ($country->zip_code_format && !$country->checkZipCode($postcode)) {
-                $this->errors[] = $this->trans('Your Zip/postal code is incorrect.', [], 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
+                $this->errors[] = $this->trans('Your Zip/Postal code is incorrect.', [], 'Admin.Notifications.Error') . '<br />' . $this->trans('It must be entered as follows:', [], 'Admin.Notifications.Error') . ' ' . str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
             } elseif (empty($postcode) && $country->need_zip_code) {
-                $this->errors[] = $this->trans('A Zip/postal code is required.', [], 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('A Zip/Postal code is required.', [], 'Admin.Notifications.Error');
             } elseif ($postcode && !Validate::isPostCode($postcode)) {
-                $this->errors[] = $this->trans('The Zip/postal code is invalid.', [], 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('The Zip/Postal code is invalid.', [], 'Admin.Notifications.Error');
             }
             /* Store hours */
             foreach ($langs as $lang) {
@@ -391,7 +391,7 @@ class AdminStoresControllerCore extends AdminController
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours ?? []);
         }
 
         if (!count($this->errors)) {
@@ -406,7 +406,7 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(
@@ -478,7 +478,7 @@ class AdminStoresControllerCore extends AdminController
                 'type' => 'text',
             ],
             'PS_SHOP_CODE' => [
-                'title' => $this->trans('Zip/postal code', [], 'Admin.Global'),
+                'title' => $this->trans('Zip/Postal code', [], 'Admin.Global'),
                 'validation' => 'isGenericName',
                 'type' => 'text',
             ],
@@ -599,6 +599,6 @@ class AdminStoresControllerCore extends AdminController
     {
         $separator = array_fill(0, count($value), ' | ');
 
-        return array_map('implode', $value, $separator);
+        return array_map('implode', $separator, $value);
     }
 }

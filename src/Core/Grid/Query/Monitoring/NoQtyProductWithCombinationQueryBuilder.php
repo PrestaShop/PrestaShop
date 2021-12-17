@@ -71,11 +71,11 @@ final class NoQtyProductWithCombinationQueryBuilder extends AbstractProductQuery
         $qb = $this->getProductsCommonQueryBuilder($searchCriteria);
 
         $attrSubQuery = $this->connection->createQueryBuilder()
-            ->select(1)
+            ->select('1')
             ->from($this->dbPrefix . 'product_attribute', 'pa')
             ->andWhere('pa.id_product = p.id_product');
 
-        $subQuery = $this->connection->createQueryBuilder()->select(1);
+        $subQuery = $this->connection->createQueryBuilder()->select('1');
         $subQuery
             ->from($this->dbPrefix . 'stock_available', 'stock')
             ->andWhere('p.id_product = stock.id_product')

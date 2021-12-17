@@ -50,7 +50,7 @@ class TaxType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $invalidCharsText = sprintf(
-            '%s ' . TypedRegexValidator::CATALOG_CHARS,
+            '%s ' . TypedRegexValidator::GENERIC_NAME_CHARS,
             $this->trans('Invalid characters:', 'Admin.Notifications.Info')
         );
 

@@ -27,18 +27,47 @@ declare(strict_types=1);
 
 class Profiler
 {
+    /** @var array */
     protected $hooksPerfs = [];
+
+    /** @var array */
     protected $modulesPerfs = [];
+
+    /** @var array */
     protected $profiler = [];
 
+    /** @var array */
+    protected $globalVarSize = [];
+
+    /** @var array */
+    protected $queries = [];
+
+    /** @var int */
     protected $totalFilesize = 0;
+
+    /** @var int */
     protected $totalGlobalVarSize = 0;
+
+    /** @var float */
     protected $totalQueryTime = 0;
+
+    /** @var float */
     protected $totalModulesTime = 0;
+
+    /** @var int */
     protected $totalModulesMemory = 0;
+
+    /** @var float */
     protected $totalHooksTime = 0;
+
+    /** @var int */
     protected $totalHooksMemory = 0;
+
+    /** @var float */
     protected $startTime = 0;
+
+    /** @var int */
+    protected $totalCacheSize = 0;
 
     protected static $instance = null;
 
@@ -159,7 +188,8 @@ class Profiler
      */
     public function interceptModule(array $params)
     {
-        $this->modulesPerfs[] = $params;
+        $this->modulesPerfs[$params['module']][] = $params;
+
         $this->totalModulesTime += $params['time'];
         $this->totalModulesMemory += $params['memory'];
     }
@@ -194,7 +224,7 @@ class Profiler
         // Sum querying time
         $queries = Db::getInstance()->queries;
         uasort($queries, [$this, 'sortByQueryTime']);
-        foreach ($queries as $data) {
+        foreach ($queries as $id => $data) {
             $this->totalQueryTime += $data['time'];
 
             $queryRow = [
@@ -205,6 +235,7 @@ class Profiler
                 'rows' => 1,
                 'group_by' => false,
                 'stack' => [],
+                'id' => $id,
             ];
 
             if (preg_match('/^\s*select\s+/i', $data['query'])) {
@@ -213,8 +244,12 @@ class Profiler
                     $queryRow['filesort'] = true;
                 }
 
-                foreach ($explain as $row) {
-                    $queryRow['rows'] *= $row['rows'];
+                if (is_array($explain)) {
+                    foreach ($explain as $row) {
+                        $queryRow['rows'] *= (int) $row['rows'];
+                    }
+                } else {
+                    $queryRow['rows'] = 'N/A';
                 }
 
                 if (stristr($data['query'], 'group by') && !preg_match('/(avg|count|min|max|group_concat|sum)\s*\(/i', $data['query'])) {
@@ -224,7 +259,7 @@ class Profiler
 
             array_shift($data['stack']);
             foreach ($data['stack'] as $call) {
-                $queryRow['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))) . ':' . $call['line'];
+                $queryRow['stack'][] = str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))) . ':' . $call['line'] . ' (' . $call['function'] . ')';
             }
 
             $this->queries[] = $queryRow;
@@ -234,6 +269,37 @@ class Profiler
         arsort(Db::getInstance()->tables);
         arsort(Db::getInstance()->uniqQueries);
         uasort($this->hooksPerfs, [$this, 'sortByQueryTime']);
+    }
+
+    /**
+     * Format performance details for modules
+     *
+     * @return array
+     */
+    public function getFormattedModulePerfs(): array
+    {
+        $formattedOutput = [];
+        foreach ($this->modulesPerfs as $moduleName => $perfs) {
+            $formattedOutput[$moduleName] = [
+                'total_time' => array_reduce(
+                    $perfs,
+                    function (&$res, $item) {
+                        return $res + $item['time'];
+                    },
+                    0
+                ),
+                'total_memory' => array_reduce(
+                    $perfs,
+                    function (&$res, $item) {
+                        return $res + $item['memory'];
+                    },
+                    0
+                ),
+                'details' => $perfs,
+            ];
+        }
+
+        return $formattedOutput;
     }
 
     /**
@@ -274,7 +340,7 @@ class Profiler
                 'totalHooksMemory' => $this->totalHooksMemory,
             ],
             'modules' => [
-                'perfs' => $this->modulesPerfs,
+                'perfs' => $this->getFormattedModulePerfs(),
                 'totalHooksTime' => $this->totalModulesTime,
                 'totalHooksMemory' => $this->totalModulesMemory,
             ],

@@ -55,7 +55,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CurrencyGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
-use PrestaShop\PrestaShop\Core\Localization\CLDR\Currency;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository as CldrLocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
@@ -102,9 +101,9 @@ class CurrencyController extends FrameworkBundleAdminController
     }
 
     /**
-     * Provides filters functionality.
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -193,11 +192,19 @@ class CurrencyController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', [
+        $templateVars = [
             'isShopFeatureEnabled' => $multiStoreFeature->isUsed(),
             'currencyForm' => $currencyForm->createView(),
-            'languages' => $this->getLanguagesData($currencyForm->getData()['iso_code']),
-        ]);
+        ];
+        try {
+            $languageData = $this->getLanguagesData($currencyForm->getData()['iso_code']);
+            $templateVars['languages'] = $languageData;
+        } catch (Exception $e) {
+            $templateVars['languageDataError'] = $e->getMessage();
+            $templateVars['languages'] = [];
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Currency/edit.html.twig', $templateVars);
     }
 
     /**
@@ -573,11 +580,11 @@ class CurrencyController extends FrameworkBundleAdminController
                     'Admin.International.Notification'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_TOGGLE => $this->trans(
-                    'You must select at least one element to perform a bulk action.',
+                    'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
                 ),
                 CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
-                    'You must select at least one element to perform a bulk action.',
+                    'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
                 ),
             ],

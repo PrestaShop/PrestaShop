@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add address page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddAddress extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add address page
+   */
   constructor() {
     super();
 
@@ -33,11 +42,12 @@ class AddAddress extends BOBasePage {
 
   /**
    * Fill form for add/edit address
-   * @param page
-   * @param addressData
-   * @returns {Promise<string>}
+   * @param page {Page} Browser tab
+   * @param addressData {AddressData} Data to set on new address form
+   * @param save {boolean} True if we need to save the new address, false if not
+   * @returns {Promise<?string>}
    */
-  async createEditAddress(page, addressData) {
+  async createEditAddress(page, addressData, save = true) {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
@@ -54,14 +64,28 @@ class AddAddress extends BOBasePage {
     await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
+
     // Save address
+    if (save) {
+      return this.saveAddress(page);
+    }
+
+    return null;
+  }
+
+  /**
+   * Save address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async saveAddress(page) {
     await this.clickAndWaitForNavigation(page, this.saveAddressButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Get selected country by default in form
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getSelectedCountry(page) {

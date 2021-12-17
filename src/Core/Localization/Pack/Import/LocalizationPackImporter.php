@@ -94,7 +94,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
 
         $pack = null;
 
-        if ($config->shouldDownloadPackData() || $this->configuration->get('_PS_HOST_MODE_')) {
+        if ($config->shouldDownloadPackData()) {
             $pack = $this->remoteLocalizationPackLoader->getLocalizationPack(
                 $config->getCountryIsoCode()
             );

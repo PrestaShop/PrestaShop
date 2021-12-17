@@ -96,6 +96,7 @@ final class ContactFormDataProvider implements FormDataProviderInterface
 
         return [
             'shop_association' => $shopIds,
+            'is_messages_saving_enabled' => false,
         ];
     }
 }

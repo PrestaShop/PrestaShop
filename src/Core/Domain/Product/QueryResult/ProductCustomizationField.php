@@ -31,8 +31,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
  */
 class ProductCustomizationField
 {
-    const TYPE_FILE = 0;
-    const TYPE_TEXT = 1;
+    public const TYPE_FILE = 0;
+    public const TYPE_TEXT = 1;
 
     /**
      * @var int

@@ -4,14 +4,17 @@
   font-size: 1em;
   line-height: 2.286em;
   cursor: pointer;
-  background: #fff;
+  background: $white;
+
   &.bordered {
     border: $gray-light 1px solid;
   }
+
   .dropdown-label {
     flex-grow: 1;
     padding: 0 0.5em;
   }
+
   .arrow-down {
     position: relative;
     font-size: 1.8em;
@@ -19,6 +22,7 @@
     color: $gray-medium;
     cursor: pointer;
   }
+
   > .ps-dropdown-menu {
     z-index: 1;
     width: 100%;
@@ -46,12 +50,15 @@
 
       .dropdown-item {
         padding: 10px;
+
         &.selected {
           color: $gray-light;
         }
+
         &.selected span {
           color: $gray-light;
         }
+
         span {
           padding: 0.25rem;
           font-size: 0.75rem;
@@ -59,11 +66,11 @@
         }
 
         &:hover {
-          color: #fff;
+          color: $white;
           background-color: $primary;
 
           span {
-            color: #fff;
+            color: $white;
           }
         }
       }

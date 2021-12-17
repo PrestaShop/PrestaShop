@@ -87,6 +87,7 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
             'precision' => Precision::DEFAULT_PRECISION,
             'exchange_rate' => ExchangeRate::DEFAULT_RATE,
             'shop_association' => $this->contextShopIds,
+            'active' => true,
         ];
     }
 }

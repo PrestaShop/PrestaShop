@@ -34,10 +34,10 @@ class FeatureConstraintException extends FeatureException
     /**
      * Code is used when feature does not have name.
      */
-    const EMPTY_NAME = 1;
+    public const EMPTY_NAME = 1;
 
     /**
      * Used when feature name is invalid.
      */
-    const INVALID_NAME = 2;
+    public const INVALID_NAME = 2;
 }

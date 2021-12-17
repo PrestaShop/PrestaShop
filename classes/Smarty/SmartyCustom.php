@@ -109,7 +109,7 @@ class SmartyCustomCore extends Smarty
     {
         $this->check_compile_cache_invalidation();
 
-        return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+        return parent::fetch($template, $cache_id, $compile_id, $parent);
     }
 
     /**
@@ -129,7 +129,7 @@ class SmartyCustomCore extends Smarty
      * Handle the lazy template cache invalidation.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
+     * @param string|array|object|null $cache_id cache id
      * @param string $compile_id compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)
@@ -272,7 +272,7 @@ class SmartyCustomCore extends Smarty
      * @param string $cache_id cache id
      * @param string $compile_id compile id
      *
-     * @return bool
+     * @return bool|int
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {

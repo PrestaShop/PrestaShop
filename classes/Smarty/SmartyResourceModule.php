@@ -31,6 +31,16 @@
  */
 class SmartyResourceModuleCore extends Smarty_Resource_Custom
 {
+    /**
+     * @var array<string>
+     */
+    public $paths;
+
+    /**
+     * @var bool
+     */
+    public $isAdmin;
+
     public function __construct(array $paths, $isAdmin = false)
     {
         $this->paths = $paths;
@@ -48,6 +58,7 @@ class SmartyResourceModuleCore extends Smarty_Resource_Custom
     {
         foreach ($this->paths as $path) {
             if (Tools::file_exists_cache($file = $path . $name)) {
+                /* @phpstan-ignore-next-line */
                 if (_PS_MODE_DEV_) {
                     $source = implode('', [
                         '<!-- begin ' . $file . ' -->',

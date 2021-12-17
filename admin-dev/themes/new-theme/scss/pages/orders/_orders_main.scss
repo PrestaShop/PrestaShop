@@ -12,6 +12,11 @@
     word-break: normal;
   }
 
+  // Do not break order status change button
+  .column-osname .btn {
+    white-space: nowrap;
+  }
+
   .order-preview-content {
     .details th,
     .product th,
@@ -21,11 +26,13 @@
       padding-bottom: 3.2px;
       border: none;
     }
+
     .details td,
     .product td {
       padding-top: 0;
       padding-bottom: 0;
     }
+
     .product th {
       background-color: #f8f8f8;
     }
@@ -49,6 +56,7 @@
   input[type="number"] {
     width: 80px;
   }
+
   .order-product-pagination {
     display: flex;
     flex-direction: row;
@@ -96,13 +104,12 @@
   margin-top: 8px;
 }
 
-$order-block-background-color: #f8f8f8 !default;
-
 .info-block {
   padding-top: 18px;
   padding-right: 18px;
   padding-bottom: 16px;
   padding-left: 18px;
+  background-color: $info-block-background;
 
   & &-col {
     > .row {
@@ -138,7 +145,7 @@ $order-block-background-color: #f8f8f8 !default;
 
 .messages-block {
   padding: 3rem 0;
-  background-color: $order-block-background-color;
+  background-color: $info-block-background;
   $private-message-color: #7a8a8f;
 
   .employee-icon {
@@ -148,6 +155,7 @@ $order-block-background-color: #f8f8f8 !default;
     }
     color: #36b9d7;
   }
+
   .employee-icon--private {
     &::before {
       font-family: "Material Icons", sans-serif;
@@ -166,13 +174,15 @@ $order-block-background-color: #f8f8f8 !default;
     @include border-radius(5px);
 
     &.customer-message {
-      background-color: #fff;
+      background-color: $white;
     }
+
     &.employee-message {
-      background-color: #d3f1f7;
+      background-color: $primary-disabled;
     }
+
     &.employee-message--private {
-      color: #fff;
+      color: $white;
       background-color: $private-message-color;
     }
   }
@@ -220,6 +230,7 @@ $order-block-background-color: #f8f8f8 !default;
     padding: 0;
     background-color: inherit;
   }
+
   .modal-body {
     padding: 0;
   }
@@ -278,6 +289,7 @@ td .editProductInvoice {
     display: flex;
     margin-top: 8px;
   }
+
   .form-group {
     width: max-content;
   }
@@ -362,9 +374,11 @@ td.cancel-product-element {
           max-width: 80px;
           height: 35px;
         }
+
         .input-group-append {
           height: 35px;
         }
+
         .max-refund {
           flex-basis: 100%;
           padding-left: 10px;
@@ -382,7 +396,7 @@ td.cancel-product-element {
 
 .voucher-refund-type-negative-error {
   display: none;
-  color: $color-error;
+  color: $danger;
 }
 
 input.refund-quantity {
@@ -405,4 +419,23 @@ input#partial_refund_shipping {
 .cellProductActions .btn:hover,
 .discountList .btn:hover {
   color: $primary;
+}
+
+.spinner-order-products-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: $white;
+
+  .spinner {
+    position: relative;
+    top: 50%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+  }
 }

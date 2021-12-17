@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
  */
 class LocalizedTags
 {
-    const VALID_TAG_PATTERN = '/^[^<>={}]*$/u';
+    public const VALID_TAG_PATTERN = '/^[^<>={}]*$/u';
 
     /**
      * @var LanguageId

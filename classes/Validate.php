@@ -187,7 +187,7 @@ class ValidateCore
             new CustomerName(),
         ]);
 
-        return (count($violations) !== 0) ? 0 : 1;
+        return count($violations) === 0;
     }
 
     /**
@@ -510,21 +510,6 @@ class ValidateCore
     }
 
     /**
-     * Check for password validity.
-     *
-     * @param string $passwd Password to validate
-     * @param int $size
-     *
-     * @return bool Validity is ok or not
-     *
-     * @deprecated 1.7.0
-     */
-    public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
-    {
-        return self::isPlaintextPassword($passwd, $size);
-    }
-
-    /**
      * Check if plaintext password is valid
      * Size is limited by `password_hash()` (72 chars).
      *
@@ -548,7 +533,6 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *
@@ -654,7 +638,7 @@ class ValidateCore
     /**
      * Check for boolean validity.
      *
-     * @param bool $bool Boolean to validate
+     * @param bool|string|null $bool Boolean to validate
      *
      * @return bool Validity is ok or not
      */
@@ -757,7 +741,7 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return bool Validity is ok or not
+     * @return int Validity is ok or not
      */
     public static function isOrderWay($way)
     {
@@ -817,7 +801,7 @@ class ValidateCore
     /**
      * Check for an integer validity.
      *
-     * @param int $value Integer to validate
+     * @param int|bool $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -829,13 +813,13 @@ class ValidateCore
     /**
      * Check for an integer validity (unsigned).
      *
-     * @param int $value Integer to validate
+     * @param mixed $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
     public static function isUnsignedInt($value)
     {
-        return (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
     }
 
     /**
@@ -1125,7 +1109,7 @@ class ValidateCore
     /**
      * Check for PHP serialized data.
      *
-     * @param string $data Serialized data to validate
+     * @param string|null $data Serialized data to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1151,7 +1135,7 @@ class ValidateCore
     /**
      * Check for Latitude/Longitude.
      *
-     * @param string $data Coordinate to validate
+     * @param string|null $data Coordinate to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1187,15 +1171,17 @@ class ValidateCore
     /**
      * @param array $ids
      *
-     * @return bool return true if the array contain only unsigned int value
+     * @return bool return true if the array contain only unsigned int value and not empty
      */
     public static function isArrayWithIds($ids)
     {
-        if (count($ids)) {
-            foreach ($ids as $id) {
-                if ($id == 0 || !Validate::isUnsignedInt($id)) {
-                    return false;
-                }
+        if (!is_array($ids) || count($ids) < 1) {
+            return false;
+        }
+
+        foreach ($ids as $id) {
+            if ($id == 0 || !Validate::isUnsignedInt($id)) {
+                return false;
             }
         }
 

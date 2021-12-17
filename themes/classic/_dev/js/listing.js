@@ -101,6 +101,8 @@ $(document).ready(() => {
       min: 1,
       max: 1000000,
     });
+
+    $(prestashop.themeSelectors.touchspin).off('touchstart.touchspin');
   };
 
   const move = (direction) => {
@@ -196,10 +198,12 @@ $(document).ready(() => {
     );
   });
 
-  window.addEventListener('popstate', (e) => {
-    const {state} = e;
-    window.location.href = state && state.current_url ? state.current_url : history;
-  });
+  if ($(prestashop.themeSelectors.listing.list).length) {
+    window.addEventListener('popstate', (e) => {
+      const {state} = e;
+      window.location.href = state && state.current_url ? state.current_url : history;
+    });
+  }
 
   $('body').on(
     'change',

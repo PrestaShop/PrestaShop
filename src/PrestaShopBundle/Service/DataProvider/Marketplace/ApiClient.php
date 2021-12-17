@@ -27,20 +27,31 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
+use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 
 class ApiClient
 {
+    /**
+     * @var Client
+     */
     private $addonsApiClient;
+
+    /**
+     * @var array<string, string>
+     */
     private $queryParameters = [
         'format' => 'json',
     ];
     private $defaultQueryParameters;
 
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Tools
+     * @param Client $addonsApiClient
+     * @param string $locale
+     * @param string|false $isoCode
+     * @param null $toolsAdapter
+     * @param string $domain
+     * @param string $shopVersion
      */
-    private $toolsAdapter;
-
     public function __construct(
         Client $addonsApiClient,
         $locale,
@@ -50,7 +61,6 @@ class ApiClient
         $shopVersion
     ) {
         $this->addonsApiClient = $addonsApiClient;
-        $this->toolsAdapter = $toolsAdapter;
 
         list($isoLang) = explode('-', $locale);
 
@@ -61,10 +71,11 @@ class ApiClient
         $this->defaultQueryParameters = $this->queryParameters;
     }
 
+    /**
+     * @Deprecated use Client constructor instead
+     */
     public function setSslVerification($verifySsl)
     {
-        $this->toolsAdapter->refreshCaCertFile();
-        $this->addonsApiClient->setDefaultOption('verify', $verifySsl);
     }
 
     /**
@@ -100,17 +111,6 @@ class ApiClient
         return json_decode($response);
     }
 
-    public function getNativesModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('native')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->modules) ? $responseArray->modules : [];
-    }
-
     public function getPreInstalledModules()
     {
         $response = $this->setMethod('listing')
@@ -119,36 +119,6 @@ class ApiClient
         $responseDecoded = json_decode($response);
 
         return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
-    }
-
-    public function getMustHaveModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('must-have')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->modules) ? $responseArray->modules : [];
-    }
-
-    /**
-     * Prepare and call API for PrestaTrust integrity and property module details.
-     *
-     * @param string $hash Hash of module files
-     * @param string $sc_address Smart contract (Module licence)
-     *
-     * @return object List of checks made and their results
-     */
-    public function getPrestaTrustCheck($hash, $sc_address)
-    {
-        $this->queryParameters['module_hash'] = $hash;
-        $this->queryParameters['sc_address'] = $sc_address;
-
-        $response = $this->setMethod('trust')
-            ->getResponse();
-
-        return json_decode($response);
     }
 
     public function getServices()
@@ -191,31 +161,16 @@ class ApiClient
      * Call API for module ZIP content (= download).
      *
      * @param int $moduleId
+     * @param string $moduleChannel
      *
      * @return string binary content (zip format)
      */
-    public function getModuleZip($moduleId)
+    public function getModuleZip($moduleId, string $moduleChannel = AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE)
     {
         return $this->setMethod('module')
             ->setModuleId($moduleId)
+            ->setModuleChannel($moduleChannel)
             ->getPostResponse();
-    }
-
-    public function getCustomerModules($userMail, $password)
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('customer')
-            ->setUserMail($userMail)
-            ->setPassword($password)
-            ->getPostResponse();
-
-        $responseArray = json_decode($response);
-
-        if (!empty($responseArray->modules)) {
-            return $responseArray->modules;
-        }
-
-        return [];
     }
 
     /**
@@ -242,7 +197,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->get(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -252,7 +207,7 @@ class ApiClient
     {
         return (string) $this->addonsApiClient
             ->post(
-                null,
+                '',
                 ['query' => $this->queryParameters,
                 ]
             )->getBody();
@@ -294,6 +249,18 @@ class ApiClient
     public function setVersion($version)
     {
         $this->queryParameters['version'] = $version;
+
+        return $this;
+    }
+
+    /**
+     * @param string $moduleChannel
+     *
+     * @return self
+     */
+    public function setModuleChannel(string $moduleChannel): self
+    {
+        $this->queryParameters['channel'] = $moduleChannel;
 
         return $this;
     }
@@ -340,7 +307,11 @@ class ApiClient
         return $this;
     }
 
-    /*
-     * END OF REQUEST PARAMETER SETTERS.
+    /**
+     * @return array<string, string>
      */
+    public function getQueryParameters(): array
+    {
+        return $this->queryParameters;
+    }
 }

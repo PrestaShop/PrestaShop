@@ -2,6 +2,7 @@
 
 .tokenfield {
   height: auto;
+
   input.token-input[type="text"] {
     display: inline-block;
     max-width: 100%;
@@ -15,7 +16,7 @@
     padding: 0.4rem;
     margin: 0.1rem;
     line-height: 1;
-    color: #fff;
+    color: $white;
     text-align: center;
     vertical-align: baseline;
     background-color: $brand-primary;
@@ -29,8 +30,8 @@
     }
 
     .close {
-      margin: 0 .4rem;
-      font-size: .875rem;
+      margin: 0 0.4rem;
+      font-size: 0.875rem;
       font-weight: 400;
       color: $gray-dark;
       text-decoration: none;
@@ -49,7 +50,7 @@
   }
 }
 
-.locale-input-group {
+.locale-input-group:not(.d-flex) {
   .js-taggable-field {
     width: 80%;
   }

@@ -1,0 +1,170 @@
+@media print {
+  * {
+    font-family: Georgia, "Times New Roman", Times, serif !important;
+    color: #000 !important;
+    text-shadow: none !important;
+    background: transparent !important;
+    border-color: #000 !important;
+    @include box-shadow(none!important);
+  }	// commons
+  [class^="icon-"],
+  [class^="process-icon-"] {
+    font-family: $icon-font-family !important;
+  }
+
+  #header,
+  #footer,
+  #nav-bar,
+  #nav-topbar,
+  #nav-sidebar,
+  .hidden-print {
+    display: none !important;
+  }
+
+  .visible-print {
+    display: block !important;
+  }
+
+  hr {
+    display: none !important;
+  }
+
+  #main {
+    float: none !important;
+    width: 8.5in !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+
+    #content.bootstrap {
+      padding: 0 !important;
+      margin: 0 !important;
+
+      .page-head {
+        display: none !important;
+      }
+
+      .panel {
+        padding: 0 !important;
+        margin: 0 0 40px !important;
+        clear: both !important;
+        border: none !important;
+        page-break-inside: avoid !important;
+        @include box-shadow(none!important);
+
+        .panel-heading {
+          margin: 0 0 20px !important;
+        }
+
+        .panel,
+        .well {
+          margin: 0 !important;
+        }
+      }
+
+      .tab-pane {
+        margin-bottom: 20px !important;
+      }
+
+      .row {
+        margin-bottom: 20px !important;
+      }
+
+      .btn {
+        display: none !important;
+      }
+
+      .panel-heading-action {
+        display: none;
+      }
+
+      .nav-tabs li a {
+        display: none;
+        background-color: #fff !important;
+        border-bottom-color: #fff !important;
+      }
+
+      .tab-content > .tab-pane {
+        display: block !important;
+        opacity: 1 !important;
+      }
+
+      h4 {
+        margin: 0 0 10px !important;
+      }			// orders
+      #shipping {
+        .form-horizontal {
+          padding-bottom: 10px !important;
+        }
+      }
+
+      #addressShipping {
+        float: left !important;
+        width: 49% !important;
+        margin-bottom: 0 !important;
+      }
+
+      #addressInvoice {
+        float: right !important;
+        width: 49% !important;
+        margin-bottom: 0 !important;
+      }
+
+      #status {
+        tr:first-child td {
+          font-weight: 700 !important;
+        }
+      }
+
+      .table {
+        margin-bottom: 10px !important;
+        border: solid 1px #000 !important;
+
+        th {
+          font-style: italic;
+        }
+      }
+
+      .label-inactive {
+        font-size: 11pt !important;
+        text-decoration: line-through !important;
+
+        i {
+          display: none !important;
+        }
+      }
+
+      .kpi-container.panel {
+        margin: 30px 0 20px !important;
+        border: solid 1px #000 !important;
+
+        .box-stats {
+          width: 25% !important;
+          height: auto !important;
+          padding: 10px 0 !important;
+          font-size: 8pt !important;
+
+          i {
+            font-size: 20pt !important;
+          }
+        }
+      }
+
+      .alert {
+        border: 1px solid #000 !important;
+
+        &::before {
+          color: #000 !important;
+        }
+      }
+
+      .table-responsive {
+        margin: 0 !important;
+        border: none !important;
+      }
+
+      .panel-total td {
+        font-size: 13pt !important;
+      }
+    }
+  }
+}

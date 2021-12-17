@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_sharebuttons/ps_sharebuttons.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5a95a425f74314a96f13a2f136992178">
+        <source>Share</source>
+        <target>Share</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="3746d4aa96f19672260a424d76729dd1">
+        <source>Tweet</source>
+        <target>Tweet</target>
+        <note>Line: 208</note>
+      </trans-unit>
+      <trans-unit id="5b2c8bfd1bc974966209b7be1cb51a72">
+        <source>Google+</source>
+        <target>Google+</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="86709a608bd914b28221164e6680ebf7">
+        <source>Pinterest</source>
+        <target>Pinterest</target>
+        <note>Line: 216</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

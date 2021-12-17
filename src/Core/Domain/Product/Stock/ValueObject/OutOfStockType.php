@@ -38,19 +38,19 @@ class OutOfStockType
     /**
      * Product is not available for order when out of stock.
      */
-    const OUT_OF_STOCK_NOT_AVAILABLE = 0;
+    public const OUT_OF_STOCK_NOT_AVAILABLE = 0;
 
     /**
      * Product is available for order even when out of stock.
      */
-    const OUT_OF_STOCK_AVAILABLE = 1;
+    public const OUT_OF_STOCK_AVAILABLE = 1;
 
     /**
      * Product availability when out of stock is define by shop settings.
      */
-    const OUT_OF_STOCK_DEFAULT = 2;
+    public const OUT_OF_STOCK_DEFAULT = 2;
 
-    const ALLOWED_OUT_OF_STOCK_TYPES = [
+    public const ALLOWED_OUT_OF_STOCK_TYPES = [
         self::OUT_OF_STOCK_AVAILABLE,
         self::OUT_OF_STOCK_NOT_AVAILABLE,
         self::OUT_OF_STOCK_DEFAULT,

@@ -4,19 +4,22 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const zonesPage = require('@pages/BO/international/locations');
 const countriesPage = require('@pages/BO/international/locations/countries');
 const addCountryPage = require('@pages/BO/international/locations/countries/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
+const foNewAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import data
 const CountryFaker = require('@data/faker/country');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -48,7 +51,12 @@ const editCountryData = new CountryFaker(
 
 let numberOfCountries = 0;
 
-describe('CRUD country', async () => {
+/*
+Create country
+Update country
+Delete country
+ */
+describe('BO - International - Countries : CRUD country', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -63,7 +71,7 @@ describe('CRUD country', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'International>Locations\' page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -78,7 +86,7 @@ describe('CRUD country', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-  it('should go to countries page', async function () {
+  it('should go to \'Countries\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCountriesPage', baseContext);
 
     await zonesPage.goToSubTabCountries(page);
@@ -135,7 +143,7 @@ describe('CRUD country', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_1', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -143,6 +151,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -154,8 +163,8 @@ describe('CRUD country', async () => {
 
       await foAddressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await foAddressesPage.isCountryExist(page, createCountryData.name);
-      await expect(isCountryExist, 'Country does not exist').to.be.true;
+      const countryExist = await foNewAddressesPage.countryExist(page, createCountryData.name);
+      await expect(countryExist, 'Country does not exist').to.be.true;
     });
 
     it('should sign out from FO', async function () {
@@ -165,9 +174,7 @@ describe('CRUD country', async () => {
       const isCustomerConnected = await foAddressesPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
-  });
 
-  describe('Update country', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_1', baseContext);
 
@@ -177,7 +184,9 @@ describe('CRUD country', async () => {
       const pageTitle = await countriesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
+  });
 
+  describe('Update country', async () => {
     it(`should filter country by name '${createCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToUpdate', baseContext);
 
@@ -233,7 +242,7 @@ describe('CRUD country', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO_2', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
@@ -241,6 +250,7 @@ describe('CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -252,12 +262,10 @@ describe('CRUD country', async () => {
 
       await foAddressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await foAddressesPage.isCountryExist(page, editCountryData.name);
-      await expect(isCountryExist, 'Country exist').to.be.false;
+      const countryExist = await foNewAddressesPage.countryExist(page, editCountryData.name);
+      await expect(countryExist, 'Country exist').to.be.false;
     });
-  });
 
-  describe('Delete country by bulk actions', async () => {
     it('should go back to BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo_2', baseContext);
 
@@ -267,7 +275,9 @@ describe('CRUD country', async () => {
       const pageTitle = await countriesPage.getPageTitle(page);
       await expect(pageTitle).to.contains(countriesPage.pageTitle);
     });
+  });
 
+  describe('Delete country by bulk actions', async () => {
     it(`should filter country by name '${editCountryData.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 

@@ -143,7 +143,7 @@ class CartControllerCore extends FrontController
             $presentedCart['products'] = $this->get('prestashop.core.filter.front_end_object.product_collection')
                 ->filter($presentedCart['products']);
 
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(json_encode([
                 'success' => true,
                 'id_product' => $this->id_product,
                 'id_product_attribute' => $this->id_product_attribute,
@@ -155,7 +155,7 @@ class CartControllerCore extends FrontController
 
             return;
         } else {
-            $this->ajaxRender(Tools::jsonEncode([
+            $this->ajaxRender(json_encode([
                 'hasError' => true,
                 'errors' => $this->errors,
                 'quantity' => $productQuantity,
@@ -173,7 +173,7 @@ class CartControllerCore extends FrontController
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'cart_detailed' => $this->render('checkout/_partials/cart-detailed'),
             'cart_detailed_totals' => $this->render('checkout/_partials/cart-detailed-totals'),
             'cart_summary_items_subtotal' => $this->render('checkout/_partials/cart-summary-items-subtotal'),
@@ -224,7 +224,7 @@ class CartControllerCore extends FrontController
         }
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'success' => true,
             'productUrl' => $url,
         ]));
@@ -237,8 +237,8 @@ class CartControllerCore extends FrontController
 
     protected function updateCart()
     {
-        // Update the cart ONLY if $this->cookies are available, in order to avoid ghost carts created by bots
-        if ($this->context->cookie->exists()
+        // Update the cart ONLY if it's not a bot, in order to avoid ghost carts
+        if (!Connection::isBot()
             && !$this->errors
             && !($this->context->customer->isLogged() && !$this->isTokenValid())
         ) {
@@ -306,7 +306,7 @@ class CartControllerCore extends FrontController
         if (count($customization_product)) {
             $product = new Product((int) $this->id_product);
             if ($this->id_product_attribute > 0) {
-                $minimal_quantity = (int) Attribute::getAttributeMinimalQty($this->id_product_attribute);
+                $minimal_quantity = (int) ProductAttribute::getAttributeMinimalQty($this->id_product_attribute);
             } else {
                 $minimal_quantity = (int) $product->minimal_quantity;
             }
@@ -504,7 +504,7 @@ class CartControllerCore extends FrontController
                 if ($update_quantity < 0) {
                     // If product has attribute, minimal quantity is set with minimal quantity of attribute
                     $minimal_quantity = ($this->id_product_attribute)
-                        ? Attribute::getAttributeMinimalQty($this->id_product_attribute)
+                        ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
                         : $product->minimal_quantity;
                     $this->{$ErrorKey}[] = $this->trans(
                         'You must add %quantity% minimum quantity',
@@ -533,7 +533,7 @@ class CartControllerCore extends FrontController
     }
 
     /**
-     * @param $productInCart
+     * @param array $productInCart
      *
      * @return bool
      */
@@ -579,7 +579,7 @@ class CartControllerCore extends FrontController
     {
         if (($this->id_product_attribute)) {
             return !Product::isAvailableWhenOutOfStock($product->out_of_stock)
-                && !Attribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
+                && !ProductAttribute::checkAttributeQty($this->id_product_attribute, $qtyToCheck);
         } elseif (Product::isAvailableWhenOutOfStock($product->out_of_stock)) {
             return false;
         }

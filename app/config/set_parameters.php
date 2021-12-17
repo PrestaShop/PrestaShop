@@ -27,14 +27,6 @@
 use PrestaShopBundle\Install\Upgrade;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
-if (!file_exists($parametersFilepath)) {
-    // let's check first if there's some old config files which could be migrated
-    if (Upgrade::migrateSettingsFile() === false) {
-        // nothing to migrate ? return
-        return;
-    }
-}
-
 $parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
@@ -50,12 +42,39 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-if ($container instanceof \Symfony\Component\DependencyInjection\Container) {
+if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
     foreach ($parameters['parameters'] as $key => $value) {
         $container->setParameter($key, $value);
     }
 
-    $container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+    $driver = 'array';
+    $cacheType = [
+        'CacheMemcached' => ['memcached'],
+        'CacheApc' => ['apcu'],
+    ];
+    $adapters = [
+        'array' => 'cache.adapter.array',
+        'memcached' => 'cache.adapter.memcached',
+        'apcu' => 'cache.adapter.apcu'
+    ];
+
+    if (isset(
+            $parameters['parameters']['ps_cache_enable'],
+            $parameters['parameters']['ps_caching'],
+            $cacheType[$parameters['parameters']['ps_caching']]
+        )
+        && true === $parameters['parameters']['ps_cache_enable']
+    ) {
+        foreach ($cacheType[$parameters['parameters']['ps_caching']] as $type) {
+            if (extension_loaded($type)) {
+                $driver = $type;
+                break;
+            }
+        }
+    }
+    $container->setParameter('cache.driver', $driver);
+    $container->setParameter('cache.driver.doctrine', $driver . '_doctrine');
+    $container->setParameter('cache.adapter', $adapters[$driver]);
 
     // Parameter used only in dev and test env
     $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');

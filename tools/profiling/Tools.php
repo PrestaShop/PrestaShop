@@ -31,7 +31,7 @@ class Tools extends ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link) {
+        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false) {
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }

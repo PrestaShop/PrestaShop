@@ -29,7 +29,7 @@
  */
 class TabCore extends ObjectModel
 {
-    /** @var string|array<string> Displayed name */
+    /** @var string|array<int, string> Displayed name */
     public $name;
 
     /** @var string Class and file name */
@@ -52,11 +52,14 @@ class TabCore extends ObjectModel
     /** @var bool enabled */
     public $enabled = true;
 
-    /** @var int hide_host_mode */
-    public $hide_host_mode = false;
-
     /** @var string Icon font */
     public $icon;
+
+    /** @var string|null Wording to use for the display name */
+    public $wording;
+
+    /** @var string|null Wording domain to use for the display name */
+    public $wording_domain;
 
     /**
      * @deprecated Since 1.7.7
@@ -78,8 +81,9 @@ class TabCore extends ObjectModel
             'route_name' => ['type' => self::TYPE_STRING, 'required' => false, 'size' => 256],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'enabled' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
-            'hide_host_mode' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'icon' => ['type' => self::TYPE_STRING, 'size' => 64],
+            'wording' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
+            'wording_domain' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'allow_null' => true, 'size' => 255],
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64],
         ],
@@ -254,12 +258,10 @@ class TabCore extends ObjectModel
         if (!Cache::isStored($cacheId)) {
             /* Tabs selection */
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-                '
-				SELECT *
+                'SELECT *
 				FROM `' . _DB_PREFIX_ . 'tab` t
-				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl
-					ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				WHERE t.`id_tab` = ' . (int) $idTab . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
+				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
+				WHERE t.`id_tab` = ' . (int) $idTab
             );
             Cache::store($cacheId, $result);
 
@@ -309,7 +311,6 @@ class TabCore extends ObjectModel
 				SELECT t.*, tl.name
 				FROM `' . _DB_PREFIX_ . 'tab` t
 				LEFT JOIN `' . _DB_PREFIX_ . 'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = ' . (int) $idLang . ')
-				WHERE 1 ' . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '') . '
 				ORDER BY t.`position` ASC'
             );
 
@@ -346,7 +347,7 @@ class TabCore extends ObjectModel
     public static function getIdFromClassName($className)
     {
         $className = self::getClassName($className);
-        if (self::$_getIdFromClassName === null) {
+        if (empty(self::$_getIdFromClassName)) {
             self::$_getIdFromClassName = [];
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `' . _DB_PREFIX_ . 'tab`', true, false);
 
@@ -386,8 +387,8 @@ class TabCore extends ObjectModel
     /**
      * Get collection from module name.
      *
-     * @param $module string Module name
-     * @param null $idLang integer Language ID
+     * @param string $module Module name
+     * @param int|null $idLang integer Language ID
      *
      * @return array|PrestaShopCollection Collection of tabs (or empty array)
      */
@@ -410,7 +411,7 @@ class TabCore extends ObjectModel
     /**
      * Enabling tabs for module.
      *
-     * @param $module string Module Name
+     * @param string $module Module Name
      *
      * @return bool Status
      */
@@ -432,7 +433,7 @@ class TabCore extends ObjectModel
     /**
      * Disabling tabs for module.
      *
-     * @param $module string Module name
+     * @param string $module Module name
      *
      * @return bool Status
      */
@@ -454,8 +455,8 @@ class TabCore extends ObjectModel
     /**
      * Get Instance from tab class name.
      *
-     * @param $className string Name of tab class
-     * @param $idLang     integer id_lang
+     * @param string $className Name of tab class
+     * @param int|null $idLang id_lang
      *
      * @return Tab Tab object (empty if bad id or class name)
      */
@@ -485,9 +486,8 @@ class TabCore extends ObjectModel
      */
     public static function getNewLastPosition($idParent)
     {
-        return Db::getInstance()->getValue(
-            '
-			SELECT IFNULL(MAX(position),0)+1
+        return (int) Db::getInstance()->getValue(
+            'SELECT IFNULL(MAX(position), 0) + 1
 			FROM `' . _DB_PREFIX_ . 'tab`
 			WHERE `id_parent` = ' . (int) $idParent
         );
@@ -576,7 +576,7 @@ class TabCore extends ObjectModel
             }
         }
 
-        if (!isset($movedTab) || !isset($position)) {
+        if (!isset($movedTab)) {
             return false;
         }
         // < and > statements rather than BETWEEN operator
@@ -628,7 +628,7 @@ class TabCore extends ObjectModel
     {
         $adminTab = Tab::getTab((int) Context::getContext()->language->id, $idTab);
         $tabs[] = $adminTab;
-        if ($adminTab['id_parent'] > 0) {
+        if (!empty($adminTab['id_parent'])) {
             $tabs = Tab::recursiveTab($adminTab['id_parent'], $tabs);
         }
 
@@ -680,7 +680,6 @@ class TabCore extends ObjectModel
 			AND a.`delete` = 1
 			AND a.`add` = 1
 			AND t.`id_parent` != 0 AND t.`id_parent` != -1
-			' . (defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '') . '
 			ORDER BY t.`id_parent` ASC
 		');
     }

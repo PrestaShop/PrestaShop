@@ -56,10 +56,15 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryResult\CartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\ValueObject\CartId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\PackOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductCustomizationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use Product;
 use RuntimeException;
+use SpecificPrice;
 use State;
 use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -96,7 +101,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -132,9 +137,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -148,7 +151,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @When I add :quantity products :productName to the cart :cartReference
+     * @When /^I add (\d+) product(?:s)? "(.+)" to the cart "(.+)"$/
      *
      * @param int $quantity
      * @param string $productName
@@ -177,6 +180,78 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I update product :productName in the cart :cartReference to :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
+     */
+    public function updateProductPriceInCart(string $productName, string $cartReference, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $command = new AddSpecificPriceCommand(
+            $productId,
+            Reduction::TYPE_AMOUNT,
+            '0',
+            true,
+            $price,
+            1
+        );
+        $command->setCartId($cartId);
+        $command->setCustomerId((int) $cart->id_customer);
+
+        $this->getCommandBus()->handle($command);
+    }
+
+    /**
+     * @Then product :productName in cart :cartReference should have specific price :price
+     *
+     * @param string $productName
+     * @param string $cartReference
+     * @param float $price
+     */
+    public function checkCartProductSpecificPrice(string $productName, string $cartReference, float $price): void
+    {
+        $productId = $this->getProductIdByName($productName);
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+
+        $specificPriceId = SpecificPrice::exists(
+            $productId,
+            0,
+            0,
+            0,
+            0,
+            0,
+            $cart->id_customer,
+            SpecificPrice::ORDER_DEFAULT_FROM_QUANTITY,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            SpecificPrice::ORDER_DEFAULT_DATE,
+            false,
+            $cartId
+        );
+
+        if (!$specificPriceId) {
+            throw new RuntimeException(sprintf(
+                'Could not find specific price for product %s in car %s',
+                $productName,
+                $cartReference
+            ));
+        }
+
+        $specificPrice = new SpecificPrice($specificPriceId);
+        Assert::assertEquals(
+            $price,
+            $specificPrice->price
+        );
+        Assert::assertEquals('amount', $specificPrice->reduction_type);
+        Assert::assertTrue((bool) $specificPrice->reduction_tax);
+    }
+
+    /**
      * @When I update quantity of product :productName in the cart :cartReference to :quantity
      *
      * @param int $quantity
@@ -202,43 +277,69 @@ class CartFeatureContext extends AbstractDomainFeatureContext
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {
             $this->setLastException($e);
+        } catch (PackOutOfStockException $e) {
+            $this->setLastException($e);
         }
     }
 
     /**
-     * @When I add :quantity customized products with reference :productReference to the cart :reference
+     * @When /^(?:I )?add (\d+) customized products? with reference "(.+)" (with|without)? all its customizations to the cart "(.+)"$/
      */
-    public function addCustomizedProductToCarts(int $quantity, $productReference, $reference)
-    {
+    public function addCustomizedProductToCartsWithCustomization(
+        int $quantity,
+        string $productReference,
+        string $withCombinations,
+        string $reference
+    ) {
+        $hasCombinations = ($withCombinations === 'with');
+        $cartId = (int) SharedStorage::getStorage()->get($reference);
         $productId = (int) Product::getIdByReference($productReference);
         $product = new Product($productId);
         $customizationFields = $product->getCustomizationFieldIds();
-        $customizations = [];
-        foreach ($customizationFields as $customizationField) {
-            $customizationFieldId = (int) $customizationField['id_customization_field'];
-            if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
-                $customizations[$customizationFieldId] = 'Toto';
-            }
+        if (empty($customizationFields)) {
+            throw new Exception('The product has no customizables fields');
         }
 
-        $cartId = (int) SharedStorage::getStorage()->get($reference);
+        $customizationId = null;
+        if ($hasCombinations) {
+            $customizations = [];
+            foreach ($customizationFields as $customizationField) {
+                $customizationFieldId = (int) $customizationField['id_customization_field'];
+                if (Product::CUSTOMIZE_TEXTFIELD == $customizationField['type']) {
+                    $customizations[$customizationFieldId] = 'Toto';
+                }
+            }
 
-        /** @var CustomizationId $customizationId */
-        $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
-            $cartId,
-            $productId,
-            $customizations
-        ));
-
-        $this->getCommandBus()->handle(
-            new UpdateProductQuantityInCartCommand(
+            /** @var CustomizationId $customizationId */
+            $customizationId = $this->getCommandBus()->handle(new AddCustomizationCommand(
                 $cartId,
                 $productId,
-                $quantity,
-                null,
-                $customizationId->getValue()
-            )
-        );
+                $customizations
+            ));
+            $customizationId = $customizationId->getValue();
+        }
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductQuantityInCartCommand(
+                    $cartId,
+                    $productId,
+                    $quantity,
+                    null,
+                    $customizationId
+                )
+            );
+        } catch (Exception $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then I should get an error that the product is customizable and the customization is not provided
+     */
+    public function assertLastErrorIsProductCustomizationNotFoundException()
+    {
+        $this->assertLastErrorIs(ProductCustomizationNotFoundException::class);
     }
 
     /**
@@ -281,7 +382,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I select :countryIsoCode address as delivery and invoice address for customer :customerReference in cart :cartReference
-     * @Given cart :cartReference delivery and invoice address country for customer :customeReferenceis is :countryIsoCode
+     * @Given cart :cartReference delivery and invoice address country for customer :customerReference is :countryIsoCode
      *
      * @param string $countryIsoCode
      * @param string $customerReference
@@ -871,12 +972,20 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then I should get error that carrier is invalid
      */
-    public function assertLastErrorIsInvalidCarrier()
+    public function assertLastErrorIsInvalidCarrier(): void
     {
         $this->assertLastErrorIs(
             CartConstraintException::class,
             CartConstraintException::INVALID_CARRIER
         );
+    }
+
+    /**
+     * @Then I should get an error that you have the maximum quantity available for this pack
+     */
+    public function assertLastErrorMaxQuantityAvailableForThisProduct(): void
+    {
+        $this->assertLastErrorIs(PackOutOfStockException::class);
     }
 
     /**
@@ -945,7 +1054,13 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     private function getProductIdByName(string $productName)
     {
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $products = $this->getQueryBus()->handle(
+            new SearchProducts(
+                $productName,
+                1,
+                Context::getContext()->currency->iso_code
+            )
+        );
 
         if (empty($products)) {
             throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));
@@ -996,5 +1111,47 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         if ($cartTotal !== $expectedTotal) {
             throw new \RuntimeException(sprintf('Expects %s, got %s instead', $expectedTotal, $cartTotal));
         }
+    }
+
+    /**
+     * @When I create an empty anonymous cart :cartReference
+     *
+     * @param string $cartReference
+     */
+    public function createEmptyAnonymousCart(string $cartReference)
+    {
+        $cart = new Cart();
+        $cart->id_currency = 1;
+        $cart->id_guest = 1;
+        $cart->save();
+        SharedStorage::getStorage()->set($cartReference, (int) $cart->id);
+    }
+
+    /**
+     * @When I assign customer :customerReference to cart :cartReference
+     *
+     * @param string $customerReference
+     * @param string $cartReference
+     */
+    public function assignCustomerToCart(string $customerReference, string $cartReference)
+    {
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        $cart = new Cart($cartId);
+        $cart->id_guest = null;
+        $cart->id_customer = $customerId;
+        $cart->save();
+        Context::getContext()->cart = $cart;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

@@ -47,4 +47,5 @@ WORKDIR /tests/
 COPY ["./", "./"]
 
 # 7. Install dependencies
+RUN rm -rf node_modules
 RUN npm install

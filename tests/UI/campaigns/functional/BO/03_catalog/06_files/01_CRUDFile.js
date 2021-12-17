@@ -1,10 +1,14 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -14,9 +18,6 @@ const FileFaker = require('@data/faker/file');
 const dashboardPage = require('@pages/BO/dashboard');
 const filesPage = require('@pages/BO/catalog/files');
 const addFilePage = require('@pages/BO/catalog/files/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_files_CRUDFile';
 
@@ -32,7 +33,7 @@ Check download of file
 Update file
 Delete file
  */
-describe('Create, update and delete file', async () => {
+describe('BO - Catalog - Files : CRUD file', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -58,7 +59,7 @@ describe('Create, update and delete file', async () => {
   });
 
   // Go to files page
-  it('should go to files page', async function () {
+  it('should go to \'Catalog > Files\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToFilesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -101,7 +102,7 @@ describe('Create, update and delete file', async () => {
     });
   });
 
-  describe('Update File', async () => {
+  describe('Update file', async () => {
     it('should go to edit first file page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditFilePage', baseContext);
 

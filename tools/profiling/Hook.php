@@ -44,6 +44,52 @@ class Hook extends HookCore
             ]
         );
 
+        Profiler::getInstance()->interceptModule(
+            [
+                'module' => $module->name,
+                'method' => $method,
+                'time' => microtime(true) - $timeStart,
+                'memory' => memory_get_usage() - $memoryStart,
+            ]
+        );
+
+        return $result;
+    }
+
+    public static function coreRenderWidget($module, $registeredHookName, $params)
+    {
+        $timeStart = microtime(true);
+        $memoryStart = memory_get_usage();
+
+        $result = parent::coreRenderWidget($module, $registeredHookName, $params);
+
+        /*
+         * It's not a hook which has been triggered but
+         * it's a widget
+         */
+        if (empty($registeredHookName)) {
+            $registeredHookName = 'renderWidget';
+        }
+
+        Profiler::getInstance()->interceptHook(
+            $registeredHookName,
+            [
+                'module' => $module->name . ' (widget)',
+                'params' => $params,
+                'time' => microtime(true) - $timeStart,
+                'memory' => memory_get_usage() - $memoryStart,
+            ]
+        );
+
+        Profiler::getInstance()->interceptModule(
+            [
+                'module' => $module->name,
+                'method' => $registeredHookName,
+                'time' => microtime(true) - $timeStart,
+                'memory' => memory_get_usage() - $memoryStart,
+            ]
+        );
+
         return $result;
     }
 }

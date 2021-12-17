@@ -1,18 +1,26 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * View brands page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class ViewBrand extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on view brand page
+   */
   constructor() {
     super();
 
     // Selectors
     this.contentDiv = 'div.content-div';
-    this.addressesGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(2)`;
+    this.addressesGrid = 'div[data-role=addresses-card]';
     this.addressesGridHeader = `${this.addressesGrid} h3.card-header`;
     this.addressesTableBody = `${this.addressesGrid} .card-body table tbody`;
     this.addressesTableRow = row => `${this.addressesTableBody} tr:nth-of-type(${row})`;
     this.addressesTableColumn = (row, column) => `${this.addressesTableRow(row)} td:nth-of-type(${column})`;
-    this.productsGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(3)`;
   }
 
   /*
@@ -20,9 +28,9 @@ class ViewBrand extends BOBasePage {
    */
   /**
    * Get text from a column
-   * @param page
-   * @param row, row in table
-   * @param column, which column
+   * @param page {Page} Browser tab
+   * @param row {number} Row in table to get text column
+   * @param column {string} Column to get text content
    * @returns {Promise<string>}
    */
   async getTextColumnFromTableAddresses(page, row, column) {
@@ -31,7 +39,7 @@ class ViewBrand extends BOBasePage {
 
   /**
    * Get number of addresses in grid
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
   async getNumberOfAddressesInGrid(page) {

@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use stdClass;
 
 /**
@@ -35,11 +35,11 @@ use stdClass;
  */
 class CategoriesProvider
 {
-    const CATEGORY_OTHER = 'other';
-    const CATEGORY_OTHER_NAME = 'Other';
+    public const CATEGORY_OTHER = 'other';
+    public const CATEGORY_OTHER_NAME = 'Other';
 
-    const CATEGORY_THEME = 'theme_modules';
-    const CATEGORY_THEME_NAME = 'Theme modules';
+    public const CATEGORY_THEME = 'theme_modules';
+    public const CATEGORY_THEME_NAME = 'Theme modules';
 
     /**
      * @var array
@@ -175,10 +175,10 @@ class CategoriesProvider
     /**
      * Find module category.
      *
-     * @param ApiModule $installedProduct Installed product
+     * @param ModuleInterface $installedProduct Installed product
      * @param array $categories Available categories
      */
-    private function findModuleCategory(ApiModule $installedProduct, array $categories): string
+    private function findModuleCategory(ModuleInterface $installedProduct, array $categories): string
     {
         $moduleCategoryParent = $installedProduct->attributes->get('categoryParentEnglishName');
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
@@ -227,11 +227,11 @@ class CategoriesProvider
      * Try to find the parent category depending on
      * the module's tab attribute.
      *
-     * @param ApiModule $module
+     * @param ModuleInterface $module
      *
      * @return ?string
      */
-    private function getParentCategoryFromTabAttribute(ApiModule $module): ?string
+    private function getParentCategoryFromTabAttribute(ModuleInterface $module): ?string
     {
         foreach ($this->categoriesFromSource as $parentCategory) {
             foreach ($parentCategory->categories as $category) {

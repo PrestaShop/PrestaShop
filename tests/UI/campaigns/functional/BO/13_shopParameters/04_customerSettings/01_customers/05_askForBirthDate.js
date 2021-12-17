@@ -4,24 +4,33 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_askForBirthDate';
 
 let browserContext;
 let page;
 
-describe('Enable ask for birth date', async () => {
+/*
+Enable ask for birthdate
+Go to FO > create account page and check that birthdate input is visible
+Disable ask for birthdate
+Go to FO > create account page and check that birthdate input is not visible
+ */
+describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birth date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +65,7 @@ describe('Enable ask for birth date', async () => {
     {args: {action: 'enable', enable: true}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} ask for birth date`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AskForBirthDate`, baseContext);
 
@@ -70,12 +79,7 @@ describe('Enable ask for birth date', async () => {
     });
 
     it('should go to customer account in FO and check birth day input', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkIsBirthDate${customerSettingsPage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkIsBirthDate${index}`, baseContext);
 
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
@@ -88,11 +92,18 @@ describe('Enable ask for birth date', async () => {
       await loginFOPage.goToCreateAccountPage(page);
 
       // Check birthday
-      const isBirthDateInputVisible = await loginFOPage.isBirthDateVisible(page);
+      const isBirthDateInputVisible = await foCreateAccountPage.isBirthDateVisible(page);
       await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

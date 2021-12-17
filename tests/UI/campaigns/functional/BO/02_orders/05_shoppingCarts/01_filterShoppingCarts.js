@@ -2,6 +2,7 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -24,28 +25,14 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (mm/dd/yyyy)
-const todayDate = `${month}/${day}/${year}`;
+const todayDate = getDateFormat('mm/dd/yyyy');
 
 /*
 Delete the non ordered shopping carts
 Filter shopping carts By :
 Id, order id, customer, carrier, date and online
 */
-describe('Filter the Shopping carts table', async () => {
+describe('BO - Orders - Shopping carts : Filter the Shopping carts table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -60,7 +47,7 @@ describe('Filter the Shopping carts table', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Orders/Shopping carts\' page', async function () {
+  it('should go to \'Orders > Shopping carts\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -106,6 +93,17 @@ describe('Filter the Shopping carts table', async () => {
 
     const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
     await expect(numberOfShoppingCartsAfterReset).to.be.equal(numberOfShoppingCarts);
+  });
+
+  it('should change pagination to 300 items per page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo300', baseContext);
+
+    let paginationNumber = 0;
+    if (numberOfShoppingCarts >= 21) {
+      paginationNumber = await shoppingCartsPage.selectPaginationLimit(page, '300');
+    }
+
+    await expect(paginationNumber).to.equal('1');
   });
 
   const tests = [
@@ -171,11 +169,7 @@ describe('Filter the Shopping carts table', async () => {
       await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
       for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(
-          page,
-          row,
-          test.args.filterBy,
-        );
+        const textColumn = await shoppingCartsPage.getTextColumn(page, row, test.args.filterBy);
 
         if (typeof test.args.filterValue === 'boolean') {
           await expect(textColumn).to.equal(test.args.filterValue ? 'Yes' : 'No');
@@ -204,11 +198,7 @@ describe('Filter the Shopping carts table', async () => {
     await expect(numberOfShoppingCartsAfterFilter).to.be.at.most(numberOfShoppingCarts);
 
     for (let row = 1; row <= numberOfShoppingCartsAfterFilter; row++) {
-      const textColumn = await shoppingCartsPage.getTextColumn(
-        page,
-        row,
-        'date',
-      );
+      const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'date');
       await expect(textColumn).to.contains(todayDate);
     }
   });

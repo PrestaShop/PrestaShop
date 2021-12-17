@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\AbstractProductHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
@@ -39,7 +38,7 @@ use Product;
 /**
  * Handles @var UpdateProductSeoCommand using legacy object model
  */
-class UpdateProductSeoHandler extends AbstractProductHandler implements UpdateProductSeoHandlerInterface
+class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -68,7 +67,7 @@ class UpdateProductSeoHandler extends AbstractProductHandler implements UpdatePr
      */
     public function handle(UpdateProductSeoCommand $command): void
     {
-        $product = $this->getProduct($command->getProductId());
+        $product = $this->productRepository->get($command->getProductId());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_SEO);

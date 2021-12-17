@@ -31,50 +31,30 @@
 
 {% block content %}
   {% block category_showcase_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/showcase_card.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/showcase_card.html.twig' %}
   {% endblock %}
 
   {% block categories_kpis %}
-    <div class="row">
-      <div class="col">
-        <div class="card card-kpis">
-          <div class="row">
-            {{ render(controller(
-              'PrestaShopBundle:Admin\\Common:renderKpiRow',
-              { 'kpiRow': categoriesKpi }
-            )) }}
-          </div>
-        </div>
-      </div>
-    </div>
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      { 'kpiRow': categoriesKpi }
+    )) }}
   {% endblock %}
 
   {% block categories_breadcrumb %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
 
   {% block categories_listing %}
-    <div class="row">
-      <div class="col">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
-          {% block grid_panel_footer %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
-          {% endblock %}
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': categoriesGrid} %}
+      {% block grid_panel_footer %}
+        {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/listing_panel_footer.html.twig' %}
+      {% endblock %}
 
-          {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
-          {% endblock %}
-        {% endembed %}
-      </div>
-    </div>
+      {% block grid_panel_extra_content %}
+        {% include '@PrestaShop/Admin/Sell/Catalog/Categories/Blocks/delete_categories_modal.html.twig' %}
+      {% endblock %}
+    {% endembed %}
   {% endblock %}
 {% endblock %}
 

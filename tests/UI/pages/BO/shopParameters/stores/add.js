@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add store page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddStore extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on add store page
+   */
   constructor() {
     super();
 
@@ -22,7 +31,7 @@ class AddStore extends BOBasePage {
     this.faxInput = '#fax';
     this.emailInput = '#email';
     this.noteTextarea = '#note_1';
-    this.statusToggle = toggle => `${this.storeForm} label[for='active_${toggle}']`;
+    this.statusToggle = toggle => `${this.storeForm} #active_${toggle}`;
     this.hoursInput = pos => `input[name='hours[${pos}][1]']`;
     this.saveButton = '#store_form_submit_btn';
     this.alertSuccessBlockParagraph = '.alert-success';
@@ -32,8 +41,8 @@ class AddStore extends BOBasePage {
 
   /**
    * Fill creation / edition form for store and save it
-   * @param page
-   * @param storeData
+   * @param page {Page} Browser tab
+   * @param storeData {StoreData} Data to set on store form
    * @return {Promise<string>}
    */
   async createEditStore(page, storeData) {
@@ -58,7 +67,7 @@ class AddStore extends BOBasePage {
     await this.setValue(page, this.noteTextarea, storeData.note);
 
     // Set store status
-    await page.click(this.statusToggle(storeData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(storeData.status ? 'on' : 'off'));
 
     // Set opening hours
     for (let day = 1; day <= 7; day++) {
@@ -69,7 +78,7 @@ class AddStore extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

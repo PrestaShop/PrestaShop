@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -46,20 +46,20 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $productRepository;
 
     /**
-     * @var ManufacturerRepository
+     * @var ProductIndexationUpdater
      */
-    private $manufacturerRepository;
+    private $productIndexationUpdater;
 
     /**
      * @param ProductRepository $productRepository
-     * @param ManufacturerRepository $manufacturerRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
-        ManufacturerRepository $manufacturerRepository
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productRepository = $productRepository;
-        $this->manufacturerRepository = $manufacturerRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -68,9 +68,15 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     public function handle(UpdateProductOptionsCommand $command): void
     {
         $product = $this->productRepository->get($command->getProductId());
-        $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
         $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
+        }
     }
 
     /**
@@ -82,11 +88,6 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private function fillUpdatableProperties(Product $product, UpdateProductOptionsCommand $command): array
     {
         $updatableProperties = [];
-
-        if (null !== $command->isActive()) {
-            $product->active = $command->isActive();
-            $updatableProperties[] = 'active';
-        }
 
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();

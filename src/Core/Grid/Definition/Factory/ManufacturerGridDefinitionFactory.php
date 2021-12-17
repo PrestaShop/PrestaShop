@@ -54,7 +54,7 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    const GRID_ID = 'manufacturer';
+    public const GRID_ID = 'manufacturer';
 
     /**
      * {@inheritdoc}
@@ -218,8 +218,9 @@ final class ManufacturerGridDefinitionFactory extends AbstractGridDefinitionFact
             ])
             ->setAssociatedColumn('name')
             )
-            ->add((new Filter('active', YesAndNoChoiceType::class))
-            ->setAssociatedColumn('active')
+            ->add(
+                (new Filter('active', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('active')
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setAssociatedColumn('actions')

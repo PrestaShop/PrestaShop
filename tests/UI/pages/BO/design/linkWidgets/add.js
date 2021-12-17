@@ -1,11 +1,20 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-class AddLinkWidget extends BOBasePage {
+/**
+ * New link block page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class AddLinkBlock extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on new link block page
+   */
   constructor() {
     super();
 
-    this.pageTitle = 'Link Widget •';
+    this.pageTitle = 'Link List •';
 
     // Selectors
     this.changeNamelangButton = '#form_link_block_block_name';
@@ -24,8 +33,8 @@ class AddLinkWidget extends BOBasePage {
   /* Methods */
   /**
    * Change input name language
-   * @param page
-   * @param lang
+   * @param page {Page} Browser tab
+   * @param lang {string} Value of language to select
    * @return {Promise<void>}
    */
   async changeLanguage(page, lang) {
@@ -41,14 +50,15 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select content pages
-   * @param page
-   * @param contentPages
+   * @param page {Page} Browser tab
+   * @param contentPages {Array<string>} List of content pages
    * @return {Promise<void>}
    */
   async selectContentPages(page, contentPages) {
     /* eslint-disable no-restricted-syntax */
     for (const contentPage of contentPages) {
       let selector;
+
       switch (contentPage) {
         case 'Delivery':
           selector = this.cmsPagesCheckbox(0);
@@ -66,7 +76,7 @@ class AddLinkWidget extends BOBasePage {
           selector = this.cmsPagesCheckbox(4);
           break;
         default:
-          // Do nothing
+        // Do nothing
       }
       await page.$eval(selector, el => el.click());
     }
@@ -75,14 +85,15 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select product pages
-   * @param page
-   * @param productPages
+   * @param page {Page} Browser tab
+   * @param productPages {Array<string>} List of product pages
    * @return {Promise<void>}
    */
   async selectProductPages(page, productPages) {
     /* eslint-disable no-restricted-syntax */
     for (const productPage of productPages) {
       let selector;
+
       switch (productPage) {
         case 'Prices drop':
           selector = this.productsPagesCheckbox(0);
@@ -103,14 +114,15 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Select static pages
-   * @param page
-   * @param staticPages
+   * @param page {Page} Browser tab
+   * @param staticPages {Array<string>} List of statistic pages
    * @return {Promise<void>}
    */
   async selectStaticPages(page, staticPages) {
     /* eslint-disable no-restricted-syntax */
     for (const staticPage of staticPages) {
       let selector;
+
       switch (staticPage) {
         case 'Contact us':
           selector = this.staticContentCheckbox(0);
@@ -137,8 +149,8 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Add custom pages
-   * @param page
-   * @param customPages
+   * @param page {Page} Browser tab
+   * @param customPages {Array<{name: string, url: string}>} List of custom pages
    * @return {Promise<void>}
    */
   async addCustomPages(page, customPages) {
@@ -158,8 +170,10 @@ class AddLinkWidget extends BOBasePage {
 
   /**
    * Add linkWidget
-   * @param page
-   * @param linkWidgetData
+   * @param page {Page} Browser tab
+   * @param linkWidgetData {{name: string, frName: string, hook: string, contentPages: Array<string>,
+   * productsPages: Array<string>, staticPages: Array<string>, customPages: Array<{name:string, url: string}>}}
+   * Data of link widget to set on link widget form
    * @return {Promise<string>}
    */
   async addLinkWidget(page, linkWidgetData) {
@@ -180,8 +194,9 @@ class AddLinkWidget extends BOBasePage {
     await this.addCustomPages(page, linkWidgetData.customPages);
     // Save
     await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
-module.exports = new AddLinkWidget();
+module.exports = new AddLinkBlock();

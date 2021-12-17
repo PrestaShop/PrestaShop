@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\HtmlColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -49,7 +50,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    const GRID_ID = 'empty_category';
+    public const GRID_ID = 'empty_category';
 
     /**
      * {@inheritdoc}
@@ -88,7 +89,7 @@ final class EmptyCategoryGridDefinitionFactory extends AbstractGridDefinitionFac
                     ])
             )
             ->add(
-                (new DataColumn('description'))
+                (new HtmlColumn('description'))
                     ->setName($this->trans('Description', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'description',

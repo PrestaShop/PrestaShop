@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s misc
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Showcase card
   In order to hide not relevant information in the Back Office
   As a BO user

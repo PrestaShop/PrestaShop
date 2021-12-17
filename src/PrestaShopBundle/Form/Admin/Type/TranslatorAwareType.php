@@ -35,6 +35,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 abstract class TranslatorAwareType extends CommonAbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
 
     /**
@@ -62,6 +65,14 @@ abstract class TranslatorAwareType extends CommonAbstractType
     protected function trans($key, $domain, $parameters = [])
     {
         return $this->translator->trans($key, $parameters, $domain);
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    protected function getTranslator(): TranslatorInterface
+    {
+        return $this->translator;
     }
 
     /**

@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -12,13 +16,10 @@ const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
+// Import data
 const ProductFaker = require('@data/faker/product');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_catalog_monitoring_monitoringProducts';
-
 
 let browserContext;
 let page;
@@ -39,7 +40,7 @@ Create new product
 Check existence of new product in monitoring page
 Delete product and check deletion in products page
  */
-describe('Create different products and delete them from monitoring page', async () => {
+describe('BO - Catalog - Monitoring : Create different products and delete them from monitoring page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -111,7 +112,7 @@ describe('Create different products and delete them from monitoring page', async
 
   tests.forEach((test) => {
     describe(`Create product ${test.args.productType} in BO`, async () => {
-      it('should go to catalog > products page', async function () {
+      it('should go to \'Catalog > Products\' page', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',
@@ -159,7 +160,7 @@ describe('Create different products and delete them from monitoring page', async
     });
 
     describe('Check created product in monitoring page', async () => {
-      it('should go to catalog > monitoring page', async function () {
+      it('should go to \'Catalog > Monitoring\' page', async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',

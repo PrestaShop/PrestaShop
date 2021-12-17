@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use RuntimeException;
 
 /**
@@ -50,23 +48,15 @@ class SetProductSuppliersCommand
     private $productSuppliers;
 
     /**
-     * @var SupplierId
-     */
-    private $defaultSupplierId;
-
-    /**
      * @param int $productId
-     * @param array<string, mixed> $productSuppliers
-     * @param int $defaultSupplierId
+     * @param array<int, array<string, mixed>> $productSuppliers
      *
      * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
      */
-    public function __construct(int $productId, array $productSuppliers, int $defaultSupplierId)
+    public function __construct(int $productId, array $productSuppliers)
     {
         $this->setProductSuppliers($productSuppliers);
         $this->productId = new ProductId($productId);
-        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
-        $this->assertDefaultSupplierIsOneOfProvidedSuppliers();
     }
 
     /**
@@ -86,15 +76,7 @@ class SetProductSuppliersCommand
     }
 
     /**
-     * @return SupplierId
-     */
-    public function getDefaultSupplierId(): SupplierId
-    {
-        return $this->defaultSupplierId;
-    }
-
-    /**
-     * @param array[] $productSuppliers
+     * @param array<int, array<string, mixed>> $productSuppliers
      */
     private function setProductSuppliers(array $productSuppliers): void
     {
@@ -112,25 +94,8 @@ class SetProductSuppliersCommand
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
                 $productSupplier['price_tax_excluded'],
-                $productSupplier['combination_id'],
                 $productSupplier['product_supplier_id'] ?? null
             );
         }
-    }
-
-    /**
-     * @throws ProductSupplierException
-     */
-    private function assertDefaultSupplierIsOneOfProvidedSuppliers(): void
-    {
-        $defaultSupplierId = $this->getDefaultSupplierId()->getValue();
-
-        foreach ($this->productSuppliers as $productSupplier) {
-            if ($productSupplier->getSupplierId() === $defaultSupplierId) {
-                return;
-            }
-        }
-
-        throw new ProductSupplierException('Default supplier must be one of provided suppliers');
     }
 }

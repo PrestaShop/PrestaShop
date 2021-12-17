@@ -4,14 +4,14 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const contactsPage = require('@pages/BO/shopParameters/contact/index');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_contact_sortContacts';
 
@@ -20,7 +20,7 @@ let page;
 let numberOfContacts = 0;
 
 // Sort contacts by id, name, email and description
-describe('Sort Contacts', async () => {
+describe('BO - Shop Parameters - Contact : Sort Contacts list', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +35,7 @@ describe('Sort Contacts', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters>Contact\' page', async function () {
+  it('should go to \'Shop parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
