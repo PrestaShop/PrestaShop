@@ -62,6 +62,11 @@ class HookRepository
 
     public function createHook($hook_name, $title = '', $description = '', $position = 1)
     {
+        $id_hook = (int) $this->getIdByName($hook_name);
+        if ($id_hook > 0) {
+            return $id_hook;
+        }
+
         $this->db->insert('hook', [
             'name' => $this->db->escape($hook_name),
             'title' => $this->db->escape($title),
