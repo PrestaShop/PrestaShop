@@ -96,7 +96,6 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
 
         $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
         Assert::assertEmpty($packedProducts);
-        Assert::assertFalse(Pack::isPack($packId));
     }
 
     /**
