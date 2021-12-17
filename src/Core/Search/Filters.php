@@ -28,9 +28,10 @@ namespace PrestaShop\PrestaShop\Core\Search;
 
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Validate;
 
 /**
- * This class is responsible of managing filters of Listing pages.
+ * This class is responsible for managing filters of Listing pages.
  */
 class Filters extends ParameterBag implements SearchCriteriaInterface
 {
@@ -66,7 +67,7 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
     public static function getDefaults()
     {
         return [
-            'limit' => self::LIST_LIMIT,
+            'limit' => static::LIST_LIMIT,
             'offset' => 0,
             'orderBy' => null,
             'sortOrder' => null,
@@ -79,7 +80,12 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getOrderBy()
     {
-        return $this->get('orderBy');
+        $orderBy = $this->get('orderBy');
+        if (!Validate::isOrderBy($orderBy)) {
+            return null;
+        }
+
+        return $orderBy;
     }
 
     /**
@@ -87,7 +93,12 @@ class Filters extends ParameterBag implements SearchCriteriaInterface
      */
     public function getOrderWay()
     {
-        return $this->get('sortOrder');
+        $orderWay = $this->get('sortOrder');
+        if (!Validate::isOrderWay(strtoupper($orderWay))) {
+            return null;
+        }
+
+        return $orderWay;
     }
 
     /**
