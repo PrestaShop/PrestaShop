@@ -223,6 +223,7 @@ class ProductController extends FrameworkBundleAdminController
             'desc' => $this->trans('New product on experimental page', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product',
+            'floating_class' => 'new-product',
         ];
 
         $toolbarButtons['list_v1'] = [
