@@ -50,7 +50,7 @@ class ProductPrice extends CommonAbstractType
 {
     // When the form is used to create, the product does not yet exists
     // however the ID is required for some fields so we use a default one:
-    const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
+    public const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
 
     /**
      * @var Configuration

@@ -29,6 +29,16 @@
  */
 class AdminGendersControllerCore extends AdminController
 {
+    /**
+     * @var int
+     */
+    public $default_image_height;
+
+    /**
+     * @var int
+     */
+    public $default_image_width;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -174,8 +184,9 @@ class AdminGendersControllerCore extends AdminController
             ],
         ];
 
-        /** @var Gender $obj */
-        if (!($obj = $this->loadObject(true))) {
+        /** @var Gender|false $obj */
+        $obj = $this->loadObject(true);
+        if (!$obj) {
             return;
         }
 
@@ -218,8 +229,9 @@ class AdminGendersControllerCore extends AdminController
     {
         parent::afterImageUpload();
 
-        if (($id_gender = (int) Tools::getValue('id_gender')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_GENDERS_DIR_ . $id_gender . '.jpg')) {
+        if (($id_gender = (int) Tools::getValue('id_gender'))
+            && count($_FILES)
+            && file_exists(_PS_GENDERS_DIR_ . $id_gender . '.jpg')) {
             $current_file = _PS_TMP_IMG_DIR_ . 'gender_mini_' . $id_gender . '_' . $this->context->shop->id . '.jpg';
 
             if (file_exists($current_file)) {

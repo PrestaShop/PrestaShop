@@ -48,31 +48,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
+    public const GRID_ID = 'logs';
 
     /**
-     * @var string the URL for redirection
+     * @var string Date format for the current user
      */
-    private $redirectionUrl;
+    private $contextDateFormat;
 
-    /**
-     * LogGridDefinitionFactory constructor.
-     *
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl
+        string $contextDateFormat
     ) {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
+        $this->contextDateFormat = $contextDateFormat;
     }
 
     /**
@@ -80,7 +68,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'logs';
+        return self::GRID_ID;
     }
 
     /**
@@ -165,7 +153,7 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new DateTimeColumn('date_add'))
                     ->setName($this->trans('Date', [], 'Admin.Global'))
                     ->setOptions([
-                        'format' => 'Y-m-d H:i',
+                        'format' => $this->contextDateFormat,
                         'field' => 'date_add',
                     ])
             )
@@ -239,10 +227,11 @@ final class LogGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_logs_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

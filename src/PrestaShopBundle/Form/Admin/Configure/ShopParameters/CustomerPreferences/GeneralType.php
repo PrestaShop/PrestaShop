@@ -59,7 +59,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Send an email with summary of the account information after registration.',
+                    'Send an email with a summary of the account information after registration.',
                     'Admin.Shopparameters.Help'
                 ),
             ])
@@ -72,13 +72,13 @@ class GeneralType extends TranslatorAwareType
                     new GreaterThanOrEqual(
                         [
                             'value' => 0,
-                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
                         ]
                     ),
                     new Type(
                         [
                             'value' => 'numeric',
-                            'message' => $this->trans('The field is invalid. Please enter a positive integer number.', 'Admin.Notifications.Error'),
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
                         ]
                     ),
                 ],

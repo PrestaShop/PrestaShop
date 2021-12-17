@@ -64,7 +64,7 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
     public function downloadAndInstallLanguagePack($iso)
     {
         $freshInstall = empty(Language::getIdByIso($iso));
-        $result = Language::downloadAndInstallLanguagePack($iso, $this->version->getVersion(), null, $freshInstall);
+        $result = Language::downloadAndInstallLanguagePack($iso, $this->version->getSemVersion(), null, $freshInstall);
 
         if (false === $result) {
             return [

@@ -1,0 +1,2252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="classes/PaymentModule.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="44aa13304026bb46ad79f4151f16634a" approved="yes">
+        <source>(waiting for validation)</source>
+        <target state="final">(en attente de validation)</target>
+        <note>Line: 630</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/components/footer.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="96dad7f0d711c3408786ba1ee05402b3" approved="yes">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="{prestashop_url}">PrestaShop™</a>]]></source>
+        <target state="final"><![CDATA[<a href="{shop_url}">{shop_name}</a> propulsé par <a href="{prestashop_url}">PrestaShop™</a>]]></target>
+        <note>Line: 6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/account.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2498c963bfc06e8fca88007ec322b769" approved="yes">
+        <source>Your login email address on {shop_name}</source>
+        <target state="final">Votre adresse e-mail de connexion sur {shop_name}</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="7cfb9d536fcd7aa70c333e8e73b287e2" approved="yes">
+        <source>Here is your login email address:</source>
+        <target state="final">Voici votre adresse e-mail de connexion :</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/backoffice_order.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bffeb374bf71938ffc4faa42afbf1679" approved="yes">
+        <source><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to finalize the payment.]]></source>
+        <target state="final"><![CDATA[Veuillez vous rendre sur <a href="{order_link}">{order_link}</a> pour finaliser votre paiement.]]></target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/bankwire.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9b33ea5c9409a67cb6e1f6bc3f0828f0" approved="yes">
+        <source>Awaiting wire payment</source>
+        <target state="final">En attente du paiement</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="f4a6af01d092af11dca29cb89578b124" approved="yes">
+        <source>You have selected to pay by wire transfer.</source>
+        <target state="final">Pour rappel, vous avez sélectionné le mode de paiement par virement bancaire.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="fc1ae3c1dd1d9d9a44da719fa9966f0e" approved="yes">
+        <source>Here are the bank details for your transfer:</source>
+        <target state="final">Voici les informations dont vous avez besoin pour effectuer votre virement :</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/cheque.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a51341e25ff7710496cf86468d797169" approved="yes">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target state="final"><![CDATA[Si vous avez un compte invité, vous pouvez suivre votre commande via la section <a href="{guest_tracking_url}">"Suivi invité"</a> sur notre boutique.]]></target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="d698e777b19f6f487ae0490950174fde" approved="yes">
+        <source>Awaiting check payment</source>
+        <target state="final">En attente du paiement par chèque</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="ecf01c46965fdfd36eb98b271276c0d5" approved="yes">
+        <source>You have selected to pay by check.</source>
+        <target state="final">Vous avez choisi de payer par chèque.</target>
+        <note>Line: 50</note>
+      </trans-unit>
+      <trans-unit id="b6592595266708e46d1d420ab7153213" approved="yes">
+        <source>Here are the bank details for your check:</source>
+        <target state="final">Voici les informations dont vous avez besoin pour effectuer le paiement :</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ed750ed3b775eb7ed37644ceb05c713b" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] has been placed successfully and will be [1]shipped as soon as we receive your payment[/1].</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] a bien été prise en compte, elle sera [1]expédiée dès réception de votre paiement[/1].</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="31e15b28c2f071f74f47eb8bcd612d94" approved="yes">
+        <source>Customer e-mail address:</source>
+        <target state="final">Adresse e-mail du client :</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="83fa39a28a4d159061c408fbd6a249e7" approved="yes">
+        <source>Order ID:</source>
+        <target state="final">Commande # :</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/contact_form.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1edbec13a38606f19c0bae544a7c6552" approved="yes">
+        <source>Your message to {shop_name} Customer Service</source>
+        <target state="final">Votre message à l'attention du service client de {shop_name}</target>
+        <note>Line: 7</note>
+      </trans-unit>
+      <trans-unit id="e92ba0cecb0593f537515b2aa2d1c701" approved="yes">
+        <source>Your message has been sent successfully.</source>
+        <target state="final">Votre message a bien été envoyé à notre service client.</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="76890cf906149b370ea6f7d1bd8eaf9a" approved="yes">
+        <source>We will answer as soon as possible.</source>
+        <target state="final">Nous vous répondrons dans les meilleurs délais.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/credit_slip.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="72dbe899c04eb3875b29b5b274340dac" approved="yes">
+        <source>Credit slip created</source>
+        <target state="final">Nouvel avoir</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="99f89e9a116e1c07f62ba17fb0312db6" approved="yes">
+        <source><![CDATA[You can review this credit slip and download your invoice from the <a href="{history_url}">"My credit slips"</a> section of your account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target state="final"><![CDATA[Vous pouvez accéder à cet avoir et télécharger votre facture dans <a href="{history_url}">"Historique des commandes"</a> de la rubrique  <a href="{my_account_url}">"Mon compte"</a> sur notre site.]]></target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="4c15700279d273ce67d98810a4b87943" approved="yes">
+        <source>We have generated a credit slip in your name for order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Nous avons généré un avoir à votre nom relatif à votre commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/download_product.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5f55a607fea61a402ceac66cc99f1e9e" approved="yes">
+        <source><![CDATA[Thank you for your order with the reference {order_name} from <strong>{shop_name}</strong>]]></source>
+        <target state="final"><![CDATA[Merci pour votre commande portant la référence {order_name} sur <strong>{shop_name}</strong>]]></target>
+        <note>Line: 8</note>
+      </trans-unit>
+      <trans-unit id="30acb55a5efc4a32a30a0c3db85f37d1" approved="yes">
+        <source>Product(s) now available for download</source>
+        <target state="final">Produit(s) à télécharger</target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/employee_password.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4785f7efb27f2905a05564903db18b23" approved="yes">
+        <source>Your {shop_name} login information</source>
+        <target state="final">Voici vos informations personnelles pour {shop_name}</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="e2fa64dedc8a3422d409cbe4eebd19bb" approved="yes">
+        <source>Here is your personal login information for [1]{shop_name}[/1]:</source>
+        <target state="final">Voici vos identifiants de connexion sur [1]{shop_name}[/1] :</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="78e365acb087fd1f8d494dae0001de10" approved="yes">
+        <source>E-mail address:</source>
+        <target state="final">Adresse e-mail :</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/forward_msg.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="8595a98bbe6d6b0e3b9b0681b3b4aa71" approved="yes">
+        <source>Customer service - Forwarded discussion</source>
+        <target state="final">Service client - Discussion transférée</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="2bf185aaec7301d0862e4d69fce26d60" approved="yes">
+        <source>[1]{employee}[/1] added [1]"{comment}"[/1]</source>
+        <target state="final">[1]{employee}[/1] a ajouté [1]"{comment}"[/1]</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/guest_to_customer.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9893de883531529d4a66a3851265f02e" approved="yes">
+        <source>Your customer account creation</source>
+        <target state="final">Votre compte invité a été transformé en compte client</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="49bea2c7e271e5cd440a295dd6fadc72" approved="yes">
+        <source>Please be careful when sharing these login details with others.</source>
+        <target state="final">Conservez ces informations confidentielles.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="f4938f5d59c6c3adc14bf0cc30bc37f5" approved="yes">
+        <source>Your guest account for [1]{shop_name}[/1] has been transformed into a customer account.</source>
+        <target state="final">Votre compte invité sur [1]{shop_name}[/1] a été transformé en compte client.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/import.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a218495ad30949e8ea1f64a261e37463" approved="yes">
+        <source>Import complete</source>
+        <target state="final">Import terminé</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/in_transit.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1b0d1cd23421d9cea08507e950e87094" approved="yes">
+        <source>{followup}</source>
+        <target state="final">{followup}</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="2fe643b2ef0a5fd0e912cd9a784510a7" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] is currently in transit.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] est en cours.</target>
+        <note>Line: 54</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/log_alert.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="07e3b33fd6a9b33d3d9cacea26dc1899" approved="yes">
+        <source>You have received a new log alert</source>
+        <target state="final">Nouveau message d'alerte enregistré</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="6c1d03a23b1b8a7eeec963fdfa8e95c5" approved="yes">
+        <source>[1]Warning:[/1] you have received a new log alert in your Back Office.</source>
+        <target state="final">[1]Attention[/1] : vous avez reçu un nouveau message d'alerte dans votre back office.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/order_canceled.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d9081e325264b44431f85a40bdca4985" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1] has been canceled.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] sur [1]{shop_name}[/1] a été annulée.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/order_customer_comment.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="381fc38b470ed543424afbd43f224453" approved="yes">
+        <source>Message from a customer</source>
+        <target state="final">Message d'un client</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/order_return_state.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="34d125dc458bced25eaf5e2e272c0d75" approved="yes">
+        <source>Return #{id_order_return} - update</source>
+        <target state="final">Retour de commande #{id_order_return} - mise à jour</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/outofstock.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e25d137c27dca2618629678d2df71113" approved="yes">
+        <source>Item(s) out of stock</source>
+        <target state="final">Réapprovisionnement nécessaire</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="5468cd18ba24d269db5ebe9177abca4a" approved="yes">
+        <source>Unfortunately, one or more items are currently out of stock. This may cause a slight delay in your delivery. Please accept our apologies and rest assured that we are working hard to rectify this.</source>
+        <target state="final">Malheureusement, un ou plusieurs des produits que vous avez commandés sont actuellement en rupture de stock. Ceci peut entraîner un léger retard de livraison. Veuillez nous excuser pour ce délai et soyez assurés que nous faisons nos meilleurs efforts pour rectifier la situation rapidement.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/password.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="53423ed6d9f522de8d41539456628786" approved="yes">
+        <source>Your new {shop_name} login details</source>
+        <target state="final">Vos nouvelles informations d'identification sur {shop_name}</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/password_query.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="280f51a8705636bd7e7ba595529411d4" approved="yes">
+        <source>Password reset request for {shop_name}</source>
+        <target state="final">Confirmation de demande de mot de passe sur {shop_name}</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="278b2a400e176e90d476fb69cb881f59" approved="yes">
+        <source>To confirm this action, please use the following link:</source>
+        <target state="final">Si vous souhaitez confirmer cette demande, cliquez sur le lien suivant :</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/payment.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6daabaab43cdbd67346ae71828b1710c" approved="yes">
+        <source>Payment processed</source>
+        <target state="final">Paiement accepté</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="2762264cddd3133c3486886e31681873" approved="yes">
+        <source><![CDATA[Your payment for order with the reference <strong><span>{order_name}</span></strong> was successfully processed.]]></source>
+        <target state="final"><![CDATA[Le paiement pour votre commande ayant pour référence <strong><span>{order_name}</span></strong> a été accepté.]]></target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/payment_error.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3dd0be333980f0b0f0895cdb6322d117" approved="yes">
+        <source>Payment processing error</source>
+        <target state="final">Erreur de paiement</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="96c8c962f040049e80bccbea08e2d776" approved="yes">
+        <source><![CDATA[There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.]]></source>
+        <target state="final"><![CDATA[Un problème a été constaté pour le paiement de votre commande sur <strong><span>{shop_name}</span></strong> ayant pour référence <strong><span>{order_name}</span></strong>. Veuillez nous contacter le plus rapidement possible.]]></target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="5f2142258e3f214d12efeb927f2a7aef" approved="yes">
+        <source>We cannot ship your order until we receive your payment.</source>
+        <target state="final">Nous ne pouvons malheureusement pas expédier votre commande tant que nous n'avons pas reçu votre paiement.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/preparation.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="643562a9ae7099c8aabfdc93478db117" approved="yes">
+        <source>Processing</source>
+        <target state="final">En cours de préparation</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="d87f9ab0faa0b39a5240d1ce19529905" approved="yes">
+        <source><![CDATA[We are currently processing your <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>.]]></source>
+        <target state="final"><![CDATA[Votre commande sur <strong><span>{shop_name}</span></strong> ayant pour référence <strong><span>{order_name}</span></strong> est en cours de préparation.]]></target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/refund.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b3e67c974cc0ca43712679a17bedf6db" approved="yes">
+        <source><![CDATA[We have processed your <strong><span>{shop_name}</span></strong> refund for order with the reference <strong><span>{order_name}</span></strong>.]]></source>
+        <target state="final"><![CDATA[Nous avons procédé au remboursement de votre commande sur <strong><span>{shop_name}</span></strong> portant la référence <strong><span>{order_name}</span></strong>.]]></target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/reply_msg.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="95d1732a1f5200c8e176bea0a5562804" approved="yes">
+        <source><![CDATA[In order to reply, please use the following link: <a href="{link}">{link}</a>]]></source>
+        <target state="final"><![CDATA[Pour répondre, veuillez utiliser le lien suivant : <a href="{link}">{link}</a>]]></target>
+        <note>Line: 25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/shipped.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="d0cc952b66ca292a2e4a1bc53453b287" approved="yes">
+        <source>Your order has been shipped</source>
+        <target state="final">Votre commande a été expédiée</target>
+        <note>Line: 8</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/test.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="8b1a9953c4611296a827abf8c47804d7" approved="yes">
+        <source>Hello</source>
+        <target state="final">Bonjour</target>
+        <note>Line: 6</note>
+      </trans-unit>
+      <trans-unit id="632f6256903fd72ff83498831d2999b6" approved="yes">
+        <source>This is a [1]test e-mail[/1] from your shop.</source>
+        <target state="final">Ceci est un [1]e-mail de test[/1] depuis votre boutique.</target>
+        <note>Line: 15</note>
+      </trans-unit>
+      <trans-unit id="79986d6ab2382663070d8cd7e31f2287" approved="yes">
+        <source>If you can read this, the test was successful!</source>
+        <target state="final">Si vous pouvez le lire, le test a réussi !</target>
+        <note>Line: 17</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6edfaaf163aab585fb50f909e6f2cadf" approved="yes">
+        <source>Voucher created</source>
+        <target state="final">Bon de réduction créé</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="6e27b373aa04d07be7c5a65bbd9f45ed" approved="yes">
+        <source>A voucher has been created in your name as a result of your order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Un bon de réduction a été généré à votre nom relatif à votre commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="f210a22fd1ec8eddd8236938d009f3a6" approved="yes">
+        <source>[1]Voucher code: {voucher_num}[/1] in the amount of [1]{voucher_amount}[/1]</source>
+        <target state="final">[1]Code de réduction : {voucher_num}[/1] d'un montant de [1]{voucher_amount}[/1]</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/core/voucher_new.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5bb0c38774ca650d9548d682e175dc75" approved="yes">
+        <source>This is to inform you about the creation of a voucher.</source>
+        <target state="final">Nous vous informons de la génération d'un bon de réduction.</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/followup/followup_1.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a037426f7ede13b30759469aaca5ad91" approved="yes">
+        <source>Your {shop_name} login details</source>
+        <target state="final">Vos codes d'accès sur {shop_name}.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ca0c09ad63f8cd2f732058be8d2b3a97" approved="yes">
+        <source>We noticed that during your last visit on {shop_name}, you did not complete the order you had started.</source>
+        <target state="final">Nous avons remarqué que lors de votre dernier passage chez {shop_name}, vous n'avez pas validé la commande que vous aviez entamée.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="85fa10f1ee5c7941ec596c4247c8102b" approved="yes">
+        <source>As an incentive, we can give you a discount of [1]{amount}%[/1] off your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!</source>
+        <target state="final">À titre exceptionnel, nous pouvons vous accorder une remise de [1]{amount}%[/1] sur votre prochaine commande ! Cette offre est valable [1]{days}[/1] jours, ne perdez plus un instant !</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/followup/followup_2.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="212dcee7c3ca3ee5fbae444b2f07c62d" approved="yes">
+        <source>Thank you for your order at {shop_name}.</source>
+        <target state="final">Merci d'avoir passé commande sur {shop_name}</target>
+        <note>Line: 8</note>
+      </trans-unit>
+      <trans-unit id="0930414a3b73fde90cef246f0f70a1c8" approved="yes">
+        <source>As our way of saying thanks, we want to give you a discount of [1]{amount}%[/1] off your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!</source>
+        <target state="final">Pour vous remercier, nous souhaitons vous offrir une remise de [1]{amount}%[/1] sur votre prochaine commande ! Cette offre est valable [1]{days}[/1] jours, ne perdez plus un instant !</target>
+        <note>Line: 23</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/followup/followup_3.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5a230b8b0490a33cf1fa3a577e1b4ef3" approved="yes">
+        <source>You are one of our best customers and as such we want to thank you for your continued patronage.</source>
+        <target state="final">Vous faites partie de nos meilleurs clients et à ce titre, nous souhaitons vous remercier pour la confiance dont vous nous faites part.</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="fb143851ff94b8816192dd378774d266" approved="yes">
+        <source>As appreciation for your loyalty, we want to give you a discount of [1]{amount}%[/1] valid on your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!</source>
+        <target state="final">Pour vous remercier de votre fidélité, nous souhaitons vous offrir une remise de [1]{amount}%[/1] sur votre prochaine commande ! Cette offre est valable [1]{days}[/1] jours, ne perdez plus un instant !</target>
+        <note>Line: 30</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/followup/followup_4.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="42578524d7fb1953f903bcc5160495ea" approved="yes">
+        <source>Here is your coupon:</source>
+        <target state="final">Voici votre bon de réduction :</target>
+        <note>Line: 51</note>
+      </trans-unit>
+      <trans-unit id="24986b852e72fcfba407bd807f790abd" approved="yes">
+        <source>Enter this code in your shopping cart to get your discount.</source>
+        <target state="final">Saisissez ce code dans votre panier afin d'obtenir votre réduction.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="7ed5b90c2f87440a6e83fc35dca83242" approved="yes">
+        <source>You are one of our best customers, however you have not placed an order in {days_threshold} days.</source>
+        <target state="final">Vous faites partie de nos meilleurs clients cependant vous n'avez pas passé de commande depuis {days_threshold} jours.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="fa0d0ed10aae850868404d1a9e7a66b2" approved="yes">
+        <source>We wish to thank you for the trust you have placed in us and want to give you a discount of [1]{amount}%[/1] valid on your next order! This offer is valid for [1]{days}[/1] days, so do not waste a moment!</source>
+        <target state="final">Nous souhaitons vous remercier pour votre confiance et vous offrir une remise de [1]{amount}%[/1] sur votre prochaine commande ! Cette offre est valable [1]{days}[/1] jours, ne perdez plus un instant !</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/customer_qty.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5b736bebe50e10240ff58d486494dc7b" approved="yes">
+        <source>This item is once again in-stock.</source>
+        <target state="final">Le stock a été réapprovisionné.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="16ce091d5fafd5b92941221eab85f3af" approved="yes">
+        <source>You can access the product page by clicking on the link:</source>
+        <target state="final">Vous pouvez accéder à la fiche produit en cliquant sur le lien suivant:</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="d5c8de069674d35946f2e88642635485" approved="yes">
+        <source>You can order it right now from our online shop.</source>
+        <target state="final">Vous pouvez donc de nouveau commander ce produit depuis notre catalogue en ligne.</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/new_order.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bb09440b8cab954c036c4a45558857a5" approved="yes">
+        <source>Total Tax paid</source>
+        <target state="final">TVA totale</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="6881c1c321e65a31d35137f960022cf7" approved="yes">
+        <source>A new order was placed on {shop_name} by the following customer: {firstname} {lastname} ({email})</source>
+        <target state="final">Une nouvelle commande a été passée sur votre boutique {shop_name} par ce client : {firstname} {lastname} ({email})</target>
+        <note>Line: 14</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/order_changed.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="fce4d5217e51f199cfbd10ae913cc5dd" approved="yes">
+        <source><![CDATA[You can review your order and download your invoice from the <a href="{history_url}">"Order history"</a> section of your customer account by clicking <a href="{my_account_url}">"My account"</a> on our shop.]]></source>
+        <target state="final"><![CDATA[Vous pouvez accéder à tout moment au suivi de votre commande et télécharger votre facture dans <a href="{history_url}">"Historique des commandes"</a> de la rubrique <a href="{my_account_url}">"Mon compte"</a> sur notre site.]]></target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="008400d8db73946ba53b2d7f091eb845" approved="yes">
+        <source>Order {order_name}</source>
+        <target state="final">Commande {order_name}</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="992ed3f1f7ce7be683fd4051138b693e" approved="yes">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}?id_order={order_name}">"Guest Tracking"</a> section on our shop.]]></source>
+        <target state="final"><![CDATA[Si vous avez un compte invité, vous pouvez suivre votre commande dans la section <a href="{guest_tracking_url}?id_order={order_name}">"Suivi invité"</a> de notre site.]]></target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="6eaf1dae59f88437851d95f504f9cb3c" approved="yes">
+        <source>Order edited</source>
+        <target state="final">Commande modifiée</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="26b5ca3acdfdbd5fe92a5cb24dcc204e" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] has been modified.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] a été modifiée.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/productcoverage.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="22609de33e6e9ee1be5b2bf9ae16514c" approved="yes">
+        <source>The stock cover is now less than the specified minimum of:</source>
+        <target state="final">En effet, la quantité disponible est maintenant inférieure au minimum de :</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/productoutofstock.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="756a94b60256e8aacdf10706925eb01e" approved="yes">
+        <source>{product} is nearly out of stock.</source>
+        <target state="final">{product} est presque en rupture de stock.</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="72943b79a01324b1875811ff792bdad0" approved="yes">
+        <source>The remaining stock is now less than the specified minimum of</source>
+        <target state="final">Le stock restant est maintenant inférieur au minimum de</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailalerts/return_slip.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="cd8ee64ef80cd6bb4e320a7d0563b56f" approved="yes">
+        <source>Return details</source>
+        <target state="final">Détails du retour</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="f2d476bf166cc31b450908f8606b0fd5" approved="yes">
+        <source>{order_name} Placed on {date}</source>
+        <target state="final">{order_name} passée le {date}</target>
+        <note>Line: 28</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailsubscription/newsletter_verif.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3f796454690dc2d7f26db5d45c48b187" approved="yes">
+        <source>Thank you for subscribing to our newsletter, please confirm your request by clicking the link below :</source>
+        <target state="final">Merci de vous être inscrit à notre newsletter, veuillez confirmer votre inscription en cliquant sur le lien ci-dessous :</target>
+        <note>Line: 22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/ps_emailsubscription/newsletter_voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="7bf7f18afabb5122fa68fbab617e509b" approved="yes">
+        <source>Newsletter subscription</source>
+        <target state="final">Inscription à la newsletter</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="289f1fb0b0a7ed1c03d1f1f597666f67" approved="yes">
+        <source>Regarding your newsletter subscription, we are pleased to offer you the following voucher:</source>
+        <target state="final">En remerciement pour votre inscription à notre newsletter nous avons le plaisir de vous offrir un bon de réduction :</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/referralprogram/referralprogram-congratulations.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="43614475dd83d9e6b291a2805ee620fc" approved="yes">
+        <source><![CDATA[Your referred friend [1]{sponsored_firstname} {sponsored_lastname}[/1] has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre filleul(e) [1]{sponsored_firstname} {sponsored_lastname}[/1] a effectué son premier achat sur <a href="{shop_url}">{shop_name}</a> !]]></target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="1b9efd76beb745e43205f60167621060" approved="yes">
+        <source>We are pleased to offer you a voucher worth [1]{discount_display} (voucher # {discount_name})[/1] that you can use on your next order.</source>
+        <target state="final">Nous avons le plaisir de vous offrir un bon d'achat de [1]{discount_display} (bon de réduction # {discount_name})[/1] à utiliser sur votre prochaine commande.</target>
+        <note>Line: 23</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/referralprogram/referralprogram-invitation.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="efd0d72633aeb91f063cfa143f56ca6b" approved="yes">
+        <source>join us!</source>
+        <target state="final">Rejoignez-nous !</target>
+        <note>Line: 7</note>
+      </trans-unit>
+      <trans-unit id="c4ae632d712131d48fcb9c6197933fe6" approved="yes">
+        <source><![CDATA[Your friend [1]{firstname} {lastname}[/1] wants to refer you on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre ami [1]{firstname} {lastname}[/1] souhaite vous parrainer sur <a href="{shop_url}">{shop_name}</a> !]]></target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="dbec0bbd293d01bb529aceafda9d0af0" approved="yes">
+        <source>Get referred and earn a discount voucher of [1]{discount}![/1]</source>
+        <target state="final">Devenez son(sa) filleul(e) et remportez un bon d'achat de [1]{discount}[/1] !</target>
+        <note>Line: 24</note>
+      </trans-unit>
+      <trans-unit id="34ef083263a212936be7907709faab44" approved="yes">
+        <source>It's very easy to sign up. Just click here!</source>
+        <target state="final">Pour nous rejoindre, rien de plus simple, cliquez ici !</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="ba14b0fd8b7764d2fdf225b11b6e3fc3" approved="yes">
+        <source>When signing up, don't forget to provide the e-mail address of your referring friend:</source>
+        <target state="final">N'oubliez pas de renseigner l'adresse e-mail de l'ami qui vous parraine lors de votre inscription :</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/classic/modules/referralprogram/referralprogram-voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6540b502e953f4c05abeb8f234cd50bf" approved="yes">
+        <source>Referral Program</source>
+        <target state="final">Programme de parrainage</target>
+        <note>Line: 22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/account.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="22a9d6a64a74d0f58a11fa7013f4b83a" approved="yes">
+        <source>Thank you for creating a customer account at {shop_name}.</source>
+        <target state="final">Merci d'avoir créé votre compte client sur {shop_name}.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="d5b14d16c4008efddbee79cb56af5455" approved="yes">
+        <source>Here are your login details:</source>
+        <target state="final">Vos codes d'accès :</target>
+        <note>Line: 256</note>
+      </trans-unit>
+      <trans-unit id="d70650ce5612f05bfe75c1962fa1e519" approved="yes">
+        <source>Important Security Tips:</source>
+        <target state="final">Conseils de sécurité importants :</target>
+        <note>Line: 330</note>
+      </trans-unit>
+      <trans-unit id="def00214a95442dc7899951abd9a6104" approved="yes">
+        <source>Always keep your account details safe.</source>
+        <target state="final">Vos informations de compte doivent rester confidentielles.</target>
+        <note>Line: 397</note>
+      </trans-unit>
+      <trans-unit id="1559b55f6ea1de9f9b8826e9be306e6f" approved="yes">
+        <source>Never disclose your login details to anyone.</source>
+        <target state="final">Ne les communiquez jamais à qui que ce soit.</target>
+        <note>Line: 404</note>
+      </trans-unit>
+      <trans-unit id="7601ee5e7968d91a7b4f099f4b4b84d0" approved="yes">
+        <source>Change your password regularly.</source>
+        <target state="final">Changez votre mot de passe régulièrement.</target>
+        <note>Line: 411</note>
+      </trans-unit>
+      <trans-unit id="8f9011f4a1219e51c8a0638d2af3f29a" approved="yes">
+        <source>Should you suspect someone is using your account illegally, please notify us immediately.</source>
+        <target state="final">Si vous pensez que quelqu'un utilise votre compte illégalement, veuillez nous prévenir immédiatement.</target>
+        <note>Line: 418</note>
+      </trans-unit>
+      <trans-unit id="de421ce3bebc9b5a2ee30fcf0312cb68" approved="yes">
+        <source>You can now place orders on our shop:</source>
+        <target state="final">Vous pouvez dès à présent passer commande sur notre boutique :</target>
+        <note>Line: 481</note>
+      </trans-unit>
+      <trans-unit id="08bd40c7543007ad06e4fce31618f6ec" approved="yes">
+        <source>Account</source>
+        <target state="final">Compte</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="edccc47e82abb1a733820982878c5fb0" approved="yes">
+        <source>Your login details on {shop_name}</source>
+        <target state="final">Vos identifiants de connexion sur {shop_name}</target>
+        <note>Line: 189</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/backoffice_order.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="abc81c0d865925584b1269c996d7b297" approved="yes">
+        <source>A new order has been generated on your behalf.</source>
+        <target state="final">Une nouvelle commande a été générée à votre demande.</target>
+        <note>Line: 170</note>
+      </trans-unit>
+      <trans-unit id="fb08925252dd912f564413fb5109eb06" approved="yes">
+        <source>Back Office Order</source>
+        <target state="final">Commande du back office</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="bfa8b60dbfd44914f8cf61b57c641784" approved="yes">
+        <source><![CDATA[Please go on <a href="{order_link}">{order_link}</a> to complete the payment.]]></source>
+        <target state="final"><![CDATA[Veuillez vous rendre sur <a href="{order_link}">{order_link}</a> pour finaliser le paiement.]]></target>
+        <note>Line: 237</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/bankwire.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="21e4851289ecc91b65023c2563344aa7" approved="yes">
+        <source>Account owner:</source>
+        <target state="final">Titulaire du compte :</target>
+        <note>Line: 406</note>
+      </trans-unit>
+      <trans-unit id="20a650d87733bd5895c979de29864a73" approved="yes">
+        <source>Account details:</source>
+        <target state="final">Détails du compte :</target>
+        <note>Line: 414</note>
+      </trans-unit>
+      <trans-unit id="312d898d92d8ba90499ef0dac27270be" approved="yes">
+        <source>Bank address:</source>
+        <target state="final">Adresse de la banque :</target>
+        <note>Line: 421</note>
+      </trans-unit>
+      <trans-unit id="b8f05e3501f419f9f7ec08026a9342be" approved="yes">
+        <source>Please specify your order reference in the bankwire description.</source>
+        <target state="final">Veuillez préciser votre numéro de commande dans la description du virement.</target>
+        <note>Line: 428</note>
+      </trans-unit>
+      <trans-unit id="35b4b09d5d0686ec5c2e2cc9f3d9039c" approved="yes">
+        <source>Bankwire</source>
+        <target state="final">Virement</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="e59458c2ad3850466357a1cd342adc51" approved="yes">
+        <source>Pending payment</source>
+        <target state="final">En attente de paiement</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="8f4dccd9e6900a3bbae488901ba81ce5" approved="yes">
+        <source>Payment method: bank wire</source>
+        <target state="final">Moyen de paiement : virement bancaire</target>
+        <note>Line: 323</note>
+      </trans-unit>
+      <trans-unit id="b59639f1f1bf84129e44b83fe192b10a" approved="yes">
+        <source>You have decided to pay by bank wire.</source>
+        <target state="final">Vous avez choisi de régler par virement bancaire.</target>
+        <note>Line: 390</note>
+      </trans-unit>
+      <trans-unit id="920fcf4696dd1caa2d08eae6ebc8d29a" approved="yes">
+        <source>Here is the information you need for your transfer:</source>
+        <target state="final">Voici les informations requises pour votre virement :</target>
+        <note>Line: 391</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/cheque.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6702a6e3bc2dce95c3e3b61fe578f29c" approved="yes">
+        <source>Amount:</source>
+        <target state="final">Montant :</target>
+        <note>Line: 398</note>
+      </trans-unit>
+      <trans-unit id="1c3bd8f6bd066270354607c08f930baf" approved="yes">
+        <source>Payable to the order of:</source>
+        <target state="final">À l'ordre de :</target>
+        <note>Line: 406</note>
+      </trans-unit>
+      <trans-unit id="8f1fb2295c4289bae9fc26549b4b45f2" approved="yes">
+        <source>Please mail your check to:</source>
+        <target state="final">Veuillez envoyer votre chèque à l'adresse suivante :</target>
+        <note>Line: 414</note>
+      </trans-unit>
+      <trans-unit id="b4556791acee238c77be9ed338a29e80" approved="yes">
+        <source>Thank you for shopping with {shop_name}!</source>
+        <target state="final">Merci d'avoir effectué vos achats sur {shop_name}!</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="97b07b4e5caa086464d9f38956718d2b" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] has been placed successfully. You can expect [1]delivery as soon as your payment is received[/1].</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] a bien été prise en compte, elle sera [1]expédiée dès réception de votre paiement[/1].</target>
+        <note>Line: 256</note>
+      </trans-unit>
+      <trans-unit id="060bf2d587991d8f090a1309b285291c" approved="yes">
+        <source>Check</source>
+        <target state="final">chèque</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="0664188509e5edc8daac0d8c80bc05b3" approved="yes">
+        <source>Awaiting payment by check</source>
+        <target state="final">En attente de paiement par chèque</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="6a9e91ee7fe91c99fc2b5915a2555a57" approved="yes">
+        <source>Payment method: check</source>
+        <target state="final">Moyen de paiement : chèque</target>
+        <note>Line: 323</note>
+      </trans-unit>
+      <trans-unit id="0cce70a6fc36b8ed06d4a0241b36eecb" approved="yes">
+        <source>You have decided to pay by bank check.</source>
+        <target state="final">Vous avez choisi de régler par chèque.</target>
+        <note>Line: 390</note>
+      </trans-unit>
+      <trans-unit id="10766e013f1b6a5cbc249604bb7fc286" approved="yes">
+        <source>Here is the information you need for your check:</source>
+        <target state="final">Voici les informations requises pour votre chèque :</target>
+        <note>Line: 391</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/contact.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a1cee0a898793ad5101154ac97984d8a" approved="yes">
+        <source>Message from a {shop_name} customer</source>
+        <target state="final">Message de la part d'un client de {shop_name}</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="53659d236625358b98797389fd2504fa" approved="yes">
+        <source>Attached file:</source>
+        <target state="final">Pièce jointe :</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="c1ebb17bfd89ea960194a6162b299cda" approved="yes">
+        <source>Order ID #:</source>
+        <target state="final">ID commande # :</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="bbaff12800505b22a853e8b7f4eb6a22" approved="yes">
+        <source>Contact</source>
+        <target state="final">Contact</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="482757e4afa747b69445ed1bfa8ea542" approved="yes">
+        <source>Customer Email Address:</source>
+        <target state="final">Adresse e-mail du client :</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/contact_form.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="465d60b936c982d7b57674f30ba022d0" approved="yes">
+        <source>Product:</source>
+        <target state="final">Produit :</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="3f65d6e17a11466983fd177702cf6a71" approved="yes">
+        <source>Contact Form</source>
+        <target state="final">Formulaire de contact</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="608a2464e2d26ee3b336400c920f87d0" approved="yes">
+        <source>Your message has been sent successfully, thank you for taking the time to write!</source>
+        <target state="final">Votre message a bien été envoyé, merci d'avoir pris le temps de nous écrire !</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="7897b8cbc40618fdd3c1ad502ba47faa" approved="yes">
+        <source>We will reply as soon as possible.</source>
+        <target state="final">Nous vous répondrons dans les meilleurs délais.</target>
+        <note>Line: 266</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/credit_slip.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="f53e8d0e97c47ce70ca9c5eaa08a00d0" approved="yes">
+        <source>Credit Slip</source>
+        <target state="final">Avoir</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45" approved="yes">
+        <source>Credit slip</source>
+        <target state="final">Avoir</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="c44669ebfaeb42d8895e332f6199688e" approved="yes">
+        <source>A credit slip has been generated in your name for order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Un avoir a été généré à votre nom relatif à votre commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="933bd01e99683693ad9ddf8405040681" approved="yes">
+        <source><![CDATA[Review this credit slip and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Credit slips</a> section of your customer account.]]></source>
+        <target state="final"><![CDATA[Accédez à cet avoir et téléchargez votre facture sur notre site, rendez-vous dans la section <a href="{history_url}" target="_blank">Avoirs</a> de votre compte client.]]></target>
+        <note>Line: 310</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/download_product.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="c4e48432bc1c131388456f9fca605baf" approved="yes">
+        <source>Download products</source>
+        <target state="final">Télécharger vos produits</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="a6c40a67df49207ba0519d1bee14a484" approved="yes">
+        <source>Thank you for your order with the reference {order_name} from [1]{shop_name}[/1]</source>
+        <target state="final">Merci pour votre commande ayant pour référence {order_name} sur [1]{shop_name}[/1]</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="9e81969b0d999f5daa0d37ce13fb7001" approved="yes">
+        <source>Product(s) to download</source>
+        <target state="final">Produit(s) à télécharger</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="8bbeb216836330d437043e36617d5325" approved="yes">
+        <source>You have [1]{nbProducts}[/1] product(s) now available for download using the following link(s):</source>
+        <target state="final">Vous avez [1]{nbProducts}[/1] produit(s) à télécharger à l'aide du/des lien(s) suivant(s) :</target>
+        <note>Line: 256</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/employee_password.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="668a8d8d7ffe5da112b266e46b79b685" approved="yes">
+        <source>First name:</source>
+        <target state="final">Prénom :</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="be5e0b5d50d48b049bd0f7b57cd163f9" approved="yes">
+        <source>Last name:</source>
+        <target state="final">Nom :</target>
+        <note>Line: 262</note>
+      </trans-unit>
+      <trans-unit id="a3b24a2a75c846bdf0bc8449746a8637" approved="yes">
+        <source>Employee password</source>
+        <target state="final">Mot de passe employé</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="02fef144b687c453c4a1ae7c4e3e150b" approved="yes">
+        <source>Here is your personal login information for {shop_name}</source>
+        <target state="final">Voici vos identifiants de connexion sur {shop_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="0b937cfeb30c586cd659a58173bd37c7" approved="yes">
+        <source>Here is your identification information on [1]{shop_name}[/1]</source>
+        <target state="final">Voici vos identifiants de connexion sur [1]{shop_name}[/1]</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/forward_msg.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a9854b516855755f7a9246d781d4f57b" approved="yes">
+        <source>Discussion history:</source>
+        <target state="final">Historique de la discussion :</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="5a02acdd25040de97181665e4e84caa4" approved="yes">
+        <source>[1]{employee}[/1] wanted to forward this discussion to you.</source>
+        <target state="final">[1]{employee}[/1] souhaiterait vous transférer cette discussion.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="459ea98b5f18960e8c26da4754208f75" approved="yes">
+        <source>Forward message</source>
+        <target state="final">Transférer le message</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="c413b39ac8eea02ebfbee487d1d9ea16" approved="yes">
+        <source>Customer Service - Discussion Forwarded</source>
+        <target state="final">SAV - Discussion transférée</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="638dae1199098a2faffc18b14086ecc5" approved="yes">
+        <source>[1]{employee}[/1] added [1]{comment}[/1]</source>
+        <target state="final">[1]{employee}[/1] a ajouté [1]{comment}[/1]</target>
+        <note>Line: 261</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/guest_to_customer.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b75184fa489c948c6debc4d635fefa5a" approved="yes">
+        <source>You can access your customer account on our shop:</source>
+        <target state="final">Vous pouvez accéder à votre compte sur notre site Internet :</target>
+        <note>Line: 311</note>
+      </trans-unit>
+      <trans-unit id="2df994fe4798f819768c87824ec15ced" approved="yes">
+        <source>Email address:</source>
+        <target state="final">Adresse e-mail :</target>
+        <note>Line: 248</note>
+      </trans-unit>
+      <trans-unit id="016878df57341f82e0702d9259bfb7d8" approved="yes">
+        <source>Guest to customer</source>
+        <target state="final">Invité à client</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="387c721c8acb98382f1d18feccf3dd55" approved="yes">
+        <source>Your guest account has been turned into a customer account</source>
+        <target state="final">Votre compte invité a été transformé en compte client</target>
+        <note>Line: 177</note>
+      </trans-unit>
+      <trans-unit id="3008c9316cf28c5f439bbcc2e43b2e3e" approved="yes">
+        <source>Congratulations, your guest account for [1]{shop_name}[/1] has been turned into a customer account!</source>
+        <target state="final">Félicitations, votre compte invité sur [1]{shop_name}[/1] a bien été transformé en compte client !</target>
+        <note>Line: 242</note>
+      </trans-unit>
+      <trans-unit id="9964a987c88f49c4be016b1af2801403" approved="yes">
+        <source>Click on the following link to set up your password:</source>
+        <target state="final">Cliquez sur le lien suivant pour créer votre mot de passe :</target>
+        <note>Line: 249</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/import.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="293a2b3dd4b7fb2d950c8128be6d14f7" approved="yes">
+        <source>The file {filename} has been successfully imported to your shop.</source>
+        <target state="final">Le fichier {filename} a bien été importé dans votre boutique.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="72d6d7a1885885bb55a565fd1070581a" approved="yes">
+        <source>Import</source>
+        <target state="final">Importer</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="23e7f4b70281e1293a4985626589aeee" approved="yes">
+        <source>Import finished</source>
+        <target state="final">Import terminé</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/in_transit.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="7ec4f8b296984ffe6ea829b7e1743577" approved="yes">
+        <source>In transit</source>
+        <target state="final">En cours d'expédition</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="34f49f671cedfb2d5f8080ec14120281" approved="yes">
+        <source>You can track your package using the following link:</source>
+        <target state="final">Vous pouvez suivre la progression de votre livraison à l'adresse suivante:</target>
+        <note>Line: 259</note>
+      </trans-unit>
+      <trans-unit id="b395812bfd92c9b2c5cce4335dbdf404" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] is on its way.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] est en route.</target>
+        <note>Line: 252</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/log_alert.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="ad69fd3d0352d7e45ccca96a1048a747" approved="yes">
+        <source><![CDATA[You can check for it in the [1]Advanced Parameters > Logs[/1] section of your back office.]]></source>
+        <target state="final"><![CDATA[Vous pouvez le consulter dans la section [1]Paramètres Avancés > Logs[/1] de votre back office.]]></target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="0f170325fe7cbbbd2be4d705b277650e" approved="yes">
+        <source>Log Alert</source>
+        <target state="final">Message d'alerte</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="223e2a86894ef6ae6d9a96b2d4f53acf" approved="yes">
+        <source>New alert message saved</source>
+        <target state="final">Nouveau message d'alerte enregistré</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="3cfb2805cc4075e0a98e932afb94d132" approved="yes">
+        <source>[1]WARNING:[/1] you have received a new log alert in your back office.</source>
+        <target state="final">[1]ATTENTION[/1] : vous avez reçu un nouveau message d'alerte dans votre back office.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/newsletter.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="ffb7e666a70151215b4c55c6268d7d72" approved="yes">
+        <source>Newsletter</source>
+        <target state="final">Lettre d'informations</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/order_canceled.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3baf03ed2980c9f339731f052c12b37d" approved="yes">
+        <source>Order canceled</source>
+        <target state="final">Commande annulée</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="059b64746023360b7ab478fd850ffeb3" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1] has been canceled by the merchant.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] sur [1]{shop_name}[/1] a été annulée par le marchand.</target>
+        <note>Line: 246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/order_conf.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="fb077ecba55e5552916bde26d8b9e794" approved="yes">
+        <source>Order confirmation</source>
+        <target state="final">Confirmation de commande</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="ca102bf009d3e0d62a4fc6918b20110e" approved="yes">
+        <source>Thank you for shopping on [1]{shop_name}[/1]!</source>
+        <target state="final">Merci d'avoir effectué vos achats sur [1]{shop_name}[/1] !</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="ff2fa78f07ffe4ac52c0d0b5ff7f0baa" approved="yes">
+        <source>Thank you for your order on [1]{shop_name}[/1]!</source>
+        <target state="final">Merci pour votre commande sur [1]{shop_name}[/1] !</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17" approved="yes">
+        <source>Total</source>
+        <target state="final">Total</target>
+        <note>Line: 382</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/order_customer_comment.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1607c3534ee9bdb8638858fa4bb9261b" approved="yes">
+        <source>You have received a new message regarding order with the reference</source>
+        <target state="final">Vous avez reçu un nouveau message concernant la commande ayant pour référence :</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="fa44c7d88039cc2a3caf05195e1e45bb" approved="yes">
+        <source>Order customer comment</source>
+        <target state="final">Commentaire client</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="c744bfa52ba85ff901bab4ed9319978e" approved="yes">
+        <source>Message from customer</source>
+        <target state="final">Message d'un client</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/order_merchant_comment.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2769d37f4eb00f2c9b940ee928f1b426" approved="yes">
+        <source>Message from {shop_name}</source>
+        <target state="final">Message de {shop_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="940663fd4428d2c86f9a4780b6574028" approved="yes">
+        <source>Message:</source>
+        <target state="final">Message :</target>
+        <note>Line: 314</note>
+      </trans-unit>
+      <trans-unit id="15c197c97ee33f7da7df21d315fb7f71" approved="yes">
+        <source>You have received a new message from [1]{shop_name}[/1] regarding order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Vous avez reçu un nouveau message depuis [1]{shop_name}[/1] concernant la commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="371e76fdc916e1fc3818f6b96dee5219" approved="yes">
+        <source>Order merchant comment</source>
+        <target state="final">Commentaire marchand</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/order_return_state.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="96aac675caae8b0ca0a5227ce8a6a7c6" approved="yes">
+        <source>We have updated the progress on your return #{id_order_return}, the new status is:</source>
+        <target state="final">Votre bon de retour #{id_order_return} est passé à l'état :</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="3bc517b4a402645da419438914f481c6" approved="yes">
+        <source>Order return #{id_order_return} - Update</source>
+        <target state="final">Retour de commande #{id_order_return} - Mis à jour</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="d28c38eafee0f9e02256b284275603f9" approved="yes">
+        <source>Order return state</source>
+        <target state="final">État de retour de commande</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/outofstock.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="be07158cdaa6c7244af799f3cdd6dad5" approved="yes">
+        <source>Thanks for your order with the reference {order_name} from {shop_name}.</source>
+        <target state="final">Merci pour votre commande ayant pour référence {order_name} sur {shop_name}</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="e57e950cfde3e24c3674f9266753edec" approved="yes">
+        <source><![CDATA[Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">Order history and details</a> section of your customer account.]]></source>
+        <target state="final"><![CDATA[Suivez votre commande et téléchargez votre facture sur notre site, rendez-vous dans la section <a href="{history_url}" target="_blank">Historique et détails de mes commandes</a> de votre compte client.]]></target>
+        <note>Line: 319</note>
+      </trans-unit>
+      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb" approved="yes">
+        <source>Out of stock</source>
+        <target state="final">Rupture de stock</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="cfc958489addbbe32552c9bc785f83c9" approved="yes">
+        <source>Replenishment required</source>
+        <target state="final">Réassort nécessaire</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="dd099f9c8d04d30fa277471417a372be" approved="yes">
+        <source>Unfortunately, one or more items are currently out of stock and this may cause a slight delay for delivery. Please accept our apologies for this inconvenience and be sure we are doing our best to correct the situation.</source>
+        <target state="final">Malheureusement, un ou plusieurs produits sont actuellement en rupture de stock, cela peut entraîner un léger retard de livraison. Veuillez nous excuser pour le dérangement, soyez assurés que nous faisons notre possible pour rétablir la situation.</target>
+        <note>Line: 256</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/password.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="dc647eb65e6711e155375218212b3964" approved="yes">
+        <source>Password</source>
+        <target state="final">Mot de passe</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="fa71c1a4010fb64e8968708b3f1e50ca" approved="yes">
+        <source>Your password has been correctly updated.</source>
+        <target state="final">Votre mot de passe a bien été mis à jour.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/password_query.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="09ce893cc7228918df5657665b899249" approved="yes">
+        <source>Please note that this will change your current password.</source>
+        <target state="final">Cette opération vous attribuera un nouveau mot de passe.</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="3516ed9d771d15439e2ac9d3bf81ad84" approved="yes">
+        <source>You have requested to reset your [1]{shop_name}[/1] login details.</source>
+        <target state="final">Vous avez demandé à réinitialiser vos identifiants de connexion sur [1]{shop_name}[/1].</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="de148dcf9a5a0f2de3a65c36f9991f42" approved="yes">
+        <source>Password Query</source>
+        <target state="final">Requête mot de passe</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="87a8bbd45aa2890a2929c07d49fa64f1" approved="yes">
+        <source>Confirmation of password request on {shop_name}</source>
+        <target state="final">Confirmation de récupération de mot de passe sur {shop_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="bdf92bd43402eeabaaa7e643e30607c1" approved="yes">
+        <source>In order to confirm this action, click on the following link:</source>
+        <target state="final">Pour confirmer cette action, cliquez sur le lien suivant :</target>
+        <note>Line: 261</note>
+      </trans-unit>
+      <trans-unit id="0b0df2fff267640acf7f0d03a9b90aa6" approved="yes">
+        <source>If you did not make this request, just ignore this email.</source>
+        <target state="final">Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail.</target>
+        <note>Line: 324</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/payment.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="c453a4b8e8d98e82f35b67f433e3b4da" approved="yes">
+        <source>Payment</source>
+        <target state="final">Paiement</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="3444682d2f753ddc0a602ea92891f3b1" approved="yes">
+        <source>Your payment for order with the reference [1]{order_name}[/1] was successfully processed.</source>
+        <target state="final">Le paiement pour votre commande ayant pour référence [1]{order_name}[/1] a bien été effectué.</target>
+        <note>Line: 246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/payment_error.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b06c5ecc37b9cd61a0cab0534ed1f15d" approved="yes">
+        <source>Payment Error</source>
+        <target state="final">Erreur lors du paiement</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="1e97d97a923eaddd810e056c828e99ea" approved="yes">
+        <source>Payment error</source>
+        <target state="final">Erreur de paiement</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="e1a66dba9aa7c8399229122ca7528b77" approved="yes">
+        <source>We have encountered an error while processing your payment for your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1]. Please contact us as soon as possible.</source>
+        <target state="final">Nous avons rencontré une erreur lors du paiement de votre commande ayant pour référence [1]{order_name}[/1] depuis [1]{shop_name}[/1]. Veuillez nous contacter dès que possible.</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="b8dfec752b0cb58a3bc3c7479e4dd44c" approved="yes">
+        <source>You can expect delivery as soon as your payment is received.</source>
+        <target state="final">La livraison sera effectuée une fois le paiement reçu.</target>
+        <note>Line: 248</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/preparation.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9a5f09cf66e692efdae493ce4c9aa64f" approved="yes">
+        <source>Preparation</source>
+        <target state="final">Préparation</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="6ae0cf64b3eeb821a73550fab5ea13bd" approved="yes">
+        <source>Processing order</source>
+        <target state="final">Commande en cours de traitement</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="67b9a4d1678e24c00ddce83b7005b8a3" approved="yes">
+        <source>We are currently processing your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1].</source>
+        <target state="final">Nous traitons actuellement votre commande ayant pour référence [1]{order_name}[/1] de [1]{shop_name}[/1].</target>
+        <note>Line: 246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/refund.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9b45ae8a346e0587013cdb1494e113d8" approved="yes">
+        <source>Refund processed</source>
+        <target state="final">Remboursement effectué</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="76f0ed934de85cc7131910b32ede7714" approved="yes">
+        <source>Refund</source>
+        <target state="final">Rembourser</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="6063c9fb7f9ad1d1a235c24bfcbf5522" approved="yes">
+        <source>We have processed your refund for your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1].</source>
+        <target state="final">Nous avons traité le remboursement de votre commande ayant pour référence [1]{order_name}[/1] sur [1]{shop_name}[/1].</target>
+        <note>Line: 188</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/reply_msg.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2ddbd3a9b06eadccdea8e1b372830d69" approved="yes">
+        <source>Please do not reply directly to this email, we will not receive it.</source>
+        <target state="final">Veuillez ne pas répondre directement à ce message, nous ne recevrons pas votre réponse.</target>
+        <note>Line: 245</note>
+      </trans-unit>
+      <trans-unit id="b0faef9417304909de0960b57582cd1c" approved="yes">
+        <source>Reply msg</source>
+        <target state="final">Message de réponse</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="7e4e256f10a59674290c89dd1bba1312" approved="yes">
+        <source><![CDATA[In order to reply, click on the following link: <a href="{link}" target="_blank">{link}</a>]]></source>
+        <target state="final"><![CDATA[Pour répondre, cliquer sur le lien suivant : <a href="{link}" target="_blank">{link}</a>]]></target>
+        <note>Line: 246</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/shipped.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="747cf5c8587184b9e489ff897d97c20d" approved="yes">
+        <source>Shipped</source>
+        <target state="final">Expédié</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="da825075a1643697f1540f1c946c01f1" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] has been shipped.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] a été expédiée.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/test.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0cbc6611f5540bd0809a388dc95a615b" approved="yes">
+        <source>Test</source>
+        <target state="final">Test</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="8afe3c369cb4d2e723edabf14b8d8db8" approved="yes">
+        <source>Here is a test [1]email[/1] from your shop.</source>
+        <target state="final">Ceci est un [1]e-mail[/1] de test depuis votre boutique.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="a6ec75fcb2240ccd4ea29549ee413885" approved="yes">
+        <source>If you can read this, it means the test is successful!</source>
+        <target state="final">Si vous pouvez le lire, cela veut dire que le test a réussi !</target>
+        <note>Line: 187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="bba6345ca09bf0e21cb502bc6d960cde" approved="yes">
+        <source>In order to use it, just copy/paste this code during check out.</source>
+        <target state="final">Pour en bénéficier, copier/coller ce code lors de l'achat.</target>
+        <note>Line: 260</note>
+      </trans-unit>
+      <trans-unit id="be686376cddb23d0227444ccc3c4b5b7" approved="yes">
+        <source>Voucher</source>
+        <target state="final">Bon de réduction</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="3e943dfae35fac1a61b30da7f27f2204" approved="yes">
+        <source>Voucher code generated</source>
+        <target state="final">Bon de réduction généré</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="0482c9e34db0bf16ec3a09c4dc7c3b0b" approved="yes">
+        <source>We are pleased to inform you that a voucher has been generated in your name for order with the reference [1]{order_name}[/1].</source>
+        <target state="final">Nous avons le plaisir de vous informer qu'un bon de réduction a été généré à votre nom relatif à votre commande ayant pour référence [1]{order_name}[/1].</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="5dc1b3e639ee30637424bd07af99154d" approved="yes">
+        <source>[1]VOUCHER CODE: {voucher_num}[/1] in the amount of [1]{voucher_amount}[/1]</source>
+        <target state="final">[1]BON DE REDUCTION : {voucher_num}[/1] d'un montant de [1]{voucher_amount}[/1]</target>
+        <note>Line: 253</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/core/voucher_new.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0b04d9ad5743989471141ab21edd64fd" approved="yes">
+        <source>Voucher new</source>
+        <target state="final">Nouveau bon de réduction</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="68b8413e263842c318e66fc6b29144da" approved="yes">
+        <source>Voucher code has been generated</source>
+        <target state="final">Le bon de réduction a été généré</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="af4667c3d9a39bfa5ce658080730210a" approved="yes">
+        <source>Here is your new voucher code:</source>
+        <target state="final">Voici votre nouveau bon de réduction :</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/followup/followup_1.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="784e102689c17fd18fe94135d4fa864d" approved="yes">
+        <source>Your cart at {shop_name}</source>
+        <target state="final">Votre panier chez {shop_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="804e4e067b0e61e122e1a35771fcf144" approved="yes">
+        <source>Follow up 1</source>
+        <target state="final">Suivi 1</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="b9018fa1aff4ac6de7e50d6a8f1c9e4a" approved="yes">
+        <source>Thanks for your visit. However, it looks like you did not complete your purchase.</source>
+        <target state="final">Merci de votre visite. Cependant, vous n'avez pas finalisé votre commande.  </target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="14c90ec7c3372b9f39c9cf24323bd959" approved="yes">
+        <source>Your cart has been saved, you can go back to your order on our shop:</source>
+        <target state="final">Vous panier a été conservé, vous pouvez reprendre votre commande depuis notre boutique :</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="938ad8b6f0f1e5c4663bc171ad56822e" approved="yes">
+        <source>Your voucher code on {shop_name}</source>
+        <target state="final">Votre bon de réduction sur {shop_name}</target>
+        <note>Line: 328</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/followup/followup_2.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="7ff89d85f528f79efd0a85c01a43cb62" approved="yes">
+        <source>Follow up 2</source>
+        <target state="final">Suivi 2</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="605fc3ecd313608fe8c6cbbed5a25261" approved="yes">
+        <source>Thanks for your order.</source>
+        <target state="final">Merci pour votre commande.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/followup/followup_3.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="66472df69ec288388183a74a6e34e942" approved="yes">
+        <source>Thanks for your trust.</source>
+        <target state="final">Merci pour votre confiance.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="383126b6a239da6f7d483220c63a46e2" approved="yes">
+        <source>Follow up 3</source>
+        <target state="final">Suivi 3</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/followup/followup_4.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="8dec16ec73558f6fb2515cce4293ce6f" approved="yes">
+        <source>Your cart has been saved, you can resume your order by visiting our shop:</source>
+        <target state="final">Vous panier a été conservé, vous pouvez reprendre votre commande en vous rendant sur notre boutique :</target>
+        <note>Line: 254</note>
+      </trans-unit>
+      <trans-unit id="18df3f8153de940176206b06a3610f80" approved="yes">
+        <source>We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!</source>
+        <target state="final">Nous avons le plaisir de vous offrir une réduction de [1]{amount}%[/1] sur votre prochaine commande. Cette offre est valable [1]{days}[/1] jours alors n'attendez plus !</target>
+        <note>Line: 261</note>
+      </trans-unit>
+      <trans-unit id="5416511766be8537f357142a81ccd7a7" approved="yes">
+        <source>Here is your VOUCHER CODE:</source>
+        <target state="final">Voici votre BON DE REDUCTION :</target>
+        <note>Line: 328</note>
+      </trans-unit>
+      <trans-unit id="ececa54d96395d3afa79cdce8e7e0bd6" approved="yes">
+        <source>Enter this code in your shopping cart to get the discount.</source>
+        <target state="final">Saisissez ce code dans votre panier pour bénéficier de la réduction.</target>
+        <note>Line: 334</note>
+      </trans-unit>
+      <trans-unit id="a5672f20db3e09abb35f909cf56f3b23" approved="yes">
+        <source>Follow up 4</source>
+        <target state="final">Suivi 4</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="1e6f48752a20a5c6dc2f387c18777136" approved="yes">
+        <source>Your cart on {shop_name}</source>
+        <target state="final">Votre panier chez {shop_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="8dfa91d2853e941e80553ab1336b6459" approved="yes">
+        <source>Congratulations, you are one of our best customers! However, it looks like you have not placed an order since {days_threshold} days.</source>
+        <target state="final">Félicitations, vous faites partie de nos meilleurs clients ! Cependant, vous n'avez pas commandé depuis {days_threshold} jours.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/customer_qty.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9b096ae55ce4d2bb889392144c104069" approved="yes">
+        <source>{product} is now available.</source>
+        <target state="final">{product} est maintenant disponible.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="583b02c0b2f05171037b58c186a5461d" approved="yes">
+        <source>Customer Quantity</source>
+        <target state="final">Quantité client</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="61a517de529038e441a1f6ada3f5a196" approved="yes">
+        <source>Good news, this item is back in stock!</source>
+        <target state="final">Bonne nouvelle, cet article est de nouveau en stock !</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="fb0e8fc6b59dac729bb483b2c617adf2" approved="yes">
+        <source>Click on the following link to visit the product page and order it:</source>
+        <target state="final">Cliquez sur le lien suivant pour accéder à la page produit et le commander :</target>
+        <note>Line: 254</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/new_order.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5c1cc11c191c9a0f32d16439618ed3bb" approved="yes">
+        <source>Customer message:</source>
+        <target state="final">Message du client :</target>
+        <note>Line: 667</note>
+      </trans-unit>
+      <trans-unit id="f5d74ea75357b5e139854c14f8e24fe3" approved="yes">
+        <source>Order details</source>
+        <target state="final">Détails de la commande</target>
+        <note>Line: 188</note>
+      </trans-unit>
+      <trans-unit id="2ca3deb5cd68fa9119b285804fab572f" approved="yes">
+        <source>Order:</source>
+        <target state="final">Commande :</target>
+        <note>Line: 255</note>
+      </trans-unit>
+      <trans-unit id="101f2450ccefbd344b37971c5d27f96d" approved="yes">
+        <source>Placed on</source>
+        <target state="final">passée le</target>
+        <note>Line: 255</note>
+      </trans-unit>
+      <trans-unit id="a0e8e26f6f9354192425b9a23227a5ba" approved="yes">
+        <source>Payment:</source>
+        <target state="final">Paiement :</target>
+        <note>Line: 510</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca" approved="yes">
+        <source>Reference</source>
+        <target state="final">Référence</target>
+        <note>Line: 331</note>
+      </trans-unit>
+      <trans-unit id="deb10517653c255364175796ace3553f" approved="yes">
+        <source>Product</source>
+        <target state="final">Produit</target>
+        <note>Line: 332</note>
+      </trans-unit>
+      <trans-unit id="6c957f72dc8cdacc75762f2cbdcdfaf2" approved="yes">
+        <source>Unit price</source>
+        <target state="final">Prix unitaire</target>
+        <note>Line: 333</note>
+      </trans-unit>
+      <trans-unit id="694e8d1f2ee056f98ee488bdc4982d73" approved="yes">
+        <source>Quantity</source>
+        <target state="final">Quantité</target>
+        <note>Line: 334</note>
+      </trans-unit>
+      <trans-unit id="0eede552438475bdfe820c13f24c9399" approved="yes">
+        <source>Total price</source>
+        <target state="final">Prix total</target>
+        <note>Line: 335</note>
+      </trans-unit>
+      <trans-unit id="068f80c7519d0528fb08e82137a72131" approved="yes">
+        <source>Products</source>
+        <target state="final">Produits</target>
+        <note>Line: 340</note>
+      </trans-unit>
+      <trans-unit id="9d5bf15117441a1b52eb1f0808e4aad3" approved="yes">
+        <source>Discounts</source>
+        <target state="final">Réductions</target>
+        <note>Line: 346</note>
+      </trans-unit>
+      <trans-unit id="41c1d61bfff3fc9b1fd8f195061b8caa" approved="yes">
+        <source>Gift-wrapping</source>
+        <target state="final">Paquet cadeau</target>
+        <note>Line: 352</note>
+      </trans-unit>
+      <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6" approved="yes">
+        <source>Shipping</source>
+        <target state="final">Livraison</target>
+        <note>Line: 358</note>
+      </trans-unit>
+      <trans-unit id="ea067eb37801c5aab1a1c685eb97d601" approved="yes">
+        <source>Total paid</source>
+        <target state="final">Total payé</target>
+        <note>Line: 370</note>
+      </trans-unit>
+      <trans-unit id="f8617a92ba0a0a4eabee724eab7c9f48" approved="yes">
+        <source>Carrier:</source>
+        <target state="final">Transporteur :</target>
+        <note>Line: 504</note>
+      </trans-unit>
+      <trans-unit id="af0f5bdc5be121b9307687aeeae38c17" approved="yes">
+        <source>Delivery address</source>
+        <target state="final">Adresse de livraison</target>
+        <note>Line: 580</note>
+      </trans-unit>
+      <trans-unit id="1fbc7e5f1b92c7ec072397b59a0bb5da" approved="yes">
+        <source>Billing address</source>
+        <target state="final">Adresse de facturation</target>
+        <note>Line: 596</note>
+      </trans-unit>
+      <trans-unit id="5c9412907a7aabeea3491fafec5c082e" approved="yes">
+        <source>Including total tax</source>
+        <target state="final">Incluant un total de taxes</target>
+        <note>Line: 364</note>
+      </trans-unit>
+      <trans-unit id="6810a1cc40329a394b9d73b5f8dac744" approved="yes">
+        <source>New Order</source>
+        <target state="final">Nouvelle commande</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="ea1fc6431869b331e6db01a2f6ca921f" approved="yes">
+        <source>A new order was placed on [1]{shop_name}[/1] by the following customer:</source>
+        <target state="final">Une nouvelle commande a été effectuée sur [1]{shop_name}[/1] par le client suivant :</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="914419aa32f04011357d3b604a86d7eb" approved="yes">
+        <source>Carrier</source>
+        <target state="final">Transporteur</target>
+        <note>Line: 437</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/order_changed.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="ac32eb3619340a6b6aff41d9797665d4" approved="yes">
+        <source>Order changed</source>
+        <target state="final">Commande modifiée</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="681a0aa2d158085f63f86c84900fa989" approved="yes">
+        <source>Your order with the reference [1]{order_name}[/1] from [1]{shop_name}[/1] has been changed by the merchant.</source>
+        <target state="final">Votre commande ayant pour référence [1]{order_name}[/1] sur [1]{shop_name}[/1] a été modifiée par le marchand.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="869a6d7d8b6af1ca14f874356141ac45" approved="yes">
+        <source><![CDATA[If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">Guest Tracking</a> section on our shop.]]></source>
+        <target state="final"><![CDATA[Si vous avez un compte invité, vous pouvez suivre votre commande via la section <a href="{guest_tracking_url}" target="_blank">Suivi invité</a> sur notre boutique.]]></target>
+        <note>Line: 317</note>
+      </trans-unit>
+      <trans-unit id="af6c5b694abbb964eec098febaa5d31d" approved="yes">
+        <source>Order ID {order_name}</source>
+        <target state="final">Identifiant de commande {order_name}</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="c03924df23d22785084b06a548ca9976" approved="yes">
+        <source>Go to your customer account to learn more about it.</source>
+        <target state="final">Pour en savoir plus, rendez-vous sur votre compte client.</target>
+        <note>Line: 254</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/productcoverage.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="81899e9a62d3f952e81d5f72437470f9" approved="yes">
+        <source>Current stock cover:</source>
+        <target state="final">Couverture actuelle :</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="fdf4e97dcf4ad98512050ab60cf91bc3" approved="yes">
+        <source>Product coverage</source>
+        <target state="final">Stock restant</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="906898f022140256a84c9429a3fcf4d8" approved="yes">
+        <source>Your stock cover is now less than the specified minimum of:</source>
+        <target state="final">Le stock restant est maintenant inférieur au minimum défini de :</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/productoutofstock.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="6983ddb3442f4ad4a3b94e94a1ebd3dc" approved="yes">
+        <source>{product} is almost out of stock.</source>
+        <target state="final">{product} est en rupture de stock.</target>
+        <note>Line: 178</note>
+      </trans-unit>
+      <trans-unit id="ab8f74636fc3f34b09b1300a2393a0b8" approved="yes">
+        <source>Remaining stock:</source>
+        <target state="final">Stock restant :</target>
+        <note>Line: 252</note>
+      </trans-unit>
+      <trans-unit id="d3f03e2edd35c99abb3fd3d9bc51706e" approved="yes">
+        <source><![CDATA[Replenish your inventory, go to the [1]Catalog > Stocks[/1] section of your back office to manage your stock.]]></source>
+        <target state="final"><![CDATA[Renouvelez vos stocks, rendez-vous dans la section [1]Catalogue > Stocks[/1] de votre back office pour gérer les quantités de vos articles.]]></target>
+        <note>Line: 258</note>
+      </trans-unit>
+      <trans-unit id="644f9c907ef5a8315916bd1e2f61f783" approved="yes">
+        <source>Product out of stock</source>
+        <target state="final">Produit en rupture de stock</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="9300ac228fc7c8ec8d970d862d68432c" approved="yes">
+        <source>There are now less than [1]{last_qty}[/1] items in stock.</source>
+        <target state="final">Il y a maintenant moins de [1]{last_qty}[/1] articles en stock.</target>
+        <note>Line: 245</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailalerts/return_slip.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="5eea367ea73b909880393bd1ae79fc67" approved="yes">
+        <source>Customer:</source>
+        <target state="final">Client :</target>
+        <note>Line: 262</note>
+      </trans-unit>
+      <trans-unit id="f285446f60a203b0f7c3ad0b14d13d29" approved="yes">
+        <source>You have received a new return request for {shop_name}.</source>
+        <target state="final">Vous avez reçu une nouvelle demande de retour pour {shop_name}.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="6773c510bcd24041ed4d515b65358e96" approved="yes">
+        <source>Return Slip</source>
+        <target state="final">Étiquette de retour</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="9b600ac4bf14f6e3919b919893bae7f8" approved="yes">
+        <source>Return Details</source>
+        <target state="final">Détails du retour</target>
+        <note>Line: 189</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailsubscription/newsletter_conf.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="4e1c51e233f1ed368c58db9ef09010ba" approved="yes">
+        <source>Thank you for subscribing to our newsletter.</source>
+        <target state="final">Merci de vous être inscrit à notre newsletter.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="bb372ddf88ad8fcc480f7a8599a92abc" approved="yes">
+        <source>Hi,</source>
+        <target state="final">Bonjour,</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="c9a257051d205ce3d0f4078b53dd4512" approved="yes">
+        <source>Newsletter Confirmation</source>
+        <target state="final">Confirmation newsletter</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailsubscription/newsletter_verif.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="32e00ed1f8f1062378ba2c47ac75de9d" approved="yes">
+        <source>Newsletter Verification</source>
+        <target state="final">Vérification newsletter</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="3b3d69d6a53f5cb28d8867f5aeb1aa78" approved="yes">
+        <source>Thank you for subscribing to our newsletter. Please click on the following link to confirm your request:</source>
+        <target state="final">Merci de vous être abonné à notre newsletter. Veuillez cliquer sur le lien suivant pour confirmer :</target>
+        <note>Line: 180</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/ps_emailsubscription/newsletter_voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2eb58792075fb4bea9ad03b6da20ec05" approved="yes">
+        <source>Newsletter Voucher</source>
+        <target state="final">Bon de réduction newsletter</target>
+        <note>Line: 3</note>
+      </trans-unit>
+      <trans-unit id="fb85495b4c45ce28e7a1521017326c5a" approved="yes">
+        <source>Subscribing to newsletter</source>
+        <target state="final">S'abonner à la newsletter</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="f6c3e4834d385f4923121b89bdee29c0" approved="yes">
+        <source>Thank you for subscribing to our newsletter. We are pleased to offer you the following voucher:</source>
+        <target state="final">Merci de vous êtes abonné à notre newsletter. Nous avons le plaisir de vous offrir le bon de réduction suivant :</target>
+        <note>Line: 247</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/referralprogram/referralprogram-congratulations.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="1a81759353d36dbd31059fc261af0aa2" approved="yes">
+        <source>Congratulations!</source>
+        <target state="final">Bravo !</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="0920dd6cc2680f2a960c59f757d5184d" approved="yes">
+        <source><![CDATA[Your referred friend [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] has placed his/her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre filleul(e) [1]{sponsored_firstname}[/1] [1]{sponsored_lastname}[/1] a effectué son premier achat sur <a href="{shop_url}">{shop_name}</a> !]]></target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="4461931aad93f10308121eb94ce7be47" approved="yes">
+        <source>We are pleased to offer you a voucher worth [1]{discount_display}[/1] (VOUCHER # [1]{discount_name}[/1]) that you can use on your next order.</source>
+        <target state="final">Nous avons le plaisir de vous offrir un bon d'achat de [1]{discount_display}[/1] (BON DE REDUCTION # [1]{discount_name}[/1]) à utiliser sur votre prochaine commande.</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="49af6950c9d9101af9ae958b4426c6b9" approved="yes">
+        <source>Referral program Congratulations</source>
+        <target state="final">Programme de parrainage Félicitations</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/referralprogram/referralprogram-invitation.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="677182971924ee6799eb365f688c5572" approved="yes">
+        <source>Best regards,</source>
+        <target state="final">Bien cordialement,</target>
+        <note>Line: 311</note>
+      </trans-unit>
+      <trans-unit id="4a898b178164591fca68f786e164927d" approved="yes">
+        <source>We are pleased to offer you a voucher worth [1]{discount}[/1] that you can use on your next order.</source>
+        <target state="final">Nous avons le plaisir de vous offrir un bon d'achat de [1]{discount}[/1] à utiliser sur votre prochaine commande.</target>
+        <note>Line: 186</note>
+      </trans-unit>
+      <trans-unit id="814fd45dff3fa38cc8114bc0d6c9020a" approved="yes">
+        <source>Join us!</source>
+        <target state="final">Rejoignez-nous !</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="a2ca20d3687abde01edc72cb7c1c5600" approved="yes">
+        <source><![CDATA[Your friend [1]{firstname} {lastname}[/1] wants to refer you on <a href="{shop_url}" target="_blank">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre ami [1]{firstname} {lastname}[/1] souhaite vous parrainer sur <a href="{shop_url}" target="_blank">{shop_name}</a> !]]></target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="b37f4e64c7473dac9931e0fabf536ef3" approved="yes">
+        <source>Get referred and earn a discount voucher of [1]{discount}[/1]!</source>
+        <target state="final">Devenez son(sa) filleul(e) et remportez un bon d'achat de [1]{discount}[/1] !</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="48f75fa6577e9a8b1a43268ac9844494" approved="yes">
+        <source>It's very easy to sign up, just click here!</source>
+        <target state="final">Pour nous rejoindre, rien de plus simple, cliquez ici !</target>
+        <note>Line: 189</note>
+      </trans-unit>
+      <trans-unit id="a0d3fa1d46da3bd234eb873154675d8e" approved="yes">
+        <source>When signing up, don't forget to provide the email address of your referring friend:</source>
+        <target state="final">N'oubliez pas de renseigner l'adresse e-mail de l'ami qui vous parraine lors de votre inscription :</target>
+        <note>Line: 253</note>
+      </trans-unit>
+      <trans-unit id="a9f8dbec69378bc1c5b1e9d144bd2412" approved="yes">
+        <source>Referral program Invitation</source>
+        <target state="final">Programme de parrainage Invitation</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="mails/themes/modern/modules/referralprogram/referralprogram-voucher.html.twig" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="31ee1241ee08294dfc2ca85698fda2a1" approved="yes">
+        <source>Hi {firstname} {lastname},</source>
+        <target state="final">Bonjour {firstname} {lastname},</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="f4f614c22d9d2cbd0f9aa08cd59600d2" approved="yes">
+        <source>Simply copy/paste this code during the payment process for your next order.</source>
+        <target state="final">Copiez-collez ce numéro dans le panier de votre prochain achat avant de régler la commande.</target>
+        <note>Line: 255</note>
+      </trans-unit>
+      <trans-unit id="abe1585bf97403d8a9a01a272183585a" approved="yes">
+        <source>Here is the code of your voucher:</source>
+        <target state="final">Voici le numéro de votre bon de réduction :</target>
+        <note>Line: 248</note>
+      </trans-unit>
+      <trans-unit id="dd863685846fc4eddcc9d6d09ddd5264" approved="yes">
+        <source>We have created a voucher in your name for referring a friend.</source>
+        <target state="final">Nous vous informons de la génération d'un bon de réduction à votre nom relatif à votre parrainage.</target>
+        <note>Line: 247</note>
+      </trans-unit>
+      <trans-unit id="389df865c60c8fc7b86bf773eb5b121c" approved="yes">
+        <source>, with an amount of</source>
+        <target state="final">, d'un montant total de</target>
+        <note>Line: 248</note>
+      </trans-unit>
+      <trans-unit id="cb3374f4e7a0afb61e63d0ee694ad501" approved="yes">
+        <source>Sponsorship Program</source>
+        <target state="final">Programme de parrainage</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="f38a99a3e90333bd34a64e90f03960f4" approved="yes">
+        <source>Referral program Voucher</source>
+        <target state="final">Programme de parrainage Réduction</target>
+        <note>Line: 3</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/cheque.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3f8b7a7948f4fd5d9bb34d63746dfd23" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been placed successfully and will be <strong>shipped as soon as we receive your payment</strong>.]]></source>
+        <target state="final"><![CDATA[Nous avons bien enregistré votre commande ayant pour référence <span><strong>{order_name}</strong></span>. Celle-ci vous sera <strong>envoyée dès réception de votre paiement</strong>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/cheque.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/credit_slip.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="b1c95c88d55558a6c04dea50425199df" approved="yes">
+        <source><![CDATA[We have generated a credit slip in your name for order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target state="final"><![CDATA[Nous vous informons de la génération d'un avoir à votre nom relatif à votre commande ayant pour référence <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/credit_slip.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/download_product.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="afae9cdc5d9b4583915a579cb0c67788" approved="yes">
+        <source><![CDATA[You have <span><strong>{nbProducts}</strong></span> product(s) now available for download using the following link(s):]]></source>
+        <target state="final"><![CDATA[Vous avez <span><strong>{nbProducts}</span></strong> produit(s) à télécharger.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/download_product.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/employee_password.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a1fd16fcb98f1a6ec4312a10e6a3acba" approved="yes">
+        <source><![CDATA[Here is your personal login information for <span><strong>{shop_name}</strong></span>:]]></source>
+        <target state="final"><![CDATA[Voici vos informations d'identification sur <span><strong>{shop_name}</strong></span> :]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/employee_password.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/footer.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e1c65ac2c128f4835c77d0c7aefccb7e" approved="yes">
+        <source><![CDATA[<a href="{shop_url}">{shop_name}</a> powered by <a href="http://www.prestashop.com/">PrestaShop™</a>]]></source>
+        <target state="final"><![CDATA[<a href="{shop_url}">{shop_name}</a> propulsé par <a href="http://www.prestashop.com/">PrestaShop™</a>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/footer.php:6</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/forward_msg.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="85ae5cfc68837cc8e50609b84babba09" approved="yes">
+        <source><![CDATA[<span><strong>{employee}</strong></span> wanted to forward this discussion to you.]]></source>
+        <target state="final"><![CDATA[<span><strong>{employee}</strong></span> souhaite vous transférer cette discussion.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:24</note>
+      </trans-unit>
+      <trans-unit id="f4df87e5e465151ae8d5954bec01d9ec" approved="yes">
+        <source><![CDATA[<span><strong>{employee}</strong></span> added <span><strong>"{comment}"</strong></span>]]></source>
+        <target state="final"><![CDATA[<span><strong>{employee}</strong></span> a ajouté <span><strong>"{comment}"</strong></span>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/forward_msg.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/guest_to_customer.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="499e229d39934f1a36f3f48718cc19cc" approved="yes">
+        <source><![CDATA[Your guest account for <span><strong>{shop_name}</strong></span> has been transformed into a customer account.]]></source>
+        <target state="final"><![CDATA[Votre compte invité sur <span><strong>{shop_name}</strong></span> a été transformé en compte client.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/guest_to_customer.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/in_transit.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="873a6c9ce4b0711161105e4a6d943bb6" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> is currently in transit.]]></source>
+        <target state="final"><![CDATA[La livraison de votre commande ayant pour référence <span><strong>{order_name}</strong></span> est en cours.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/in_transit.php:49</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/log_alert.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="17357f0ed7c82a1620f4311667886a63" approved="yes">
+        <source><![CDATA[<span><strong>Warning:</strong></span> you have received a new log alert in your Back Office.]]></source>
+        <target state="final"><![CDATA[<span><strong>Attention :</strong></span> vous avez reçu un nouveau message d'alerte dans votre back-office.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/log_alert.php:24</note>
+      </trans-unit>
+      <trans-unit id="ba00a1816b599684def5ff1d312ef5ed" approved="yes">
+        <source><![CDATA[You can check for it in the <span><strong>"Tools" > "Logs"</strong></span> section of your Back Office.]]></source>
+        <target state="final"><![CDATA[Vous pouvez consulter les messages d'alerte grâce à la page <span><strong>Paramètres de la boutique > Logs</strong></span> de votre back office.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/log_alert.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_canceled.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="50651089ed12eb33b55394a0a17618de" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been canceled.]]></source>
+        <target state="final"><![CDATA[Votre commande sur  <span><strong>{shop_name}</strong></span> ayant pour référence <span><strong>{order_name}</strong></span> a été annulée.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_canceled.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_changed.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0e6321e9d36186e957652f07d88116a5" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> from <span><strong>{shop_name}</strong></span> has been changed by the merchant.]]></source>
+        <target state="final"><![CDATA[Votre commande sur <span><strong>{shop_name}</strong></span> ayant pour référence <span><strong>{order_name}</strong></span> a été modifiée par le marchand.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_changed.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/order_merchant_comment.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="ad9fd7d0fe973ddaef093d912d0b57e2" approved="yes">
+        <source><![CDATA[You have received a new message from <span><strong>{shop_name}</strong></span> regarding order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target state="final"><![CDATA[Vous avez reçu un nouveau message de <span><strong>{shop_name}</strong></span> concernant la commande ayant pour référence <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/order_merchant_comment.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/password_query.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="18f3152ffe51f0d446558f666dc8d5ea" approved="yes">
+        <source><![CDATA[You have requested to reset your <span><strong>{shop_name}</strong></span> login details.]]></source>
+        <target state="final"><![CDATA[Vous avez demandé à récupérer vos codes d'accès sur <span><strong>{shop_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/password_query.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/shipped.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="e9933131bfeef332fc84561f8e23aeba" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been shipped.]]></source>
+        <target state="final"><![CDATA[Votre commande ayant la référence <span><strong>{order_name}</strong></span> vient d'être expédiée.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/shipped.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/test.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="0afa69e0eb948ce9fb81e14cc0c7cf0b" approved="yes">
+        <source><![CDATA[This is a <strong>test e-mail</strong> from your shop.<br /><br /> If you can read this, the test was successful!]]></source>
+        <target state="final"><![CDATA[Voici un <strong>e-mail</strong> de test de votre boutique. <br /><br />Si vous parvenez à lire ceci, le test a réussi!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/test.php:14</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/core/voucher.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="17ab9221f0e6cb342a02d31c56c79c2b" approved="yes">
+        <source><![CDATA[A voucher has been created in your name as a result of your order with the reference <span><strong>{order_name}</strong></span>.]]></source>
+        <target state="final"><![CDATA[Nous vous informons de la génération d'un bon de réduction à votre nom relatif à votre commande ayant pour référence <span><strong>{order_name}</strong></span>.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher.php:24</note>
+      </trans-unit>
+      <trans-unit id="25cecf399c0cd872952ced4a7d150e0d" approved="yes">
+        <source><![CDATA[<span><strong>Voucher code: {voucher_num}</strong></span> in the amount of <span><strong>{voucher_amount}</strong></span>]]></source>
+        <target state="final"><![CDATA[<span><strong>Code du bon de réduction : {voucher_num}</strong></span> Montant: <span><strong>{voucher_amount}</strong></span>]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/core/voucher.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_1.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="2213ab34c63663d94f96efdb6a9be339" approved="yes">
+        <source><![CDATA[As an incentive, we can give you a discount of {amount}% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target state="final"><![CDATA[A titre exceptionnel, nous vous accordons également une remise de {amount}% sur votre commande ! Cette offre est valable <span><strong>{days}</strong></span> jours, ne perdez plus un instant !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_1.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_2.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="3a5fa552bd31ebcceae0973cd384406b" approved="yes">
+        <source><![CDATA[As our way of saying thanks, we want to give you a discount of <span><strong>{amount}</strong></span>% off your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target state="final"><![CDATA[À titre exceptionnel, nous vous accordons une remise de <span><strong>{amount}%</strong></span> sur votre prochaine commande ! Cette offre est valable <span><strong>{days}</strong></span> jours, ne perdez plus un instant !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_2.php:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_3.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="86736a3055a9913b2c64671cd333e159" approved="yes">
+        <source><![CDATA[As appreciation for your loyalty, we want to give you a discount of <span><strong>{amount}</strong></span>% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target state="final"><![CDATA[Pour vous remercier de votre fidélité, nous vous accordons une remise de <span><strong>{amount}%</strong></span> valable sur votre prochaine commande ! Cette offre est valable <span><strong>{days}</strong></span> jours, ne perdez plus un instant !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_3.php:25</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/followup/followup_4.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="08706a0434d504af130649d9fd74ca54" approved="yes">
+        <source><![CDATA[We wish to thank you for the trust you have placed in us and want to give you a discount of {amount}% valid on your next order! This offer is valid for <span><strong>{days}</strong></span> days, so do not waste a moment!]]></source>
+        <target state="final"><![CDATA[Nous souhaitons vous remercier pour la confiance dont vous nous faites part et à ce titre, nous vous accordons une remise de <span><strong>{amount}%</strong></span> valable sur votre prochaine commande ! Cette offre est valable {days} jours, ne perdez plus un instant !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/followup/followup_4.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="fe61da38922f840543c9f7a4f5dc8140" approved="yes">
+        <source><![CDATA[Your order with the reference <span><strong>{order_name}</strong></span> has been modified.]]></source>
+        <target state="final"><![CDATA[Votre commande référence <span><strong>{order_name}</strong></span> a été modifiée.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/order_changed.php:24</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="a36e5157843703cdad66073626eb54cb" approved="yes">
+        <source><![CDATA[You are advised to open the product&#039;s admin Product Page in order to replenish your inventory.]]></source>
+        <target state="final"><![CDATA[Nous vous conseillons de vous rendre sur la page produit du panneau d'administration afin de renouveler vos stocks.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/ps_emailalerts/productoutofstock.php:26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="90e0a7c3c7230e2188794af89350ea7b" approved="yes">
+        <source><![CDATA[Your referred friend <span><strong>{sponsored_firstname} {sponsored_lastname}</strong></span> has placed his or her first order on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre filleul(e) <span><strong>{sponsored_firstname} {sponsored_lastname}</strong></span> a effectué son premier achat sur <a href="{shop_url}">{shop_name}</a>!]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php:21</note>
+      </trans-unit>
+      <trans-unit id="eb7c04362c657d5651703a43307e61c2" approved="yes">
+        <source><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount_display} (voucher # {discount_name})</strong></span> that you can use on your next order.]]></source>
+        <target state="final"><![CDATA[Nous avons le plaisir de vous offrir un bon d'achat de <span><strong>{discount_display} (bon de réduction # {discount_name})</strong></span>, que vous pourrez utiliser à l'occasion de votre prochaine commande.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-congratulations.php:22</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php" source-language="en" target-language="fr" datatype="plaintext">
+    <body>
+      <trans-unit id="9607a6790558da43af7334b50dfb5354" approved="yes">
+        <source><![CDATA[Your friend <span><strong>{firstname} {lastname}</strong></span> wants to refer you on <a href="{shop_url}">{shop_name}</a>!]]></source>
+        <target state="final"><![CDATA[Votre ami(e) <span><strong>{firstname} {lastname}</strong></span> vous a parrainé depuis le site <a href="{shop_url}">{shop_name}</a> !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:21</note>
+      </trans-unit>
+      <trans-unit id="a234487df6f91f04f3d99a597681a4ac" approved="yes">
+        <source><![CDATA[We are pleased to offer you a voucher worth <span><strong>{discount}</strong></span> that you can use on your next order.]]></source>
+        <target state="final"><![CDATA[Nous avons le plaisir de vous offrir un bon d'achat de <span><strong>{discount}</strong></span> que vous pourrez utiliser à l'occasion de votre prochaine commande.]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:22</note>
+      </trans-unit>
+      <trans-unit id="99c81bae8075078e8af2bccbdd5e98b6" approved="yes">
+        <source><![CDATA[Get referred and earn a discount voucher of <span><strong>{discount}!</strong></span>]]></source>
+        <target state="final"><![CDATA[Devenez son(sa) filleul(e) afin de gagner un bon d'achat de <span><strong>{discount}!</strong></span> !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:23</note>
+      </trans-unit>
+      <trans-unit id="36791224f527482e84d2ff30fbb3c699" approved="yes">
+        <source><![CDATA[It&#039;s very easy to sign up. Just click here!]]></source>
+        <target state="final"><![CDATA[Pour nous rejoindre, rien de plus simple : cliquez ici !]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:24</note>
+      </trans-unit>
+      <trans-unit id="edfb7a07b2d6386a1308f34c1a08aa0e" approved="yes">
+        <source><![CDATA[When signing up, don&#039;t forget to provide the e-mail address of your referring friend:]]></source>
+        <target state="final"><![CDATA[N'oubliez pas d'y préciser l'e-mail de votre ami en tant que parrain lors de votre inscription :]]></target>
+        <note>Context:
+File: modules/ps_emailgenerator/templates/modules/referralprogram/referralprogram-invitation.php:39</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

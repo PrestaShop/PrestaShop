@@ -59,6 +59,6 @@ class InstallControllerHttpLicense extends InstallControllerHttp implements Http
      */
     public function display()
     {
-        $this->displayTemplate('license');
+        $this->displayContent('license');
     }
 }

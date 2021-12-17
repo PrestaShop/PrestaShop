@@ -23,38 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block addresses_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': addressGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': addressGrid} %}
   {% endblock %}
 
   {% block address_required_fields_form %}
-    <div class="row">
-      <div class="col-md-12">
-        <p>
-          <button class="btn btn-primary"
-                  type="button"
-                  data-toggle="collapse"
-                  data-target="#addressRequiredFieldsContainer"
-                  aria-expanded="false"
-                  aria-controls="addressRequiredFieldsContainer"
-          >
-            <i class="material-icons">add_circle</i>
-            {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </button>
-        </p>
-      </div>
+    <p>
+      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#addressRequiredFieldsContainer" aria-expanded="false" aria-controls="addressRequiredFieldsContainer">
+        <i class="material-icons">add_circle</i>
+        {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </p>
 
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Address/Blocks/required_fields.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Address/Blocks/required_fields.html.twig' %}
   {% endblock %}
 {% endblock %}
 

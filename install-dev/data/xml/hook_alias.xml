@@ -349,5 +349,13 @@
       <alias>actionFrontControllerAfterInit</alias>
       <name>actionFrontControllerInitAfter</name>
     </hook_alias>
+    <hook_alias id="displayAdminListBefore">
+      <alias>displayAdminListBefore</alias>
+      <name>displayAdminGridTableBefore</name>
+    </hook_alias>
+    <hook_alias id="displayAdminListAfter">
+      <alias>displayAdminListAfter</alias>
+      <name>displayAdminGridTableAfter</name>
+    </hook_alias>
   </entities>
 </entity_hook_alias>

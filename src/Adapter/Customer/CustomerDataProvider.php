@@ -45,7 +45,7 @@ class CustomerDataProvider
     public function getCustomer($id)
     {
         if (!$id) {
-            throw new LogicException('You need to provide a customer id', null, 5002);
+            throw new LogicException('You need to provide a customer id', 5002);
         }
 
         $customer = new Customer($id);

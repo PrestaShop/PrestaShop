@@ -34,7 +34,8 @@ use Hook;
 use Order;
 use OrderDetail;
 use OrderInvoice;
-use PrestaShop\PrestaShop\Adapter\Order\AbstractOrderHandler;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater;
 use PrestaShop\PrestaShop\Adapter\Order\OrderProductQuantityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotEditDeliveredOrderProductException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\CannotFindProductInOrderException;
@@ -43,7 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\UpdateProductInOrderCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\CommandHandler\UpdateProductInOrderHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 use StockAvailable;
 use Validate;
@@ -51,22 +51,38 @@ use Validate;
 /**
  * @internal
  */
-final class UpdateProductInOrderHandler extends AbstractOrderHandler implements UpdateProductInOrderHandlerInterface
+final class UpdateProductInOrderHandler extends AbstractOrderCommandHandler implements UpdateProductInOrderHandlerInterface
 {
+    /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
     /**
      * @var OrderProductQuantityUpdater
      */
     private $orderProductQuantityUpdater;
 
     /**
+     * @var OrderDetailUpdater
+     */
+    private $orderDetailUpdater;
+
+    /**
      * UpdateProductInOrderHandler constructor.
      *
      * @param OrderProductQuantityUpdater $orderProductQuantityUpdater
+     * @param OrderDetailUpdater $orderDetailUpdater
+     * @param ContextStateManager $contextStateManager
      */
     public function __construct(
-        OrderProductQuantityUpdater $orderProductQuantityUpdater
+        OrderProductQuantityUpdater $orderProductQuantityUpdater,
+        OrderDetailUpdater $orderDetailUpdater,
+        ContextStateManager $contextStateManager
     ) {
         $this->orderProductQuantityUpdater = $orderProductQuantityUpdater;
+        $this->orderDetailUpdater = $orderDetailUpdater;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -76,6 +92,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
     {
         try {
             $order = $this->getOrder($command->getOrderId());
+
+            $this->setOrderContext($this->contextStateManager, $order);
 
             $orderDetail = new OrderDetail($command->getOrderDetailId());
             $orderInvoice = null;
@@ -87,16 +105,21 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             $this->assertProductCanBeUpdated($command, $orderDetail, $order, $orderInvoice);
             $this->assertProductNotDuplicate($order, $orderDetail, $orderInvoice);
 
-            // Update specific price if needed
-            $product = $this->getProduct(new ProductId((int) $orderDetail->product_id), (int) $order->id_lang);
-            $combination = $this->getCombination((int) $orderDetail->product_attribute_id);
-
-            $this->updateSpecificPrice(
-                $command->getPriceTaxIncluded(),
-                $command->getPriceTaxExcluded(),
+            // Update current OrderDetail with new price (the object will be updated by reference)
+            $this->orderDetailUpdater->updateOrderDetail(
+                $orderDetail,
                 $order,
-                $product,
-                $combination
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
+            );
+
+            // We also need to update all identical OrderDetails to be sure that Cart will get the correct price
+            $this->orderDetailUpdater->updateOrderDetailsForProduct(
+                $order,
+                (int) $orderDetail->product_id,
+                (int) $orderDetail->product_attribute_id,
+                $command->getPriceTaxExcluded(),
+                $command->getPriceTaxIncluded()
             );
 
             // Update invoice, quantity and amounts
@@ -105,6 +128,8 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             Hook::exec('actionOrderEdited', ['order' => $order]);
         } catch (Exception $e) {
             throw $e;
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
@@ -161,18 +186,13 @@ final class UpdateProductInOrderHandler extends AbstractOrderHandler implements 
             throw new OrderException('Invalid quantity');
         }
 
-        // @todo: check if quantity can be array
-//        if (is_array($command->getQuantity())) {
-//            foreach ($command->getQuantity() as $qty) {
-//                if (!Validate::isUnsignedInt($qty)) {
-//                    throw new OrderException('Invalid quantity');
-//                }
-//            }
-//        }
-
         //check if product is available in stock
         if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($orderDetail->product_id))) {
-            $availableQuantity = StockAvailable::getQuantityAvailableByProduct($orderDetail->product_id, $orderDetail->product_attribute_id);
+            $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $orderDetail->product_id,
+                $orderDetail->product_attribute_id,
+                $orderDetail->id_shop
+            );
             $quantityDiff = $command->getQuantity() - (int) $orderDetail->product_quantity;
 
             if ($quantityDiff > $availableQuantity) {

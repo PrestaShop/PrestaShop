@@ -79,7 +79,7 @@ class WebserviceOutputBuilderCore
      * @param WebserviceOutputInterface $obj_render
      * @throw WebserviceException if the object render is not an instance of WebserviceOutputInterface
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      *
      * @throws WebserviceException
      */
@@ -114,7 +114,7 @@ class WebserviceOutputBuilderCore
      *
      * @param array $resources
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      */
     public function setWsResources($resources)
     {
@@ -146,7 +146,7 @@ class WebserviceOutputBuilderCore
      * @param string $key The normalized key expected for an http response
      * @param string $value
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      *
      * @throws WebserviceException If the key or the value are corrupted (use Validate::isCleanHtml method)
      */
@@ -165,12 +165,10 @@ class WebserviceOutputBuilderCore
      * @throw WebserviceException if the key is corrupted (use Validate::isCleanHtml method)
      * @throw WebserviceException if the asked key does'nt exists.
      *
-     * @return array|string
+     * @return array|int
      */
     public function getHeaderParams($key = null)
     {
-        $return = '';
-
         if (null !== $key) {
             if (!Validate::isCleanHtml($key)) {
                 throw new WebserviceException('the key you write is a corrupted text.', [95, 500]);
@@ -189,7 +187,7 @@ class WebserviceOutputBuilderCore
     /**
      * Delete all Header parameters previously set.
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      */
     public function resetHeaderParams()
     {
@@ -280,6 +278,7 @@ class WebserviceOutputBuilderCore
      */
     public function getErrors($errors)
     {
+        $str_output = '';
         if (!empty($errors)) {
             if (isset($this->objectRender)) {
                 $str_output = $this->objectRender->renderErrorsHeader();
@@ -303,7 +302,7 @@ class WebserviceOutputBuilderCore
     /**
      * Build the resource list in the output format specified by WebserviceOutputBuilder::objectRender.
      *
-     * @param $key_permissions
+     * @param array $key_permissions
      *
      * @return string
      */
@@ -413,6 +412,8 @@ class WebserviceOutputBuilderCore
                     } else {
                         $output .= $this->renderEntity($object, $depth);
                     }
+                } elseif ($key == 'empty' && $this->objectRender->getContentType() == 'application/json') {
+                    $output .= $this->renderEntity($object, $depth);
                 }
             }
         } else {
@@ -501,7 +502,7 @@ class WebserviceOutputBuilderCore
         }
         $output .= $this->setIndent($depth) . $this->objectRender->renderNodeHeader($ws_params['objectNodeName'], $ws_params);
 
-        if ($object->id != 0) {
+        if (!empty($object->id)) {
             // This to add virtual Fields for a particular entity.
             $virtual_fields = $this->addVirtualFields($ws_params['objectsNodeName'], $object);
             if (!empty($virtual_fields)) {
@@ -554,7 +555,7 @@ class WebserviceOutputBuilderCore
         $show_field = true;
 
         if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields'])) {
-            return;
+            return '';
         }
 
         if ($this->schemaToDisplay === 'synopsis') {
@@ -608,10 +609,10 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param $object
-     * @param $depth
-     * @param $associations
-     * @param $ws_params
+     * @param ObjectModel $object
+     * @param int $depth
+     * @param array $associations
+     * @param array $ws_params
      *
      * @return string
      */
@@ -766,10 +767,10 @@ class WebserviceOutputBuilderCore
     /**
      * @param string|object $object
      * @param string $method
-     * @param $field_name
-     * @param $entity_name
+     * @param string $field_name
+     * @param string $entity_name
      *
-     * @return WebserviceOutputBuilder
+     * @return $this
      *
      * @throws Exception
      * @throws WebserviceException
@@ -811,7 +812,9 @@ class WebserviceOutputBuilderCore
                 $object = $this->specificFields[$field_name]['object'];
             }
 
-            $field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
+            if (isset($object) && is_object($object)) {
+                $field = $object->{$this->specificFields[$field_name]['method']}($field, $entity_object, $ws_params);
+            }
         }
 
         return $field;
@@ -845,12 +848,14 @@ class WebserviceOutputBuilderCore
                     $object = $function_infos['object'];
                 }
 
-                $return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
-                foreach ($return_fields as $field_name => $value) {
-                    if (Validate::isConfigName($field_name)) {
-                        $arr_return[$field_name] = $value;
-                    } else {
-                        throw new WebserviceException('Name for the virtual field is not allow', [128, 400]);
+                if (isset($object) && is_object($object)) {
+                    $return_fields = $object->{$function_infos['method']}($entity_object, $function_infos['parameters']);
+                    foreach ($return_fields as $field_name => $value) {
+                        if (Validate::isConfigName($field_name)) {
+                            $arr_return[$field_name] = $value;
+                        } else {
+                            throw new WebserviceException('Name for the virtual field is not allow', [128, 400]);
+                        }
                     }
                 }
             }

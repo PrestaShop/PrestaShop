@@ -218,7 +218,7 @@ class AdminShopGroupControllerCore extends AdminController
                 ],
                 [
                     'type' => 'switch',
-                    'label' => $this->trans('Share available quantities to sell', [], 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Share available quantities for sale', [], 'Admin.Advparameters.Feature'),
                     'name' => 'share_stock',
                     'required' => true,
                     'class' => 't',
@@ -344,6 +344,13 @@ class AdminShopGroupControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    public function beforeUpdateOptions()
+    {
+        if (!(new Shop((int) Tools::getValue('PS_SHOP_DEFAULT')))->getBaseURL()) {
+            $this->errors[] = $this->trans('You must configure this store\'s URL before setting it as default.', [], 'Admin.Advparameters.Notification');
+        }
+    }
+
     protected function afterAdd($new_shop_group)
     {
         //Reset available quantitites
@@ -361,7 +368,7 @@ class AdminShopGroupControllerCore extends AdminController
         if ($this->fields_options && is_array($this->fields_options)) {
             $this->display = 'options';
             $this->show_toolbar = false;
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;

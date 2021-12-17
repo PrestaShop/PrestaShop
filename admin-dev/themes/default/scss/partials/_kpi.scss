@@ -1,0 +1,129 @@
+.kpi-container {
+  padding-bottom: 10px !important;
+
+  .kpi-refresh {
+    position: absolute;
+    right: 20px;
+    z-index: 1;
+  }
+}
+
+.box-stats {
+  display: block;
+  height: 64px;
+  margin-bottom: 10px;
+
+  .boxchart-overlay {
+    @include padding(10px, 10px, 5px, 10px);
+    @include margin-right(10px);
+    @include float(left);
+    @include border-radius(3px);
+  }
+
+  .kpi-content {
+    position: relative;
+    width: 100%;
+    @include padding-left(40px);
+    @include float(left);
+
+    i {
+      position: absolute;
+      top: 0;
+      font-size: 26px;
+      line-height: 26px;
+      color: #fff;
+      text-align: center;
+      @include left(0);
+      @include border-radius(3px);
+    }
+
+    .title {
+      display: block;
+      color: #666;
+    }
+
+    .subtitle {
+      display: block;
+      color: #aaa;
+      text-transform: uppercase;
+    }
+
+    .value {
+      display: block;
+      overflow: hidden;
+      clear: both;
+      font-size: 1.5em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.color1 {
+  i,
+  .boxchart-overlay {
+    color: #2ba8e3 !important;
+  }
+
+  .value {
+    color: #2ba8e3;
+  }
+}
+
+.color2 {
+  i,
+  .boxchart-overlay {
+    color: #ff5450 !important;
+  }
+
+  .value {
+    color: #ff5450;
+  }
+}
+
+.color3 {
+  i,
+  .boxchart-overlay {
+    color: #9e5ba1 !important;
+  }
+
+  .value {
+    color: #9e5ba1;
+  }
+}
+
+.color4 {
+  i,
+  .boxchart-overlay {
+    color: #95cc6b !important;
+  }
+
+  .value {
+    color: #95cc6b;
+  }
+}
+
+.data_chart {
+  rect {
+    fill: #fff;
+  }
+
+  path {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 2;
+  }
+
+  line {
+    stroke: #000;
+  }
+
+  .area {
+    fill: rgba(#fff, 0.3);
+    stroke-width: 0;
+  }
+}

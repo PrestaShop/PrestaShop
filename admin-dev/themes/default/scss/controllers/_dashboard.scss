@@ -1,0 +1,467 @@
+//DASHBOARD
+.size_s {
+  font-size: 1.1em;
+}
+
+.size_md {
+  font-size: 1.3em;
+}
+
+.size_l {
+  font-size: 1.7em;
+}
+
+.size_xl {
+  font-size: 2em;
+}
+
+.size_xxl {
+  font-size: 2.3em;
+}
+
+.number-monospace {
+  font-family: $font-family-mono !important;
+  font-weight: 200;
+  word-spacing: -0.3em;
+}
+
+.color_success {
+  color: $brand-success;
+}
+
+.color_danger {
+  color: $brand-danger;
+}
+
+.dash_trend_down {
+  color: $brand-danger;
+
+  &::before {
+    font-family: FontAwesome, sans-serif;
+    content: "\f0ab";
+    @include margin-right(4px);
+  }
+}
+
+.dash_trend_up {
+  color: $brand-success;
+
+  &::before {
+    font-family: FontAwesome, sans-serif;
+    content: "\f0aa";
+    @include margin-right(4px);
+  }
+}
+
+.dash_trend_right {
+  &::before {
+    font-family: FontAwesome, sans-serif;
+    content: "\f0a9";
+    @include margin-right(4px);
+  }
+}
+
+#dashboard {
+  section > section {
+    header {
+      padding: 3px 8px;
+      font-size: 1.2em;
+      color: #fff;
+      background-color: $brand-primary;
+      @include margin(0, 0, 3px, 0);
+
+      .small {
+        display: block;
+        clear: both;
+        font-family: $font-family-sans-serif;
+        font-size: 0.8em;
+        font-variant: small-cap;
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  .data_list {
+    @extend .list-group;
+    padding: 0;
+    @include margin(0, 0, 10px, 0);
+
+    li {
+      @extend .list-group-item;
+      position: relative;
+    }
+
+    .data_value {
+      position: absolute;
+      top: 0;
+      line-height: 39px;
+      @include right(0);
+      @include padding(0, 10px, 0, 0);
+    }
+  }
+
+  .data_list_small {
+    padding: 0;
+    border-top: solid 1px #ddd;
+    @include margin(8px, 0, 10px, 0);
+
+    li {
+      position: relative;
+      padding: 3px 0;
+      margin: 0;
+      border: none;
+      border-bottom: dashed 1px #ddd;
+    }
+
+    .data_label {
+      color: #bbb;
+      text-transform: uppercase;
+    }
+
+    .data_value {
+      position: absolute;
+      top: 0;
+      padding: 0;
+      line-height: 25px;
+      @include right(0);
+    }
+  }
+
+  .data_list_large {
+    @extend .list-unstyled;
+    padding: 0;
+    @include margin(8px, 0, 10px, 0);
+
+    li {
+      position: relative;
+      padding: 6px 0;
+      margin: 0;
+      border: none;
+    }
+
+    .data_label {
+      line-height: 0.8em;
+
+      small {
+        font-size: 0.6em;
+      }
+    }
+
+    .data_value {
+      position: absolute;
+      top: 0;
+      line-height: 0.6em;
+      text-align: right;
+      @include right(0);
+      @include padding(8px, 0, 0, 0);
+
+      small {
+        font-size: 0.5em;
+      }
+    }
+  }
+
+  .data_list_vertical {
+    @extend .list-unstyled;
+    @extend .row;
+    padding: 0;
+    border: 1px solid #ddd;
+    @include margin(0, 0, 10px, 0);
+    @include border-radius(3px);
+
+    li {
+      @extend .col-xs-6;
+      padding: 6px;
+      @include border-left(solid 1px #ddd);
+
+      &:first-child {
+        border: none;
+      }
+    }
+
+    .data_label {
+      display: block;
+      min-height: 32px;
+      line-height: 1em;
+      text-align: center;
+    }
+
+    .data_value {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  #dashtrends {
+    header {
+      margin-bottom: 0;
+    }
+
+    #dashtrends_toolbar {
+      margin: 0 -16px 10px;
+
+      dl {
+        @include box-shadow(0 0 0 2px #ffffff inset);
+
+        dt {
+          height: 2.6em;
+          padding: 0;
+          margin: 0;
+          color: #777;
+        }
+
+        dd.data_value {
+          color: #aaa;
+          @extend .clearfix;
+
+          small {
+            font-size: 0.5em;
+          }
+        }
+
+        dd.dash_trend {
+          width: 80px;
+          margin: 0 auto;
+          background-color: #fff;
+          @include border-radius(3px);
+        }
+
+        &:hover {
+          dt,
+          dd.data_value {
+            color: $brand-primary;
+          }
+
+          dt {
+            text-decoration: underline;
+          }
+        }
+
+        &.active {
+          dt,
+          dd.data_value {
+            color: #fff;
+          }
+        }
+      }
+    }
+
+    dl {
+      min-height: 70px;
+      padding: 10px;
+      margin: 0;
+      text-align: center;
+      cursor: pointer;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      @include border-left(1px solid #ddd);
+
+      &:first-child {
+        @include border-left(none);
+      }
+
+      &.active {
+        background-color: $brand-primary;
+        @include box-shadow(#ffffff 0 0 0 2px inset);
+
+        dt {
+          color: #fff;
+        }
+      }
+    }
+
+    dt {
+      height: 37px;
+      font: 400 1.1em / 120% $headings-font-family;
+      line-height: 1em;
+      text-align: center;
+    }
+
+    dd {
+      span {
+        font-size: 0.9em;
+        white-space: nowrap;
+      }
+    }
+
+    svg {
+      height: 350px;
+    }
+  }
+
+  #dashgoals {
+    svg {
+      height: 250px;
+    }
+  }
+
+  #dashproducts {
+    nav {
+      margin-bottom: 10px;
+      font: 400 1.1em / 120% $headings-font-family;
+      text-transform: uppercase;
+    }
+  }
+
+  #dashaddons {
+    padding: 10px 20px;
+    font-size: 1.3em;
+    text-align: center;
+    background-color: #fff;
+    border: 1px dashed #c0c0c0;
+    @include border-radius(3px);
+
+    a {
+      display: block;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  #dashactivity {
+    svg {
+      height: 150px;
+    }
+  }
+
+  .data_value {
+    span,
+    .dash_trend {
+      @extend .data_loading;
+    }
+  }
+
+  .loading {
+    .data_value {
+      min-width: 30px;
+      text-align: center;
+
+      &::before {
+        @extend .icon-spin;
+        @extend .icon;
+        @extend .icon-refresh;
+        font-size: 14px;
+        color: #ccc;
+      }
+
+      span,
+      small {
+        display: none;
+      }
+    }
+
+    .data_trend {
+      display: none;
+    }
+
+    .btn-group {
+      > .btn {
+        display: flex;
+        align-items: center;
+
+        > i {
+          height: auto;
+        }
+      }
+    }
+  }
+
+  .tooltip-panel {
+    min-width: 150px;
+    padding: 10px;
+  }
+
+  .tooltip-panel-heading {
+    margin-bottom: 10px;
+    font: 400 1.2em / $line-height-base $headings-font-family;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ccc;
+  }
+}
+@mixin animation($name,$value) {
+  -webkit-animation-#{$name}: $value;
+  animation-#{$name}: $value;
+}
+// stylelint-disable
+@mixin keyframes($name) {
+  @-webkit-keyframes $name {
+    @content;
+  }
+  @-moz-keyframes $name {
+    @content;
+  }
+  @-ms-keyframes $name {
+    @content;
+  }
+  @-o-keyframes $name {
+    @content;
+  }
+  @keyframes $name {
+    @content;
+  }
+}
+// stylelint-enable
+.data_loading {
+  opacity: 1;
+  @include animation(name,bounceG);
+  @include animation(duration,0.7s);
+  @include animation(direction,linear);
+  @include scaleX(0.7);
+  @include scaleY(0.7);
+}
+@include keyframes(bounceG) {
+  0% {
+    @include opacity(0);
+    @include scaleX(0.1);
+    @include scaleY(0.1);
+  }
+
+  100% {
+    @include opacity(1);
+    @include scaleX(1);
+    @include scaleY(1);
+  }
+}
+
+#dash_version {
+  @extend .panel;
+  padding: 0 !important;
+  overflow: hidden;
+
+  iframe {
+    width: 100%;
+    height: 80px;
+  }
+}
+
+#calendar {
+  button.btn-default.active {
+    font-weight: 700;
+    color: #fff;
+    background-color: $brand-primary;
+    border-color: darken($brand-primary, 10%);
+    @include box-shadow(none);
+  }
+  @media (max-width: $screen-phone) {
+    padding: 10px !important;
+
+    button.btn-default {
+      padding: 5px;
+    }
+  }
+}
+
+.dash_news {
+  h3 {
+    // stylelint-disable-next-line
+    font-size: 14px !important;
+
+    i {
+      font-size: 20px;
+      color: $medium-gray;
+    }
+  }
+}

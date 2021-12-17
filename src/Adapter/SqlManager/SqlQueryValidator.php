@@ -75,7 +75,7 @@ class SqlQueryValidator
     /**
      * Get request sql errors.
      *
-     * @param array $sqlErrors
+     * @param array<string, string|array<string>> $sqlErrors
      *
      * @return array
      */
@@ -84,10 +84,6 @@ class SqlQueryValidator
         $errors = [];
 
         foreach ($sqlErrors as $key => $sqlError) {
-            if (false === is_array($sqlError)) {
-                $sqlError = [];
-            }
-
             if ('checkedFrom' === $key) {
                 $errors[] = $this->getFromKeywordError($sqlError);
             } elseif ('checkedSelect' === $key) {
@@ -353,11 +349,11 @@ class SqlQueryValidator
     /**
      * Get reference related SQL error.
      *
-     * @param array $legacyError
+     * @param array|bool $legacyError
      *
-     * @return array
+     * @return array<string, string|array<string, string>>
      */
-    private function getReferenceError(array $legacyError)
+    private function getReferenceError($legacyError): array
     {
         if (isset($legacyError['reference'])) {
             return [

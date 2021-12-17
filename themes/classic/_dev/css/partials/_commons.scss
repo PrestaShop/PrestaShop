@@ -34,7 +34,8 @@ p {
   background: none;
 }
 
-.color,
+label .color,
+.variant-links .color,
 .custom-checkbox input[type="checkbox"] + span.color {
   display: inline-block;
   width: 1.125rem;
@@ -44,7 +45,6 @@ p {
   cursor: pointer;
   background-size: contain;
   border: 1px solid $radio-border-color;
-  @include box-shadow-light();
 
   &.active,
   &:hover {
@@ -75,7 +75,6 @@ p {
 
 .btn-primary,
 .btn-secondary {
-  @include box-shadow-light();
   padding: 0.5rem 1.25rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -94,7 +93,6 @@ p {
   color: $gray;
   text-transform: lowercase;
   background-color: #f7f7f7;
-  box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.1);
 
   .material-icons {
     font-size: $base-font-size;
@@ -102,7 +100,6 @@ p {
 
   &:hover {
     border: $input-btn-border-width solid rgba(35, 35, 35, 0.2);
-    box-shadow: 0.0625rem 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.2);
   }
 }
 
@@ -122,7 +119,7 @@ p {
 }
 
 .card {
-  @include box-shadow();
+  border: none;
 }
 
 label,
@@ -149,12 +146,14 @@ small.value {
 
   &:focus {
     color: $gray-darker;
-    background-color: #fff;
+    background-color: $white;
     outline: 0.1875rem solid $brand-primary;
   }
 }
 
 .input-group {
+  display: flex;
+
   &.focus {
     outline: 0.1875rem solid $brand-primary;
   }
@@ -164,14 +163,18 @@ small.value {
   }
 
   .input-group-btn {
-    height: 100%;
+    display: block;
+    width: auto;
 
     > .btn {
-      padding: 0.625rem 1rem;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0.25rem 1rem;
       margin-left: 0;
       font-size: 0.6875rem;
       font-weight: 500;
-      color: #fff;
+      color: $white;
       text-transform: uppercase;
       border: 0;
       box-shadow: none;
@@ -248,7 +251,7 @@ textarea {
 
 .form-control-submit {
   &.disabled {
-    color: #fff;
+    color: $white;
     background: $brand-info;
   }
 }
@@ -259,6 +262,7 @@ textarea {
     select {
       outline: 0.1875rem solid $brand-danger;
     }
+
     .help-block {
       color: $brand-danger;
     }
@@ -273,7 +277,7 @@ textarea {
   .btn-default {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
-    color: #fff;
+    color: $white;
     text-transform: uppercase;
     background: $brand-primary;
     border-radius: 0;
@@ -284,7 +288,6 @@ textarea {
   display: inline-block;
   float: left;
   width: auto;
-  @include box-shadow-light();
 
   input {
     &:focus {
@@ -298,7 +301,7 @@ textarea {
       height: $input-height;
       padding: 0.175rem 0.5rem;
       color: $gray-darker;
-      background-color: #fff;
+      background-color: $white;
       border: $input-btn-border-width solid $input-border-color;
     }
   }
@@ -306,7 +309,7 @@ textarea {
   .btn-touchspin {
     @extend .btn-default;
     height: $input-height / 2 + 0.0625rem;
-    background-color: #fff;
+    background-color: $white;
     border: $input-btn-border-width solid $input-border-color;
 
     &:hover {
@@ -390,7 +393,7 @@ form {
   margin-right: 0.5rem;
   vertical-align: middle;
   cursor: pointer;
-  background: #fff;
+  background: $white;
   border: $radio-border-color 1px solid;
   border-radius: 50%;
 
@@ -545,7 +548,7 @@ form {
   }
 
   ul li:last-child .alert-link {
-    color: #fff;
+    color: $white;
   }
 
   .warning-buttons {
@@ -607,10 +610,15 @@ form {
 input[type="number"] {
   /* stylelint-disable */
   -moz-appearance: textfield;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     margin: 0;
     -webkit-appearance: none;
   }
   /* stylelint-enable */
+}
+
+.ui-autocomplete.ui-front {
+  z-index: 999;
 }

@@ -25,6 +25,8 @@
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
 {% set layoutHeaderToolbarBtn = {
   add: {
     href: path('admin_suppliers_create'),
@@ -37,11 +39,7 @@
 {% block content %}
   {% block supplier_grid %}
     {{ ps.infotip(settingsTipMessage, true) }}
-    <div class="row">
-      <div class="col">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': supplierGrid} %}
-      </div>
-    </div>
+    {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': supplierGrid} %}
   {% endblock %}
 {% endblock %}
 

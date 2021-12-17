@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {expect} from 'chai';
+import { expect } from 'chai';
 import NumberFormatter from '../../js/app/cldr/number-formatter';
 import PriceSpecification from '../../js/app/cldr/specifications/price';
 import NumberSymbol from '../../js/app/cldr/number-symbol';
@@ -41,7 +41,7 @@ describe('NumberFormatter', () => {
       '×',
       '‰',
       '∞',
-      'NaN',
+      'NaN'
     );
     currency = new NumberFormatter(
       new PriceSpecification(
@@ -54,8 +54,8 @@ describe('NumberFormatter', () => {
         3,
         3,
         '$',
-        'USD',
-      ),
+        'USD'
+      )
     );
   });
 
@@ -64,11 +64,13 @@ describe('NumberFormatter', () => {
       [10, ['10', '']],
       [10.1, ['10', '1']],
       [11.12345, ['11', '12345']],
-      [11.00000, ['11', '']],
+      [11.0, ['11', '']]
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test ${assertion[0]}`, () => {
-        expect(currency.extractMajorMinorDigits(assertion[0])).to.eql(assertion[1]);
+        expect(currency.extractMajorMinorDigits(assertion[0])).to.eql(
+          assertion[1]
+        );
       });
     });
   });
@@ -76,9 +78,9 @@ describe('NumberFormatter', () => {
   describe('getCldrPattern', () => {
     const assertions = [
       [false, '¤#,##0.###'],
-      [true, '-¤#,##0.###'],
+      [true, '-¤#,##0.###']
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test isNegative ${assertion[0]}`, () => {
         expect(currency.getCldrPattern(assertion[0])).to.eq(assertion[1]);
       });
@@ -94,9 +96,9 @@ describe('NumberFormatter', () => {
       ['100000', '100,000'],
       ['1000000', '1,000,000'],
       ['10000000', '10,000,000'],
-      ['100000000', '100,000,000'],
+      ['100000000', '100,000,000']
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test ${assertion[0]} should display ${assertion[1]}`, () => {
         expect(currency.splitMajorGroups(assertion[0])).to.eq(assertion[1]);
       });
@@ -110,12 +112,14 @@ describe('NumberFormatter', () => {
       ['12', '12'],
       ['120', '120'],
       ['1271', '1271'],
-      ['1270', '127'],
+      ['1270', '127']
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test ${assertion[0]} should display ${assertion[1]}`, () => {
         currency.numberSpecification.minFractionDigits = 2;
-        expect(currency.adjustMinorDigitsZeroes(assertion[0])).to.eq(assertion[1]);
+        expect(currency.adjustMinorDigitsZeroes(assertion[0])).to.eq(
+          assertion[1]
+        );
       });
     });
   });
@@ -123,11 +127,13 @@ describe('NumberFormatter', () => {
   describe('addPlaceholders', () => {
     const assertions = [
       ['100,000.13', '¤#,##0.00', '¤100,000.13'],
-      ['100.13', '¤#,##0.00', '¤100.13'],
+      ['100.13', '¤#,##0.00', '¤100.13']
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test ${assertion[0]} with pattern ${assertion[1]} should display ${assertion[2]}`, () => {
-        expect(currency.addPlaceholders(assertion[0], assertion[1])).to.eq(assertion[2]);
+        expect(currency.addPlaceholders(assertion[0], assertion[1])).to.eq(
+          assertion[2]
+        );
       });
     });
   });
@@ -145,15 +151,19 @@ describe('NumberFormatter', () => {
         '×',
         '‰',
         '∞',
-        'NaN',
+        'NaN'
       );
-      expect(currency.replaceSymbols('¤-10,000,000.13')).to.eq('¤Moins10:)000:)000_13');
+      expect(currency.replaceSymbols('¤-10,000,000.13')).to.eq(
+        '¤Moins10:)000:)000_13'
+      );
     });
   });
 
   describe('addPlaceholders', () => {
     it('should replace currency symbol', () => {
-      expect(currency.performSpecificReplacements('¤10,000,000.13')).to.eq('$10,000,000.13');
+      expect(currency.performSpecificReplacements('¤10,000,000.13')).to.eq(
+        '$10,000,000.13'
+      );
     });
   });
 
@@ -169,9 +179,9 @@ describe('NumberFormatter', () => {
       ['100000000', '$100,000,000.000'],
       ['-10.3', '-$10.300'],
       ['-125.45672', '-$125.457'],
-      ['-125.45627', '-$125.456'],
+      ['-125.45627', '-$125.456']
     ];
-    assertions.forEach((assertion) => {
+    assertions.forEach(assertion => {
       it(`test ${assertion[0]} should display ${assertion[1]}`, () => {
         expect(currency.format(assertion[0])).to.eq(assertion[1]);
       });

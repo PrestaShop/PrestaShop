@@ -74,7 +74,6 @@ class PrimitiveUtils
                 break;
 
             case self::TYPE_ARRAY:
-
                 if ('empty' === $element) {
                     return [];
                 }
@@ -130,7 +129,6 @@ class PrimitiveUtils
                 return $element1 === $element2;
                 break;
             case self::TYPE_DOUBLE:
-
                 // see http://php.net/manual/en/language.types.float.php#language.types.float.comparison
                 $epsilon = 0.00001;
 

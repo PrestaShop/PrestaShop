@@ -36,17 +36,17 @@ class ProductCustomizabilitySettings
     /**
      * The product does not have any customiztion fields, so it is not customizable at all
      */
-    const NOT_CUSTOMIZABLE = 0;
+    public const NOT_CUSTOMIZABLE = 0;
 
     /**
      * The product has at least one customization field, but none of them are required
      */
-    const ALLOWS_CUSTOMIZATION = 1;
+    public const ALLOWS_CUSTOMIZATION = 1;
 
     /**
      * The product has at least one customization field which is required
      */
-    const REQUIRES_CUSTOMIZATION = 2;
+    public const REQUIRES_CUSTOMIZATION = 2;
 
     /**
      * This class shouldn't be instantiated as its purpose is to hold some setting values

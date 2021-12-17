@@ -23,7 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 
 class PackCore extends Product
 {
@@ -69,7 +71,7 @@ class PackCore extends Product
     /**
      * Is product a pack?
      *
-     * @param $id_product
+     * @param int $id_product
      *
      * @return bool
      */
@@ -230,11 +232,11 @@ class PackCore extends Product
     /**
      * Returns the available quantity of a given pack (this method already have decreased products in cart).
      *
-     * @param int $id_product Product id
-     * @param int $id_product_attribute Product attribute id (optional)
+     * @param int $idProduct Product id
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart $cart
-     * @param int $idCustomization Product customization id (optional)
+     * @param Cart|null $cart
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int
      *
@@ -292,7 +294,7 @@ class PackCore extends Product
             $items = array_values(Pack::getItems($idProduct, Configuration::get('PS_LANG_DEFAULT')));
 
             foreach ($items as $index => $item) {
-                $itemQuantity = Product::getQuantity($item->id, null, null, $cart, $idCustomization);
+                $itemQuantity = Product::getQuantity($item->id, $item->id_pack_product_attribute ?: null, null, $cart, $idCustomization);
                 $nbPackAvailableForItem = (int) floor($itemQuantity / $item->pack_quantity);
 
                 // Initialize packQuantity with the first product quantity
@@ -467,7 +469,7 @@ class PackCore extends Product
     {
         $id_attribute_item = (int) $id_attribute_item ? (int) $id_attribute_item : Product::getDefaultAttribute((int) $id_item);
 
-        return Db::getInstance()->update('product', ['cache_is_pack' => 1], 'id_product = ' . (int) $id_product) &&
+        return Db::getInstance()->update('product', ['cache_is_pack' => 1, 'product_type' => ProductType::TYPE_PACK], 'id_product = ' . (int) $id_product) &&
             Db::getInstance()->insert('pack', [
                 'id_product_pack' => (int) $id_product,
                 'id_product_item' => (int) $id_item,
@@ -503,8 +505,8 @@ class PackCore extends Product
      *
      * @since 1.5.0
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */

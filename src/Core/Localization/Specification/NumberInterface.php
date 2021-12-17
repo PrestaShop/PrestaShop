@@ -39,7 +39,7 @@ interface NumberInterface
      * This is the default numbering system in PrestaShop, even for arabian or asian languages, until we
      * provide a way to configure this in admin.
      */
-    const NUMBERING_SYSTEM_LATIN = 'latn';
+    public const NUMBERING_SYSTEM_LATIN = 'latn';
 
     /**
      * Get all specified symbols lists, indexed by available numbering system.

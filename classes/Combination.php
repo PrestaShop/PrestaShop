@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShopBundle\Translation\Translator;
+
 /**
  * Class CombinationCore.
  */
@@ -37,7 +39,13 @@ class CombinationCore extends ObjectModel
     /** @var string */
     public $supplier_reference;
 
-    public $location;
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$location instead
+     *
+     * @var string
+     */
+    public $location = '';
 
     public $ean13;
 
@@ -63,6 +71,12 @@ class CombinationCore extends ObjectModel
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
 
+    /**
+     * @deprecated since 1.7.8
+     * @see StockAvailable::$quantity instead
+     *
+     * @var int
+     */
     public $quantity;
 
     public $weight;
@@ -79,7 +93,7 @@ class CombinationCore extends ObjectModel
         'primary' => 'id_product_attribute',
         'fields' => [
             'id_product' => ['type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true],
-            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64],
+            'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],
             'ean13' => ['type' => self::TYPE_STRING, 'validate' => 'isEan13', 'size' => 13],
             'isbn' => ['type' => self::TYPE_STRING, 'validate' => 'isIsbn', 'size' => 32],
             'upc' => ['type' => self::TYPE_STRING, 'validate' => 'isUpc', 'size' => 12],
@@ -89,7 +103,7 @@ class CombinationCore extends ObjectModel
             'supplier_reference' => ['type' => self::TYPE_STRING, 'size' => 64],
 
             /* Shop fields */
-            'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 27],
+            'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 27],
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20],
             'ecotax' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'size' => 20],
             'weight' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'],
@@ -115,6 +129,31 @@ class CombinationCore extends ObjectModel
     ];
 
     /**
+     * @param int|null $id
+     * @param int|null $id_lang
+     * @param int|null $id_shop
+     * @param Translator|null $translator
+     */
+    public function __construct(?int $id = null, ?int $id_lang = null, ?int $id_shop = null, ?Translator $translator = null)
+    {
+        parent::__construct($id, $id_lang, $id_shop, $translator);
+        $this->loadStockData();
+    }
+
+    /**
+     * Fill the variables used for stock management.
+     */
+    public function loadStockData(): void
+    {
+        if (false === Validate::isLoadedObject($this)) {
+            return;
+        }
+
+        $this->quantity = StockAvailable::getQuantityAvailableByProduct($this->id_product, $this->id);
+        $this->location = StockAvailable::getLocation($this->id_product, $this->id);
+    }
+
+    /**
      * Deletes current Combination from the database.
      *
      * @return bool True if delete was successful
@@ -138,6 +177,10 @@ class CombinationCore extends ObjectModel
         }
 
         if (!$this->hasMultishopEntries() && !$this->deleteAssociations()) {
+            return false;
+        }
+
+        if (!$this->deleteCartProductCombination()) {
             return false;
         }
 
@@ -232,15 +275,34 @@ class CombinationCore extends ObjectModel
         if ((int) $this->id === 0) {
             return false;
         }
-        $result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = ' . (int) $this->id);
-        $result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = ' . (int) $this->id);
-        $result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = ' . (int) $this->id);
+        $result = Db::getInstance()->delete(
+            'product_attribute_combination',
+            '`id_product_attribute` = ' . (int) $this->id
+        );
+        $result = $result && Db::getInstance()->delete(
+            'product_attribute_image',
+            '`id_product_attribute` = ' . (int) $this->id
+        );
 
         if ($result) {
             Hook::exec('actionAttributeCombinationDelete', ['id_product_attribute' => (int) $this->id]);
         }
 
         return $result;
+    }
+
+    /**
+     * Delete product combination from cart.
+     *
+     * @return bool
+     */
+    protected function deleteCartProductCombination(): bool
+    {
+        if ((int) $this->id === 0) {
+            return false;
+        }
+
+        return Db::getInstance()->delete('cart_product', 'id_product_attribute = ' . (int) $this->id);
     }
 
     /**
@@ -313,7 +375,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idsImage
+     * @param array<int> $idsImage
      *
      * @return bool
      */
@@ -332,20 +394,17 @@ class CombinationCore extends ObjectModel
                 $sqlValues[] = '(' . (int) $this->id . ', ' . (int) $value . ')';
             }
 
-            if (is_array($sqlValues) && count($sqlValues)) {
-                Db::getInstance()->execute(
-                    '
-					INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
+            Db::getInstance()->execute(
+                'INSERT INTO `' . _DB_PREFIX_ . 'product_attribute_image` (`id_product_attribute`, `id_image`)
 					VALUES ' . implode(',', $sqlValues)
-                );
-            }
+            );
         }
 
         return true;
     }
 
     /**
-     * @param $values
+     * @param array<array{id: int}> $values
      *
      * @return bool
      */
@@ -360,7 +419,7 @@ class CombinationCore extends ObjectModel
     }
 
     /**
-     * @param $idLang
+     * @param int $idLang
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -396,8 +455,8 @@ class CombinationCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $hasActiveColumn
+     * @param string|null $table Name of table linked to entity
+     * @param bool $hasActiveColumn True if the table has an active column
      *
      * @return bool
      */
@@ -437,7 +496,7 @@ class CombinationCore extends ObjectModel
      * @param int $idProduct
      * @param string $reference
      *
-     * @return int id
+     * @return int ID
      */
     public static function getIdByReference($idProduct, $reference)
     {
@@ -451,7 +510,7 @@ class CombinationCore extends ObjectModel
         $query->where('pa.reference LIKE \'%' . pSQL($reference) . '%\'');
         $query->where('pa.id_product = ' . (int) $idProduct);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -473,15 +532,14 @@ class CombinationCore extends ObjectModel
      *
      * @param int $idProductAttribute
      *
-     * @return float mixed
+     * @return string
      *
      * @since 1.5.0
      */
     public static function getPrice($idProductAttribute)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-			SELECT product_attribute_shop.`price`
+        return (string) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT product_attribute_shop.`price`
 			FROM `' . _DB_PREFIX_ . 'product_attribute` pa
 			' . Shop::addSqlAssociation('product_attribute', 'pa') . '
 			WHERE pa.`id_product_attribute` = ' . (int) $idProductAttribute

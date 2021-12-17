@@ -157,10 +157,15 @@ class ProductCombination extends CommonAbstractType
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'float']),
                 ],
+                'attr' => [
+                    'class' => 'attribute_ecotaxTi',
+                ],
             ])
             ->add('attribute_weight', NumberType::class, [
+                'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                 'required' => false,
                 'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
+                'attr' => ['class' => 'attribute_weight'],
             ])
             ->add('attribute_unity', MoneyType::class, [
                 'required' => false,

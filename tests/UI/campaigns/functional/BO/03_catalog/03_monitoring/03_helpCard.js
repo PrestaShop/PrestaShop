@@ -1,17 +1,18 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_catalog_monitoring_helpCard';
 
@@ -19,7 +20,7 @@ let browserContext;
 let page;
 
 // Check help card language in monitoring page
-describe('Help card in monitoring page', async () => {
+describe('BO - Catalog - Monitoring : Help card in monitoring page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -34,20 +34,20 @@ final class SupplierSettings
     /**
      * Maximum allowed symbols for name
      */
-    const MAX_NAME_LENGTH = 64;
+    public const MAX_NAME_LENGTH = 64;
 
     /**
      * Maximum allowed symbols for meta title
      */
-    const MAX_META_TITLE_LENGTH = 255;
+    public const MAX_META_TITLE_LENGTH = 255;
 
     /**
      * Maximum allowed symbols for meta description
      */
-    const MAX_META_DESCRIPTION_LENGTH = 512;
+    public const MAX_META_DESCRIPTION_LENGTH = 512;
 
     /**
      * Maximum allowed symbols for meta keyword
      */
-    const MAX_META_KEYWORD_LENGTH = 255;
+    public const MAX_META_KEYWORD_LENGTH = 255;
 }

@@ -8,7 +8,6 @@ body#checkout {
     padding: 0.9375rem 0;
     margin-bottom: 0;
     border: none;
-    @include box-shadow();
 
     .logo {
       width: auto;
@@ -87,7 +86,7 @@ body#checkout {
 
   section.checkout-step {
     padding: 0.625rem;
-    background-color: #fff;
+    background-color: $white;
 
     &:last-child {
       border: 0;
@@ -302,7 +301,7 @@ body#checkout {
       }
 
       &.selected {
-        background: #fff;
+        background: $white;
         border: $brand-primary 3px solid;
       }
     }
@@ -493,7 +492,7 @@ body#checkout {
     }
 
     h4.black {
-      color: #000;
+      color: $black;
     }
 
     h4.addresshead {
@@ -526,7 +525,7 @@ body#checkout {
     .order-confirmation-table {
       padding: 1rem;
       margin-bottom: 2rem;
-      background-color: #fff;
+      background-color: $white;
       border: 3px solid #e5e5e5;
       border-radius: 0;
     }
@@ -534,12 +533,13 @@ body#checkout {
     .summary-selected-carrier {
       padding: 1rem;
       margin-bottom: 0.75rem;
-      background-color: #fff;
+      background-color: $white;
       border: 1px solid #e5e5e5;
       border-radius: 0;
 
       .logo-container {
         text-align: center;
+
         img {
           width: 3.125rem;
         }
@@ -574,10 +574,9 @@ body#checkout {
   }
 
   #footer {
-    @include box-shadow();
     padding: 0.9375rem;
     color: $gray;
-    background: #fff;
+    background: $white;
   }
 
   #delivery {
@@ -613,16 +612,19 @@ body#checkout {
 
   ul {
     margin-bottom: $medium-space;
+
     li {
       margin-bottom: $small-space;
     }
   }
 }
+
 #order-items {
   border-right: $gray-light 1px solid;
 
   .h3 {
     font-size: 1rem;
+
     &._desktop-title {
       @include media-breakpoint-down(md) {
         display: none;

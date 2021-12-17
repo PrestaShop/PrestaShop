@@ -63,10 +63,18 @@ class ExportThemeLanguageType extends TranslatorAwareType
     {
         $builder
             ->add('iso_code', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Language',
+                    'Admin.Global'
+                ),
                 'choices' => $this->getLocaleChoices(),
                 'choice_translation_domain' => false,
             ])
             ->add('theme_name', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Select your theme',
+                    'Admin.International.Feature'
+                ),
                 'choices' => $this->themeChoices,
                 'choice_translation_domain' => false,
             ]);

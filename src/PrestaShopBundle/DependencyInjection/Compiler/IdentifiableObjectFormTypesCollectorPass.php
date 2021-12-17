@@ -36,10 +36,10 @@ use Symfony\Component\Form\FormTypeInterface;
  */
 class IdentifiableObjectFormTypesCollectorPass implements CompilerPassInterface
 {
-    const IDENTIFIABLE_OBJECT_SERVICE_NAME_START_WITH = 'prestashop.core.form.identifiable_object.builder';
-    const ALTERNATIVE_IDENTIFIABLE_OBJECT_SERVICE_STARTS_WITH = 'prestashop.core.form.builder';
-    const GRID_DEFINITION_SERVICE_STARTS_WITH = 'prestashop.core.grid.definition';
-    const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
+    public const IDENTIFIABLE_OBJECT_SERVICE_NAME_START_WITH = 'prestashop.core.form.identifiable_object.builder';
+    public const ALTERNATIVE_IDENTIFIABLE_OBJECT_SERVICE_STARTS_WITH = 'prestashop.core.form.builder';
+    public const GRID_DEFINITION_SERVICE_STARTS_WITH = 'prestashop.core.grid.definition';
+    public const FORM_TYPE_POSITION_IN_CONSTRUCTOR_OF_FORM_BUILDER = 0;
 
     /**
      * {@inheritdoc}

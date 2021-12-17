@@ -28,7 +28,17 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Session\SessionInterface;
 
 /**
+ * @property bool $detect_language
+ * @property int $id_customer
+ * @property int $id_employee
+ * @property int $id_lang
+ * @property bool $is_guest
+ * @property bool $logged
  * @property string $passwd
+ * @property int $session_id
+ * @property string $session_token
+ * @property string $shopContext
+ * @property int $last_activity
  */
 class CookieCore
 {
@@ -45,19 +55,22 @@ class CookieCore
     /** @var array Contain cookie content in a key => value format */
     protected $_content = [];
 
-    /** @var array Crypted cookie name for setcookie() */
+    /** @var string Crypted cookie name for setcookie() */
     protected $_name;
 
-    /** @var array expiration date for setcookie() */
+    /** @var int expiration date for setcookie() */
     protected $_expire;
 
-    /** @var array Website domain for setcookie() */
+    /** @var bool|string Website domain for setcookie() */
     protected $_domain;
 
-    /** @var array Path for setcookie() */
+    /** @var string|bool SameSite for setcookie() */
+    protected $_sameSite;
+
+    /** @var string Path for setcookie() */
     protected $_path;
 
-    /** @var array cipher tool instance */
+    /** @var PhpEncryption cipher tool instance */
     protected $cipherTool;
 
     protected $_modified = false;
@@ -74,8 +87,8 @@ class CookieCore
     /**
      * Get data if the cookie exists and else initialize an new one.
      *
-     * @param $name string Cookie name before encrypting
-     * @param $path string
+     * @param string $name Cookie name before encrypting
+     * @param string $path
      */
     public function __construct($name, $path = '', $expire = null, $shared_urls = null, $standalone = false, $secure = false)
     {
@@ -89,6 +102,7 @@ class CookieCore
         $this->_path = rawurlencode($this->_path);
         $this->_path = str_replace(['%2F', '%7E', '%2B', '%26'], ['/', '~', '+', '&'], $this->_path);
         $this->_domain = $this->getDomain($shared_urls);
+        $this->_sameSite = Configuration::get('PS_COOKIE_SAMESITE');
         $this->_name = 'PrestaShop-' . md5(($this->_standalone ? '' : _PS_VERSION_) . $name . $this->_domain);
         $this->_allow_writing = true;
         $this->_salt = $this->_standalone ? str_pad('', 32, md5('ps' . __FILE__)) : _COOKIE_IV_;
@@ -110,6 +124,11 @@ class CookieCore
         $this->_allow_writing = false;
     }
 
+    /**
+     * @param array|null $shared_urls
+     *
+     * @return bool|string
+     */
     protected function getDomain($shared_urls = null)
     {
         $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
@@ -231,7 +250,7 @@ class CookieCore
         }
 
         /* Customer is valid only if it can be load and if cookie password is the same as database one */
-        if ($this->logged == 1 && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
+        if ($this->logged == true && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
             return true;
         }
 
@@ -275,6 +294,7 @@ class CookieCore
      */
     public function mylogout()
     {
+        $this->deleteSession();
         unset(
             $this->_content['id_customer'],
             $this->_content['id_guest'],
@@ -342,7 +362,7 @@ class CookieCore
 
         //checks if the language exists, if not choose the default language
         if (!$this->_standalone && !Language::getLanguage((int) $this->id_lang)) {
-            $this->id_lang = Configuration::get('PS_LANG_DEFAULT');
+            $this->id_lang = (int) Configuration::get('PS_LANG_DEFAULT');
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
             $this->detect_language = true;
         }
@@ -386,8 +406,6 @@ class CookieCore
             $time = 1;
         }
 
-        $sameSite = Configuration::get('PS_COOKIE_SAMESITE');
-
         /*
          * The alternative signature supporting an options array is only available since
          * PHP 7.3.0, before there is no support for SameSite attribute.
@@ -398,7 +416,7 @@ class CookieCore
                 $content,
                 $time,
                 $this->_path,
-                $this->_domain . '; SameSite=' . $sameSite,
+                $this->_domain . '; SameSite=' . $this->_sameSite,
                 $this->_secure,
                 true
             );
@@ -413,7 +431,7 @@ class CookieCore
                 'domain' => $this->_domain,
                 'secure' => $this->_secure,
                 'httponly' => true,
-                'samesite' => $sameSite,
+                'samesite' => $this->_sameSite,
             ]
         );
     }
@@ -556,7 +574,7 @@ class CookieCore
      */
     public function isSessionAlive()
     {
-        if (!isset($this->session_id, $this->session_token)) {
+        if (!isset($this->session_id) || !isset($this->session_token)) {
             return false;
         }
 
@@ -586,7 +604,7 @@ class CookieCore
             $session = new CustomerSession($sessionId);
         }
 
-        if (!empty($session->getId())) {
+        if (isset($session) && Validate::isLoadedObject($session)) {
             return $session;
         }
 

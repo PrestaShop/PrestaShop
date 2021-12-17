@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
 @order-from-bo
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
@@ -79,6 +80,17 @@ Feature: Order from Back Office (BO)
     Then I should get error that payment amount is negative
     And order "bo_order1" has 0 payments
 
+  Scenario: pay order with invalid payment method and see it is not valid
+    When order "bo_order1" has 0 payments
+    And I pay order "bo_order1" with the invalid following details:
+      | date           | 2019-11-26 13:56:22 |
+      | payment_method | Paym>>ents by check |
+      | transaction_id | test!@#$%%^^&* OR 1 |
+      | currency       | USD                 |
+      | amount         | 1.548               |
+    Then I should get error that payment method is invalid
+    And order "bo_order1" has 0 payments
+
   Scenario: pay for order
     When I pay order "bo_order1" with the following details:
       | date           | 2019-11-26 13:56:23 |
@@ -86,10 +98,10 @@ Feature: Order from Back Office (BO)
       | transaction_id | test123             |
       | currency       | USD                 |
       | amount         | 6.00                |
-    Then order "bo_order1" payments should have the following details:
+    Then order "bo_order1" payment in first position should have the following details:
       | date           | 2019-11-26 13:56:23 |
-      | payment_method | Payments by check   |
-      | transaction_id | test123             |
+      | paymentMethod  | Payments by check   |
+      | transactionId  | test123             |
       | amount         | $6.00               |
     And order "bo_order1" should have following details:
       | total_products           | 23.80 |
@@ -121,7 +133,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
@@ -197,8 +208,15 @@ Feature: Order from Back Office (BO)
       | amount        | 2                       |
       | price         | 16                      |
     Then order "bo_order1" should contain 2 products "Mug Today is a good day"
-    And product "Mug Today is a good day" in order "bo_order1" should have specific price 16.0
     And order "bo_order1" should have 2 invoices
+    And the product "Mug Today is a good day" in the second invoice from the order "bo_order1" should have the following details:
+      | product_quantity            | 2     |
+      | product_price               | 16.00 |
+      | original_product_price      | 11.90 |
+      | unit_price_tax_incl         | 16.96 |
+      | unit_price_tax_excl         | 16.00 |
+      | total_price_tax_incl        | 33.92 |
+      | total_price_tax_excl        | 32.00 |
     And order "bo_order1" should have following details:
       | total_products           | 55.80 |
       | total_products_wt        | 59.15 |
@@ -279,7 +297,6 @@ Feature: Order from Back Office (BO)
       | amount        | 2                  |
       | price         | 16                 |
     Then order "bo_order1" should contain 2 products "Test Added Product"
-    And product "Test Added Product" in order "bo_order1" should have specific price 16.0
     And the available stock for product "Test Added Product" should be 98
     And order "bo_order1" should have 4 products in total
     And order "bo_order1" should have 0 invoices
@@ -329,6 +346,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 3      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 37.84  |
@@ -345,6 +363,25 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.0    |
       | total_shipping_tax_incl  | 7.42   |
 
+  Scenario: Update quantity of customized product
+    When I create an empty cart "dummy_cart3" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart3"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart3         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 3                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 3 products in total
+    When I edit product "Customizable Mug" to order "bo_order_custo" with following products details:
+      | amount        | 4                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 4 products in total
+
   Scenario: Update product in order with zero quantity is forbidden
     When I edit product "Mug The best is yet to come" to order "bo_order1" with following products details:
       | amount        | 0                       |
@@ -354,6 +391,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.9   |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.230000 |
@@ -379,6 +417,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.9   |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.9   |
       | total_price_tax_incl        | 25.23  |
@@ -489,6 +528,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.90  |
+      | original_product_price      | 11.90  |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.90  |
       | total_price_tax_incl        | 25.23  |
@@ -499,11 +539,12 @@ Feature: Order from Back Office (BO)
       | price          | 94.34                   |
       | price_tax_incl | 100                     |
     When I generate invoice for "bo_order1" order
+    # product_price is computed for backward compatibility which is why it is rounded (database value is correct though)
     Then the product "Mug The best is yet to come" in the first invoice from the order "bo_order1" should have the following details:
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |
@@ -528,7 +569,7 @@ Feature: Order from Back Office (BO)
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |
@@ -536,7 +577,7 @@ Feature: Order from Back Office (BO)
       | product_quantity            | 1         |
       | product_price               | 94.34     |
       | original_product_price      | 11.90     |
-      | unit_price_tax_incl         | 99.999999 |
+      | unit_price_tax_incl         | 100.00    |
       | unit_price_tax_excl         | 94.339622 |
       | total_price_tax_incl        | 100       |
       | total_price_tax_excl        | 94.34     |
@@ -699,3 +740,41 @@ Feature: Order from Back Office (BO)
     And the first invoice from order "bo_order1" should have following shipping tax details:
       | total_tax_excl | rate | total_amount |
       | 7              | 6.00 | 0.42         |
+
+  Scenario: View order created on a currently deleted language
+    Given language "Spanish" with locale "es-ES" exists
+    And language with iso code "es" is the default one
+    When I create an empty cart "dummy_cart-ES" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart-ES"
+    And I add 1 product "Mug The best is yet to come" to the cart "dummy_cart-ES"
+    And I add order "bo_order-ES" with the following details:
+      | cart                | dummy_cart-ES               |
+      | message             |                             |
+      | payment module name | dummy_payment               |
+      | status              | Awaiting bank wire payment  |
+    And I change order "bo_order-ES" shipping address to "test-address"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      # country is not translated here but should be on the develop branch (https://github.com/PrestaShop/PrestaShop/pull/19818)
+      | country | United States |
+    When language with iso code "en" is the default one
+    And I delete language "Spanish"
+    Then order "bo_order-ES" shipping address should be "test-address"
+    And order "bo_order-ES" preview shipping address should have the following details:
+      | country | United States |
+
+  Scenario: Add same customizable product to an order with new invoice
+    When I create an empty cart "dummy_cart_custo" for customer "testCustomer"
+    And I add 1 customized products with reference "demo_14" with all its customizations to the cart "dummy_cart_custo"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_custo"
+    And I add order "bo_order_custo" with the following details:
+      | cart                | dummy_cart_custo         |
+      | message             | test                |
+      | payment module name | dummy_payment       |
+      | status              | Payment accepted    |
+    Then order "bo_order_custo" should have 1 products in total
+    When I add products to order "bo_order_custo" with new invoice and the following products details:
+      | name          | Customizable Mug        |
+      | amount        | 1                       |
+      | price         | 10                      |
+    Then order "bo_order_custo" should have 2 products in total

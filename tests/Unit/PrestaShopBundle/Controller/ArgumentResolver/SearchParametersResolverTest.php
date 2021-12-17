@@ -238,7 +238,6 @@ class SearchParametersResolverTest extends TestCase
                 ->expects($this->once())
                 ->method('dispatch')
                 ->with(
-                    $this->equalTo(FilterSearchCriteriaEvent::NAME),
                     $this->callback(function (FilterSearchCriteriaEvent $event) use ($expectedFilters) {
                         $this->assertInstanceOf(FilterSearchCriteriaEvent::class, $event);
                         /** @var SampleFilters $filters */
@@ -248,7 +247,8 @@ class SearchParametersResolverTest extends TestCase
                         $this->assertEquals($expectedFilters, $filters->all());
 
                         return true;
-                    })
+                    }),
+                    $this->equalTo(FilterSearchCriteriaEvent::NAME)
                 );
         }
 

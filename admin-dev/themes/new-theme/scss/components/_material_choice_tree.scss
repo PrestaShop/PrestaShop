@@ -1,10 +1,10 @@
 .material-choice-tree-container {
-  padding: .625rem;
+  padding: 0.625rem;
   border: 1px solid $gray-light;
 
   .choice-tree-actions {
     margin-bottom: 10px;
-    border-bottom: .063rem solid $gray-light;
+    border-bottom: 0.063rem solid $gray-light;
   }
 
   ul.choice-tree {
@@ -64,8 +64,8 @@
 
         &::before {
           position: absolute;
-          top: -.25rem;
-          left: -.1rem;
+          top: -0.25rem;
+          left: -0.1rem;
           font-family: "Material Icons", Arial, Helvetica, sans-serif;
           font-size: 1.25rem;
           color: $gray-medium;

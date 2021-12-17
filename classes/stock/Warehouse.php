@@ -50,7 +50,7 @@ class WarehouseCore extends ObjectModel
     public $id_currency;
 
     /** @var bool True if warehouse has been deleted (hence, no deletion in DB) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * Describes the way a Warehouse is managed.
@@ -397,17 +397,15 @@ class WarehouseCore extends ObjectModel
      */
     public function getNumberOfProducts()
     {
-        $query = '
-			SELECT COUNT(t.id_stock)
-			FROM
-				(
-					SELECT s.id_stock
-				 	FROM ' . _DB_PREFIX_ . 'stock s
-				 	WHERE s.id_warehouse = ' . (int) $this->id . '
-				 	GROUP BY s.id_product, s.id_product_attribute
-				 ) as t';
+        $query = 'SELECT COUNT(t.id_stock) FROM
+            (
+                SELECT s.id_stock
+                FROM ' . _DB_PREFIX_ . 'stock s
+                WHERE s.id_warehouse = ' . (int) $this->id . '
+                GROUP BY s.id_product, s.id_product_attribute
+             ) as t';
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -430,7 +428,7 @@ class WarehouseCore extends ObjectModel
     /**
      * Gets the value of the stock in the current warehouse.
      *
-     * @return int Value of the stock
+     * @return float Value of the stock
      */
     public function getStockValue()
     {
@@ -439,7 +437,7 @@ class WarehouseCore extends ObjectModel
         $query->from('stock', 's');
         $query->where('s.`id_warehouse` = ' . (int) $this->id);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (float) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -575,7 +573,7 @@ class WarehouseCore extends ObjectModel
     /**
      * Webservice : gets the value of the warehouse.
      *
-     * @return int
+     * @return float
      */
     public function getWsStockValue()
     {

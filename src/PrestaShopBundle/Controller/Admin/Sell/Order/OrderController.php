@@ -29,13 +29,13 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 use Currency;
 use Exception;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddCartRuleToOrderCommand;
-use PrestaShop\PrestaShop\Core\Domain\Order\Command\AddOrderFromBackOfficeCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\BulkChangeOrderStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand;
@@ -64,6 +64,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\TransistEmailSendingException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\GenerateInvoiceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Command\UpdateInvoiceNoteCommand;
+use PrestaShop\PrestaShop\Core\Domain\Order\Invoice\Exception\InvoiceException;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderConstraints;
 use PrestaShop\PrestaShop\Core\Domain\Order\Payment\Command\AddPaymentCommand;
 use PrestaShop\PrestaShop\Core\Domain\Order\Product\Command\AddProductToOrderCommand;
@@ -76,13 +77,15 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderPreview;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductOutOfStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductSearchEmptyPhraseException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\FoundProduct;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderSiblingProviderInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\OrderFilters;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Exception\InvalidModuleException;
@@ -118,12 +121,12 @@ class OrderController extends FrameworkBundleAdminController
     /**
      * Default number of products per page (in case invalid value is used)
      */
-    const DEFAULT_PRODUCTS_NUMBER = 8;
+    public const DEFAULT_PRODUCTS_NUMBER = 8;
 
     /**
      * Options used for the number of products per page
      */
-    const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
+    public const PRODUCTS_PAGINATION_OPTIONS = [8, 20, 50, 100];
 
     /**
      * Shows list of orders
@@ -162,11 +165,22 @@ class OrderController extends FrameworkBundleAdminController
     {
         $toolbarButtons = [];
 
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_orders_create'),
             'desc' => $this->trans('Add new order', 'Admin.Orderscustomers.Feature'),
             'icon' => 'add_circle_outline',
+            'disabled' => !$isSingleShopContext,
         ];
+
+        if (!$isSingleShopContext) {
+            $toolbarButtons['add']['help'] = $this->trans(
+                'You can use this feature in a single shop context only. Switch context to enable it.',
+                'Admin.Orderscustomers.Feature'
+            );
+            $toolbarButtons['add']['href'] = '#';
+        }
 
         return $toolbarButtons;
     }
@@ -184,24 +198,21 @@ class OrderController extends FrameworkBundleAdminController
     {
         $summaryForm = $this->createForm(CartSummaryType::class);
         $summaryForm->handleRequest($request);
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.cart_summary_form_handler');
 
-        if ($summaryForm->isSubmitted() && $summaryForm->isValid()) {
-            $formData = $summaryForm->getData();
-            try {
-                $orderId = $this->getCommandBus()->handle(new AddOrderFromBackOfficeCommand(
-                    (int) $formData['cart_id'],
-                    $this->getContext()->employee->id,
-                    $formData['order_message'],
-                    $formData['payment_module'],
-                    (int) $formData['order_state']
-                ));
+        try {
+            $result = $formHandler->handle($summaryForm);
+
+            if ($result->getIdentifiableObjectId() instanceof OrderId) {
+                /** @var OrderId $orderId */
+                $orderId = $result->getIdentifiableObjectId();
 
                 return $this->redirectToRoute('admin_orders_view', [
                     'orderId' => $orderId->getValue(),
                 ]);
-            } catch (Exception $e) {
-                $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
         return $this->redirectToRoute('admin_orders_create');
@@ -220,7 +231,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        /** @var MultistoreContextCheckerInterface $shopContextChecker */
+        /** @var ShopContext $shopContextChecker */
         $shopContextChecker = $this->container->get('prestashop.adapter.shop.context');
 
         if (!$shopContextChecker->isSingleShopContext()) {
@@ -233,7 +244,11 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         $summaryForm = $this->createForm(CartSummaryType::class);
-        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices();
+        $languages = $this->get('prestashop.core.form.choice_provider.language_by_id')->getChoices(
+            [
+                'shop_id' => $shopContextChecker->getContextShopID(),
+            ]
+        );
         $currencies = $this->get('prestashop.core.form.choice_provider.currency_by_id')->getChoices();
 
         $configuration = $this->get('prestashop.adapter.legacy.configuration');
@@ -246,6 +261,8 @@ class OrderController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'recycledPackagingEnabled' => (bool) $configuration->get('PS_RECYCLABLE_PACK'),
             'giftSettingsEnabled' => (bool) $configuration->get('PS_GIFT_WRAPPING'),
+            'stockManagementEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
+            'isB2BEnabled' => (bool) $configuration->get('PS_B2B_ENABLE'),
         ]);
     }
 
@@ -399,7 +416,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         try {
             /** @var OrderForViewing $orderForViewing */
-            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+            $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
         } catch (OrderException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
@@ -429,7 +446,9 @@ class OrderController extends FrameworkBundleAdminController
             'id_order' => $orderId,
         ]);
 
-        $orderMessageForm = $this->createForm(OrderMessageType::class, [], [
+        $orderMessageForm = $this->createForm(OrderMessageType::class, [
+            'lang_id' => $orderForViewing->getCustomer()->getLanguageId(),
+        ], [
             'action' => $this->generateUrl('admin_orders_send_message', ['orderId' => $orderId]),
         ]);
         $orderMessageForm->handleRequest($request);
@@ -441,7 +460,7 @@ class OrderController extends FrameworkBundleAdminController
         $changeOrderAddressForm = null;
         $privateNoteForm = null;
 
-        if (null !== $orderForViewing->getCustomer()) {
+        if (null !== $orderForViewing->getCustomer() && $orderForViewing->getCustomer()->getId() !== 0) {
             $changeOrderAddressForm = $this->createForm(ChangeOrderAddressType::class, [], [
                 'customer_id' => $orderForViewing->getCustomer()->getId(),
             ]);
@@ -479,11 +498,13 @@ class OrderController extends FrameworkBundleAdminController
 
         try {
             $this->dispatchHook(
-                'actionGetAdminOrderButtons', [
+                'actionGetAdminOrderButtons',
+                [
                     'controller' => $this,
                     'id_order' => $orderId,
                     'actions_bar_buttons_collection' => $backOfficeOrderButtons,
-                ]);
+                ]
+            );
 
             $cancelProductForm = $formBuilder->getFormFor($orderId);
         } catch (Exception $e) {
@@ -506,11 +527,26 @@ class OrderController extends FrameworkBundleAdminController
         }
         sort($paginationNumOptions);
 
+        $metatitle = sprintf(
+            '%s %s %s',
+            $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            $this->configuration->get('PS_NAVIGATION_PIPE', '>'),
+            $this->trans(
+                'Order %reference% from %firstname% %lastname%',
+                'Admin.Orderscustomers.Feature',
+                [
+                    '%reference%' => $orderForViewing->getReference(),
+                    '%firstname%' => $orderForViewing->getCustomer()->getFirstName(),
+                    '%lastname%' => $orderForViewing->getCustomer()->getLastName(),
+                ]
+            )
+        );
+
         return $this->render('@PrestaShop/Admin/Sell/Order/Order/view.html.twig', [
             'showContentHeader' => true,
             'enableSidebar' => true,
             'orderCurrency' => $orderCurrency,
-            'meta_title' => $this->trans('Orders', 'Admin.Orderscustomers.Feature'),
+            'meta_title' => $metatitle,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'orderForViewing' => $orderForViewing,
             'addOrderCartRuleForm' => $addOrderCartRuleForm->createView(),
@@ -533,13 +569,14 @@ class OrderController extends FrameworkBundleAdminController
             'nextOrderId' => $orderSiblingProvider->getNextOrderId($orderId),
             'paginationNum' => $paginationNum,
             'paginationNumOptions' => $paginationNumOptions,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'internalNoteForm' => $internalNoteForm->createView(),
         ]);
     }
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -576,7 +613,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      *
      * @param int $orderId
      * @param Request $request
@@ -609,7 +648,9 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      *
      * @param int $orderId
      * @param Request $request
@@ -646,7 +687,7 @@ class OrderController extends FrameworkBundleAdminController
      */
     private function handleOutOfStockProduct(OrderForViewing $orderForViewing)
     {
-        $isStockManagementEnabled = $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
         if (!$isStockManagementEnabled || $orderForViewing->isDelivered() || $orderForViewing->isShipped()) {
             return;
         }
@@ -662,7 +703,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      * @param Request $request
@@ -672,9 +713,12 @@ class OrderController extends FrameworkBundleAdminController
     public function addProductAction(int $orderId, Request $request): Response
     {
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $previousProducts = $orderForViewing->getProducts()->getProducts();
+        $previousProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $previousProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
+        }
 
         $invoiceId = (int) $request->get('invoice_id');
         try {
@@ -711,14 +755,19 @@ class OrderController extends FrameworkBundleAdminController
             );
         }
 
+        /**
+         * Returning the products list view is not required since we reload the whole list
+         * We keep it for now to avoid Breaking Change
+         */
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
-        $updatedProducts = $orderForViewing->getProducts()->getProducts();
-        $newProducts = [];
-        for ($i = count($previousProducts); $i < count($updatedProducts); ++$i) {
-            $newProducts[] = $updatedProducts[$i];
+        $updatedProducts = [];
+        foreach ($orderForViewing->getProducts()->getProducts() as $orderProductForViewing) {
+            $updatedProducts[$orderProductForViewing->getOrderDetailId()] = $orderProductForViewing;
         }
+
+        $newProducts = array_diff_key($updatedProducts, $previousProducts);
 
         $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
         $cancelProductForm = $formBuilder->getFormFor($orderId);
@@ -733,6 +782,7 @@ class OrderController extends FrameworkBundleAdminController
                 'product' => $newProduct,
                 'isColumnLocationDisplayed' => $newProduct->getLocation() !== '',
                 'isColumnRefundedDisplayed' => $newProduct->getQuantityRefunded() > 0,
+                'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
                 'cancelProductForm' => $cancelProductForm->createView(),
                 'orderCurrency' => $orderCurrency,
             ]);
@@ -742,7 +792,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      *
@@ -778,7 +828,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -798,7 +848,7 @@ class OrderController extends FrameworkBundleAdminController
     }
 
     /**
-     * @AdminSecurity("is_granted(['create', 'update'], request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
      *
      * @param int $orderId
      */
@@ -810,6 +860,24 @@ class OrderController extends FrameworkBundleAdminController
         return $this->json([
             'total' => count($orderForViewing->getDocuments()->getDocuments()),
             'html' => $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/documents.html.twig', [
+                'orderForViewing' => $orderForViewing,
+            ])->getContent(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     */
+    public function getShippingAction(int $orderId)
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+
+        return $this->json([
+            'total' => count($orderForViewing->getShipping()->getCarriers()),
+            'html' => $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/shipping.html.twig', [
                 'orderForViewing' => $orderForViewing,
             ])->getContent(),
         ]);
@@ -909,12 +977,18 @@ class OrderController extends FrameworkBundleAdminController
      */
     public function updateInvoiceNoteAction(int $orderId, int $orderInvoiceId, Request $request): RedirectResponse
     {
-        $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
-            $orderInvoiceId,
-            $request->request->get('invoice_note')
-        ));
-
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        try {
+            $this->getCommandBus()->handle(new UpdateInvoiceNoteCommand(
+                $orderInvoiceId,
+                $request->request->get('invoice_note')
+            ));
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        } catch (InvoiceException $e) {
+            $this->addFlash(
+                'error',
+                $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            );
+        }
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -951,7 +1025,7 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         /** @var OrderForViewing $orderForViewing */
-        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
 
         $products = $orderForViewing->getProducts()->getProducts();
         $product = array_reduce($products, function ($result, OrderProductForViewing $item) use ($orderDetailId) {
@@ -973,6 +1047,7 @@ class OrderController extends FrameworkBundleAdminController
             'cancelProductForm' => $cancelProductForm->createView(),
             'isColumnLocationDisplayed' => $product->getLocation() !== '',
             'isColumnRefundedDisplayed' => $product->getQuantityRefunded() > 0,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
             'orderCurrency' => $orderCurrency,
             'orderForViewing' => $orderForViewing,
             'product' => $product,
@@ -1455,6 +1530,7 @@ class OrderController extends FrameworkBundleAdminController
             'discountsAmountDisplayed' => $orderForViewingPrices->getDiscountsAmountRaw()->isGreaterThanZero(),
             'productsTotalFormatted' => $orderForViewingPrices->getProductsPriceFormatted(),
             'shippingTotalFormatted' => $orderForViewingPrices->getShippingPriceFormatted(),
+            'shippingTotalDisplayed' => $orderForViewingPrices->getShippingPriceRaw()->isGreaterThanZero(),
             'taxesTotalFormatted' => $orderForViewingPrices->getTaxesAmountFormatted(),
         ]);
     }
@@ -1482,6 +1558,54 @@ class OrderController extends FrameworkBundleAdminController
                 Response::HTTP_BAD_REQUEST
             );
         }
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_orders_index")
+     *
+     * @param int $orderId
+     *
+     * @return Response
+     */
+    public function getProductsListAction(int $orderId): Response
+    {
+        /** @var OrderForViewing $orderForViewing */
+        $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId, QuerySorting::DESC));
+
+        $currencyDataProvider = $this->container->get('prestashop.adapter.data_provider.currency');
+        $orderCurrency = $currencyDataProvider->getCurrencyById($orderForViewing->getCurrencyId());
+
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.cancel_product_form_builder');
+        $cancelProductForm = $formBuilder->getFormFor($orderId);
+
+        $paginationNum = $this->configuration->getInt('PS_ORDER_PRODUCTS_NB_PER_PAGE', self::DEFAULT_PRODUCTS_NUMBER);
+        $paginationNumOptions = self::PRODUCTS_PAGINATION_OPTIONS;
+        if (!in_array($paginationNum, $paginationNumOptions)) {
+            $paginationNumOptions[] = $paginationNum;
+        }
+        sort($paginationNumOptions);
+
+        $isColumnLocationDisplayed = false;
+        $isColumnRefundedDisplayed = false;
+
+        foreach (array_slice($orderForViewing->getProducts()->getProducts(), $paginationNum) as $product) {
+            if (!empty($product->getLocation())) {
+                $isColumnLocationDisplayed = true;
+            }
+            if ($product->getQuantityRefunded() > 0) {
+                $isColumnRefundedDisplayed = true;
+            }
+        }
+
+        return $this->render('@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig', [
+            'orderForViewing' => $orderForViewing,
+            'cancelProductForm' => $cancelProductForm->createView(),
+            'orderCurrency' => $orderCurrency,
+            'paginationNum' => $paginationNum,
+            'isColumnLocationDisplayed' => $isColumnLocationDisplayed,
+            'isColumnRefundedDisplayed' => $isColumnRefundedDisplayed,
+            'isAvailableQuantityDisplayed' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
+        ]);
     }
 
     /**
@@ -1538,7 +1662,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['update', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_view",
      *     redirectQueryParamsToKeep={"orderId"},
      *     message="You do not have permission to edit this."
@@ -1605,12 +1729,11 @@ class OrderController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $orderId
-     * @param string $name
      * @param string $value
      *
      * @return BinaryFileResponse|RedirectResponse
      */
-    public function displayCustomizationImageAction(int $orderId, string $name, string $value)
+    public function displayCustomizationImageAction(int $orderId, string $value)
     {
         $uploadDir = $this->get('prestashop.adapter.legacy.context')->getUploadDirectory();
         $filePath = $uploadDir . $value;
@@ -1626,7 +1749,7 @@ class OrderController extends FrameworkBundleAdminController
             }
 
             $imageFile = new File($filePath);
-            $fileName = sprintf('%s-customization-%s.%s', $orderId, $name, $imageFile->guessExtension() ?? 'jpg');
+            $fileName = sprintf('%s-customization-%s.%s', $orderId, $value, $imageFile->guessExtension() ?? 'jpg');
 
             return $this->file($filePath, $fileName);
         } catch (Exception $e) {
@@ -1642,7 +1765,7 @@ class OrderController extends FrameworkBundleAdminController
      * Set order internal note.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_orders_index"
      * )
      *
@@ -1688,7 +1811,7 @@ class OrderController extends FrameworkBundleAdminController
 
     /**
      * @AdminSecurity(
-     *     "is_granted(['create', 'update'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))",
      *     message="You do not have permission to perform this search."
      * )
      *
@@ -1717,6 +1840,11 @@ class OrderController extends FrameworkBundleAdminController
             return $this->json([
                 'products' => $foundProducts,
             ]);
+        } catch (ProductSearchEmptyPhraseException $e) {
+            return $this->json(
+                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
         } catch (Exception $e) {
             return $this->json(
                 [$e, 'message' => $this->getErrorMessageForException($e, [])],
@@ -1777,6 +1905,10 @@ class OrderController extends FrameworkBundleAdminController
                 'Admin.Orderscustomers.Notification'
             ),
             OrderException::class => $this->trans(
+                $e->getMessage(),
+                'Admin.Orderscustomers.Notification'
+            ),
+            InvoiceException::class => $this->trans(
                 $e->getMessage(),
                 'Admin.Orderscustomers.Notification'
             ),
@@ -1897,6 +2029,20 @@ class OrderController extends FrameworkBundleAdminController
                 'Only numbers and decimal points (".") are allowed in the amount fields of the payment block, e.g. 10.50 or 1050.',
                 'Admin.Orderscustomers.Notification'
             ),
+            OrderConstraintException::class => [
+                OrderConstraintException::INVALID_PAYMENT_METHOD => sprintf(
+                    '%s %s %s',
+                    $this->trans(
+                        'The selected payment method is invalid.',
+                        'Admin.Orderscustomers.Notification'
+                    ),
+                    $this->trans(
+                        'Invalid characters:',
+                        'Admin.Notifications.Info'
+                    ),
+                    AddPaymentCommand::INVALID_CHARACTERS_NAME
+                ),
+            ],
         ]);
     }
 
@@ -1945,19 +2091,19 @@ class OrderController extends FrameworkBundleAdminController
                 ) : '',
             CustomerMessageConstraintException::class => [
                 CustomerMessageConstraintException::MISSING_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
                 CustomerMessageConstraintException::INVALID_MESSAGE => $this->trans(
-                        'The %s field is not valid',
-                        'Admin.Notifications.Error',
-                        [
-                            sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
-                        ]
-                    ),
+                    'The %s field is not valid',
+                    'Admin.Notifications.Error',
+                    [
+                        sprintf('"%s"', $this->trans('Message', 'Admin.Global')),
+                    ]
+                ),
             ],
         ];
     }

@@ -185,7 +185,10 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import file from history.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to update this.", redirectRoute="admin_import")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to update this.", redirectRoute="admin_import"
+     * )
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -209,7 +212,7 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Download import sample file.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))", redirectRoute="admin_import")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", redirectRoute="admin_import")
      *
      * @param string $sampleName
      *
@@ -259,7 +262,10 @@ class ImportController extends FrameworkBundleAdminController
     /**
      * Process the import.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", redirectRoute="admin_import")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_import"
+     * )
      * @DemoRestricted(redirectRoute="admin_import")
      *
      * @param Request $request
@@ -315,7 +321,6 @@ class ImportController extends FrameworkBundleAdminController
         return [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->get('translator')->trans('Import', [], 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,

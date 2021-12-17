@@ -22,30 +22,30 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-$(function() {
-  var moduleImport = $("#module-import");
-  moduleImport.click(function() {
-    moduleImport.addClass("onclick", 250, validate);
+$(() => {
+  const moduleImport = $('#module-import');
+  moduleImport.click(() => {
+    moduleImport.addClass('onclick', 250, validate);
   });
 
   function validate() {
-    setTimeout(function() {
-      moduleImport.removeClass("onclick");
-      moduleImport.addClass("validate", 450, callback);
-    }, 2250 );
+    setTimeout(() => {
+      moduleImport.removeClass('onclick');
+      moduleImport.addClass('validate', 450, callback);
+    }, 2250);
   }
   function callback() {
-    setTimeout(function() {
-      moduleImport.removeClass("validate");
-    }, 1250 );
+    setTimeout(() => {
+      moduleImport.removeClass('validate');
+    }, 1250);
   }
 
-  $('body').on('click', 'a.module-read-more-grid-btn, a.module-read-more-list-btn', function (event) {
+  $('body').on('click', 'a.module-read-more-grid-btn, a.module-read-more-list-btn', (event) => {
     event.preventDefault();
-    var urlCallModule = event.target.href;
-    var modulePoppin = $(event.target).data('target');
+    const urlCallModule = event.target.href;
+    const modulePoppin = $(event.target).data('target');
 
-    $.get(urlCallModule, function (data) {
+    $.get(urlCallModule, (data) => {
       $(modulePoppin).html(data);
       $(modulePoppin).modal();
     });

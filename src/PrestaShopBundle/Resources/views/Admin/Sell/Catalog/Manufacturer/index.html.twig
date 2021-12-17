@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% set layoutHeaderToolbarBtn = {
   add_manufacturer: {
@@ -42,19 +44,11 @@
 {% block content %}
   {% block manufacturers_listing %}
     {{ ps.infotip(settingsTipMessage, true) }}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerGrid} %}
   {% endblock %}
 
   {% block manufacturers_address_listing %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerAddressGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': manufacturerAddressGrid} %}
   {% endblock %}
 {% endblock %}
 

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,19 +43,18 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
      * Render merchandise returns grid and options.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *     redirectRoute="admin_merchandise_returns_index"
      * )
      *
      * @param Request $request
      * @param MerchandiseReturnFilters $filters
      *
-     * @return Response
+     * @return Response|RedirectResponse
      */
     public function indexAction(Request $request, MerchandiseReturnFilters $filters): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.merchandise_return');
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
 
         $optionsFormHandler = $this->getOptionsFormHandler();
         $optionsForm = $optionsFormHandler->getForm();
@@ -65,13 +65,15 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
 
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_merchandise_returns_index');
             } else {
                 $this->flashErrors($errors);
             }
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/index.html.twig', [
-            'merchandiseReturnsGrid' => $gridPresenter->present($gridFactory->getGrid($filters)),
+            'merchandiseReturnsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);
     }

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class CustomerAddressGridDefinitionFactory defines customer's addresses grid structure.
@@ -43,17 +44,17 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
 {
     use DeleteActionTrait;
 
-    const GRID_ID = 'customer_address';
+    public const GRID_ID = 'customer_address';
 
     /**
      * @var string
      */
     private $backUrl;
 
-    public function __construct(HookDispatcherInterface $hookDispatcher, string $backUrl)
+    public function __construct(HookDispatcherInterface $hookDispatcher, ?Request $currentRequest)
     {
         parent::__construct($hookDispatcher);
-        $this->backUrl = $backUrl;
+        $this->backUrl = $currentRequest ? $currentRequest->getUri() : '';
     }
 
     /**
@@ -104,6 +105,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ->setName($this->trans('Address', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'full_address',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -118,6 +120,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ->setName($this->trans('Phone number(s)', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'phone_number',
+                        'sortable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))

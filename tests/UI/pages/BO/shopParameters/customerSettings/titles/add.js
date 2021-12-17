@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add title page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddTitle extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add title page
+   */
   constructor() {
     super();
 
@@ -30,8 +39,8 @@ class AddTitle extends BOBasePage {
 
   /**
    * Change language in form
-   * @param page
-   * @param idLang
+   * @param page {Page} Browser tab
+   * @param idLang {number} Id language to select
    * @return {Promise<void>}
    */
   async changeLanguage(page, idLang) {
@@ -42,14 +51,14 @@ class AddTitle extends BOBasePage {
 
     await Promise.all([
       page.click(this.dropdownMenuItemLink(idLang)),
-      page.waitForSelector(this.dropdownMenuItemLink(idLang), {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.dropdownMenuItemLink(idLang)),
     ]);
   }
 
   /**
    * Fill title form and get successful message
-   * @param page
-   * @param titleData
+   * @param page {Page} Browser tab
+   * @param titleData {TitleData} Data to set on create/edit title form
    * @return {Promise<string>}
    */
   async createEditTitle(page, titleData) {
@@ -64,14 +73,14 @@ class AddTitle extends BOBasePage {
     // Upload image
     await this.uploadFile(page, this.imageInput, titleData.imageName);
 
-    await this.setValue(page, this.imageWidthInput, titleData.imageWidth.toString());
-    await this.setValue(page, this.imageHeightInput, titleData.imageHeight.toString());
+    await this.setValue(page, this.imageWidthInput, titleData.imageWidth);
+    await this.setValue(page, this.imageHeightInput, titleData.imageHeight);
 
     // Save title
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 

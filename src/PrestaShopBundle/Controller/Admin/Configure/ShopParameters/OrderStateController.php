@@ -78,7 +78,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */
@@ -105,7 +105,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -145,7 +145,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order_state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -190,7 +190,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state create form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -222,7 +222,7 @@ class OrderStateController extends FrameworkBundleAdminController
     /**
      * Show order return state edit form & handle processing of it.
      *
-     * @AdminSecurity("is_granted(['update'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @return Response
      */
@@ -387,7 +387,7 @@ class OrderStateController extends FrameworkBundleAdminController
                 ),
             ],
             MissingOrderStateRequiredFieldsException::class => $this->trans(
-                'The field %s is required.',
+                'The %s field is required.',
                 'Admin.Notifications.Error',
                 [
                     implode(

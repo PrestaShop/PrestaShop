@@ -4,25 +4,27 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
 
 let browserContext;
 let page;
 
-describe('Enable guest checkout', async () => {
+describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,16 +59,16 @@ describe('Enable guest checkout', async () => {
     {args: {action: 'enable', exist: true, pwdRequired: false}},
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     it(`should ${test.args.action} guest checkout`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}GuestCheckout`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `guestCheckout${index}`, baseContext);
 
       const result = await orderSettingsPage.setGuestCheckoutStatus(page, test.args.exist);
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
 
     it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}AndViewMyShop`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `viewMyShop${index}`, baseContext);
 
       // Click on view my shop
       page = await orderSettingsPage.viewMyShop(page);
@@ -79,12 +81,7 @@ describe('Enable guest checkout', async () => {
     });
 
     it('should verify the guest checkout', async function () {
-      await testContext.addContextItem(
-        this,
-        'testIdentifier',
-        `checkGuestCheckout${homePage.uppercaseFirstCharacter(test.args.action)}`,
-        baseContext,
-      );
+      await testContext.addContextItem(this, 'testIdentifier', `checkGuestCheckout${index}`, baseContext);
 
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
@@ -104,7 +101,7 @@ describe('Enable guest checkout', async () => {
     });
 
     it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `${test.args.action}CheckAndBackToBO`, baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       page = await checkoutPage.closePage(browserContext, page, 0);
 

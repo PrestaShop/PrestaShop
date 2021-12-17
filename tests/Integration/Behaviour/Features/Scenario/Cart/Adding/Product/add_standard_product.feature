@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags add-standard-product
 
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @add-standard-product
 Feature: Add product in cart
   As a customer

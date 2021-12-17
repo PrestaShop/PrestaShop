@@ -38,20 +38,20 @@ class NumberExtractorException extends CoreException
     /**
      * When provided property path is not valid
      */
-    const INVALID_PROPERTY_PATH = 10;
+    public const INVALID_PROPERTY_PATH = 10;
 
     /**
      * When the resource/property from which value is being extracted is of invalid type
      */
-    const INVALID_RESOURCE_TYPE = 20;
+    public const INVALID_RESOURCE_TYPE = 20;
 
     /**
      * When property is not accessible or doesn't exist
      */
-    const NOT_ACCESSIBLE = 30;
+    public const NOT_ACCESSIBLE = 30;
 
     /**
      * When property type is not numeric therefore it cannot be converted to number
      */
-    const NON_NUMERIC_PROPERTY = 40;
+    public const NON_NUMERIC_PROPERTY = 40;
 }

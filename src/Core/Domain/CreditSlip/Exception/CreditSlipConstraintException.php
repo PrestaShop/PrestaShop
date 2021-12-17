@@ -34,5 +34,5 @@ class CreditSlipConstraintException extends CreditSlipException
     /**
      * When id value is not valid
      */
-    const INVALID_ID = 10;
+    public const INVALID_ID = 10;
 }

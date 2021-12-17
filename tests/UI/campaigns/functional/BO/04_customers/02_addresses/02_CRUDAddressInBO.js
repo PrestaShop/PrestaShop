@@ -1,9 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -14,11 +18,7 @@ const addAddressPage = require('@pages/BO/customers/addresses/add');
 // Import data
 const AddressFaker = require('@data/faker/address');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_customers_addresses_CRUDAddressesInBO';
-
 
 let browserContext;
 let page;
@@ -28,7 +28,7 @@ const createAddressData = new AddressFaker({email: 'pub@prestashop.com', country
 const editAddressData = new AddressFaker({country: 'France'});
 
 // Create, Read, Update and Delete address in BO
-describe('Create, Read, Update and Delete address in BO', async () => {
+describe('BO - Customers - Addresses : CRUD Address in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Customers>Addresses\' page', async function () {
+  it('should go to \'Customers > Addresses\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -64,6 +64,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
     numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
     await expect(numberOfAddresses).to.be.above(0);
   });
+
   // 1 : Create address
   describe('Create address in BO', async () => {
     it('should go to add new address page', async function () {
@@ -86,8 +87,8 @@ describe('Create, Read, Update and Delete address in BO', async () => {
   });
 
   // 2 : Update address
-  describe('Update address Created', async () => {
-    it('should go to \'Customers>Addresses\' page', async function () {
+  describe('Update address', async () => {
+    it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToUpdate', baseContext);
 
       await addressesPage.goToSubMenu(
@@ -105,19 +106,9 @@ describe('Create, Read, Update and Delete address in BO', async () => {
 
       await addressesPage.resetFilter(page);
 
-      await addressesPage.filterAddresses(
-        page,
-        'input',
-        'firstname',
-        createAddressData.firstName,
-      );
+      await addressesPage.filterAddresses(page, 'input', 'firstname', createAddressData.firstName);
 
-      await addressesPage.filterAddresses(
-        page,
-        'input',
-        'lastname',
-        createAddressData.lastName,
-      );
+      await addressesPage.filterAddresses(page, 'input', 'lastname', createAddressData.lastName);
 
       const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
       await expect(firstName).to.contains(createAddressData.firstName);
@@ -147,7 +138,7 @@ describe('Create, Read, Update and Delete address in BO', async () => {
 
   // 3 : Delete address from BO
   describe('Delete address', async () => {
-    it('should go to \'Customers>Addresses\' page', async function () {
+    it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDelete', baseContext);
 
       await addressesPage.goToSubMenu(
@@ -165,19 +156,9 @@ describe('Create, Read, Update and Delete address in BO', async () => {
 
       await addressesPage.resetFilter(page);
 
-      await addressesPage.filterAddresses(
-        page,
-        'input',
-        'firstname',
-        editAddressData.firstName,
-      );
+      await addressesPage.filterAddresses(page, 'input', 'firstname', editAddressData.firstName);
 
-      await addressesPage.filterAddresses(
-        page,
-        'input',
-        'lastname',
-        editAddressData.lastName,
-      );
+      await addressesPage.filterAddresses(page, 'input', 'lastname', editAddressData.lastName);
 
       const firstName = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'firstname');
       await expect(firstName).to.contains(editAddressData.firstName);
@@ -194,6 +175,13 @@ describe('Create, Read, Update and Delete address in BO', async () => {
 
       const numberOfAddressesAfterDelete = await addressesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfAddressesAfterDelete).to.be.equal(numberOfAddresses);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfAddressesAfterReset).to.equal(numberOfAddresses);
     });
   });
 });

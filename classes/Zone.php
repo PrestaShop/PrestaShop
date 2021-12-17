@@ -84,8 +84,8 @@ class ZoneCore extends ObjectModel
      */
     public static function getIdByName($name)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_zone`
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_zone`
 			FROM `' . _DB_PREFIX_ . 'zone`
 			WHERE `name` = \'' . pSQL($name) . '\'
 		');
@@ -101,13 +101,12 @@ class ZoneCore extends ObjectModel
         if (parent::delete()) {
             // Delete regarding delivery preferences
             $result = Db::getInstance()->delete('carrier_zone', 'id_zone = ' . (int) $this->id);
-            $result &= Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
+            $result = $result && Db::getInstance()->delete('delivery', 'id_zone = ' . (int) $this->id);
 
             // Update Country & state zone with 0
-            $result &= Db::getInstance()->update('country', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
-            $result &= Db::getInstance()->update('state', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
+            $result = $result && Db::getInstance()->update('country', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
 
-            return $result;
+            return $result && Db::getInstance()->update('state', ['id_zone' => 0], 'id_zone = ' . (int) $this->id);
         }
 
         return false;

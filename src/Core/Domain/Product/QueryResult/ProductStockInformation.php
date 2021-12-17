@@ -66,11 +66,6 @@ class ProductStockInformation
     private $minimalQuantity;
 
     /**
-     * @var string
-     */
-    private $location;
-
-    /**
      * @var int
      */
     private $lowStockThreshold;
@@ -78,7 +73,7 @@ class ProductStockInformation
     /**
      * @var bool
      */
-    private $lowStockAlert;
+    private $lowStockAlertEnabled;
 
     /**
      * @var string[] key value pairs where key is the id of language
@@ -91,47 +86,46 @@ class ProductStockInformation
     private $localizedAvailableLaterLabels;
 
     /**
-     * @var DateTimeInterface
+     * @var string
+     */
+    private $location;
+
+    /**
+     * @var DateTimeInterface|null
      */
     private $availableDate;
 
     /**
-     * @param bool $useAdvancedStockManagement
-     * @param bool $dependsOnStock
      * @param int $packStockType
      * @param int $outOfStockType
      * @param int $quantity
      * @param int $minimalQuantity
-     * @param string $location
      * @param int $lowStockThreshold
-     * @param bool $lowStockAlert
+     * @param bool $lowStockAlertEnabled
      * @param array $localizedAvailableNowLabels
      * @param array $localizedAvailableLaterLabels
-     * @param DateTimeInterface $availableDate
+     * @param string $location
+     * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        bool $useAdvancedStockManagement,
-        bool $dependsOnStock,
         int $packStockType,
         int $outOfStockType,
         int $quantity,
         int $minimalQuantity,
-        string $location,
         int $lowStockThreshold,
-        bool $lowStockAlert,
+        bool $lowStockAlertEnabled,
         array $localizedAvailableNowLabels,
         array $localizedAvailableLaterLabels,
-        DateTimeInterface $availableDate
+        string $location,
+        ?DateTimeInterface $availableDate
     ) {
-        $this->useAdvancedStockManagement = $useAdvancedStockManagement;
-        $this->dependsOnStock = $dependsOnStock;
         $this->packStockType = $packStockType;
         $this->outOfStockType = $outOfStockType;
         $this->quantity = $quantity;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
-        $this->lowStockAlert = $lowStockAlert;
+        $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
         $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
         $this->availableDate = $availableDate;
@@ -186,14 +180,6 @@ class ProductStockInformation
     }
 
     /**
-     * @return string
-     */
-    public function getLocation(): string
-    {
-        return $this->location;
-    }
-
-    /**
      * @return int
      */
     public function getLowStockThreshold(): int
@@ -204,9 +190,9 @@ class ProductStockInformation
     /**
      * @return bool
      */
-    public function hasLowStockAlert(): bool
+    public function isLowStockAlertEnabled(): bool
     {
-        return $this->lowStockAlert;
+        return $this->lowStockAlertEnabled;
     }
 
     /**
@@ -226,9 +212,17 @@ class ProductStockInformation
     }
 
     /**
-     * @return DateTimeInterface
+     * @return string
      */
-    public function getAvailableDate(): DateTimeInterface
+    public function getLocation(): string
+    {
+        return $this->location;
+    }
+
+    /**
+     * @return DateTimeInterface|null
+     */
+    public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
     }

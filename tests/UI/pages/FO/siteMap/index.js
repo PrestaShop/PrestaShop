@@ -1,7 +1,16 @@
 require('module-alias/register');
 const FOBasePage = require('@pages/FO/FObasePage');
 
+/**
+ * Site map page, contains functions that can be used on the page
+ * @class
+ * @extends FOBasePage
+ */
 class SiteMap extends FOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on site map page
+   */
   constructor() {
     super();
 
@@ -19,8 +28,8 @@ class SiteMap extends FOBasePage {
    */
   /**
    * Get category name
-   * @param page
-   * @param categoryID
+   * @param page {Page} Browser tab
+   * @param categoryID {number} ID of the category
    * @return {Promise<string>}
    */
   async getCategoryName(page, categoryID) {
@@ -29,8 +38,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Check if category is visible
-   * @param page
-   * @param categoryID
+   * @param page {Page} Browser tab
+   * @param categoryID {number} ID of the category
    * @return {Promise<boolean>}
    */
   async isVisibleCategory(page, categoryID) {
@@ -39,8 +48,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Get page category name
-   * @param page
-   * @param pageCategoryID
+   * @param page {Page} Browser tab
+   * @param pageCategoryID {number} Id of the page category
    * @return {Promise<string>}
    */
   async getPageCategoryName(page, pageCategoryID) {
@@ -49,8 +58,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Is suppliers link visible
-   * @param page
-   * @returns {boolean}
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
    */
   isSuppliersLinkVisible(page) {
     return this.elementVisible(page, this.suppliersPageLink, 2000);
@@ -58,8 +67,8 @@ class SiteMap extends FOBasePage {
 
   /**
    * Is brands link visible
-   * @param page
-   * @returns {boolean}
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
    */
   isBrandsLinkVisible(page) {
     return this.elementVisible(page, this.brandsPageLink, 2000);

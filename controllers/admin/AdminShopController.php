@@ -27,6 +27,16 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 
 class AdminShopControllerCore extends AdminController
 {
+    /**
+     * @var int
+     */
+    public $id_shop;
+
+    /**
+     * @var int
+     */
+    public $id_shop_group;
+
     public function __construct()
     {
         $this->bootstrap = true;
@@ -354,10 +364,10 @@ class AdminShopControllerCore extends AdminController
 
     public function renderForm()
     {
-        /** @var Shop $obj */
         if (!($obj = $this->loadObject(true))) {
             return;
         }
+        /* @var Shop $obj */
 
         $this->fields_form = [
             'legend' => [
@@ -434,14 +444,14 @@ class AdminShopControllerCore extends AdminController
             $this->fields_form['input'][] = [
                 'type' => 'hidden',
                 'name' => 'id_shop_group',
-                'default' => $group->name,
+                'default' => isset($group) ? $group->name : '',
             ];
             $this->fields_form['input'][] = [
                 'type' => 'textShopGroup',
                 'label' => $this->trans('Shop group', [], 'Admin.Shopparameters.Feature'),
                 'desc' => $this->trans('You can\'t edit the shop group because the current shop belongs to a group with the "share" option enabled.', [], 'Admin.Shopparameters.Help'),
                 'name' => 'id_shop_group',
-                'value' => $group->name,
+                'value' => isset($group) ? $group->name : '',
             ];
         }
 
@@ -568,7 +578,7 @@ class AdminShopControllerCore extends AdminController
         asort($import_data);
 
         if (!$this->object->id) {
-            $this->fields_import_form = [
+            $fields_import_form = [
                 'radio' => [
                     'type' => 'radio',
                     'label' => $this->trans('Import data', [], 'Admin.Advparameters.Feature'),
@@ -637,8 +647,8 @@ class AdminShopControllerCore extends AdminController
             'defaultShop' => (int) Configuration::get('PS_SHOP_DEFAULT'),
             'ids_category' => $ids_category,
         ];
-        if (isset($this->fields_import_form)) {
-            $this->tpl_form_vars = array_merge($this->tpl_form_vars, ['form_import' => $this->fields_import_form]);
+        if (isset($fields_import_form)) {
+            $this->tpl_form_vars = array_merge($this->tpl_form_vars, ['form_import' => $fields_import_form]);
         }
 
         return parent::renderForm();
@@ -660,6 +670,7 @@ class AdminShopControllerCore extends AdminController
         /* Checking fields validity */
         $this->validateRules();
 
+        $this->errors = array_unique($this->errors);
         if (!count($this->errors)) {
             /** @var Shop $object */
             $object = new $this->className();
@@ -686,10 +697,7 @@ class AdminShopControllerCore extends AdminController
                     $this->redirect_after = self::$currentIndex . ($parent_id ? '&shop_id=' . $object->id : '') . '&conf=3&token=' . $this->token;
                 }
             }
-        }
-
-        $this->errors = array_unique($this->errors);
-        if (count($this->errors) > 0) {
+        } else {
             $this->display = 'add';
 
             return;

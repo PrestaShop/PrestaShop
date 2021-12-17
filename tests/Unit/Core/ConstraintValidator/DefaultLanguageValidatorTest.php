@@ -42,7 +42,7 @@ class DefaultLanguageValidatorTest extends ConstraintValidatorTestCase
      */
     private $defaultLanguageId;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->defaultLanguageId = 1;
 

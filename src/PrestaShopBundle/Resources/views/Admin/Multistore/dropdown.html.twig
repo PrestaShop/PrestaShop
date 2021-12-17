@@ -1,0 +1,64 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% block multistore_dropdown %}
+  <div class="btn-group multistore-dropdown js-multistore-dropdown">
+    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" data-flip="false" aria-haspopup="true" aria-expanded="false">
+      <i class="material-icons">storefront</i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton4">
+      <div class="multistore-dropdown-search-container">
+        <i class="material-icons">search</i>
+        <input type="text" class="form-control multistore-dropdown-search js-multistore-dropdown-search" placeholder="Search shop name" data-no-results="{{ 'No results found for'|trans({}, 'Admin.Global') }}" data-searching="{{ 'Searching for'|trans({}, 'Admin.Global') }}">
+      </div>
+
+      <div class="multistore-dropdown-content js-multistore-scrollbar">
+        <ul class="multistore-dropdown-group">
+          {% for group in groupList %}
+          <li class="multistore-dropdown-group-item">
+            <a class="multistore-dropdown-group-name" href="{{ multistore_group_url(group) }}">{{ "Group"|trans({}, 'Admin.Global') ~ ' ' ~ group.name }}</a>
+
+            <ul class="multistore-dropdown-shops">
+              {% for shop in group.shops %}
+                <li class="multistore-dropdown-shop">
+                  <a class="multistore-dropdown-shop-name{% if shop.hasMainUrl() == false %} multistore-dropdown-no-url">{{ shop.name }}</a>{% else %}" href="{{ multistore_shop_url(shop) }}">{{ shop.name }}</a>{% endif %}
+                  {% if shopCustomizationChecker.isConfigurationCustomizedForThisShop(configurationKey, shop, isGroupShopContext) == true %}
+                    <p class="multistore-dropdown-shop-status multistore-dropdown-shop-status-locked">
+                      <i class="material-icons">https</i>
+                      {{ 'Customized'|trans({}, 'Admin.Global') }}
+                  {% else %}
+                    <p class="multistore-dropdown-shop-status">
+                      {{ 'Inherited'|trans({}, 'Admin.Global') }}
+                  {% endif %}
+                    </p>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

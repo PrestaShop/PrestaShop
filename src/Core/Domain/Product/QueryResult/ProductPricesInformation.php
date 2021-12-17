@@ -43,6 +43,11 @@ class ProductPricesInformation
     /**
      * @var DecimalNumber
      */
+    private $priceTaxIncluded;
+
+    /**
+     * @var DecimalNumber
+     */
     private $ecotax;
 
     /**
@@ -77,6 +82,7 @@ class ProductPricesInformation
 
     /**
      * @param DecimalNumber $price
+     * @param DecimalNumber $priceTaxIncluded
      * @param DecimalNumber $ecotax
      * @param int $taxRulesGroupId
      * @param bool $onSale
@@ -87,6 +93,7 @@ class ProductPricesInformation
      */
     public function __construct(
         DecimalNumber $price,
+        DecimalNumber $priceTaxIncluded,
         DecimalNumber $ecotax,
         int $taxRulesGroupId,
         bool $onSale,
@@ -96,6 +103,7 @@ class ProductPricesInformation
         DecimalNumber $unitPriceRatio
     ) {
         $this->price = $price;
+        $this->priceTaxIncluded = $priceTaxIncluded;
         $this->ecotax = $ecotax;
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->onSale = $onSale;
@@ -111,6 +119,14 @@ class ProductPricesInformation
     public function getPrice(): DecimalNumber
     {
         return $this->price;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getPriceTaxIncluded(): DecimalNumber
+    {
+        return $this->priceTaxIncluded;
     }
 
     /**

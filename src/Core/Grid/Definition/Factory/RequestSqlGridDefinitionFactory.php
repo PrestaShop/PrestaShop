@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,37 +49,14 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    /**
-     * @var string
-     */
-    private $resetSearchUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetSearchUrl
-     * @param string $redirectionUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetSearchUrl,
-        $redirectionUrl
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetSearchUrl = $resetSearchUrl;
-        $this->redirectionUrl = $redirectionUrl;
-    }
+    public const GRID_ID = 'sql_request';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'sql_request';
+        return self::GRID_ID;
     }
 
     /**
@@ -112,7 +88,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             )
             ->add(
                 (new DataColumn('name'))
-                    ->setName($this->trans('SQL query Name', [], 'Admin.Advparameters.Feature'))
+                    ->setName($this->trans('SQL query name', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'name',
                     ])
@@ -131,6 +107,7 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
                         'actions' => (new RowActionCollection())
                             ->add(
                                 (new LinkRowAction('export'))
+                                    ->setName($this->trans('Export', [], 'Admin.Actions'))
                                     ->setIcon('cloud_download')
                                     ->setOptions([
                                         'route' => 'admin_sql_requests_export',
@@ -201,10 +178,11 @@ final class RequestSqlGridDefinitionFactory extends AbstractGridDefinitionFactor
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetSearchUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_sql_requests_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

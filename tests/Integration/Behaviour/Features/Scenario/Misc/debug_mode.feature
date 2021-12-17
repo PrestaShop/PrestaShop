@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s misc
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Switch debug mode
   In order to see or hide what exactly is causing the error
   As a BO user

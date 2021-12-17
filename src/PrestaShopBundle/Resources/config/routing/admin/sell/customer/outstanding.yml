@@ -1,0 +1,15 @@
+admin_outstanding_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\OutstandingController::indexAction
+    _legacy_controller: AdminOutstanding
+    _legacy_link: AdminOutstanding
+
+admin_outstanding_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Customer\OutstandingController::searchAction
+    _legacy_controller: AdminOutstanding
+    _legacy_link: AdminOutstanding:submitFilterorder_invoice

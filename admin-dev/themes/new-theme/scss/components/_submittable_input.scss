@@ -1,0 +1,36 @@
+.ps-submittable-input-wrapper {
+  position: relative;
+
+  .check-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    width: 33px;
+    height: 100%;
+    padding: 0;
+    cursor: pointer;
+    background: $gray-300;
+    border: none;
+    outline: none;
+    @include border-top-right-radius(4px);
+    @include border-bottom-right-radius(4px);
+
+    .material-icons,
+    .spinner-border {
+      color: $white;
+    }
+  }
+
+  .check-button:hover {
+    cursor: default;
+  }
+
+  .check-button.active:hover {
+    cursor: pointer;
+  }
+
+  .check-button.active {
+    background: $primary;
+  }
+}

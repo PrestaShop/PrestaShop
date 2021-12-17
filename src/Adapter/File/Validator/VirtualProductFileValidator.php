@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\File\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\File\Exception\InvalidFileException;
 
 /**
- * Validates virtual product file
+ * Validates virtual product file (the actual file itself & not the domain model)
  */
 class VirtualProductFileValidator
 {

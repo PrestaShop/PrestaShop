@@ -36,12 +36,8 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-lg-12">
-      {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxGrid} %}
-      {% include '@PrestaShop/Admin/Improve/International/Tax/Blocks/tax_options.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': taxGrid} %}
+  {% include '@PrestaShop/Admin/Improve/International/Tax/Blocks/tax_options.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

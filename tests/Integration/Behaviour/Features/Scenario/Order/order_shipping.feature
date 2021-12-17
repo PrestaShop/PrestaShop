@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-shipping
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-shipping
 @clear-cache-before-feature
 Feature: Order from Back Office (BO)
@@ -309,19 +309,22 @@ Feature: Order from Back Office (BO)
       | message             | test                       |
       | payment module name | dummy_payment              |
       | status              | Awaiting bank wire payment |
+    And I add discount to order "bo_order1" with following details:
+      | name        | FreeShippingAndAmount |
+      | type        | free_shipping         |
     And order "bo_order1" should have 2 products in total
     And order "bo_order1" should have 0 invoices
-    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have 1 cart rule
     # Carrier less expensive is chosen by default
     And order "bo_order1" should have "weight_carrier" as a carrier
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
-      | total_discounts_tax_excl | 0.0    |
-      | total_discounts_tax_incl | 0.0    |
-      | total_paid_tax_excl      | 25.800 |
-      | total_paid_tax_incl      | 27.350 |
-      | total_paid               | 27.350 |
+      | total_discounts_tax_excl | 2.0    |
+      | total_discounts_tax_incl | 2.12   |
+      | total_paid_tax_excl      | 23.800 |
+      | total_paid_tax_incl      | 25.230 |
+      | total_paid               | 25.230 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -340,11 +343,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.800 |
       | total_products_wt        | 57.030 |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.8   |
-      | total_paid_tax_incl      | 59.150 |
-      | total_paid               | 59.150 |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.8   |
+      | total_paid_tax_incl      | 57.030 |
+      | total_paid               | 57.030 |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -360,11 +363,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -378,11 +381,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -396,11 +399,11 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have following details:
       | total_products           | 53.80  |
       | total_products_wt        | 57.03  |
-      | total_discounts_tax_excl | 0.0000 |
-      | total_discounts_tax_incl | 0.0000 |
-      | total_paid_tax_excl      | 55.80  |
-      | total_paid_tax_incl      | 59.15  |
-      | total_paid               | 59.15  |
+      | total_discounts_tax_excl | 2.0000 |
+      | total_discounts_tax_incl | 2.1200 |
+      | total_paid_tax_excl      | 53.80  |
+      | total_paid_tax_incl      | 57.03  |
+      | total_paid               | 57.03  |
       | total_paid_real          | 0.0    |
       | total_shipping_tax_excl  | 2.0    |
       | total_shipping_tax_incl  | 2.12   |
@@ -428,6 +431,7 @@ Feature: Order from Back Office (BO)
     And order "bo_order1" should have 1 cart rule
     Then order "bo_order1" should have cart rule "FreeShippingDiscount" with amount "$6.00"
     And order "bo_order1" should have "price_carrier" as a carrier
+    # Shipping cost is 4 (for US zone) + 2 (general fee)
     And order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -447,6 +451,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -462,6 +467,7 @@ Feature: Order from Back Office (BO)
     And I change order "bo_order1" shipping address to "test-customer-france-address"
     Then order "bo_order1" shipping address should be "test-customer-france-address"
     # Shipping cost changes because we are not in the same zone but the tax is still the one from invoice address
+    # Shipping cost is 3 (for Europe zone) + 2 (general fee)
     Then order "bo_order1" should have following details:
       | total_products           | 23.800 |
       | total_products_wt        | 25.230 |
@@ -481,6 +487,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -510,6 +517,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -552,6 +560,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -586,6 +595,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -614,6 +624,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -650,6 +661,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -676,6 +688,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -706,6 +719,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -753,6 +767,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -801,6 +816,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.614 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.230 |
@@ -842,6 +858,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -894,6 +911,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800 |
@@ -942,6 +960,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 12.610000 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 25.220000 |
@@ -983,6 +1002,7 @@ Feature: Order from Back Office (BO)
     And product "Mug The best is yet to come" in order "bo_order1" has following details:
       | product_quantity            | 2      |
       | product_price               | 11.900 |
+      | original_product_price      | 11.900 |
       | unit_price_tax_incl         | 11.900 |
       | unit_price_tax_excl         | 11.900 |
       | total_price_tax_incl        | 23.800000 |

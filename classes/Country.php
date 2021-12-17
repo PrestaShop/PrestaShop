@@ -176,9 +176,9 @@ class CountryCore extends ObjectModel
      * Get a country ID with its iso code.
      *
      * @param string $isoCode Country iso code
-     * @param bool $active return only active coutries
+     * @param bool $active return only active countries
      *
-     * @return int Country ID
+     * @return int|bool Country ID
      */
     public static function getByIso($isoCode, $active = false)
     {
@@ -263,7 +263,7 @@ class CountryCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      *
-     * @return string Country iso
+     * @return string|bool Country iso
      */
     public static function getIsoById($idCountry)
     {
@@ -286,7 +286,7 @@ class CountryCore extends ObjectModel
      * @param int|null $idLang Language ID
      * @param string $country Country Name
      *
-     * @return int Country ID
+     * @return int|bool Country ID
      */
     public static function getIdByName($idLang, $country)
     {
@@ -344,7 +344,7 @@ class CountryCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'country`
 		WHERE `id_country` = ' . (int) $idCountry);
 
-        if (isset($zipCodeFormat) && $zipCodeFormat) {
+        if ($zipCodeFormat) {
             return $zipCodeFormat;
         }
 

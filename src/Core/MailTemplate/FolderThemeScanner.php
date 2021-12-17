@@ -41,6 +41,11 @@ use Symfony\Component\Finder\SplFileInfo;
 final class FolderThemeScanner
 {
     /**
+     * @var string
+     */
+    private $baseThemeFolder;
+
+    /**
      * @param string $mailThemeFolder
      *
      * @return ThemeInterface|null
@@ -53,6 +58,7 @@ final class FolderThemeScanner
         $this->checkThemeFolder($mailThemeFolder);
 
         $mailTheme = new Theme(basename($mailThemeFolder));
+        $this->baseThemeFolder = dirname($mailThemeFolder);
 
         $finder = new Finder();
         $finder->files()->in($mailThemeFolder);
@@ -143,7 +149,7 @@ final class FolderThemeScanner
                 ];
             }
             $templateType = $this->getTemplateType($fileInfo);
-            $layoutFiles[$layoutName][$templateType] = $fileInfo->getRealPath();
+            $layoutFiles[$layoutName][$templateType] = $this->getTemplatePath($fileInfo);
         }
 
         foreach ($layoutFiles as $layoutName => $layouts) {
@@ -180,5 +186,10 @@ final class FolderThemeScanner
         if (!is_dir($mailThemeFolder)) {
             throw new FileNotFoundException(sprintf('Invalid mail theme folder "%s": no such directory', $mailThemeFolder));
         }
+    }
+
+    private function getTemplatePath(SplFileInfo $fileInfo): string
+    {
+        return '@MailThemes' . substr($fileInfo->getRealPath(), strlen($this->baseThemeFolder));
     }
 }

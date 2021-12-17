@@ -14,7 +14,7 @@
   {/if}
 
   {if $is_free}
-    <p>{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
+    <p class="cart-payment-step-not-needed-info">{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
   {/if}
   <div class="payment-options {if $is_free}hidden-xs-up{/if}">
     {foreach from=$payment_options item="module_options"}
@@ -71,7 +71,7 @@
           {if $option.form}
             {$option.form nofilter}
           {else}
-            <form id="payment-form" method="POST" action="{$option.action nofilter}">
+            <form id="payment-{$option.id}-form" method="POST" action="{$option.action nofilter}">
               {foreach from=$option.inputs item=input}
                 <input type="{$input.type}" name="{$input.name}" value="{$input.value}">
               {/foreach}
@@ -94,7 +94,7 @@
       {l s='By confirming the order, you certify that you have read and agree with all of the conditions below:' d='Shop.Theme.Checkout'}
     </p>
 
-    <form id="conditions-to-approve" method="GET">
+    <form id="conditions-to-approve" class="js-conditions-to-approve" method="GET">
       <ul>
         {foreach from=$conditions_to_approve item="condition" key="condition_name"}
           <li>
@@ -125,7 +125,7 @@
     {include file='checkout/_partials/order-final-summary.tpl'}
   {/if}
 
-  <div id="payment-confirmation">
+  <div id="payment-confirmation" class="js-payment-confirmation">
     <div class="ps-shown-by-js">
       <button type="submit" class="btn btn-primary center-block{if !$selected_payment_option} disabled{/if}">
         {l s='Place order' d='Shop.Theme.Checkout'}

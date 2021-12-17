@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Image settings page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class ImageSettings extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on image settings page
+   */
   constructor() {
     super();
 
@@ -33,18 +42,9 @@ class ImageSettings extends BOBasePage {
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
     // Columns selectors
-    this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
-    this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
-    this.tableColumnWidth = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
-    this.tableColumnHeight = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
-    this.tableColumnStatus = (row, columnPos, status) => `${this.tableBodyColumn(row)}:nth-child(${columnPos})`
+    this.tableBodySpecificColumn = (row, columnName) => `${this.tableBodyColumn(row)}.column-${columnName}`;
+    this.tableColumnStatus = (row, columnName, status) => `${this.tableBodySpecificColumn(row, columnName)}`
       + ` span.action-${status}`;
-
-    this.tableColumnProducts = (row, status) => this.tableColumnStatus(row, 6, status);
-    this.tableColumnCategories = (row, status) => this.tableColumnStatus(row, 7, status);
-    this.tableColumnManufacturers = (row, status) => this.tableColumnStatus(row, 8, status);
-    this.tableColumnSuppliers = (row, status) => this.tableColumnStatus(row, 9, status);
-    this.tableColumnStores = (row, status) => this.tableColumnStatus(row, 10, status);
 
     // Sort Selectors
     this.tableHead = `${this.gridTable} thead`;
@@ -80,7 +80,7 @@ class ImageSettings extends BOBasePage {
   /* Header methods */
   /**
    * Go to new image type page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewImageTypePage(page) {
@@ -90,8 +90,8 @@ class ImageSettings extends BOBasePage {
   /* Filter methods */
 
   /**
-   * Get Number of image types
-   * @param page
+   * Get number of image types
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -100,7 +100,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -112,20 +112,21 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Reset and get number of image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
     await this.resetFilter(page);
+
     return this.getNumberOfElementInGrid(page);
   }
 
   /**
    * Filter image types
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param filterBy {string} Column to filter
+   * @param value {string} Value to filter with
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -151,96 +152,48 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Value of column name to get text column
    * @return {Promise<string>}
    */
-  async getTextColumn(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'id_image_type':
-        columnSelector = this.tableColumnId(row);
-        break;
-
-      case 'name':
-        columnSelector = this.tableColumnName(row);
-        break;
-
-      case 'width':
-        columnSelector = this.tableColumnWidth(row);
-        break;
-
-      case 'height':
-        columnSelector = this.tableColumnHeight(row);
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.getTextContent(page, columnSelector);
+  getTextColumn(page, row, columnName) {
+    return this.getTextContent(page, this.tableBodySpecificColumn(row, columnName));
   }
 
   /**
    * Get content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Value of column name to get all rows column content
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
     const allRowsContentTable = [];
+
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
+
     return allRowsContentTable;
   }
 
   /**
    * Get image type status for pages: products, categories, manufacturers, suppliers or stores
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Value of column name to get type status
    * @return {Promise<boolean>}
    */
   async getImageTypeStatus(page, row, columnName) {
-    let columnSelector;
-
-    switch (columnName) {
-      case 'products':
-        columnSelector = this.tableColumnProducts;
-        break;
-
-      case 'categories':
-        columnSelector = this.tableColumnCategories;
-        break;
-
-      case 'manufacturers':
-        columnSelector = this.tableColumnManufacturers;
-        break;
-
-      case 'suppliers':
-        columnSelector = this.tableColumnSuppliers;
-        break;
-
-      case 'stores':
-        columnSelector = this.tableColumnStores;
-        break;
-
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
-
-    return this.elementVisible(page, columnSelector(row, 'enabled'), 1000);
+    return this.elementVisible(page, this.tableColumnStatus(row, columnName, 'enabled'), 1000);
   }
 
   /**
    * Go to edit imageType page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditImageTypePage(page, row) {
@@ -249,8 +202,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Delete image type from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteImageType(page, row) {
@@ -265,13 +218,13 @@ class ImageSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Bulk actions methods */
   /**
    * Bulk delete image types
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteImageTypes(page) {
@@ -286,7 +239,7 @@ class ImageSettings extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
 
     // Perform delete
@@ -298,15 +251,15 @@ class ImageSettings extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -332,6 +285,7 @@ class ImageSettings extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -339,7 +293,7 @@ class ImageSettings extends BOBasePage {
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -348,8 +302,8 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -361,7 +315,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -372,7 +326,7 @@ class ImageSettings extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

@@ -103,24 +103,6 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
      */
     private function buildCurrencyName(array $currency)
     {
-        $currencyName = mb_ucfirst($currency['name']);
-
-        if (!empty($currency['unofficial'])) {
-            return sprintf(
-                '%s %s',
-                $currencyName,
-                '<i class="material-icons unofficial">person</i>'
-            );
-        }
-
-        if (!empty($currency['modified'])) {
-            return sprintf(
-                '%s (%s)',
-                $currencyName,
-                $this->translator->trans('Edited', [], 'Admin.International.Feature')
-            );
-        }
-
-        return $currencyName;
+        return mb_ucfirst($currency['name']);
     }
 }

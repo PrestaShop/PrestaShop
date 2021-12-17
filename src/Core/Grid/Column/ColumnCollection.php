@@ -39,12 +39,12 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
     /**
      * @internal
      */
-    const POSITION_AFTER = 'after';
+    public const POSITION_AFTER = 'after';
 
     /**
      * @internal
      */
-    const POSITION_BEFORE = 'before';
+    public const POSITION_BEFORE = 'before';
 
     /**
      * {@inheritdoc}
@@ -148,15 +148,16 @@ final class ColumnCollection extends AbstractCollection implements ColumnCollect
             throw new ColumnNotFoundException(sprintf('Cannot insert new column into collection. Column with id "%s" was not found.', $id));
         }
 
-        $existingColumnKeyPosition = array_search($id, array_keys($this->items));
+        $existingColumnKeyPosition = (int) array_search($id, array_keys($this->items));
 
         if (self::POSITION_AFTER === $position) {
             ++$existingColumnKeyPosition;
         }
 
-        $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true) +
-            [$newColumn->getId() => $newColumn] +
-            array_slice($this->items, $existingColumnKeyPosition, null, true);
+        $columns = array_slice($this->items, 0, $existingColumnKeyPosition, true)
+            + [$newColumn->getId() => $newColumn]
+            + array_slice($this->items, $existingColumnKeyPosition, null, true)
+        ;
 
         $this->items = $columns;
     }

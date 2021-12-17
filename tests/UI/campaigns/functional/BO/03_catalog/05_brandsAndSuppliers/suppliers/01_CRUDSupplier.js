@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import data
@@ -29,7 +32,7 @@ const createSupplierData = new SupplierFaker();
 const editSupplierData = new SupplierFaker();
 
 // CRUD Supplier
-describe('Create, update and delete supplier', async () => {
+describe('BO - Catalog - Brands & Suppliers : CRUD supplier', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,7 +59,7 @@ describe('Create, update and delete supplier', async () => {
   });
 
   // Go to brands page
-  it('should go to brands page', async function () {
+  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -72,7 +75,7 @@ describe('Create, update and delete supplier', async () => {
   });
 
   // Go to suppliers page
-  it('should go to suppliers page', async function () {
+  it('should go to Suppliers page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSuppliersPage', baseContext);
 
     await brandsPage.goToSubTabSuppliers(page);
@@ -100,6 +103,15 @@ describe('Create, update and delete supplier', async () => {
 
   // 2: View supplier
   describe('View supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewCreatedSupplier', baseContext);
+
+      await suppliersPage.filterTable(page, 'input', 'name', createSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(createSupplierData.name);
+    });
+
     it('should view supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewCreatedSupplier', baseContext);
 
@@ -138,6 +150,16 @@ describe('Create, update and delete supplier', async () => {
 
   // 4: View supplier
   describe('View edited supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewUpdatedSupplier', baseContext);
+
+      await suppliersPage.resetFilter(page);
+      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(editSupplierData.name);
+    });
+
     it('should view supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewUpdatedSupplier', baseContext);
 
@@ -158,6 +180,16 @@ describe('Create, update and delete supplier', async () => {
 
   // 5: Delete supplier
   describe('Delete supplier', async () => {
+    it('should filter suppliers by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToViewDeleteSupplier', baseContext);
+
+      await suppliersPage.resetFilter(page);
+      await suppliersPage.filterTable(page, 'input', 'name', editSupplierData.name);
+
+      const textColumn = await suppliersPage.getTextColumnFromTableSupplier(page, 1, 'name');
+      await expect(textColumn).to.contain(editSupplierData.name);
+    });
+
     it('should delete supplier', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteSupplier', baseContext);
 

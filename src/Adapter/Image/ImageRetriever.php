@@ -144,7 +144,7 @@ class ImageRetriever
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
-            $root = _PS_PROD_IMG_DIR_;
+            $root = _PS_PRODUCT_IMG_DIR_;
             $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
                 rtrim($root, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
@@ -164,8 +164,7 @@ class ImageRetriever
         $urls = [];
         $image_types = ImageType::getImagesTypes($type, true);
 
-        $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
-        $ext = @file_get_contents($extPath) ?: 'jpg';
+        $ext = 'jpg';
 
         $mainImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,

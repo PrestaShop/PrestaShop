@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 /**
- * Interface for services that provide data form identifiable object forms.
+ * Interface for services that provide data for identifiable object forms.
  */
 interface FormDataProviderInterface
 {

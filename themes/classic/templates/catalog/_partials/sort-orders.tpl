@@ -29,6 +29,7 @@
     class="btn-unstyle select-title"
     rel="nofollow"
     data-toggle="dropdown"
+    aria-label="{l s='Sort by selection' d='Shop.Theme.Global'}"
     aria-haspopup="true"
     aria-expanded="false">
     {if $listing.sort_selected}{$listing.sort_selected}{else}{l s='Select' d='Shop.Theme.Actions'}{/if}

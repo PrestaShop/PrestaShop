@@ -24,9 +24,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Core\Checkout\TermsAndConditions;
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
+use PrestaShopBundle\Translation\TranslatorComponent;
 
 class OrderControllerCore extends FrontController
 {
@@ -146,7 +148,7 @@ class OrderControllerCore extends FrontController
     protected function saveDataToPersist(CheckoutProcess $process)
     {
         $data = $process->getDataToPersist();
-        $addressValidator = new AddressValidator($this->context);
+        $addressValidator = new AddressValidator();
         $customer = $this->context->customer;
         $cart = $this->context->cart;
 
@@ -223,12 +225,13 @@ class OrderControllerCore extends FrontController
     public function displayAjaxselectDeliveryOption()
     {
         $cart = $this->cart_presenter->present(
-            $this->context->cart
+            $this->context->cart,
+            true
         );
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'preview' => $this->render('checkout/_partials/cart-summary', [
                 'cart' => $cart,
                 'static_token' => Tools::getToken(false),
@@ -247,7 +250,7 @@ class OrderControllerCore extends FrontController
             Tools::getAllValues()
         );
 
-        $presentedCart = $this->cart_presenter->present($this->context->cart);
+        $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
             // if there is no product in current cart, redirect to cart page
@@ -319,7 +322,7 @@ class OrderControllerCore extends FrontController
         ob_end_clean();
         header('Content-Type: application/json');
 
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'address_form' => $this->render(
                 'checkout/_partials/address-form',
                 $templateParams
@@ -355,7 +358,7 @@ class OrderControllerCore extends FrontController
 
     /**
      * @param CheckoutSession $session
-     * @param $translator
+     * @param TranslatorComponent $translator
      *
      * @return CheckoutProcess
      */

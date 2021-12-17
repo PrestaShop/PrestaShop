@@ -33,6 +33,11 @@ class CustomerFormCore extends AbstractForm
 {
     protected $template = 'customer/_partials/customer-form.tpl';
 
+    /**
+     * @var CustomerFormatter
+     */
+    protected $formatter;
+
     private $context;
     private $urls;
 
@@ -142,14 +147,16 @@ class CustomerFormCore extends AbstractForm
 
         $passwordField = $this->getField('password');
         if ((!empty($passwordField->getValue()) || $this->passwordRequired)
-            && Validate::isPasswd($passwordField->getValue()) === false) {
-            $passwordField->AddError($this->translator->trans(
+            && Validate::isPlaintextPassword($passwordField->getValue()) === false) {
+            $passwordField->addError($this->translator->trans(
                 'Password must be between 5 and 72 characters long',
                 [],
                 'Shop.Notifications.Error'
             ));
         }
+
         $this->validateFieldsLengths();
+        $this->validateFieldsValues();
         $this->validateByModules();
 
         return parent::validate();
@@ -163,9 +170,9 @@ class CustomerFormCore extends AbstractForm
     }
 
     /**
-     * @param $fieldName
-     * @param $maximumLength
-     * @param $violationMessage
+     * @param string $fieldName
+     * @param int $maximumLength
+     * @param string $violationMessage
      */
     protected function validateFieldLength($fieldName, $maximumLength, $violationMessage)
     {
@@ -211,12 +218,17 @@ class CustomerFormCore extends AbstractForm
             $clearTextPassword = $this->getValue('password');
             $newPassword = $this->getValue('new_password');
 
-            $ok = $this->customerPersister->save(
-                $this->getCustomer(),
-                $clearTextPassword,
-                $newPassword,
-                $this->passwordRequired
-            );
+            try {
+                $ok = $this->customerPersister->save(
+                    $this->getCustomer(),
+                    $clearTextPassword,
+                    $newPassword,
+                    $this->passwordRequired
+                );
+            } catch (PrestaShopException $e) {
+                $this->errors[''][] = $this->translator->trans('Could not update your information, please check your data.', [], 'Shop.Notifications.Error');
+                $ok = false;
+            }
 
             if (!$ok) {
                 foreach ($this->customerPersister->getErrors() as $field => $errors) {
@@ -270,9 +282,40 @@ class CustomerFormCore extends AbstractForm
                 $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
                 if (is_array($validatedCustomerFormFields)) {
-                    array_merge($this->formFields, $validatedCustomerFormFields);
+                    $this->formFields = array_merge($this->formFields, $validatedCustomerFormFields);
                 }
             }
+        }
+    }
+
+    /**
+     * Performs validation on field values.
+     * Adds error to the field object if value is not as expected.
+     */
+    private function validateFieldsValues(): void
+    {
+        $this->validateFieldIsCustomerName('firstname');
+        $this->validateFieldIsCustomerName('lastname');
+    }
+
+    /**
+     * Checks whether a field's value is a valid customer(person) name.
+     *
+     * @param string $fieldName
+     */
+    private function validateFieldIsCustomerName(string $fieldName): void
+    {
+        $field = $this->getField($fieldName);
+        if (null === $field) {
+            return;
+        }
+        $value = $field->getValue();
+        if (!empty($value) && false === (bool) Validate::isCustomerName($value)) {
+            $field->addError($this->translator->trans(
+                'Invalid format.',
+                [],
+                'Shop.Forms.Errors'
+            ));
         }
     }
 }

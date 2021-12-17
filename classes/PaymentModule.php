@@ -36,7 +36,7 @@ abstract class PaymentModuleCore extends Module
 
     const DEBUG_MODE = false;
 
-    /** @var MailPartialTemplateRenderer */
+    /** @var MailPartialTemplateRenderer|null */
     protected $partialRenderer;
 
     public function install()
@@ -149,10 +149,6 @@ abstract class PaymentModuleCore extends Module
     public function addCheckboxCountryRestrictionsForModule(array $shops = [])
     {
         $countries = Country::getCountries((int) Context::getContext()->language->id, true); //get only active country
-        $country_ids = [];
-        foreach ($countries as $country) {
-            $country_ids[] = $country['id_country'];
-        }
 
         return Country::addModuleRestrictions($shops, $countries, [['id_module' => (int) $this->id]]);
     }
@@ -198,10 +194,11 @@ abstract class PaymentModuleCore extends Module
      * @param string $payment_method Payment method (eg. 'Credit card')
      * @param string|null $message Message to attach to order
      * @param array $extra_vars
-     * @param null $currency_special
+     * @param int|null $currency_special
      * @param bool $dont_touch_amount
-     * @param bool $secure_key
+     * @param string|bool $secure_key
      * @param Shop $shop
+     * @param string|null $order_reference if this parameter is not provided, a random order reference will be generated
      *
      * @return bool
      *
@@ -217,8 +214,10 @@ abstract class PaymentModuleCore extends Module
         $currency_special = null,
         $dont_touch_amount = false,
         $secure_key = false,
-        Shop $shop = null
+        Shop $shop = null,
+        ?string $order_reference = null
     ) {
+        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -231,7 +230,7 @@ abstract class PaymentModuleCore extends Module
         // The tax cart is loaded before the customer so re-cache the tax calculation method
         $this->context->cart->setTaxCalculationMethod();
 
-        $this->context->language = new Language((int) $this->context->cart->id_lang);
+        $this->context->language = $this->context->cart->getAssociatedLanguage();
         $this->context->shop = ($shop ? $shop : new Shop((int) $this->context->cart->id_shop));
         ShopUrl::resetMainDomainCache();
         $id_currency = $currency_special ? (int) $currency_special : (int) $this->context->cart->id_currency;
@@ -278,9 +277,13 @@ abstract class PaymentModuleCore extends Module
             $order_list = [];
             $order_detail_list = [];
 
-            do {
-                $reference = Order::generateReference();
-            } while (Order::getByReference($reference)->count());
+            if ($order_reference === null) {
+                do {
+                    $reference = Order::generateReference();
+                } while (Order::getByReference($reference)->count());
+            } else {
+                $reference = $order_reference;
+            }
 
             $this->currentOrderReference = $reference;
 
@@ -302,7 +305,8 @@ abstract class PaymentModuleCore extends Module
             CartRule::cleanCache();
             $cart_rules = $this->context->cart->getCartRules();
             foreach ($cart_rules as $cart_rule) {
-                if (($rule = new CartRule((int) $cart_rule['obj']->id)) && Validate::isLoadedObject($rule)) {
+                $rule = new CartRule((int) $cart_rule['obj']->id);
+                if (Validate::isLoadedObject($rule)) {
                     if ($error = $rule->checkValidity($this->context, true, true)) {
                         $this->context->cart->removeCartRule((int) $rule->id);
                         if (isset($this->context->cookie, $this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code)) {
@@ -352,7 +356,7 @@ abstract class PaymentModuleCore extends Module
             }
 
             // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
-            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery') {
+            if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
                 $this->context->country = $context_country;
             }
 
@@ -362,6 +366,7 @@ abstract class PaymentModuleCore extends Module
                 throw new PrestaShopException('The order address country is not active.');
             }
 
+            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -385,13 +390,12 @@ abstract class PaymentModuleCore extends Module
             }
 
             // Next !
-            $only_one_gift = false;
             $products = $this->context->cart->getProducts();
 
             // Make sure CartRule caches are empty
             CartRule::cleanCache();
             foreach ($order_detail_list as $key => $order_detail) {
-                /** @var OrderDetail $order_detail */
+                /** @var Order $order */
                 $order = $order_list[$key];
                 if (isset($order->id)) {
                     if (!$secure_key) {
@@ -399,17 +403,18 @@ abstract class PaymentModuleCore extends Module
                     }
                     // Optional message to attach to this order
                     if (!empty($message)) {
-                        $msg = new Message();
                         $message = strip_tags($message, '<br>');
                         if (Validate::isCleanHtml($message)) {
+                            /* @phpstan-ignore-next-line */
                             if (self::DEBUG_MODE) {
                                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                             }
+                            $msg = new Message();
                             $msg->message = $message;
                             $msg->id_cart = (int) $id_cart;
-                            $msg->id_customer = (int) ($order->id_customer);
+                            $msg->id_customer = (int) $order->id_customer;
                             $msg->id_order = (int) $order->id;
-                            $msg->private = 1;
+                            $msg->private = true;
                             $msg->add();
                         }
                     }
@@ -419,7 +424,6 @@ abstract class PaymentModuleCore extends Module
                     //$orderDetail->createList($order, $this->context->cart, $id_order_state);
 
                     // Construct order detail table for the email
-                    $products_list = '';
                     $virtual_product = true;
 
                     $product_var_tpl_list = [];
@@ -431,6 +435,7 @@ abstract class PaymentModuleCore extends Module
 
                         $product_var_tpl = [
                             'id_product' => $product['id_product'],
+                            'id_product_attribute' => $product['id_product_attribute'],
                             'reference' => $product['reference'],
                             'name' => $product['name'] . (isset($product['attributes']) ? ' - ' . $product['attributes'] : ''),
                             'price' => Tools::getContextLocale($this->context)->formatPrice($product_price * $product['quantity'], $this->context->currency->iso_code),
@@ -476,7 +481,7 @@ abstract class PaymentModuleCore extends Module
                         if (!$product['is_virtual']) {
                             $virtual_product &= false;
                         }
-                    } // end foreach ($products)
+                    }
 
                     $product_list_txt = '';
                     $product_list_html = '';
@@ -527,13 +532,14 @@ abstract class PaymentModuleCore extends Module
                         $customer_message->id_customer_thread = $customer_thread->id;
                         $customer_message->id_employee = 0;
                         $customer_message->message = $update_message->message;
-                        $customer_message->private = 0;
+                        $customer_message->private = false;
 
                         if (!$customer_message->add()) {
-                            $this->errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
+                            $this->_errors[] = $this->trans('An error occurred while saving message', [], 'Admin.Payment.Notification');
                         }
                     }
 
+                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -553,6 +559,7 @@ abstract class PaymentModuleCore extends Module
                         }
                     }
 
+                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -604,6 +611,7 @@ abstract class PaymentModuleCore extends Module
                             $file_attachement = null;
                         }
 
+                        /* @phpstan-ignore-next-line */
                         if (self::DEBUG_MODE) {
                             PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                         }
@@ -663,6 +671,7 @@ abstract class PaymentModuleCore extends Module
                                 '{total_shipping_tax_incl}' => Tools::getContextLocale($this->context)->formatPrice($order->total_shipping_tax_incl, $this->context->currency->iso_code),
                                 '{total_wrapping}' => Tools::getContextLocale($this->context)->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
                                 '{total_tax_paid}' => Tools::getContextLocale($this->context)->formatPrice(($order->total_paid_tax_incl - $order->total_paid_tax_excl), $this->context->currency->iso_code),
+                                '{recycled_packaging_label}' => $order->recyclable ? $this->trans('Yes', [], 'Shop.Theme.Global') : $this->trans('No', [], 'Shop.Theme.Global'),
                             ];
 
                             if (is_array($extra_vars)) {
@@ -726,9 +735,22 @@ abstract class PaymentModuleCore extends Module
                 $this->currentOrder = (int) $order->id;
             }
 
+            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
             }
+
+            Hook::exec(
+                'actionValidateOrderAfter',
+                [
+                    'cart' => $this->context->cart,
+                    'order' => $order ?? null,
+                    'orders' => $order_list,
+                    'customer' => $this->context->customer,
+                    'currency' => $this->context->currency,
+                    'orderStatus' => new OrderState(isset($order) ? $order->current_state : null),
+                ]
+            );
 
             return true;
         } else {
@@ -736,20 +758,6 @@ abstract class PaymentModuleCore extends Module
             PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
             die(Tools::displayError($error));
         }
-    }
-
-    /**
-     * @deprecated 1.6.0.7
-     *
-     * @param mixed $content
-     *
-     * @return mixed
-     */
-    public function formatProductAndVoucherForEmail($content)
-    {
-        Tools::displayAsDeprecated('Use $content instead');
-
-        return $content;
     }
 
     /**
@@ -776,7 +784,7 @@ abstract class PaymentModuleCore extends Module
     }
 
     /**
-     * @param Address Address $the_address that needs to be txt formatted
+     * @param Address $the_address that needs to be txt formatted
      * @param string $line_sep
      * @param array $fields_style
      *
@@ -884,13 +892,9 @@ abstract class PaymentModuleCore extends Module
 
     public static function preCall($module_name)
     {
-        if (!parent::preCall($module_name)) {
-            return false;
-        }
-
         if (($module_instance = Module::getInstanceByName($module_name))) {
             /** @var PaymentModule $module_instance */
-            if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id)))) {
+            if (!$module_instance->currencies || count(Currency::checkPaymentCurrencies($module_instance->id))) {
                 return true;
             }
         }
@@ -989,7 +993,7 @@ abstract class PaymentModuleCore extends Module
             $order->module = $name;
         }
         $order->recyclable = $cart->recyclable;
-        $order->gift = (int) $cart->gift;
+        $order->gift = (bool) $cart->gift;
         $order->gift_message = $cart->gift_message;
         $order->mobile_theme = $cart->mobile_theme;
         $order->conversion_rate = $currency->conversion_rate;
@@ -1047,8 +1051,8 @@ abstract class PaymentModuleCore extends Module
             $computingPrecision
         );
         $order->total_paid = $order->total_paid_tax_incl;
-        $order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
-        $order->round_type = Configuration::get('PS_ROUND_TYPE');
+        $order->round_mode = (int) Configuration::get('PS_PRICE_ROUND_MODE');
+        $order->round_type = (int) Configuration::get('PS_ROUND_TYPE');
 
         $order->invoice_date = '0000-00-00 00:00:00';
         $order->delivery_date = '0000-00-00 00:00:00';

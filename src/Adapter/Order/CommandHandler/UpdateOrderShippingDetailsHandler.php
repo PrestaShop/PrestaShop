@@ -66,7 +66,7 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
         $trackingNumber = $command->getShippingTrackingNumber();
         $carrierId = $command->getNewCarrierId();
-        $oldTrackingNumber = $order->shipping_number;
+        $oldTrackingNumber = $order->getShippingNumber();
 
         $orderCarrier = new OrderCarrier($command->getCurrentOrderCarrierId());
         if (!Validate::isLoadedObject($orderCarrier)) {
@@ -96,11 +96,6 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
         //load fresh order carrier because updated just before
         $orderCarrier = new OrderCarrier((int) $order->getIdOrderCarrier());
 
-        // update shipping number
-        // Keep these two following lines for backward compatibility, remove on 1.6 version
-        $order->shipping_number = $trackingNumber;
-        $order->update();
-
         // Update order_carrier
         $orderCarrier->tracking_number = pSQL($trackingNumber);
         if (!$orderCarrier->update()) {
@@ -109,18 +104,18 @@ final class UpdateOrderShippingDetailsHandler extends AbstractOrderHandler imple
 
         //send mail only if tracking number is different AND not empty
         if (!empty($trackingNumber) && $oldTrackingNumber != $trackingNumber) {
-            if (!$orderCarrier->sendInTransitEmail($order)) {
-                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
-            }
-
             $customer = new Customer((int) $order->id_customer);
-            $carrier = new Carrier((int) $order->id_carrier, $order->id_lang);
+            $carrier = new Carrier((int) $order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
 
             Hook::exec('actionAdminOrdersTrackingNumberUpdate', [
                 'order' => $order,
                 'customer' => $customer,
                 'carrier' => $carrier,
             ], null, false, true, false, $order->id_shop);
+
+            if (!$orderCarrier->sendInTransitEmail($order)) {
+                throw new TransistEmailSendingException('An error occurred while sending an email to the customer.');
+            }
         }
     }
 }

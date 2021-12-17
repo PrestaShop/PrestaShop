@@ -301,13 +301,13 @@ $(document).ready(function() {
 		new_condition_group();
 		{foreach from=$condition_group item='condition'}
 			{if $condition.type == 'attribute'}
-				$('#id_attribute_group option[value="{$condition.id_attribute_group}"]').attr('selected', true);
-				$('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]').attr('selected', true);
+				$('#id_attribute_group option[value="{$condition.id_attribute_group}"]').prop('selected', true);
+				$('#id_attribute_{$condition.id_attribute_group} option[value="{$condition.value}"]').prop('selected', true);
 			{elseif $condition.type == 'feature'}
-				$('#id_feature option[value="{$condition.id_feature}"]').attr('selected', true);
-				$('#id_feature_{$condition.id_feature} option[value="{$condition.value}"]').attr('selected', true);
+				$('#id_feature option[value="{$condition.id_feature}"]').prop('selected', true);
+				$('#id_feature_{$condition.id_feature} option[value="{$condition.value}"]').prop('selected', true);
 			{else}
-				$('#id_{$condition.type} option[value="{$condition.value}"]').attr('selected', true);
+				$('#id_{$condition.type} option[value="{$condition.value}"]').prop('selected', true);
 			{/if}
 			$('#add_condition_{$condition.type}').click();
 		{/foreach}

@@ -1,0 +1,121 @@
+#right-sidebar {
+  position: fixed;
+  top: 136px;
+  right: -3em;
+  bottom: 0;
+  z-index: 1000;
+  display: block;
+  float: right;
+  padding: 0 3em 0 0;
+  overflow: auto;
+  background: $white;
+
+  &.sidebar-open {
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.8);
+  }
+
+  .quicknav-container {
+    height: 100%;
+  }
+}
+
+@include media-breakpoint-down(md) {
+  #right-sidebar {
+    top: 62px;
+    right: 0;
+    padding: 0;
+
+    .quicknav-header {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      justify-content: space-between;
+
+      a {
+        font-size: 2rem;
+        color: $white;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  /* right sidebar is untested */
+  .sidebar.sidebar-right.sidebar-sm-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .sidebar.sidebar-right.sidebar-md-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .sidebar.sidebar-right.sidebar-lg-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+}
+
+/* animation class - optional: without it the sidebar would just pop in and out */
+.sidebar-animate {
+  @include transition(transform 300ms ease);
+}
+
+.sidebar.sidebar-right {
+  transform: translate(100%, 0);
+
+  &.sidebar-open {
+    transform: translate(0, 0);
+  }
+
+  &.sidebar-xs-show {
+    right: 0;
+    transform: translate(0, 0);
+  }
+
+  .quicknav-fixed-bottom {
+    position: fixed;
+    right: 3em;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    margin-bottom: 0;
+
+    ul.pagination {
+      margin-top: 0.5em;
+      margin-bottom: 0.5em;
+    }
+
+    input {
+      text-align: center;
+      outline-style: none;
+    }
+  }
+
+  .quicknav-header {
+    height: 50px;
+    padding: 1.2em;
+    color: $white;
+    background: $gray-700;
+
+    h2{
+      margin-bottom: 0;
+      color: $white;
+    }
+  }
+
+  .quicknav-scroller {
+    height: calc(100% - 50px - 50px);
+    overflow: auto;
+
+    table {
+      margin-bottom: 0;
+    }
+  }
+}
+

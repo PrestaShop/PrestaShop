@@ -100,7 +100,11 @@ class AdminLoginControllerCore extends AdminController
         }
 
         if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_ . '/../admin/')) {
-            $rand = 'admin' . sprintf('%03d', mt_rand(0, 999)) . Tools::strtolower(Tools::passwdGen(6)) . '/';
+            $rand = sprintf(
+                'admin%03d%s/',
+                mt_rand(0, 999),
+                Tools::strtolower(Tools::passwdGen(16))
+            );
             if (@rename(_PS_ADMIN_DIR_ . '/../admin/', _PS_ADMIN_DIR_ . '/../' . $rand)) {
                 Tools::redirectAdmin('../' . $rand);
             } else {
@@ -115,6 +119,7 @@ class AdminLoginControllerCore extends AdminController
         $this->context->smarty->assign([
             'randomNb' => $rand,
             'adminUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__ . $rand,
+            'homeUrl' => Tools::getCurrentUrlProtocolPrefix() . Tools::getShopDomain() . __PS_BASE_URI__,
         ]);
 
         // Redirect to admin panel
@@ -219,7 +224,7 @@ class AdminLoginControllerCore extends AdminController
 
         if (empty($passwd)) {
             $this->errors[] = $this->trans('The password field is blank.', [], 'Admin.Notifications.Error');
-        } elseif (!Validate::isPasswd($passwd)) {
+        } elseif (!Validate::isPlaintextPassword($passwd)) {
             $this->errors[] = $this->trans('Invalid password.', [], 'Admin.Notifications.Error');
         }
 
@@ -308,7 +313,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        if (!count($this->errors)) {
+        if (!count($this->errors) && isset($employee)) {
             if (!$employee->hasRecentResetPasswordToken()) {
                 $employee->stampResetPasswordToken();
                 $employee->update();
@@ -350,18 +355,18 @@ class AdminLoginControllerCore extends AdminController
                     ]
                 );
 
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => false,
                     'confirm' => $this->trans('Please, check your mailbox. A link to reset your password has been sent to you.', [], 'Admin.Login.Notification'),
                 ]));
             } else {
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => true,
                     'errors' => [$this->trans('An error occurred while attempting to reset your password.', [], 'Admin.Login.Notification')],
                 ]));
             }
         } elseif (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(['hasErrors' => true, 'errors' => $this->errors]));
+            die(json_encode(['hasErrors' => true, 'errors' => $this->errors]));
         }
     }
 
@@ -396,7 +401,7 @@ class AdminLoginControllerCore extends AdminController
         } elseif (!$reset_password) {
             // password (twice)
             $this->errors[] = $this->trans('The password is missing: please enter your new password.', [], 'Admin.Login.Notification');
-        } elseif (!Validate::isPasswd($reset_password)) {
+        } elseif (!Validate::isPlaintextPassword($reset_password)) {
             $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Admin.Login.Notification');
         } elseif (!$reset_confirm) {
             $this->errors[] = $this->trans('The confirmation is empty: please fill in the password confirmation as well.', [], 'Admin.Login.Notification');
@@ -414,7 +419,7 @@ class AdminLoginControllerCore extends AdminController
             }
         }
 
-        if (!count($this->errors)) {
+        if (!count($this->errors) && isset($employee)) {
             $employee->passwd = $this->get('hashing')->hash($reset_password, _COOKIE_KEY_);
             $employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
@@ -458,19 +463,19 @@ class AdminLoginControllerCore extends AdminController
                             'employee' => $employee,
                         ]
                     );
-                    die(Tools::jsonEncode([
+                    die(json_encode([
                         'hasErrors' => false,
                         'confirm' => $this->trans('The password has been changed successfully.', [], 'Admin.Login.Notification'),
                     ]));
                 }
             } else {
-                die(Tools::jsonEncode([
+                die(json_encode([
                     'hasErrors' => true,
                     'errors' => [$this->trans('An error occurred while attempting to change your password.', [], 'Admin.Login.Notification')],
                 ]));
             }
         } elseif (Tools::isSubmit('ajax')) {
-            die(Tools::jsonEncode(['hasErrors' => true, 'errors' => $this->errors]));
+            die(json_encode(['hasErrors' => true, 'errors' => $this->errors]));
         }
     }
 }

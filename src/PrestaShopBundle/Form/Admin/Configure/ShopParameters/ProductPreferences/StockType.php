@@ -51,22 +51,47 @@ class StockType extends TranslatorAwareType
             ->add('in_stock_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('In stock', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
             ])
             ->add('oos_allowed_backorders', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('On backorder', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
             ])
             ->add('oos_denied_backorders', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Out of stock', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
             ])
             ->add('delivery_time', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
             ])
             ->add('oos_delivery_time', TranslatableType::class, [
                 'type' => TextType::class,
                 'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
             ])
             ->add('pack_stock_management', ChoiceType::class, [
                 'choices' => [
@@ -74,6 +99,16 @@ class StockType extends TranslatorAwareType
                     'Decrement products in pack only.' => 1,
                     'Decrement both.' => 2,
                 ],
+            ])
+            ->add('oos_show_label_listing_pages', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display out-of-stock label on product listing pages',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Note that the label will be displayed only if backorders are denied.',
+                    'Admin.Shopparameters.Help'
+                ),
             ]);
     }
 

@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Add page page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
 class AddPage extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on add page page
+   */
   constructor() {
     super();
 
@@ -26,8 +35,8 @@ class AddPage extends BOBasePage {
 
   /**
    * Fill form for add/edit page category
-   * @param page
-   * @param pageData
+   * @param page {Page} Browser tab
+   * @param pageData {CMSPageData} Data to set on new/edit page form
    * @return {Promise<void>}
    */
   async createEditPage(page, pageData) {
@@ -37,20 +46,20 @@ class AddPage extends BOBasePage {
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
     await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
-    await page.check(this.indexationToggleInput(pageData.indexation ? 1 : 0));
-    await page.check(this.displayedToggleInput(pageData.displayed ? 1 : 0));
+    await this.setChecked(page, this.indexationToggleInput(pageData.indexation ? 1 : 0));
+    await this.setChecked(page, this.displayedToggleInput(pageData.displayed ? 1 : 0));
 
     // Save form
     await this.clickAndWaitForNavigation(page, this.savePageButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /**
    * Preview page in new tab
-   * @param page
-   * @return page opened
+   * @param page {Page} Browser tab
+   * @returns {Promise<Page>}
    */
   async previewPage(page) {
     return this.openLinkWithTargetBlank(page, this.saveAndPreviewPageButton);
@@ -58,7 +67,7 @@ class AddPage extends BOBasePage {
 
   /**
    * Cancel page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async cancelPage(page) {

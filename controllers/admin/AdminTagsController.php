@@ -125,8 +125,9 @@ class AdminTagsControllerCore extends AdminController
 
     public function renderForm()
     {
-        /** @var Tag $obj */
-        if (!($obj = $this->loadObject(true))) {
+        /** @var Tag|null $obj */
+        $obj = $this->loadObject(true);
+        if (!$obj) {
             return;
         }
 

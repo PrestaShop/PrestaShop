@@ -30,14 +30,9 @@
   orderingurl="{{ path('admin_product_catalog', {offset: 0, 'limit': 300, 'orderBy': 'position_ordering', 'sortOrder': sortOrder}) }}"
   newproducturl="{{ path('admin_product_new') }}"
 >
-  <div class="row">
-    <div class="col-md-12">
-      <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-12">
+  <input type="hidden" name="filter_category" value="{{ filter_category|default('') }}" />
+
       {% block product_catalog_form_table %}
         {{ include('@Product/CatalogPage/Lists/products_table.html.twig', {
           'limit': limit,
@@ -59,13 +54,8 @@
           })
         }}
       {% endblock %}
-    </div>
-  </div>
 
   {% if product_count_filtered > 20 %}
-    <div class="row">
-      <div class="col-md-12">
-
         {{ render(controller('PrestaShopBundle:Admin\\Common:pagination', {
           'limit': limit,
           'offset': offset,
@@ -74,7 +64,5 @@
           'caller_parameters': pagination_parameters,
           'limit_choices': pagination_limit_choices
           })) }}
-      </div>
-    </div>
   {% endif %}
 </form>

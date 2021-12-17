@@ -12,9 +12,11 @@ table.grid-ordering-column tr {
   transition-timing-function: ease-out;
   transition-duration: 0.2s;
   transition-property: all;
+
   &.hover {
     background-color: $gray-soft;
   }
+
   &:hover {
     .position-drag-handle {
       visibility: visible;
@@ -23,16 +25,19 @@ table.grid-ordering-column tr {
 }
 
 table.grid-ordering-column tr.position-row-while-drag {
-  color: #fff;
+  color: $white;
   background: none;
   box-shadow: 3px 3px 8px 0 rgba(0, 0, 0, 0.2);
   transform: translate(5px, 10px);
+
   td {
     background-color: $medium-gray;
   }
+
   td:first-child {
     @include border-left-radius(3px);
   }
+
   td:last-child {
     @include border-right-radius(3px);
   }
@@ -42,7 +47,7 @@ table.grid-ordering-column tr.position-row-while-drag {
   .btn,
   .btn::after,
   .btn .material-icons {
-    color: #fff;
+    color: $white;
   }
 }
 
@@ -59,11 +64,22 @@ table.grid-ordering-column tr.position-row-while-drag {
   }
 }
 
+.adminmailtheme {
+  .action-type {
+    .text-right {
+      .btn.tooltip-link {
+        justify-content: flex-end;
+      }
+    }
+  }
+}
+
 .btn-group-action {
   a.dropdown-toggle,
   button.dropdown-toggle,
   .dropdown-toggle {
     color: $gray-medium;
+
     &::after {
       content: "more_vert";
     }
@@ -87,9 +103,17 @@ table .thead-default .column-headers th:last-child .grid-actions-header-text {
   }
 }
 
-table .column-filters td:last-child .grid-search-button,
-table .column-filters td:last-child .grid-reset-button {
-  float: right;
+table .column-filters {
+  th .btn,
+  td .btn {
+    white-space: nowrap;
+  }
+
+  td:last-child .grid-search-button,
+  td:last-child .grid-reset-button {
+    float: right;
+    white-space: nowrap;
+  }
 }
 
 .grid {
@@ -102,10 +126,12 @@ table .column-filters td:last-child .grid-reset-button {
             display: inline-block;
             width: 60px;
           }
+
           .md-checkbox {
             &:not(:last-child) {
               display: inline-block;
             }
+
             & ~ .form-control {
               display: inline-block;
               /* stylelint-disable-next-line */
@@ -115,6 +141,7 @@ table .column-filters td:last-child .grid-reset-button {
         }
       }
     }
+
     tbody {
       tr {
         $tr: &;
@@ -135,10 +162,10 @@ table .column-filters td:last-child .grid-reset-button {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: #fafbfc;
+          background: $gray-250;
 
           td {
-            color: #fff;
+            color: $white;
             background: #67868e;
             transform: translate(5px, 10px);
 
@@ -148,7 +175,7 @@ table .column-filters td:last-child .grid-reset-button {
             i.material-icons,
             a,
             a::after {
-              color: #fff;
+              color: $white;
             }
           }
         }
@@ -192,6 +219,7 @@ table .column-filters td:last-child .grid-reset-button {
                   margin-right: 0;
                   @include display-dropdown-arrow();
                 }
+
                 &.coloured {
                   border: 0;
                 }
@@ -256,12 +284,41 @@ table .column-filters td:last-child .grid-reset-button {
       }
     }
   }
+
   .table-responsive .row {
     margin: 0;
   }
+
   .preview-toggle {
     i:hover {
       cursor: pointer;
+    }
+  }
+}
+
+table {
+  tr {
+    &.column-filters {
+      @include media-breakpoint-down(md) {
+        input,
+        select {
+          min-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="id_"] {
+        max-width: 8rem;
+
+        input:only-child {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="name"] {
+        input:only-child {
+          max-width: 8rem;
+        }
+      }
     }
   }
 }

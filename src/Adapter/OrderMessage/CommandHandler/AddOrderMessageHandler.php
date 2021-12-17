@@ -30,6 +30,7 @@ use OrderMessage;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Command\AddOrderMessageCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\CommandHandler\AddOrderMessageHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageException;
+use PrestaShop\PrestaShop\Core\Domain\OrderMessage\Exception\OrderMessageNameAlreadyUsedException;
 use PrestaShop\PrestaShop\Core\Domain\OrderMessage\ValueObject\OrderMessageId;
 use PrestaShopException;
 
@@ -47,6 +48,8 @@ final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
      */
     public function handle(AddOrderMessageCommand $command): OrderMessageId
     {
+        $this->assertNameIsNotAlreadyUsed($command);
+
         $orderMessage = new OrderMessage();
 
         $orderMessage->name = $command->getLocalizedName();
@@ -68,5 +71,24 @@ final class AddOrderMessageHandler implements AddOrderMessageHandlerInterface
         }
 
         return new OrderMessageId((int) $orderMessage->id);
+    }
+
+    private function assertNameIsNotAlreadyUsed(AddOrderMessageCommand $command): void
+    {
+        foreach ($command->getLocalizedName() as $langId => $langName) {
+            $orderMessages = OrderMessage::getOrderMessages($langId);
+            if (!is_array($orderMessages)) {
+                continue;
+            }
+            foreach ($orderMessages as $orderMessage) {
+                if ($orderMessage['name'] === $langName) {
+                    throw new OrderMessageNameAlreadyUsedException(
+                        $langName,
+                        $langId,
+                        'An order message already exists for this name'
+                    );
+                }
+            }
+        }
     }
 }

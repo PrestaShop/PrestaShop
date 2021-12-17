@@ -5,16 +5,15 @@ doctrine:
 
     connections:
       default:
-        driver:   pdo_mysql
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
+        driver: pdo_mysql
+        host: "%database_host%"
+        port: "%database_port%"
+        dbname: "%database_name%"
+        user: "%database_user%"
         password: "%database_password%"
-        charset:  utf8mb4
+        charset: utf8mb4
         mapping_types:
           enum: string
-
         options:
           1002: "SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))"
 

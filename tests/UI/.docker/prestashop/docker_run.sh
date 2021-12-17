@@ -27,11 +27,6 @@ fi
 echo "\n* Disabling DEV mode ...";
 sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
 
-if [ $PS_HOST_MODE -ne 0 -a ! $(grep "define('_PS_HOST_MODE_', true);" /var/www/html/config/defines.inc.php) ]; then
-  echo "\n* Enabling HOST mode ...";
-  echo "define('_PS_HOST_MODE_', true);" >> /var/www/html/config/defines.inc.php
-fi
-
 if [ "$PS_FOLDER_INSTALL" != "install" -a -d /var/www/html/install ]; then
   echo "\n* Renaming install folder as $PS_FOLDER_INSTALL ...";
   mv /var/www/html/install /var/www/html/$PS_FOLDER_INSTALL/
@@ -82,7 +77,7 @@ if [ $PS_INSTALL_AUTO = 1 ]; then
   echo "\n* Install PrestaShop...";
   php -d memory_limit=-1 /var/www/html/$PS_FOLDER_INSTALL/index_cli.php \
       --domain="$PS_DOMAIN" --db_server=$DB_SERVER:$DB_PORT --db_name="$DB_NAME" --db_user=$DB_USER \
-      --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="John" --lastname="Doe" \
+      --db_password=$DB_PASSWD --prefix="$DB_PREFIX" --firstname="$ADMIN_FIRSTNAME" --lastname="$ADMIN_LASTNAME" \
       --password=$ADMIN_PASSWD --email="$ADMIN_MAIL" --language=$PS_LANGUAGE --country=$PS_COUNTRY \
       --newsletter=0 --send_email=0
 fi

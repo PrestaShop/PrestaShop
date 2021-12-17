@@ -1,7 +1,16 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
+/**
+ * Stores page, contains selectors and functions for the page
+ * @class
+ * @extends BOBasePage
+ */
 class Stores extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up titles and selectors to use on stores page
+   */
   constructor() {
     super();
 
@@ -38,7 +47,6 @@ class Stores extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
-
     // Columns selectors
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnName = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
@@ -66,7 +74,7 @@ class Stores extends BOBasePage {
     this.bulkActionMenuButton = '#bulk_action_menu_store';
     this.bulkActionDropdownMenu = `${this.bulkActionBlock} ul.dropdown-menu`;
     this.selectAllLink = `${this.bulkActionDropdownMenu} li:nth-child(1)`;
-    this.enableSelectionink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
+    this.enableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(4)`;
     this.disableSelectionLink = `${this.bulkActionDropdownMenu} li:nth-child(5)`;
     this.bulkDeleteLink = `${this.bulkActionDropdownMenu} li:nth-child(7)`;
 
@@ -96,7 +104,7 @@ class Stores extends BOBasePage {
   /* Header methods */
   /**
    * Go to new store page
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async goToNewStorePage(page) {
@@ -107,7 +115,7 @@ class Stores extends BOBasePage {
 
   /**
    * Get Number of stores
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   getNumberOfElementInGrid(page) {
@@ -116,7 +124,7 @@ class Stores extends BOBasePage {
 
   /**
    * Reset all filters
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async resetFilter(page) {
@@ -128,7 +136,7 @@ class Stores extends BOBasePage {
 
   /**
    * Reset and get number of stores
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<number>}
    */
   async resetAndGetNumberOfLines(page) {
@@ -138,10 +146,10 @@ class Stores extends BOBasePage {
 
   /**
    * Filter stores
-   * @param page
-   * @param filterType
-   * @param filterBy
-   * @param value
+   * @param page {Page} Browser tab
+   * @param filterType {string} Type of filter (input/select)
+   * @param filterBy {string} Column to filter with
+   * @param value {string} Value to filter
    * @return {Promise<void>}
    */
   async filterTable(page, filterType, filterBy, value) {
@@ -167,9 +175,9 @@ class Stores extends BOBasePage {
 
   /**
    * Get text from column in table
-   * @param page
-   * @param row
-   * @param columnName
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param columnName {string} Column name of the value to return
    * @return {Promise<string>}
    */
   async getTextColumn(page, row, columnName) {
@@ -221,9 +229,9 @@ class Stores extends BOBasePage {
 
   /**
    * Get column content from all rows
-   * @param page
-   * @param columnName
-   * @return {Promise<[]>}
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name of the value to return
+   * @return {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, columnName) {
     const rowsNumber = await this.getNumberOfElementInGrid(page);
@@ -232,7 +240,7 @@ class Stores extends BOBasePage {
     // Get text column from each row
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, i, columnName);
-      await allRowsContentTable.push(rowContent);
+      allRowsContentTable.push(rowContent);
     }
 
     return allRowsContentTable;
@@ -240,8 +248,8 @@ class Stores extends BOBasePage {
 
   /**
    * Get Store status
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<boolean>}
    */
   getStoreStatus(page, row) {
@@ -250,9 +258,9 @@ class Stores extends BOBasePage {
 
   /**
    * Set store status by clicking on column status
-   * @param page
-   * @param row
-   * @param wantedStatus
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @param wantedStatus {boolean} True if we need to enable status
    * @return {Promise<void>}
    */
   async setStoreStatus(page, row, wantedStatus) {
@@ -265,8 +273,8 @@ class Stores extends BOBasePage {
 
   /**
    * Go to edit store page
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<void>}
    */
   async gotoEditStorePage(page, row) {
@@ -275,8 +283,8 @@ class Stores extends BOBasePage {
 
   /**
    * Delete store from row
-   * @param page
-   * @param row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
    * @return {Promise<string>}
    */
   async deleteStore(page, row) {
@@ -291,14 +299,14 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteModalButtonYes);
 
     // Get successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Bulk actions methods */
 
   /**
    * Select all rows for bulk action
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<void>}
    */
   async selectAllRow(page) {
@@ -309,14 +317,14 @@ class Stores extends BOBasePage {
 
     await Promise.all([
       page.click(this.selectAllLink),
-      page.waitForSelector(this.selectAllLink, {state: 'hidden'}),
+      this.waitForHiddenSelector(page, this.selectAllLink),
     ]);
   }
 
   /**
    * Enable / disable stores by bulk actions
-   * @param page
-   * @param statusWanted
+   * @param page {Page} Browser tab
+   * @param statusWanted {boolean} True if we need to enable status
    * @return {Promise<void>}
    */
   async bulkUpdateStoreStatus(page, statusWanted) {
@@ -328,19 +336,19 @@ class Stores extends BOBasePage {
       page.click(this.bulkActionMenuButton),
       this.waitForVisibleSelector(
         page,
-        this.enableSelectionink,
+        this.enableSelectionLink,
       ),
     ]);
 
     await this.clickAndWaitForNavigation(
       page,
-      statusWanted ? this.enableSelectionink : this.disableSelectionLink,
+      statusWanted ? this.enableSelectionLink : this.disableSelectionLink,
     );
   }
 
   /**
    * Bulk delete stores
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   async bulkDeleteStores(page) {
@@ -359,15 +367,15 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.bulkDeleteLink);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Sort functions */
   /**
    * Sort table by clicking on column name
-   * @param page
-   * @param sortBy, column to sort with
-   * @param sortDirection, asc or desc
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column name to sort with
+   * @param sortDirection {string} Sort direction by asc or desc
    * @return {Promise<void>}
    */
   async sortTable(page, sortBy, sortDirection) {
@@ -405,6 +413,7 @@ class Stores extends BOBasePage {
       default:
         throw new Error(`Column ${sortBy} was not found`);
     }
+
     const sortColumnButton = `${columnSelector} i.icon-caret-${sortDirection}`;
     await this.clickAndWaitForNavigation(page, sortColumnButton);
   }
@@ -412,9 +421,9 @@ class Stores extends BOBasePage {
   /* Form functions */
   /**
    * Se contact details
-   * @param page
-   * @param storeContactData
-   * @returns {Promise<unknown>}
+   * @param page {Page} Browser tab
+   * @param storeContactData {StoreData} Store contact data to set on contact detail form
+   * @returns {Promise<string>}
    */
   async setContactDetails(page, storeContactData) {
     // Set name
@@ -439,13 +448,13 @@ class Stores extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     // Return successful message
-    return this.getTextContent(page, this.alertSuccessBlockParagraph);
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 
   /* Pagination methods */
   /**
    * Get pagination label
-   * @param page
+   * @param page {Page} Browser tab
    * @return {Promise<string>}
    */
   getPaginationLabel(page) {
@@ -454,8 +463,8 @@ class Stores extends BOBasePage {
 
   /**
    * Select pagination limit
-   * @param page
-   * @param number
+   * @param page {Page} Browser tab
+   * @param number {number} Pagination limit number to select
    * @returns {Promise<string>}
    */
   async selectPaginationLimit(page, number) {
@@ -467,7 +476,7 @@ class Stores extends BOBasePage {
 
   /**
    * Click on next
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationNext(page) {
@@ -478,7 +487,7 @@ class Stores extends BOBasePage {
 
   /**
    * Click on previous
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async paginationPrevious(page) {

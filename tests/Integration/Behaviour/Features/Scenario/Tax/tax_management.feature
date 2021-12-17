@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s tax
 Feature: Manage tax
   As an employee

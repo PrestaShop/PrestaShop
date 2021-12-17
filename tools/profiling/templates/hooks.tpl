@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<div class="col-4">
+<div class="col-5">
   <table class="table table-condensed">
     <thead>
       <tr>

@@ -78,6 +78,11 @@ class ProfileController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Profiles', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($profilesGridFactory->getGrid($filters)),
+                'multistoreInfoTip' => $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                ),
+                'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
             ]
         );
     }
@@ -85,7 +90,7 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -142,6 +147,11 @@ class ProfileController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Add new profile', 'Admin.Advparameters.Feature'),
             'help_link' => $this->generateSidebarLink('AdminProfiles'),
             'enableSidebar' => true,
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 

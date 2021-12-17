@@ -99,7 +99,7 @@ class CategoryController extends FrameworkBundleAdminController
                     if ($request->query->has('id_product')) {
                         $assignProductToCategoryCommand = new AssignProductToCategoryCommand(
                             $categoryId->getValue(),
-                            $request->query->get('id_product')
+                            $request->query->getInt('id_product')
                         );
                         $commandBus->handle($assignProductToCategoryCommand);
                     }

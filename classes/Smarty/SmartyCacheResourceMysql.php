@@ -81,14 +81,14 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
      */
     protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content)
     {
-        Db::getInstance()->execute('
-		REPLACE INTO ' . _DB_PREFIX_ . 'smarty_cache (id_smarty_cache, name, cache_id, content)
-		VALUES (
-			"' . pSQL($id, true) . '",
-			"' . pSQL(sha1($name)) . '",
-			"' . pSQL($cache_id, true) . '",
-			"' . pSQL($content, true) . '"
-		)');
+        Db::getInstance()->execute(
+            'REPLACE INTO ' . _DB_PREFIX_ . 'smarty_cache (id_smarty_cache, name, cache_id, content)
+            VALUES (
+                "' . pSQL($id, true) . '",
+                "' . pSQL(sha1($name)) . '",
+                "' . pSQL($cache_id, true) . '",
+                "' . pSQL($content, true) . '"
+            )');
 
         return (bool) Db::getInstance()->Affected_Rows();
     }
@@ -96,9 +96,9 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
     /**
      * Delete content from cache.
      *
-     * @param string $name template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
+     * @param string|null $name template name
+     * @param string|null $cache_id cache id
+     * @param string|null $compile_id compile id
      * @param int|null $exp_time seconds till expiration or null
      *
      * @return int number of deleted caches

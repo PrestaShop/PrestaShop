@@ -59,7 +59,7 @@ final class StoreContactFieldsProvider implements EntityFieldsProviderInterface
             new EntityField('name', $this->trans('Name', 'Admin.Global')),
             new EntityField('address1', $this->trans('Address', 'Admin.Global'), '', true),
             new EntityField('address2', $this->trans('Address (2)', 'Admin.Advparameters.Feature')),
-            new EntityField('postcode', $this->trans('Zip/postal code', 'Admin.Global')),
+            new EntityField('postcode', $this->trans('Zip/Postal code', 'Admin.Global')),
             new EntityField('state', $this->trans('State', 'Admin.Global')),
             new EntityField('city', $this->trans('City', 'Admin.Global'), '', true),
             new EntityField('country', $this->trans('Country', 'Admin.Global'), '', true),

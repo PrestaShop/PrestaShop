@@ -36,25 +36,25 @@ class InvalidCartRuleDiscountValueException extends InvalidCartRuleValueExceptio
     /**
      * Code used when an invalid percent value is under min value
      */
-    const INVALID_MIN_PERCENT = 10;
+    public const INVALID_MIN_PERCENT = 10;
 
     /**
      * Code used when an invalid percent value is above max value
      */
-    const INVALID_MAX_PERCENT = 20;
+    public const INVALID_MAX_PERCENT = 20;
 
     /**
      * Code used when the specified amount is under min value
      */
-    const INVALID_MIN_AMOUNT = 30;
+    public const INVALID_MIN_AMOUNT = 30;
 
     /**
      * Code used when the specified amount is above max value
      */
-    const INVALID_MAX_AMOUNT = 40;
+    public const INVALID_MAX_AMOUNT = 40;
 
     /**
      * Code used when free shipping cannot be applied
      */
-    const INVALID_FREE_SHIPPING = 50;
+    public const INVALID_FREE_SHIPPING = 50;
 }

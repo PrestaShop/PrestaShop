@@ -106,7 +106,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
                     $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $path = _PS_PRODUCT_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
                         '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',

@@ -69,12 +69,12 @@ final class UpdateOrderStatusHandler extends AbstractOrderHandler implements Upd
 
         $history->changeIdOrderState((int) $orderState->id, $order, $useExistingPayments);
 
-        $carrier = new Carrier($order->id_carrier, $order->id_lang);
+        $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
         $templateVars = [];
 
-        if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
+        if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
             $templateVars = [
-                '{followup}' => str_replace('@', $order->shipping_number, $carrier->url),
+                '{followup}' => str_replace('@', $order->getShippingNumber(), $carrier->url),
             ];
         }
 

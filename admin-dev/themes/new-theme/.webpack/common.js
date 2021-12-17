@@ -26,10 +26,11 @@ const path = require('path');
 const webpack = require('webpack');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   externals: {
@@ -41,26 +42,30 @@ module.exports = {
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
-    catalog: './js/app/pages/catalog',
-    catalog_product: './js/pages/catalog/product',
+    carrier: './js/pages/carrier',
     cart_rule: './js/pages/cart-rule',
+    catalog: './js/app/pages/catalog',
     catalog_price_rule: './js/pages/catalog-price-rule',
     catalog_price_rule_form: './js/pages/catalog-price-rule/form',
+    catalog_product: './js/pages/catalog/product',
     category: './js/pages/category',
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
+    combination_edit: './js/pages/product/combination/edit',
     contacts: './js/pages/contacts',
     credit_slip: './js/pages/credit-slip',
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
-    customer_address_form: './js/pages/address/form.js',
-    customer_thread_view: './js/pages/customer-thread/view.js',
+    customer_address_form: './js/pages/address/form',
+    customer_outstanding: './js/pages/outstanding',
+    customer_thread_view: './js/pages/customer-thread/view',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
     error: './js/pages/error',
+    feature_flag: './js/pages/feature-flag/index',
     feature_form: './js/pages/feature/form',
     form_popover_error: './js/components/form/form-popover-error',
     geolocation: './js/pages/geolocation',
@@ -70,44 +75,51 @@ module.exports = {
     language: './js/pages/language',
     localization: './js/pages/localization',
     logs: './js/pages/logs',
-    main: './js/theme.js',
+    main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',
     monitoring: './js/pages/monitoring',
+    multistore_dropdown: './js/components/multistore-dropdown',
+    multistore_header: './js/components/multistore-header',
     order: './js/pages/order',
-    order_create: './js/pages/order/create.js',
+    order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',
-    order_message_form: './js/pages/order_message/form',
     order_message: './js/pages/order_message',
+    order_message_form: './js/pages/order_message/form',
     order_preferences: './js/pages/order-preferences',
-    order_states_form: './js/pages/order-states/form',
-    order_states: './js/pages/order-states',
     order_return_states_form: './js/pages/order-return-states/form',
-    order_view: './js/pages/order/view.js',
+    order_states: './js/pages/order-states',
+    order_states_form: './js/pages/order-states/form',
+    order_view: './js/pages/order/view',
+    orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
+    product: './scss/pages/product/product_page.scss',
+    product_catalog: './scss/pages/product/products_catalog.scss',
+    product_edit: './js/pages/product/edit',
+    product_index: './js/pages/product/index',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
+    search_engine: './js/pages/search-engine',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
+    stock_page: './scss/pages/stock/stock_page.scss',
     supplier: './js/pages/supplier',
-    supplier_form: './js/pages/supplier/supplier-form.js',
+    supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
+    theme: './scss/theme.scss',
     themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
-    theme: './scss/theme.scss',
-    orders: './scss/pages/orders/orders.scss',
-    product: './scss/pages/product/product_page.scss',
-    product_catalog: './scss/pages/product/products_catalog.scss',
-    stock_page: './scss/pages/stock/stock_page.scss',
+    zone: './js/pages/zone',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -119,7 +131,7 @@ module.exports = {
     chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
       '@app': path.resolve(__dirname, '../js/app'),
@@ -129,71 +141,158 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
+      '@PSTypes': path.resolve(__dirname, '../js/types'),
+      '@images': path.resolve(__dirname, '../img'),
     },
   },
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
-            },
+            loader: 'esbuild-loader',
           },
         ],
       },
       {
+        test: /\.ts?$/,
+        include: path.resolve(__dirname, '../js'),
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target: 'es2015',
+        },
+        exclude: /node_modules/,
+      },
+      {
         test: /jquery-ui\.js/,
-        use: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+            },
+          },
+        },
       },
       {
         test: /jquery\.magnific-popup\.js/,
-        use: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bloodhound\.min\.js/,
         use: [
           {
             loader: 'expose-loader',
-            query: 'Bloodhound',
+            options: {
+              exposes: 'Bloodhound',
+            },
           },
         ],
       },
       {
         test: /dropzone\/dist\/dropzone\.js/,
-        loader: 'imports-loader?this=>window&module=>null',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              module: null,
+            },
+          },
+        },
       },
       {
         test: require.resolve('moment'),
-        loader: 'imports-loader?define=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+            },
+          },
+        },
       },
       {
         test: /typeahead\.jquery\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-tokenfield\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-datetimepicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /bootstrap-colorpicker\.js/,
-        loader: 'imports-loader?define=>false&exports=>false&this=>window',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              define: false,
+              exports: false,
+            },
+          },
+        },
       },
       {
         test: /jwerty\/jwerty\.js/,
-        loader: 'imports-loader?this=>window&module=>false',
-      },
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'imports-loader',
+        options: {
+          wrapper: {
+            thisArg: 'window',
+            args: {
+              module: false,
+            },
+          },
+        },
       },
       {
         test: /\.css$/,
@@ -207,7 +306,6 @@ module.exports = {
       {
         test: /\.scss$/,
         include: /scss/,
-        exclude: /js/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -227,7 +325,7 @@ module.exports = {
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: [bourbon.includePaths],
+                includePaths: bourbon.includePaths,
               },
             },
           },
@@ -241,12 +339,15 @@ module.exports = {
       // FILES
       {
         test: /.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
-        loader: 'file-loader?name=[hash].[ext]',
+        loader: 'file-loader',
+        options: {
+          name: '[hash].[ext]',
+        },
       },
     ],
   },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
+    new RemoveEmptyScriptsPlugin(),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
@@ -256,7 +357,20 @@ module.exports = {
       $: 'jquery', // needed for jquery-ui
       jQuery: 'jquery',
     }),
-    new CopyPlugin([{from: 'static'}]),
+    new CopyPlugin({
+      patterns: [{from: 'static'}],
+    }),
     new VueLoaderPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        extensions: {
+          vue: true,
+        },
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
+    }),
   ],
 };

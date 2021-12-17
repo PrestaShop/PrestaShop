@@ -3,7 +3,7 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -12,7 +12,7 @@ const ordersPage = require('@pages/BO/orders');
 const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import customer 'J. DOE'
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -21,7 +21,6 @@ const baseContext = 'functional_BO_orders_orders_viewCustomer';
 
 // Import expect from chai
 const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
@@ -33,7 +32,7 @@ Filter by customer name 'J. DOE'
 Click on customer link on grid
 Check that View customer page is displayed
  */
-describe('View customer from orders page', async () => {
+describe('BO - Orders : View customer from orders page', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -47,7 +46,7 @@ describe('View customer from orders page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to orders page', async function () {
+  it('should go to \'Orders > Orders\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -76,7 +75,7 @@ describe('View customer from orders page', async () => {
       page,
       'input',
       'customer',
-      DefaultAccount.lastName,
+      DefaultCustomer.lastName,
     );
 
     const numberOfOrders = await ordersPage.getNumberOfElementInGrid(page);
@@ -91,6 +90,26 @@ describe('View customer from orders page', async () => {
 
     const pageTitle = await viewCustomerPage.getPageTitle(page);
     await expect(pageTitle).to
-      .contains(`${viewCustomerPage.pageTitle} ${DefaultAccount.firstName[0]}. ${DefaultAccount.lastName}`);
+      .contains(`${viewCustomerPage.pageTitle} ${DefaultCustomer.firstName[0]}. ${DefaultCustomer.lastName}`);
+  });
+
+  it('should go back to \'Orders > Orders\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPageToResetFilter', baseContext);
+
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.ordersParentLink,
+      dashboardPage.ordersLink,
+    );
+
+    const pageTitle = await ordersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(ordersPage.pageTitle);
+  });
+
+  it('should reset all filters', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersAfterCheck', baseContext);
+
+    const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+    await expect(numberOfOrders).to.be.above(0);
   });
 });

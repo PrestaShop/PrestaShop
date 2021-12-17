@@ -1,17 +1,28 @@
-name: JavaScript tests
-on: [push, pull_request]
+name: Js
+on: [ push, pull_request ]
 jobs:
-  eslint:
+  js-unit-tests:
     runs-on: ubuntu-latest
-    name: ESLint
+    name: Run unit tests
+    strategy:
+      matrix:
+        js: [ '12', '13', '14', '15' ]
     steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 0
-
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
-          node-version: '10.x'
+          node-version: ${{ matrix.js }}
 
-      - run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Node Directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Run tests
+        run: npm install && npm run test
+        working-directory: ./admin-dev/themes/new-theme

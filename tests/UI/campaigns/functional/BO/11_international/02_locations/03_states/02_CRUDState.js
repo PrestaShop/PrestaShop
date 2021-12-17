@@ -31,7 +31,7 @@ const editStateData = new StateFaker();
 
 let numberOfStates = 0;
 
-describe('CRUD state', async () => {
+describe('BO - International - States : CRUD state', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +46,7 @@ describe('CRUD state', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to locations page', async function () {
+  it('should go to \'International > Locations\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLocationsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -61,8 +61,7 @@ describe('CRUD state', async () => {
     await expect(pageTitle).to.contains(zonesPage.pageTitle);
   });
 
-
-  it('should go to states page', async function () {
+  it('should go to \'States\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStatesPage', baseContext);
 
     await zonesPage.goToSubTabStates(page);

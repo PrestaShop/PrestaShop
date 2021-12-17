@@ -26,7 +26,7 @@
 
 namespace LegacyTests\Endpoints;
 
-use LegacyTests\Unit\ContextMocker;
+use Tests\Integration\Utility\ContextMocker;
 use PHPUnit\Framework\TestCase;
 
 abstract class AbstractEndpointTest extends TestCase
@@ -36,11 +36,10 @@ abstract class AbstractEndpointTest extends TestCase
      */
     protected $contextMocker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         define('_PS_ROOT_DIR_', __DIR__ . '/../..');
         define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev');
-        //define('_DB_PREFIX_', 'ps_');
         require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
         require_once _PS_CONFIG_DIR_ . 'autoload.php';
         require_once _PS_CONFIG_DIR_ . 'bootstrap.php';

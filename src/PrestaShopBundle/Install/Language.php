@@ -26,6 +26,9 @@
 
 namespace PrestaShopBundle\Install;
 
+use Locale;
+use Symfony\Component\Intl\Intl;
+
 class Language
 {
     public $id;
@@ -119,18 +122,9 @@ class Language
     public function getCountries()
     {
         if (!is_array($this->countries)) {
-            $this->countries = [];
-            $filename = _PS_INSTALL_LANGS_PATH_ . substr($this->language_code, 0, 2) . '/data/country.xml';
-
-            if (!file_exists($filename)) {
-                $filename = _PS_INSTALL_LANGS_PATH_ . 'en/data/country.xml';
-            }
-
-            if ($xml = @simplexml_load_file($filename)) {
-                foreach ($xml->country as $country) {
-                    $this->countries[strtolower((string) $country['id'])] = (string) $country->name;
-                }
-            }
+            Locale::setDefault($this->getLocale());
+            $this->countries = Intl::getRegionBundle()->getCountryNames();
+            $this->countries = array_change_key_case($this->countries, CASE_LOWER);
         }
 
         return $this->countries;

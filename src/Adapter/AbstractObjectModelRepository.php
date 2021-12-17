@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopException;
 
 abstract class AbstractObjectModelRepository
@@ -50,7 +51,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to check if %s #%d exists', $objectTableName, $id),
+                sprintf(
+                    'Error occurred when trying to check if %s #%d exists [%s]',
+                    $objectTableName,
+                    $id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -76,7 +82,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to get %s #%d', $objectModelClass, $id),
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    $objectModelClass,
+                    $id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -105,7 +116,11 @@ abstract class AbstractObjectModelRepository
             return (int) $objectModel->id;
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to add %s', get_class($objectModel)),
+                sprintf(
+                    'Error occurred when trying to add %s [%s]',
+                    get_class($objectModel),
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -134,7 +149,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to update %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to update %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -179,7 +199,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to delete %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -204,7 +229,12 @@ abstract class AbstractObjectModelRepository
             }
         } catch (PrestaShopException $e) {
             throw new CoreException(
-                sprintf('Error occurred when trying to soft delete %s #%d', get_class($objectModel), $objectModel->id),
+                sprintf(
+                    'Error occurred when trying to soft delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
                 0,
                 $e
             );
@@ -212,6 +242,15 @@ abstract class AbstractObjectModelRepository
     }
 
     /**
+     * Expected format: $propertiesToUpdate = [
+     *     'active', // Regular field are simply listed
+     *     'price',
+     *     'name' => [ // Multilang fields must indicate which language is impacted
+     *         1,
+     *         3,
+     *     ],
+     * ];
+     *
      * @param array $propertiesToUpdate
      *
      * @return array<string, mixed>
@@ -220,12 +259,18 @@ abstract class AbstractObjectModelRepository
     {
         $formattedPropertiesToUpdate = [];
         foreach ($propertiesToUpdate as $propertyName => $property) {
+            if (!is_array($property) && !is_string($property)) {
+                throw new InvalidArgumentException('Invalid format for properties to update, expected an array indexed by string matching field name');
+            }
+
+            // For common properties the value is the field name
             if (!is_array($property)) {
                 $formattedPropertiesToUpdate[$property] = true;
 
                 continue;
             }
 
+            // For multilang values the index is actually the field name
             foreach ($property as $langId) {
                 $formattedPropertiesToUpdate[$propertyName][$langId] = true;
             }

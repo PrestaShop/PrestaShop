@@ -32,90 +32,39 @@ class AdminStatsControllerCore extends AdminStatsTabController
     public static function getVisits($unique, $date_from, $date_to, $granularity = false)
     {
         $visits = ($granularity == false) ? 0 : [];
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
 
-        /** @var Gapi $gapi */
-        $gapi = $moduleManager->isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
-        if (Validate::isLoadedObject($gapi) && $gapi->isConfigured()) {
-            $metric = $unique ? 'visitors' : 'visits';
-            if ($result = $gapi->requestReportData(
-                $granularity ? 'ga:date' : '',
-                'ga:' . $metric,
-                $date_from,
-                $date_to,
-                null,
-                null,
-                1,
-                5000
-            )
-            ) {
-                foreach ($result as $row) {
-                    if ($granularity == 'day') {
-                        $visits[strtotime(
-                            preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-$3', $row['dimensions']['date'])
-                        )] = $row['metrics'][$metric];
-                    } elseif ($granularity == 'month') {
-                        if (!isset(
-                            $visits[strtotime(
-                                preg_replace(
-                                    '/^([0-9]{4})([0-9]{2})([0-9]{2})$/',
-                                    '$1-$2-01',
-                                    $row['dimensions']['date']
-                                )
-                            )]
-                        )
-                        ) {
-                            $visits[strtotime(
-                                preg_replace(
-                                    '/^([0-9]{4})([0-9]{2})([0-9]{2})$/',
-                                    '$1-$2-01',
-                                    $row['dimensions']['date']
-                                )
-                            )] = 0;
-                        }
-                        $visits[strtotime(
-                            preg_replace('/^([0-9]{4})([0-9]{2})([0-9]{2})$/', '$1-$2-01', $row['dimensions']['date'])
-                        )] += $row['metrics'][$metric];
-                    } else {
-                        $visits = $row['metrics'][$metric];
-                    }
-                }
+        if ($granularity == 'day') {
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
+            SELECT date(`date_add`) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+            FROM `' . _DB_PREFIX_ . 'connections`
+            WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+            ' . Shop::addSqlRestriction() . '
+            GROUP BY date(`date_add`)'
+            );
+            foreach ($result as $row) {
+                $visits[strtotime($row['date'])] = $row['visits'];
+            }
+        } elseif ($granularity == 'month') {
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+                '
+            SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+            FROM `' . _DB_PREFIX_ . 'connections`
+            WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+            ' . Shop::addSqlRestriction() . '
+            GROUP BY LAST_DAY(`date_add`)'
+            );
+            foreach ($result as $row) {
+                $visits[strtotime($row['date'] . '-01')] = $row['visits'];
             }
         } else {
-            if ($granularity == 'day') {
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                    '
-				SELECT date(`date_add`) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction() . '
-				GROUP BY date(`date_add`)'
-                );
-                foreach ($result as $row) {
-                    $visits[strtotime($row['date'])] = $row['visits'];
-                }
-            } elseif ($granularity == 'month') {
-                $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
-                    '
-				SELECT LEFT(LAST_DAY(`date_add`), 7) as date, COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction() . '
-				GROUP BY LAST_DAY(`date_add`)'
-                );
-                foreach ($result as $row) {
-                    $visits[strtotime($row['date'] . '-01')] = $row['visits'];
-                }
-            } else {
-                $visits = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-                    '
-				SELECT COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
-				FROM `' . _DB_PREFIX_ . 'connections`
-				WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
-				' . Shop::addSqlRestriction()
-                );
-            }
+            $visits = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
+            SELECT COUNT(' . ($unique ? 'DISTINCT id_guest' : '*') . ') as visits
+            FROM `' . _DB_PREFIX_ . 'connections`
+            WHERE `date_add` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
+            ' . Shop::addSqlRestriction()
+            );
         }
 
         return $visits;
@@ -307,9 +256,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
     public static function get8020SalesCatalog($date_from, $date_to)
     {
-        $distinct_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-		SELECT COUNT(DISTINCT od.product_id)
+        $distinct_products = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(DISTINCT od.product_id)
 		FROM `' . _DB_PREFIX_ . 'orders` o
 		LEFT JOIN `' . _DB_PREFIX_ . 'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "' . pSQL($date_from) . ' 00:00:00" AND "' . pSQL($date_to) . ' 23:59:59"
@@ -425,7 +373,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			LEFT JOIN (
 				SELECT pr.`id_product`,
 					IFNULL(SUM(cp.`product_quantity`), 0) AS totalQuantitySold,
-					IFNULL(SUM(cp.`product_price` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
+					IFNULL(SUM(cp.`unit_price_tax_excl` * cp.`product_quantity`), 0) / o.conversion_rate AS totalPriceSold
 				FROM `' . _DB_PREFIX_ . 'product` pr
 				LEFT OUTER JOIN `' . _DB_PREFIX_ . 'order_detail` cp ON pr.`id_product` = cp.`product_id`
 				LEFT JOIN `' . _DB_PREFIX_ . 'orders` o ON o.`id_order` = cp.`id_order`
@@ -635,6 +583,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
         $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
         $tooltip = null;
+        $value = false;
         switch (Tools::getValue('kpi')) {
             case 'conversion_rate':
                 $visitors = AdminStatsController::getVisits(
@@ -649,17 +598,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
                     false /*'day'*/
                 );
 
-                // $data = array();
-                // $from = strtotime(date('Y-m-d 00:00:00', strtotime('-31 day')));
-                // $to = strtotime(date('Y-m-d 23:59:59', strtotime('-1 day')));
-                // for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
-                // if (isset($visitors[$date]) && $visitors[$date])
-                // $data[$date] = round(100 * ((isset($orders[$date]) && $orders[$date]) ? $orders[$date] : 0) / $visitors[$date], 2);
-                // else
-                // $data[$date] = 0;
-
-                $visits_sum = $visitors; //array_sum($visitors);
-                $orders_sum = $orders; //array_sum($orders);
+                $visits_sum = $visitors;
+                $orders_sum = $orders;
                 if ($visits_sum) {
                     $value = round(100 * $orders_sum / $visits_sum, 2);
                 } elseif ($orders_sum) {
@@ -669,7 +609,6 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 }
                 $value .= '%';
 
-                // ConfigurationKPI::updateValue('CONVERSION_RATE_CHART', json_encode($data));
                 ConfigurationKPI::updateValue('CONVERSION_RATE', $value);
                 ConfigurationKPI::updateValue(
                     'CONVERSION_RATE_EXPIRE',
@@ -1025,15 +964,22 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
                 break;
 
-            default:
-                $value = false;
+            case 'shopping_cart_total':
+                $cartId = Tools::getValue('cartId');
+                $cart = new Cart((int) $cartId);
+                if (Validate::isLoadedObject($cart)) {
+                    $value = $this->context->getCurrentLocale()->formatPrice(
+                        $cart->getCartTotalPrice(),
+                        Currency::getIsoCodeById((int) $cart->id_currency)
+                    );
+                }
+                break;
         }
         if ($value !== false) {
-            $array = ['value' => $value, 'tooltip' => $tooltip];
-            if (isset($data)) {
-                $array['data'] = $data;
-            }
-            die(json_encode($array));
+            die(json_encode([
+                'value' => $value,
+                'tooltip' => $tooltip,
+            ]));
         }
         die(json_encode(['has_errors' => true]));
     }
@@ -1057,6 +1003,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $id_employee = Tools::getValue('id_employee');
         $id_lang = Tools::getValue('id_lang');
 
+        /** @var ModuleGraph|false $graph */
         $graph = Module::getInstanceByName($module);
         if (false === $graph) {
             $this->ajaxRender(Tools::displayError());
@@ -1096,6 +1043,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
         $id_employee = (int) (Tools::getValue('id_employee'));
         $id_lang = (int) (Tools::getValue('id_lang'));
 
+        /** @var ModuleGrid|false $grid */
         $grid = Module::getInstanceByName($module);
         if (false === $grid) {
             $this->ajaxRender(Tools::displayError());

@@ -46,6 +46,7 @@ class SqlManager {
   createSqlQueryName() {
     let container = false;
     let current = false;
+
     if ($('.breadcrumb')) {
       container = $('.breadcrumb li').eq(0).text().replace(/\s+/g, ' ')
         .trim();
@@ -53,12 +54,14 @@ class SqlManager {
         .trim();
     }
     let title = false;
+
     if ($('h2.title')) {
       title = $('h2.title').first().text().replace(/\s+/g, ' ')
         .trim();
     }
 
     let name = false;
+
     if (container && current && container !== current) {
       name = `${container} > ${current}`;
     } else if (container) {

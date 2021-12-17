@@ -35,7 +35,7 @@ class CartChecksumCore implements ChecksumInterface
     }
 
     /**
-     * @param $cart
+     * @param Cart $cart
      *
      * @return string cart SHA1
      */

@@ -35,7 +35,9 @@
     {% set text %}
         <div class="sf-toolbar-info-piece">
             <div class="sf-toolbar-info-piece">
-                <b class="sf-toolbar-ajax-info">{{ collector.calledHooks|length }} Hooks called</b>
+                <b class="sf-toolbar-ajax-info">{{ collector.calledHooks|length }}
+                    Hooks called and received by modules
+                </b>
             </div>
             <div class="sf-toolbar-info-piece">
                 <table class="sf-toolbar-ajax-requests">
@@ -79,15 +81,27 @@
     {% else %}
         <div class="sf-tabs">
             <div class="tab">
-                <h3 class="tab-title">Called Hooks <span class="badge">{{ collector.calledHooks|length }}</span></h3>
-
+                <h3 class="tab-title">
+                    Hooks called and received by modules
+                    <span class="badge">{{ collector.calledHooks|length }}</span>
+                </h3>
+                <p>
+                    These hooks have been dispatched by PrestaShop and there are active modules listening and receiving them.
+                </p>
                 <div class="tab-content">
                     {{ helper.render_table(collector.calledHooks, true) }}
                 </div>
             </div>
 
             <div class="tab">
-                <h3 class="tab-title">Not Called Hooks <span class="badge">{{ collector.notCalledHooks|length }}</span></h3>
+                <h3 class="tab-title">
+                    Hooks called but not received by modules
+                    <span class="badge">{{ collector.notCalledHooks|length }}</span>
+                </h3>
+                <p>
+                    These hooks have been dispatched by PrestaShop but no modules
+                    have subscribed to them.
+                </p>
                 <div class="tab-content">
                     {% if collector.notCalledHooks is empty %}
                         <div class="empty">

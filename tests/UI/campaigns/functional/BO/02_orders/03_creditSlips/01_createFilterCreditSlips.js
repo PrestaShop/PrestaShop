@@ -1,63 +1,54 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
-const files = require('@utils/files');
 
-// Importing pages
+// Import utils
+const helper = require('@utils/helpers');
+const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
+
+// Import login steps
+const loginCommon = require('@commonTests/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
+const ordersPage = require('@pages/BO/orders/index');
+const viewOrderPage = require('@pages/BO/orders/view');
+const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
+
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
-const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 
-// Importing data
+// Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultAccount} = require('@data/demo/customer');
+const {DefaultCustomer} = require('@data/demo/customer');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-// Test context imports
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_creditSlips_createFilterCreditSlips';
 
+// Import expect from chai
+const {expect} = require('chai');
 
 let browserContext;
 let page;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const dateTodayToCheck = `${month}/${day}/${year}`;
-
 let numberOfCreditSlips = 0;
-
+const todayDate = getDateFormat('yyyy-mm-dd');
+const todayDateToCheck = getDateFormat('mm/dd/yyyy');
 
 /*
+Create order
 Create 2 credit slips for the same order
 Filter Credit slips table( by ID, Order ID, Date issued From and To)
 Download the 2 credit slip files and check them
  */
-describe('Create, filter and check credit slips file', async () => {
+describe('BO - Orders - Credit slips : Create, filter and check credit slips file', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -91,13 +82,13 @@ describe('Create, filter and check credit slips file', async () => {
     it('should sign in with default customer', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultAccount);
+      await foLoginPage.customerLogin(page, DefaultCustomer);
       const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
-    it('should create an order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
+    it('should add product to cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
       // Go to home page
       await foLoginPage.goToHomePage(page);
@@ -105,11 +96,15 @@ describe('Create, filter and check credit slips file', async () => {
       // Go to the first product page
       await homePage.goToProductPage(page, 1);
 
-      // Add the created product to the cart
-      await productPage.addProductToTheCart(page);
+      // Add the product to the cart
+      await productPage.addProductToTheCart(page, 5);
 
-      // Edit the product quantity
-      await cartPage.editProductQuantity(page, 1, 5);
+      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
+      await expect(notificationsNumber).to.be.equal(5);
+    });
+
+    it('should go to delivery step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
@@ -117,10 +112,18 @@ describe('Create, filter and check credit slips file', async () => {
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
       await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to payment step', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
 
       // Delivery step - Go to payment step
       const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
       await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should choose payment method and confirm the order', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
@@ -134,6 +137,7 @@ describe('Create, filter and check credit slips file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
 
       await orderConfirmationPage.logout(page);
+
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
@@ -144,7 +148,7 @@ describe('Create, filter and check credit slips file', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -157,10 +161,11 @@ describe('Create, filter and check credit slips file', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    it('should go to the created order page', async function () {
+    it('should go to the first order page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreatedOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
+
       const pageTitle = await viewOrderPage.getPageTitle(page);
       await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
     });
@@ -178,17 +183,12 @@ describe('Create, filter and check credit slips file', async () => {
     ];
 
     tests.forEach((test, index) => {
-      it('should add a partial refund', async function () {
+      it(`should create the partial refund n°${index}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
         await viewOrderPage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderPage.addPartialRefundProduct(
-          page,
-          test.args.productID,
-          test.args.quantity,
-        );
-
+        const textMessage = await viewOrderPage.addPartialRefundProduct(page, test.args.productID, test.args.quantity);
         await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
       });
 
@@ -196,8 +196,8 @@ describe('Create, filter and check credit slips file', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentName = await viewOrderPage.getDocumentName(page, test.args.documentRow);
-        await expect(documentName).to.be.equal('Credit slip');
+        const documentType = await viewOrderPage.getDocumentType(page, test.args.documentRow);
+        await expect(documentType).to.be.equal('Credit slip');
       });
     });
   });
@@ -282,19 +282,15 @@ describe('Create, filter and check credit slips file', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
 
       // Filter credit slips
-      await creditSlipsPage.filterCreditSlipsByDate(page, dateToday, dateToday);
+      await creditSlipsPage.filterCreditSlipsByDate(page, todayDate, todayDate);
 
       // Check number of element
       const numberOfCreditSlipsAfterFilter = await creditSlipsPage.getNumberOfElementInGrid(page);
       await expect(numberOfCreditSlipsAfterFilter).to.be.at.most(numberOfCreditSlips);
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
-        const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(
-          page,
-          i,
-          'date_add',
-        );
-        await expect(textColumn).to.contains(dateTodayToCheck);
+        const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
+        await expect(textColumn).to.contains(todayDateToCheck);
       }
     });
 
@@ -313,7 +309,7 @@ describe('Create, filter and check credit slips file', async () => {
 
   creditSlips.forEach((creditSlip) => {
     describe(`Download the ${creditSlip.args.number} Credit slips and check it`, async () => {
-      it(`should filter by the credit slip id '${creditSlip.args.id}'`, async function () {
+      it(`should filter credit slip by id '${creditSlip.args.id}'`, async function () {
         await testContext.addContextItem(
           this,
           'testIdentifier',

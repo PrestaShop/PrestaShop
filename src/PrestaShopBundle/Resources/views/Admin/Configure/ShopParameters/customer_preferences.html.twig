@@ -27,8 +27,6 @@
 
 {% block content %}
     {{ form_start(generalForm, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-    <div class="row justify-content-center">
-        {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
-    </div>
+      {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
     {{ form_end(generalForm) }}
 {% endblock %}

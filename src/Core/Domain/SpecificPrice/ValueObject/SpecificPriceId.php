@@ -26,10 +26,20 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId as ProductSpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
+        SpecificPriceId::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Holds identification data of specific price
+ * @deprecated since 8.0.0 and will be removed in the next major version.
+ * @see ProductSpecificPriceId
  */
 class SpecificPriceId
 {

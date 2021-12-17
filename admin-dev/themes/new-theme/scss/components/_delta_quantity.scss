@@ -1,0 +1,41 @@
+// stylelint-disable-next-line
+$component-name: delta-quantity;
+
+.#{$component-name} {
+  display: flex;
+  flex-direction: row;
+
+  &-quantity {
+    margin-right: 20px;
+    font-weight: $font-weight-semibold;
+
+    .quantity-update {
+      color: $brand-primary;
+      visibility: hidden;
+
+      .material-icons {
+        vertical-align: middle;
+      }
+
+      &.quantity-modified {
+        visibility: visible;
+      }
+    }
+  }
+
+  &-delta-container {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &-delta {
+    max-width: 100px;
+    margin: 0 20px;
+  }
+
+  span,
+  label {
+    margin: 0;
+    line-height: 39px;
+  }
+}

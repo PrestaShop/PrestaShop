@@ -108,7 +108,7 @@ $ret = @fpassthru($fp);
 
 fclose($fp);
 
-if ($ret === false) {
+if ((int) $ret === 0) {
     die(Context::getContext()->getTranslator()->trans(
             'Unable to display backup file(s).',
             array(),

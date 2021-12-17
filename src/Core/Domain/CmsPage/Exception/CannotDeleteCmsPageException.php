@@ -34,10 +34,10 @@ class CannotDeleteCmsPageException extends CmsPageException
     /**
      * When fails to delete single cms page
      */
-    const FAILED_DELETE = 10;
+    public const FAILED_DELETE = 10;
 
     /**
      * When fails to delete cms pages on bulk action
      */
-    const FAILED_BULK_DELETE = 20;
+    public const FAILED_BULK_DELETE = 20;
 }

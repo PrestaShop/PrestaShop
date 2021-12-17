@@ -22,10 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% extends '::base.html.twig' %}
+{% extends '@PrestaShop/base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}" />
 {% endblock %}
 
 {% block title %}

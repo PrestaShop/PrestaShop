@@ -50,7 +50,7 @@ class Repository implements RepositoryInterface
      * Max number of digits to use in the fraction part of a decimal number
      * This is a default value.
      */
-    const MAX_FRACTION_DIGITS = 3;
+    public const MAX_FRACTION_DIGITS = 3;
 
     /**
      * Repository used to retrieve low level CLDR locale objects.

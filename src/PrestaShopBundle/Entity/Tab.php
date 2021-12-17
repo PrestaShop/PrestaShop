@@ -95,18 +95,25 @@ class Tab
     private $enabled = true;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="hide_host_mode", type="boolean")
-     */
-    private $hideHostMode;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="icon", type="string", length=32, nullable=true)
      */
     private $icon;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="wording", type="string", length=255, nullable=true)
+     */
+    private $wording;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="wording_domain", type="string", length=255, nullable=true)
+     */
+    private $wordingDomain;
 
     /**
      * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="id")
@@ -143,11 +150,6 @@ class Tab
         return $this->active;
     }
 
-    public function getHideHostMode()
-    {
-        return $this->hideHostMode;
-    }
-
     public function getIcon()
     {
         return $this->icon;
@@ -156,6 +158,22 @@ class Tab
     public function getTabLangs()
     {
         return $this->tabLangs;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWording(): ?string
+    {
+        return $this->wording;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWordingDomain(): ?string
+    {
+        return $this->wordingDomain;
     }
 
     /**

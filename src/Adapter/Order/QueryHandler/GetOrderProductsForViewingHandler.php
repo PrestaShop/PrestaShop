@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -110,11 +111,15 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             $customizations = [];
             if (is_array($product['customizedDatas'])) {
                 foreach ($product['customizedDatas'] as $customizationPerAddress) {
-                    foreach ($customizationPerAddress as $customizationId => $customization) {
+                    foreach ($customizationPerAddress as $customization) {
                         $customized_product_quantity += (int) $customization['quantity'];
                         foreach ($customization['datas'] as $datas) {
                             foreach ($datas as $data) {
-                                $customizations[] = new OrderProductCustomizationForViewing((int) $data['type'], $data['name'], $data['value']);
+                                $customizations[] = new OrderProductCustomizationForViewing(
+                                    (int) $data['type'],
+                                    (string) $data['name'],
+                                    $data['value']
+                                );
                             }
                         }
                     }
@@ -170,7 +175,13 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         unset($product);
 
-        ksort($products);
+        if (QuerySorting::DESC === $query->getProductsSorting()->getValue()) {
+            // reorder products by order_detail_id DESC
+            krsort($products);
+        } else {
+            // reorder products by order_detail_id ASC
+            ksort($products);
+        }
 
         $productsForViewing = [];
 
@@ -218,17 +229,17 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     $pack_item['reference'],
                     $pack_item['supplier_reference'],
                     $pack_item['pack_quantity'],
-                    0,
-                    0,
+                    '0',
+                    '0',
                     $pack_item['current_stock'],
                     $packItemImagePath,
                     '0',
                     '0',
-                        '0',
+                    '0',
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
-                        '0',
+                    '0',
                     $pack_item['location'],
                     null,
                     '',
@@ -258,7 +269,9 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 (string) $product['displayed_max_refundable'],
                 $product['location'],
                 !empty($product['id_order_invoice']) ? $product['id_order_invoice'] : null,
-                !empty($product['id_order_invoice']) ? $orderInvoice->getInvoiceNumberFormatted($order->id_lang) : '',
+                !empty($product['id_order_invoice'])
+                    ? $orderInvoice->getInvoiceNumberFormatted((int) $order->getAssociatedLanguage()->getId())
+                    : '',
                 $productType,
                 (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
                 $packItems,
@@ -291,8 +304,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         }
 
         if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue(
-                '
+            $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
                 FROM `' . _DB_PREFIX_ . 'image` i' .
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
@@ -300,11 +312,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             );
         }
 
-        $pack_item['image'] = null;
+        $pack_item['image'] = $id_image ? new Image((int) $id_image) : null;
         $pack_item['image_size'] = null;
-
-        if ($id_image) {
-            $pack_item['image'] = new Image($id_image);
-        }
     }
 }

@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-tags
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @update-tags
 Feature: Update product tags from Back Office (BO)
   As a BO user
@@ -12,7 +13,7 @@ Feature: Update product tags from Back Office (BO)
     And I add product "product3" with following information:
       | name[en-US] | Mechanical watch |
       | name[fr-FR] | montre mécanique |
-      | is_virtual  | false            |
+      | type        | standard         |
     And product "product3" localized "name" should be:
       | locale | value            |
       | en-US  | Mechanical watch |

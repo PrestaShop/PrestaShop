@@ -47,11 +47,14 @@
       {foreach $tax_breakdowns as $label => $bd}
         {assign var=label_printed value=false}
 
-        {foreach $bd as $line}
-          {if $line.rate == 0}
+			  {foreach $bd as $line}
+          {* We force the display of the ecotax even if the ecotax rate is equals to 0 *}
+          {if $line.rate == 0 and $label != 'ecotax_tax'}
             {continue}
           {/if}
+
           {assign var=has_line value=true}
+
           <tr>
             <td class="white">
               {if !$label_printed}

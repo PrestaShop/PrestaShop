@@ -42,22 +42,22 @@ class TranslationRouteFinder
     /**
      * Mails translations type.
      */
-    const MAILS = 'mails';
+    public const MAILS = 'mails';
 
     /**
      * Modules translations type.
      */
-    const MODULES = 'modules';
+    public const MODULES = 'modules';
 
     /**
      * Email body translations type.
      */
-    const BODY = 'body';
+    public const BODY = 'body';
 
     /**
      * Themes translations type.
      */
-    const THEMES = 'themes';
+    public const THEMES = 'themes';
 
     /**
      * @var TranslationService

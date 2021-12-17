@@ -4,25 +4,27 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
 const loginCommon = require('@commonTests/loginBO');
 
-// Importing pages
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
 const emailPage = require('@pages/BO/advancedParameters/email');
+const customersPage = require('@pages/BO/customers');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
-const customersPage = require('@pages/BO/customers');
+const foCreateAccountPage = require('@pages/FO/myAccount/add');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_sendAnEmailAfterRegistration';
-
 
 let browserContext;
 let page;
@@ -40,7 +42,7 @@ Enable send an email after registration
 Create customer account
 Check that there is an email sent to the new customer in 'Advanced Parameters > Email'
  */
-describe('Enable send an email after registration', async () => {
+describe('BO - Shop Parameters - Customer Settings : Enable/Disable send an email after registration', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -98,6 +100,7 @@ describe('Enable send an email after registration', async () => {
 
     it('should create a customer account from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `createCustomerAccount${index + 1}`, baseContext);
+
       // Go to FO
       page = await customerSettingsPage.viewMyShop(page);
 
@@ -105,15 +108,22 @@ describe('Enable send an email after registration', async () => {
 
       // Create account
       await foHomePage.goToLoginPage(page);
-      await loginFOPage.createAccount(page, test.args.customer);
+      await loginFOPage.goToCreateAccountPage(page);
+      await foCreateAccountPage.createAccount(page, test.args.customer);
 
-      const connected = await loginFOPage.isCustomerConnected(page);
+      const connected = await foCreateAccountPage.isCustomerConnected(page);
       await expect(connected, 'Customer is not created in FO').to.be.true;
 
-      await loginFOPage.logout(page);
+      await foCreateAccountPage.logout(page);
+    });
 
-      // Go back to BO
-      page = await loginFOPage.closePage(browserContext, page, 0);
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackTOBO${index + 1}`, baseContext);
+
+      page = await foCreateAccountPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
 
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
@@ -139,8 +149,8 @@ describe('Enable send an email after registration', async () => {
     });
   });
 
-  describe('Delete the two created customer', async () => {
-    it('should go to customers page', async function () {
+  describe('Delete the two created customers', async () => {
+    it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
 
       await emailPage.goToSubMenu(

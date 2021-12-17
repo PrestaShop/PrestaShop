@@ -1,59 +1,57 @@
 /**
  * modal confirmation management
  */
-var modalConfirmation = (function() {
-  var modal = $('#confirmation_modal');
+window.modalConfirmation = (function () {
+  const modal = $('#confirmation_modal');
 
-  if(!modal) {
+  if (!modal) {
     throw new Error('Modal confirmation is not available');
   }
 
-  var actionsCallbacks = {
-    onCancel: function() {
+  let actionsCallbacks = {
+    onCancel() {
       console.log('modal canceled');
-      return;
     },
-    onContinue: function() {
+    onContinue() {
       console.log('modal continued');
-      return;
-    }
+    },
   };
 
-  modal.find('button.cancel').click(function() {
+  modal.find('button.cancel').click(() => {
     if (typeof actionsCallbacks.onCancel === 'function') {
       actionsCallbacks.onCancel();
     }
     modalConfirmation.hide();
   });
 
-  modal.find('button.continue').click(function() {
+  modal.find('button.continue').click(() => {
     if (typeof actionsCallbacks.onContinue === 'function') {
       actionsCallbacks.onContinue();
     }
     modalConfirmation.hide();
   });
   return {
-    'init': function init() {},
-    'create': function create(content, title, callbacks) {
-      if(title != null){
+    init: function init() {},
+    create: function create(content, title, callbacks) {
+      if (title != null) {
         modal.find('.modal-title').html(title);
       }
-      if(content != null){
+      if (content != null) {
         modal.find('.modal-body').html(content);
       }
 
       actionsCallbacks = callbacks;
       return this;
     },
-    'show': function show() {
+    show: function show() {
       modal.modal('show');
     },
-    'hide': function hide() {
+    hide: function hide() {
       modal.modal('hide');
-    }
+    },
   };
-})();
+}());
 
-BOEvent.on("Modal confirmation started", function initModalConfirmationSystem() {
+BOEvent.on('Modal confirmation started', () => {
   modalConfirmation.init();
-}, "Back office");
+}, 'Back office');

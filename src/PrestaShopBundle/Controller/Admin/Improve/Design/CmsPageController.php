@@ -114,8 +114,6 @@ class CmsPageController extends FrameworkBundleAdminController
         $cmsGridFactory = $this->get('prestashop.core.grid.factory.cms_page');
         $cmsGrid = $cmsGridFactory->getGrid($cmsFilters);
 
-        $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-
         $showcaseCardIsClosed = $this->getQueryBus()->handle(
             new GetShowcaseCardIsClosed(
                 (int) $this->getContext()->employee->id,
@@ -128,8 +126,8 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/index.html.twig',
             [
-                'cmsCategoryGrid' => $gridPresenter->present($cmsCategoryGrid),
-                'cmsGrid' => $gridPresenter->present($cmsGrid),
+                'cmsCategoryGrid' => $this->presentGrid($cmsCategoryGrid),
+                'cmsGrid' => $this->presentGrid($cmsGrid),
                 'cmsPageView' => $viewData,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
@@ -141,6 +139,8 @@ class CmsPageController extends FrameworkBundleAdminController
     }
 
     /**
+     * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
@@ -193,7 +193,7 @@ class CmsPageController extends FrameworkBundleAdminController
             $formData['page_category_id'] = $categoryParentId;
         }
         $form = $formBuilder->getForm($formData, [
-            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendy-url}'),
+            'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')->getUrl(0, '{friendly-url}'),
         ]);
         $form->handleRequest($request);
 
@@ -223,7 +223,7 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->render(
-            'PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig',
+            '@PrestaShop/Admin/Improve/Design/Cms/add.html.twig',
             [
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $categoryParentId,
@@ -260,7 +260,7 @@ class CmsPageController extends FrameworkBundleAdminController
                     'cmsPageId' => $cmsPageId,
                 ]),
                 'cms_preview_url' => $this->get('prestashop.adapter.shop.url.cms_provider')
-                    ->getUrl($cmsPageId, '{friendy-url}'),
+                    ->getUrl($cmsPageId, '{friendly-url}'),
             ]);
             $form->handleRequest($request);
         } catch (Exception $e) {
@@ -300,6 +300,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig',
             [
+                'cmsPageId' => $cmsPageId,
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $request->get('id_cms_category'),
                 'enableSidebar' => true,
@@ -352,6 +353,8 @@ class CmsPageController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Improve/Design/Cms/create_category.html.twig',
             [
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
         );
     }
@@ -415,6 +418,8 @@ class CmsPageController extends FrameworkBundleAdminController
             [
                 'cmsPageCategoryForm' => $cmsPageCategoryForm->createView(),
                 'cmsCategoryParentId' => $cmsCategoryParentId,
+                'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             ]
         );
     }
