@@ -28,42 +28,33 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 
-class FixedPrice implements FixedPriceInterface
+/**
+ * Represents "leave initial product price" option
+ */
+class InitialPrice implements FixedPriceInterface
 {
+    /**
+     * Inherited from legacy.
+     * When SpecificPrice->price has this value, it means that product initial price is used.
+     */
+    public const INITIAL_PRICE_VALUE = '-1';
+
     /**
      * @var DecimalNumber
      */
     private $value;
 
-    public function __construct(
-        string $value
-    ) {
-        $this->setValue($value);
-    }
-
-    public function getValue(): DecimalNumber
+    public function __construct()
     {
-        return $this->value;
+        $this->value = new DecimalNumber(self::INITIAL_PRICE_VALUE);
     }
 
     /**
-     * @param string $value
-     *
-     * @throws SpecificPriceConstraintException
+     * @return DecimalNumber
      */
-    private function setValue(string $value): void
+    public function getValue(): DecimalNumber
     {
-        $decimalValue = new DecimalNumber($value);
-
-        if (!$decimalValue->isNegative()) {
-            $this->value = $decimalValue;
-        }
-
-        throw new SpecificPriceConstraintException(
-            sprintf('Invalid fixed price "%s". It cannot be negative', var_export($value)),
-            SpecificPriceConstraintException::INVALID_PRICE
-        );
+        return $this->value;
     }
 }
