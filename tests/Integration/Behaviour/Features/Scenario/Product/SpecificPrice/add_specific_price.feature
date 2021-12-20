@@ -36,6 +36,23 @@ Feature: Update product options from Back Office (BO)
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
       | product               | product1            |
+    When I add a specific price price1 to product product1 with following details:
+      | reduction type  | amount |
+      | reduction value | 12.56  |
+      | includes tax    | true   |
+      | price           | -1     |
+      | from quantity   | 2      |
+    Then product "product1" should have 1 specific prices
+    And specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | price                 | -1                  |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | product               | product1            |
 
   Scenario: I add a specific price with percent reduction to product
     Given I add product "product1" with following information:
@@ -46,7 +63,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | percentage          |
       | reduction value | 12.56               |
       | includes tax    | false               |
-      | price           | -12.78              |
+      | price           | 0                   |
       | from quantity   | 1                   |
       | from            | 1969-07-20 20:17:00 |
       | to              | 1969-07-20 20:17:00 |
@@ -57,7 +74,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | percentage          |
       | reduction value       | 12.56               |
       | includes tax          | false               |
-      | price                 | -12.78              |
+      | price                 | 0                   |
       | from quantity         | 1                   |
       | from                  | 1969-07-20 20:17:00 |
       | to                    | 1969-07-20 20:17:00 |
@@ -96,6 +113,14 @@ Feature: Update product options from Back Office (BO)
       | price           | 0          |
       | from quantity   | -1         |
     Then I should get error that specific price from_quantity is invalid
+    When I add a specific price price1 to product product1 with following details:
+      | reduction type  | percentage |
+      | reduction value | 12.56      |
+      | includes tax    | false      |
+      | price           | -50        |
+      | from quantity   | 1          |
+    Then I should get error that specific price price is invalid
+    And product "product1" should have 0 specific prices
 
   Scenario: I add a specific price without relations
     Given I add product "product1" with following information:

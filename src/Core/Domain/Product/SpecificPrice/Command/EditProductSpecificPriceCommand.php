@@ -39,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -66,7 +68,7 @@ class EditProductSpecificPriceCommand
     /**
      * @var FixedPrice|null
      */
-    private $price;
+    private $fixedPrice;
 
     /**
      * @var int|null
@@ -180,21 +182,25 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return FixedPrice|null
+     * @return FixedPriceInterface|null
      */
-    public function getPrice(): ?FixedPrice
+    public function getFixedPrice(): ?FixedPriceInterface
     {
-        return $this->price;
+        return $this->fixedPrice;
     }
 
     /**
-     * @param string $price
+     * @param string $fixedPrice
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setPrice(string $price): self
+    public function setFixedPrice(string $fixedPrice): self
     {
-        $this->price = new FixedPrice($price);
+        if (InitialPrice::INITIAL_PRICE_VALUE === $fixedPrice) {
+            $this->fixedPrice = new InitialPrice();
+        } else {
+            $this->fixedPrice = new FixedPrice($fixedPrice);
+        }
 
         return $this;
     }

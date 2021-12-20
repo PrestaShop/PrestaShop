@@ -57,7 +57,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     {
         /** @var SpecificPriceForEditing $specificPriceForEditing */
         $specificPriceForEditing = $this->queryBus->handle(new GetSpecificPriceForEditing((int) $id));
-        $fixedPrice = $specificPriceForEditing->getPrice();
+        $fixedPrice = $specificPriceForEditing->getFixedPrice();
 
         $data = [
             'product_id' => $specificPriceForEditing->getProductId(),

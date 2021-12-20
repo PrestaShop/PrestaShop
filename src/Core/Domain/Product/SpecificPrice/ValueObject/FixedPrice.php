@@ -59,10 +59,12 @@ class FixedPrice implements FixedPriceInterface
 
         if (!$decimalValue->isNegative()) {
             $this->value = $decimalValue;
+
+            return;
         }
 
         throw new SpecificPriceConstraintException(
-            sprintf('Invalid fixed price "%s". It cannot be negative', var_export($value)),
+            sprintf('Invalid fixed price "%s". It cannot be negative', $value),
             SpecificPriceConstraintException::INVALID_PRICE
         );
     }
