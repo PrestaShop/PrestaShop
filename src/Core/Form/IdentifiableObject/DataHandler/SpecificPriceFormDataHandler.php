@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
@@ -53,8 +54,8 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     public function create(array $data): int
     {
         $price = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
-            FixedPrice::LEAVE_PRODUCT_INITIAL_PRICE_VALUE :
-            (string) $data['price']
+            new InitialPrice() :
+            new FixedPrice((string) $data['price'])
         ;
 
         $command = new AddProductSpecificPriceCommand(

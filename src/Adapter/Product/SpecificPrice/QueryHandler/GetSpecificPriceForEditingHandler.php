@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler\GetSpec
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\CustomerInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
 
@@ -73,13 +74,17 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     public function handle(GetSpecificPriceForEditing $query): SpecificPriceForEditing
     {
         $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
+        $fixedPrice = InitialPrice::INITIAL_PRICE_VALUE === $specificPrice->price ?
+            new InitialPrice() :
+            new FixedPrice($specificPrice->price)
+        ;
 
         return new SpecificPriceForEditing(
             (int) $specificPrice->id,
             $specificPrice->reduction_type,
             new DecimalNumber((string) $specificPrice->reduction),
             (bool) $specificPrice->reduction_tax,
-            new FixedPrice((string) $specificPrice->price),
+            $fixedPrice,
             (int) $specificPrice->from_quantity,
             DateTimeUtil::buildNullableDateTime($specificPrice->from),
             DateTimeUtil::buildNullableDateTime($specificPrice->to),

@@ -23,38 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
 use PrestaShop\Decimal\DecimalNumber;
 
-class FixedPrice implements FixedPriceInterface
+interface FixedPriceInterface
 {
-    /**
-     * @var DecimalNumber
-     */
-    private $value;
-
-    public function __construct(
-        string $value
-    ) {
-        $this->setValue($value);
-    }
-
-    public function getValue(): DecimalNumber
-    {
-        return $this->value;
-    }
-
-    private function setValue(string $value): void
-    {
-        $decimalValue = new DecimalNumber($value);
-
-        if (!$decimalValue->isNegative()) {
-            $this->value = $decimalValue;
-        }
-
-        //throw new SpecificPriceConstraintException with some code "FIXED_PRICE_INVALID".
-    }
+    public function getValue(): DecimalNumber;
 }

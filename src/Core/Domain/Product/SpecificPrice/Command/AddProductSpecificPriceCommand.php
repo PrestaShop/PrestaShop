@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -133,7 +134,7 @@ class AddProductSpecificPriceCommand
      * @param string $reductionType
      * @param string $reductionValue
      * @param bool $includeTax
-     * @param string $price
+     * @param FixedPriceInterface $price
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -144,13 +145,13 @@ class AddProductSpecificPriceCommand
         string $reductionType,
         string $reductionValue,
         bool $includeTax,
-        string $price,
+        FixedPriceInterface $price,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includesTax = $includeTax;
-        $this->price = new FixedPrice($price);
+        $this->price = $price;
         $this->fromQuantity = $fromQuantity;
         $this->shopId = new NoShopId();
         $this->combinationId = new NoCombinationId();
@@ -185,9 +186,9 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return FixedPrice
+     * @return FixedPriceInterface
      */
-    public function getPrice(): FixedPrice
+    public function getPrice(): FixedPriceInterface
     {
         return $this->price;
     }

@@ -29,32 +29,16 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
 use PrestaShop\Decimal\DecimalNumber;
 
-class FixedPrice implements FixedPriceInterface
+class InitialPrice implements FixedPriceInterface
 {
     /**
-     * @var DecimalNumber
+     * Inherited from legacy.
+     * SpecificPrice->price can have certain value which means that product initial price should be used.
      */
-    private $value;
-
-    public function __construct(
-        string $value
-    ) {
-        $this->setValue($value);
-    }
+    public const INITIAL_PRICE_VALUE = '-1';
 
     public function getValue(): DecimalNumber
     {
-        return $this->value;
-    }
-
-    private function setValue(string $value): void
-    {
-        $decimalValue = new DecimalNumber($value);
-
-        if (!$decimalValue->isNegative()) {
-            $this->value = $decimalValue;
-        }
-
-        //throw new SpecificPriceConstraintException with some code "FIXED_PRICE_INVALID".
+        return new DecimalNumber(self::INITIAL_PRICE_VALUE);
     }
 }
