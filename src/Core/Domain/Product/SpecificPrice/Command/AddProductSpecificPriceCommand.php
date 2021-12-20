@@ -389,7 +389,7 @@ class AddProductSpecificPriceCommand
      */
     private function setFixedPrice(string $value): void
     {
-        if ($value === InitialPrice::INITIAL_PRICE_VALUE) {
+        if (InitialPrice::isInitialPriceValue($value)) {
             $this->fixedPrice = new InitialPrice();
 
             return;
