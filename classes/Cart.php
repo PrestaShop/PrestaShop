@@ -4381,14 +4381,6 @@ class CartCore extends ObjectModel
             }
         }
 
-        // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
-        $new_customization_method = (int) Db::getInstance()->getValue(
-            '
-            SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
-            WHERE `id_cart` = ' . (int) $this->id .
-                ' AND `id_customization` != 0'
-        ) > 0;
-
         // Insert new customizations
         $custom_ids = [];
         foreach ($customs_by_id as $customization_id => $val) {
