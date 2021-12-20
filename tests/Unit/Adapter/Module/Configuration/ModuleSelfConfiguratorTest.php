@@ -372,6 +372,7 @@ class ConnectionMock extends Connection
 
 class StatementMock extends Statement
 {
+    /** @phpstan-ignore-next-line */
     public function __construct($sql, Connection $conn)
     {
     }

@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Addon\Theme;
+namespace Tests\Integration\Core\Addon\Theme;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
@@ -37,6 +37,9 @@ use Tests\TestCase\ContextStateTestCase;
 class ThemeRepositoryTest extends ContextStateTestCase
 {
     const NOTICE = '[ThemeRepository] ';
+    /**
+     * @var ThemeRepository
+     */
     private $repository;
 
     protected function setUp(): void
@@ -49,7 +52,6 @@ class ThemeRepositoryTest extends ContextStateTestCase
         $configuration = new Configuration();
         $configuration->restrictUpdatesTo($context->shop);
 
-        /* @var \PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository */
         $this->repository = new ThemeRepository(
             $configuration,
             new Filesystem(),

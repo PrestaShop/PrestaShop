@@ -55,8 +55,7 @@ class HookRepositoryTest extends KernelTestCase
         $this->hookRepository = new HookRepository(
             new HookInformationProvider(),
             Context::getContext()->shop,
-            Db::getInstance(),
-            _DB_PREFIX_
+            Db::getInstance()
         );
     }
 

@@ -33,6 +33,8 @@ parameters:
     - classes/lang/KeysReference
     - install-dev/theme/views
     - install-dev/theme/config.php
+    - tests/Resources
+    - tests/Unit/Core/Foundation/IoC/Fixtures
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
