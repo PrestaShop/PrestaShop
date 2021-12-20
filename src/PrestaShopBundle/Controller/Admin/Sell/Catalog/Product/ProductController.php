@@ -423,24 +423,24 @@ class ProductController extends FrameworkBundleAdminController
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
-                    'Admin.Notifications.Error'
+                    'Admin.Catalog.Notification'
                 ),
                 ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
                     'When redirecting towards a product you must select a target product.',
-                    'Admin.Notifications.Error'
+                    'Admin.Catalog.Notification'
                 ),
                 ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(
                     'To put this product online, please enter a name.',
-                    'Admin.Notifications.Error'
+                    'Admin.Catalog.Notification'
                 ),
             ],
             DuplicateFeatureValueAssociationException::class => $this->trans(
                 'You cannot associate the same feature value more than once.',
-                'Admin.Notifications.Error'
+                'Admin.Catalog.Notification'
             ),
             InvalidAssociatedFeatureException::class => $this->trans(
                 'The selected value belongs to another feature.',
-                'Admin.Notifications.Error'
+                'Admin.Catalog.Notification'
             ),
         ];
     }
