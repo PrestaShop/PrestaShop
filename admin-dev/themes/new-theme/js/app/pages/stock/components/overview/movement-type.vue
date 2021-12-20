@@ -49,7 +49,7 @@
       disabled(): boolean {
         return !this.$store.state.hasQty;
       },
-      classObject(): Record<string, any> {
+      classObject(): {'btn-primary': boolean} {
         return {
           'btn-primary': !this.disabled,
         };

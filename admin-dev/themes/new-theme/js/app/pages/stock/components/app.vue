@@ -60,6 +60,21 @@
   import Search from './header/search.vue';
   import LowFilter from './header/filters/low-filter.vue';
 
+  /* eslint-disable camelcase */
+  export interface StockFilters {
+    active?: string;
+    categories?: Array<number>;
+    date_add?: Array<any>;
+    id_employee?: Array<number>;
+    id_stock_mvt_reason?: Array<number>;
+    order?: string;
+    page_size?: number,
+    page_index?: number;
+    keywords?: any;
+    low_stock?: number | boolean | string;
+  }
+  /* eslint-enable camelcase */
+
   const FIRST_PAGE = 1;
 
   export default Vue.extend({
@@ -103,7 +118,7 @@
         this.resetPagination();
         this.fetch();
       },
-      applyFilter(filters: Record<string, any>): void {
+      applyFilter(filters: StockFilters): void {
         this.filters = filters;
         this.resetPagination();
         this.fetch();
@@ -125,7 +140,7 @@
       PSPagination,
       LowFilter,
     },
-    data: () => ({
+    data: (): {filters: StockFilters} => ({
       filters: {},
     }),
   });
