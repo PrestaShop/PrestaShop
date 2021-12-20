@@ -423,7 +423,7 @@ class ProductController extends FrameworkBundleAdminController
             ProductConstraintException::class => [
                 ProductConstraintException::INVALID_PRICE => $this->trans(
                     'Product price is invalid',
-                    'Admin.Catalog.Notification'
+                    'Admin.Notifications.Error'
                 ),
                 ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
                     'When redirecting towards a product you must select a target product.',
@@ -436,11 +436,11 @@ class ProductController extends FrameworkBundleAdminController
             ],
             DuplicateFeatureValueAssociationException::class => $this->trans(
                 'You cannot associate the same feature value more than once.',
-                'Admin.Catalog.Notification'
+                'Admin.Notifications.Error'
             ),
             InvalidAssociatedFeatureException::class => $this->trans(
                 'The selected value belongs to another feature.',
-                'Admin.Catalog.Notification'
+                'Admin.Notifications.Error'
             ),
         ];
     }
