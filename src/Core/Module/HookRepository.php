@@ -72,7 +72,7 @@ class HookRepository
      */
     public function createHook($hook_name, $title = '', $description = '', $position = 1)
     {
-        $id_hook = (int) $this->getIdByName($hook_name);
+        $id_hook = $this->getIdByName($hook_name);
         if ($id_hook > 0) {
             return $id_hook;
         }
@@ -84,7 +84,7 @@ class HookRepository
             'position' => $this->db->escape($position),
         ], false, true, Db::INSERT);
 
-        return $this->getIdByName($hook_name);
+        return $this->db->Insert_ID();
     }
 
     private function getIdModule($module_name)
