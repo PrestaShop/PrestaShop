@@ -166,7 +166,7 @@ abstract class ControllerCore
     /**
      * Errors displayed after post processing
      *
-     * @var array<string>
+     * @var array<string|int, string|bool>
      */
     public $errors = [];
 

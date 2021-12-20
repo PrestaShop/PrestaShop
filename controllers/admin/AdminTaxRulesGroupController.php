@@ -546,19 +546,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         return $tr->validateController();
     }
 
-    protected function displayAjaxUpdateTaxRule()
-    {
-        if ($this->access('view')) {
-            $id_tax_rule = Tools::getValue('id_tax_rule');
-            $tax_rules = new TaxRule((int) $id_tax_rule);
-            $output = [];
-            foreach ($tax_rules as $key => $result) {
-                $output[$key] = $result;
-            }
-            die(json_encode($output));
-        }
-    }
-
     /**
      * @param TaxRulesGroup $object
      *
