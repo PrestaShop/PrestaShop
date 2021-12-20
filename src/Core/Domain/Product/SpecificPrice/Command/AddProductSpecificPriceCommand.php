@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -70,9 +72,9 @@ class AddProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var FixedPrice
+     * @var FixedPriceInterface
      */
-    private $price;
+    private $fixedPrice;
 
     /**
      * @var int
@@ -133,7 +135,7 @@ class AddProductSpecificPriceCommand
      * @param string $reductionType
      * @param string $reductionValue
      * @param bool $includeTax
-     * @param string $price
+     * @param string $fixedPrice
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -144,13 +146,13 @@ class AddProductSpecificPriceCommand
         string $reductionType,
         string $reductionValue,
         bool $includeTax,
-        string $price,
+        string $fixedPrice,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
+        $this->setFixedPrice($fixedPrice);
         $this->includesTax = $includeTax;
-        $this->price = new FixedPrice($price);
         $this->fromQuantity = $fromQuantity;
         $this->shopId = new NoShopId();
         $this->combinationId = new NoCombinationId();
@@ -185,11 +187,11 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return FixedPrice
+     * @return FixedPriceInterface
      */
-    public function getPrice(): FixedPrice
+    public function getFixedPrice(): FixedPriceInterface
     {
-        return $this->price;
+        return $this->fixedPrice;
     }
 
     /**
@@ -380,5 +382,19 @@ class AddProductSpecificPriceCommand
         $this->customerId = $customerId;
 
         return $this;
+    }
+
+    /**
+     * @param string $value
+     */
+    private function setFixedPrice(string $value): void
+    {
+        if ($value === InitialPrice::INITIAL_PRICE_VALUE) {
+            $this->fixedPrice = new InitialPrice();
+
+            return;
+        }
+
+        $this->fixedPrice = new FixedPrice($value);
     }
 }

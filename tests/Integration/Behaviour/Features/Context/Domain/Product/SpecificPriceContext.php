@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Customer
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -86,7 +87,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            new FixedPrice($dataRows['price']),
+            $dataRows['price'] === InitialPrice::INITIAL_PRICE_VALUE ? new InitialPrice() : new FixedPrice($dataRows['price']),
             (int) $dataRows['from quantity'],
             DateTimeUtil::buildNullableDateTime($dataRows['from']),
             DateTimeUtil::buildNullableDateTime($dataRows['to']),
@@ -203,7 +204,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             );
         }
 
-        $specificPriceDecimalProperties = ['reductionAmount', 'price'];
+        $specificPriceDecimalProperties = ['reductionAmount', 'fixedPrice.value'];
         foreach ($specificPriceDecimalProperties as $decimalProperty) {
             /** @var DecimalNumber $expectedNumber */
             $expectedNumber = $propertyAccessor->getValue($expectedSpecificPrice, $decimalProperty);
@@ -354,7 +355,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $editCommand->setIncludesTax(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']));
         }
         if (isset($dataRows['price'])) {
-            $editCommand->setPrice($dataRows['price']);
+            $editCommand->setFixedPrice($dataRows['price']);
         }
         if (isset($dataRows['from quantity'])) {
             $editCommand->setFromQuantity((int) $dataRows['from quantity']);

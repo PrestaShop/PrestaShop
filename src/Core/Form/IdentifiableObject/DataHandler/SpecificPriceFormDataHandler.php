@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
@@ -52,8 +52,8 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data): int
     {
-        $price = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
-            FixedPrice::LEAVE_PRODUCT_INITIAL_PRICE_VALUE :
+        $fixedPrice = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
+            InitialPrice::INITIAL_PRICE_VALUE :
             (string) $data['price']
         ;
 
@@ -62,7 +62,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             $data['reduction']['type'],
             (string) $data['reduction']['value'],
             (bool) $data['include_tax'],
-            $price,
+            $fixedPrice,
             (int) $data['from_quantity']
         );
 
@@ -80,9 +80,9 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         $this->fillRelations($command, $data);
 
         if (isset($data['leave_initial_price']) && $data['leave_initial_price']) {
-            $command->setPrice(FixedPrice::LEAVE_PRODUCT_INITIAL_PRICE_VALUE);
+            $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
         } elseif (isset($data['price'])) {
-            $command->setPrice((string) $data['price']);
+            $command->setFixedPrice((string) $data['price']);
         }
 
         if (isset($data['from_quantity'])) {
