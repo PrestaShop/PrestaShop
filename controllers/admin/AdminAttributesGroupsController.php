@@ -25,7 +25,7 @@
  */
 
 /**
- * @property AttributeGroup $object
+ * @property AttributeGroup|ProductAttribute $object
  */
 class AdminAttributesGroupsControllerCore extends AdminController
 {
@@ -482,7 +482,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (Combination::isFeatureActive()) {
             if ($this->display == 'edit' || $this->display == 'add') {
-                if (!($this->object = $this->loadObject(true))) {
+                /** @var AttributeGroup $object */
+                $object = $this->loadObject(true);
+                if (!($this->object = $object)) {
                     return;
                 }
                 $this->content .= $this->renderForm();

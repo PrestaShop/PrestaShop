@@ -8,6 +8,21 @@
 .stock-app {
   padding: 0;
 
+  .header-toolbar {
+    z-index: 989;
+    padding-left: 0;
+    margin: -($grid-gutter-width / 2);
+    margin-bottom: 1rem;
+
+    @at-root .multishop-enabled & {
+      top: 4.95rem;
+
+      @include media-breakpoint-down(md) {
+        top: 6.2rem;
+      }
+    }
+  }
+
   .table {
     td:first-child {
       // product description inside the product column
@@ -33,7 +48,7 @@
 
     .alert-box {
       position: fixed;
-      top: 40px;
+      top: 4rem;
       right: 5px;
       z-index: 1000; // above header toolbar
       padding-top: 28px;
@@ -305,4 +320,8 @@
       }
     }
   }
+}
+
+.adminstockmanagement > .header-toolbar .container-fluid {
+  display: none;
 }

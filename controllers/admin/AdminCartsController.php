@@ -329,8 +329,8 @@ class AdminCartsControllerCore extends AdminController
             $this->context->cart = new Cart((int) $id_cart);
 
             if (!$this->context->cart->id) {
-                $this->context->cart->recyclable = 0;
-                $this->context->cart->gift = 0;
+                $this->context->cart->recyclable = false;
+                $this->context->cart->gift = false;
             }
 
             if (!$this->context->cart->id_customer) {
@@ -622,7 +622,7 @@ class AdminCartsControllerCore extends AdminController
                 $cart_rule->reduction_currency = (int) $this->context->cart->id_currency;
                 $cart_rule->date_from = date('Y-m-d H:i:s', time());
                 $cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-                $cart_rule->active = 1;
+                $cart_rule->active = true;
                 $cart_rule->add();
             } else {
                 $cart_rule = new CartRule((int) $id_cart_rule);

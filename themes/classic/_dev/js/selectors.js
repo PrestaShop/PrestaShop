@@ -46,6 +46,7 @@ prestashop.themeSelectors = {
     searchFilters: '#search_filters',
     activeSearchFilters: '#js-active-search-filters',
     listTop: '#js-product-list-top',
+    product: '.js-product',
     list: '#js-product-list',
     listBottom: '#js-product-list-bottom',
     listHeader: '#js-product-list-header',

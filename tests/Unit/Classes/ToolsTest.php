@@ -103,7 +103,6 @@ class ToolsTest extends TestCase
         $this->setPostAndGet([
             '' => true,
             ' ' => true,
-            null => true,
         ]);
 
         $this->assertFalse(Tools::getValue('', true));

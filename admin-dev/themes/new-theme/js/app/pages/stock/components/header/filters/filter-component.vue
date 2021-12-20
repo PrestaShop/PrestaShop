@@ -109,7 +109,7 @@
       hasPlaceholder(): boolean {
         return !this.tags.length;
       },
-      PSTreeTranslations(): Record<string, any> {
+      PSTreeTranslations(): {expand: string, reduce: string} {
         return {
           expand: this.trans('tree_expand'),
           reduce: this.trans('tree_reduce'),
@@ -118,7 +118,14 @@
     },
     methods: {
       getItems(): Array<any> {
-        const matchList: Record<string, any> = [];
+        /* eslint-disable camelcase */
+        const matchList: Array<{
+          id: number,
+          name: string,
+          supplier_id: number,
+          visible: boolean,
+        }> = [];
+        /* eslint-enable camelcase */
         this.list.filter((data: any) => {
           const label = data[this.label].toLowerCase();
           data.visible = false;

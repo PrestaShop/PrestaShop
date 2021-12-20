@@ -72,7 +72,7 @@
       id(): string {
         return `qty-${this.product.product_id}-${this.product.combination_id}`;
       },
-      classObject(): Record<string, any> {
+      classObject(): {active: boolean, disabled: boolean} {
         return {
           active: this.isActive,
           disabled: !this.isEnabled,

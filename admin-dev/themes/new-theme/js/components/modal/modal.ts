@@ -202,6 +202,15 @@ export class Modal implements ModalType {
     document.body.appendChild(this.modal.container);
   }
 
+  setTitle(modalTitle: string): void {
+    if (!this.modal.title) {
+      this.modal.title = document.createElement('h4');
+      this.modal.title.classList.add('modal-title');
+      this.modal.header.insertBefore(this.modal.title, this.modal.closeIcon);
+    }
+    this.modal.title.innerHTML = modalTitle;
+  }
+
   render(content: string): void {
     this.modal.message.innerHTML = content;
   }

@@ -148,11 +148,23 @@
 </template>
 
 <script lang="ts">
+  /* eslint-disable camelcase */
   import Vue from 'vue';
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
   import FilterComponent from './filters/filter-component.vue';
+
+  export interface StockCategory {
+    active: number;
+    children: Array<StockCategory>;
+    id: string;
+    id_category: number;
+    id_parent: number;
+    name: string;
+    position: string;
+    visible: boolean;
+  }
 
   export default Vue.extend({
     computed: {
@@ -162,13 +174,13 @@
       isOverview(): boolean {
         return this.$route.name === 'overview';
       },
-      employees(): Record<string, any> {
+      employees(): Array<{id_employee: number, name: string}> {
         return this.$store.state.employees;
       },
-      movementsTypes(): Record<string, any> {
+      movementsTypes(): Array<{id_stock_mvt_reason: Array<number>, name: string}> {
         return this.$store.state.movementsTypes;
       },
-      categoriesList(): Record<string, any> {
+      categoriesList(): Array<StockCategory> {
         return this.$store.getters.categories;
       },
     },

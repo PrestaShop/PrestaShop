@@ -73,6 +73,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: cron-js-routing
+          add-paths: |
+            admin-dev/themes/new-theme/js/fos_js_routes.json
           commit-message: Updated JS Routing file
           committer: PrestonBot <noreply@github.com>
           author: prestonBot <prestonBot@users.noreply.github.com>

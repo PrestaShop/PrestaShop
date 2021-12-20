@@ -528,7 +528,7 @@ class AdminCarriersControllerCore extends AdminController
         if (!Validate::isLoadedObject($carrier)) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
-        $carrier->is_free = $carrier->is_free ? 0 : 1;
+        $carrier->is_free = !$carrier->is_free;
         if (!$carrier->update()) {
             $this->errors[] = $this->trans('An error occurred while updating carrier information.', [], 'Admin.Shipping.Notification');
         }
@@ -588,11 +588,11 @@ class AdminCarriersControllerCore extends AdminController
     /**
      * @param Carrier $object
      *
-     * @return int
+     * @return bool
      */
     protected function beforeDelete($object)
     {
-        return $object->isUsed();
+        return (bool) $object->isUsed();
     }
 
     protected function changeGroups($id_carrier, $delete = true)

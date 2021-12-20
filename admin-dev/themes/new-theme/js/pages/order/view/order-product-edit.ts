@@ -31,6 +31,20 @@ import OrderPrices from '@pages/order/view/order-prices';
 import ConfirmModal from '@components/modal';
 import OrderPricesRefresher from '@pages/order/view/order-prices-refresher';
 
+export interface DisplayedProduct {
+  /* eslint-disable camelcase */
+  price_tax_excl: number;
+  price_tax_incl: number;
+  tax_rate: number;
+  /* eslint-enable camelcase */
+  quantity: number;
+  location: string;
+  availableQuantity: number;
+  availableOutOfStock: string;
+  orderInvoiceId: string;
+  isOrderTaxIncluded: number;
+}
+
 const {$} = window;
 
 export default class OrderProductEdit {
@@ -82,7 +96,7 @@ export default class OrderProductEdit {
 
   locationText: JQuery | null;
 
-  isOrderTaxIncluded: boolean | null;
+  isOrderTaxIncluded: number | null;
 
   constructor(orderDetailId: number) {
     this.router = new Router();
@@ -203,7 +217,7 @@ export default class OrderProductEdit {
     this.productEditSaveBtn.prop('disabled', updatedTotal === this.initialTotal);
   }
 
-  displayProduct(product: Record<string, any>): void {
+  displayProduct(product: DisplayedProduct): void {
     this.productRowEdit = $(OrderViewPageMap.productEditRowTemplate).clone(true);
     this.productRowEdit.attr('id', `editOrderProduct_${this.orderDetailId}`);
     this.productRowEdit.find('*[id]').each(function removeAllIds() {
@@ -260,7 +274,7 @@ export default class OrderProductEdit {
       this.productRow.find(OrderViewPageMap.productEditName).html(),
     );
     this.locationText.html(product.location);
-    this.availableText.html(product.availableQuantity);
+    this.availableText.html(<string><unknown>product.availableQuantity);
     this.priceTotalText.html(<string><unknown> this.initialTotal);
     this.productRow.addClass('d-none').after(this.productRowEdit.removeClass('d-none'));
 

@@ -183,7 +183,8 @@ class LayoutExtension extends AbstractExtension implements GlobalsInterface
         $helpLink = '',
         $jsRouterMetadata = [],
         $metaTitle = '',
-        $useRegularH1Structure = true
+        $useRegularH1Structure = true,
+        $baseLayout = 'layout.tpl'
     ) {
         if ($this->environment == 'test') {
             return <<<'EOF'
@@ -215,7 +216,8 @@ EOF;
             $helpLink,
             $jsRouterMetadata,
             $metaTitle,
-            $useRegularH1Structure
+            $useRegularH1Structure,
+            $baseLayout
         );
 
         //test if legacy template from "content.tpl" has '{$content}'

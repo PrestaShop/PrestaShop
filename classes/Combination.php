@@ -507,7 +507,7 @@ class CombinationCore extends ObjectModel
         $query = new DbQuery();
         $query->select('pa.id_product_attribute');
         $query->from('product_attribute', 'pa');
-        $query->where('pa.reference LIKE \'%' . pSQL($reference) . '%\'');
+        $query->where('pa.reference = \'' . pSQL($reference) . '\'');
         $query->where('pa.id_product = ' . (int) $idProduct);
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);

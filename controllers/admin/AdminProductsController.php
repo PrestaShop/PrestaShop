@@ -30,8 +30,9 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
  */
 class AdminProductsControllerCore extends AdminController
 {
-    /** @var int Max image size for upload
-     * As of 1.5 it is recommended to not set a limit to max image size
+    /**
+     * @var int Max image size for upload
+     *          As of 1.5 it is recommended to not set a limit to max image size
      */
     protected $max_file_size = null;
     protected $max_image_size = null;
@@ -129,7 +130,6 @@ class AdminProductsControllerCore extends AdminController
         foreach (Language::getIDs(false) as $id_lang) {
             if (isset($_POST['meta_keywords_' . $id_lang])) {
                 $_POST['meta_keywords_' . $id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_' . $id_lang]));
-                // preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
                 $object->meta_keywords[$id_lang] = $_POST['meta_keywords_' . $id_lang];
             }
         }
@@ -139,31 +139,31 @@ class AdminProductsControllerCore extends AdminController
         $_POST['weight'] = empty($_POST['weight']) ? '0' : str_replace(',', '.', $_POST['weight']);
 
         if (Tools::getIsset('unit_price') != null) {
-            $object->unit_price = str_replace(',', '.', Tools::getValue('unit_price'));
+            $object->unit_price = (float) str_replace(',', '.', Tools::getValue('unit_price'));
         }
         if (Tools::getIsset('ecotax') != null) {
-            $object->ecotax = str_replace(',', '.', Tools::getValue('ecotax'));
+            $object->ecotax = (float) str_replace(',', '.', Tools::getValue('ecotax'));
         }
 
         if ($this->isTabSubmitted('Informations')) {
             if ($this->checkMultishopBox('available_for_order', $this->context)) {
-                $object->available_for_order = (int) Tools::getValue('available_for_order');
+                $object->available_for_order = (bool) Tools::getValue('available_for_order');
             }
 
             if ($this->checkMultishopBox('show_price', $this->context)) {
-                $object->show_price = $object->available_for_order ? 1 : (int) Tools::getValue('show_price');
+                $object->show_price = $object->available_for_order || (bool) Tools::getValue('show_price');
             }
 
             if ($this->checkMultishopBox('online_only', $this->context)) {
-                $object->online_only = (int) Tools::getValue('online_only');
+                $object->online_only = (bool) Tools::getValue('online_only');
             }
 
             if ($this->checkMultishopBox('show_condition', $this->context)) {
-                $object->show_condition = (int) Tools::getValue('show_condition');
+                $object->show_condition = (bool) Tools::getValue('show_condition');
             }
         }
         if ($this->isTabSubmitted('Prices')) {
-            $object->on_sale = (int) Tools::getValue('on_sale');
+            $object->on_sale = (bool) Tools::getValue('on_sale');
         }
     }
 
@@ -201,7 +201,7 @@ class AdminProductsControllerCore extends AdminController
      * @param string $orderWay
      * @param int $start
      * @param int $limit
-     * @param null $id_lang_shop
+     * @param int|null $id_lang_shop
      *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
@@ -546,8 +546,8 @@ class AdminProductsControllerCore extends AdminController
                 $product->id_product
             );
 
-            $product->indexed = 0;
-            $product->active = 0;
+            $product->indexed = false;
+            $product->active = false;
             if ($product->add()
             && Category::duplicateProductCategories($id_product_old, $product->id)
             && Product::duplicateSuppliers($id_product_old, $product->id)
@@ -634,7 +634,7 @@ class AdminProductsControllerCore extends AdminController
             } elseif (Tools::getIsset('coverImage')) {
                 /* Choose product cover image */
                 Image::deleteCover($image->id_product);
-                $image->cover = 1;
+                $image->cover = true;
                 if (!$image->update()) {
                     $this->errors[] = $this->trans('You cannot change the product\'s cover image.', [], 'Admin.Catalog.Notification');
                 } else {
@@ -1514,7 +1514,7 @@ class AdminProductsControllerCore extends AdminController
         }
         Image::deleteCover((int) Tools::getValue('id_product'));
         $img = new Image((int) Tools::getValue('id_image'));
-        $img->cover = 1;
+        $img->cover = true;
 
         @unlink(_PS_TMP_IMG_DIR_ . 'product_' . (int) $img->id_product . '.jpg');
         @unlink(_PS_TMP_IMG_DIR_ . 'product_mini_' . (int) $img->id_product . '_' . $this->context->shop->id . '.jpg');
@@ -1534,7 +1534,6 @@ class AdminProductsControllerCore extends AdminController
         $id_image = $id_image ? $id_image : (int) Tools::getValue('id_image');
 
         $image = new Image($id_image);
-        $this->content['id'] = $image->id;
         $res &= $image->delete();
         // if deleted image was the cover, change it to the first one
         if (!Image::getCover($image->id_product)) {
@@ -1776,7 +1775,7 @@ class AdminProductsControllerCore extends AdminController
                     $warehouse_location_entity = new WarehouseProductLocation();
                     $warehouse_location_entity->id_product = $this->object->id;
                     $warehouse_location_entity->id_product_attribute = 0;
-                    $warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
+                    $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
                     $warehouse_location_entity->location = pSQL('');
                     $warehouse_location_entity->save();
                 }
@@ -2278,7 +2277,7 @@ class AdminProductsControllerCore extends AdminController
                 $id_product_download = Tools::getValue('virtual_product_id');
             }
 
-            $is_shareable = Tools::getValue('virtual_product_is_shareable');
+            $is_shareable = (bool) Tools::getValue('virtual_product_is_shareable');
             $virtual_product_name = Tools::getValue('virtual_product_name');
             $virtual_product_nb_days = Tools::getValue('virtual_product_nb_days');
             $virtual_product_nb_downloable = Tools::getValue('virtual_product_nb_downloable');
@@ -2292,8 +2291,8 @@ class AdminProductsControllerCore extends AdminController
             $download->date_expiration = $virtual_product_expiration_date ? $virtual_product_expiration_date . ' 23:59:59' : '';
             $download->nb_days_accessible = (int) $virtual_product_nb_days;
             $download->nb_downloadable = (int) $virtual_product_nb_downloable;
-            $download->active = 1;
-            $download->is_shareable = (int) $is_shareable;
+            $download->active = true;
+            $download->is_shareable = $is_shareable;
             if ($download->save()) {
                 return true;
             }
@@ -2311,7 +2310,7 @@ class AdminProductsControllerCore extends AdminController
             if (!empty($id_product_download)) {
                 $product_download = new ProductDownload((int) $id_product_download);
                 $product_download->date_expiration = date('Y-m-d H:i:s', time() - 1);
-                $product_download->active = 0;
+                $product_download->active = false;
 
                 return $product_download->save();
             }
@@ -2814,11 +2813,7 @@ class AdminProductsControllerCore extends AdminController
                 }
             }
 
-            if (!Image::getCover($image->id_product)) {
-                $image->cover = 1;
-            } else {
-                $image->cover = 0;
-            }
+            $image->cover = !Image::getCover($image->id_product);
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                 $file['error'] = $validate;
@@ -3223,7 +3218,7 @@ class AdminProductsControllerCore extends AdminController
                     die('error: invalid id');
                 }
 
-                $product->active = 1;
+                $product->active = true;
 
                 if ($product->save()) {
                     die($bo_product_url);

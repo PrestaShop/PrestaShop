@@ -180,7 +180,7 @@ class AdminControllerCore extends Controller
     /** @var string|array Toolbar title */
     protected $toolbar_title;
 
-    /** @var array List of toolbar buttons */
+    /** @var array|null List of toolbar buttons */
     protected $toolbar_btn = null;
 
     /** @var bool Scrolling toolbar */
@@ -213,7 +213,7 @@ class AdminControllerCore extends Controller
     /** @var int Default number of results in list per page */
     protected $_default_pagination = 50;
 
-    /** @var string ORDER BY clause determined by field/arrows in list header */
+    /** @var string|null ORDER BY clause determined by field/arrows in list header */
     protected $_orderBy;
 
     /** @var string Order way (ASC, DESC) determined by arrows in list header */
@@ -336,7 +336,7 @@ class AdminControllerCore extends Controller
     /** @var string Action to perform : 'edit', 'view', 'add', ... */
     protected $action;
 
-    /** @var string */
+    /** @var string|null */
     protected $display;
 
     /** @var array */
@@ -974,7 +974,7 @@ class AdminControllerCore extends Controller
     /**
      * @TODO uses redirectAdmin only if !$this->ajax
      *
-     * @return ObjectModel|bool
+     * @return ObjectModel|bool|void
      */
     public function postProcess()
     {

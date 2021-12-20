@@ -83,6 +83,7 @@ class ContainerBuilderTest extends TestCase
         $container = ContainerBuilder::getContainer('front', true);
         $frontRepository = $container->get('ps_banner.front_repository');
         $this->assertNotNull($frontRepository);
+        /* @phpstan-ignore-next-line */
         $this->assertInstanceOf(FrontRepository::class, $frontRepository);
     }
 

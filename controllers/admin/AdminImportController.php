@@ -1425,10 +1425,10 @@ class AdminImportControllerCore extends AdminController
             } else {
                 $category_to_create = new Category();
                 $category_to_create->name = AdminImportController::createMultiLangField($category->parent);
-                $category_to_create->active = 1;
+                $category_to_create->active = true;
                 $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$id_lang]);
                 $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
-                $category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+                $category_to_create->id_parent = (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 
                 if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                     ($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
@@ -1895,8 +1895,8 @@ class AdminImportControllerCore extends AdminController
                         $category_to_create = new Category();
                         $category_to_create->id = (int) $value;
                         $category_to_create->name = AdminImportController::createMultiLangField($value);
-                        $category_to_create->active = 1;
-                        $category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+                        $category_to_create->active = true;
+                        $category_to_create->id_parent = (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
                         $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
                         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
                         if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1995,7 +1995,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         // Indexation is already 0 if it's a new product, but not if it's an update
-        $product->indexed = 0;
+        $product->indexed = false;
         $productExistsInDatabase = false;
 
         if ($product->id && Product::existsInDatabase((int) $product->id, 'product')) {
@@ -2448,7 +2448,7 @@ class AdminImportControllerCore extends AdminController
             $category_to_create->id_shop_default = (int) Context::getContext()->shop->id;
         }
         $category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
-        $category_to_create->active = 1;
+        $category_to_create->active = true;
         $category_to_create->id_parent = (int) $id_parent_category ? (int) $id_parent_category : (int) Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
         $category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
         $category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
@@ -3349,11 +3349,11 @@ class AdminImportControllerCore extends AdminController
                 $address->id_country = (int) $id_country;
             } else {
                 $country = new Country();
-                $country->active = 1;
+                $country->active = true;
                 $country->name = AdminImportController::createMultiLangField($address->country);
                 $country->id_zone = 0; // Default zone for country to create
                 $country->iso_code = Tools::strtoupper(Tools::substr($address->country, 0, 2)); // Default iso for country to create
-                $country->contains_states = 0; // Default value for country to create
+                $country->contains_states = false; // Default value for country to create
                 $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                     ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
@@ -3388,7 +3388,7 @@ class AdminImportControllerCore extends AdminController
                 $address->id_state = (int) $id_state;
             } else {
                 $state = new State();
-                $state->active = 1;
+                $state->active = true;
                 $state->name = $address->state;
                 $state->id_country = isset($country->id) ? (int) $country->id : 0;
                 $state->id_zone = 0; // Default zone for state to create
@@ -3984,11 +3984,11 @@ class AdminImportControllerCore extends AdminController
                 $store->id_country = (int) $id_country;
             } else {
                 $country = new Country();
-                $country->active = 1;
+                $country->active = true;
                 $country->name = AdminImportController::createMultiLangField($store->country);
                 $country->id_zone = 0; // Default zone for country to create
                 $country->iso_code = Tools::strtoupper(Tools::substr($store->country, 0, 2)); // Default iso for country to create
-                $country->contains_states = 0; // Default value for country to create
+                $country->contains_states = false; // Default value for country to create
                 $lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
                 if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
                     ($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
@@ -4023,7 +4023,7 @@ class AdminImportControllerCore extends AdminController
                 $store->id_state = (int) $id_state;
             } else {
                 $state = new State();
-                $state->active = 1;
+                $state->active = true;
                 $state->name = $store->state;
                 $state->id_country = isset($country->id) ? (int) $country->id : 0;
                 $state->id_zone = 0; // Default zone for state to create
@@ -4667,6 +4667,7 @@ class AdminImportControllerCore extends AdminController
             }
             $import_type = false;
             $doneCount = 0;
+            /** @var array<string> $moreStepLabels */
             $moreStepLabels = [];
             // Sometime, import will use registers to memorize data across all elements to import (for trees, or else).
             // Since import is splitted in multiple ajax calls, we must keep these data across all steps of the full import.

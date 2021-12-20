@@ -46,6 +46,7 @@ $component-name: modal;
           height: 100%;
           border: none;
           scroll-behavior: auto;
+          @include border-radius(0 0 6px 6px);
         }
       }
     }
@@ -61,5 +62,6 @@ $component-name: modal;
     height: 100%;
     min-height: 80px;
     background: rgba(255, 255, 255, 1);
+    @include border-radius(0 0 6px 6px);
   }
 }

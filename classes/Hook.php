@@ -774,6 +774,10 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
+        if ($use_push) {
+            Tools::displayParameterAsDeprecated('use_push');
+        }
+
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
             return $array_return ? [] : null;
         }
@@ -913,20 +917,12 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ($use_push && !$moduleInstance->allow_push) {
-                continue;
-            }
-
             if ($isRegistryEnabled) {
                 $hookRegistry->hookedByModule($moduleInstance);
             }
 
             if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
-
-                if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
-                    Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
-                }
 
                 if (0 !== $key && true === $chain) {
                     $hook_args = $output;

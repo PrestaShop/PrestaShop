@@ -205,11 +205,6 @@ abstract class ModuleCore implements ModuleInterface
      */
     protected $tabs = [];
 
-    /** @var bool If true, allow push */
-    public $allow_push;
-
-    public $push_time_limit = 180;
-
     /** @var bool Define if we will log modules performances for this session */
     public static $_log_modules_perfs = null;
     /** @var bool Random session for modules perfs logs */
@@ -2187,7 +2182,6 @@ abstract class ModuleCore implements ModuleInterface
             $this->smarty->assign([
                 'module_dir' => __PS_BASE_URI__ . 'modules/' . basename($file, '.php') . '/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__) . 'modules/' . basename($file, '.php') . '/',
-                'allow_push' => $this->allow_push,
             ]);
 
             if ($cache_id !== null) {
