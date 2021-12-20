@@ -970,6 +970,10 @@ class CartCore extends ObjectModel
                 break;
         }
 
+        // Update unit price in case cart reductions happened
+        $row['unit_price'] = $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction_without_tax'] / $row['unit_price_ratio'] : 0.0;
+        $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction'] / $row['unit_price_ratio'] : 0.0;
+
         $row['price_wt'] = $row['price_with_reduction'];
         $row['description_short'] = Tools::nl2br($row['description_short']);
 
