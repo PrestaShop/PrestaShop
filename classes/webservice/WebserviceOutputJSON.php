@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,196 +26,69 @@
  */
 class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
-    public $docUrl = '';
-    public $languages = [];
-    protected $wsUrl;
-    protected $schemaToDisplay;
-
-    /**
-     * Current entity.
-     */
-    protected $currentEntity;
-
-    /**
-     * Current association.
-     */
-    protected $currentAssociatedEntity = [];
-
-    /**
-     * Json content.
-     */
-    protected $content = [];
-
-    public function __construct($languages = [])
-    {
-        $this->languages = $languages;
-    }
-
-    public function setSchemaToDisplay($schema)
-    {
-        if (is_string($schema)) {
-            $this->schemaToDisplay = $schema;
-        }
-
-        return $this;
-    }
-
-    public function getSchemaToDisplay()
-    {
-        return $this->schemaToDisplay;
-    }
-
-    public function setWsUrl($url)
-    {
-        $this->wsUrl = $url;
-
-        return $this;
-    }
-
-    public function getWsUrl()
-    {
-        return $this->wsUrl;
-    }
-
     public function getContentType()
     {
         return 'application/json';
     }
 
-    public function renderErrors($message, $code = null)
+    /**
+     * Main function used to render node in desired format
+     *
+     * @param ApiNode $apiNode
+     * @param int $type_of_view Use constants WebserviceOutputBuilderCore::VIEW_DETAILS / WebserviceOutputBuilderCore::VIEW_LIST
+     *
+     * @return string json-encoded string
+     */
+    public function renderNode($apiNode)
     {
-        $this->content['errors'][] = ['code' => $code, 'message' => $message];
-
-        return '';
-    }
-
-    public function renderField($field)
-    {
-        $is_association = (isset($field['is_association']) && $field['is_association'] == true);
-
-        if (is_array($field['value'])) {
-            $tmp = [];
-            foreach ($this->languages as $id_lang) {
-                $tmp[] = ['id' => $id_lang, 'value' => $field['value'][$id_lang]];
-            }
-            if (count($tmp) == 1) {
-                $field['value'] = $tmp[0]['value'];
-            } else {
-                $field['value'] = $tmp;
-            }
-        }
-        // Case 1 : fields of the current entity (not an association)
-        if (!$is_association) {
-            $this->currentEntity[$field['sqlId']] = $field['value'];
-        } else { // Case 2 : fields of an associated entity to the current one
-            $this->currentAssociatedEntity[] = ['name' => $field['entities_name'], 'key' => $field['sqlId'], 'value' => $field['value']];
+        if ($apiNode->getType() == ApiNode::TYPE_LIST) {
+            $jsonArray = [$apiNode->getName() => $this->toJsonArray($apiNode)];
+        } else {
+            $jsonArray = $this->toJsonArray($apiNode);
         }
 
-        return '';
+        return json_encode($jsonArray, JSON_UNESCAPED_UNICODE);
     }
 
-    public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
+    /**
+     * Transform tree structure of desired node to array, suitable for JSON output.
+     * JSON output completely ignores attributes - those are used just in XML output.
+     *
+     * @param ApiNode $apiNode
+     *
+     * @return array|string Node type ApiNode::TYPE_NODE returns just value as string.
+     *                      Node type ApiNode::TYPE_PARENT returns recursive array of underlying nodes in the form of [Name => [... subnodes ...]]
+     *                      Node type ApiNode::TYPE_LIST returns recursive array of underlying nodes in the form of [[... subnodes ...]]
+     */
+    private function toJsonArray($apiNode)
     {
-        // api ?
-        static $isAPICall = false;
-        if ($node_name == 'api' && ($isAPICall == false)) {
-            $isAPICall = true;
+        switch ($apiNode->getType()) {
+            case ApiNode::TYPE_VALUE:
+                return $apiNode->getValue();
+            case ApiNode::TYPE_LANGUAGE:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    /* @var $node ApiNode */
+                    $langId = $node->getAttributes()['id'];
+                    $value = $node->getValue();
+                    $out[] = ['id' => $langId, 'value' => $value];
+                }
+
+                return $out;
+            case ApiNode::TYPE_LIST:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    $out[] = $this->toJsonArray($node);
+                }
+
+                return $out;
+            case ApiNode::TYPE_PARENT:
+                $out = [];
+                foreach ($apiNode->getNodes() as $node) {
+                    $out[$node->getName()] = $this->toJsonArray($node);
+                }
+
+                return $out;
         }
-        if ($isAPICall && !in_array($node_name, ['description', 'schema', 'api'])) {
-            $this->content[] = $node_name;
-        }
-        if (isset($more_attr, $more_attr['id'])) {
-            $this->content[$params['objectsNodeName']][] = ['id' => $more_attr['id']];
-        }
-
-        return '';
-    }
-
-    public function getNodeName($params)
-    {
-        $node_name = '';
-        if (isset($params['objectNodeName'])) {
-            $node_name = $params['objectNodeName'];
-        }
-
-        return $node_name;
-    }
-
-    public function renderNodeFooter($node_name, $params)
-    {
-        if (isset($params['objectNodeName']) && $params['objectNodeName'] == $node_name) {
-            if (array_key_exists('display', $_GET)) {
-                $this->content[$params['objectsNodeName']][] = $this->currentEntity;
-            } else {
-                $this->content[$params['objectNodeName']] = $this->currentEntity;
-            }
-            $this->currentEntity = [];
-        }
-        if (is_countable($this->currentAssociatedEntity) && count($this->currentAssociatedEntity)) {
-            $current = [];
-            foreach ($this->currentAssociatedEntity as $element) {
-                $current[$element['key']] = $element['value'];
-            }
-            if (isset($element, $element['name'])) {
-                $this->currentEntity['associations'][$element['name']][] = $current;
-            }
-            $this->currentAssociatedEntity = [];
-        }
-    }
-
-    public function overrideContent($content)
-    {
-        array_walk($this->content, function (&$item) {
-            $item = array_filter($item);
-        });
-        $content = json_encode($this->content, JSON_UNESCAPED_UNICODE);
-
-        return (false !== $content) ? $content : '';
-    }
-
-    public function setLanguages($languages)
-    {
-        $this->languages = $languages;
-
-        return $this;
-    }
-
-    public function renderAssociationWrapperHeader()
-    {
-        return '';
-    }
-
-    public function renderAssociationWrapperFooter()
-    {
-        return '';
-    }
-
-    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false)
-    {
-        return '';
-    }
-
-    public function renderAssociationFooter($obj, $params, $assoc_name)
-    {
-    }
-
-    public function renderErrorsHeader()
-    {
-        return '';
-    }
-
-    public function renderErrorsFooter()
-    {
-        return '';
-    }
-
-    public function renderAssociationField($field)
-    {
-        return '';
-    }
-
-    public function renderi18nField($field)
-    {
-        return '';
     }
 }
