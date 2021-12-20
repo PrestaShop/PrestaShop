@@ -22,7 +22,7 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
-    this.custumizedTextarea = '#field-textField5.product-message';
+    this.custumizedTextarea = '.product-customization-item .product-message';
     this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
@@ -276,7 +276,6 @@ class Product extends FOBasePage {
     }
 
     if (await this.elementVisible(page, this.custumizedTextarea, 2000)) {
-      console.log(customizedText);
       await this.setValue(page, this.custumizedTextarea, customizedText);
       await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
