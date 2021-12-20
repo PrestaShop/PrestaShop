@@ -33,7 +33,8 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -178,7 +179,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'country' => $specificPrice->getCountry() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroup() ?? $this->trans('All groups', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomer() ?? $this->trans('All customers', 'Admin.Global'),
-                'price' => $this->formatPrice($specificPrice->getPrice()),
+                'price' => $this->formatPrice($specificPrice->getFixedPrice()),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
                 'fromQuantity' => $specificPrice->getFromQuantity(),
@@ -189,17 +190,17 @@ class SpecificPriceController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param FixedPrice $price
+     * @param FixedPriceInterface $fixedPrice
      *
      * @return string
      */
-    private function formatPrice(FixedPrice $price): string
+    private function formatPrice(FixedPriceInterface $fixedPrice): string
     {
-        if ($price->isInitialPrice()) {
+        if (InitialPrice::isInitialPriceValue((string) $fixedPrice->getValue())) {
             return self::UNSPECIFIED_VALUE_FORMAT;
         }
 
-        return $this->getContextLocale()->formatPrice((string) $price, $this->getContextCurrencyIso());
+        return $this->getContextLocale()->formatPrice((string) $fixedPrice->getValue(), $this->getContextCurrencyIso());
     }
 
     /**

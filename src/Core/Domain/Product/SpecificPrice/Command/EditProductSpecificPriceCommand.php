@@ -196,7 +196,7 @@ class EditProductSpecificPriceCommand
      */
     public function setFixedPrice(string $fixedPrice): self
     {
-        if (InitialPrice::INITIAL_PRICE_VALUE === $fixedPrice) {
+        if (InitialPrice::isInitialPriceValue($fixedPrice)) {
             $this->fixedPrice = new InitialPrice();
         } else {
             $this->fixedPrice = new FixedPrice($fixedPrice);

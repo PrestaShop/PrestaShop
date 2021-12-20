@@ -87,7 +87,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            $dataRows['price'] === InitialPrice::INITIAL_PRICE_VALUE ? new InitialPrice() : new FixedPrice($dataRows['price']),
+            InitialPrice::isInitialPriceValue($dataRows['price']) ? new InitialPrice() : new FixedPrice($dataRows['price']),
             (int) $dataRows['from quantity'],
             DateTimeUtil::buildNullableDateTime($dataRows['from']),
             DateTimeUtil::buildNullableDateTime($dataRows['to']),

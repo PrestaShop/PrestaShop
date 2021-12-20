@@ -57,4 +57,16 @@ class InitialPrice implements FixedPriceInterface
     {
         return $this->value;
     }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    public static function isInitialPriceValue(string $value): bool
+    {
+        $initialPrice = new DecimalNumber(self::INITIAL_PRICE_VALUE);
+
+        return $initialPrice->equals(new DecimalNumber($value));
+    }
 }

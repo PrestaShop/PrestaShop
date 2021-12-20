@@ -74,7 +74,7 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
     public function handle(GetSpecificPriceForEditing $query): SpecificPriceForEditing
     {
         $specificPrice = $this->specificPriceRepository->get($query->getSpecificPriceId());
-        $fixedPrice = InitialPrice::INITIAL_PRICE_VALUE === $specificPrice->price ?
+        $fixedPrice = InitialPrice::isInitialPriceValue($specificPrice->price) ?
             new InitialPrice() :
             new FixedPrice($specificPrice->price)
         ;

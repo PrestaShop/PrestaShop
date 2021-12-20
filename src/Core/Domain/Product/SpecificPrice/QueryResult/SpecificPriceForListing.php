@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
 
 class SpecificPriceForListing
 {
@@ -54,9 +55,9 @@ class SpecificPriceForListing
     private $includesTax;
 
     /**
-     * @var FixedPrice
+     * @var FixedPriceInterface
      */
-    private $price;
+    private $fixedPrice;
 
     /**
      * @var int
@@ -108,7 +109,7 @@ class SpecificPriceForListing
      * @param string $reductionType
      * @param DecimalNumber $reductionValue
      * @param bool $includesTax
-     * @param FixedPrice $price
+     * @param FixedPriceInterface $price
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
@@ -124,7 +125,7 @@ class SpecificPriceForListing
         string $reductionType,
         DecimalNumber $reductionValue,
         bool $includesTax,
-        FixedPrice $price,
+        FixedPriceInterface $price,
         int $fromQuantity,
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
@@ -139,7 +140,7 @@ class SpecificPriceForListing
         $this->reductionType = $reductionType;
         $this->reductionValue = $reductionValue;
         $this->includesTax = $includesTax;
-        $this->price = $price;
+        $this->fixedPrice = $price;
         $this->fromQuantity = $fromQuantity;
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
@@ -192,11 +193,11 @@ class SpecificPriceForListing
     }
 
     /**
-     * @return FixedPrice
+     * @return FixedPriceInterface
      */
-    public function getPrice(): FixedPrice
+    public function getFixedPrice(): FixedPriceInterface
     {
-        return $this->price;
+        return $this->fixedPrice;
     }
 
     /**
