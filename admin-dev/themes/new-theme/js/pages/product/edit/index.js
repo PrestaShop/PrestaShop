@@ -39,10 +39,10 @@ import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
-
+import RelatedProductsManager from '@pages/product/edit/related-products-manager';
+import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
-import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 
 const {$} = window;
 
@@ -68,13 +68,13 @@ $(() => {
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
-  if (productId && productType === ProductMap.productType.COMBINATIONS) {
+  if (productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
-    // selected on load, it is only initialized when productId exists though (edition mode)
+    // selected on load
     new CombinationsManager(productId);
   }
 
-  new NavbarHandler(ProductMap.navigationBar);
+  new NavbarHandler($(ProductMap.navigationBar));
   new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
@@ -83,6 +83,7 @@ $(() => {
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
+  new CreateProductModal();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
@@ -90,11 +91,6 @@ $(() => {
     $productForm,
     $productFormSubmitButton,
   ).watch();
-
-  // Form has no productId data means that we are in creation mode
-  if (!productId) {
-    return;
-  }
 
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);

@@ -25,12 +25,26 @@
 {% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
+{# It is very important to use product theme ONLY or the default theme from Symfony config is always preloaded #}
+{% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block content %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/form.html.twig' %}
+  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form product-page-v2 justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+    {% block product_creation_form %}
+      {{ form_row(productForm) }}
+    {% endblock %}
+
+  {% block product_rest %}
+    {{ form_end(productForm) }}
+  {% endblock %}
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
+  <script src="{{ asset('themes/new-theme/public/product_create.bundle.js') }}"></script>
 {% endblock %}

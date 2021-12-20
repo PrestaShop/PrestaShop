@@ -275,4 +275,9 @@ class ProductConstraintException extends ProductException
      * Search phrase must have a minimum length
      */
     public const INVALID_SEARCH_PHRASE_LENGTH = 490;
+
+    /**
+     * The product doesn't have the minimum data to be online.
+     */
+    public const INVALID_ONLINE_DATA = 500;
 }

@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Decorates original grid data and returns modified prices for grid display as well as calculated price with taxes.
@@ -90,12 +91,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $productImagePathFactory;
 
     /**
-     * @param GridDataFactoryInterface $productGridDataFactory
-     * @param Repository $localeRepository
-     * @param string $contextLocale
-     * @param int $defaultCurrencyId
-     * @param ProductDataProvider $productDataProvider
+     * @var TranslatorInterface
      */
+    private $translator;
+
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
         Repository $localeRepository,
@@ -105,7 +104,8 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         TaxComputer $taxComputer,
         ProductRepository $productRepository,
         int $countryId,
-        ProductImagePathFactory $productImagePathFactory
+        ProductImagePathFactory $productImagePathFactory,
+        TranslatorInterface $translator
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -119,6 +119,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         $this->productRepository = $productRepository;
         $this->countryId = $countryId;
         $this->productImagePathFactory = $productImagePathFactory;
+        $this->translator = $translator;
     }
 
     /**
@@ -150,6 +151,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     {
         $currency = new Currency($this->defaultCurrencyId);
         foreach ($products as $i => $product) {
+            if (empty($product['name'])) {
+                $products[$i]['name'] = $this->translator->trans('N/A', [], 'Admin.Global');
+            }
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
                 $products[$i]['price_tax_excluded'],
                 $currency->iso_code

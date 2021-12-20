@@ -91,3 +91,18 @@ Feature: Update product basic information from Back Office (BO)
     Then product "product1" localized "description" should be:
       | locale | value                |
       | en-US  | it's mug & it's nice |
+
+  Scenario: When product has empty names in some languages the default language is used to prefill them all
+    Given language "fr" with locale "fr-FR" exists
+    And I add product "empty_product" with following information:
+      | type        | standard  |
+    Then product "empty_product" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "empty_product" basic information with following values:
+      | name[en-US] | english name |
+    Then product "empty_product" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | english name |

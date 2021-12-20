@@ -41,6 +41,10 @@
   @include media-breakpoint-down(md) {
     padding-top: 3.5rem;
   }
+
+  &.light_display_layout {
+    padding-top: 0;
+  }
 }
 
 .page-sidebar-closed:not(.mobile) {

@@ -94,18 +94,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  &::before {
-    position: fixed;
-    top: $size-header-height - 0.0625rem;
-    right: 0;
-    left: 0;
-    z-index: 400;
-    display: block;
-    height: 1px;
-    content: "";
-    box-shadow: $gray-dark 0 0 10px;
-  }
-
   // Resets
   ul.nostyle {
     padding: 0;
@@ -127,6 +115,18 @@ $product-page-padding-bottom: 80px !default;
     margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     background: $white;
+
+    &::before {
+      position: fixed;
+      top: $size-header-height - 0.0625rem;
+      right: 0;
+      left: 0;
+      z-index: 400;
+      display: block;
+      height: 1px;
+      content: "";
+      box-shadow: $gray-dark 0 0 10px;
+    }
 
     .edit {
       background-size: 4%;
@@ -1059,6 +1059,12 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .product-page-v2 {
+  &.create-product-form {
+    width: 100%;
+    padding: 0 1rem 0.1rem;
+    background-color: $white;
+  }
+
   .maxLength {
     float: none;
   }
@@ -1139,6 +1145,50 @@ $product-page-padding-bottom: 80px !default;
           overflow: hidden;
           text-overflow: ellipsis;
         }
+      }
+    }
+  }
+
+  .product-type-selector {
+    width: 100%;
+    margin-bottom: 1rem;
+
+    select {
+      display: none;
+    }
+
+    .product-type-choices {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding-top: 1.5rem;
+
+      .product-type-choice {
+        position: relative;
+        width: 100%;
+        max-width: 350px;
+        padding-right: 3rem;
+        margin: 0.25rem 0;
+        text-align: left;
+
+        .material-icons {
+          position: absolute;
+          top: 50%;
+          right: 0.75rem;
+          margin-top: -0.725rem;
+          font-size: 1.45rem;
+        }
+      }
+    }
+
+    .product-type-description {
+      width: 100%;
+      margin: 1.5rem 0;
+      text-align: center;
+
+      .material-icons {
+        color: $brand-primary;
       }
     }
   }
@@ -1711,3 +1761,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 }
+
+// Create product modal
+@import "create_product_modal";

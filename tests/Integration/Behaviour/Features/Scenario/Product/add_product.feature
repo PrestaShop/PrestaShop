@@ -60,3 +60,15 @@ Feature: Add basic product from Back Office (BO)
     And product "product3" localized "name" should be:
       | locale | value                |
       | en-US  | Shirt - Dom & Jquery |
+
+  Scenario: I can add a product without providing a name
+    When I add product "product1" with following information:
+      | type        | standard       |
+    Then product "product1" should be disabled
+    And product "product1" type should be standard
+    And product "product1" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |

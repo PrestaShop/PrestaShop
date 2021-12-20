@@ -116,7 +116,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderDisableMultistorePage();
         }
 
-        $productForm = $this->getProductFormBuilder()->getForm();
+        $productForm = $this->getCreateProductFormBuilder()->getForm();
 
         try {
             $productForm->handleRequest($request);
@@ -132,7 +132,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm);
+        return $this->renderCreateProductForm($productForm, $request->query->has('liteDisplaying'));
     }
 
     /**
@@ -155,7 +155,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->renderDisableMultistorePage($productId);
         }
 
-        $productForm = $this->getProductFormBuilder()->getFormFor($productId, [], [
+        $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
             'product_id' => $productId,
             // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
             // 'method' => Request::METHOD_PATCH,
@@ -187,7 +187,7 @@ class ProductController extends FrameworkBundleAdminController
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 
-        return $this->renderProductForm($productForm, $productId);
+        return $this->renderEditProductForm($productForm, $productId);
     }
 
     /**
@@ -219,9 +219,11 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_product_new'),
-            'desc' => $this->trans('New product', 'Admin.Actions'),
+            'href' => $this->generateUrl('admin_products_v2_create'),
+            'desc' => $this->trans('New product on experimental page', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
+            'class' => 'btn-primary new-product',
+            'floating_class' => 'new-product',
         ];
 
         $toolbarButtons['list_v1'] = [
@@ -334,11 +336,27 @@ class ProductController extends FrameworkBundleAdminController
 
     /**
      * @param FormInterface $productForm
-     * @param int|null $productId
      *
      * @return Response
      */
-    private function renderProductForm(FormInterface $productForm, ?int $productId = null): Response
+    private function renderCreateProductForm(FormInterface $productForm, bool $lightDisplay): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/create.html.twig', [
+            'lightDisplay' => $lightDisplay,
+            'showContentHeader' => false,
+            'productForm' => $productForm->createView(),
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+            'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+        ]);
+    }
+
+    /**
+     * @param FormInterface $productForm
+     * @param int $productId
+     *
+     * @return Response
+     */
+    private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
         $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
@@ -348,7 +366,7 @@ class ProductController extends FrameworkBundleAdminController
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'statsLink' => $productId ? $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]) : null,
+            'statsLink' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
@@ -356,13 +374,23 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * Gets form builder.
+     * Gets creation form builder.
      *
      * @return FormBuilderInterface
      */
-    private function getProductFormBuilder(): FormBuilderInterface
+    private function getCreateProductFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.product_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.create_product_form_builder');
+    }
+
+    /**
+     * Gets edition form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getEditProductFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
     }
 
     /**
@@ -399,7 +427,11 @@ class ProductController extends FrameworkBundleAdminController
                 ),
                 ProductConstraintException::INVALID_REDIRECT_TARGET => $this->trans(
                     'When redirecting towards a product you must select a target product.',
-                    'Admin.Notifications.Error'
+                    'Admin.Catalog.Notification'
+                ),
+                ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(
+                    'To put this product online, please enter a name.',
+                    'Admin.Catalog.Notification'
                 ),
             ],
             DuplicateFeatureValueAssociationException::class => $this->trans(

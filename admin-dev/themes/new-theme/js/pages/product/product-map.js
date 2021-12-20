@@ -35,6 +35,17 @@ export default {
     VIRTUAL: 'virtual',
     COMBINATIONS: 'combinations',
   },
+  create: {
+    newProductButton: 'a.new-product',
+    productTypeSelector: {
+      select: '#product_type',
+      choicesContainer: '.product-type-choices',
+      typeChoices: '.product-type-choice',
+      defaultChoiceClass: 'btn-outline-secondary',
+      selectedChoiceClass: 'btn-primary',
+      typeDescription: '.product-type-description-content',
+    },
+  },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',

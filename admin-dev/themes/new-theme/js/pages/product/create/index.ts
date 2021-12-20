@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,16 +21,11 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
+import ProductTypeSelector from '@pages/product/create/product-type-selector';
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Attachment/Blocks/form.html.twig' %}
-{% endblock %}
+const {$} = window;
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/attachment.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new ProductTypeSelector();
+});

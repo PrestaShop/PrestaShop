@@ -47,7 +47,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 /**
  * This is the parent product form type
  */
-class ProductFormType extends TranslatorAwareType
+class EditProductFormType extends TranslatorAwareType
 {
     /**
      * @var EventSubscriberInterface
@@ -75,7 +75,9 @@ class ProductFormType extends TranslatorAwareType
     {
         $productId = $options['product_id'] ?? null;
         $builder
-            ->add('header', HeaderType::class)
+            ->add('header', HeaderType::class, [
+                'active' => $options['active'],
+            ])
             ->add('description', DescriptionType::class, [
                 'product_id' => $productId,
             ])
@@ -92,6 +94,7 @@ class ProductFormType extends TranslatorAwareType
             ->add('options', OptionsType::class)
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
+                'active' => $options['active'],
             ])
         ;
 
@@ -126,15 +129,19 @@ class ProductFormType extends TranslatorAwareType
         parent::configureOptions($resolver);
 
         // We must allow extra fields because when we switch product type some former fields may be present in request
-        $resolver->setDefaults([
-            'product_id' => null,
-            'product_type' => null,
-            'virtual_product_file_id' => null,
-            'allow_extra_fields' => true,
-        ]);
-        $resolver->setAllowedTypes('product_id', ['null', 'int']);
-        $resolver->setAllowedTypes('product_type', ['null', 'string']);
-        $resolver->setAllowedTypes('virtual_product_file_id', ['null', 'int']);
+        $resolver
+            ->setDefaults([
+                'product_id' => null,
+                'product_type' => null,
+                'virtual_product_file_id' => null,
+                'active' => false,
+                'allow_extra_fields' => true,
+            ])
+            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setAllowedTypes('product_type', ['null', 'string'])
+            ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
+            ->setAllowedTypes('active', ['bool'])
+        ;
     }
 
     /**
