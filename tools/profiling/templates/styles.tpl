@@ -145,18 +145,31 @@
     }
   }
 
-  #prestashop-profiling ol {
+  #profiling-links {
+    display: flex;
+    width: fit-content;
     position: fixed;
     top: 0;
     right: 0;
+    transform: translateX(calc(100% - 38px));
     padding: 10px;
-    padding-left: 25px;
     background: #EEE;
-    opacity: 0.2;
+    z-index: 10000;
+    transition: transform ease-in-out .2s;
   }
 
-  #prestashop-profiling ol:hover {
-    opacity: 1;
+  #profiling-links:hover {
+    left: unset;
+    transform: translateX(0);
+  }
+
+  #profiling-links span {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  #profiling-links ol {
+    padding-left: 25px;
   }
 
   .success {
