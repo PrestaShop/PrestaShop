@@ -659,6 +659,9 @@ class Order extends BOBasePage {
    */
   async deleteProduct(page, row) {
     await this.dialogListener(page);
+    if (await this.elementVisible(page, this.growlMessageBlock, 1000)) {
+      await this.closeGrowlMessage(page);
+    }
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
     return this.getGrowlMessageContent(page);
   }
@@ -1415,7 +1418,7 @@ class Order extends BOBasePage {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {{carrier: string, shippingCost: string, trackingNumber: string}} Data to set on shipping form
+   * @param shippingData {{carrier: string, trackingNumber: string}} Data to set on shipping form
    * @returns {Promise<string>}
    */
   async setShippingDetails(page, shippingData) {
