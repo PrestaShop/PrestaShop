@@ -30,8 +30,8 @@ use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\MissingCustomerRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
-use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Provides reusable methods for customer command handlers.

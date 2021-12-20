@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\RequiredField;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email;
-use Symfony\Component\Translation\TranslatorInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles commands which edits given customer with provided data.
@@ -66,8 +66,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
         TranslatorInterface $translator,
         LoggerInterface $logger,
         $legacyCookieKey
-    )
-    {
+    ) {
         parent::__construct($translator, $logger);
 
         $this->hashing = $hashing;
@@ -125,7 +124,7 @@ final class EditCustomerHandler extends AbstractCustomerHandler implements EditC
             [
                 'allow_duplicate' => true,
                 'object_type' => $this->objectTypeLabel,
-                'object_id' => $customer->id
+                'object_id' => $customer->id,
             ]
         );
     }

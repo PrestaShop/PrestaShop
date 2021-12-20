@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\BulkDeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\BulkDeleteCustomerHandlerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Handles command that deletes customers in bulk action.
@@ -58,7 +56,7 @@ final class BulkDeleteCustomerHandler extends AbstractCustomerHandler implements
                 [
                     'allow_duplicate' => true,
                     'object_type' => $this->objectTypeLabel,
-                    'object_id' => $customer->id
+                    'object_id' => $customer->id,
                 ]
             );
 

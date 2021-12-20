@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Customer\CommandHandler;
 use Customer;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\CommandHandler\DeleteCustomerHandlerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
-use Psr\Log\LoggerInterface;
 
 /**
  * Handles delete customer command.
@@ -58,7 +56,7 @@ final class DeleteCustomerHandler extends AbstractCustomerHandler implements Del
             [
                 'allow_duplicate' => true,
                 'object_type' => $this->objectTypeLabel,
-                'object_id' => $customer->id
+                'object_id' => $customer->id,
             ]
         );
 
