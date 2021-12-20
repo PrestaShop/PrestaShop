@@ -430,7 +430,7 @@ class ProductController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
                 ProductConstraintException::INVALID_ONLINE_DATA => $this->trans(
-                    'A product without name cannot be set online.',
+                    'To put this product online, please enter a name.',
                     'Admin.Notifications.Error'
                 ),
             ],

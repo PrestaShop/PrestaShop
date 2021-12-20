@@ -74,7 +74,7 @@ class CreateProductFormType extends TranslatorAwareType
                 'block_prefix' => 'product_type',
             ])
             ->add('create', SubmitType::class, [
-                'label' => $this->trans('Create product', 'Admin.Catalog.Help'),
+                'label' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
                 'row_attr' => [
                     'class' => 'text-right',
                 ],
@@ -91,7 +91,7 @@ class CreateProductFormType extends TranslatorAwareType
             'required' => false,
             'label' => false,
             'attr' => [
-                'data-modal-title' => $this->trans('Add new product', 'Admin.Catalog.Help'),
+                'data-modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
             ],
         ]);
     }

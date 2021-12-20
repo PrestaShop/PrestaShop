@@ -60,7 +60,7 @@ class ProductTypeChoiceProvider implements FormChoiceProviderInterface, FormChoi
                 'icon' => 'checkroom',
             ],
             $this->trans('Product with combinations', 'Admin.Catalog.Feature') => [
-                'data-description' => $this->trans('A product with different variations (size, color, etc.) from which customers can choose', 'Admin.Catalog.Feature'),
+                'data-description' => $this->trans('A product with different variations (size, color, etc.) from which customers can choose.', 'Admin.Catalog.Feature'),
                 'icon' => 'layers',
             ],
             $this->trans('Pack of products', 'Admin.Catalog.Feature') => [
