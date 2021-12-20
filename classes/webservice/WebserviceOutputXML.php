@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -25,216 +26,81 @@
  */
 class WebserviceOutputXMLCore implements WebserviceOutputInterface
 {
-    public $docUrl = '';
-    public $languages = [];
-    protected $wsUrl;
-    protected $schemaToDisplay;
-
-    public function setSchemaToDisplay($schema)
-    {
-        if (is_string($schema)) {
-            $this->schemaToDisplay = $schema;
-        }
-
-        return $this;
-    }
-
-    public function getSchemaToDisplay()
-    {
-        return $this->schemaToDisplay;
-    }
-
-    public function setWsUrl($url)
-    {
-        $this->wsUrl = $url;
-
-        return $this;
-    }
-
-    public function getWsUrl()
-    {
-        return $this->wsUrl;
-    }
+    private const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
     public function getContentType()
     {
         return 'text/xml';
     }
 
-    public function __construct($languages = [])
+    /**
+     * Iterate over ApiNode tree and returns XML formatted output.
+     * If requested schema is DETAIL instead of node, parent resource is not being printed out (i.e. <strong>&lt;products/&gt;</strong> tag)
+     *
+     * @param Apinode $apiNode
+     * @param int $type_of_view Use constants WebserviceOutputBuilderCore::VIEW_DETAILS / WebserviceOutputBuilderCore::VIEW_LIST
+     *
+     * @return string Properly XML formatted string
+     */
+    public function renderNode($apiNode)
     {
-        $this->languages = $languages;
-    }
+        $xml = new SuperXMLElement("<?xml version='1.0' encoding='UTF-8'?><prestashop xmlns:xlink='" . self::XLINK_NS . "'/>");
 
-    public function setLanguages($languages)
-    {
-        $this->languages = $languages;
-
-        return $this;
-    }
-
-    public function renderErrorsHeader()
-    {
-        return '<errors>' . "\n";
-    }
-
-    public function renderErrorsFooter()
-    {
-        return '</errors>' . "\n";
-    }
-
-    public function renderErrors($message, $code = null)
-    {
-        $str_output = '<error>' . "\n";
-        if ($code !== null) {
-            $str_output .= '<code><![CDATA[' . $code . ']]></code>' . "\n";
-        }
-        $str_output .= '<message><![CDATA[' . $message . ']]></message>' . "\n";
-        $str_output .= '</error>' . "\n";
-
-        return $str_output;
-    }
-
-    public function renderField($field)
-    {
-        $ret = '';
-        $node_content = '';
-        $ret .= '<' . $field['sqlId'];
-        // display i18n fields
-        if (isset($field['i18n']) && $field['i18n']) {
-            foreach ($this->languages as $language) {
-                $more_attr = '';
-                if (isset($field['synopsis_details']) || (isset($field['value']) && is_array($field['value']))) {
-                    $more_attr .= ' xlink:href="' . $this->getWsUrl() . 'languages/' . $language . '"';
-                    if (isset($field['synopsis_details']) && $this->schemaToDisplay != 'blank') {
-                        $more_attr .= ' format="isUnsignedId" ';
-                    }
-                }
-                $node_content .= '<language id="' . $language . '"' . $more_attr . '>';
-                $node_content .= '<![CDATA[';
-                if (isset($field['value'][$language])) {
-                    $node_content .= $field['value'][$language];
-                }
-                $node_content .= ']]>';
-                $node_content .= '</language>';
-            }
+        /* @var $rootXml SuperXMLElement */
+        if ($apiNode->getType() == ApiNode::TYPE_LIST) {
+            $rootXml = $xml->addChild($apiNode->getName(), $apiNode->getValue());
         } else {
-            // display not i18n fields value
-            if (array_key_exists('xlink_resource', $field) && $this->schemaToDisplay != 'blank') {
-                if (!is_array($field['xlink_resource'])) {
-                    $ret .= ' xlink:href="' . $this->getWsUrl() . $field['xlink_resource'] . '/' . $field['value'] . '"';
-                } else {
-                    $ret .= ' xlink:href="' . $this->getWsUrl() . $field['xlink_resource']['resourceName'] . '/' .
-                    (isset($field['xlink_resource']['subResourceName']) ? $field['xlink_resource']['subResourceName'] . '/' . $field['object_id'] . '/' : '') . $field['value'] . '"';
+            $rootXml = $xml;
+    }
+
+        $this->injectAttributes($rootXml, $apiNode);
+        $this->injectChildren($rootXml, $apiNode);
+
+        return $xml->asXML();
+    }
+
+    /**
+     * Iterates over all attributes specified in ApiNode and injects them into $xml
+     *
+     * @param \SuperXMLElement $xml
+     * @param ApiNode $node
+     *
+     * @return void
+     */
+    private function injectAttributes(&$xml, $node)
+    {
+        if (empty($node->getAttributes()) || !is_array($node->getAttributes())) {
+            return;
+        }
+
+        foreach ($node->getAttributes() as $name => $value) {
+            if (strpos($name, 'xlink:') === 0) {    //when name begins on xlink, inject it underneath proper namespace
+                $xml->addAttribute($name, $value, self::XLINK_NS);
+        } else {
+                $xml->addAttribute($name, $value);
                 }
             }
-
-            if (isset($field['getter']) && $this->schemaToDisplay != 'blank') {
-                $ret .= ' notFilterable="true"';
             }
 
-            if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay == 'synopsis') {
-                $ret .= ' read_only="true"';
-            }
-
-            if (array_key_exists('value', $field)) {
-                $node_content .= '<![CDATA[' . $field['value'] . ']]>';
-            }
-        }
-
-        if (isset($field['encode'])) {
-            $ret .= ' encode="' . $field['encode'] . '"';
-        }
-
-        if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank') {
-            foreach ($field['synopsis_details'] as $name => $detail) {
-                $ret .= ' ' . $name . '="' . (is_array($detail) ? implode(' ', $detail) : $detail) . '"';
-            }
-        }
-        $ret .= '>';
-        $ret .= $node_content;
-        $ret .= '</' . $field['sqlId'] . '>' . "\n";
-
-        return $ret;
-    }
-
-    public function renderNodeHeader($node_name, $params, $more_attr = null, $has_child = true)
+    /**
+     * Inject children node
+     *
+     * @param \SuperXMLElement $parentXml
+     * @param ApiNode $apiNode
+     *
+     * @return void
+     */
+    private function injectChildren(&$parentXml, $apiNode)
     {
-        $string_attr = '';
-        if (is_array($more_attr)) {
-            foreach ($more_attr as $key => $attr) {
-                if ($key === 'xlink_resource') {
-                    $string_attr .= ' xlink:href="' . $attr . '"';
-                } else {
-                    $string_attr .= ' ' . $key . '="' . $attr . '"';
+        if (empty($apiNode->getNodes())) {
+            return;
                 }
-            }
+
+        foreach ($apiNode->getNodes() as $node) {
+            /* @var $node ApiNode */
+            $childXml = $node->getType() == ApiNode::TYPE_VALUE ? $parentXml->addChildCData($node->getName(), $node->getValue()) : $parentXml->addChild($node->getName(), $node->getValue());
+            $this->injectAttributes($childXml, $node);
+            $this->injectChildren($childXml, $node);
+    }
         }
-        $end_tag = (!$has_child) ? '/>' : '>';
-
-        return '<' . $node_name . $string_attr . $end_tag . "\n";
     }
-
-    public function getNodeName($params)
-    {
-        $node_name = '';
-        if (isset($params['objectNodeName'])) {
-            $node_name = $params['objectNodeName'];
-        }
-
-        return $node_name;
-    }
-
-    public function renderNodeFooter($node_name, $params)
-    {
-        return '</' . $node_name . '>' . "\n";
-    }
-
-    public function overrideContent($content)
-    {
-        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $xml .= '<prestashop xmlns:xlink="http://www.w3.org/1999/xlink">' . "\n";
-        $xml .= $content;
-        $xml .= '</prestashop>' . "\n";
-
-        return $xml;
-    }
-
-    public function renderAssociationWrapperHeader()
-    {
-        return '<associations>' . "\n";
-    }
-
-    public function renderAssociationWrapperFooter()
-    {
-        return '</associations>' . "\n";
-    }
-
-    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false)
-    {
-        $end_tag = ($closed_tags) ? '/>' : '>';
-        $more = '';
-        if ($this->schemaToDisplay != 'blank') {
-            if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter']) {
-                $more .= ' readOnly="true"';
-            }
-            $more .= ' nodeType="' . $params['associations'][$assoc_name]['resource'] . '"';
-            if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity']) {
-                $more .= ' virtualEntity="true"';
-            } else {
-                if (isset($params['associations'][$assoc_name]['api'])) {
-                    $more .= ' api="' . $params['associations'][$assoc_name]['api'] . '"';
-                } else {
-                    $more .= ' api="' . $assoc_name . '"';
-                }
-            }
-        }
-
-        return '<' . $assoc_name . $more . $end_tag . "\n";
-    }
-
-    public function renderAssociationFooter($obj, $params, $assoc_name)
-    {
-        return '</' . $assoc_name . '>' . "\n";
-    }
-}

@@ -263,6 +263,8 @@ class WebserviceRequestCore
             $type = $_GET['io_format'];
         }
         $this->outputFormat = $type;
+        require_once __DIR__ . '/ApiNode.php';
+        require_once __DIR__ . '/SuperXMLElement.php';
         switch ($type) {
             case 'JSON':
                 require_once __DIR__ . '/WebserviceOutputJSON.php';
@@ -545,7 +547,7 @@ class WebserviceRequestCore
             // Need to set available languages for the render object.
             // Thus we can filter i18n field for the output
             // @see WebserviceOutputXML::renderField() method for example
-            $this->objOutput->objectRender->setLanguages($this->_available_languages);
+            ApiNode::$languages = $this->_available_languages;
 
             // check method and resource
             if (empty($this->errors) && $this->checkResource() && $this->checkHTTPMethod()) {
