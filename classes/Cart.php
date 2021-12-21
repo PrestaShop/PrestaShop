@@ -4583,8 +4583,6 @@ class CartCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']])) {
             $product['customizedDatas'] = $customized_datas[$product['id_product']][$product['id_product_attribute']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 
