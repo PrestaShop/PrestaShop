@@ -81,8 +81,8 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
         if (isset($data['leave_initial_price']) && $data['leave_initial_price']) {
             $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
-        } elseif (isset($data['price'])) {
-            $command->setFixedPrice((string) $data['price']);
+        } elseif (isset($data['fixed_price'])) {
+            $command->setFixedPrice((string) $data['fixed_price']);
         }
 
         if (isset($data['from_quantity'])) {

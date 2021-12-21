@@ -149,11 +149,13 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Currency', 'Admin.Global'),
                 'placeholder' => $this->trans('All currencies', 'Admin.Global'),
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'required' => false,
             ])
             ->add('country_id', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
                 'placeholder' => $this->trans('All countries', 'Admin.Global'),
                 'choices' => $this->countryByIdChoiceProvider->getChoices(),
+                'required' => false,
             ])
             ->add('group_id', ChoiceType::class, [
                 'label' => $this->trans('Group', 'Admin.Global'),
@@ -173,11 +175,13 @@ class SpecificPriceType extends TranslatorAwareType
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
+                'required' => false,
             ])
             ->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
                 'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
+                'required' => false,
             ])
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),
@@ -209,6 +213,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('date_range', DateRangeType::class, [
                 'label' => $this->trans('Available from', 'Admin.Catalog.Feature'),
+                'required' => false,
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(
@@ -220,6 +225,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('reduction', ReductionType::class, [
                 'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
+                'required' => false,
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->trans(
@@ -240,6 +246,8 @@ class SpecificPriceType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
+                'placeholder' => false,
+                'required' => false,
             ])
         ;
 
