@@ -207,7 +207,7 @@ class ImageRetriever
             $url = $this->link->$getImageURL(
                 isset($object->link_rewrite) ? $object->link_rewrite : $object->name,
                 $id_image,
-                $image_type['name'] . ($generateHighDpiImages ? self::HIGH_RES_URL_SUFFIX : '')
+                $image_type['name'] . ($generateHighDpiImages ? static::HIGH_RES_URL_SUFFIX : '')
             );
 
             $urls[$image_type['name']] = [
