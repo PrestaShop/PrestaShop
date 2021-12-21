@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
 
 class SpecificPriceForListing
