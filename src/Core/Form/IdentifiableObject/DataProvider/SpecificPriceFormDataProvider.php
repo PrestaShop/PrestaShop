@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 class SpecificPriceFormDataProvider implements FormDataProviderInterface
@@ -57,7 +58,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     {
         /** @var SpecificPriceForEditing $specificPriceForEditing */
         $specificPriceForEditing = $this->queryBus->handle(new GetSpecificPriceForEditing((int) $id));
-        $fixedPrice = $specificPriceForEditing->getFixedPrice();
+        $fixedPrice = $specificPriceForEditing->getFixedPrice()->getValue();
 
         $data = [
             'product_id' => $specificPriceForEditing->getProductId(),
@@ -67,7 +68,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             'group_id' => $specificPriceForEditing->getGroupId(),
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
             'price' => (string) $fixedPrice,
-            'leave_initial_price' => $fixedPrice->isInitialPrice(),
+            'leave_initial_price' => InitialPrice::isInitialPriceValue((string) $fixedPrice),
             'date_range' => [
                 'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
                 'to' => $specificPriceForEditing->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT),
@@ -106,6 +107,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
                 'value' => 0,
             ],
             'leave_initial_price' => false,
+            'from_quantity' => 1,
         ];
     }
 }
