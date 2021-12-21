@@ -65,7 +65,7 @@
       <div class="icon"><i class="material-icons">&#xE88E;</i></div>
       <div class="data">
         {l s='Company details:' d='Shop.Theme.Global'}<br/>
-        {$contact_infos.details}
+        {$contact_infos.details|nl2br nofilter}
       </div>
     </div>
   {/if}
