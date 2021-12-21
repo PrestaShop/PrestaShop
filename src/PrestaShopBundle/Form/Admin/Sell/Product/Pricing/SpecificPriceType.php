@@ -209,7 +209,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('leave_initial_price', CheckboxType::class, [
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted',
+                'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
                 'required' => false,
             ])
             ->add('date_range', DateRangeType::class, [
