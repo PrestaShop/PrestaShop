@@ -64,7 +64,7 @@
                 </a>
               </td>
               <td>{{ product.unit_price_formatted }}</td>
-              <td>{{ product.quantity }}</td>
+              <td>{{ product.cart_quantity }}</td>
               <td>{{ product.stock_quantity }}</td>
               <td>{{ product.total_price_formatted }}</td>
             </tr>
@@ -92,13 +92,13 @@
               </td>
 
               <td></td>
-              <td>{{ product.customization.quantity }}</td>
+              <td></td>
               <td></td>
               <td></td>
             </tr>
           {% endif %}
 
-          {% if product.customization is empty or product.cart_quantity > product.customization_quantity %}
+          {% if product.customization is empty %}
             <tr>
               <td>{{ product.image|raw }}</td>
               <td>
