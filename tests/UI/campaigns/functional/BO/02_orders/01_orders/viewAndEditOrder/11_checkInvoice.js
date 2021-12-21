@@ -560,7 +560,10 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               + 'are correct', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceSpecificPrice', baseContext);
 
-              const discountValue = await viewOrderPage.percentage(test.args.product.price, test.args.product.specificPrice.discount);
+              const discountValue = await viewOrderPage.percentage(
+                test.args.product.price,
+                test.args.product.specificPrice.discount,
+              );
               const unitPrice = test.args.product.price - discountValue;
 
               const basePriceVisible = await files.isTextInPDF(
@@ -761,7 +764,10 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', `checkTotal${index}`, baseContext);
 
-                const discount = await viewOrderPage.percentage(test.args.product.price, test.args.product.specificPrice.discount);
+                const discount = await viewOrderPage.percentage(
+                  test.args.product.price,
+                  test.args.product.specificPrice.discount,
+                );
                 const unitPrice = test.args.product.price - discount;
 
                 const totalPriceTaxExcl = unitPrice + customizedProduct.price;
