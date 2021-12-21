@@ -65,7 +65,7 @@ class FixedPrice implements FixedPriceInterface
 
         throw new SpecificPriceConstraintException(
             sprintf('Invalid fixed price "%s". It cannot be negative', $value),
-            SpecificPriceConstraintException::INVALID_PRICE
+            SpecificPriceConstraintException::INVALID_FIXED_PRICE
         );
     }
 }

@@ -192,7 +192,7 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('price', MoneyType::class, [
+            ->add('fixed_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],

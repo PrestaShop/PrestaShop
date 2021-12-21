@@ -23,7 +23,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type  | amount |
       | reduction value | 12.56  |
       | includes tax    | true   |
-      | price           | 45.78  |
+      | fixed price     | 45.78  |
       | from quantity   | 1      |
     And product "product1" should have 1 specific prices
     And specific price price1 should have following details:
@@ -31,7 +31,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -44,7 +44,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | percentage          |
       | reduction value       | 10                  |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -57,7 +57,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -69,27 +69,27 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
       | product               | product1            |
     When I edit specific price "price1" with following details:
       | includes tax  | false |
-      | price         | 50    |
+      | fixed price   | 50    |
       | from quantity | 3     |
     Then specific price price1 should have following details:
       | specific price detail | value               |
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | false               |
-      | price                 | 50                  |
+      | fixed price           | 50                  |
       | from quantity         | 3                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
       | product               | product1            |
     When I edit specific price "price1" with following details:
-      | price         | 45.78 |
+      | fixed price   | 45.78 |
       | includes tax  | true  |
       | from quantity | 1     |
     Then specific price price1 should have following details:
@@ -99,7 +99,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -111,7 +111,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -132,7 +132,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -153,7 +153,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -175,7 +175,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -205,7 +205,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -222,7 +222,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -235,7 +235,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 2021-01-01 10:00:00 |
       | to                    | 2021-01-01 11:00:00 |
@@ -248,7 +248,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -261,7 +261,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 2021-01-01 10:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -274,7 +274,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
@@ -288,7 +288,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
@@ -300,7 +300,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
@@ -312,7 +312,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | false               |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
@@ -324,7 +324,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 2021-01-01 10:00:00 |
@@ -339,7 +339,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type  | amount       |
       | reduction value | 12.56        |
       | includes tax    | true         |
-      | price           | 45.78        |
+      | fixed price     | 45.78        |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -350,7 +350,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type  | amount       |
       | reduction value | 12.56        |
       | includes tax    | true         |
-      | price           | 45.78        |
+      | fixed price     | 45.78        |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -363,7 +363,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -378,7 +378,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -396,7 +396,7 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -408,15 +408,26 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | product               | product2            |
 
   Scenario: I cannot edit specific price when it results in having no reduction or fixed price
-    Given I add product "product3" with following information:
-      | name[en-US] | Special Prestashop craft beer |
-      | type        | standard                      |
-    Then product "product3" should have 0 specific prices
-    When I add a specific price price4 to product product3 with following details:
+    Given specific price price3 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              |                     |
+      | product               | product2            |
+    When I edit specific price "price3" with following details:
       | reduction type  | percentage   |
       | reduction value | 0            |
       | includes tax    | true         |
-      | price           | 0            |
+      | fixed price     | 0            |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -424,4 +435,18 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group           | visitor      |
       | customer        | testCustomer |
     Then I should get error that specific price reduction or price must be set
-    And product "product3" should have 0 specific prices
+    And specific price price3 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              |                     |
+      | product               | product2            |
