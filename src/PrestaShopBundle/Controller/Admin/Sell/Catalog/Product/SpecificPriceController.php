@@ -58,6 +58,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             new GetSpecificPriceList($productId, $this->getContextLangId())
         );
 
+        //@todo: this could be refactored to make endpoint more reusable, by implementing formatting in javascript side.
         return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
     }
 
