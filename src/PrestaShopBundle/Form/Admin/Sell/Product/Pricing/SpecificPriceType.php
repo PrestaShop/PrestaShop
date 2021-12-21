@@ -184,7 +184,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('from_quantity', NumberType::class, [
-                'label' => $this->trans('From quantity', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Minimum number of units purchased', 'Admin.Catalog.Feature'),
                 'scale' => 0,
                 'constraints' => [
                     new GreaterThanOrEqual([
@@ -198,7 +198,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('fixed_price', MoneyType::class, [
                 'required' => false,
-                'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Set specific price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrencyIso,
                 'constraints' => [
@@ -208,11 +208,12 @@ class SpecificPriceType extends TranslatorAwareType
                 'default_empty_data' => 0.0,
             ])
             ->add('leave_initial_price', CheckboxType::class, [
-                'label' => $this->trans('Leave initial price', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
+                'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted',
                 'required' => false,
             ])
             ->add('date_range', DateRangeType::class, [
-                'label' => $this->trans('Available from', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'constraints' => [
                     new DateRange([

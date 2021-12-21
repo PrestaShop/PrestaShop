@@ -75,7 +75,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Creation successful', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'lightDisplay' => $request->query->has('liteDisplaying'),
