@@ -148,7 +148,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      */
     public function validate(SpecificPrice $specificPrice): void
     {
-        $this->validateSpecificPriceProperty($specificPrice, 'price', SpecificPriceConstraintException::INVALID_PRICE);
+        $this->validateSpecificPriceProperty($specificPrice, 'price', SpecificPriceConstraintException::INVALID_FIXED_PRICE);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction', SpecificPriceConstraintException::INVALID_REDUCTION_AMOUNT);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction_tax', SpecificPriceConstraintException::INVALID_FROM_QUANTITY);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction_type', SpecificPriceConstraintException::INVALID_REDUCTION_TYPE);

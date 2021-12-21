@@ -74,9 +74,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
     public const INVALID_REDUCTION_AMOUNT = 8;
 
     /**
-     * When specific price price value is not valid
+     * When specific price fixed price value is not valid
      */
-    public const INVALID_PRICE = 9;
+    public const INVALID_FIXED_PRICE = 9;
 
     /**
      * When specific price lower validity limit is not valid

@@ -100,7 +100,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 'country_id' => 7,
                 'group_id' => 8,
                 'from_quantity' => 1,
-                'price' => '-1',
+                'fixed_price' => '-1',
                 'leave_initial_price' => true,
                 'date_range' => [
                     'from' => '2021-10-20 01:00:00',
@@ -145,7 +145,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 'country_id' => null,
                 'group_id' => null,
                 'from_quantity' => 10,
-                'price' => '100',
+                'fixed_price' => '100',
                 'leave_initial_price' => false,
                 'date_range' => [
                     'from' => '2021-11-20 01:00:00',

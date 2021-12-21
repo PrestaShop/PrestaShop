@@ -87,7 +87,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             new DecimalNumber($dataRows['reduction value']),
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            InitialPrice::isInitialPriceValue($dataRows['price']) ? new InitialPrice() : new FixedPrice($dataRows['price']),
+            InitialPrice::isInitialPriceValue($dataRows['fixed price']) ?new InitialPrice() : new FixedPrice($dataRows['fixed price']),
             (int) $dataRows['from quantity'],
             DateTimeUtil::buildNullableDateTime($dataRows['from']),
             DateTimeUtil::buildNullableDateTime($dataRows['to']),
@@ -274,7 +274,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             'reduction_amount' => DomainConstraintException::INVALID_REDUCTION_AMOUNT,
             'reduction_percentage' => DomainConstraintException::INVALID_REDUCTION_PERCENTAGE,
             'reduction_type' => DomainConstraintException::INVALID_REDUCTION_TYPE,
-            'price' => SpecificPriceConstraintException::INVALID_PRICE,
+            'fixed price' => SpecificPriceConstraintException::INVALID_FIXED_PRICE,
             'from' => SpecificPriceConstraintException::INVALID_FROM_DATETIME,
             'to' => SpecificPriceConstraintException::INVALID_TO_DATETIME,
             'date range' => SpecificPriceConstraintException::INVALID_DATE_RANGE,
@@ -304,7 +304,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction type'],
             $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            $dataRows['price'],
+            $dataRows['fixed price'],
             (int) $dataRows['from quantity']
         );
 
@@ -353,8 +353,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         if (isset($dataRows['includes tax'])) {
             $editCommand->setIncludesTax(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']));
         }
-        if (isset($dataRows['price'])) {
-            $editCommand->setFixedPrice($dataRows['price']);
+        if (isset($dataRows['fixed price'])) {
+            $editCommand->setFixedPrice($dataRows['fixed price']);
         }
         if (isset($dataRows['from quantity'])) {
             $editCommand->setFromQuantity((int) $dataRows['from quantity']);

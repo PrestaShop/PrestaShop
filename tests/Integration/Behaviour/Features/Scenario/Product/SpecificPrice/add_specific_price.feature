@@ -23,7 +23,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount |
       | reduction value | 12.56  |
       | includes tax    | true   |
-      | price           | 45.78  |
+      | fixed price     | 45.78  |
       | from quantity   | 1      |
     Then product "product1" should have 1 specific prices
     And specific price price1 should have following details:
@@ -31,7 +31,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -46,7 +46,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | percentage          |
       | reduction value | 12.56               |
       | includes tax    | false               |
-      | price           | 0                   |
+      | fixed price     | 0                   |
       | from quantity   | 1                   |
       | from            | 1969-07-20 20:17:00 |
       | to              | 1969-07-20 20:17:00 |
@@ -57,7 +57,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | percentage          |
       | reduction value       | 12.56               |
       | includes tax          | false               |
-      | price                 | 0                   |
+      | fixed price           | 0                   |
       | from quantity         | 1                   |
       | from                  | 1969-07-20 20:17:00 |
       | to                    | 1969-07-20 20:17:00 |
@@ -72,28 +72,28 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | invalid |
       | reduction value | 12.56   |
       | includes tax    | false   |
-      | price           | 0       |
+      | fixed price     | 0       |
       | from quantity   | 1       |
     Then I should get error that specific price reduction_type is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type  | percentage |
       | reduction value | -12.56     |
       | includes tax    | false      |
-      | price           | 0          |
+      | fixed price     | 0          |
       | from quantity   | 1          |
     Then I should get error that specific price reduction_percentage is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type  | amount |
       | reduction value | -12.56 |
       | includes tax    | false  |
-      | price           | 0      |
+      | fixed price     | 0      |
       | from quantity   | 1      |
     Then I should get error that specific price reduction_amount is invalid
     When I add a specific price price1 to product product1 with following details:
       | reduction type  | percentage |
       | reduction value | 12.56      |
       | includes tax    | false      |
-      | price           | 0          |
+      | fixed price     | 0          |
       | from quantity   | -1         |
     Then I should get error that specific price from_quantity is invalid
 
@@ -106,7 +106,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount |
       | reduction value | 12.56  |
       | includes tax    | true   |
-      | price           | 45.78  |
+      | fixed price     | 45.78  |
       | from quantity   | 1      |
       | shop            |        |
       | currency        |        |
@@ -119,7 +119,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -139,7 +139,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount       |
       | reduction value | 12.56        |
       | includes tax    | true         |
-      | price           | 45.78        |
+      | fixed price     | 45.78        |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -152,7 +152,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -170,7 +170,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -184,7 +184,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount       |
       | reduction value | 12.56        |
       | includes tax    | true         |
-      | price           | 45.78        |
+      | fixed price     | 45.78        |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -200,7 +200,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount       |
       | reduction value | 12.56        |
       | includes tax    | true         |
-      | price           | 45.78        |
+      | fixed price     | 45.78        |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -213,7 +213,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 12.56               |
       | includes tax          | true                |
-      | price                 | 45.78               |
+      | fixed price           | 45.78               |
       | from quantity         | 1                   |
       | from                  | 0000-00-00 00:00:00 |
       | to                    | 0000-00-00 00:00:00 |
@@ -233,7 +233,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount       |
       | reduction value | 0            |
       | includes tax    | true         |
-      | price           | 0            |
+      | fixed price     | 0            |
       | from quantity   | 1            |
       | shop            | testShop     |
       | currency        | usd          |
@@ -252,7 +252,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | amount |
       | reduction value | 0      |
       | includes tax    | true   |
-      | price           | -1     |
+      | fixed price     | -1     |
       | from quantity   | 1      |
     Then product "product4" should have 1 specific prices
     And specific price price4 should have following details:
@@ -260,7 +260,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type        | amount              |
       | reduction value       | 0                   |
       | includes tax          | true                |
-      | price                 | -1                  |
+      | fixed price           | -1                  |
       | from quantity         | 1                   |
       | product               | product4            |
       | from                  | 0000-00-00 00:00:00 |
@@ -269,7 +269,7 @@ Feature: Update product options from Back Office (BO)
       | reduction type  | percentage |
       | reduction value | 12.56      |
       | includes tax    | false      |
-      | price           | -50        |
+      | fixed price     | -50        |
       | from quantity   | 1          |
-    Then I should get error that specific price price is invalid
+    Then I should get error that specific price "fixed price" is invalid
     And product "product4" should have 1 specific prices

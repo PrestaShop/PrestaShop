@@ -67,7 +67,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             'country_id' => $specificPriceForEditing->getCountryId(),
             'group_id' => $specificPriceForEditing->getGroupId(),
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
-            'price' => (string) $fixedPrice,
+            'fixed_price' => (string) $fixedPrice,
             'leave_initial_price' => InitialPrice::isInitialPriceValue((string) $fixedPrice),
             'date_range' => [
                 'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
