@@ -47,6 +47,7 @@ const firstOrderByCustomer = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
+// Customized product data
 const customizedProduct = new ProductFaker({
   name: 'Customized product',
   type: 'Standard product',
@@ -58,22 +59,30 @@ const customizedProduct = new ProductFaker({
   },
 });
 
+// Second order by customer
+const secondOrderByCustomer = {
+  customer: DefaultCustomer,
+  product: customizedProduct.name,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
+// Virtual product data
 const virtualProduct = new ProductFaker({
   name: 'Virtual product',
   type: 'Virtual product',
   quantity: 20,
-  price: 17.00,
-  priceTaxExcluded: 14.166667,
+  tax: 20,
   taxRule: 'FR Taux standard (20%)',
   stockLocation: 'stock 1',
 });
 
+// Product with specific price data
 const productWithSpecificPrice = new ProductFaker({
   name: 'Product with specific price',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
-  price: 24.00,
   specificPrice: {
     discount: 35,
     startingAt: 1,
@@ -81,22 +90,14 @@ const productWithSpecificPrice = new ProductFaker({
   },
 });
 
+// Product with ecoTax data
 const productWithEcoTax = new ProductFaker({
   name: 'Product with ecotax',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
   minimumQuantity: 1,
-  ecoTax: 10,
 });
-
-// Second order
-const secondOrderByCustomer = {
-  customer: DefaultCustomer,
-  product: customizedProduct.name,
-  productQuantity: 1,
-  paymentMethod: PaymentMethods.wirePayment.moduleName,
-};
 
 // Discount data
 const discountData = {
@@ -255,7 +256,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
         billingAddress: Address.third,
         product: virtualProduct,
         productQuantity: 13,
-        tax: '20 %',
+        tax: `${virtualProduct.tax} %`,
       },
     },
     {
@@ -536,9 +537,9 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               const productPriceExist = await files.isTextInPDF(
                 filePath,
                 `${test.args.product.name},  `
-                + `€${test.args.product.priceTaxExcluded.toFixed(2)},  `
+                + `€${test.args.product.price.toFixed(2)},  `
                 + `${test.args.productQuantity},  `
-                + `€${(test.args.product.priceTaxExcluded * test.args.productQuantity).toFixed(2)}`,
+                + `€${(test.args.product.price * test.args.productQuantity).toFixed(2)}`,
               );
               await expect(
                 productPriceExist,
@@ -559,13 +560,13 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               + 'are correct', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceSpecificPrice', baseContext);
 
-              const unitPrice = test.args.product.priceTaxExcluded
-                - (test.args.product.priceTaxExcluded * test.args.product.specificPrice.discount) / 100;
+              const discountValue = await viewOrderPage.percentage(test.args.product.price, test.args.product.specificPrice.discount);
+              const unitPrice = test.args.product.price - discountValue;
 
               const basePriceVisible = await files.isTextInPDF(
                 filePath,
                 `${test.args.product.name},  `
-                + `€${test.args.product.priceTaxExcluded.toFixed(2)},  `
+                + `€${test.args.product.price.toFixed(2)},  `
                 + `€${unitPrice.toFixed(2)},  `
                 + `${test.args.productQuantity},  `
                 + `€${unitPrice.toFixed(2)}`,
@@ -588,13 +589,20 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceWithEcoTax', baseContext);
 
+                console.log(test.args.product.ecoTax);
+                console.log(`${test.args.product.name},  `
+                  + `€${test.args.product.price.toFixed(2)},  ,`
+                  + `Ecotax: €${test.args.product.ecoTax.toFixed(2)},  `
+                  + `${test.args.productQuantity},  `
+                  + `€${test.args.product.price.toFixed(2)}`,
+                );
                 const basePriceVisible = await files.isTextInPDF(
                   filePath,
                   `${test.args.product.name},  `
-                  + `€${test.args.product.priceTaxExcluded.toFixed(2)},  ,`
+                  + `€${test.args.product.price.toFixed(2)},  ,`
                   + `Ecotax: €${test.args.product.ecoTax.toFixed(2)},  `
                   + `${test.args.productQuantity},  `
-                  + `€${test.args.product.priceTaxExcluded.toFixed(2)}`,
+                  + `€${test.args.product.price.toFixed(2)}`,
                 );
                 await expect(basePriceVisible, 'Base price is not visible!').to.be.true;
               });
@@ -731,7 +739,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', `checkTotal${index}`, baseContext);
 
-                const totalPriceTaxExcl = test.args.product.priceTaxExcluded * test.args.productQuantity;
+                const totalPriceTaxExcl = test.args.product.price * test.args.productQuantity;
 
                 // Total Products, Shipping Costs, Total (Tax excl.), Total
                 const isShippingCostVisible = await files.isTextInPDF(
@@ -753,8 +761,8 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', `checkTotal${index}`, baseContext);
 
-                const unitPrice = test.args.product.priceTaxExcluded
-                  - (test.args.product.priceTaxExcluded * test.args.product.specificPrice.discount) / 100;
+                const discount = await viewOrderPage.percentage(test.args.product.price, test.args.product.specificPrice.discount);
+                const unitPrice = test.args.product.price - discount;
 
                 const totalPriceTaxExcl = unitPrice + customizedProduct.price;
 
@@ -1015,11 +1023,12 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountsTable', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
+            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
               'Discounts,  Discount,  '
-              + `- €${((totalPrice * discountData.value) / 100).toFixed(2)}`,
+              + `- €${discount.toFixed(2)}`,
             );
             await expect(isDiscountVisible, 'Discounts table is not visible in the invoice!').to.be.true;
           });
@@ -1028,7 +1037,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscount', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
-            const discount = (totalPrice * discountData.value) / 100;
+            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
@@ -1062,11 +1071,12 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkIsDiscountNotVisible', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
+            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
               ' Total Discounts,  '
-              + `-€${(totalPrice - (totalPrice * discountData.value) / 100).toFixed(2)}`,
+              + `-€${(totalPrice - discount).toFixed(2)}`,
             );
             await expect(isDiscountVisible, 'Total discount is not correct in the invoice!').to.be.false;
           });
@@ -1139,7 +1149,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
     });
   });
 
-  // Post-condition - Disable EcoTax
+  // POST-condition - Disable EcoTax
   describe('POS-TEST: Disable EcoTax', async () => {
     it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage2', baseContext);
