@@ -1631,10 +1631,10 @@ class CartCore extends ObjectModel
                 'id_customization' => (int) $id_customization,
             ]);
 
-            if ((int)$id_customization) {
+            if ((int) $id_customization) {
                 $result_add &= Db::getInstance()->update('customization', [
-                    'in_cart' => 1
-                ], '`id_customization` = '.(int)$id_customization);
+                    'in_cart' => 1,
+                ], '`id_customization` = ' . (int) $id_customization);
             }
 
             if (!$result_add) {

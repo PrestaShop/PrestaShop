@@ -6088,6 +6088,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated 8.0.0
+     *
      * @param array $products
      * @param array $customized_datas
      */
@@ -6149,6 +6150,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @deprecated 8.0.0
+     *
      * Add customization price for a single product
      *
      * @param array $product Product data
