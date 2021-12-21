@@ -37,7 +37,7 @@ use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use WebserviceKey;
 
-class WebserviceKeyFeatureContext extends CommonDomainFeatureContext
+class WebserviceKeyFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @Given I add a new webservice key with specified properties:

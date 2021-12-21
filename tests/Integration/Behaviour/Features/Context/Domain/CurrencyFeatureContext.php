@@ -67,6 +67,14 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
         static::restoreCurrenciesTables();
     }
 
+    /**
+     * @BeforeScenario @restore-currencies-before-scenario
+     */
+    public static function restoreCurrenciesTablesBeforeScenario(): void
+    {
+        static::restoreCurrenciesTables();
+    }
+
     private static function restoreCurrenciesTables(): void
     {
         DatabaseDump::restoreTables([
@@ -74,6 +82,8 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
             'currency_lang',
             'currency_shop',
         ]);
+        Configuration::set('PS_CURRENCY_DEFAULT', 1);
+        Currency::resetStaticCache();
     }
 
     /**

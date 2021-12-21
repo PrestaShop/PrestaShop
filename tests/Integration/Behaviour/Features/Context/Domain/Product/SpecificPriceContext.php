@@ -92,7 +92,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $this->cleanLastException();
         try {
             $command = $this->createAddSpecificPriceCommand($productId, $tableNode);
 

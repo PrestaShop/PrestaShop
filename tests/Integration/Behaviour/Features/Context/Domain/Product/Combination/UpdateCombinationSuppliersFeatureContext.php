@@ -51,7 +51,6 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      */
     public function updateCombinationDefaultSupplier(string $combinationReference, string $defaultSupplierReference): void
     {
-        $this->cleanLastException();
         try {
             $command = new SetCombinationDefaultSupplierCommand(
                 $this->getSharedStorage()->get($combinationReference),

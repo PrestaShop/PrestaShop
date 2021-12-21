@@ -1,9 +1,10 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s language
-@restore-all-tables-before-feature
+@restore-languages-after-feature
 Feature: Language
 
   Background:
     Given shop "shop1" with name "test_shop" exists
+    And I restore languages tables
     And I add a new language with the following details:
       | name            | Français (French) |
       | isoCode         | fr                |
@@ -35,7 +36,6 @@ Feature: Language
       | isRtl           | 0                    |
       | isActive        | 1                    |
       | shop            | shop1                |
-    Then I should get no error
     And the language with ISOCode "ag" should have the following details:
       | name            | Español AR (Spanish) |
       | isoCode         | ag                   |
@@ -47,7 +47,6 @@ Feature: Language
       | shop            | shop1                |
     ## Reset
     When I delete the language with ISOCode "ag"
-    Then I should get no error
 
   Scenario: Edit language
     When I update the language with ISOCode "fr" with the following details:
@@ -58,7 +57,6 @@ Feature: Language
       | isRtl           | 0                 |
       | isActive        | 1                 |
       | shop            | shop1             |
-    Then I should get no error
     And the language with ISOCode "fr" should have the following details:
       | name            | Language          |
       | isoCode         | fr                |
@@ -71,7 +69,6 @@ Feature: Language
 
   Scenario: Delete language
     When I delete the language with ISOCode "fr"
-    Then I should get no error
     And the language with ISOCode "fr" shouldn't exist
 
   Scenario: Delete a default language
@@ -79,12 +76,9 @@ Feature: Language
     When I delete the language with ISOCode "fr"
     Then I should get an error that a default language can't be deleted
     And the language with ISOCode "fr" should exist
-    ## Reset default language back to english
-    When language with iso code "en" is the default one
 
   Scenario: Bulk Delete
     When I bulk delete languages with ISOCode "fr,gb"
-    Then I should get no error
     And the language with ISOCode "fr" shouldn't exist
     And the language with ISOCode "gb" shouldn't exist
 
@@ -100,51 +94,36 @@ Feature: Language
     And the language with ISOCode "gb" shouldn't exist
 
   Scenario: Toggle Status
-    When I add a new language with the following details:
-      | name            | Español AR (Spanish) |
-      | isoCode         | ag                   |
-      | tagIETF         | es-ar                |
-      | shortDateFormat | Y-m-d                |
-      | fullDateFormat  | Y-m-d H:i:s          |
-      | isRtl           | 0                    |
-      | isActive        | 1                    |
-      | shop            | shop1                |
-    Then I should get no error
-    And the language with ISOCode "ag" should be enabled
-    When I disable the language with ISOCode "ag"
-    Then the language with ISOCode "ag" should be disabled
-    When I enable the language with ISOCode "ag"
-    And the language with ISOCode "ag" should be enabled
+    Given the language with ISOCode "fr" should be enabled
+    When I disable the language with ISOCode "fr"
+    Then the language with ISOCode "fr" should be disabled
+    When I enable the language with ISOCode "fr"
+    And the language with ISOCode "fr" should be enabled
 
   Scenario: Toggle the status of the default language
-    When language with iso code "ag" is the default one
-    And I disable the language with ISOCode "ag"
+    Given language with iso code "fr" is the default one
+    And I disable the language with ISOCode "fr"
     Then I should get an error that a default language can't be disabled
-    And the language with ISOCode "ag" should be enabled
-    ## Reset default language back to english
-    When language with iso code "en" is the default one
+    And the language with ISOCode "fr" should be enabled
 
   Scenario: Bulk Toggle Status
     Given the language with ISOCode "fr" should be enabled
-    And the language with ISOCode "ag" should be enabled
-    When I bulk disable languages with ISOCode "ag,fr"
-    Then I should get no error
+    And the language with ISOCode "gb" should be enabled
+    When I bulk disable languages with ISOCode "gb,fr"
     And the language with ISOCode "fr" should be disabled
-    And the language with ISOCode "ag" should be disabled
-    When I bulk enable languages with ISOCode "ag,fr"
-    Then I should get no error
+    And the language with ISOCode "gb" should be disabled
+    When I bulk enable languages with ISOCode "gb,fr"
     And the language with ISOCode "fr" should be enabled
-    And the language with ISOCode "ag" should be enabled
+    And the language with ISOCode "gb" should be enabled
 
   Scenario: Bulk Toggle Status (with a default one)
-    When language with iso code "ag" is the default one
-    When I bulk disable languages with ISOCode "ag,fr"
+    Given language with iso code "fr" is the default one
+    When I bulk disable languages with ISOCode "fr,gb"
     Then I should get an error that a default language can't be disabled
     And the language with ISOCode "fr" should be enabled
-    And the language with ISOCode "ag" should be enabled
-    When I bulk disable languages with ISOCode "fr,ag"
+    And the language with ISOCode "gb" should be enabled
+    # Second case the gb is provided first so it is disabled before the exception is thrown for default language
+    When I bulk disable languages with ISOCode "gb,fr"
     Then I should get an error that a default language can't be disabled
-    And the language with ISOCode "fr" should be disabled
-    And the language with ISOCode "ag" should be enabled
-    ## Reset default language back to english
-    When language with iso code "en" is the default one
+    And the language with ISOCode "fr" should be enabled
+    And the language with ISOCode "gb" should be disabled
