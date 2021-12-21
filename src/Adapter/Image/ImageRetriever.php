@@ -192,7 +192,7 @@ class ImageRetriever
             if ($generateHighDpiImages) {
                 $resizedImagePathHighDpi = implode(DIRECTORY_SEPARATOR, [
                     $imageFolderPath,
-                    $id_image . '-' . $image_type['name'] . self::HIGH_RES_URL_SUFFIX . '.' . $ext,
+                    $id_image . '-' . $image_type['name'] . static::HIGH_RES_URL_SUFFIX . '.' . $ext,
                 ]);
                 if (!file_exists($resizedImagePathHighDpi)) {
                     ImageManager::resize(
