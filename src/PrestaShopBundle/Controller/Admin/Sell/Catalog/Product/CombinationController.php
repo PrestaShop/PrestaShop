@@ -97,6 +97,7 @@ class CombinationController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/edit.html.twig', [
+            'lightDisplay' => $liteDisplaying,
             'combinationForm' => $combinationForm->createView(),
         ]);
     }
