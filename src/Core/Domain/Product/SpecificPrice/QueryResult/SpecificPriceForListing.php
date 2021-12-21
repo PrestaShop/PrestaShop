@@ -108,7 +108,7 @@ class SpecificPriceForListing
      * @param string $reductionType
      * @param DecimalNumber $reductionValue
      * @param bool $includesTax
-     * @param FixedPriceInterface $price
+     * @param FixedPriceInterface $fixedPrice
      * @param int $fromQuantity
      * @param DateTimeInterface $dateTimeFrom
      * @param DateTimeInterface $dateTimeTo
@@ -124,7 +124,7 @@ class SpecificPriceForListing
         string $reductionType,
         DecimalNumber $reductionValue,
         bool $includesTax,
-        FixedPriceInterface $price,
+        FixedPriceInterface $fixedPrice,
         int $fromQuantity,
         DateTimeInterface $dateTimeFrom,
         DateTimeInterface $dateTimeTo,
@@ -139,7 +139,7 @@ class SpecificPriceForListing
         $this->reductionType = $reductionType;
         $this->reductionValue = $reductionValue;
         $this->includesTax = $includesTax;
-        $this->fixedPrice = $price;
+        $this->fixedPrice = $fixedPrice;
         $this->fromQuantity = $fromQuantity;
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
