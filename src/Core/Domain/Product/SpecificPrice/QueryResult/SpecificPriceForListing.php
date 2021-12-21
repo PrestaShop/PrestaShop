@@ -64,29 +64,34 @@ class SpecificPriceForListing
     private $fromQuantity;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $shop;
+    private $shopName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $currency;
+    private $currencyName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $country;
+    private $countryName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $group;
+    private $groupName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $customer;
+    private $customerName;
+
+    /**
+     * @var string|null
+     */
+    private $combinationName;
 
     /**
      * @var DateTimeInterface
@@ -97,11 +102,6 @@ class SpecificPriceForListing
      * @var DateTimeInterface
      */
     private $dateTimeTo;
-
-    /**
-     * @var string|null
-     */
-    private $combinationName;
 
     /**
      * @param int $specificPriceId
@@ -144,11 +144,11 @@ class SpecificPriceForListing
         $this->dateTimeFrom = $dateTimeFrom;
         $this->dateTimeTo = $dateTimeTo;
         $this->combinationName = $combinationName;
-        $this->shop = $shop;
-        $this->currency = $currency;
-        $this->country = $country;
-        $this->group = $group;
-        $this->customer = $customer;
+        $this->shopName = $shop;
+        $this->currencyName = $currency;
+        $this->countryName = $country;
+        $this->groupName = $group;
+        $this->customerName = $customer;
     }
 
     /**
@@ -210,41 +210,41 @@ class SpecificPriceForListing
     /**
      * @return string|null
      */
-    public function getShop(): ?string
+    public function getShopName(): ?string
     {
-        return $this->shop;
+        return $this->shopName;
     }
 
     /**
      * @return string|null
      */
-    public function getCurrency(): ?string
+    public function getCurrencyName(): ?string
     {
-        return $this->currency;
+        return $this->currencyName;
     }
 
     /**
      * @return string|null
      */
-    public function getCountry(): ?string
+    public function getCountryName(): ?string
     {
-        return $this->country;
+        return $this->countryName;
     }
 
     /**
      * @return string|null
      */
-    public function getGroup(): ?string
+    public function getGroupName(): ?string
     {
-        return $this->group;
+        return $this->groupName;
     }
 
     /**
      * @return string|null
      */
-    public function getCustomer(): ?string
+    public function getCustomerName(): ?string
     {
-        return $this->customer;
+        return $this->customerName;
     }
 
     /**
