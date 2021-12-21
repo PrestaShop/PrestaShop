@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBu
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
- * @todo: missing behat
  * Handles @see GetSpecificPriceList using legacy object model
  */
 class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterface
