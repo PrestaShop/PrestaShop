@@ -465,6 +465,16 @@ class CommonPage {
 
     return download.path();
   }
+
+  /**
+   * Calculate percentage
+   * @param num {number} Number to do the percentage
+   * @param per {number} Percentage value
+   * @returns {Promise<number>}
+   */
+  async percentage(num, per) {
+    return (num / 100) * per;
+  }
 }
 
 module.exports = CommonPage;
