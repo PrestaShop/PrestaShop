@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9643b2e29ae81a444dd035397af55f9",
+    "content-hash": "cd93c72eebb06658e639f69beae80be9",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -6356,16 +6356,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v4.0.4",
+            "version": "v4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "9da37780f6004271616579365238d9421a2d1b97"
+                "reference": "86a356f9cd7d063643d7e027ec75077c098b9c88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/9da37780f6004271616579365238d9421a2d1b97",
-                "reference": "9da37780f6004271616579365238d9421a2d1b97",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/86a356f9cd7d063643d7e027ec75077c098b9c88",
+                "reference": "86a356f9cd7d063643d7e027ec75077c098b9c88",
                 "shasum": ""
             },
             "require": {
@@ -6377,6 +6377,7 @@
             },
             "require-dev": {
                 "doctrine/common": "~2.10.0",
+                "friendsofphp/php-cs-fixer": "^2.18",
                 "phpunit/phpunit": "^7.5 || ^8.5",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
                 "symfony/translation": "^3.4 || ^4.4 || ^5.0"
@@ -6409,9 +6410,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.0.4"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.1.1"
             },
-            "time": "2020-11-13T08:11:44+00:00"
+            "time": "2021-12-03T16:01:50+00:00"
         },
         {
             "name": "prestashop/welcome",

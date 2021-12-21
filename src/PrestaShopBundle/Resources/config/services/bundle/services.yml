@@ -6,6 +6,7 @@ parameters:
     modules_dir:                        "%kernel.root_dir%/../modules"
     themes_dir:                         "%kernel.root_dir%/../themes"
     translation_catalogues_export_dir:  "%kernel.cache_dir%/export"
+    translations_catalogue_extract_excluded_dirs:   ['vendor', 'lib', 'tests']
 
 services:
     _defaults:

@@ -101,7 +101,7 @@
     "prestashop/statssales": "^2",
     "prestashop/statssearch": "^2",
     "prestashop/statsstock": "^2",
-    "prestashop/translationtools-bundle": "^4.0",
+    "prestashop/translationtools-bundle": "^4.1",
     "prestashop/welcome": "^6",
     "sensio/distribution-bundle": "^5.0",
     "sensio/framework-extra-bundle": "^5.1",
