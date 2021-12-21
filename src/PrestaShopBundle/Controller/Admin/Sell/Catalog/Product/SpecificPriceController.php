@@ -78,7 +78,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Creation successful', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
-                    'liteDisplaying' => $request->query->has('liteDisplaying'),
+                    'lightDisplay' => $request->query->has('liteDisplaying'),
                     // This action is only used inside a dedicated modal so we always enforce the lite display in the redirection url
                     'specificPriceId' => $result->getIdentifiableObjectId(),
                 ]);
@@ -89,6 +89,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
             'specificPriceForm' => $form->createView(),
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -110,7 +111,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'specificPriceId' => $specificPriceId,
-                    'liteDisplaying' => $request->query->has('liteDisplaying'),
+                    'lightDisplay' => $request->query->has('liteDisplaying'),
                 ]);
             }
         } catch (Exception $e) {
@@ -119,6 +120,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/edit.html.twig', [
             'specificPriceForm' => $form->createView(),
+            'lightDisplay' => $request->query->has('liteDisplaying'),
         ]);
     }
 
