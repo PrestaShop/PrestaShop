@@ -99,19 +99,9 @@ class CombinationStockUpdater
     {
         $updatableProperties = [];
 
-        if (null !== $properties->getQuantity()) {
-            $combination->quantity = $properties->getQuantity();
-            $updatableProperties[] = 'quantity';
-        }
-
         if (null !== $properties->getAvailableDate()) {
             $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
-        }
-
-        if (null !== $properties->getLocation()) {
-            $combination->location = $properties->getLocation();
-            $updatableProperties[] = 'location';
         }
 
         if (null !== $properties->getLowStockThreshold()) {
