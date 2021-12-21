@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
@@ -4264,28 +4265,30 @@ class CartCore extends ObjectModel
             AND `in_cart` = 0'
         );
 
-        // Delete customization picture if necessary
-        if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
-            $result = !file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']);
-            $result = !($result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small')) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small');
-        }
+        if (is_array($cust_data)) {
+            // Delete customization picture if necessary
+            if (isset($cust_data['type']) && $cust_data['type'] == Product::CUSTOMIZE_FILE) {
+                $result = !file_exists(_PS_UPLOAD_DIR_ . $cust_data['value']) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value']);
+                $result = !($result && file_exists(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small')) || @unlink(_PS_UPLOAD_DIR_ . $cust_data['value'] . '_small');
+            }
 
-        $result = $result && Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
-            WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
-            AND `index` = ' . (int) $index
-        );
-
-        $hasRemainingCustomData = Db::getInstance()->getValue(
-            'SELECT 1 FROM `' . _DB_PREFIX_ . 'customized_data`
-            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
-        );
-
-        if (!$hasRemainingCustomData) {
             $result = $result && Db::getInstance()->execute(
-                'DELETE FROM `' . _DB_PREFIX_ . 'customization`
-            WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+                'DELETE FROM `' . _DB_PREFIX_ . 'customized_data`
+                WHERE `id_customization` = ' . (int) $cust_data['id_customization'] . '
+                AND `index` = ' . (int) $index
             );
+
+            $hasRemainingCustomData = Db::getInstance()->getValue(
+                'SELECT 1 FROM `' . _DB_PREFIX_ . 'customized_data`
+                WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+            );
+
+            if (!$hasRemainingCustomData) {
+                $result = $result && Db::getInstance()->execute(
+                    'DELETE FROM `' . _DB_PREFIX_ . 'customization`
+                    WHERE `id_customization` = ' . (int) $cust_data['id_customization']
+                );
+            }
         }
 
         return $result;
