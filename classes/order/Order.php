@@ -684,8 +684,6 @@ class OrderCore extends ObjectModel
         $product['customizedDatas'] = null;
         if (isset($customized_datas[$product['product_id']][$product['product_attribute_id']])) {
             $product['customizedDatas'] = $customized_datas[$product['product_id']][$product['product_attribute_id']];
-        } else {
-            $product['customizationQuantityTotal'] = 0;
         }
     }
 
