@@ -347,7 +347,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', `searchProduct${index}`, baseContext);
 
             await viewOrderPage.searchProduct(page, test.args.product.name);
-            const result = await viewOrderPage.getSearchedProductDetails(page);
+            const result = await viewOrderPage.getSearchedProductInformation(page);
             await expect(result.available).to.equal(test.args.product.quantity - 1);
           });
 
