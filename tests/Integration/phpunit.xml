@@ -1,8 +1,6 @@
 <phpunit
     bootstrap="bootstrap.php"
-    convertDeprecationsToExceptions="false"
-    processIsolation="true">
-  <!-- process isolation is required since the introduction of GenerateMailTemplatesCommandTest file -->
+    convertDeprecationsToExceptions="false">
   <php>
     <env name="KERNEL_CLASS" value="AppKernel" />
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
