@@ -193,9 +193,8 @@ function createOrderByGuestTest(orderData, baseContext = 'commonTests-createOrde
   });
 }
 
-
 /**
- * Function to simple order with specific product by customer in FO
+ * Function to create order with specific product by customer in FO
  * @param orderData {object} Data to set when creating the order
  * @param baseContext {string} String to identify the test
  */
