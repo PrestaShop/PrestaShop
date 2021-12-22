@@ -2169,6 +2169,7 @@ abstract class ModuleCore implements ModuleInterface
         if (isset($this->context->country)) {
             $cache_array[] = (int) $this->context->country->id;
         }
+        $cache_array[] = (int) $this->context->getDevice();
 
         return implode('|', $cache_array);
     }
