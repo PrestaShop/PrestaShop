@@ -441,7 +441,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               + `${test.args.deliveryAddress.country},`
               + `${test.args.deliveryAddress.phone}`,
             );
-            await expect(deliveryAddressExist, 'Delivery address does not exist in invoice!').to.be.true;
+            await expect(deliveryAddressExist, 'Delivery address is not correct in invoice!').to.be.true;
           });
 
           it('should check that the \'Billing address\' is correct', async function () {
@@ -472,7 +472,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 + `${Address.third.phone}`,
               );
             }
-            await expect(billingAddressExist, 'Billing address does not exist in invoice!').to.be.true;
+            await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
           });
 
           it('should check that the \'Invoice number, Invoice date, order Reference and Order date\' are correct',
@@ -578,7 +578,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               );
               await expect(
                 basePriceVisible,
-                'Base price (Tax excl.), Unit Price, Quantity, Total (Tax excl.) is not correct!').to.be.true;
+                'Base price (Tax excl.), Unit Price, Quantity, Total (Tax excl.) are not correct!').to.be.true;
             });
           }
 
@@ -594,22 +594,15 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceWithEcoTax', baseContext);
 
-                console.log(test.args.product.ecoTax);
-                console.log(`${test.args.product.name},  `
-                  + `€${test.args.product.price.toFixed(2)},  ,`
-                  + `Ecotax: €${test.args.product.ecoTax.toFixed(2)},  `
-                  + `${test.args.productQuantity},  `
-                  + `€${test.args.product.price.toFixed(2)}`,
-                );
                 const basePriceVisible = await files.isTextInPDF(
                   filePath,
-                  `${test.args.product.name},  `
+                  `${test.args.product.name}, ,  `
                   + `€${test.args.product.price.toFixed(2)},  ,`
-                  + `Ecotax: €${test.args.product.ecoTax.toFixed(2)},  `
-                  + `${test.args.productQuantity},  `
+                  + `Ecotax: €${test.args.product.ecoTax.toFixed(2)},,  `
+                  + `${test.args.productQuantity}, ,  `
                   + `€${test.args.product.price.toFixed(2)}`,
                 );
-                await expect(basePriceVisible, 'Base price is not visible!').to.be.true;
+                await expect(basePriceVisible, 'Base price is not correct in invoice!').to.be.true;
               });
           }
         });
@@ -653,12 +646,13 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 async function () {
                   await testContext.addContextItem(this, 'testIdentifier', 'checkEcotax', baseContext);
 
+                  // Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  Ecotax, ,  0.000 %, ,  €5.00, ,  €0.00
                   const taxDetailsVisible = await files.isTextInPDF(
                     filePath,
-                    'Tax Detail,Tax Rate,Base price,Total Tax,  '
-                    + 'Ecotax,  '
-                    + '0.000 %,  '
-                    + `€${productWithEcoTax.ecoTax.toFixed(2)},  `
+                    'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  '
+                    + 'Ecotax, ,  '
+                    + '0.000 %, ,  '
+                    + `€${productWithEcoTax.ecoTax.toFixed(2)}, ,  `
                     + '€0.00',
                   );
                   await expect(
@@ -693,7 +687,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 'Payment Method, ,Bank transfer, ,'
                 + `€${customizedProduct.price.toFixed(2)}`,
               );
-              await expect(paymentMethodExist, 'Payment method is not correct!').to.be.true;
+              await expect(paymentMethodExist, 'Payment method and total are not correct!').to.be.true;
             });
           }
 
@@ -785,7 +779,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 );
                 await expect(
                   isShippingCostVisible,
-                  'Total Products, Total(Tax exc.), Total Tax, Total are not correct!',
+                  'Total Products, Shipping Costs, Total(Tax exc.), Total are not correct!',
                 ).to.be.true;
               });
           }
@@ -800,14 +794,14 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 // Total Products, Shipping Costs, Total (Tax excl.), Total
                 const isShippingCostVisible = await files.isTextInPDF(
                   filePath,
-                  `Total Products,  €${totalPriceTaxExcl.toFixed(2)},  `
-                  + 'Shipping Costs,  Free Shipping,  '
-                  + `Total (Tax excl.),  €${totalPriceTaxExcl.toFixed(2)},  `
-                  + `Total,  €${totalPriceTaxExcl.toFixed(2)}`,
+                  `Total Products, ,  €${totalPriceTaxExcl.toFixed(2)},  `
+                  + 'Shipping Costs, ,  Free Shipping,,  '
+                  + `Total (Tax excl.), ,  €${totalPriceTaxExcl.toFixed(2)},,  `
+                  + `Total, ,  €${totalPriceTaxExcl.toFixed(2)}`,
                 );
                 await expect(
                   isShippingCostVisible,
-                  'Total Products, Total(Tax exc.), Total Tax, Total are not correct!',
+                  'Total Products, Shipping Costs, Total(Tax exc.), Total are not correct!',
                 ).to.be.true;
               });
           }
@@ -874,7 +868,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
             const deliveryAddressExist = await files.isTextInPDF(
               filePath,
-              'Delivery Address,'
+              'Delivery Address,,'
               + `${Address.third.firstName} ${Address.third.lastName},`
               + `${Address.third.company},`
               + `${Address.third.address} ${Address.third.secondAddress},`
@@ -909,7 +903,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
             const deliveryAddressExist = await files.isTextInPDF(
               filePath,
-              'Billing Address,'
+              'Billing Address,,'
               + `${Address.third.firstName} ${Address.third.lastName},`
               + `${Address.third.company},`
               + `${Address.third.address} ${Address.third.secondAddress},`
@@ -922,7 +916,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
         });
 
         describe('Add note and check the invoice', async () => {
-          it('should click on \'DocumentS\' tab', async function () {
+          it('should click on \'Documents\' tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
 
             const isTabOpened = await viewOrderPage.goToDocumentsTab(page);
@@ -937,7 +931,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           });
 
           it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice', baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckNote1', baseContext);
 
             filePath = await viewOrderPage.viewInvoice(page);
 
@@ -946,10 +940,40 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           });
 
           it('should check that the note is visible in the invoice', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', 'checkIsNotVisible', baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', 'checkIsNoteNotVisible', baseContext);
 
             const isNoteVisible = await files.isTextInPDF(filePath, 'Test note');
             await expect(isNoteVisible, 'Note does not exist in invoice!').to.be.true;
+          });
+
+          it('should click on \'Documents\' tab', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTabToDeleteNote', baseContext);
+
+            const isTabOpened = await viewOrderPage.goToDocumentsTab(page);
+            await expect(isTabOpened).to.be.true;
+          });
+
+          it('should delete the note', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'deleteNote', baseContext);
+
+            const textResult = await viewOrderPage.setDocumentNote(page, '', 1);
+            await expect(textResult).to.equal(viewOrderPage.updateSuccessfullMessage);
+          });
+
+          it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'viewInvoiceToCheckNote2', baseContext);
+
+            filePath = await viewOrderPage.viewInvoice(page);
+
+            const doesFileExist = await files.doesFileExist(filePath, 5000);
+            await expect(doesFileExist, 'File is not downloaded!').to.be.true;
+          });
+
+          it('should check that the note is not visible in the invoice', async function () {
+            await testContext.addContextItem(this, 'testIdentifier', 'checkIsNoteVisible', baseContext);
+
+            const isNoteVisible = await files.isTextInPDF(filePath, 'Test note');
+            await expect(isNoteVisible, 'Note does is visible in invoice!').to.be.false;
           });
         });
 
@@ -989,7 +1013,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           it('should check that the edited \'Carrier\' is visible in the invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'checkCarrier', baseContext);
 
-            const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier,${Carriers.myCarrier.name}`);
+            const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ,${Carriers.myCarrier.name}`);
             await expect(isCarrierVisible, 'New carrier not exist in invoice!').to.be.true;
           });
 
@@ -1001,10 +1025,10 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
               const isDiscountVisible = await files.isTextInPDF(
                 filePath,
-                ` Total Products,  €${totalPrice.toFixed(2)},  `
-                + 'Shipping Costs,  €7.00,  '
-                + `Total (Tax excl.),  €${(totalPrice + 7.00).toFixed(2)},  `
-                + `Total,  €${(totalPrice + 7.00).toFixed(2)}`,
+                ` Total Products, ,  €${totalPrice.toFixed(2)},  `
+                + 'Shipping Costs, ,  €7.00,,  '
+                + `Total (Tax excl.), ,  €${(totalPrice + 7.00).toFixed(2)},,  `
+                + `Total, ,  €${(totalPrice + 7.00).toFixed(2)}`,
               );
               await expect(isDiscountVisible, 'Shipping cost is not correct in the invoice!').to.be.true;
             });
@@ -1034,9 +1058,10 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
             const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
 
+            // Discounts,,  Discount, ,  - €14.30,
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
-              'Discounts,  Discount,  '
+              'Discounts,,  Discount, ,  '
               + `- €${discount.toFixed(2)}`,
             );
             await expect(isDiscountVisible, 'Discounts table is not visible in the invoice!').to.be.true;
@@ -1050,11 +1075,11 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
-              ` Total Products,  €${totalPrice.toFixed(2)},  `
-              + `Total Discounts,  - €${discount.toFixed(2)},  `
-              + 'Shipping Costs,  €7.00,  '
-              + `Total (Tax excl.),  €${(totalPrice - discount + 7.00).toFixed(2)},  `
-              + `Total,  €${(totalPrice - discount + 7.00).toFixed(2)}`,
+              ` Total Products, ,  €${totalPrice.toFixed(2)},  `
+              + `Total Discounts, ,  - €${discount.toFixed(2)},  `
+              + 'Shipping Costs, ,  €7.00,,  '
+              + `Total (Tax excl.), ,  €${(totalPrice - discount + 7.00).toFixed(2)},,  `
+              + `Total, ,  €${(totalPrice - discount + 7.00).toFixed(2)}`,
             );
             await expect(isDiscountVisible, 'Discount is not visible in the invoice!').to.be.true;
           });
@@ -1116,8 +1141,8 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
             const isPaymentMethodVisible = await files.isTextInPDF(
               filePath,
-              `,Payment Method,Bank transfer,€${customizedProduct.price.toFixed(2)},`
-              + `${paymentData.paymentMethod},€${paymentData.amount}`,
+              `,Payment Method, ,Bank transfer, ,€${customizedProduct.price.toFixed(2)},,`
+              + `${paymentData.paymentMethod}, ,€${paymentData.amount}`,
             );
             await expect(isPaymentMethodVisible, 'Payment method is no correct!').to.be.true;
           });
