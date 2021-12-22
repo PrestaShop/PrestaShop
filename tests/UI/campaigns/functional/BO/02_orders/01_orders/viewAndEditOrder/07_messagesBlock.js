@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -31,17 +32,11 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_messagesBlock'
 
 let browserContext;
 let page;
+const today = getDateFormat('mm/dd/yyyy');
 
 const messageData = {orderMessage: 'Delay', displayToCustomer: true, message: ''};
 const secondMessageData = {orderMessage: 'Delay', displayToCustomer: false, message: 'test message visibility'};
 let textMessage = '';
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 // New order by customer data
 const orderByCustomerData = {
@@ -153,7 +148,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'checkSenderAndDate1', baseContext);
 
       textMessage = await viewOrderPage.getTextMessage(page);
-      await expect(textMessage).to.contains(`Me ${todayDate}`);
+      await expect(textMessage).to.contains(`Me ${today}`);
     });
 
     it('should check the employee icon, the message date and the message sender', async function () {
@@ -224,7 +219,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
 
       const message = await foOrderHistoryPage.getMessageRow(page);
       await expect(message)
-        .to.contain(todayDate)
+        .to.contain(today)
         .and.to.contain(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`)
         .and.to.contain(textMessage);
     }); */
@@ -283,7 +278,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await testContext.addContextItem(this, 'testIdentifier', 'checkSenderAndDate2', baseContext);
 
       textMessage = await viewOrderPage.getTextMessage(page, 2);
-      await expect(textMessage, 'Sender or date is incorrect!').to.contains(`Me ${todayDate}`);
+      await expect(textMessage, 'Sender or date is incorrect!').to.contains(`Me ${today}`);
     });
   });
 
@@ -380,7 +375,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
 
       textMessage = await viewOrderPage.getTextMessage(page, 3, 'customer');
       await expect(textMessage, 'Sender or date is not correct!')
-        .to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName} ${todayDate}`)
+        .to.contains(`${DefaultCustomer.firstName} ${DefaultCustomer.lastName} ${today}`)
         .and.to.contains(messageToSendData.message);
     });
   });
