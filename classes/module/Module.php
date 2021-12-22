@@ -2182,6 +2182,7 @@ abstract class ModuleCore implements ModuleInterface
             $this->smarty->assign([
                 'module_dir' => __PS_BASE_URI__ . 'modules/' . basename($file, '.php') . '/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__) . 'modules/' . basename($file, '.php') . '/',
+                'allow_push' => false,
             ]);
 
             if ($cache_id !== null) {
