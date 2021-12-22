@@ -1,0 +1,25 @@
+admin_merchandise_returns_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::indexAction
+    _legacy_controller: AdminReturn
+#  _legacy_link: AdminReturn
+
+admin_merchandise_returns_save_options:
+  path: /options
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::indexAction
+    _legacy_controller: AdminReturn
+#  _legacy_link: AdminReturn:submitOptionsorder_return
+
+admin_merchandise_returns_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.merchandise_return
+    redirectRoute: admin_merchandise_returns_index
+    _legacy_controller: AdminReturn
+#  _legacy_link: AdminReturn:submitFilterorder_return

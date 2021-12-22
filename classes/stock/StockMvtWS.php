@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -128,7 +128,7 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public $management_type;
 
-    /*
+    /**
      * @var string : Name of the product (@see Product::getProductName)
      */
     public $product_name;
@@ -144,6 +144,11 @@ class StockMvtWSCore extends ObjectModelCore
     public $upc;
 
     /**
+     * @var string MPN of the product (@see Stock::product_mpn)
+     */
+    public $mpn;
+
+    /**
      * @var string Reference of the product (@see Stock::product_reference)
      */
     public $reference;
@@ -151,69 +156,71 @@ class StockMvtWSCore extends ObjectModelCore
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'stock_mvt',
         'primary' => 'id_stock_mvt',
-        'fields' => array(
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'employee_firstname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'employee_lastname' => array('type' => self::TYPE_STRING, 'validate' => 'isName'),
-            'id_stock' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'physical_quantity' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'id_stock_mvt_reason' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'id_supply_order' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'sign' => array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-            'last_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'current_wa' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-            'price_te' => array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
-            'referer' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true),
-        ),
-    );
+        'fields' => [
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
+            'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'id_supply_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'sign' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
+            'last_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'current_wa' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice'],
+            'price_te' => ['type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true],
+            'referer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_product' => array('xlink_resource' => 'products'),
-            'id_product_attribute' => array('xlink_resource' => 'combinations'),
-            'id_warehouse' => array('xlink_resource' => 'warehouses'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-            'management_type' => array(),
-            'id_employee' => array('xlink_resource' => 'employees'),
-            'id_stock' => array('xlink_resource' => 'stocks'),
-            'id_stock_mvt_reason' => array('xlink_resource' => 'stock_movement_reasons'),
-            'id_order' => array('xlink_resource' => 'orders'),
-            'id_supply_order' => array('xlink_resource' => 'supply_orders'),
-            'product_name' => array('getter' => 'getWSProductName', 'i18n' => true),
-            'ean13' => array(),
-            'upc' => array(),
-            'reference' => array(),
-        ),
-        'hidden_fields' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_product' => ['xlink_resource' => 'products'],
+            'id_product_attribute' => ['xlink_resource' => 'combinations'],
+            'id_warehouse' => ['xlink_resource' => 'warehouses'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+            'management_type' => [],
+            'id_employee' => ['xlink_resource' => 'employees'],
+            'id_stock' => ['xlink_resource' => 'stocks'],
+            'id_stock_mvt_reason' => ['xlink_resource' => 'stock_movement_reasons'],
+            'id_order' => ['xlink_resource' => 'orders'],
+            'id_supply_order' => ['xlink_resource' => 'supply_orders'],
+            'product_name' => ['getter' => 'getWSProductName', 'i18n' => true],
+            'ean13' => [],
+            'upc' => [],
+            'reference' => [],
+            'mpn' => [],
+        ],
+        'hidden_fields' => [
             'referer',
             'employee_firstname',
             'employee_lastname',
-        ),
-    );
+        ],
+    ];
 
     /**
      * Associations tables for attributes that require different tables than stated in ObjectModel::definition.
      *
      * @var array
      */
-    protected $tables_assoc = array(
-        'id_product' => array('table' => 's'),
-        'id_product_attribute' => array('table' => 's'),
-        'id_warehouse' => array('table' => 's'),
-        'id_currency' => array('table' => 's'),
-        'management_type' => array('table' => 'w'),
-        'ean13' => array('table' => 's'),
-        'upc' => array('table' => 's'),
-        'reference' => array('table' => 's'),
-    );
+    protected $tables_assoc = [
+        'id_product' => ['table' => 's'],
+        'id_product_attribute' => ['table' => 's'],
+        'id_warehouse' => ['table' => 's'],
+        'id_currency' => ['table' => 's'],
+        'management_type' => ['table' => 'w'],
+        'ean13' => ['table' => 's'],
+        'upc' => ['table' => 's'],
+        'mpn' => ['table' => 's'],
+        'reference' => ['table' => 's'],
+    ];
 
     /**
      * @see ObjectModel
@@ -243,7 +250,7 @@ class StockMvtWSCore extends ObjectModelCore
 
         if ($full) {
             $query .= ', s.id_product, s.id_product_attribute, s.id_warehouse, w.id_currency, w.management_type,
-					   s.ean13, s.upc, s.reference ';
+					   s.ean13, s.upc, s.mpn, s.reference ';
         }
 
         $old_filter = $filter;
@@ -287,7 +294,7 @@ class StockMvtWSCore extends ObjectModelCore
      */
     public function getWSProductName()
     {
-        $res = array();
+        $res = [];
         foreach (Language::getIDs(true) as $id_lang) {
             $res[$id_lang] = Product::getProductName($this->id_product, $this->id_product_attribute, $id_lang);
         }

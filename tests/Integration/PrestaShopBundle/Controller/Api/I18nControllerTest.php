@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,40 +17,50 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
-/**
- * @group api
- * @group i18n
- */
 class I18nControllerTest extends ApiTestCase
 {
     /**
      * @dataProvider getBadListTranslations
-     * @test
      *
-     * @param $params
+     * @param array $params
      */
-    public function it_should_return_bad_response_when_requesting_list_of_translations($params)
+    public function testItShouldReturnBadResponseWhenRequestingListOfTranslations(array $params): void
     {
         $this->assertBadRequest('api_i18n_translations_list', $params);
     }
 
     /**
-     * @dataProvider getGoodListTranslations
-     * @test
-     *
-     * @param $params
+     * @return array
      */
-    public function it_should_return_ok_response_when_requesting_list_of_translations($params)
+    public function getBadListTranslations(): array
+    {
+        return [
+            [
+                ['page' => 'internationnal'], // syntax error wanted
+            ],
+            [
+                ['page' => 'stockk'], // syntax error wanted
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getGoodListTranslations
+     *
+     * @param array $params
+     */
+    public function testItShouldReturnOkResponseWhenRequestingListOfTranslations(array $params): void
     {
         $this->assertOkRequest('api_i18n_translations_list', $params);
     }
@@ -57,30 +68,15 @@ class I18nControllerTest extends ApiTestCase
     /**
      * @return array
      */
-    public function getBadListTranslations()
+    public function getGoodListTranslations(): array
     {
-        return array(
-            array(
-                array('page' => 'internationnal'), // syntax error wanted
-            ),
-            array(
-                array('page' => 'stockk'), // syntax error wanted
-            ),
-        );
-    }
-
-    /**
-     * @return array
-     */
-    public function getGoodListTranslations()
-    {
-        return array(
-            array(
-                array('page' => 'international'),
-            ),
-            array(
-                array('page' => 'stock'),
-            ),
-        );
+        return [
+            [
+                ['page' => 'international'],
+            ],
+            [
+                ['page' => 'stock'],
+            ],
+        ];
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Product\Search;
@@ -30,66 +30,113 @@ use Context;
 
 class ProductSearchContext
 {
-    private $id_shop;
-    private $id_lang;
-    private $id_currency;
-    private $id_customer;
+    /**
+     * @var int the Shop id
+     */
+    private $idShop;
+
+    /**
+     * @var int the Language id
+     */
+    private $idLang;
+
+    /**
+     * @var int the Currency id
+     */
+    private $idCurrency;
+
+    /**
+     * @var int the Customer id
+     */
+    private $idCustomer;
 
     public function __construct(Context $context = null)
     {
         if ($context) {
-            $this->id_shop = $context->shop->id;
-            $this->id_lang = $context->language->id;
-            $this->id_currency = $context->currency->id;
-            $this->id_customer = $context->customer->id;
+            $this->idShop = $context->shop->id;
+            $this->idLang = $context->language->id;
+            $this->idCurrency = $context->currency->id;
+            $this->idCustomer = $context->customer->id;
         }
     }
 
-    public function setIdShop($id_shop)
+    /**
+     * @param int $idShop
+     *
+     * @return $this
+     */
+    public function setIdShop($idShop)
     {
-        $this->id_shop = $id_shop;
+        $this->idShop = $idShop;
 
         return $this;
     }
 
+    /**
+     * @return int the Product Search Shop id
+     */
     public function getIdShop()
     {
-        return $this->id_shop;
+        return $this->idShop;
     }
 
-    public function setIdLang($id_lang)
+    /**
+     * @param int $idLang
+     *
+     * @return $this
+     */
+    public function setIdLang($idLang)
     {
-        $this->id_lang = $id_lang;
+        $this->idLang = $idLang;
 
         return $this;
     }
 
+    /**
+     * @return int the Product Search Language id
+     */
     public function getIdLang()
     {
-        return $this->id_lang;
+        return $this->idLang;
     }
 
-    public function setIdCurrency($id_currency)
+    /**
+     * @param int $idCurrency
+     *
+     * @return $this
+     */
+    public function setIdCurrency($idCurrency)
     {
-        $this->id_currency = $id_currency;
+        $this->idCurrency = $idCurrency;
 
         return $this;
     }
 
+    /**
+     * @return int the Product Search Currency id
+     */
     public function getIdCurrency()
     {
-        return $this->id_currency;
+        return $this->idCurrency;
     }
 
-    public function setIdCustomer($id_customer)
+    /**
+     * @param int $idCustomer
+     *
+     * @return $this
+     */
+    public function setIdCustomer($idCustomer)
     {
-        $this->id_customer = $id_customer;
+        $this->idCustomer = $idCustomer;
 
         return $this;
     }
 
+    /**
+     * @return int the Product Search Customer id
+     */
     public function getIdCustomer()
     {
-        return $this->id_customer;
+        return $this->idCustomer;
     }
 }

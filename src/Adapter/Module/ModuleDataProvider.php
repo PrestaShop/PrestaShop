@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,25 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Db;
 use Doctrine\ORM\EntityManager;
+use Module as LegacyModule;
 use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
-use Db;
 use Validate;
-use Module as LegacyModule;
 
 /**
  * This class will provide data from DB / ORM about Module.
@@ -77,7 +77,7 @@ class ModuleDataProvider
     }
 
     /**
-     * @param $employeeID
+     * @param int $employeeID
      */
     public function setEmployeeId($employeeID)
     {
@@ -100,8 +100,8 @@ class ModuleDataProvider
             $result['active_on_mobile'] = (bool) ($this->getDeviceStatus($name) & AddonListFilterDeviceStatus::DEVICE_MOBILE);
             $lastAccessDate = '0000-00-00 00:00:00';
 
-            if (!Tools::isPHPCLI() && !is_null($this->entityManager) && $this->employeeID) {
-                $moduleID = (int) $result['id'];
+            if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
+                $moduleID = isset($result['id']) ? (int) $result['id'] : 0;
 
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('mh')
@@ -158,7 +158,7 @@ class ModuleDataProvider
     /**
      * Check if a module is enabled in the current shop context.
      *
-     * @param bool $name The technical module name
+     * @param string $name The technical module name
      *
      * @return bool True if enable
      */
@@ -182,7 +182,21 @@ class ModuleDataProvider
     public function isInstalled($name)
     {
         // ToDo: Load list of all installed modules ?
-        return (bool) Db::getInstance()->getValue('SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
+        return (bool) $this->getModuleIdByName($name);
+    }
+
+    /**
+     * Returns the Module Id
+     *
+     * @param string $name The technical module name
+     *
+     * @return int the Module Id, or 0 if not found
+     */
+    public function getModuleIdByName($name)
+    {
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_module` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"'
+        );
     }
 
     /**
@@ -204,15 +218,26 @@ class ModuleDataProvider
             return false;
         }
 
-        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::PREFER_PHP7);
+        $parser = (new PhpParser\ParserFactory())->create(PhpParser\ParserFactory::ONLY_PHP7);
+        $log_context_data = [
+            'object_type' => 'Module',
+            'object_id' => LegacyModule::getModuleIdByName($name),
+        ];
+
         try {
             $parser->parse(file_get_contents($file_path));
         } catch (PhpParser\Error $exception) {
             $this->logger->critical(
                 $this->translator->trans(
-                    'Parse error detected in main class of module %module%!',
-                    array('%module%' => $name),
-                    'Admin.Modules.Notification'));
+                    'Parse error detected in main class of module %module%: %parse_error%',
+                    [
+                        '%module%' => $name,
+                        '%parse_error%' => $exception->getMessage(),
+                    ],
+                    'Admin.Modules.Notification'
+                ),
+                $log_context_data
+            );
 
             return false;
         }
@@ -223,17 +248,20 @@ class ModuleDataProvider
         // -> We use an anonymous function here because if a test is made twice
         // on the same module, the test on require_once would immediately return true
         // (as the file would have already been evaluated).
-        $require_correct = function ($name) use ($file_path, $logger) {
+        $require_correct = function ($name) use ($file_path, $logger, $log_context_data) {
             try {
                 require_once $file_path;
             } catch (\Exception $e) {
                 $logger->error(
                     $this->translator->trans(
                         'Error while loading file of module %module%. %error_message%',
-                        array(
+                        [
                             '%module%' => $name,
-                            '%error_message%' => $e->getMessage(), ),
-                        'Admin.Modules.Notification'));
+                            '%error_message%' => $e->getMessage(), ],
+                        'Admin.Modules.Notification'
+                    ),
+                    $log_context_data
+                );
 
                 return false;
             }
@@ -263,7 +291,7 @@ class ModuleDataProvider
      *
      * @param string $name The technical module name to check
      *
-     * @return int The devices enabled for this module
+     * @return int|false The devices enabled for this module
      */
     private function getDeviceStatus($name)
     {

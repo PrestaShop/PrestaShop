@@ -1,0 +1,17 @@
+admin_order_return_states_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::createOrderReturnStateAction
+    _legacy_controller: AdminStatuses
+    _legacy_link: AdminStatuses:addorderreturnstate
+
+admin_order_return_states_edit:
+  path: /{orderReturnStateId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::editOrderReturnStateAction
+    _legacy_controller: AdminStatuses
+    _legacy_link: AdminStatuses:updateorderreturnstate
+    _legacy_parameters:
+      id_order_return_state: orderReturnStateId

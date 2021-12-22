@@ -1,0 +1,55 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% form_theme pdfByDateForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% trans_default_domain "Admin.Orderscustomers.Feature" %}
+
+{{ form_start(pdfByDateForm, {
+  'method': 'GET',
+  'action': path('_admin_credit_slips_pdf_by_date'),
+  attr: {id: 'form-generate-credit-slips-by-date'}})
+}}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">date_range</i> {{ 'By date'|trans }}
+  </h3>
+
+  <div class="card-block row">
+    <div class="card-text">
+      {% block credit_slip_pdf_by_date_form %}
+        {{ form_widget(pdfByDateForm) }}
+      {% endblock %}
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" id="generate-credit-slip-by-date">
+        {{ 'Generate PDF file by date'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(pdfByDateForm) }}

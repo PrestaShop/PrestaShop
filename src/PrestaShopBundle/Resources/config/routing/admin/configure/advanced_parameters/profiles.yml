@@ -1,0 +1,57 @@
+admin_profiles_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::indexAction'
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles
+
+admin_profiles_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.profile
+    redirectRoute: admin_profiles_index
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles:submitFilterprofile
+
+admin_profiles_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::createAction'
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles:addprofile
+
+admin_profiles_edit:
+  path: /{profileId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::editAction'
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles:updateprofile
+    _legacy_parameters:
+      id_profile: profileId
+  requirements:
+    profileId: \d+
+
+admin_profiles_delete:
+  path: /{profileId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::deleteAction'
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles:deleteprofile
+    _legacy_parameters:
+      id_profile: profileId
+  requirements:
+    profileId: \d+
+
+admin_profiles_bulk_delete:
+  path: /delete/bulk
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::bulkDeleteAction'
+    _legacy_controller: AdminProfiles
+    _legacy_link: AdminProfiles:submitBulkdeleteprofile

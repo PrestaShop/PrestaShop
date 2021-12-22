@@ -1,0 +1,21 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.attribute.command_handler.delete_attribute_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\DeleteAttributeHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\DeleteAttributeCommand'
+
+  prestashop.adapter.attribute.command_handler.bulk_delete_attribute_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attribute\CommandHandler\BulkDeleteAttributeHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Command\BulkDeleteAttributeCommand'
+
+  prestashop.adapter.attribute.repository.attribute_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Core\Filter;
 
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\Presenter\AbstractLazyArray;
 use PrestaShop\PrestaShop\Core\Filter\HashMapWhitelistFilter;
 
-class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
+class HashMapWhitelistFilterTest extends TestCase
 {
-
     /**
      * @param array $subject
      * @param array $whitelist
@@ -38,7 +41,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
      *
      * @dataProvider provideTestCases
      */
-    public function testItOnlyKeepsWhitelistedKeysWithoutLosingValues($subject, $whitelist, $expectedResult)
+    public function testItOnlyKeepsWhitelistedKeysWithoutLosingValues(array $subject, array $whitelist, array $expectedResult): void
     {
         $filter = new HashMapWhitelistFilter();
         $filter->whitelist($whitelist);
@@ -48,7 +51,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expectedResult, $result);
     }
 
-    public function testKeysCanBeRemovedFromWhitelist()
+    public function testKeysCanBeRemovedFromWhitelist(): void
     {
         $subject = [
             'foo' => 'something',
@@ -58,7 +61,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 
         $filter = new HashMapWhitelistFilter();
         $filter->whitelist([
-            'foo', 'bar'
+            'foo', 'bar',
         ]);
 
         $expected = [
@@ -77,7 +80,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $filter->filter($subject));
     }
 
-    public function testKeysCanBeAddedToWhitelist()
+    public function testKeysCanBeAddedToWhitelist(): void
     {
         $subject = [
             'foo' => 'something',
@@ -87,7 +90,7 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
 
         $filter = new HashMapWhitelistFilter();
         $filter->whitelist([
-            'foo'
+            'foo',
         ]);
 
         $expected = [
@@ -106,7 +109,31 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $filter->filter($subject));
     }
 
-    public function provideTestCases()
+    public function testFilteringLazyArrayReturnsNewInstanceOfSubject(): void
+    {
+        $subject = new TestLazyArray();
+
+        $filter = new HashMapWhitelistFilter();
+        $filter->whitelist([
+            'some_property',
+        ]);
+
+        $filteredSubject = $filter->filter($subject);
+
+        $this->assertNotSame($subject, $filteredSubject);
+        $this->assertArrayNotHasKey(
+            'some_other_property',
+            $filteredSubject,
+            'The filtered subject still has properties that should have been filtered out'
+        );
+        $this->assertArrayHasKey(
+            'some_other_property',
+            $subject,
+            'The original subject has been altered'
+        );
+    }
+
+    public function provideTestCases(): array
     {
         $basicArray = [
             'foo' => 'something',
@@ -121,74 +148,92 @@ class HashMapWhitelistFilterTest extends \PHPUnit_Framework_TestCase
         ];
 
         return [
-            'keep 1st'         => [
-                'subject'   => $basicArray,
+            'keep 1st' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                 ],
             ],
-            'keep 2nd'         => [
-                'subject'   => $basicArray,
+            'keep 2nd' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'bar',
                 ],
-                'expected'  => [
+                'expected' => [
                     'bar' => null,
                 ],
             ],
-            'keep 3rd'         => [
-                'subject'   => $basicArray,
+            'keep 3rd' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'baz',
                 ],
-                'expected'  => [
-                    'baz' => array(),
+                'expected' => [
+                    'baz' => [],
                 ],
             ],
             'keep 1st and 2nd' => [
-                'subject'   => $basicArray,
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo', 'bar',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                     'bar' => null,
                 ],
             ],
-            'keep all'         => [
-                'subject'   => $basicArray,
+            'keep all' => [
+                'subject' => $basicArray,
                 'whitelist' => [
                     'foo', 'bar', 'baz',
                 ],
-                'expected'  => [
+                'expected' => [
                     'foo' => 'something',
                     'bar' => null,
                     'baz' => [],
                 ],
             ],
-            'keep none'        => [
-                'subject'   => $basicArray,
+            'keep none' => [
+                'subject' => $basicArray,
                 'whitelist' => [],
-                'expected'  => [],
+                'expected' => [],
             ],
             'nested filter' => [
-                'subject'   => $nestedArray,
+                'subject' => $nestedArray,
                 'whitelist' => [
                     'foo',
-                    'baz' => (new HashMapWhitelistFilter())->whitelist(['foo', 'baz'])
+                    'baz' => (new HashMapWhitelistFilter())->whitelist(['foo', 'baz']),
                 ],
                 'expected' => [
                     'foo' => 'something',
                     'baz' => [
                         'foo' => 'something',
-                        'baz' => []
+                        'baz' => [],
                     ],
-                ]
-            ]
+                ],
+            ],
         ];
     }
+}
 
+class TestLazyArray extends AbstractLazyArray
+{
+    /**
+     * @arrayAccess
+     */
+    public function getSomeProperty()
+    {
+        return 'some_property';
+    }
+
+    /**
+     * @arrayAccess
+     */
+    public function getSomeOtherProperty()
+    {
+        return 'some_other_property';
+    }
 }

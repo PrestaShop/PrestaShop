@@ -1,0 +1,60 @@
+{% extends '@MailThemes/classic/components/layout.html.twig' %}
+
+{% block content %}
+<tr>
+  <td align="center" class="titleblock">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span class="title">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="box" style="border:1px solid #D6D4D4;">
+    <table class="table">
+      <tr>
+        <td width="10">&nbsp;</td>
+        <td>
+          <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+            {% if templateType == 'html' %}
+
+              <p style="border-bottom:1px solid #D6D4D4;">
+                {{ 'Order {order_name}'|trans({}, 'Emails.Body', locale) }}&nbsp;-&nbsp;{{ 'Payment processing error'|trans({}, 'Emails.Body', locale)|raw }}
+              </p>
+
+{% endif %}
+            <span>
+              {{ 'There is a problem with your payment for <strong><span>{shop_name}</span></strong> order with the reference <strong><span>{order_name}</span></strong>. Please contact us at your earliest convenience.'|trans({}, 'Emails.Body', locale)|raw }}<br/>
+              <strong><span>{{ 'We cannot ship your order until we receive your payment.'|trans({}, 'Emails.Body', locale)|raw }}</span></strong>
+            </span>
+          </font>
+        </td>
+        <td width="10">&nbsp;</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="space_footer">&nbsp;</td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.'|trans({'%order_history_label%': 'Order history and details'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td class="linkbelow">
+    <font size="2" face="{{ languageDefaultFont }}Open-sans, sans-serif" color="#555454">
+      <span>
+        {{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.'|trans({'%guest_tracking_label%': 'Guest Tracking'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}
+      </span>
+    </font>
+  </td>
+</tr>
+{% endblock %}

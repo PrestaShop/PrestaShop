@@ -1,0 +1,9 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.form.identifiable_object.option_provider.combination_form_options_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CombinationFormOptionsProvider'
+
+  prestashop.core.form.identifiable_object.option_provider.product_form_options_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider'

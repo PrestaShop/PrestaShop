@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,28 +17,45 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Foundation\Templating\RenderableProxy;
 use Symfony\Component\Translation\TranslatorInterface;
 
 abstract class AbstractFormCore implements FormInterface
 {
+    /**
+     * @var Smarty
+     */
     private $smarty;
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
+    /**
+     * @var ValidateConstraintTranslator
+     */
     protected $constraintTranslator;
+
+    /**
+     * @var FormFormatterInterface
+     */
+    protected $formatter;
 
     protected $action;
     protected $template;
 
-    protected $formatter;
-
+    /**
+     * @var array
+     */
     protected $formFields = [];
+    /**
+     * @var array[]
+     */
     protected $errors = ['' => []];
 
     public function __construct(
@@ -110,12 +128,16 @@ abstract class AbstractFormCore implements FormInterface
             $this->smarty
         );
 
+        $context = Context::getContext();
+        $theme = $context->shop->theme->getName();
+
         $scope->assign($extraVariables);
         $scope->assign($this->getTemplateVariables());
 
         $tpl = $this->smarty->createTemplate(
             $this->getTemplate(),
-            $scope
+            $scope,
+            $theme
         );
 
         return $tpl->fetch();
@@ -129,13 +151,34 @@ abstract class AbstractFormCore implements FormInterface
     public function validate()
     {
         foreach ($this->formFields as $field) {
-            if ($field->isRequired() && !$field->getValue()) {
-                $field->addError(
-                    $this->constraintTranslator->translate('required')
-                );
+            if ($field->isRequired()) {
+                if (!$field->getValue()) {
+                    $field->addError(
+                        $this->constraintTranslator->translate('required')
+                    );
+                } elseif (!$this->checkFieldLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
+                }
+
                 continue;
-            } elseif (!$field->isRequired() && !$field->getValue()) {
-                continue;
+            } elseif (!$field->isRequired()) {
+                if (!$field->getValue()) {
+                    continue;
+                } elseif (!$this->checkFieldLength($field)) {
+                    $field->addError(
+                        $this->translator->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            [$field->getLabel(), $field->getMaxLength()],
+                            'Shop.Notifications.Error'
+                        )
+                    );
+                }
             }
 
             foreach ($field->getConstraints() as $constraint) {
@@ -166,7 +209,9 @@ abstract class AbstractFormCore implements FormInterface
             } elseif ($field->getType() === 'checkbox') {
                 // checkboxes that are not submitted
                 // are interpreted as booleans switched off
-                $field->setValue(false);
+                if (empty($field->getValue())) {
+                    $field->setValue(false);
+                }
             }
         }
 
@@ -198,5 +243,19 @@ abstract class AbstractFormCore implements FormInterface
         $this->getField($field_name)->setValue($value);
 
         return $this;
+    }
+
+    /**
+     * Validate field length
+     *
+     * @param FormField $field the field to check
+     *
+     * @return bool
+     */
+    protected function checkFieldLength($field)
+    {
+        $error = $field->getMaxLength() != null && strlen($field->getValue()) > (int) $field->getMaxLength();
+
+        return !$error;
     }
 }

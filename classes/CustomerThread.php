@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class CustomerThreadCore extends ObjectModel
 {
@@ -41,87 +41,87 @@ class CustomerThreadCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'customer_thread',
         'primary' => 'id_customer_thread',
-        'fields' => array(
-            'id_lang' => array(
+        'fields' => [
+            'id_lang' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'required' => true,
-            ),
-            'id_contact' => array(
+            ],
+            'id_contact' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
                 'required' => true,
-            ),
-            'id_shop' => array(
+            ],
+            'id_shop' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ),
-            'id_customer' => array(
+            ],
+            'id_customer' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ),
-            'id_order' => array(
+            ],
+            'id_order' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ),
-            'id_product' => array(
+            ],
+            'id_product' => [
                 'type' => self::TYPE_INT,
                 'validate' => 'isUnsignedId',
-            ),
-            'email' => array(
+            ],
+            'email' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isEmail',
                 'size' => 255,
-            ),
-            'token' => array(
+            ],
+            'token' => [
                 'type' => self::TYPE_STRING,
                 'validate' => 'isGenericName',
                 'required' => true,
-            ),
-            'status' => array(
+            ],
+            'status' => [
                 'type' => self::TYPE_STRING,
-            ),
-            'date_add' => array(
+            ],
+            'date_add' => [
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
-            ),
-            'date_upd' => array(
+            ],
+            'date_upd' => [
                 'type' => self::TYPE_DATE,
                 'validate' => 'isDate',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_lang' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_lang' => [
                 'xlink_resource' => 'languages',
-            ),
-            'id_shop' => array(
+            ],
+            'id_shop' => [
                 'xlink_resource' => 'shops',
-            ),
-            'id_customer' => array(
+            ],
+            'id_customer' => [
                 'xlink_resource' => 'customers',
-            ),
-            'id_order' => array(
+            ],
+            'id_order' => [
                 'xlink_resource' => 'orders',
-            ),
-            'id_product' => array(
+            ],
+            'id_product' => [
                 'xlink_resource' => 'products',
-            ),
-        ),
-        'associations' => array(
-            'customer_messages' => array(
+            ],
+        ],
+        'associations' => [
+            'customer_messages' => [
                 'resource' => 'customer_message',
-                'id' => array(
+                'id' => [
                     'required' => true,
-                ),
-            ),
-        ),
-    );
+                ],
+            ],
+        ],
+    ];
 
     public function getWsCustomerMessages()
     {
@@ -151,13 +151,12 @@ class CustomerThreadCore extends ObjectModel
                 if (!Validate::isLoadedObject($message)) {
                     $return = false;
                 } else {
-                    $return &= $message->delete();
+                    $return = $return && $message->delete();
                 }
             }
         }
-        $return &= parent::delete();
 
-        return $return;
+        return $return && parent::delete();
     }
 
     public static function getCustomerMessages($id_customer, $read = null, $id_order = null)
@@ -214,7 +213,7 @@ class CustomerThreadCore extends ObjectModel
 
     public static function getTotalCustomerThreads($where = null)
     {
-        if (is_null($where)) {
+        if (null === $where) {
             return (int) Db::getInstance()->getValue(
                 '
 				SELECT COUNT(*)
@@ -279,9 +278,9 @@ class CustomerThreadCore extends ObjectModel
 			FROM ' . _DB_PREFIX_ . 'customer_thread ct
 			LEFT JOIN ' . _DB_PREFIX_ . 'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
-            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c 
+            LEFT JOIN `' . _DB_PREFIX_ . 'customer` c
                 ON ct.`id_customer` = c.`id_customer`
-            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e 
+            LEFT OUTER JOIN `' . _DB_PREFIX_ . 'employee` e
                 ON e.`id_employee` = cm.`id_employee`
 			WHERE ct.id_customer = ' . (int) $id_customer .
                 ' AND ct.`id_order` = ' . (int) $id_order . '

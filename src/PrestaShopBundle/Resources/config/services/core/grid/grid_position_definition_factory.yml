@@ -1,0 +1,50 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.grid.cms_page_category.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'cms_category'
+      $idField: 'id_cms_category'
+      $positionField: 'position'
+      $parentIdField: 'id_parent'
+
+  prestashop.core.grid.cms_page.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'cms'
+      $idField: 'id_cms'
+      $positionField: 'position'
+      $parentIdField: 'id_cms_category'
+
+  prestashop.core.grid.attribute.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'attribute'
+      $idField: 'id_attribute'
+      $positionField: 'position'
+      $parentIdField: 'id_attribute_group'
+
+  prestashop.core.grid.attribute_group.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'attribute_group'
+      $idField: 'id_attribute_group'
+      $positionField: 'position'
+
+  prestashop.core.grid.carrier.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'carrier'
+      $idField: 'id_carrier'
+      $positionField: 'position'
+
+  prestashop.core.grid.image.position_definition:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+    arguments:
+      $table: 'image'
+      $idField: 'id_image'
+      $positionField: 'position'
+      $parentIdField: 'id_product'
+      $firstPosition: 1

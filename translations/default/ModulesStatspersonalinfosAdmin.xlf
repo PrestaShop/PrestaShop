@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statspersonalinfos/statspersonalinfos.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1b94af23fd8ea879910a6307460ebba4">
+        <source>Registered customer information</source>
+        <target>Registered customer information</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="b0cb4ea4e89c2107cb100be8417fd94e">
+        <source>Adds information about your registered customers (such as gender and age) to the Stats dashboard.</source>
+        <target>Adds information about your registered customers (such as gender and age) to the Stats dashboard.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="3ca26e413e485538a7f3e610c0324636">
+        <source>Target your audience</source>
+        <target>Target your audience</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="74036f0101d2f3f9b082b8de981c18dc">
+        <source>In order for each message to have an impact, you need to know who it is being addressed to. </source>
+        <target>In order for each message to have an impact, you need to know who it is being addressed to.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="daa0ad6a8b07a64f18b26e0f5e1255bd">
+        <source>Defining your target audience is essential when choosing the right tools to win them over.</source>
+        <target>Defining your target audience is essential when choosing the right tools to win them over.</target>
+        <note>Line: 68</note>
+      </trans-unit>
+      <trans-unit id="8044a3d0d61282c4c425cd0da5432f11">
+        <source>It is best to limit an action to a group -- or to groups -- of clients.</source>
+        <target>It is best to limit an action to a group -- or to groups -- of clients.</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="05f074d112460c990203ff2f17a7d46d">
+        <source>Storing registered customer information allows you to accurately define customer profiles so you can adapt your special deals and promotions.</source>
+        <target>Storing registered customer information allows you to accurately define customer profiles so you can adapt your special deals and promotions.</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="9dc739320e2523183e8b31f395e1e489">
+        <source>You can increase your sales by:</source>
+        <target>You can increase your sales by:</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="2f619981f1abd95da0907766cc409be9">
+        <source>Launching targeted advertisement campaigns.</source>
+        <target>Launching targeted advertisement campaigns.</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="428dc481e13dad2818d8088da7362dd2">
+        <source>Contacting a group of clients by email or newsletter.</source>
+        <target>Contacting a group of clients by email or newsletter.</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="12344d957b4aee1e2c322549ddc9741f">
+        <source>Gender distribution allows you to determine the percentage of men and women shoppers on your store.</source>
+        <target>Gender distribution allows you to determine the percentage of men and women shoppers on your store.</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="08a12630390dc8ddd4c9fdcd9060dce6">
+        <source>Age ranges allow you to better understand target demographics.</source>
+        <target>Age ranges allow you to better understand target demographics.</target>
+        <note>Line: 140</note>
+      </trans-unit>
+      <trans-unit id="db9750afee08c6e88c91fbe1b3404ba6">
+        <source>Country distribution allows you to analyze which part of the World your customers are shopping from.</source>
+        <target>Country distribution allows you to analyze which part of the World your customers are shopping from.</target>
+        <note>Line: 157</note>
+      </trans-unit>
+      <trans-unit id="e0fcbbd416a4872ec8f91fefa823debe">
+        <source>Currency range allows you to determine which currency your customers are using.</source>
+        <target>Currency range allows you to determine which currency your customers are using.</target>
+        <note>Line: 174</note>
+      </trans-unit>
+      <trans-unit id="94d50571d0f2e98276cfbe2f3de41b20">
+        <source>Language distribution allows you to analyze the browsing language used by your customers.</source>
+        <target>Language distribution allows you to analyze the browsing language used by your customers.</target>
+        <note>Line: 191</note>
+      </trans-unit>
+      <trans-unit id="9fde3510abe63111086fd4288a19e1be">
+        <source>No customers have registered yet.</source>
+        <target>No customers have registered yet.</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="8dc514f6da8c696c4a522efc145ad28a">
+        <source>Gender distribution</source>
+        <target>Gender distribution</target>
+        <note>Line: 215</note>
+      </trans-unit>
+      <trans-unit id="4d79e3d0b4d09b2f42d0831193cea200">
+        <source>Age range</source>
+        <target>Age range</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="6e69fbf88d84db874f365542b0284a95">
+        <source>0-18</source>
+        <target>0-18</target>
+        <note>Line: 258</note>
+      </trans-unit>
+      <trans-unit id="b20e0ed6158978a3a23d092060b5dbab">
+        <source>18-24</source>
+        <target>18-24</target>
+        <note>Line: 272</note>
+      </trans-unit>
+      <trans-unit id="e5884ca49180d38295ee426c624d936c">
+        <source>25-34</source>
+        <target>25-34</target>
+        <note>Line: 286</note>
+      </trans-unit>
+      <trans-unit id="62ce9f61153b331eabe9efc2fc7eb5c2">
+        <source>35-49</source>
+        <target>35-49</target>
+        <note>Line: 300</note>
+      </trans-unit>
+      <trans-unit id="a7724f78dcdf2179c5ca651d15ed5b2c">
+        <source>50-59</source>
+        <target>50-59</target>
+        <note>Line: 314</note>
+      </trans-unit>
+      <trans-unit id="6a239f88f1aeb0561e7786b6120d1d5e">
+        <source>60+</source>
+        <target>60+</target>
+        <note>Line: 327</note>
+      </trans-unit>
+      <trans-unit id="73b0130037e21b76351aebfd29d0b9aa">
+        <source>Country distribution</source>
+        <target>Country distribution</target>
+        <note>Line: 344</note>
+      </trans-unit>
+      <trans-unit id="28e81c8343702f6c813cc31a7f90616a">
+        <source>Currency distribution</source>
+        <target>Currency distribution</target>
+        <note>Line: 361</note>
+      </trans-unit>
+      <trans-unit id="f1dd68fb6a00d3e4d7f751deacde995d">
+        <source>Language distribution</source>
+        <target>Language distribution</target>
+        <note>Line: 377</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

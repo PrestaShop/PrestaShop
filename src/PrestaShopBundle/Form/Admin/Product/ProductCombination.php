@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,43 +17,60 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use Context;
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * This form class is responsible to generate the product combination form.
  */
 class ProductCombination extends CommonAbstractType
 {
-    private $translator;
-    private $contextLegacy;
+    /**
+     * @var Configuration
+     */
     private $configuration;
+    /**
+     * @var Context
+     */
+    public $contextLegacy;
+    /**
+     * @var Currency
+     */
+    public $currency;
+    /**
+     * @var TranslatorInterface
+     */
+    public $translator;
 
     /**
      * Constructor.
      *
-     * @param object $translator
-     * @param object $legacyContext
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
      */
     public function __construct($translator, $legacyContext)
     {
@@ -104,6 +122,14 @@ class ProductCombination extends CommonAbstractType
                 ],
                 'empty_data' => '',
             ])
+            ->add('attribute_mpn', TextType::class, [
+                'required' => false,
+                'label' => $this->translator->trans('MPN', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Length(['max' => 40]),
+                ],
+                'empty_data' => '',
+            ])
             ->add('attribute_wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Cost price', [], 'Admin.Catalog.Feature'),
@@ -125,16 +151,21 @@ class ProductCombination extends CommonAbstractType
             ])
             ->add('attribute_ecotax', MoneyType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Ecotax', [], 'Admin.Catalog.Feature'),
+                'label' => $this->translator->trans('Ecotax (tax incl.)', [], 'Admin.Catalog.Feature'),
                 'currency' => $this->currency->iso_code,
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Type(['type' => 'float']),
                 ],
+                'attr' => [
+                    'class' => 'attribute_ecotaxTi',
+                ],
             ])
             ->add('attribute_weight', NumberType::class, [
+                'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                 'required' => false,
                 'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
+                'attr' => ['class' => 'attribute_weight'],
             ])
             ->add('attribute_unity', MoneyType::class, [
                 'required' => false,

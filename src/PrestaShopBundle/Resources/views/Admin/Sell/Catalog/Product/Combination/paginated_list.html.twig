@@ -1,0 +1,75 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig' %}
+
+{% block combinations_paginated_list %}
+  <div id="combinations-paginated-list" class="d-none">
+    {# Combination filters for paginated list #}
+    <div id="combinations_filters"
+         data-translations="{{ {
+           'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
+           'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
+         }|json_encode }}"
+    ></div>
+
+    <div id="combination-edit-modal"
+         data-empty-image="{{ asset('themes/new-theme/img/empty_state/combinations_history.png') }}"
+         data-translations="{{ {
+          'modal.save': 'Save'|trans({}, 'Admin.Actions'),
+          'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+          'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.history.editedCombination': 'Edited combinations (%editedNb%)'|trans({}, 'Admin.Catalog.Feature'),
+          'modal.history.confirmTitle': 'Discard changes?'|trans({}, 'Admin.Catalog.Notification'),
+          'modal.history.confirmBody': 'All unsaved modifications made on the combination [1]%combinationName%[/1] will be lost.'|trans({'[1]': '<span class="font-weight-bold">', '[/1]': '</span>'}, 'Admin.Catalog.Notification'),
+          'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+          'modal.confirm': 'Discard'|trans({}, 'Admin.Actions'),
+          'modal.history.empty': 'Here, you can have a look at the combinations you have edited. The list will reset when you close the editing window.'|trans({}, 'Admin.Catalog.Feature'),
+
+         }|json_encode }}"
+    ></div>
+    <div class="justify-content-center" id="combinations-list">
+      <div class="spinner-product-combinations-container" id="productCombinationsLoading">
+        <div class="spinner spinner-primary"></div>
+      </div>
+
+      {# Integrate the token that will be required in the combination update request #}
+      {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
+    </div>
+
+    <div class="row justify-content-center" id="combinations-pagination">
+      {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+        'limit': combinationsLimit,
+        'limitChoices': combinationLimitChoices,
+      }) }}
+    </div>
+
+    <div class="justify-content-start mt-2 mb-3">
+      <button id="generate-combinations-button" class="btn btn-primary generate-combinations-button" disabled="disabled">
+        {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </button>
+    </div>
+  </div>
+{% endblock %}

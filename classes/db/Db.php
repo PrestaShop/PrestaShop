@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 /**
  * Class DbCore.
@@ -55,19 +55,19 @@ abstract class DbCore
     /** @var bool */
     protected $is_cache_enabled;
 
-    /** @var PDO|mysqli|resource Resource link */
+    /** @var PDO|mysqli|resource|null Resource link */
     protected $link;
 
     /** @var PDOStatement|mysqli_result|resource|bool SQL cached result */
     protected $result;
 
     /** @var array List of DB instances */
-    public static $instance = array();
+    public static $instance = [];
 
     /** @var array List of server settings */
-    public static $_servers = array();
+    public static $_servers = [];
 
-    /** @var null Flag used to load slave servers only once.
+    /** @var bool|null Flag used to load slave servers only once.
      * See loadSlaveServers() method
      */
     public static $_slave_servers_loaded = null;
@@ -89,7 +89,7 @@ abstract class DbCore
     /**
      * Last cached query.
      *
-     * @var string
+     * @var bool
      */
     protected $last_cached;
 
@@ -215,9 +215,9 @@ abstract class DbCore
 
         // This MUST not be declared with the class members because some defines (like _DB_SERVER_) may not exist yet (the constructor can be called directly with params)
         if (!self::$_servers) {
-            self::$_servers = array(
-                array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
-            );
+            self::$_servers = [
+                ['server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_], /* MySQL Master server */
+            ];
         }
 
         if (!$master) {
@@ -251,8 +251,8 @@ abstract class DbCore
     }
 
     /**
-     * @param $test_db Db
-     * Unit testing purpose only
+     * @param Db $test_db
+     *                    Unit testing purpose only
      */
     public static function setInstanceForTesting($test_db)
     {
@@ -264,7 +264,7 @@ abstract class DbCore
      */
     public static function deleteTestingInstance()
     {
-        self::$instance = array();
+        self::$instance = [];
     }
 
     /**
@@ -376,11 +376,11 @@ abstract class DbCore
         $this->result = $this->_query($sql);
 
         if (!$this->result && $this->getNumberError() == 2006) {
-            if ($this->connect()) {
-                $this->result = $this->_query($sql);
-            }
+            $this->connect();
+            $this->result = $this->_query($sql);
         }
 
+        /* @phpstan-ignore-next-line */
         if (_PS_DEBUG_SQL_) {
             $this->displayError($sql);
         }
@@ -427,15 +427,15 @@ abstract class DbCore
         // Check if $data is a list of row
         $current = current($data);
         if (!is_array($current) || isset($current['type'])) {
-            $data = array($data);
+            $data = [$data];
         }
 
-        $keys = array();
-        $values_stringified = array();
+        $keys = [];
+        $values_stringified = [];
         $first_loop = true;
         $duplicate_key_stringified = '';
         foreach ($data as $row_data) {
-            $values = array();
+            $values = [];
             foreach ($row_data as $key => $value) {
                 if (!$first_loop) {
                     // Check if row array mapping are the same
@@ -451,12 +451,12 @@ abstract class DbCore
                 }
 
                 if (!is_array($value)) {
-                    $value = array('type' => 'text', 'value' => $value);
+                    $value = ['type' => 'text', 'value' => $value];
                 }
                 if ($value['type'] == 'sql') {
                     $values[] = $string_value = $value['value'];
                 } else {
-                    $values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+                    $values[] = $string_value = $null_values && ($value['value'] === '' || null === $value['value']) ? 'NULL' : "'{$value['value']}'";
                 }
 
                 if ($type == Db::ON_DUPLICATE_KEY) {
@@ -502,12 +502,12 @@ abstract class DbCore
         $sql = 'UPDATE `' . bqSQL($table) . '` SET ';
         foreach ($data as $key => $value) {
             if (!is_array($value)) {
-                $value = array('type' => 'text', 'value' => $value);
+                $value = ['type' => 'text', 'value' => $value];
             }
             if ($value['type'] == 'sql') {
                 $sql .= '`' . bqSQL($key) . "` = {$value['value']},";
             } else {
-                $sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
+                $sql .= ($null_values && ($value['value'] === '' || null === $value['value'])) ? '`' . bqSQL($key) . '` = NULL,' : '`' . bqSQL($key) . "` = '{$value['value']}',";
             }
         }
 
@@ -578,7 +578,7 @@ abstract class DbCore
      * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
      * @param bool $use_cache
      *
-     * @return array|false|null|mysqli_result|PDOStatement|resource
+     * @return array|bool|mysqli_result|PDOStatement|resource|null
      *
      * @throws PrestaShopDatabaseException
      */
@@ -602,7 +602,8 @@ abstract class DbCore
         }
 
         // This method must be used only with queries which display results
-        if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql)) {
+        if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc|checksum)\s#i', $sql)) {
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
             }
@@ -669,7 +670,7 @@ abstract class DbCore
 
         $this->last_cached = false;
 
-        if (is_null($result)) {
+        if (null === $result) {
             $result = false;
         }
 
@@ -686,7 +687,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return string|false|null
+     * @return string|false Returns false if no results
      */
     public function getValue($sql, $use_cache = true)
     {
@@ -694,7 +695,8 @@ abstract class DbCore
             $sql = $sql->build();
         }
 
-        if (!$result = $this->getRow($sql, $use_cache)) {
+        $result = $this->getRow($sql, $use_cache);
+        if (false === $result) {
             return false;
         }
 
@@ -718,6 +720,8 @@ abstract class DbCore
         } elseif ($this->is_cache_enabled && $this->last_cached) {
             return Cache::getInstance()->get($this->last_query_hash . '_nrows');
         }
+
+        return 0;
     }
 
     /**
@@ -742,6 +746,7 @@ abstract class DbCore
             Cache::getInstance()->deleteQuery($sql);
         }
 
+        /* @phpstan-ignore-next-line */
         if (_PS_DEBUG_SQL_) {
             $this->displayError($sql);
         }
@@ -764,7 +769,7 @@ abstract class DbCore
         if ($webservice_call && $errno) {
             $dbg = debug_backtrace();
             WebserviceRequest::getInstance()->setError(500, '[SQL Error] ' . $this->getMsgError() . '. From ' . (isset($dbg[3]['class']) ? $dbg[3]['class'] : '') . '->' . $dbg[3]['function'] . '() Query was : ' . $sql, 97);
-        } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) {
+        } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) { /* @phpstan-ignore-line */
             if ($sql) {
                 throw new PrestaShopDatabaseException($this->getMsgError() . '<br /><br /><pre>' . $sql . '</pre>');
             }
@@ -778,15 +783,12 @@ abstract class DbCore
      *
      * @param string $string SQL data which will be injected into SQL query
      * @param bool $html_ok Does data contain HTML code ? (optional)
+     * @param bool $bq_sql Escape backticks
      *
      * @return string Sanitized data
      */
     public function escape($string, $html_ok = false, $bq_sql = false)
     {
-        if (_PS_MAGIC_QUOTES_GPC_) {
-            $string = stripslashes($string);
-        }
-
         if (!is_numeric($string)) {
             $string = $this->_escape($string);
 
@@ -817,7 +819,7 @@ abstract class DbCore
      */
     public static function checkConnection($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
     {
-        return call_user_func_array(array(Db::getClass(), 'tryToConnect'), array($server, $user, $pwd, $db, $new_db_link, $engine, $timeout));
+        return call_user_func_array([Db::getClass(), 'tryToConnect'], [$server, $user, $pwd, $db, $new_db_link, $engine, $timeout]);
     }
 
     /**
@@ -831,7 +833,7 @@ abstract class DbCore
      */
     public static function checkEncoding($server, $user, $pwd)
     {
-        return call_user_func_array(array(Db::getClass(), 'tryUTF8'), array($server, $user, $pwd));
+        return call_user_func_array([Db::getClass(), 'tryUTF8'], [$server, $user, $pwd]);
     }
 
     /**
@@ -847,7 +849,7 @@ abstract class DbCore
      */
     public static function hasTableWithSamePrefix($server, $user, $pwd, $db, $prefix)
     {
-        return call_user_func_array(array(Db::getClass(), 'hasTableWithSamePrefix'), array($server, $user, $pwd, $db, $prefix));
+        return call_user_func_array([Db::getClass(), 'hasTableWithSamePrefix'], [$server, $user, $pwd, $db, $prefix]);
     }
 
     /**
@@ -864,21 +866,24 @@ abstract class DbCore
      */
     public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
+        return call_user_func_array([Db::getClass(), 'checkCreatePrivilege'], [$server, $user, $pwd, $db, $prefix, $engine]);
     }
 
     /**
-     * Checks if auto increment value and offset is 1.
+     * Tries to connect to the database and select content (checking select privileges).
      *
      * @param string $server
      * @param string $user
      * @param string $pwd
+     * @param string $db
+     * @param string $prefix
+     * @param string|null $engine Table engine
      *
-     * @return bool
+     * @return bool|string True, false or error
      */
-    public static function checkAutoIncrement($server, $user, $pwd)
+    public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
     {
-        return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
+        return call_user_func_array([Db::getClass(), 'checkSelectPrivilege'], [$server, $user, $pwd, $db, $prefix, $engine]);
     }
 
     /**

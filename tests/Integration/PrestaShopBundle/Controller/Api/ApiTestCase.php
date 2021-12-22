@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,44 +17,53 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
+use AdminController;
 use Context;
+use Employee;
 use Language;
+use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Shop;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouterInterface;
 
-// bin/phpunit -c tests/phpunit-admin.xml --group api --stop-on-error --stop-on-failure --verbose --debug
 abstract class ApiTestCase extends WebTestCase
 {
     /**
-     * @var \Symfony\Component\Routing\RouterInterface
+     * @var RouterInterface
      */
     protected $router;
 
     /**
-     * @var \Symfony\Component\BrowserKit\Client
+     * @var Client
      */
     protected static $client;
 
-    /** @var Context */
+    /**
+     * @var Context
+     */
     protected $oldContext;
 
     /**
-     * Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface
      */
     protected static $container;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -67,12 +77,12 @@ abstract class ApiTestCase extends WebTestCase
         self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
 
         $client = self::$kernel->getContainer()->get('test.client');
-        $client->setServerParameters(array());
+        $client->setServerParameters([]);
 
         self::$client = $client;
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -82,24 +92,20 @@ abstract class ApiTestCase extends WebTestCase
         Context::setInstanceForTesting($this->oldContext);
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function mockContextAdapter()
+    protected function mockContextAdapter(): LegacyContext
     {
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->setMethods(array(
+            ->setMethods([
                 'getContext',
                 'getEmployeeLanguageIso',
                 'getEmployeeCurrency',
                 'getRootUrl',
-                'getLanguage'
-            ))
-            ->getMock()
-        ;
+                'getLanguage',
+            ])
+            ->getMock();
 
         $contextMock = $this->mockContext();
-        $legacyContextMock->method('getContext')->willReturn($contextMock);
+        $legacyContextMock->expects($this->any())->method('getContext')->willReturn($contextMock);
 
         $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
         $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
@@ -109,12 +115,9 @@ abstract class ApiTestCase extends WebTestCase
         return $legacyContextMock;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockContext()
+    private function mockContext(): Context
     {
-        $contextMock = $this->getMockBuilder('\Context')->getMock();
+        $contextMock = $this->getMockBuilder(Context::class)->getMock();
 
         $employeeMock = $this->mockEmployee();
         $contextMock->employee = $employeeMock;
@@ -131,65 +134,60 @@ abstract class ApiTestCase extends WebTestCase
         $controllerMock = $this->mockController();
         $contextMock->controller = $controllerMock;
 
-        $contextMock->currency = (object) array('sign' => '$');
+        $contextMock->currency = (object) ['sign' => '$'];
 
         Context::setInstanceForTesting($contextMock);
 
         return $contextMock;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockEmployee()
+    private function mockEmployee(): Employee
     {
-        $employeeMock = $this->getMockBuilder('\Employee')->getMock();
+        $employeeMock = $this->getMockBuilder(Employee::class)->getMock();
         $employeeMock->id_lang = 1;
 
         return $employeeMock;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockLanguage()
+    private function mockLanguage(): Language
     {
-        $languageMock = $this->getMockBuilder('\Language')
-            ->getMock()
-        ;
+        $languageMock = $this->getMockBuilder(Language::class)
+            ->getMock();
 
         $languageMock->iso_code = 'en-US';
 
         return $languageMock;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockLink()
+    private function mockLink(): Link
     {
-        return $this->getMockBuilder('\Link')->getMock();
+        return $this->getMockBuilder(Link::class)->getMock();
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockShop()
+    private function mockShop(): Shop
     {
-        $shopMock = $this->getMockBuilder('\Shop')
-            ->setMethods(array(
+        $shopMock = $this->getMockBuilder(Shop::class)
+            ->setMethods([
                 'getContextualShopId',
                 'getCategory',
                 'getContextType',
                 'getGroup',
-            ))
-            ->getMock()
-        ;
+            ])
+            ->getMock();
 
         $shopMock->method('getContextualShopId')->willReturn(1);
         $shopMock->method('getCategory')->willReturn(1);
         $shopMock->method('getContextType')->willReturn(Shop::CONTEXT_SHOP);
         $shopMock->id = 1;
+
+        $themeMock = $this->getMockBuilder(Theme::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getName'])
+            ->getMock()
+        ;
+        $themeMock->method('getName')->willReturn('classic');
+
+        $shopMock->theme = $themeMock;
 
         $shopGroupMock = $this->getMockBuilder('\ShopGroup')->getMock();
 
@@ -199,15 +197,11 @@ abstract class ApiTestCase extends WebTestCase
         return $shopMock;
     }
 
-    /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function mockController()
+    private function mockController(): AdminController
     {
-        $controller = $this->getMockBuilder('\AdminController')
+        $controller = $this->getMockBuilder(AdminController::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $controller->controller_type = 'admin';
 
@@ -215,40 +209,38 @@ abstract class ApiTestCase extends WebTestCase
     }
 
     /**
-     * @param $route
-     * @param $params
+     * @param string $route
+     * @param array $params
      */
-    protected function assertBadRequest($route, $params)
+    protected function assertBadRequest(string $route, array $params): void
     {
         $route = $this->router->generate($route, $params);
         self::$client->request('GET', $route);
 
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
         $this->assertEquals(400, $response->getStatusCode(), 'It should return a response with "Bad Request" Status.');
     }
 
     /**
-     * @param $route
-     * @param $params
+     * @param string $route
+     * @param array $params
      */
-    protected function assertOkRequest($route, $params)
+    protected function assertOkRequest(string $route, array $params): void
     {
         $route = $this->router->generate($route, $params);
         self::$client->request('GET', $route);
 
-        /** @var \Symfony\Component\HttpFoundation\Response $response */
         $response = self::$client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), 'It should return a response with "OK" Status.');
     }
 
     /**
-     * @param $expectedStatusCode
-     * @return mixed
+     * @param int $expectedStatusCode
+     *
+     * @return array
      */
-    protected function assertResponseBodyValidJson($expectedStatusCode)
+    protected function assertResponseBodyValidJson(int $expectedStatusCode): array
     {
-        /** @var \Symfony\Component\HttpFoundation\JsonResponse $response */
         $response = self::$client->getResponse();
 
         $message = 'Unexpected status code.';
@@ -256,12 +248,15 @@ abstract class ApiTestCase extends WebTestCase
         switch ($expectedStatusCode) {
             case 200:
                 $message = 'It should return a response with "OK" Status.';
+
                 break;
             case 400:
                 $message = 'It should return a response with "Bad Request" Status.';
+
                 break;
             case 404:
                 $message = 'It should return a response with "Not Found" Status.';
+
                 break;
 
             default:

@@ -1,10 +1,11 @@
 {#**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 {% block typeahead_product_collection_widget %}
     <div
@@ -32,12 +32,17 @@
       data-remoteurl="{{ remote_url|raw }}"
       data-limit="{{ limit }}"
     >
-        {{ form_errors(form) }}
-
         <div class="search search-with-icon">
-            <input type="text" id="{{ form.vars.id }}" class="form-control search typeahead {{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off">
+          {# We want the attributes from the form type to be added to the input so we merge class form attribute to required ones #}
+          {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control search typeahead ' ~ form.vars.id)|trim }) -%}
+          {# We do not want the initial input name because the data is handled via a collection input with name="full_name[data][]" #}
+          {%- set full_name = '' -%}
+          <input type="text" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
+          {% if help %}
+            {{ help|raw }}
+          {% endif %}
         </small>
         <ul id="{{ form.vars.id }}-data" class="typeahead-list nostyle col-sm-12 product-list">
             {% if collection is defined and collection|length > 0 %}
@@ -113,7 +118,7 @@
                     e.preventDefault();
                     var _this = $(this);
 
-                    modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                    modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                         onContinue: function(){
                             _this.closest('li').remove();
                             if(_this.parent().parent().length == 0){
@@ -133,7 +138,7 @@
                         var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-xl-3 col-lg-6 mb-1">';
                         html += '<div class="pack-product">';
                         html += '<img class="cover" src="' + data.image +'" />';
-                        html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', data.{{ mapping_name }}, data.ref, number);
+                        html += sprintf('{% apply spaceless %}{{ template_collection|raw }}{% endapply %}', data.{{ mapping_name }}, data.ref, number);
                         html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                         html += '</div>';
                         html += '</li>';
@@ -233,7 +238,7 @@
                 e.preventDefault();
                 var _this = $(this);
 
-                modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
+                modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
                     onContinue: function(){
                         _this.closest('li').remove();
                         _this.parent().parent().hide();
@@ -291,7 +296,7 @@
                 }
 
                 var html = '<li class="media">';
-                html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
+                html += sprintf('{% apply spaceless %}{{ template_collection|raw }}{% endapply %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';
                 $('#{{ form.vars.id }}-data').show();

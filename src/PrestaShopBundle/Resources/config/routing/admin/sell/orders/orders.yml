@@ -1,0 +1,420 @@
+admin_orders_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::indexAction
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders
+
+admin_orders_create:
+  path: /new
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::createAction
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:addorder
+
+admin_orders_place:
+  path: /place
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::placeAction
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminOrders
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order
+    redirectRoute: admin_orders_index
+
+admin_orders_generate_invoice_pdf:
+  path: /{orderId}/generate-invoice-pdf
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateInvoicePdfAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_generate_delivery_slip_pdf:
+  path: /{orderId}/generate-delivery-slip-pdf
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateDeliverySlipPdfAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_change_orders_status:
+  path: /change-orders-status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::changeOrdersStatusAction
+    _legacy_controller: AdminOrders
+
+admin_orders_export:
+  path: /export
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::exportAction
+    _legacy_controller: AdminOrders
+
+admin_orders_view:
+  path: /{orderId}/view
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::viewAction
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:vieworder
+    _legacy_parameters:
+      id_order: orderId
+  options:
+    expose: true
+  requirements:
+    orderId: \d+
+
+admin_orders_add_cart_rule:
+  path: /{orderId}/cart-rules
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::addCartRuleAction
+  requirements:
+    orderId: \d+
+
+admin_orders_list_update_status:
+  path: /list/{orderId}/status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::updateStatusFromListAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_status:
+  path: /{orderId}/status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::updateStatusAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_add_payment:
+  path: /{orderId}/payment
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::addPaymentAction
+  requirements:
+    orderId: \d+
+
+admin_orders_duplicate_cart:
+  path: /{orderId}/duplicate-cart
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::duplicateOrderCartAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_change_currency:
+  path: /{orderId}/currency/change
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::changeCurrencyAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_product:
+  path: /{orderId}/products/{orderDetailId}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::updateProductAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+  options:
+    expose: true
+
+admin_orders_remove_cart_rule:
+  path: /{orderId}/cart-rules/{orderCartRuleId}/delete
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::removeCartRuleAction
+  requirements:
+    orderId: \d+
+    orderCartRuleId: \d+
+
+admin_orders_resend_email:
+  path: /{orderId}/history/{orderHistoryId}/statuses/{orderStatusId}/resend-email
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::resendEmailAction
+  requirements:
+    orderId: \d+
+    orderHistoryId: \d+
+    orderStatusId: \d+
+
+admin_orders_preview:
+  path: /{orderId}/preview
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::previewAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_shipping:
+  path: /{orderId}/shipping
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::updateShippingAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_update_invoice_note:
+  path: /{orderId}/invoice/{orderInvoiceId}/note
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::updateInvoiceNoteAction
+  requirements:
+    orderId: \d+
+    orderInvoiceId: \d+
+
+admin_orders_generate_invoice:
+  path: /{orderId}/invoice
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::generateInvoiceAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_change_customer_address:
+  path: /change-customer-address
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::changeCustomerAddressAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+
+admin_orders_send_message:
+  path: /{orderId}/send-message
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::sendMessageAction
+    _legacy_controller: AdminOrders
+
+admin_orders_partial_refund:
+  path: /{orderId}/partial-refund
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::partialRefundAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_standard_refund:
+  path: /{orderId}/standard-refund
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::standardRefundAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_return_product:
+  path: /{orderId}/return-product
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::returnProductAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_send_process_order_email:
+  path: /process-order-email
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::sendProcessOrderEmailAction
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_add_product:
+  path: /{orderId}/products
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::addProductAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_delete_product:
+  path: /{orderId}/products/{orderDetailId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::deleteProductAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    orderDetailId: \d+
+  options:
+    expose: true
+
+admin_orders_get_discounts:
+  path: /{orderId}/discounts
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getDiscountsAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_prices:
+  path: /{orderId}/prices
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getPricesAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_payments:
+  path: /{orderId}/payments
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getPaymentsAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_products:
+  path: /{orderId}/products
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getProductsListAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_invoices:
+  path: /{orderId}/invoices
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getInvoicesAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_documents:
+  path: /{orderId}/documents
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getDocumentsAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_get_shipping:
+  path: /{orderId}/shipping
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getShippingAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_cancellation:
+  path: /{orderId}/cancellation
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::cancellationAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_configure_product_pagination:
+  path: /configure-product-pagination
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::configureProductPaginationAction
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_display_customization_image:
+  path: /display-customization-image/{orderId}/{value}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::displayCustomizationImageAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+    value: .+
+
+admin_orders_product_prices:
+  path: /{orderId}/products/prices
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::getProductPricesAction
+    _legacy_controller: AdminOrders
+  requirements:
+    orderId: \d+
+  options:
+    expose: true
+
+admin_orders_products_search:
+  path: /products/search
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::searchProductsAction
+    _legacy_controller: AdminOrders
+  options:
+    expose: true
+
+admin_orders_set_internal_note:
+  path: /{orderId}/set-internal-note
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Order\OrderController::setInternalNoteAction
+    _legacy_controller: AdminOrders
+    _legacy_link: AdminOrders:updateInternalNote
+    _legacy_parameters:
+      id_order: orderId
+  requirements:
+    orderId: \d+

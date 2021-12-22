@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class HelperUploaderCore extends Uploader
 {
@@ -39,6 +39,9 @@ class HelperUploaderCore extends Uploader
     private $_name;
     private $_max_files;
     private $_multiple;
+    /**
+     * @var int|null
+     */
     private $_post_max_size;
     protected $_template;
     private $_template_directory;
@@ -104,7 +107,7 @@ class HelperUploaderCore extends Uploader
     public function getFiles()
     {
         if (!isset($this->_files)) {
-            $this->_files = array();
+            $this->_files = [];
         }
 
         return $this->_files;
@@ -112,7 +115,7 @@ class HelperUploaderCore extends Uploader
 
     public function setMaxFiles($value)
     {
-        $this->_max_files = isset($value) ? intval($value) : $value;
+        $this->_max_files = isset($value) ? (int) $value : $value;
 
         return $this;
     }
@@ -152,7 +155,7 @@ class HelperUploaderCore extends Uploader
     public function getPostMaxSize()
     {
         if (!isset($this->_post_max_size)) {
-            $this->_post_max_size = parent::getPostMaxSize();
+            $this->_post_max_size = parent::getPostMaxSizeBytes();
         }
 
         return $this->_post_max_size;
@@ -187,7 +190,7 @@ class HelperUploaderCore extends Uploader
             $this->_template_directory = self::DEFAULT_TEMPLATE_DIRECTORY;
         }
 
-        return $this->_normalizeDirectory($this->_template_directory);
+        return $this->normalizeDirectory($this->_template_directory);
     }
 
     public function getTemplateFile($template)
@@ -197,22 +200,22 @@ class HelperUploaderCore extends Uploader
         }
 
         if ($this->getContext()->controller instanceof ModuleAdminController
-            && file_exists($this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)
+            && file_exists($this->normalizeDirectory($this->getContext()->controller->getTemplatePath()) . $this->getTemplateDirectory() . $template)
         ) {
-            return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
+            return $this->normalizeDirectory($this->getContext()->controller->getTemplatePath())
                 . $this->getTemplateDirectory() . $template;
         } elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
-            && file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+            && file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)) . 'controllers'
                 . DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+        } elseif (file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                 . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
                     . $this->getTemplateDirectory() . $template;
-        } elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+        } elseif (file_exists($this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template)) {
-            return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+            return $this->normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
                 . $this->getTemplateDirectory() . $template;
         } else {
             return $this->getTemplateDirectory() . $template;
@@ -287,7 +290,7 @@ class HelperUploaderCore extends Uploader
             $this->getContext()->smarty
         );
 
-        $template->assign(array(
+        $template->assign([
             'id' => $this->getId(),
             'name' => $this->getName(),
             'url' => $this->getUrl(),
@@ -297,7 +300,7 @@ class HelperUploaderCore extends Uploader
             'max_files' => $this->getMaxFiles(),
             'post_max_size' => $this->getPostMaxSizeBytes(),
             'drop_zone' => $this->getDropZone(),
-        ));
+        ]);
 
         return $template->fetch();
     }

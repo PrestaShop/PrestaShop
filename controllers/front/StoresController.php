@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,32 +17,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class StoresControllerCore extends FrontController
 {
     public $php_self = 'stores';
-
-    /**
-     * Initialize stores controller.
-     *
-     * @see FrontController::init()
-     */
-    public function init()
-    {
-        parent::init();
-
-        // StarterTheme: Remove check when google maps v3 is done
-        if (!extension_loaded('Dom')) {
-            $this->errors[] = $this->trans('PHP "Dom" extension has not been loaded.', array(), 'Shop.Notifications.Error');
-            $this->context->smarty->assign('errors', $this->errors);
-        }
-    }
 
     /**
      * Get formatted string address.
@@ -52,20 +36,19 @@ class StoresControllerCore extends FrontController
      */
     protected function processStoreAddress($store)
     {
-        // StarterTheme: Remove method when google maps v3 is done
-        $ignore_field = array(
+        $ignore_field = [
             'firstname',
             'lastname',
-        );
+        ];
 
-        $out_datas = array();
+        $out_datas = [];
 
         $address_datas = AddressFormat::getOrderedAddressFields($store['id_country'], false, true);
         $state = (isset($store['id_state'])) ? new State($store['id_state']) : null;
 
         foreach ($address_datas as $data_line) {
             $data_fields = explode(' ', $data_line);
-            $addr_out = array();
+            $addr_out = [];
 
             $data_fields_mod = false;
             foreach ($data_fields as $field_item) {
@@ -88,17 +71,18 @@ class StoresControllerCore extends FrontController
 
     public function getStoresForXml()
     {
-        // StarterTheme: Remove method when google maps v3 is done
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi'))) {
+        if (!in_array($distance_unit, ['km', 'mi'])) {
             $distance_unit = 'km';
         }
 
         $distance = (int) Tools::getValue('radius', 100);
         $multiplicator = ($distance_unit == 'km' ? 6371 : 3959);
 
+        $langId = (int) Tools::getValue('lang', Configuration::get('PS_LANG_DEFAULT'));
+
         $stores = Db::getInstance()->executeS('
-        SELECT s.*, cl.name country, st.iso_code state,
+        SELECT s.*, sl.*, cl.name country, st.iso_code state,
         (' . (int) $multiplicator . '
             * acos(
                 cos(radians(' . (float) Tools::getValue('latitude') . '))
@@ -110,10 +94,10 @@ class StoresControllerCore extends FrontController
         ) distance,
         cl.id_country id_country
         FROM ' . _DB_PREFIX_ . 'store s
-        ' . Shop::addSqlAssociation('store', 's') . '
-        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country)
+        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country AND cl.id_lang = ' . (int) $langId . ')
+        LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $langId . ')
         LEFT JOIN ' . _DB_PREFIX_ . 'state st ON (st.id_state = s.id_state)
-        WHERE s.active = 1 AND cl.id_lang = ' . (int) $this->context->language->id . '
+        WHERE s.active = 1
         HAVING distance < ' . (int) $distance . '
         ORDER BY distance ASC
         LIMIT 0,20');
@@ -126,21 +110,20 @@ class StoresControllerCore extends FrontController
      */
     protected function displayAjax()
     {
-        // StarterTheme: Remove method when google maps v3 is done
         $stores = $this->getStoresForXml();
         $parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
         foreach ($stores as $store) {
-            $other = '';
             $newnode = $parnode->addChild('marker');
             $newnode->addAttribute('name', $store['name']);
             $address = $this->processStoreAddress($store);
 
-            //$other .= $this->renderStoreWorkingHours($store);
             $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
             $newnode->addAttribute('address', $address);
-            $newnode->addAttribute('other', $other);
+            $newnode->addAttribute('hours', trim($store['hours']));
             $newnode->addAttribute('phone', $store['phone']);
+            $newnode->addAttribute('fax', $store['fax']);
+            $newnode->addAttribute('note', $store['note']);
             $newnode->addAttribute('id_store', (int) $store['id_store']);
             $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
             $newnode->addAttribute('lat', (float) $store['latitude']);
@@ -153,8 +136,6 @@ class StoresControllerCore extends FrontController
         header('Content-type: text/xml');
 
         $this->ajaxRender($parnode->asXML());
-
-        return;
     }
 
     /**
@@ -165,16 +146,16 @@ class StoresControllerCore extends FrontController
     public function initContent()
     {
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
-        if (!in_array($distance_unit, array('km', 'mi'))) {
+        if (!in_array($distance_unit, ['km', 'mi'])) {
             $distance_unit = 'km';
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'mediumSize' => Image::getSize(ImageType::getFormattedName('medium')),
             'searchUrl' => $this->context->link->getPageLink('stores'),
             'distance_unit' => $distance_unit,
             'stores' => $this->getTemplateVarStores(),
-        ));
+        ]);
 
         parent::initContent();
         $this->setTemplate('cms/stores');
@@ -197,7 +178,7 @@ class StoresControllerCore extends FrontController
                 $store['address'][$a] = $store[$a];
                 unset($store[$a]);
             }
-            $store['address']['formatted'] = AddressFormat::generateAddress($address, array(), '<br />');
+            $store['address']['formatted'] = AddressFormat::generateAddress($address, [], '<br />');
 
             // Prepare $store.business_hours
             // Required for trad
@@ -205,25 +186,25 @@ class StoresControllerCore extends FrontController
             unset($store['hours']);
             $store['business_hours'] = [
                 [
-                    'day' => $this->trans('Monday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Monday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[0],
                 ], [
-                    'day' => $this->trans('Tuesday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Tuesday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[1],
                 ], [
-                    'day' => $this->trans('Wednesday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Wednesday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[2],
                 ], [
-                    'day' => $this->trans('Thursday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Thursday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[3],
                 ], [
-                    'day' => $this->trans('Friday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Friday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[4],
                 ], [
-                    'day' => $this->trans('Saturday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Saturday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[5],
                 ], [
-                    'day' => $this->trans('Sunday', array(), 'Shop.Theme.Global'),
+                    'day' => $this->trans('Sunday', [], 'Shop.Theme.Global'),
                     'hours' => $temp[6],
                 ],
             ];
@@ -234,5 +215,17 @@ class StoresControllerCore extends FrontController
         }
 
         return $stores;
+    }
+
+    public function getBreadcrumbLinks()
+    {
+        $breadcrumb = parent::getBreadcrumbLinks();
+
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Our stores', [], 'Shop.Theme.Global'),
+            'url' => $this->context->link->getPageLink('stores', true),
+        ];
+
+        return $breadcrumb;
     }
 }

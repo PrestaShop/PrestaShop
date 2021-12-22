@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statsbestvouchers/statsbestvouchers.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="58ef962a87e6fbbea6027c17a954a18d">
+        <source>Empty recordset returned.</source>
+        <target>Empty recordset returned.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="df25596dc94d556af2f1823725118572">
+        <source>Total used</source>
+        <target>Total used</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="b769cee333527b8dc6f3f67882e35a0b">
+        <source>Best vouchers</source>
+        <target>Best vouchers</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="d32edaf4608c91c5795eceaa1948aea7">
+        <source>Adds a list of the best vouchers to the Stats dashboard.</source>
+        <target>Adds a list of the best vouchers to the Stats dashboard.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

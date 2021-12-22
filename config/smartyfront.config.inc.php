@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 global $smarty;
 
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $template_dirs[] = _PS_PARENT_THEME_DIR_.'templates';
     $plugin_dirs[] = _PS_PARENT_THEME_DIR_.'plugins';
 }
@@ -36,14 +36,14 @@ $smarty->setTemplateDir($template_dirs);
 $smarty->addPluginsDir($plugin_dirs);
 
 $module_resources = array('theme' => _PS_THEME_DIR_.'modules/');
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'modules/';
 }
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
 
 $parent_resources = array();
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $parent_resources['parent'] = _PS_PARENT_THEME_DIR_.'templates/';
 }
 $smarty->registerResource('parent', new SmartyResourceParent($parent_resources));
@@ -175,7 +175,7 @@ function smartyTranslate($params, $smarty)
         $params['d'] = null;
     }
 
-    if (!is_null($params['d'])) {
+    if (!empty($params['d'])) {
         if (isset($params['tags'])) {
             $backTrace = debug_backtrace();
 
@@ -185,6 +185,7 @@ function smartyTranslate($params, $smarty)
                 $backTrace[0]['args'][1]->template_resource
             );
 
+            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
             } else {
@@ -201,6 +202,7 @@ function smartyTranslate($params, $smarty)
                 $backTrace[0]['args'][1]->template_resource
             );
 
+            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
             } else {
@@ -209,15 +211,19 @@ function smartyTranslate($params, $smarty)
                 return $params['s'];
             }
         }
-    }
 
-    if (($translation = Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d'])) !== $params['s']
-        && $params['mod'] === false) {
-        return $translation;
+        return Context::getContext()->getTranslator()->trans($params['s'], $params['sprintf'], $params['d']);
     }
 
     $string = str_replace('\'', '\\\'', $params['s']);
-    $basename = basename($smarty->source->name, '.tpl');
+
+    // fix inheritance template filename in case of includes from different cross sources between theme, modules, ...
+    $filename = $smarty->template_resource;
+    if (!isset($smarty->inheritance->sourceStack[0]) || $filename === $smarty->inheritance->sourceStack[0]->resource) {
+        $filename = $smarty->source->name;
+    }
+
+    $basename = basename($filename, '.tpl');
     $key = $basename.'_'.md5($string);
 
     if (isset($smarty->source) && (strpos($smarty->source->filepath, DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR) !== false)) {

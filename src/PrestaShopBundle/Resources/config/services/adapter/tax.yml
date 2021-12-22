@@ -1,0 +1,50 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.tax.ecotax.ecotax_resetter:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\Ecotax\ProductEcotaxResetter'
+
+  prestashop.adapter.tax.tax_computer:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
+    arguments:
+      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
+
+  # Command handlers
+  prestashop.adapter.tax.command_handler.delete_tax_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\DeleteTaxHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\DeleteTaxCommand' }
+
+  prestashop.adapter.tax.command_handler.toggle_tax_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\ToggleTaxStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\ToggleTaxStatusCommand' }
+
+  prestashop.adapter.tax.command_handler.bulk_toggle_tax_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkToggleTaxStatusHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkToggleTaxStatusCommand' }
+
+  prestashop.adapter.tax.command_handler.bulk_delete_tax_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\BulkDeleteTaxHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\BulkDeleteTaxCommand' }
+
+  prestashop.adapter.tax.query_handler.get_tax_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\QueryHandler\GetTaxForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Query\GetTaxForEditing'
+
+  prestashop.adapter.tax.command_handler.edit_tax_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\EditTaxHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\EditTaxCommand'
+
+  prestashop.adapter.tax.command_handler.add_tax_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Tax\CommandHandler\AddTaxHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Tax\Command\AddTaxCommand'

@@ -1,10 +1,11 @@
 {#**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 <tr class="combination loaded" id="attribute_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}">
   <td width="1%"><input class="js-combination" type="checkbox" data-id="{{ form.vars.value.id_product_attribute }}" data-index="{{ form.vars.value.id_product_attribute }}"></td>
@@ -29,15 +29,27 @@
     <td class="attribute-price">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text">{{ default_currency }}</span>
+                <span class="input-group-text">{{ default_currency_symbol }}</span>
             </div>
             <input type="text" class="attribute_priceTE form-control text-sm-right" value="{{ form.vars.value.attribute_price }}">
         </div>
     </td>
     <td class="attribute-finalprice text-sm-right">
-      <span data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}
+      <div>
+        <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency_symbol }}
+      </div>
+      {% if 'PS_USE_ECOTAX'|configuration != 0 %}
+        {% set attributeEcotax = form.vars.value.attribute_ecotax %}
+        {% if attributeEcotax == 0 %}
+          {% set attributeEcotax = form.vars.value.product_ecotax %}
+        {% endif %}
+        <div class="attribute-ecotax-preview{% if attributeEcotax == 0 %} d-none{% endif %}">
+          {{ 'Ecotax'|trans({}, 'Admin.Catalog.Feature') }}
+          <span class="attribute-ecotax">{{ attributeEcotax|round(2) }}</span> {{ default_currency_symbol }}
+        </div>
+      {% endif %}
     </td>
-    {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+    {% if configuration('PS_STOCK_MANAGEMENT') %}
       <td class="attribute-quantity">
           <div>
               <input type="text" value="{{ form.vars.value.attribute_quantity }}" class="form-control text-sm-right">
@@ -49,13 +61,13 @@
         <div class="btn-group btn-group-sm" role="group">
             <a href="#combination_form_{{ form.vars.value.id_product_attribute }}" class="btn btn-open tooltip-link btn-sm"><i class="material-icons">mode_edit</i></a>
         </div>
-        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide row">
-            <div class="col-sm-12 nav">
+        <div id="combination_form_{{ form.vars.value.id_product_attribute }}" data="{{ form.vars.value.id_product_attribute }}" class="combination-form hide">
+            <div class="nav">
                 {# "Prev." is short for "Previous" #}
                 <a class="btn-sensitive prev"><i class="material-icons">keyboard_arrow_left</i> {{ 'Prev. combination'|trans({}, 'Admin.Catalog.Feature') }}</a>
                 <a class="next btn-sensitive">{{ 'Next combination'|trans({}, 'Admin.Catalog.Feature') }} <i class="material-icons">keyboard_arrow_right</i></a>
             </div>
-            <div class="panel col-md-12 p-2">
+            <div class="panel p-2">
                 <div class="float-left">
                     <button type="button" class="back-to-product btn btn-outline-secondary btn-back"><i class="material-icons">arrow_back</i> {{ 'Back to product'|trans({}, 'Admin.Catalog.Feature') }}</button>
                 </div>
@@ -65,7 +77,7 @@
                 </h2>
                 {{ form_widget(form.attribute_default) }}
                 <div class="row">
-                  {% if 'PS_STOCK_MANAGEMENT'|configuration %}
+                  {% if configuration('PS_STOCK_MANAGEMENT') %}
                     <div class="col-md-2">
                       <fieldset class="form-group">
                           <label class="form-control-label">
@@ -87,8 +99,10 @@
                       <fieldset class="form-group">
                           <label class="form-control-label">
                             {{ form.attribute_minimal_quantity.vars.label }}
-                            <span class="help-box" data-toggle="popover"
-                              data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                            <span class="help-box" 
+                                  data-toggle="popover"
+                                  data-content="{{ "The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity."|trans({}, 'Admin.Catalog.Help') }}" >
+                            </span>
                           </label>
                           {{ form_errors(form.attribute_minimal_quantity) }}
                           {{ form_widget(form.attribute_minimal_quantity) }}
@@ -126,7 +140,11 @@
                       <div class="widget-checkbox-inline">
                         {{ form_errors(form.attribute_low_stock_alert) }}
                         {{ form_widget(form.attribute_low_stock_alert) }}
-                        <span class="help-box" data-toggle="popover" data-html="true" data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" ></span>
+                        <span class="help-box" 
+                              data-toggle="popover" 
+                              data-html="true" 
+                              data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}" >
+                        </span>
                       </div>
                     </fieldset>
                   </div>
@@ -146,8 +164,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_price.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "Does this combination have a different price? Is it cheaper or more expensive than the default retail price?"|trans({}, 'Admin.Catalog.Help') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_price) }}
                             {{ form_widget(form.attribute_price) }}
@@ -161,11 +181,12 @@
                         </fieldset>
                     </div>
                     <div class="col-md-3">
-                      <small class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency }}</small>
+                      <div class="form-control-label vcenter">{{ "Final retail price (tax excl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price" data-price="{{ form.vars.value.final_price }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price }}</span> {{ default_currency_symbol }}</div>
+                      <div class="form-control-label vcenter">{{ "Final retail price (tax incl.) will be"|trans({}, 'Admin.Catalog.Feature') }} <span class="final-price-tax-included" data-price="{{ form.vars.value.final_price_tax_included }}" data-uniqid="{{ form.vars.value.id_product_attribute }}">{{ form.vars.value.final_price_tax_included }}</span> {{ default_currency_symbol }}</div>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3 {% if 'PS_USE_ECOTAX'|configuration != 1 %}hide{% endif %}">
+                    <div class="col-md-3 {% if configuration('PS_USE_ECOTAX') != 1 %}hide{% endif %}">
                         <fieldset class="form-group">
                             <label class="form-control-label">{{ form.attribute_ecotax.vars.label }}</label>
                             {{ form_errors(form.attribute_ecotax) }}
@@ -176,8 +197,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_unity.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'Admin.Catalog.Feature') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "Does this combination have a different price per unit?"|trans({}, 'Admin.Catalog.Feature') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_unity) }}
                             {{ form_widget(form.attribute_unity) }}
@@ -188,7 +211,7 @@
                             <label class="form-control-label">{{ form.attribute_weight.vars.label }}</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{{ 'PS_WEIGHT_UNIT'|configuration }}</span>
+                                    <span class="input-group-text">{{ configuration('PS_WEIGHT_UNIT') }}</span>
                                 </div>
                                 {{ form_errors(form.attribute_weight) }}
                                 {{ form_widget(form.attribute_weight) }}
@@ -211,8 +234,10 @@
                         <fieldset class="form-group">
                             <label class="form-control-label">
                               {{ form.attribute_ean13.vars.label }}
-                              <span class="help-box" data-toggle="popover"
-                                data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+                              <span class="help-box" 
+                                    data-toggle="popover"
+                                    data-content="{{ "This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America."|trans({}, 'Admin.Catalog.Help') }}" >
+                              </span>
                             </label>
                             {{ form_errors(form.attribute_ean13) }}
                             {{ form_widget(form.attribute_ean13) }}
@@ -225,28 +250,28 @@
                             {{ form_widget(form.attribute_upc) }}
                         </fieldset>
                     </div>
+                    <div class="col-md-4">
+                        <fieldset class="form-group">
+                            <label class="form-control-label">{{ form.attribute_mpn.vars.label }}</label>
+                            {{ form_errors(form.attribute_mpn) }}
+                            {{ form_widget(form.attribute_mpn) }}
+                        </fieldset>
+                    </div>
                 </div>
                 <h2 class="title">
                   {{ "Images"|trans({}, 'Admin.Catalog.Feature') }}
                 </h2>
-                <div class="row">
-                    <div class="col-md-12">
-                        <fieldset class="form-group js-combination-images">
-                            <label>
-                                <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
-                                <small class="form-control-label number-of-images"></small>
-                            </label>
-                            {{ form_errors(form.id_image_attr) }}
-                            {{ form_widget(form.id_image_attr) }}
-                        </fieldset>
-                    </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        {{ renderhook('displayAdminProductsCombinationBottom', { 'id_product': form.vars.value.id_product, 'id_product_attribute': form.vars.value.id_product_attribute }) }}
-                    </div>
-                </div>
+                <fieldset class="form-group js-combination-images">
+                    <label>
+                        <small class="form-control-label">{{ form.id_image_attr.vars.label }}</small>
+                        <small class="form-control-label number-of-images"></small>
+                    </label>
+                    {{ form_errors(form.id_image_attr) }}
+                    {{ form_widget(form.id_image_attr) }}
+                </fieldset>
+
+                {{ renderhook('displayAdminProductsCombinationBottom', { 'id_product': form.vars.value.id_product, 'id_product_attribute': form.vars.value.id_product_attribute }) }}
 
                 {{ form_widget(form.id_product_attribute) }}
             </div>

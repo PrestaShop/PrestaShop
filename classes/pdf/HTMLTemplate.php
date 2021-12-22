@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -29,14 +29,29 @@
  */
 abstract class HTMLTemplateCore
 {
+    /**
+     * @var string
+     */
     public $title;
+
+    /**
+     * @var string
+     */
     public $date;
+
+    /**
+     * @var bool
+     */
     public $available_in_your_account = true;
 
-    /** @var Smarty */
+    /**
+     * @var Smarty
+     */
     public $smarty;
 
-    /** @var Shop */
+    /**
+     * @var Shop
+     */
     public $shop;
 
     /**
@@ -62,14 +77,14 @@ abstract class HTMLTemplateCore
 
         $id_shop = (int) $this->shop->id;
 
-        $this->smarty->assign(array(
+        $this->smarty->assign([
             'available_in_your_account' => $this->available_in_your_account,
             'shop_address' => $shop_address,
             'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
             'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
             'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
             'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int) Context::getContext()->language->id, null, $id_shop),
-        ));
+        ]);
 
         return $this->smarty->fetch($this->getTemplate('footer'));
     }
@@ -81,32 +96,29 @@ abstract class HTMLTemplateCore
      */
     protected function getShopAddress()
     {
-        $shop_address = '';
-
-        $shop_address_obj = $this->shop->getAddress();
-        if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
-            $shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
-        }
-
-        return $shop_address;
+        return AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ');
     }
 
     /**
      * Returns the invoice logo.
+     *
+     * @return string|null
      */
     protected function getLogo()
     {
-        $logo = '';
-
         $id_shop = (int) $this->shop->id;
 
-        if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
-        } elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop))) {
-            $logo = _PS_IMG_DIR_ . Configuration::get('PS_LOGO', null, null, $id_shop);
+        $invoiceLogo = Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+        if ($invoiceLogo && file_exists(_PS_IMG_DIR_ . $invoiceLogo)) {
+            return $invoiceLogo;
         }
 
-        return $logo;
+        $logo = Configuration::get('PS_LOGO', null, null, $id_shop);
+        if ($logo && file_exists(_PS_IMG_DIR_ . $logo)) {
+            return $logo;
+        }
+
+        return null;
     }
 
     /**
@@ -118,12 +130,12 @@ abstract class HTMLTemplateCore
         $id_shop = (int) $this->shop->id;
         $shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
 
-        $path_logo = $this->getLogo();
+        $logo = $this->getLogo();
 
         $width = 0;
         $height = 0;
-        if (!empty($path_logo)) {
-            list($width, $height) = getimagesize($path_logo);
+        if (!empty($logo)) {
+            list($width, $height) = getimagesize(_PS_IMG_DIR_ . $logo);
         }
 
         // Limit the height of the logo for the PDF render
@@ -134,9 +146,9 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
-        $this->smarty->assign(array(
-            'logo_path' => $path_logo,
-            'img_ps_dir' => 'http://' . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
+        $this->smarty->assign([
+            'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
+            'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
             'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
             'date' => $this->date,
             'title' => $this->title,
@@ -144,7 +156,7 @@ abstract class HTMLTemplateCore
             'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
             'width_logo' => $width,
             'height_logo' => $height,
-        ));
+        ]);
     }
 
     /**
@@ -157,9 +169,16 @@ abstract class HTMLTemplateCore
         $template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
         $hook_name = 'displayPDF' . $template;
 
-        $this->smarty->assign(array(
-            'HOOK_DISPLAY_PDF' => Hook::exec($hook_name, array('object' => $object)),
-        ));
+        $this->smarty->assign([
+            'HOOK_DISPLAY_PDF' => Hook::exec(
+                $hook_name,
+                [
+                    'object' => $object,
+                    // The smarty instance is a clone that does NOT escape HTML
+                    'smarty' => $this->smarty,
+                ]
+            ),
+        ]);
     }
 
     /**
@@ -187,7 +206,7 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param $template_name
+     * @param string $template_name
      *
      * @return string
      */

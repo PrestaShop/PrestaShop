@@ -1,0 +1,286 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% set isColumnLocationDisplayed = false %}
+{% set isColumnRefundedDisplayed = false %}
+{% for product in orderForViewing.products.products|slice(0, paginationNum) %}
+  {% if product.location is not empty %}
+    {% set isColumnLocationDisplayed = true %}
+  {% endif %}
+  {% if product.quantityRefunded > 0 %}
+    {% set isColumnRefundedDisplayed = true %}
+  {% endif %}
+{% endfor %}
+
+<div class="card" id="orderProductsPanel">
+  <div class="card-header">
+    <h3 class="card-header-title">
+      {{ 'Products'|trans({}, 'Admin.Global') }} (<span id="orderProductsPanelCount">{{ orderForViewing.products.products|length }}</span>)
+    </h3>
+  </div>
+
+  <div class="card-body">
+    <div class="spinner-order-products-container" id="orderProductsLoading">
+      <div class="spinner spinner-primary"></div>
+    </div>
+
+    {% set formOptions = {
+          'attr': {
+            'data-order-id': orderForViewing.id,
+            'data-is-delivered': orderForViewing.isDelivered,
+            'data-is-tax-included': orderForViewing.isTaxIncluded,
+            'data-discounts-amount': orderForViewing.prices.discountsAmountRaw,
+            'data-price-specification': priceSpecification|json_encode
+          }
+        } %}
+    {{ form_start(cancelProductForm, formOptions) }}
+
+    {# PRODUCT TABLE #}
+    <table class="table" id="orderProductsTable" data-currency-precision="{{ orderCurrency.precision }}">
+      <thead>
+        <tr>
+          <th>
+            <p>{{ 'Product'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th></th>
+          <th>
+            <p class="mb-0">{{ 'Price per unit'|trans({}, 'Admin.Advparameters.Feature') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
+          </th>
+          <th>
+            <p>{{ 'Quantity'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th class="cellProductLocation{% if not isColumnLocationDisplayed %} d-none{% endif %}">
+            <p>{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th class="cellProductRefunded{% if not isColumnRefundedDisplayed %} d-none{% endif %}">
+            <p>{{ 'Refunded'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+          <th {% if not isAvailableQuantityDisplayed %} class="d-none" {% endif %}>
+            <p>{{ 'Available'|trans({}, 'Admin.Global') }}</p>
+          </th>
+          <th>
+            <p class="mb-0">{{ 'Total'|trans({}, 'Admin.Global') }}</p>
+            <small class="text-muted">{{ orderForViewing.taxMethod }}</small>
+          </th>
+          {% if orderForViewing.hasInvoice() %}
+            <th>
+              <p>{{ 'Invoice'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
+          {% if not orderForViewing.delivered %}
+            <th class="text-right product_actions d-print-none">
+              <p>{{ 'Actions'|trans({}, 'Admin.Global') }}</p>
+            </th>
+          {% endif %}
+          <th class="text-center cancel-product-element">
+            <p>{{ 'Partial refund'|trans({}, 'Admin.Orderscustomers.Feature') }}</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/product_list.html.twig' %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/add_product_row.html.twig' %}
+        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/edit_product_row.html.twig' %}
+      </tbody>
+    </table>
+
+
+    {# PAGINATION AND ADD NEW PRODUCT/DISCOUNT #}
+    <div class="row mb-3">
+      <div class="col-xl-6 d-print-none order-product-pagination">
+        <div class="form-group">
+          <label for="paginator_select_page_limit" class="col-form-label ml-3">{{ "Items per page:"|trans({}, 'Admin.Catalog.Feature') }}</label>
+          <select id="orderProductsTablePaginationNumberSelector" class="pagination-link custom-select">
+            {% for numPageOption in paginationNumOptions %}
+              <option value="{{ numPageOption }}" {% if numPageOption == paginationNum %} selected {% endif %}>{{ numPageOption }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        {% set numPages = max(orderForViewing.products.products|length / paginationNum, 1)|round(0, 'ceil') %}
+        <nav aria-label="Products Navigation"{% if orderForViewing.products.products|length <= paginationNum %} class="d-none"{% endif %} id="orderProductsNavPagination">
+          <ul class="pagination" id="orderProductsTablePagination" data-num-per-page="{{ paginationNum }}" data-num-pages="{{ numPages }}">
+            <li class="page-item disabled" id="orderProductsTablePaginationPrev">
+              <a class="page-link" href="javascript:void(0);" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            {% for numPage in 1..numPages %}
+              <li class="page-item{% if numPage==1 %} active{% endif %}">
+                <span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page="{{ numPage }}">{{ numPage }}</span>
+              </li>
+            {% endfor %}
+            <li class="page-item d-none">
+              <span class="page-link" data-order-id="{{ orderForViewing.id }}" data-page=""></span>
+            </li>
+            <li class="page-item" id="orderProductsTablePaginationNext">
+              <a class="page-link" href="javascript:void(0);" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="col-xl-6 text-xl-right discount-action">
+        {% if not orderForViewing.delivered %}
+          <button type="button" class="btn btn-outline-secondary js-product-action-btn mr-3" id="addProductBtn">
+            <i class="material-icons">add_circle_outline</i>
+            {{ 'Add a product'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          </button>
+        {% endif %}
+        <button type="button" class="btn btn-outline-secondary js-product-action-btn" data-toggle="modal" data-target="#addOrderDiscountModal">
+          <i class="material-icons">confirmation_number</i>
+          {{ 'Add a discount'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </button>
+      </div>
+
+    </div>
+
+    {# DISCOUNT LIST #}
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/discount_list.html.twig' with {
+        'discounts': orderForViewing.discounts.discounts,
+        'orderId': orderForViewing.id
+    } %}
+
+
+    {# ORDER TOTALS #}
+
+    <div class="info-block">
+      <div class="row">
+
+        <div class="col-sm text-center">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Products'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <strong id="orderProductsTotal">{{ orderForViewing.prices.productsPriceFormatted }}</strong>
+        </div>
+
+        <div id="order-discounts-total-container" class="col-sm text-center{% if not orderForViewing.prices.discountsAmountRaw.greaterThan((number(0))) %} d-none{% endif %}">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Discounts'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <strong id="orderDiscountsTotal">-{{ orderForViewing.prices.discountsAmountFormatted }}</strong>
+        </div>
+
+        {% if orderForViewing.prices.wrappingPriceRaw.greaterThan(number(0)) %}
+          <div class="col-sm text-center">
+            <p class="text-muted mb-0">
+              <strong>{{ 'Wrapping'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
+            </p>
+            <strong id="orderWrappingTotal">{{ orderForViewing.prices.wrappingPriceFormatted }}</strong>
+          </div>
+        {% endif %}
+
+        <div id="order-shipping-total-container" class="col-sm text-center{% if not orderForViewing.prices.shippingPriceRaw.greaterThan((number(0))) %} d-none{% endif %}">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Shipping'|trans({}, 'Admin.Catalog.Feature') }}</strong>
+          </p>
+          <div class="shipping-price">
+            <strong id="orderShippingTotal">{{ orderForViewing.prices.shippingPriceFormatted }}</strong>
+            <div class="cancel-product-element shipping-refund-amount{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
+              <div class="input-group">
+                {{ form_widget(cancelProductForm.shipping_amount) }}
+                <div class="input-group-append">
+                  <div class="input-group-text">{{ orderCurrency.symbol }}</div>
+                </div>
+              </div>
+              <p class="text-center">(max
+                {{ orderForViewing.prices.shippingRefundableAmountFormatted }}
+                tax included)</p>
+            </div>
+          </div>
+        </div>
+
+        {% if not orderForViewing.taxIncluded %}
+          <div class="col-sm text-center">
+            <p class="text-muted mb-0">
+              <strong>{{ 'Taxes'|trans({}, 'Admin.Global') }}</strong>
+            </p>
+            <strong id="orderTaxesTotal">{{ orderForViewing.prices.taxesAmountFormatted }}</strong>
+          </div>
+        {% endif %}
+
+        <div class="col-sm text-center">
+          <p class="text-muted mb-0">
+            <strong>{{ 'Total'|trans({}, 'Admin.Global') }}</strong>
+          </p>
+          <span class="badge rounded badge-dark font-size-100" id="orderTotal">{{ orderForViewing.prices.totalAmountFormatted }}</span>
+        </div>
+
+      </div>
+    </div>
+
+    {# PRICE DISPLAY #}
+    <p class="mb-0 mt-1 text-center text-muted">
+      <small>
+        {{ 'For this customer group, prices are displayed as: [1]%tax_method%[/1]'|trans({
+          '%tax_method%': orderForViewing.taxMethod,
+          '[1]': '<strong>',
+          '[/1]': '</strong>'
+        }, 'Admin.Orderscustomers.Notification')|raw }}.
+
+        {% if not configuration('PS_ORDER_RETURN') %}
+          <strong>{{ 'Merchandise returns are disabled'|trans({}, 'Admin.Orderscustomers.Notification') }}</strong>
+        {% endif %}
+      </small>
+    </p>
+
+    {# PRODUCT CANCEL #}
+    <div class="cancel-product-element refund-checkboxes-container">
+      <div class="cancel-product-element form-group restock-products">
+        {{ form_widget(cancelProductForm.restock) }}
+      </div>
+      <div class="cancel-product-element form-group refund-credit-slip">
+        {{ form_widget(cancelProductForm.credit_slip) }}
+      </div>
+      <div class="cancel-product-element form-group refund-voucher">
+        {{ form_widget(cancelProductForm.voucher) }}
+      </div>
+      <div class="cancel-product-element shipping-refund{% if orderForViewing.prices.shippingRefundableAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
+        <div class="form-group">
+          {{ form_widget(cancelProductForm.shipping) }}
+          <small class="shipping-refund-amount">({{ orderForViewing.prices.shippingRefundableAmountFormatted }})</small>
+        </div>
+      </div>
+      <div class="cancel-product-element form-group voucher-refund-type{% if orderForViewing.prices.discountsAmountRaw.lowerOrEqualThan(number(0)) %} hidden{% endif %}">
+        {{ 'This order has been partially paid by voucher. Choose the amount you want to refund:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ form_widget(cancelProductForm.voucher_refund_type) }}
+        <div class="voucher-refund-type-negative-error">
+          {{ 'Error. You cannot refund a negative amount.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+        </div>
+      </div>
+    </div>
+    <div class="cancel-product-element form-submit text-right">
+      {{ form_widget(cancelProductForm.cancel) }}
+      {{ form_widget(cancelProductForm.save) }}
+    </div>
+
+    {{ form_end(cancelProductForm) }}
+  </div>
+</div>

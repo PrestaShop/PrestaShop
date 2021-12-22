@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
+
+{include file='_partials/helpers.tpl'}
+
 <!doctype html>
-<html lang="{$language.iso_code}">
+<html lang="{$language.locale}">
 
   <head>
     {block name='head'}
@@ -48,51 +51,53 @@
         {/block}
       </header>
 
-      {block name='notifications'}
-        {include file='_partials/notifications.tpl'}
-      {/block}
-
       <section id="wrapper">
+        {block name='notifications'}
+          {include file='_partials/notifications.tpl'}
+        {/block}
+
         {hook h="displayWrapperTop"}
         <div class="container">
           {block name='breadcrumb'}
             {include file='_partials/breadcrumb.tpl'}
           {/block}
 
-          {block name="left_column"}
-            <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
-              {if $page.page_name == 'product'}
-                {hook h='displayLeftColumnProduct'}
-              {else}
-                {hook h="displayLeftColumn"}
-              {/if}
-            </div>
-          {/block}
+          <div class="row">
+            {block name="left_column"}
+              <div id="left-column" class="col-xs-12 col-sm-4 col-md-3">
+                {if $page.page_name == 'product'}
+                  {hook h='displayLeftColumnProduct' product=$product category=$category}
+                {else}
+                  {hook h="displayLeftColumn"}
+                {/if}
+              </div>
+            {/block}
 
-          {block name="content_wrapper"}
-            <div id="content-wrapper" class="left-column right-column col-sm-4 col-md-6">
-              {hook h="displayContentWrapperTop"}
-              {block name="content"}
-                <p>Hello world! This is HTML5 Boilerplate.</p>
-              {/block}
-              {hook h="displayContentWrapperBottom"}
-            </div>
-          {/block}
+            {block name="content_wrapper"}
+              <div id="content-wrapper" class="js-content-wrapper left-column right-column col-sm-4 col-md-6">
+                {hook h="displayContentWrapperTop"}
+                {block name="content"}
+                  <p>Hello world! This is HTML5 Boilerplate.</p>
+                {/block}
+                {hook h="displayContentWrapperBottom"}
+              </div>
+            {/block}
 
-          {block name="right_column"}
-            <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
-              {if $page.page_name == 'product'}
-                {hook h='displayRightColumnProduct'}
-              {else}
-                {hook h="displayRightColumn"}
-              {/if}
-            </div>
-          {/block}
+            {block name="right_column"}
+              <div id="right-column" class="col-xs-12 col-sm-4 col-md-3">
+                {if $page.page_name == 'product'}
+                  {hook h='displayRightColumnProduct'}
+                {else}
+                  {hook h="displayRightColumn"}
+                {/if}
+              </div>
+            {/block}
+          </div>
         </div>
         {hook h="displayWrapperBottom"}
       </section>
 
-      <footer id="footer">
+      <footer id="footer" class="js-footer">
         {block name="footer"}
           {include file="_partials/footer.tpl"}
         {/block}

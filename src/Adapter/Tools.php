@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,17 +17,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\Decimal\Number;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use Tools as LegacyTools;
 
@@ -73,12 +73,12 @@ class Tools
     /**
      * Polyfill for bcadd if BC Math extension is not installed.
      *
-     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\Number instead
+     * @deprecated since 1.7.2.2 - Use PrestaShop\Decimal\DecimalNumber instead
      */
     public function bcadd($left_operand, $right_operand, $scale = null)
     {
-        $result = (new Number((string) $left_operand))
-            ->plus(new Number((string) $right_operand));
+        $result = (new DecimalNumber((string) $left_operand))
+            ->plus(new DecimalNumber((string) $right_operand));
 
         if (null === $scale) {
             return (string) $result;
@@ -126,7 +126,8 @@ class Tools
      */
     private function generateHtaccessOnMultiViews($disableMultiView = false)
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -141,7 +142,8 @@ class Tools
      */
     public function generateHtaccessWithMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -156,7 +158,8 @@ class Tools
      */
     public function generateHtaccessWithoutMultiViews()
     {
-        return LegacyTools::generateHtaccess(null,
+        return LegacyTools::generateHtaccess(
+            null,
             null,
             null,
             '',
@@ -200,5 +203,79 @@ class Tools
     public function isModRewriteActive()
     {
         return LegacyTools::modRewriteActive();
+    }
+
+    /**
+     * Copy content.
+     *
+     * @param string $source
+     * @param string $destination
+     * @param resource|null $streamContext
+     *
+     * @return bool|int
+     */
+    public function copy($source, $destination, $streamContext = null)
+    {
+        return LegacyTools::copy($source, $destination, $streamContext);
+    }
+
+    /**
+     * Sanitize a string.
+     *
+     * @param string $value
+     * @param bool $allowHtml
+     *
+     * @return string
+     */
+    public function sanitize($value, $allowHtml = false)
+    {
+        return LegacyTools::safeOutput($value, $allowHtml);
+    }
+
+    /**
+     * Get a valid image URL to use from BackOffice.
+     *
+     * @param string $fileName image file name
+     * @param bool $escapeHtmlEntities if true - escape html entities on file name argument
+     *
+     * @return string image URL
+     */
+    public function getAdminImageUrl($fileName, $escapeHtmlEntities = false)
+    {
+        return LegacyTools::getAdminImageUrl($fileName, $escapeHtmlEntities);
+    }
+
+    /**
+     * Delete unicode class from regular expression patterns.
+     *
+     * @param string $pattern
+     *
+     * @return string pattern
+     */
+    public function cleanNonUnicodeSupport($pattern)
+    {
+        return LegacyTools::cleanNonUnicodeSupport($pattern);
+    }
+
+    /**
+     * @see LegacyTools::displayDate()
+     *
+     * @return string
+     *
+     * @throws \PrestaShopException
+     */
+    public function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    {
+        return LegacyTools::displayDate($date, $id_lang, $full, $separator);
+    }
+
+    /**
+     * @see LegacyTools::truncateString()
+     *
+     * @return bool|string
+     */
+    public function truncateString($text, $length = 120, $options = [])
+    {
+        return LegacyTools::truncateString($text, $length, $options);
     }
 }

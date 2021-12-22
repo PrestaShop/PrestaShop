@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class TaxRuleCore extends ObjectModel
 {
@@ -37,28 +37,28 @@ class TaxRuleCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'tax_rule',
         'primary' => 'id_tax_rule',
-        'fields' => array(
-            'id_tax_rules_group' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_state' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-            'zipcode_from' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode'),
-            'zipcode_to' => array('type' => self::TYPE_STRING, 'validate' => 'isPostCode'),
-            'id_tax' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'behavior' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-            'description' => array('type' => self::TYPE_STRING, 'validate' => 'isString'),
-        ),
-    );
+        'fields' => [
+            'id_tax_rules_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_state' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
+            'zipcode_from' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
+            'zipcode_to' => ['type' => self::TYPE_STRING, 'validate' => 'isPostCode'],
+            'id_tax' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'behavior' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'description' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_tax_rules_group' => array('xlink_resource' => 'tax_rule_groups'),
-            'id_state' => array('xlink_resource' => 'states'),
-            'id_country' => array('xlink_resource' => 'countries'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_tax_rules_group' => ['xlink_resource' => 'tax_rule_groups'],
+            'id_state' => ['xlink_resource' => 'states'],
+            'id_country' => ['xlink_resource' => 'countries'],
+        ],
+    ];
 
     public static function deleteByGroupId($id_group)
     {
@@ -66,7 +66,8 @@ class TaxRuleCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
 			WHERE `id_tax_rules_group` = ' . (int) $id_group
         );
@@ -81,7 +82,8 @@ class TaxRuleCore extends ObjectModel
 
     public static function getTaxRulesByGroupId($id_lang, $id_group)
     {
-        return Db::getInstance()->executeS('
+        return Db::getInstance()->executeS(
+            '
 		SELECT g.`id_tax_rule`,
 				 c.`name` AS country_name,
 				 s.`name` AS state_name,
@@ -102,26 +104,17 @@ class TaxRuleCore extends ObjectModel
 
     public static function deleteTaxRuleByIdTax($id_tax)
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 			DELETE FROM `' . _DB_PREFIX_ . 'tax_rule`
 			WHERE `id_tax` = ' . (int) $id_tax
         );
     }
 
     /**
-     * @deprecated since 1.5
-     */
-    public static function deleteTaxRuleByIdCounty($id_county)
-    {
-        Tools::displayAsDeprecated();
-
-        return true;
-    }
-
-    /**
      * @param int $id_tax
      *
-     * @return bool
+     * @return int
      */
     public static function isTaxInUse($id_tax)
     {
@@ -137,7 +130,7 @@ class TaxRuleCore extends ObjectModel
     }
 
     /**
-     * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+     * @param string $zip_codes a range of zipcode (eg: 75000 / 75000-75015)
      *
      * @return array an array containing two zipcode ordered by zipcode
      */
@@ -162,7 +155,7 @@ class TaxRuleCore extends ObjectModel
             $to = 0;
         }
 
-        return array($from, $to);
+        return [$from, $to];
     }
 
     /**
@@ -173,7 +166,8 @@ class TaxRuleCore extends ObjectModel
      */
     public static function swapTaxId($old_id, $new_id)
     {
-        return Db::getInstance()->execute('
+        return Db::getInstance()->execute(
+            '
 		UPDATE `' . _DB_PREFIX_ . 'tax_rule`
 		SET `id_tax` = ' . (int) $new_id . '
 		WHERE `id_tax` = ' . (int) $old_id

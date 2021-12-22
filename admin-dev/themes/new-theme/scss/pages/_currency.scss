@@ -1,0 +1,69 @@
+#currency_grid_panel {
+  #currency_iso_code {
+    max-width: 120px;
+  }
+}
+
+.grid {
+  table.grid-table {
+    tr {
+      td {
+        .unofficial {
+          font-size: 20px;
+          color: $medium-gray;
+        }
+      }
+    }
+  }
+}
+
+.admincurrencies {
+  .card {
+    &-currency {
+      .card {
+        &-footer {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+      &-reset {
+        margin-left: 0.625rem;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .admincurrencies {
+    .card {
+      &-currency {
+        .card {
+          &-footer {
+            &-left {
+              &,
+              .btn {
+                width: 100%;
+              }
+
+              .btn {
+                margin-bottom: 0.625rem;
+              }
+            }
+
+            > .btn {
+              width: 100%;
+            }
+          }
+        }
+
+        &-reset {
+          width: 100%;
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

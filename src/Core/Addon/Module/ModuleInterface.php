@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
@@ -30,9 +30,17 @@ use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 
 interface ModuleInterface extends AddonInterface
 {
-    public function onInstall();
+    public function getInstance();
 
-    public function onUninstall();
+    public function hasValidInstance();
+
+    public function get(string $name);
+
+    public function onInstall(): bool;
+
+    public function onPostInstall(): bool;
+
+    public function onUninstall(): bool;
 
     /**
      * Called when switching the current theme of the selected shop.
@@ -40,7 +48,7 @@ interface ModuleInterface extends AddonInterface
      *
      * @return bool true for success
      */
-    public function onEnable();
+    public function onEnable(): bool;
 
     /**
      * Not necessarily the opposite of enable. Use this method if
@@ -49,22 +57,22 @@ interface ModuleInterface extends AddonInterface
      *
      * @return bool true for success
      */
-    public function onDisable();
+    public function onDisable(): bool;
 
     /**
      * @return bool
      */
-    public function onMobileEnable();
+    public function onMobileEnable(): bool;
 
     /**
      * @return bool
      */
-    public function onMobileDisable();
+    public function onMobileDisable(): bool;
 
     /**
      * @return bool
      */
-    public function onReset();
+    public function onReset(): bool;
 
     /**
      * Execute up files. You can update configuration, update sql schema.
@@ -72,5 +80,5 @@ interface ModuleInterface extends AddonInterface
      *
      * @return bool true for success
      */
-    public function onUpgrade($version);
+    public function onUpgrade($version): bool;
 }

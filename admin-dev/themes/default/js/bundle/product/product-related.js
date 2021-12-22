@@ -1,27 +1,28 @@
 /**
  * Related product management
  */
-var relatedProduct = (function() {
+window.relatedProduct = (function () {
   return {
-    'init': function() {
-      var addButton = $('#add-related-product-button');
-      var resetButton = $('#reset_related_product');
-      var relatedContent = $('#related-content');
-      var productItems = $('#form_step1_related_products-data');
-      var searchProductsBar = $('#form_step1_related_products');
+    init() {
+      const addButton = $('#add-related-product-button');
+      const resetButton = $('#reset_related_product');
+      const relatedContent = $('#related-content');
+      const productItems = $('#form_step1_related_products-data');
+      const searchProductsBar = $('#form_step1_related_products');
 
-      addButton.on('click', function(e) {
+      addButton.on('click', (e) => {
         e.preventDefault();
         relatedContent.removeClass('hide');
         addButton.hide();
       });
-      resetButton.on('click', function(e) {
+      resetButton.on('click', (e) => {
         e.preventDefault();
-        modalConfirmation.create(translate_javascripts['Are you sure to delete this?'], null, {
-          onContinue: function onContinue(){
-            var items = productItems.find('li').toArray();
+        // eslint-disable-next-line
+        modalConfirmation.create(translate_javascripts['Are you sure you want to delete this item?'], null, {
+          onContinue: function onContinue() {
+            const items = productItems.find('li').toArray();
 
-            items.forEach(function removeItem(item) {
+            items.forEach((item) => {
               console.log(item);
               item.remove();
             });
@@ -29,14 +30,14 @@ var relatedProduct = (function() {
 
             relatedContent.addClass('hide');
             addButton.show();
-          }
+          },
         }).show();
       });
-    }
+    },
   };
-})();
+}());
 
-BOEvent.on("Product Related Management started", function initRelatedProductManagement() {
+// eslint-disable-next-line
+BOEvent.on('Product Related Management started', () => {
   relatedProduct.init();
-}, "Back office");
-
+}, 'Back office');

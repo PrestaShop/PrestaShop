@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -29,6 +29,16 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
 {
     protected $template = 'checkout/_partials/steps/payment.tpl';
     private $selected_payment_option;
+
+    /**
+     * @var ConditionsToApproveFinder
+     */
+    public $conditionsToApproveFinder;
+
+    /**
+     * @var PaymentOptionsFinder
+     */
+    public $paymentOptionsFinder;
 
     public function __construct(
         Context $context,
@@ -41,18 +51,21 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $this->conditionsToApproveFinder = $conditionsToApproveFinder;
     }
 
-    public function handleRequest(array $requestParams = array())
+    public function handleRequest(array $requestParams = [])
     {
-        $allProductsInStock = $this->getCheckoutSession()->getCart()->isAllProductsInStock();
+        $cart = $this->getCheckoutSession()->getCart();
+        $allProductsInStock = $cart->isAllProductsInStock();
+        $allProductsExist = $cart->checkAllProductsAreStillAvailableInThisState();
+        $allProductsHaveMinimalQuantity = $cart->checkAllProductsHaveMinimalQuantities();
 
-        if ($allProductsInStock !== true) {
+        if ($allProductsInStock !== true || $allProductsExist !== true || $allProductsHaveMinimalQuantity !== true) {
             $cartShowUrl = $this->context->link->getPageLink(
                 'cart',
                 null,
                 $this->context->language->id,
-                array(
+                [
                     'action' => 'show',
-                ),
+                ],
                 false,
                 null,
                 false
@@ -67,7 +80,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         $this->setTitle(
             $this->getTranslator()->trans(
                 'Payment',
-                array(),
+                [],
                 'Shop.Theme.Checkout'
             )
         );
@@ -78,7 +91,7 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
      *
      * @return string
      */
-    public function render(array $extraParams = array())
+    public function render(array $extraParams = [])
     {
         $isFree = 0 == (float) $this->getCheckoutSession()->getCart()->getOrderTotal(true, Cart::BOTH);
         $paymentOptions = $this->paymentOptionsFinder->present($isFree);
@@ -93,14 +106,15 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         }
         unset($selectedDeliveryOption['product_list']);
 
-        $assignedVars = array(
+        $assignedVars = [
             'is_free' => $isFree,
             'payment_options' => $paymentOptions,
             'conditions_to_approve' => $conditionsToApprove,
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
-        );
+            'is_recyclable_packaging' => $this->getCheckoutSession()->isRecyclable(),
+        ];
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);
     }

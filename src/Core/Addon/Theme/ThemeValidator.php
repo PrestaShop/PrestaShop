@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
@@ -39,7 +39,7 @@ class ThemeValidator
     private $translator;
     private $appConfiguration;
 
-    private $errors = array();
+    private $errors = [];
 
     public function __construct(TranslatorInterface $translator, ConfigurationInterface $configuration)
     {
@@ -65,11 +65,13 @@ class ThemeValidator
         foreach ($this->getRequiredProperties() as $prop) {
             if (!$theme->has($prop)) {
                 if (!array_key_exists($themeName, $this->errors)) {
-                    $this->errors[$themeName] = array();
+                    $this->errors[$themeName] = [];
                 }
 
                 $this->errors[$themeName] = $this->translator->trans(
-                    'An error occurred. The information "%s" is missing.', array($prop), 'Admin.Design.Notification'
+                    'An error occurred. The information "%s" is missing.',
+                    [$prop],
+                    'Admin.Design.Notification'
                 );
             }
         }
@@ -79,7 +81,7 @@ class ThemeValidator
 
     public function getRequiredProperties()
     {
-        return array(
+        return [
             'name',
             'display_name',
             'version',
@@ -93,7 +95,7 @@ class ThemeValidator
             'global_settings.image_types.home_default',
             'global_settings.image_types.category_default',
             'theme_settings.default_layout',
-        );
+        ];
     }
 
     private function hasRequiredFiles(Theme $theme)
@@ -110,10 +112,10 @@ class ThemeValidator
 
             if (!file_exists($childFile) && !file_exists($parentFile)) {
                 if (!array_key_exists($themeName, $this->errors)) {
-                    $this->errors[$themeName] = array();
+                    $this->errors[$themeName] = [];
                 }
 
-                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', array($file), 'Admin.Design.Notification');
+                $this->errors[$themeName] = $this->translator->trans('An error occurred. The template "%s" is missing.', [$file], 'Admin.Design.Notification');
             }
         }
 
@@ -122,7 +124,7 @@ class ThemeValidator
 
     public function getRequiredFiles()
     {
-        return array(
+        return [
             'preview.png',
             'config/theme.yml',
             'assets/js/theme.js',
@@ -156,6 +158,6 @@ class ThemeValidator
             'templates/customer/authentication.tpl',
             'templates/customer/registration.tpl',
             'templates/contact.tpl',
-        );
+        ];
     }
 }

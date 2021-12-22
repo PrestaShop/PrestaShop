@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,44 +17,60 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class CheckoutSessionCore
 {
+    /** @var Context */
     protected $context;
+    /** @var DeliveryOptionsFinder */
     protected $deliveryOptionsFinder;
 
+    /**
+     * @param Context $context
+     * @param DeliveryOptionsFinder $deliveryOptionsFinder
+     */
     public function __construct(Context $context, DeliveryOptionsFinder $deliveryOptionsFinder)
     {
         $this->context = $context;
         $this->deliveryOptionsFinder = $deliveryOptionsFinder;
     }
 
+    /**
+     * @return bool
+     */
     public function customerHasLoggedIn()
     {
         return $this->context->customer->isLogged();
     }
 
+    /**
+     * @return Customer
+     */
     public function getCustomer()
     {
         return $this->context->customer;
     }
 
+    /**
+     * @return Cart
+     */
     public function getCart()
     {
         return $this->context->cart;
     }
 
+    /**
+     * @return int
+     */
     public function getCustomerAddressesCount()
     {
         return count($this->getCustomer()->getSimpleAddresses(
-            $this->context->language->id,
-            true // no cache
+            $this->context->language->id
         ));
     }
 
@@ -86,7 +103,7 @@ class CheckoutSessionCore
 
     public function setMessage($message)
     {
-        $this->_updateMessage(Tools::safeOutput($message));
+        $this->_updateMessage($message);
 
         return $this;
     }
@@ -143,7 +160,7 @@ class CheckoutSessionCore
 
     public function setRecyclable($option)
     {
-        $this->context->cart->recyclable = (int) $option;
+        $this->context->cart->recyclable = (bool) $option;
 
         return $this->context->cart->update();
     }
@@ -155,7 +172,7 @@ class CheckoutSessionCore
 
     public function setGift($gift, $gift_message)
     {
-        $this->context->cart->gift = (int) $gift;
+        $this->context->cart->gift = (bool) $gift;
         $this->context->cart->gift_message = $gift_message;
 
         return $this->context->cart->update();
@@ -163,10 +180,10 @@ class CheckoutSessionCore
 
     public function getGift()
     {
-        return array(
+        return [
             'isGift' => $this->context->cart->gift,
             'message' => $this->context->cart->gift_message,
-        );
+        ];
     }
 
     public function isGuestAllowed()

@@ -1,0 +1,38 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.product.attribute_group.attribute_group_view_data_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\AttributeGroupViewDataProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+      - "@=service('prestashop.adapter.legacy.configuration')"
+
+  prestashop.adapter.product.attribute_group.command_handler.delete_attribute_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\DeleteAttributeGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\DeleteAttributeGroupCommand'
+
+  prestashop.adapter.product.attribute_group.command_handler.bulk_delete_attribute_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\CommandHandler\BulkDeleteAttributeGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Command\BulkDeleteAttributeGroupCommand'
+
+  prestashop.adapter.product.attribute_group.query_handler.get_attribute_group_list_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetAttributeGroupListHandler'
+    arguments:
+      - '@prestashop.core.admin.attribute_group.repository'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList'
+
+  prestashop.adapter.product.attribute_group.query_handler.get_product_attribute_groups_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Product\AttributeGroup\QueryHandler\GetProductAttributeGroupsHandler'
+    arguments:
+      - '@prestashop.core.admin.attribute_group.repository'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups'

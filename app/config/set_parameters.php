@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShopBundle\Install\Upgrade;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
-if (!file_exists($parametersFilepath)) {
-    // let's check first if there's some old config files which could be migrated
-    if (Upgrade::migrateSettingsFile() === false) {
-        // nothing to migrate ? return
-        return;
-    }
-}
-
-$parameters = require($parametersFilepath);
+$parameters = require $parametersFilepath;
 
 if (!array_key_exists('parameters', $parameters)) {
     throw new \Exception('Missing "parameters" key in "parameters.php" configuration file');
@@ -50,11 +42,43 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-foreach ($parameters['parameters'] as $key => $value) {
-    if (defined('_PS_IN_TEST_') && $key === 'database_name') {
-        $value = 'test_'.$value;
+if (isset($container) && $container instanceof \Symfony\Component\DependencyInjection\Container) {
+    foreach ($parameters['parameters'] as $key => $value) {
+        $container->setParameter($key, $value);
     }
-    $container->setParameter($key, $value);
-}
 
-$container->setParameter('cache.driver', extension_loaded('apc') ? 'apc': 'array');
+    $driver = 'array';
+    $cacheType = [
+        'CacheMemcached' => ['memcached'],
+        'CacheApc' => ['apcu'],
+    ];
+    $adapters = [
+        'array' => 'cache.adapter.array',
+        'memcached' => 'cache.adapter.memcached',
+        'apcu' => 'cache.adapter.apcu'
+    ];
+
+    if (isset(
+            $parameters['parameters']['ps_cache_enable'],
+            $parameters['parameters']['ps_caching'],
+            $cacheType[$parameters['parameters']['ps_caching']]
+        )
+        && true === $parameters['parameters']['ps_cache_enable']
+    ) {
+        foreach ($cacheType[$parameters['parameters']['ps_caching']] as $type) {
+            if (extension_loaded($type)) {
+                $driver = $type;
+                break;
+            }
+        }
+    }
+    $container->setParameter('cache.driver', $driver);
+    $container->setParameter('cache.driver.doctrine', $driver . '_doctrine');
+    $container->setParameter('cache.adapter', $adapters[$driver]);
+
+    // Parameter used only in dev and test env
+    $envParameter = getenv('DISABLE_DEBUG_TOOLBAR');
+    if (!isset($parameters['parameters']['use_debug_toolbar']) || false !== $envParameter) {
+        $container->setParameter('use_debug_toolbar', !$envParameter);
+    }
+}

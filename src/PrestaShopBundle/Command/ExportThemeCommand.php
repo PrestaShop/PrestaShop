@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,50 +17,76 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Command;
 
 \Smarty_Autoloader::register();
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputInterface;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeExporter;
+use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeRepository;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ExportThemeCommand extends ContainerAwareCommand
+class ExportThemeCommand extends Command
 {
+    /**
+     * @var ThemeRepository
+     */
+    private $themeRepository;
+
+    /**
+     * @var ThemeExporter
+     */
+    private $themeExporter;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    public function __construct(
+        ThemeRepository $themeRepository,
+        ThemeExporter $themeExporter,
+        TranslatorInterface $translator
+    ) {
+        parent::__construct();
+        $this->themeRepository = $themeRepository;
+        $this->themeExporter = $themeExporter;
+        $this->translator = $translator;
+    }
+
     protected function configure()
     {
         $this
             ->setName('prestashop:theme:export')
             ->setDescription('Create zip to distribute theme with its dependencies')
-            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.')
-        ;
+            ->addArgument('theme', InputArgument::REQUIRED, 'Theme to export directory name.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $repository = $this->getContainer()->get('prestashop.core.addon.theme.repository');
-        $theme = $repository->getInstanceByName($input->getArgument('theme'));
+        $theme = $this->themeRepository->getInstanceByName($input->getArgument('theme'));
 
-        $themeExporter = $this->getContainer()->get('prestashop.core.addon.theme.exporter');
-        $path = $themeExporter->export($theme);
+        $path = $this->themeExporter->export($theme);
 
         $formatter = $this->getHelper('formatter');
-        $translator = $this->getContainer()->get('translator');
-        $successMsg = $translator->trans(
+        $successMsg = $this->translator->trans(
             'Your theme has been correctly exported: %path%',
             ['%path%' => $path],
             'Admin.Design.Notification'
         );
         $formattedBlock = $formatter->formatBlock($successMsg, 'info', true);
         $output->writeln($formattedBlock);
+
+        return 0;
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,13 +17,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\VirtualProductFileSettings;
 
 /**
  * Class ProductDownloadCore.
@@ -44,38 +46,38 @@ class ProductDownloadCore extends ObjectModel
     /** @var string DateExpiration deadline of the file */
     public $date_expiration;
 
-    /** @var string NbDaysAccessible how many days the customer can access to file */
+    /** @var int NbDaysAccessible how many days the customer can access to file */
     public $nb_days_accessible;
 
-    /** @var string NbDownloadable how many time the customer can download the file */
+    /** @var int NbDownloadable how many time the customer can download the file */
     public $nb_downloadable;
 
     /** @var bool Active if file is accessible or not */
-    public $active = 1;
+    public $active = true;
 
     /** @var bool is_shareable indicates whether the product can be shared */
-    public $is_shareable = 0;
+    public $is_shareable = false;
 
-    protected static $_productIds = array();
+    protected static $_productIds = [];
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'product_download',
         'primary' => 'id_product_download',
-        'fields' => array(
-            'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'display_filename' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 255),
-            'filename' => array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 255),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_expiration' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'nb_days_accessible' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
-            'nb_downloadable' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'is_shareable' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_product' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'display_filename' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH],
+            'filename' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => VirtualProductFileSettings::MAX_FILENAME_LENGTH],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_expiration' => ['type' => self::TYPE_DATE, 'validate' => 'isDateOrNull'],
+            'nb_days_accessible' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
+            'nb_downloadable' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'size' => 10],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'is_shareable' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
     /**
      * Build a virtual product.
@@ -174,8 +176,9 @@ class ProductDownloadCore extends ObjectModel
      * Return the id_product_download from an id_product.
      *
      * @param int $idProduct Product the id
+     * @param bool $active
      *
-     * @return int Product the id for this virtual product
+     * @return bool|int Product the id for this virtual product
      */
     public static function getIdFromIdProduct($idProduct, $active = true)
     {
@@ -204,10 +207,11 @@ class ProductDownloadCore extends ObjectModel
      */
     public static function getIdFromFilename($filename)
     {
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT `id_product_download`
-		FROM `' . _DB_PREFIX_ . 'product_download`
-		WHERE `filename` = \'' . pSQL($filename) . '\'');
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT `id_product_download`
+            FROM `' . _DB_PREFIX_ . 'product_download`
+            WHERE `filename` = \'' . pSQL($filename) . '\''
+        );
     }
 
     /**
@@ -245,24 +249,25 @@ class ProductDownloadCore extends ObjectModel
     /**
      * Return text link.
      *
-     * @param bool $admin specific to backend (optionnal)
-     * @param string $hash hash code in table order detail (optionnal)
+     * @param bool $admin specific to backend (optional)
+     * @param string|false $hash hash code in table order detail (optional)
      *
      * @return string Html all the code for print a link to the file
      */
     public function getTextLink($admin = true, $hash = false)
     {
+        if ($admin) {
+            return 'get-file-admin.php?file=' . $this->filename;
+        }
         $key = $this->filename . '-' . ($hash ? $hash : 'orderdetail');
-        $link = ($admin) ? 'get-file-admin.php?' : _PS_BASE_URL_ . __PS_BASE_URI__ . 'index.php?controller=get-file&';
-        $link .= ($admin) ? 'file=' . $this->filename : 'key=' . $key;
 
-        return $link;
+        return Context::getContext()->link->getPageLink('get-file&key=' . $key);
     }
 
     /**
      * Return html link.
      *
-     * @param string $class CSS selector
+     * @param string|bool $class CSS selector
      * @param bool $admin specific to backend
      * @param bool $hash hash code in table order detail
      *

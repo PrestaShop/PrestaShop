@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -47,24 +47,24 @@ class StateCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'state',
         'primary' => 'id_state',
-        'fields' => array(
-            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'id_zone' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'iso_code' => array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-        ),
-    );
+        'fields' => [
+            'id_country' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'id_zone' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'iso_code' => ['type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+        ],
+    ];
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_zone' => array('xlink_resource' => 'zones'),
-            'id_country' => array('xlink_resource' => 'countries'),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_zone' => ['xlink_resource' => 'zones'],
+            'id_country' => ['xlink_resource' => 'countries'],
+        ],
+    ];
 
     public static function getStates($idLang = false, $active = false)
     {
@@ -80,7 +80,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idState Country ID
      *
-     * @return string State name
+     * @return bool|string State name
      */
     public static function getNameById($idState)
     {
@@ -89,7 +89,8 @@ class StateCore extends ObjectModel
         }
         $cacheId = 'State::getNameById_' . (int) $idState;
         if (!Cache::isStored($cacheId)) {
-            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
 				SELECT `name`
 				FROM `' . _DB_PREFIX_ . 'state`
 				WHERE `id_state` = ' . (int) $idState
@@ -107,7 +108,7 @@ class StateCore extends ObjectModel
      *
      * @param string $state State ID
      *
-     * @return int state id
+     * @return bool|int state id
      */
     public static function getIdByName($state)
     {
@@ -133,16 +134,18 @@ class StateCore extends ObjectModel
      * Get a state id with its iso code.
      *
      * @param string $isoCode Iso code
+     * @param int|null $idCountry
      *
      * @return int state id
      */
     public static function getIdByIso($isoCode, $idCountry = null)
     {
-        return Db::getInstance()->getValue('
-		SELECT `id_state`
-		FROM `' . _DB_PREFIX_ . 'state`
-		WHERE `iso_code` = \'' . pSQL($isoCode) . '\'
-		' . ($idCountry ? 'AND `id_country` = ' . (int) $idCountry : ''));
+        return (int) Db::getInstance()->getValue(
+            'SELECT `id_state`
+            FROM `' . _DB_PREFIX_ . 'state`
+            WHERE `iso_code` = \'' . pSQL($isoCode) . '\'
+            ' . ($idCountry ? 'AND `id_country` = ' . (int) $idCountry : '')
+        );
     }
 
     /**
@@ -187,13 +190,11 @@ class StateCore extends ObjectModel
      */
     public function countUsed()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT COUNT(*)
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            'SELECT COUNT(*)
 			FROM `' . _DB_PREFIX_ . 'address`
 			WHERE `' . $this->def['primary'] . '` = ' . (int) $this->id
         );
-
-        return $result;
     }
 
     /**
@@ -201,32 +202,33 @@ class StateCore extends ObjectModel
      *
      * @param int $idCountry Country ID
      * @param bool $active true if the state must be active
+     * @param string $orderBy order by field
+     * @param string $sort sort key (ASC or DESC)
      *
-     * @return array|false|mysqli_result|null|PDOStatement|resource
+     * @return array|false|mysqli_result|PDOStatement|resource|null
      */
-    public static function getStatesByIdCountry($idCountry, $active = false)
+    public static function getStatesByIdCountry($idCountry, $active = false, $orderBy = null, $sort = 'ASC')
     {
         if (empty($idCountry)) {
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->executeS('
-			SELECT *
-			FROM `' . _DB_PREFIX_ . 'state` s
-			WHERE s.`id_country` = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : '')
-        );
-    }
+        $available_sort = ['DESC', 'ASC', 'asc', 'desc'];
 
-    /**
-     * Has Counties.
-     *
-     * @param int $idState
-     *
-     * @return int
-     */
-    public static function hasCounties($idState)
-    {
-        return count(County::getCounties((int) $idState));
+        $sql = new DbQuery();
+        $sql->select('*');
+        $sql->from('state', 's');
+        $sql->where('s.id_country = ' . (int) $idCountry . ($active ? ' AND s.active = 1' : ''));
+
+        if (array_key_exists($orderBy, static::$definition['fields'])) {
+            $sort = trim($sort);
+            if (in_array($sort, $available_sort)) {
+                $orderBy = $orderBy . ' ' . $sort;
+            }
+            $sql->orderBy($orderBy);
+        }
+
+        return Db::getInstance()->executeS($sql);
     }
 
     /**
@@ -234,7 +236,7 @@ class StateCore extends ObjectModel
      *
      * @param int $idState State ID
      *
-     * @return false|null|string
+     * @return false|string|null
      */
     public static function getIdZone($idState)
     {
@@ -242,7 +244,8 @@ class StateCore extends ObjectModel
             die(Tools::displayError());
         }
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+            '
 			SELECT `id_zone`
 			FROM `' . _DB_PREFIX_ . 'state`
 			WHERE `id_state` = ' . (int) $idState

@@ -1,0 +1,58 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set layoutTitle = 'Create order'|trans({}, 'Admin.Orderscustomers.Feature') %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/orders' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{% block content %}
+  <div id="order-creation-container">
+    {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/customer.html.twig' %}
+    <div id="js-cart-info-wrapper">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/cart_rules.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/addresses.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/shipping.html.twig' %}
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/order_create.bundle.js') }}"></script>
+{% endblock %}
+
+{% set js_translatable = {
+  "Customer search - group default": 'default'|trans({}, 'Admin.Orderscustomers.Feature'),
+  "Customer search - group label single": 'Group'|trans({}, 'Admin.Orderscustomers.Feature'),
+  "Customer search - group label multiple": 'Groups'|trans({}, 'Admin.Orderscustomers.Feature'),
+}|merge(js_translatable)
+%}

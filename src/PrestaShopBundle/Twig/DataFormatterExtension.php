@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Twig;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+
 /**
  * This class is used by Twig_Environment and provide some methods callable from a twig template.
  */
-class DataFormatterExtension extends \Twig_Extension
+class DataFormatterExtension extends AbstractExtension
 {
     /**
      * Define available filters.
@@ -38,12 +42,12 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('arrayCast', array($this, 'arrayCast')),
-            new \Twig_SimpleFilter('intCast', array($this, 'intCast')),
-            new \Twig_SimpleFilter('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFilter('array_pluck', array($this, 'arrayPluck')),
-        );
+        return [
+            new TwigFilter('arrayCast', [$this, 'arrayCast']),
+            new TwigFilter('intCast', [$this, 'intCast']),
+            new TwigFilter('unsetElement', [$this, 'unsetElement']),
+            new TwigFilter('array_pluck', [$this, 'arrayPluck']),
+        ];
     }
 
     /**
@@ -53,12 +57,12 @@ class DataFormatterExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            new \Twig_SimpleFunction('arrayCast', array($this, 'arrayCast')),
-            new \Twig_SimpleFunction('intCast', array($this, 'intCast')),
-            new \Twig_SimpleFunction('unsetElement', array($this, 'unsetElement')),
-            new \Twig_SimpleFunction('array_pluck', array($this, 'arrayPluck')),
-        );
+        return [
+            new TwigFunction('arrayCast', [$this, 'arrayCast']),
+            new TwigFunction('intCast', [$this, 'intCast']),
+            new TwigFunction('unsetElement', [$this, 'unsetElement']),
+            new TwigFunction('array_pluck', [$this, 'arrayPluck']),
+        ];
     }
 
     /**
@@ -88,7 +92,7 @@ class DataFormatterExtension extends \Twig_Extension
     /**
      * PHP 'unset()' exposed through twig template engine.
      *
-     * @param string $array Array containing Element to unset
+     * @param array $array Array containing Element to unset
      * @param string $key Element to be unset
      */
     public function unsetElement($array, $key)

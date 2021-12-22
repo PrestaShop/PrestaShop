@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
@@ -30,19 +30,53 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\GridDefinition;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherAwareTrait;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Translation\TranslatorAwareTrait;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Class AbstractGridDefinitionFactory implements grid definition creation.
  */
 abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInterface
 {
-    use TranslatorAwareTrait, HookDispatcherAwareTrait;
+    use TranslatorAwareTrait;
+
+    /**
+     * @var HookDispatcherInterface
+     */
+    protected $hookDispatcher;
+
+    /**
+     * @param HookDispatcherInterface|null $hookDispatcher
+     */
+    public function __construct(HookDispatcherInterface $hookDispatcher = null)
+    {
+        if (null === $hookDispatcher) {
+            @trigger_error('The $hookDispatcher parameter should not be null, inject your main HookDispatcherInterface service, or NullDispatcher if you don\'t need hooks.', E_USER_DEPRECATED);
+        }
+        $this->hookDispatcher = $hookDispatcher ? $hookDispatcher : new NullDispatcher();
+    }
+
+    /**
+     * Set hook dispatcher.
+     *
+     * @param HookDispatcherInterface $hookDispatcher
+     *
+     * @deprecated
+     */
+    final public function setHookDispatcher(HookDispatcherInterface $hookDispatcher)
+    {
+        @trigger_error('The AbstractGridDefinitionFactory::setHookDispatcher method is deprecated as of 1.7.5.1 Please use the constructor instead', E_USER_DEPRECATED);
+
+        $this->hookDispatcher = $hookDispatcher;
+    }
 
     /**
      * {@inheritdoc}
@@ -55,10 +89,11 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
             $this->getColumns(),
             $this->getFilters(),
             $this->getGridActions(),
-            $this->getBulkActions()
+            $this->getBulkActions(),
+            $this->getViewOptions()
         );
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $definition->getId() . 'GridDefinitionModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . Container::camelize($definition->getId()) . 'GridDefinitionModifier', [
             'definition' => $definition,
         ]);
 
@@ -106,6 +141,17 @@ abstract class AbstractGridDefinitionFactory implements GridDefinitionFactoryInt
     protected function getBulkActions()
     {
         return new BulkActionCollection();
+    }
+
+    /**
+     * Get defined grid view options.
+     * Override this method to define custom view options collection.
+     *
+     * @return ViewOptionsCollectionInterface
+     */
+    protected function getViewOptions()
+    {
+        return new ViewOptionsCollection();
     }
 
     /**

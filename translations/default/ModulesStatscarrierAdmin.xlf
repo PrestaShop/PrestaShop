@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statscarrier/statscarrier.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2e6774abc54cb13cef2c5bfd5a2cb463">
+        <source>Carrier distribution</source>
+        <target>Carrier distribution</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="2e30734499b8dca052626a5145679eff">
+        <source>Adds a graph displaying each carriers' distribution to the Stats dashboard.</source>
+        <target>Adds a graph displaying each carriers' distribution to the Stats dashboard.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="ff61af405aa570a9000e6ba2da39857a">
+        <source>This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular order status.</source>
+        <target>This graph represents the carrier distribution for your orders. You can also narrow the focus of the graph to display distribution for a particular order status.</target>
+        <note>Line: 90</note>
+      </trans-unit>
+      <trans-unit id="ae916988f1944283efa2968808a71287">
+        <source>No valid orders have been received for this period.</source>
+        <target>No valid orders have been received for this period.</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="d5b9d0daaf017332f1f8188ab2a3f802">
+        <source>Percentage of orders listed by carrier.</source>
+        <target>Percentage of orders listed by carrier.</target>
+        <note>Line: 126</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,57 @@
+@import "../config/settings";
+
+.tokenfield {
+  height: auto;
+
+  input.token-input[type="text"] {
+    display: inline-block;
+    max-width: 100%;
+    background-color: transparent;
+    border: 0;
+    outline: none;
+  }
+
+  .token {
+    display: inline-block;
+    padding: 0.4rem;
+    margin: 0.1rem;
+    line-height: 1;
+    color: $white;
+    text-align: center;
+    vertical-align: baseline;
+    background-color: $brand-primary;
+
+    &.invalid {
+      background-color: $brand-warning;
+    }
+
+    > .token-label {
+      white-space: nowrap;
+    }
+
+    .close {
+      margin: 0 0.4rem;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: $gray-dark;
+      text-decoration: none;
+      text-shadow: none;
+
+      &:hover {
+        color: $gray-dark;
+      }
+    }
+  }
+
+  .token-input {
+    /* stylelint-disable declaration-no-important */
+    width: auto !important;
+    /* stylelint-enable declaration-no-important */
+  }
+}
+
+.locale-input-group:not(.d-flex) {
+  .js-taggable-field {
+    width: 80%;
+  }
+}

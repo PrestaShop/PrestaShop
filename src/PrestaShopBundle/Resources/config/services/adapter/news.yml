@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.news.circuit_breaker.settings:
+    class: PrestaShop\CircuitBreaker\FactorySettings
+    arguments:
+      - !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::CLOSED_ALLOWED_FAILURES
+      - !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::CLOSED_TIMEOUT_SECONDS
+      - !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_THRESHOLD_SECONDS
+    calls:
+      - [ 'setStrippedFailures', [ !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_ALLOWED_FAILURES ] ]
+      - [ 'setStrippedTimeout', [ !php/const \PrestaShop\PrestaShop\Adapter\News\NewsDataProvider::OPEN_TIMEOUT_SECONDS ] ]
+      - [ 'setStorage', [ '@prestashop.core.circuit_breaker.storage' ] ]
+
+  prestashop.adapter.news.circuit_breaker:
+    class: 'PrestaShop\CircuitBreaker\Contract\CircuitBreakerInterface'
+    factory: [ "@prestashop.core.circuit_breaker.advanced_factory", create ]
+    arguments:
+      - "@prestashop.adapter.news.circuit_breaker.settings"
+
+  prestashop.adapter.news.provider:
+    class: PrestaShop\PrestaShop\Adapter\News\NewsDataProvider
+    arguments:
+      - "@prestashop.adapter.news.circuit_breaker"
+      - "@prestashop.adapter.data_provider.country"
+      - "@prestashop.adapter.tools"
+      - "@prestashop.adapter.legacy.configuration"
+      - "@prestashop.adapter.validate"
+      - "@=service('prestashop.adapter.legacy.context').getContext().mode"

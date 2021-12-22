@@ -1,0 +1,68 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.shop.command_handler.upload_logos_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\CommandHandler\UploadLogosHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.shop.logo_uploader'
+      - '@prestashop.core.hook.dispatcher'
+    tags:
+      - { name: tactician.handler, command: 'PrestaShop\PrestaShop\Core\Domain\Shop\Command\UploadLogosCommand' }
+
+  prestashop.adapter.shop.url.base_url_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\BaseUrlProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.url.category_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.url.cms_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CmsProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.url.product_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+
+  prestashop.adapter.shop.query_handler.get_logos_paths_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\GetLogosPathsHandler'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_")'
+      - '@=service("prestashop.adapter.legacy.configuration").get("_PS_IMG_DIR_")'
+    tags:
+      - name: 'tactician.handler'
+        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\GetLogosPaths
+
+  prestashop.adapter.shop.query_handler.search_shops_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\SearchShopsHandler'
+    arguments:
+      - '@prestashop.core.admin.shop.repository'
+      - '@prestashop.core.admin.shop_group.repository'
+    tags:
+      - name: 'tactician.handler'
+        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
+
+  prestashop.adapter.shop.url.product_image_folder_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+      - 'img/p'
+
+  prestashop.adapter.shop.url.category_image_folder_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.context').getContext().link"
+      - 'img/c'
+
+  prestashop.adapter.shop.repository.shop_group_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopGroupRepository'
+
+  prestashop.adapter.shop.repository.shop_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'

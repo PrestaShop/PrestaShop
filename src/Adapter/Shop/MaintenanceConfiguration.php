@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,69 +17,69 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
  */
-class MaintenanceConfiguration implements DataConfigurationInterface
+class MaintenanceConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var Configuration
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
-        return array(
-            'enable_shop' => $this->configuration->getBoolean('PS_SHOP_ENABLE'),
-            'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP'),
-            'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT'),
-        );
+        $shopConstraint = $this->getShopConstraint();
+
+        return [
+            'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE', false, $shopConstraint),
+            'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP', null, $shopConstraint),
+            'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT', null, $shopConstraint),
+        ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $configuration)
+    public function updateConfiguration(array $configurationInputValues)
     {
-        if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHOP_ENABLE', $configuration['enable_shop']);
-            $this->configuration->set('PS_MAINTENANCE_IP', $configuration['maintenance_ip']);
-            $this->configuration->set('PS_MAINTENANCE_TEXT', $configuration['maintenance_text'], ['html' => true]);
+        if ($this->validateConfiguration($configurationInputValues)) {
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_SHOP_ENABLE', 'enable_shop', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_IP', 'maintenance_ip', $configurationInputValues, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAINTENANCE_TEXT', 'maintenance_text', $configurationInputValues, $shopConstraint, ['html' => true]);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['enable_shop'],
-            $configuration['maintenance_ip'],
-            $configuration['maintenance_text']
-        );
+        $resolver = new OptionsResolver();
+        $resolver->setDefined(self::CONFIGURATION_FIELDS);
+        $resolver->setAllowedTypes('enable_shop', 'bool');
+        $resolver->setAllowedTypes('maintenance_ip', 'string');
+        $resolver->setAllowedTypes('maintenance_text', 'array');
+
+        return $resolver;
     }
 }

@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,17 +16,16 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {strip}
 <ul class="items-list">
     <li{if !isset($current_shop_value) || $current_shop_value == ''} class="active"{/if}>
-      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops'}</a>
+      <a class="dropdown-item" href="{$url|escape:'html':'UTF-8'}">{l s='All shops' d='Admin.Global'}</a>
     </li>
     {foreach key=group_id item=group_data from=$tree}
         {if !isset($multishop_context) || $is_group_context}
@@ -50,7 +50,7 @@
                               <i class="material-icons">&#xE869;</i>
                             </a>
                         {else}
-                            <a class="link-shop" href="{$shop_data['uri']}" target="_blank">
+                            <a class="link-shop" href="{$link->getBaseLink($shop_data['id_shop'])}" target="_blank">
                               <i class="material-icons">&#xE8F4;</i>
                             </a>
                         {/if}

@@ -1,0 +1,76 @@
+name: Integration tests
+on: [ push, pull_request ]
+jobs:
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0' ]
+      fail-fast: false
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql database: 'prestashop'
+          mysql root password: 'password'
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - uses: actions/checkout@v2
+
+      - name: PrestaShop Configuration
+        run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Node Directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Cache Composer Directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
+
+      - name: Build assets
+        run: make assets
+
+      - name: Change MySQL authentication method
+        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+
+      - name: Prepare PrestaShop parameters
+        run: cp .github/workflows/phpunit/parameters.php app/config/parameters.php
+
+      - name: Run integration-tests
+        run: composer run-script integration-tests --timeout=0
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled
+
+      - name: Run integration-behaviour-tests
+        run: composer run-script integration-behaviour-tests --timeout=0
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled

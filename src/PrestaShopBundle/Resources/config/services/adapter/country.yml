@@ -1,0 +1,25 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.country.query_handler.get_country_required_fields:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetCountryRequiredFieldsHandler'
+    arguments:
+      - '@prestashop.adapter.country.country_required_fields_provider'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryRequiredFields'
+
+  prestashop.adapter.country.country_zip_code_requirements_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CountryZipCodeRequirementsProvider'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.domain.country.zip_code_format_resolver'
+
+  prestashop.adapter.country.country_required_fields_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CountryRequiredFieldsProvider'
+    arguments:
+      - '@prestashop.adapter.data_provider.country'
+
+  prestashop.adapter.country.repository.country_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'

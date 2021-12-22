@@ -1,0 +1,8 @@
+### Node & UI folder rules ###
+
+node_modules
+.doc
+*/node_modules
+test/reports/*
+**/mochawesome-report
+tools/reports/*

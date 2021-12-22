@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -50,7 +50,7 @@ class WarehouseCore extends ObjectModel
     public $id_currency;
 
     /** @var bool True if warehouse has been deleted (hence, no deletion in DB) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * Describes the way a Warehouse is managed.
@@ -62,53 +62,53 @@ class WarehouseCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'warehouse',
         'primary' => 'id_warehouse',
-        'fields' => array(
-            'id_address' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'reference' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 64),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45),
-            'id_employee' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'management_type' => array('type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true),
-            'id_currency' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-            'deleted' => array('type' => self::TYPE_BOOL),
-        ),
-    );
+        'fields' => [
+            'id_address' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'reference' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 64],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 45],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'management_type' => ['type' => self::TYPE_STRING, 'validate' => 'isStockManagement', 'required' => true],
+            'id_currency' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
+            'deleted' => ['type' => self::TYPE_BOOL],
+        ],
+    ];
 
     /**
      * @see ObjectModel::$webserviceParameters
      */
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_address' => array('xlink_resource' => 'addresses'),
-            'id_employee' => array('xlink_resource' => 'employees'),
-            'id_currency' => array('xlink_resource' => 'currencies'),
-            'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
-            'deleted' => array(),
-        ),
-        'associations' => array(
-            'stocks' => array(
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_address' => ['xlink_resource' => 'addresses'],
+            'id_employee' => ['xlink_resource' => 'employees'],
+            'id_currency' => ['xlink_resource' => 'currencies'],
+            'valuation' => ['getter' => 'getWsStockValue', 'setter' => false],
+            'deleted' => [],
+        ],
+        'associations' => [
+            'stocks' => [
                 'resource' => 'stock',
-                'fields' => array(
-                    'id' => array(),
-                ),
-            ),
-            'carriers' => array(
+                'fields' => [
+                    'id' => [],
+                ],
+            ],
+            'carriers' => [
                 'resource' => 'carrier',
-                'fields' => array(
-                    'id' => array(),
-                ),
-            ),
-            'shops' => array(
+                'fields' => [
+                    'id' => [],
+                ],
+            ],
+            'shops' => [
                 'resource' => 'shop',
-                'fields' => array(
-                    'id' => array(),
-                    'name' => array(),
-                ),
-            ),
-        ),
-    );
+                'fields' => [
+                    'id' => [],
+                    'name' => [],
+                ],
+            ],
+        ],
+    ];
 
     /**
      * Gets the shops associated to the current warehouse.
@@ -135,7 +135,7 @@ class WarehouseCore extends ObjectModel
      */
     public function getCarriers($return_reference = false)
     {
-        $ids_carrier = array();
+        $ids_carrier = [];
 
         $query = new DbQuery();
         if ($return_reference) {
@@ -170,12 +170,12 @@ class WarehouseCore extends ObjectModel
     public function setCarriers($ids_carriers)
     {
         if (!is_array($ids_carriers)) {
-            $ids_carriers = array();
+            $ids_carriers = [];
         }
 
-        $row_to_insert = array();
+        $row_to_insert = [];
         foreach ($ids_carriers as $id_carrier) {
-            $row_to_insert[] = array($this->def['primary'] => $this->id, 'id_carrier' => (int) $id_carrier);
+            $row_to_insert[] = [$this->def['primary'] => $this->id, 'id_carrier' => (int) $id_carrier];
         }
 
         Db::getInstance()->execute('
@@ -232,7 +232,7 @@ class WarehouseCore extends ObjectModel
         $query->where('id_warehouse = ' . (int) $id_warehouse);
         $query->where('deleted = 0');
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query, false);
     }
 
     /**
@@ -254,12 +254,12 @@ class WarehouseCore extends ObjectModel
 			AND `id_product_attribute` = ' . (int) $id_product_attribute . '
 			AND `id_warehouse` = ' . (int) $id_warehouse);
 
-        $row_to_insert = array(
+        $row_to_insert = [
             'id_product' => (int) $id_product,
             'id_product_attribute' => (int) $id_product_attribute,
             'id_warehouse' => (int) $id_warehouse,
             'location' => pSQL($location),
-        );
+        ];
 
         return Db::getInstance()->insert('warehouse_product_location', $row_to_insert);
     }
@@ -324,7 +324,7 @@ class WarehouseCore extends ObjectModel
         if ($share_stock) {
             $ids_shop = Shop::getShops(true, (int) $shop_group->id, true);
         } else {
-            $ids_shop = array((int) $id_shop);
+            $ids_shop = [(int) $id_shop];
         }
 
         $query = new DbQuery();
@@ -352,7 +352,7 @@ class WarehouseCore extends ObjectModel
     public static function getWarehouses($ignore_shop = false, $id_shop = null)
     {
         if (!$ignore_shop) {
-            if (is_null($id_shop)) {
+            if (null === $id_shop) {
                 $id_shop = Context::getContext()->shop->id;
             }
         }
@@ -376,7 +376,7 @@ class WarehouseCore extends ObjectModel
      */
     public static function getWarehousesGroupedByShops()
     {
-        $ids_warehouse = array();
+        $ids_warehouse = [];
         $query = new DbQuery();
         $query->select('id_warehouse, id_shop');
         $query->from('warehouse_shop');
@@ -397,17 +397,15 @@ class WarehouseCore extends ObjectModel
      */
     public function getNumberOfProducts()
     {
-        $query = '
-			SELECT COUNT(t.id_stock)
-			FROM
-				(
-					SELECT s.id_stock
-				 	FROM ' . _DB_PREFIX_ . 'stock s
-				 	WHERE s.id_warehouse = ' . (int) $this->id . '
-				 	GROUP BY s.id_product, s.id_product_attribute
-				 ) as t';
+        $query = 'SELECT COUNT(t.id_stock) FROM
+            (
+                SELECT s.id_stock
+                FROM ' . _DB_PREFIX_ . 'stock s
+                WHERE s.id_warehouse = ' . (int) $this->id . '
+                GROUP BY s.id_product, s.id_product_attribute
+             ) as t';
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -430,7 +428,7 @@ class WarehouseCore extends ObjectModel
     /**
      * Gets the value of the stock in the current warehouse.
      *
-     * @return int Value of the stock
+     * @return float Value of the stock
      */
     public function getStockValue()
     {
@@ -439,7 +437,7 @@ class WarehouseCore extends ObjectModel
         $query->from('stock', 's');
         $query->where('s.`id_warehouse` = ' . (int) $this->id);
 
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (float) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 
     /**
@@ -470,7 +468,7 @@ class WarehouseCore extends ObjectModel
     public static function getWarehousesByProductId($id_product, $id_product_attribute = 0)
     {
         if (!$id_product && !$id_product_attribute) {
-            return array();
+            return [];
         }
 
         $query = new DbQuery();
@@ -518,7 +516,7 @@ class WarehouseCore extends ObjectModel
             return false;
         }
 
-        if (is_null($id_shop)) {
+        if (null === $id_shop) {
             $id_shop = Context::getContext()->shop->id;
         }
 
@@ -528,7 +526,7 @@ class WarehouseCore extends ObjectModel
         $products = Pack::getItems((int) $id_product, Configuration::get('PS_LANG_DEFAULT'));
 
         // array with all warehouses id to check
-        $list = array();
+        $list = [];
 
         // fills $list
         foreach ($pack_warehouses as $pack_warehouse) {
@@ -541,7 +539,7 @@ class WarehouseCore extends ObjectModel
             if ($product->advanced_stock_management) {
                 // gets the warehouses of one product
                 $product_warehouses = Warehouse::getProductWarehouseList((int) $product->id, (int) $product->cache_default_attribute, (int) $id_shop);
-                $list[(int) $product->id] = array();
+                $list[(int) $product->id] = [];
                 // fills array with warehouses for this product
                 foreach ($product_warehouses as $product_warehouse) {
                     $list[(int) $product->id][] = $product_warehouse['id_warehouse'];
@@ -575,7 +573,7 @@ class WarehouseCore extends ObjectModel
     /**
      * Webservice : gets the value of the warehouse.
      *
-     * @return int
+     * @return float
      */
     public function getWsStockValue()
     {
@@ -622,7 +620,7 @@ class WarehouseCore extends ObjectModel
      */
     public function getWsCarriers()
     {
-        $ids_carrier = array();
+        $ids_carrier = [];
 
         $query = new DbQuery();
         $query->select('wc.id_carrier as id');

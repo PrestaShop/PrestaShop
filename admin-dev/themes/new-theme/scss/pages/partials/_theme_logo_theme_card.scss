@@ -1,0 +1,158 @@
+//local mixins
+@mixin theme-card-overlay() {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: $black;
+  opacity: 0.25;
+}
+
+@mixin card-width() {
+  max-width: 24.1875rem;
+
+  @include media-breakpoint-down(sm) {
+    max-width: 100%;
+  }
+}
+
+@mixin card-width-and-height() {
+  height: 15.125rem;
+  @include card-width();
+}
+
+@mixin action-button {
+  min-height: 2.5rem;
+  background-color: $white;
+  @include border-radius(1.65rem);
+}
+
+@mixin theme-name-and-version() {
+  font-size: 1rem;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  color: $gray-700;
+  text-align: center;
+  letter-spacing: -0.01875rem;
+}
+
+.theme-card {
+  position: relative;
+
+  .active-card-overlay {
+    &.active {
+      display: block;
+    }
+    display: none;
+    @include theme-card-overlay();
+  }
+
+  @include card-width-and-height();
+
+  overflow-y: hidden;
+  @include border-radius(0.25rem);
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .actions-container {
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    display: none;
+    width: 100%;
+    padding: 0.4rem;
+    text-align: center;
+    transform: translate(-50%, -80%);
+
+    &.active {
+      display: block;
+    }
+
+    .action-button {
+      @include action-button();
+      font-style: normal;
+      font-weight: 400;
+      font-stretch: normal;
+      line-height: normal;
+      color: $gray-700;
+      text-align: center;
+      letter-spacing: -0.0125rem;
+
+      .icon-current-theme {
+        color: $primary;
+      }
+    }
+
+    .action-button:disabled {
+      i,
+      span {
+        opacity: 0.5;
+      }
+    }
+
+    .delete-button {
+      @include action-button();
+      position: relative;
+      width: 2.5rem;
+
+      i {
+        position: absolute;
+        right: 25%;
+        bottom: 25%;
+      }
+    }
+
+    .action-button:not(:first-child):not(:disabled):hover,
+    .delete-button:hover {
+      color: $white;
+      background-color: #3ed1f0;
+      box-shadow: 0 0 0.9375rem 0 rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.theme-card-description {
+  @include card-width();
+}
+
+.theme-name {
+  font-weight: 700;
+  @include theme-name-and-version();
+}
+
+.theme-version {
+  @include theme-name-and-version();
+}
+
+.theme-author {
+  padding-bottom: 1.6875rem;
+  font-size: 0.8125rem;
+  font-style: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  line-height: normal;
+  color: #618596;
+  text-align: center;
+  letter-spacing: -0.01875rem;
+}
+
+.theme-catalog-card {
+  background-color: #f8f8f8;
+
+  .catalog-image {
+    padding-top: 3.7rem;
+  }
+
+  .catalog-description {
+    padding-top: 0.975rem;
+  }
+}
+
+// actions
+.theme-card:hover .active-card-overlay,
+.theme-card:hover .actions-container {
+  display: block;
+}

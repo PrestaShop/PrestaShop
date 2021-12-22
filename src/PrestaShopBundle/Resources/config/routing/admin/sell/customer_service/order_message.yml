@@ -1,0 +1,59 @@
+admin_order_messages_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::indexAction
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage
+
+admin_order_messages_filter:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.order_message
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage:submitFilterorder_message
+    redirectRoute: admin_order_messages_index
+
+admin_order_messages_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::createAction
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage:addorder_message
+
+admin_order_messages_edit:
+  path: /{orderMessageId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::editAction
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage:updateorder_message
+    legacy_parameters:
+      id_order_message: orderMessageId
+  requirements:
+    orderMessageId: \d+
+
+admin_order_messages_delete:
+  path: /{orderMessageId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::deleteAction
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage:deleteorder_message
+    legacy_parameters:
+      id_order_message: orderMessageId
+  requirements:
+    orderMessageId: \d+
+
+admin_order_messages_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\OrderMessageController::bulkDeleteAction
+    _legacy_controller: AdminOrderMessage
+    _legacy_link: AdminOrderMessage:submitBulkdeleteorder_message
+    legacy_parameters:
+      order_messageBox: order_message_order_messages_bulk

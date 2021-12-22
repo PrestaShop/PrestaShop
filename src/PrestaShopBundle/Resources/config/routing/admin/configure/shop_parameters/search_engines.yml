@@ -1,0 +1,53 @@
+admin_search_engines_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::indexAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines
+
+admin_search_engines_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::searchGridAction'
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.search_engines
+    redirectRoute: admin_search_engines_index
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines:submitFiltersearch_engine
+
+admin_search_engines_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::createAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines:addsearch_engine
+
+admin_search_engines_edit:
+  path: /{searchEngineId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::editAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines:updatesearch_engine
+  requirements:
+    searchEngineId: \d+
+
+admin_search_engines_delete:
+  path: /{searchEngineId}/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::deleteAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines:deletesearch_engine
+  requirements:
+    searchEngineId: \d+
+
+admin_search_engines_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchEnginesController::bulkDeleteAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines:submitBulkdeletesearch_engine

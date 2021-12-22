@@ -1,0 +1,81 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.attachment.command_handler.delete_attachment_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\DeleteAttachmentHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\DeleteAttachmentCommand' }
+
+  prestashop.adapter.attachment.command_handler.bulk_delete_attachment_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\BulkDeleteAttachmentsHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\BulkDeleteAttachmentsCommand' }
+
+  prestashop.adapter.attachment.query_handler.get_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentHandler'
+    arguments:
+      - !php/const _PS_DOWNLOAD_DIR_
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachment' }
+
+  prestashop.adapter.contact.query_handler.get_attachment_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentForEditingHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentForEditing' }
+
+  prestashop.adapter.attachment.uploader.attachment_file_uploader:
+    class: 'PrestaShop\PrestaShop\Adapter\File\Uploader\AttachmentFileUploader'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.configuration.upload_size_configuration'
+
+  prestashop.adapter.attachment.command_handler.abstract_attachment_handler:
+    abstract: true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\AbstractAttachmentHandler'
+    arguments:
+      - '@validator'
+
+  prestashop.adapter.attachment.command_handler.edit_attachment_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\EditAttachmentHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
+    arguments:
+      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\EditAttachmentCommand' }
+
+  prestashop.adapter.attachment.command_handler.create_attachment_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Attachment\CommandHandler\AddAttachmentHandler'
+    parent: 'prestashop.adapter.attachment.command_handler.abstract_attachment_handler'
+    arguments:
+      - '@prestashop.adapter.attachment.uploader.attachment_file_uploader'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Attachment\Command\AddAttachmentCommand' }
+
+  prestashop.adapter.attachment.attachment_repository:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
+  prestashop.adapter.attachment.query_handler.get_attachment_information_handler:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\GetAttachmentInformationHandler
+    arguments:
+      - '@prestashop.adapter.attachment.attachment_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\GetAttachmentInformation
+
+  prestashop.adapter.attachment.query_handler.search_attachment_handler:
+    class: PrestaShop\PrestaShop\Adapter\Attachment\QueryHandler\SearchAttachmentHandler
+    arguments:
+      - '@prestashop.adapter.attachment.attachment_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Attachment\Query\SearchAttachment

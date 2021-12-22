@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,24 +17,26 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace Tests\Core\Addon\Module;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
-use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+namespace Tests\Unit\Core\Addon\Module;
+
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends TestCase
 {
-    const UNINSTALLED_MODULE = "uninstalled-module";
-    const INSTALLED_MODULE = "installed-module";
+    const UNINSTALLED_MODULE = 'uninstalled-module';
+    const INSTALLED_MODULE = 'installed-module';
 
     private $moduleManager;
     private $adminModuleProviderS;
@@ -44,8 +47,9 @@ class ModuleManagerTest extends TestCase
     private $translatorS;
     private $dispatcherS;
     private $employeeS;
+    private $cacheClearerS;
 
-    public function setUp()
+    protected function setUp(): void
     {
         // Mocks
         $this->initMocks();
@@ -56,85 +60,99 @@ class ModuleManagerTest extends TestCase
             $this->moduleRepositoryS,
             $this->moduleZipManagerS,
             $this->translatorS,
-            $this->dispatcherS
+            $this->dispatcherS,
+            $this->cacheClearerS
         );
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         // destroy Mocks
         $this->destroyMocks();
         $this->moduleManager = null;
     }
 
-    public function testInstallSuccessful()
+    public function testInstallSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->install(self::UNINSTALLED_MODULE));
         $this->assertTrue($this->moduleManager->install(self::INSTALLED_MODULE));
     }
 
-    public function testUninstallSuccessful()
+    public function testPostInstallSuccessful(): void
+    {
+        $this->assertFalse($this->moduleManager->postInstall(self::UNINSTALLED_MODULE));
+        $this->assertTrue($this->moduleManager->postInstall(self::INSTALLED_MODULE));
+    }
+
+    public function testUninstallSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->uninstall(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->uninstall(self::UNINSTALLED_MODULE));
     }
 
-    public function testUpgradeSuccessful()
+    public function testUpgradeSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->moduleManager->upgrade(self::UNINSTALLED_MODULE);
     }
 
-    public function testDisableSuccessful()
+    public function testDisableSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->disable(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->disable(self::UNINSTALLED_MODULE));
     }
 
-    public function testEnableSuccessful()
+    public function testEnableSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->enable(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->enable(self::UNINSTALLED_MODULE));
     }
 
-    public function testDisableOnMobileSuccessful()
+    public function testDisableOnMobileSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
     }
 
-    public function testEnableOnMobileSuccessful()
+    public function testEnableOnMobileSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
     }
 
-    public function testResetSuccessful()
+    public function testResetSuccessful(): void
     {
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE));
-        $this->setExpectedException('Exception', 'The module %module% must be installed first');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The module %module% must be installed first');
         $this->assertFalse($this->moduleManager->reset(self::UNINSTALLED_MODULE));
     }
 
-    public function testIsEnabled()
+    public function testIsEnabled(): void
     {
         $this->assertTrue($this->moduleManager->isEnabled(self::INSTALLED_MODULE));
         $this->assertFalse($this->moduleManager->isEnabled(self::UNINSTALLED_MODULE));
     }
 
-    public function testIsInstalled()
+    public function testIsInstalled(): void
     {
         $this->assertTrue($this->moduleManager->isInstalled(self::INSTALLED_MODULE));
         $this->assertFalse($this->moduleManager->isInstalled(self::UNINSTALLED_MODULE));
     }
 
-    public function testRemoveModuleFromDisk()
+    public function testRemoveModuleFromDisk(): void
     {
         $modules = [self::INSTALLED_MODULE, self::UNINSTALLED_MODULE];
         foreach ($modules as $module) {
@@ -142,7 +160,7 @@ class ModuleManagerTest extends TestCase
         }
     }
 
-    private function initMocks()
+    private function initMocks(): void
     {
         $this->mockModuleProvider();
         $this->mockAdminModuleProvider();
@@ -152,9 +170,10 @@ class ModuleManagerTest extends TestCase
         $this->mockTranslator();
         $this->mockDispatcher();
         $this->mockEmployee();
+        $this->mockCacheClearer();
     }
 
-    private function mockAdminModuleProvider()
+    private function mockAdminModuleProvider(): void
     {
         $this->adminModuleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
             ->disableOriginalConstructor()
@@ -165,21 +184,21 @@ class ModuleManagerTest extends TestCase
             ->willReturn(true);
     }
 
-    private function mockModuleProvider()
+    private function mockModuleProvider(): void
     {
         $providerAuthorizations = [
             [
                 'uninstall', self::INSTALLED_MODULE, true,
             ],
             [
-                'uninstall', self::UNINSTALLED_MODULE, false
+                'uninstall', self::UNINSTALLED_MODULE, false,
             ],
             [
                 'configure', self::INSTALLED_MODULE, true,
             ],
             [
-                'configure', self::UNINSTALLED_MODULE, false
-            ]
+                'configure', self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
             ->disableOriginalConstructor()
@@ -191,11 +210,11 @@ class ModuleManagerTest extends TestCase
 
         $isInstalledValues = [
             [
-                self::INSTALLED_MODULE, true
+                self::INSTALLED_MODULE, true,
             ],
             [
-                self::UNINSTALLED_MODULE, false
-            ]
+                self::UNINSTALLED_MODULE, false,
+            ],
         ];
         $this->moduleProviderS
             ->method('isInstalled')
@@ -203,15 +222,19 @@ class ModuleManagerTest extends TestCase
 
         $isEnabledValues = [
             [self::INSTALLED_MODULE, true],
-            [self::UNINSTALLED_MODULE, false]
+            [self::UNINSTALLED_MODULE, false],
         ];
 
         $this->moduleProviderS
             ->method('isEnabled')
             ->will($this->returnValueMap($isEnabledValues));
+
+        $this->moduleProviderS
+            ->method('isOnDisk')
+            ->willReturn(true);
     }
 
-    private function mockModuleUpdater()
+    private function mockModuleUpdater(): void
     {
         $this->moduleUpdaterS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater')
             ->disableOriginalConstructor()
@@ -227,13 +250,16 @@ class ModuleManagerTest extends TestCase
             ->willReturn(true);
     }
 
-    private function mockModuleRepository()
+    private function mockModuleRepository(): void
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
-            ->setConstructorArgs(array(array(), array(), array()))
+            ->setConstructorArgs([[], [], []])
             ->getMock();
         $moduleS
             ->method('onInstall')
+            ->willReturn(true);
+        $moduleS
+            ->method('onPostInstall')
             ->willReturn(true);
         $moduleS
             ->method('onUpgrade')
@@ -266,7 +292,7 @@ class ModuleManagerTest extends TestCase
             ->willReturn($moduleS);
     }
 
-    private function mockModuleZipManager()
+    private function mockModuleZipManager(): void
     {
         $this->moduleZipManagerS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager')
             ->disableOriginalConstructor()
@@ -280,7 +306,7 @@ class ModuleManagerTest extends TestCase
             ->method('storeInModulesFolder');
     }
 
-    private function mockTranslator()
+    private function mockTranslator(): void
     {
         $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
             ->disableOriginalConstructor()
@@ -291,12 +317,18 @@ class ModuleManagerTest extends TestCase
             ->will($this->returnArgument(0));
     }
 
-    private function mockDispatcher()
+    private function mockDispatcher(): void
     {
         $this->dispatcherS = new NullDispatcher();
     }
 
-    private function mockEmployee()
+    private function mockCacheClearer(): void
+    {
+        $this->cacheClearerS = $this->getMockBuilder(CacheClearerInterface::class)
+            ->getMock();
+    }
+
+    private function mockEmployee(): void
     {
         /* this is a super admin */
         $this->employeeS = $this->getMockBuilder('Employee')
@@ -308,7 +340,7 @@ class ModuleManagerTest extends TestCase
             ->willReturn(true);
     }
 
-    private function destroyMocks()
+    private function destroyMocks(): void
     {
         $this->adminModuleProviderS = null;
         $this->moduleProviderS = null;

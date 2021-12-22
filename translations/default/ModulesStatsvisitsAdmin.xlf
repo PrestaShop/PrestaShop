@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statsvisits/statsvisits.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="504c16c26a96283f91fb46a69b7c8153">
+        <source>Visits and Visitors</source>
+        <target>Visits and Visitors</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="432c3ab90b3af30ad318201ba09aa824">
+        <source>Adds statistics about your visits and visitors to the Stats dashboard.</source>
+        <target>Adds statistics about your visits and visitors to the Stats dashboard.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="ffbee337f031c2282b311bac40bc8bb9">
+        <source>Determine the interest of a visit</source>
+        <target>Determine the interest of a visit</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="5a688ee0660f9a42ddcf1e0844281461">
+        <source>The visitors' evolution graph strongly resembles the visits' graph, but provides additional information:</source>
+        <target>The visitors' evolution graph strongly resembles the visits' graph, but provides additional information:</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="76c7ed2c75936e77b913d805195dc408">
+        <source>If this is the case, congratulations, your website is well planned and pleasing. Glad to see that you've been paying attention.</source>
+        <target>If this is the case, congratulations, your website is well planned and pleasing. Glad to see that you've been paying attention.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="c745121a98cf1d5b26bc5299d9880d5c">
+        <source>Otherwise, the conclusion is not so simple. The problem can be aesthetic or ergonomic. It is also possible that many visitors have mistakenly visited your URL without possessing a particular interest in your shop. This strange and ever-confusing phenomenon is most likely cause by search engines. If this is the case, you should consider revising your SEO structure.</source>
+        <target>Otherwise, the conclusion is not so simple. The problem can be aesthetic or ergonomic. It is also possible that many visitors have mistakenly visited your URL without possessing a particular interest in your shop. This strange and ever-confusing phenomenon is most likely cause by search engines. If this is the case, you should consider revising your SEO structure.</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="9bf5a493522a65d550f096505874873b">
+        <source>This information is mostly qualitative. It is up to you to determine the interest of a disjointed visit.</source>
+        <target>This information is mostly qualitative. It is up to you to determine the interest of a disjointed visit.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="b8901fb7bbfaf9b0c4724343c7cd1f90">
+        <source>A visit corresponds to an internet user coming to your shop, and until the end of their session, only one visit is counted.</source>
+        <target>A visit corresponds to an internet user coming to your shop, and until the end of their session, only one visit is counted.</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="f43a4cf6dcc4ec617d2296d03d26c90f">
+        <source>A visitor is an unknown person who has not registered or logged into your store. A visitor can also be considered a person who has visited your shop multiple times.</source>
+        <target>A visitor is an unknown person who has not registered or logged into your store. A visitor can also be considered a person who has visited your shop multiple times.</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="54067074d24489ddb5654bf46642cb85">
+        <source>Total visits:</source>
+        <target>Total visits:</target>
+        <note>Line: 122</note>
+      </trans-unit>
+      <trans-unit id="23e640d55e56db79971918936e95bf9d">
+        <source>Total visitors:</source>
+        <target>Total visitors:</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="998e4c5c80f27dec552e99dfed34889a">
+        <source>CSV Export</source>
+        <target>CSV Export</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="39b960b0a5e2ebaaa638d946f1892050">
+        <source>Number of visits and unique visitors</source>
+        <target>Number of visits and unique visitors</target>
+        <note>Line: 140</note>
+      </trans-unit>
+      <trans-unit id="d6be47df1fca07069a3f6a1844b301c6">
+        <source>Enrich your stats, add statistics about your visits and visitors.</source>
+        <target>Enrich your stats, add statistics about your visits and visitors.</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

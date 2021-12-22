@@ -15,3 +15,7 @@
     }
   }
 }
+
+.translations.tabbable {
+  @include border-radius(4px);
+}

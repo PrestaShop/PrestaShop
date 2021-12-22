@@ -1,0 +1,6 @@
+admin_country_states:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\StateController::getStatesAction'
+    _legacy_controller: AdminStates

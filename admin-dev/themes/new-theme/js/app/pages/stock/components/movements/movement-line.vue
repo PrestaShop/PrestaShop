@@ -1,10 +1,11 @@
 <!--**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <tr>
@@ -32,8 +32,8 @@
         >
           <p>
             {{ product.product_name }}
-            <small v-if="hasCombination"><br />
-              {{ combinationName }}
+            <small v-if="hasCombination"><br>
+              {{ product.combination_name }}
             </small>
           </p>
         </PSMedia>
@@ -43,20 +43,27 @@
       {{ product.product_reference }}
     </td>
     <td>
-      <a v-if="orderLink" :href="orderLink" target="_blank">
+      <a
+        v-if="orderLink"
+        :href="orderLink"
+        target="_blank"
+      >
         {{ product.movement_reason }}
       </a>
       <span v-else>{{ product.movement_reason }}</span>
     </td>
     <td class="text-sm-center">
-      <span class="qty-number" :class="{'is-positive' : isPositive}">
+      <span
+        class="qty-number"
+        :class="{'is-positive' : isPositive}"
+      >
         <span v-if="isPositive">+</span>
         <span v-else>-</span>
         {{ qty }}
       </span>
     </td>
     <td class="text-sm-center">
-      {{ product.date_add }}
+      {{ dateAdd }}
     </td>
     <td>
       {{ employeeName }}
@@ -64,29 +71,40 @@
   </tr>
 </template>
 
-<script>
-  import PSMedia from 'app/widgets/ps-media';
-  import productDesc from 'app/pages/stock/mixins/product-desc';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSMedia from '@app/widgets/ps-media.vue';
+  import productDesc from '@app/pages/stock/mixins/product-desc';
 
-  export default {
-    props: ['product'],
+  export default Vue.extend({
+    props: {
+      product: {
+        type: Object,
+        required: true,
+      },
+    },
     mixins: [productDesc],
     computed: {
-      qty() {
+      qty(): number {
         return this.product.physical_quantity;
       },
-      employeeName() {
+      employeeName(): string {
         return `${this.product.employee_firstname} ${this.product.employee_lastname}`;
       },
-      isPositive() {
+      isPositive(): boolean {
         return this.product.sign > 0;
       },
-      orderLink() {
+      orderLink(): string | null {
         return this.product.order_link !== 'N/A' ? this.product.order_link : null;
+      },
+      dateAdd() {
+        const date = new Date(Date.parse(this.product.date_add));
+
+        return date.toLocaleDateString(window.data.locale, {});
       },
     },
     components: {
       PSMedia,
     },
-  };
+  });
 </script>

@@ -1,0 +1,89 @@
+#themes-logo-page {
+  @import "partials/theme_logo_configuration";
+  @import "partials/theme_logo_theme_card";
+
+  #adapt_theme_to_rtl_languages_theme_to_adapt {
+    width: 18.75rem;
+  }
+
+  .btn-tertiary {
+    font-style: normal;
+    font-weight: 600;
+    font-stretch: normal;
+    line-height: normal;
+    color: $white;
+    text-align: center;
+    letter-spacing: -0.2px;
+    background-color: $gray-500;
+    @include border-radius(2px);
+  }
+
+  .btn-tertiary-outline {
+    font-style: normal;
+    font-weight: 600;
+    font-stretch: normal;
+    line-height: normal;
+    color: $gray-700;
+    text-align: center;
+    letter-spacing: -0.2px;
+    background-color: transparent;
+    border: 1px solid $gray-500;
+  }
+
+  .btn-tertiary:hover {
+    background-color: $gray-700;
+  }
+
+  .layout-configuration {
+    .inner-content {
+      padding: 0.9375rem;
+      background-color: #f8f8f8;
+      @include border-radius(0.25rem);
+
+      .title {
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        font-stretch: normal;
+        line-height: normal;
+        color: #4a4a4a;
+        letter-spacing: normal;
+      }
+
+      .description {
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        font-stretch: normal;
+        line-height: 1.33;
+        color: $gray-500;
+        letter-spacing: normal;
+      }
+    }
+
+    .layout-logo {
+      padding-right: 1rem;
+      vertical-align: text-bottom;
+    }
+
+    .choose-layouts-button {
+      margin-right: 0.9375rem;
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .adminthemes {
+    .nav.nav-pills {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: scroll;
+
+      li {
+        a {
+          width: max-content;
+        }
+      }
+    }
+  }
+}

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,29 +17,33 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
+
 namespace Tests\Unit\Adapter\Module\Configuration;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Doctrine\DBAL\Driver\PDOMySql\Driver;
+use Doctrine\DBAL\Statement;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use Tests\TestCase\UnitTestCase;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
-class ModuleSelfConfiguratorTest extends UnitTestCase
+class ModuleSelfConfiguratorTest extends TestCase
 {
+    /**
+     * @var ModuleSelfConfigurator
+     */
     public $moduleSelfConfigurator;
-
     /**
      * @var ConfigurationMock
      */
@@ -51,38 +56,42 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
      * @var ModuleRepository
      */
     private $moduleRepository;
-
+    /**
+     * @var string
+     */
     public $defaultDir;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->configuration = new ConfigurationMock();
-        $this->connection = new ConnectionMock(array(), new Driver);
+        $this->connection = new ConnectionMock([], new Driver());
         $this->mockModuleRepository();
 
-        $this->defaultDir = __DIR__.'/../../../../resources/module-self-config-files';
+        $this->defaultDir = dirname(__DIR__, 3) . '/Resources/module-self-config-files';
+
         parent::setUp();
     }
 
-    private function getModuleSelfConfigurator($moduleRepository = null, $configuration = null, $connection = null, $filesystem = null)
-    {
-        $moduleSelfConfigurator = new ModuleSelfConfigurator(
+    private function getModuleSelfConfigurator(
+        ModuleRepository $moduleRepository = null,
+        Configuration $configuration = null,
+        Connection $connection = null,
+        Filesystem $filesystem = null
+    ): ModuleSelfConfigurator {
+        return new ModuleSelfConfigurator(
             $moduleRepository ?: $this->moduleRepository,
             $configuration ?: $this->configuration,
             $connection ?: $this->connection,
             $filesystem ?: new Filesystem()
         );
-
-        return $moduleSelfConfigurator;
     }
 
-    public function testSuccessfulConfiguration()
+    public function testSuccessfulConfiguration(): void
     {
-        $name = 'bankwire';
-        $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->configure());
+        $this->assertTrue($this->getModuleSelfConfigurator()->module('bankwire')->configure());
     }
 
-    public function testFileExists()
+    public function testFileExists(): void
     {
         $moduleSelfConfigurator = $this->getModuleSelfConfigurator();
 
@@ -95,23 +104,23 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertNotEmpty($moduleSelfConfigurator->module($name)->file($filepath)->validate());
     }
 
-    public function testModuleInstallationRequirementPass()
+    public function testModuleInstallationRequirementPass(): void
     {
         // Module installed
         $name = 'ganalytics';
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir . '/moduleConfExample.yml';
         $result = $this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate();
-        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: '.var_export($result, true));
+        $this->assertEmpty($result, 'Failed to pass the module for the following reasons: ' . var_export($result, true));
     }
 
-    public function testModuleInstallationRequirementFail()
+    public function testModuleInstallationRequirementFail(): void
     {
         // Module installed
         $name = 'ganalytics';
         $this->assertNotEmpty($this->getModuleSelfConfigurator()->module($name)->validate());
     }
 
-    public function testFileToUse()
+    public function testFileToUse(): void
     {
         $this->assertNull($this->getModuleSelfConfigurator()->getFile());
 
@@ -119,16 +128,16 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertEquals($filepath, $this->getModuleSelfConfigurator()->file($filepath)->getFile());
     }
 
-    public function testAllValid()
+    public function testAllValid(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExample.yml';
+        $filepath = $this->defaultDir . '/moduleConfExample.yml';
         $name = 'bankwire';
         $this->assertEmpty($this->getModuleSelfConfigurator()->module($name)->file($filepath)->validate());
     }
 
-    public function testConfigurationUpdate()
+    public function testConfigurationUpdate(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->assertNull($this->configuration->get('PAYPAL_SANDBOX'));
@@ -136,9 +145,9 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertEquals(1, $this->configuration->get('PAYPAL_SANDBOX'));
     }
 
-    public function testConfigurationDelete()
+    public function testConfigurationDelete(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleConfStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleConfStep.yml';
         $name = 'bankwire';
         // Test before
         $this->configuration->set('PAYPAL_ONBOARDING', 1);
@@ -147,30 +156,32 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertNull($this->configuration->get('PAYPAL_ONBOARDING'));
     }
 
-    public function testFilesExceptionMissingSource()
+    public function testFilesExceptionMissingSource(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashFileSource.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashFileSource.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing source file');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing source file');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 
-    public function testFilesExceptionMissingDestination()
+    public function testFilesExceptionMissingDestination(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashFileDestination.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashFileDestination.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing destination file');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing destination file');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 
-    public function testFilesStep()
+    public function testFilesStep(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleFilesStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleFilesStep.yml';
         $name = 'ganalytics';
 
-        $basePath = __DIR__ . '/../../../../resources/module-self-config-files/..';
+        $basePath = $this->defaultDir . '/..';
 
         $mockFilesystem = $this->getMockBuilder('\Symfony\Component\Filesystem\Filesystem')
             ->getMock();
@@ -179,12 +190,12 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
             ->method('copy')
             ->withConsecutive(
                 [
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics.php'),
-                    $this->equalTo($basePath.'/modules/ganalytics/ganalytics_copy.php'),
+                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics.php'),
+                    $this->equalTo($basePath . '/modules/ganalytics/ganalytics_copy.php'),
                 ],
                 [
                     $this->equalTo('http://localhost/img/logo.png'),
-                    $this->equalTo($basePath.'/modules/ganalytics/another-logo.png'),
+                    $this->equalTo($basePath . '/modules/ganalytics/another-logo.png'),
                 ]
             );
 
@@ -199,15 +210,15 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
         // Then clean
         $filesystem = new Filesystem();
-        $filesystem->remove(array(
-            __DIR__.'/../../../../resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__.'/../../../../resources/modules/ganalytics/avatar.jpg',
-        ));
+        $filesystem->remove([
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/ganalytics_copy.php',
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/avatar.jpg',
+        ]);
     }
 
-    public function testSqlStep()
+    public function testSqlStep(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExampleSqlStep.yml';
+        $filepath = $this->defaultDir . '/moduleConfExampleSqlStep.yml';
         $name = 'ganalytics';
 
         $this->assertTrue($this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure());
@@ -218,36 +229,37 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
         $this->assertTrue(in_array('TRUNCATE TABLE `ps_lolcat_army`', $this->connection->executedSql));
     }
 
-    public function testSqlExceptionMissingFile()
+    public function testSqlExceptionMissingFile(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfCrashSql.yml';
+        $filepath = $this->defaultDir . '/moduleConfCrashSql.yml';
         $name = 'bankwire';
 
-        $this->setExpectedException('Exception', 'Missing file path');
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing file path');
         $this->getModuleSelfConfigurator()->module($name)->file($filepath)->configure();
     }
 
-    public function testPhpStep()
+    public function testPhpStep(): void
     {
-        $filepath = $this->defaultDir.'/moduleConfExamplePhpStep.yml';
-        $php_filepath = __DIR__.'/../../../../resources/module-self-config-files/php/MyComplexModuleConfiguration.php';
+        $filepath = $this->defaultDir . '/moduleConfExamplePhpStep.yml';
+        $php_filepath = $this->defaultDir . '/php/MyComplexModuleConfiguration.php';
         $name = 'ganalytics';
 
         // Test context with mocks
         require_once $php_filepath;
         $mock = $this->getMockBuilder('\MyComplexModuleConfiguration')
-                     ->setMethods(array('run'))
-                     ->getMock();
+            ->setMethods(['run'])
+            ->getMock();
         $mock->expects($this->exactly(2))
-             ->method('run');
+            ->method('run');
 
         // Redefine self configuratrion as mock
         $moduleSelfConfigurator = $this
             ->getMockBuilder(
                 '\PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator'
             )
-            ->setConstructorArgs(array($this->moduleRepository, $this->configuration, $this->connection, new Filesystem()))
-            ->setMethods(array('loadPhpFile'))
+            ->setConstructorArgs([$this->moduleRepository, $this->configuration, $this->connection, new Filesystem()])
+            ->setMethods(['loadPhpFile'])
             ->getMock();
 
         $moduleSelfConfigurator
@@ -261,7 +273,7 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
     // MOCK
 
-    private function mockModuleRepository()
+    private function mockModuleRepository(): void
     {
         $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
             ->disableOriginalConstructor()
@@ -303,58 +315,69 @@ class ModuleSelfConfiguratorTest extends UnitTestCase
 
 class ConfigurationMock extends Configuration
 {
-    private $configurationData = array();
+    private $configurationData = [];
 
-    public function set($key, $value, array $options = [])
+    public function set($key, $value, ShopConstraint $shopConstraint = null, array $options = [])
     {
         $this->configurationData[$key] = $value;
+
         return $this;
     }
 
-    public function get($key, $default = null)
+    public function get($key, $default = null, ShopConstraint $shopConstraint = null)
     {
-        return isset($this->configurationData[$key])?$this->configurationData[$key]:$default;
+        return isset($this->configurationData[$key]) ? $this->configurationData[$key] : $default;
     }
 
     public function remove($key)
     {
         unset($this->configurationData[$key]);
+
         return $this;
     }
 }
 
 class ConnectionMock extends Connection
 {
-    public $sql = array();
-    public $executedSql = array();
+    public $sql = [];
+    public $executedSql = [];
 
     public function connect()
     {
         return true;
     }
 
-    public function beginTransaction() { }
+    public function beginTransaction()
+    {
+    }
 
     public function commit()
     {
         $this->executedSql = array_merge($this->executedSql, $this->sql);
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function rollBack()
     {
-        $this->sql = array();
+        $this->sql = [];
     }
 
     public function prepare($statement)
     {
         $this->sql[] = $statement;
+
         return new StatementMock($statement, $this);
     }
 }
 
 class StatementMock extends Statement
 {
-    public function __construct($sql, Connection $conn) { }
-    public function execute($params = null) { }
+    /** @phpstan-ignore-next-line */
+    public function __construct($sql, Connection $conn)
+    {
+    }
+
+    public function execute($params = null)
+    {
+    }
 }

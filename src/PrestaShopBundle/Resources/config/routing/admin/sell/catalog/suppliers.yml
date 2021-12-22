@@ -1,0 +1,105 @@
+admin_suppliers_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::indexAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers
+
+admin_suppliers_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitFiltersupplier
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.supplier
+    redirectRoute: admin_suppliers_index
+
+admin_suppliers_view:
+  path: /{supplierId}/products
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::viewAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:viewsupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
+
+admin_suppliers_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::createAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:addsupplier
+
+admin_suppliers_edit:
+  path: /{supplierId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::editAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:updatesupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
+
+admin_suppliers_delete:
+  path: /{supplierId}/delete
+  methods: DELETE
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::deleteAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:deletesupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
+
+admin_suppliers_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::bulkDeleteAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkdeletesupplier
+
+admin_suppliers_bulk_enable:
+  path: /bulk-enable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::bulkEnableAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkenableSelectionsupplier
+
+admin_suppliers_bulk_disable:
+  path: /bulk-disable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::bulkDisableAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:submitBulkdisableSelectionsupplier
+
+admin_suppliers_toggle_status:
+  path: /{supplierId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::toggleStatusAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:statussupplier
+    _legacy_parameters:
+      id_supplier: supplierId
+  requirements:
+    supplierId: \d+
+
+admin_suppliers_export:
+  path: /export
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\SupplierController::exportAction'
+    _legacy_controller: AdminSuppliers
+    _legacy_link: AdminSuppliers:exportsupplier

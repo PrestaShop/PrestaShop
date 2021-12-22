@@ -1,0 +1,28 @@
+.form-group {
+  [class^="popover-error-container"] {
+    .popover {
+      max-width: inherit;
+      border: inherit;
+      @include border-radius(5px);
+      box-shadow: 0 1px 10px #d3d3d3;
+
+      .popover-body {
+        padding: 15px;
+      }
+
+      .popover-error-list {
+        ul {
+          padding-left: 18px;
+          margin-bottom: 0;
+        }
+
+        li {
+          font-family: "Open Sans", Helvetica, Arial, sans-serif;
+          font-size: 0.875rem;
+          font-weight: 400;
+          line-height: 1.5;
+        }
+      }
+    }
+  }
+}

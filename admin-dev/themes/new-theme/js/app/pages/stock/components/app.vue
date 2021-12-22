@@ -1,10 +1,11 @@
 <!--**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,85 +16,121 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="stock-app container-fluid">
+  <div
+    v-if="isReady"
+    id="app"
+    class="stock-app container-fluid"
+  >
     <StockHeader />
-    <Search @search="onSearch" @applyFilter="applyFilter" />
-    <LowFilter v-if="isOverview" :filters="filters" @lowStockChecked="onLowStockChecked" />
+    <Search
+      @search="onSearch"
+      @applyFilter="applyFilter"
+    />
+    <LowFilter
+      v-if="isOverview"
+      :filters="filters"
+      @lowStockChecked="onLowStockChecked"
+    />
     <div class="card container-fluid pa-2 clearfix">
-      <router-view class="view" @resetFilters="resetFilters" @fetch="fetch"></router-view>
+      <router-view
+        class="view"
+        @resetFilters="resetFilters"
+        @fetch="fetch"
+      />
       <PSPagination
-        :currentIndex="currentPagination"
-        :pagesCount="pagesCount"
+        :current-index="currentPagination"
+        :pages-count="pagesCount"
         @pageChanged="onPageChanged"
       />
     </div>
   </div>
 </template>
 
-<script>
-  import StockHeader from './header/stock-header';
-  import Search from './header/search';
-  import LowFilter from './header/filters/low-filter';
-  import PSPagination from 'app/widgets/ps-pagination';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSPagination from '@app/widgets/ps-pagination.vue';
+  import StockHeader from './header/stock-header.vue';
+  import Search from './header/search.vue';
+  import LowFilter from './header/filters/low-filter.vue';
 
-  export default {
-    name: 'app',
+  /* eslint-disable camelcase */
+  export interface StockFilters {
+    active?: string;
+    categories?: Array<number>;
+    date_add?: Array<any>;
+    id_employee?: Array<number>;
+    id_stock_mvt_reason?: Array<number>;
+    order?: string;
+    page_size?: number,
+    page_index?: number;
+    keywords?: any;
+    low_stock?: number | boolean | string;
+  }
+  /* eslint-enable camelcase */
+
+  const FIRST_PAGE = 1;
+
+  export default Vue.extend({
+    name: 'App',
     computed: {
-      isReady() {
+      isReady(): boolean {
         return this.$store.state.isReady;
       },
-      pagesCount() {
+      pagesCount(): number {
         return this.$store.state.totalPages;
       },
-      currentPagination() {
+      currentPagination(): number {
         return this.$store.state.pageIndex;
       },
-      isOverview() {
+      isOverview(): boolean {
         return this.$route.name === 'overview';
       },
     },
     methods: {
-      onPageChanged(pageIndex) {
+      onPageChanged(pageIndex: number): void {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch('asc');
       },
-      fetch(sortDirection) {
+      fetch(sortDirection?: string): void {
         const action = this.$route.name === 'overview' ? 'getStock' : 'getMovements';
-        const sorting = (sortDirection === 'desc') ? ' desc' : '';
+        const sorting = sortDirection === 'desc' ? ' desc' : '';
         this.$store.dispatch('isLoading');
 
-        this.filters = Object.assign({}, this.filters, {
+        this.filters = {
+          ...this.filters,
           order: `${this.$store.state.order}${sorting}`,
           page_size: this.$store.state.productsPerPage,
           page_index: this.$store.state.pageIndex,
           keywords: this.$store.state.keywords,
-        });
+        };
 
         this.$store.dispatch(action, this.filters);
       },
-      onSearch(keywords) {
+      onSearch(keywords: any): void {
         this.$store.dispatch('updateKeywords', keywords);
+        this.resetPagination();
         this.fetch();
       },
-      applyFilter(filters) {
+      applyFilter(filters: StockFilters): void {
         this.filters = filters;
+        this.resetPagination();
         this.fetch();
       },
-      resetFilters() {
+      resetFilters(): void {
         this.filters = {};
       },
-      onLowStockChecked(isChecked) {
-        this.filters = Object.assign({}, this.filters, {
-          low_stock: isChecked,
-        });
+      resetPagination(): void {
+        this.$store.dispatch('updatePageIndex', FIRST_PAGE);
+      },
+      onLowStockChecked(isChecked: boolean): void {
+        this.filters = {...this.filters, low_stock: isChecked};
         this.fetch();
       },
     },
@@ -103,16 +140,16 @@
       PSPagination,
       LowFilter,
     },
-    data: () => ({
+    data: (): {filters: StockFilters} => ({
       filters: {},
     }),
-  };
+  });
 </script>
 
-<style lang="sass" type="text/scss">
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
+<style lang="scss" type="text/scss">
+// hide the layout header
+#main-div > .header-toolbar {
+  height: 0;
+  display: none;
+}
 </style>

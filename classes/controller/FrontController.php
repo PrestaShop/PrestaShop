@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
+use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
+use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
-use PrestaShop\PrestaShop\Adapter\Configuration as ConfigurationAdapter;
-use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
-use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Debug\Debug;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
@@ -62,16 +63,16 @@ class FrontControllerCore extends Controller
     protected static $cart;
 
     /** @var array Controller errors */
-    public $errors = array();
+    public $errors = [];
 
     /** @var array Controller warning notifications */
-    public $warning = array();
+    public $warning = [];
 
     /** @var array Controller success notifications */
-    public $success = array();
+    public $success = [];
 
     /** @var array Controller info notifications */
-    public $info = array();
+    public $info = [];
 
     /** @var string Language ISO code */
     public $iso;
@@ -112,14 +113,14 @@ class FrontControllerCore extends Controller
     /** @var bool SSL connection flag */
     public $ssl = false;
 
-    /** @var bool If true, switches display to restricted country page during init. */
+    /** @var int If Country::GEOLOC_CATALOG_MODE, switches display to restricted country page during init. */
     protected $restrictedCountry = Country::GEOLOC_ALLOWED;
 
     /** @var bool If true, forces display to maintenance page. */
     protected $maintenance = false;
 
-    /** @var string[] Adds excluded $_GET keys for redirection */
-    protected $redirectionExtraExcludedKeys = array();
+    /** @var string[] Adds excluded `$_GET` keys for redirection */
+    protected $redirectionExtraExcludedKeys = [];
 
     /**
      * True if controller has already been initialized.
@@ -140,7 +141,7 @@ class FrontControllerCore extends Controller
     public $nb_items_per_page;
 
     /**
-     * @var object ObjectSerializer
+     * @var ObjectPresenter
      */
     public $objectPresenter;
 
@@ -170,6 +171,30 @@ class FrontControllerCore extends Controller
     protected $cccReducer;
 
     /**
+     * @var array Contains the result of getTemplateVarUrls method
+     */
+    protected $urls;
+
+    /**
+     * Set this parameter to false if you don't want cart's invoice address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateInvoiceAddress
+     */
+    protected $automaticallyAllocateInvoiceAddress = true;
+
+    /**
+     * Set this parameter to false if you don't want cart's delivery address
+     * to be set automatically (this behavior is kept for legacy and BC purpose)
+     *
+     * @var bool automaticallyAllocateDeliveryAddress
+     */
+    protected $automaticallyAllocateDeliveryAddress = true;
+
+    /** @var string Page name */
+    public $page_name;
+
+    /**
      * Controller constructor.
      *
      * @global bool $useSSL SSL connection flag
@@ -196,11 +221,11 @@ class FrontControllerCore extends Controller
         $this->cart_presenter = new CartPresenter();
         $this->templateFinder = new TemplateFinder($this->context->smarty->getTemplateDir(), '.tpl');
         $this->stylesheetManager = new StylesheetManager(
-            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
+            [_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__],
             new ConfigurationAdapter()
         );
         $this->javascriptManager = new JavascriptManager(
-            array(_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__),
+            [_PS_THEME_URI_, _PS_PARENT_THEME_URI_, __PS_BASE_URI__],
             new ConfigurationAdapter()
         );
         $this->cccReducer = new CccReducer(
@@ -255,6 +280,13 @@ class FrontControllerCore extends Controller
      */
     public function init()
     {
+        Hook::exec(
+            'actionFrontControllerInitBefore',
+            [
+                'controller' => $this,
+            ]
+        );
+
         /*
          * Globals are DEPRECATED as of version 1.5.0.1
          * Use the Context object to access objects instead.
@@ -312,12 +344,7 @@ class FrontControllerCore extends Controller
 
         /* Theme is missing */
         if (!is_dir(_PS_THEME_DIR_)) {
-            throw new PrestaShopException(
-                $this->trans(
-                    'Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.',
-                    array(basename(rtrim(_PS_THEME_DIR_, '/\\'))),
-                    'Admin.Design.Notification'
-                ));
+            throw new PrestaShopException($this->trans('Current theme is unavailable. Please check your theme\'s directory name ("%s") and permissions.', [basename(rtrim(_PS_THEME_DIR_, '/\\'))], 'Admin.Design.Notification'));
         }
 
         if (Configuration::get('PS_GEOLOCATION_ENABLED')) {
@@ -329,17 +356,27 @@ class FrontControllerCore extends Controller
             $has_country = isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country;
             $has_address_type = false;
 
-            if ((int) $this->context->cookie->id_cart && ($cart = new Cart($this->context->cookie->id_cart)) && Validate::isLoadedObject($cart)) {
-                $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+            if ((int) $this->context->cookie->id_cart) {
+                $cart = new Cart($this->context->cookie->id_cart);
+                if (Validate::isLoadedObject($cart)) {
+                    $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+                }
             }
 
             if ((!$has_currency || $has_country) && !$has_address_type) {
-                $id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
-                    (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int) Tools::getCountry();
+                if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
+                    $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
+                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
+                    $id_country = (int) Country::getByIso($array[0], true);
+                } else {
+                    $id_country = Tools::getCountry();
+                }
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
-                if (!$has_currency && validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
+                if (!$has_currency && Validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
                     $this->context->cookie->id_currency = (int) Currency::getCurrencyInstance($country->id_currency ? (int) $country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'))->id;
                     $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
@@ -368,12 +405,12 @@ class FrontControllerCore extends Controller
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
-            } elseif (intval(Configuration::get('PS_GEOLOCATION_ENABLED'))
+            } elseif ((int) (Configuration::get('PS_GEOLOCATION_ENABLED'))
                 && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))
                 && $cart->nbProducts()
-                && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
+                && (int) (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1
                 && !FrontController::isInWhitelistForGeolocation()
-                && !in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1', '::1'))
+                && !in_array($_SERVER['SERVER_NAME'], ['localhost', '127.0.0.1', '::1'])
             ) {
                 /* Delete product of cart, if user can't make an order from his country */
                 PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
@@ -389,13 +426,13 @@ class FrontControllerCore extends Controller
             }
             /* Select an address if not set */
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
-                if (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0) {
+                if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
                     $cart->id_address_delivery = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
-                if (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) {
+                if ($this->automaticallyAllocateInvoiceAddress && (!isset($cart->id_address_invoice) || $cart->id_address_invoice == 0)) {
                     $to_update = true;
                     $cart->id_address_invoice = (int) Address::getFirstCustomerAddressId($cart->id_customer);
                 }
@@ -439,14 +476,10 @@ class FrontControllerCore extends Controller
 
         Product::initPricesComputation();
 
-        $display_tax_label = $this->context->country->display_tax_label;
         if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) {
             $infos = Address::getCountryAndState((int) $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
             $country = new Country((int) $infos['id_country']);
             $this->context->country = $country;
-            if (Validate::isLoadedObject($country)) {
-                $display_tax_label = $country->display_tax_label;
-            }
         }
 
         /*
@@ -470,7 +503,12 @@ class FrontControllerCore extends Controller
         $this->context->cart = $cart;
         $this->context->currency = $currency;
 
-        Hook::exec('actionFrontControllerAfterInit');
+        Hook::exec(
+            'actionFrontControllerInitAfter',
+            [
+                'controller' => $this,
+            ]
+        );
     }
 
     /**
@@ -485,7 +523,7 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
-        $templateVars = array(
+        $templateVars = [
             'cart' => $this->cart_presenter->present($this->context->cart),
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
@@ -500,9 +538,17 @@ class FrontControllerCore extends Controller
             'time' => time(),
             'static_token' => Tools::getToken(false),
             'token' => Tools::getToken(),
-        );
+            'debug' => _PS_MODE_DEV_,
+        ];
 
-        $modulesVariables = Hook::exec('actionFrontControllerSetVariables', [], null, true);
+        $modulesVariables = Hook::exec(
+            'actionFrontControllerSetVariables',
+            [
+                'templateVars' => &$templateVars,
+            ],
+            null,
+            true
+        );
 
         if (is_array($modulesVariables)) {
             foreach ($modulesVariables as $moduleName => $variables) {
@@ -512,9 +558,9 @@ class FrontControllerCore extends Controller
 
         $this->context->smarty->assign($templateVars);
 
-        Media::addJsDef(array(
+        Media::addJsDef([
             'prestashop' => $this->buildFrontEndObject($templateVars),
-        ));
+        ]);
     }
 
     /**
@@ -532,9 +578,9 @@ class FrontControllerCore extends Controller
         $object = $this->get('prestashop.core.filter.front_end_object.main')
             ->filter($object);
 
-        Hook::exec('actionBuildFrontEndObject', array(
+        Hook::exec('actionBuildFrontEndObject', [
             'obj' => &$object,
-        ));
+        ]);
 
         return $object;
     }
@@ -551,9 +597,9 @@ class FrontControllerCore extends Controller
             $this->context->cart = new Cart();
         }
 
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'HOOK_HEADER' => Hook::exec('displayHeader'),
-        ));
+        ]);
     }
 
     public function initFooter()
@@ -618,12 +664,12 @@ class FrontControllerCore extends Controller
 
     public function redirectWithNotifications()
     {
-        $notifications = json_encode(array(
+        $notifications = json_encode([
             'error' => $this->errors,
             'warning' => $this->warning,
             'success' => $this->success,
             'info' => $this->info,
-        ));
+        ]);
 
         if (session_status() == PHP_SESSION_ACTIVE) {
             $_SESSION['notifications'] = $notifications;
@@ -634,7 +680,7 @@ class FrontControllerCore extends Controller
             setcookie('notifications', $notifications);
         }
 
-        return call_user_func_array(array('Tools', 'redirect'), func_get_args());
+        return call_user_func_array(['Tools', 'redirect'], func_get_args());
     }
 
     /**
@@ -655,13 +701,13 @@ class FrontControllerCore extends Controller
      */
     public function display()
     {
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'layout' => $this->getLayout(),
             'stylesheets' => $this->getStylesheets(),
             'javascript' => $this->getJavascript(),
             'js_custom_vars' => Media::getJsDef(),
             'notifications' => $this->prepareNotifications(),
-        ));
+        ]);
 
         $this->smartyOutputContent($this->template);
 
@@ -674,26 +720,28 @@ class FrontControllerCore extends Controller
 
         $html = '';
 
+        $theme = $this->context->shop->theme->getName();
+
         if (is_array($content)) {
             foreach ($content as $tpl) {
-                $html .= $this->context->smarty->fetch($tpl, null, $this->getLayout());
+                $html .= $this->context->smarty->fetch($tpl, null, $theme . $this->getLayout());
             }
         } else {
-            $html = $this->context->smarty->fetch($content, null, $this->getLayout());
+            $html = $this->context->smarty->fetch($content, null, $theme . $this->getLayout());
         }
 
-        Hook::exec('actionOutputHTMLBefore', array('html' => &$html));
+        Hook::exec('actionOutputHTMLBefore', ['html' => &$html]);
         echo trim($html);
     }
 
     protected function prepareNotifications()
     {
-        $notifications = array(
+        $notifications = [
             'error' => $this->errors,
             'warning' => $this->warning,
             'success' => $this->success,
             'info' => $this->info,
-        );
+        ];
 
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
@@ -717,18 +765,19 @@ class FrontControllerCore extends Controller
     {
         if ($this->maintenance == true || !(int) Configuration::get('PS_SHOP_ENABLE')) {
             $this->maintenance = true;
-            if (!in_array(Tools::getRemoteAddr(), explode(',', Configuration::get('PS_MAINTENANCE_IP')))) {
+            $allowed_ips = array_map('trim', explode(',', Configuration::get('PS_MAINTENANCE_IP')));
+            if (!IpUtils::checkIp(Tools::getRemoteAddr(), $allowed_ips)) {
                 header('HTTP/1.1 503 Service Unavailable');
                 header('Retry-After: 3600');
 
                 $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
-                $this->context->smarty->assign(array(
+                $this->context->smarty->assign([
                     'urls' => $this->getTemplateVarUrls(),
                     'shop' => $this->getTemplateVarShop(),
-                    'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
+                    'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', []),
                     'maintenance_text' => Configuration::get('PS_MAINTENANCE_TEXT', (int) $this->context->language->id),
                     'stylesheets' => $this->getStylesheets(),
-                ));
+                ]);
                 $this->smartyOutputContent('errors/maintenance.tpl');
 
                 exit;
@@ -744,11 +793,11 @@ class FrontControllerCore extends Controller
         header('HTTP/1.1 403 Forbidden');
 
         $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
-        $this->context->smarty->assign(array(
+        $this->context->smarty->assign([
             'urls' => $this->getTemplateVarUrls(),
             'shop' => $this->getTemplateVarShop(),
             'stylesheets' => $this->getStylesheets(),
-        ));
+        ]);
         $this->smartyOutputContent('errors/restricted-country.tpl');
 
         exit;
@@ -788,32 +837,11 @@ class FrontControllerCore extends Controller
 
         $match_url = rawurldecode(Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         if (!preg_match('/^' . Tools::pRegexp(rawurldecode($canonical_url), '/') . '([&?].*)?$/', $match_url)) {
-            $params = array();
-            $url_details = parse_url($canonical_url);
-
-            if (!empty($url_details['query'])) {
-                parse_str($url_details['query'], $query);
-                foreach ($query as $key => $value) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-            $excluded_key = array('isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms');
-            $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
-            foreach ($_GET as $key => $value) {
-                if (!in_array($key, $excluded_key) && Validate::isUrl($key) && Validate::isUrl($value)) {
-                    $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
-                }
-            }
-
-            $str_params = http_build_query($params, '', '&');
-            if (!empty($str_params)) {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url) . '?' . $str_params;
-            } else {
-                $final_url = preg_replace('/^([^?]*)?.*$/', '$1', $canonical_url);
-            }
+            $final_url = $this->sanitizeUrl($canonical_url);
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
                 die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
@@ -834,11 +862,12 @@ class FrontControllerCore extends Controller
      */
     protected function geolocationManagement($defaultCountry)
     {
-        if (!in_array(Tools::getRemoteAddr(), array('localhost', '127.0.0.1', '::1'))) {
+        if (!in_array(Tools::getRemoteAddr(), ['127.0.0.1', '::1'])) {
             /* Check if Maxmind Database exists */
             if (@filemtime(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_)) {
                 if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES'))))) {
                     $reader = new GeoIp2\Database\Reader(_PS_GEOIP_DIR_ . _PS_GEOIP_CITY_FILE_);
+
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
                     } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
@@ -851,7 +880,7 @@ class FrontControllerCore extends Controller
                                 $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                             } elseif (Configuration::get('PS_GEOLOCATION_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_) {
                                 $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', array($record->country->name), 'Shop.Notifications.Warning');
+                                $this->warning[] = $this->trans('You cannot place a new order from your country (%s).', [$record->country->name], 'Shop.Notifications.Warning');
                             }
                         } else {
                             $hasBeenSet = !isset($this->context->cookie->iso_code_country);
@@ -878,13 +907,13 @@ class FrontControllerCore extends Controller
                     $this->restrictedCountry = Country::GEOLOC_FORBIDDEN;
                 } elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation()) {
                     $this->restrictedCountry = Country::GEOLOC_CATALOG_MODE;
-                    $countryName = $this->trans('Undefined', array(), 'Shop.Theme.Global');
+                    $countryName = $this->trans('Undefined', [], 'Shop.Theme.Global');
                     if (isset($record->country->name) && $record->country->name) {
                         $countryName = $record->country->name;
                     }
                     $this->warning[] = $this->trans(
                         'You cannot place a new order from your country (%s).',
-                        array($countryName),
+                        [$countryName],
                         'Shop.Notifications.Warning'
                     );
                 }
@@ -923,7 +952,7 @@ class FrontControllerCore extends Controller
         }
 
         // Execute Hook FrontController SetMedia
-        Hook::exec('actionFrontControllerSetMedia', array());
+        Hook::exec('actionFrontControllerSetMedia', []);
 
         return true;
     }
@@ -933,9 +962,6 @@ class FrontControllerCore extends Controller
      */
     public function initHeader()
     {
-        /* @see P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies) */
-        header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
-        header('Powered-By: PrestaShop');
     }
 
     /**
@@ -948,16 +974,16 @@ class FrontControllerCore extends Controller
     public static function getCurrentCustomerGroups()
     {
         if (!Group::isFeatureActive()) {
-            return array();
+            return [];
         }
 
         $context = Context::getContext();
         if (!isset($context->customer) || !$context->customer->id) {
-            return array();
+            return [];
         }
 
         if (!is_array(self::$currentCustomerGroups)) {
-            self::$currentCustomerGroups = array();
+            self::$currentCustomerGroups = [];
             $result = Db::getInstance()->executeS('SELECT id_group FROM ' . _DB_PREFIX_ . 'customer_group WHERE id_customer = ' . (int) $context->customer->id);
             foreach ($result as $row) {
                 self::$currentCustomerGroups[] = $row['id_group'];
@@ -984,14 +1010,12 @@ class FrontControllerCore extends Controller
 
         $allowed = false;
         $user_ip = Tools::getRemoteAddr();
-        $ips = array();
+        $ips = [];
 
         // retrocompatibility
         $ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
-        if (is_array($ips_old) && count($ips_old)) {
-            foreach ($ips_old as $ip) {
-                $ips = array_merge($ips, explode("\n", $ip));
-            }
+        foreach ($ips_old as $ip) {
+            $ips = array_merge($ips, explode("\n", $ip));
         }
 
         $ips = array_map('trim', $ips);
@@ -1022,32 +1046,10 @@ class FrontControllerCore extends Controller
         return strcasecmp(Tools::getToken(false), Tools::getValue('token')) == 0;
     }
 
-    /**
-     * @deprecated 1.7 use $this->registerJavascript() and $this->registerStylesheet() to manage your assets.
-     */
-    public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
-    }
-
-    /**
-     * @deprecated 1.7 this method has not effect with PrestaShop 1.7+
-     */
-    public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
-    {
-        /*
-        This function has no effect in PrestaShop 1.7 theme, use $this->registerJavascript() and
-        $this->registerStylesheet() to manage your assets.
-         */
-    }
-
-    public function registerStylesheet($id, $relativePath, $params = array())
+    public function registerStylesheet($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1055,11 +1057,18 @@ class FrontControllerCore extends Controller
             'priority' => AbstractAssetManager::DEFAULT_PRIORITY,
             'inline' => false,
             'server' => 'local',
+            'version' => null,
+            'needRtl' => true,
         ];
-
         $params = array_merge($default_params, $params);
 
-        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server']);
+        if (Tools::hasMediaServer() && !Configuration::get('PS_CSS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->stylesheetManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
+
+        $this->stylesheetManager->register($id, $relativePath, $params['media'], $params['priority'], $params['inline'], $params['server'], $params['needRtl'], $params['version']);
     }
 
     public function unregisterStylesheet($id)
@@ -1067,10 +1076,10 @@ class FrontControllerCore extends Controller
         $this->stylesheetManager->unregisterById($id);
     }
 
-    public function registerJavascript($id, $relativePath, $params = array())
+    public function registerJavascript($id, $relativePath, $params = [])
     {
         if (!is_array($params)) {
-            $params = array();
+            $params = [];
         }
 
         $default_params = [
@@ -1079,11 +1088,16 @@ class FrontControllerCore extends Controller
             'inline' => false,
             'attributes' => null,
             'server' => 'local',
+            'version' => null,
         ];
-
         $params = array_merge($default_params, $params);
 
-        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server']);
+        if (Tools::hasMediaServer() && !Configuration::get('PS_JS_THEME_CACHE')) {
+            $relativePath = Tools::getCurrentUrlProtocolPrefix() . Tools::getMediaServer($relativePath)
+                . ($this->javascriptManager->getFullPath($relativePath) ?? $relativePath);
+            $params['server'] = 'remote';
+        }
+        $this->javascriptManager->register($id, $relativePath, $params['position'], $params['priority'], $params['inline'], $params['attributes'], $params['server'], $params['version']);
     }
 
     public function unregisterJavascript($id)
@@ -1176,18 +1190,6 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.7  This function has no effect in PrestaShop 1.7 theme. jQuery2 is register by the core on every theme.
-     *                  Have a look at the /themes/_core folder.
-     */
-    public function addJquery($version = null, $folder = null, $minifier = true)
-    {
-        /*
-        This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
-        jQuery2 is register by the core on every theme. Have a look at the /themes/_core folder.
-        */
-    }
-
-    /**
      * Adds jQuery UI component(s) to queued JS file list.
      *
      * @param string|array $component
@@ -1202,7 +1204,7 @@ class FrontControllerCore extends Controller
 
         $this->registerStylesheet('jquery-ui-theme', $css_theme_path, ['media' => 'all', 'priority' => 95]);
         $this->registerStylesheet('jquery-ui', $css_path, ['media' => 'all', 'priority' => 90]);
-        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 90]);
+        $this->registerJavascript('jquery-ui', $js_path, ['position' => 'bottom', 'priority' => 49]);
     }
 
     /**
@@ -1223,13 +1225,13 @@ class FrontControllerCore extends Controller
      * Adds jQuery plugin(s) to queued JS file list.
      *
      * @param string|array $name
-     * @param string null $folder
+     * @param string|null $folder
      * @param bool $css
      */
     public function addJqueryPlugin($name, $folder = null, $css = true)
     {
         if (!is_array($name)) {
-            $name = array($name);
+            $name = [$name];
         }
 
         foreach ($name as $plugin) {
@@ -1239,14 +1241,14 @@ class FrontControllerCore extends Controller
                 $this->registerJavascript(
                     str_replace(_PS_JS_DIR_ . 'jquery/plugins/', '', $plugin_path['js']),
                     str_replace(_PS_JS_DIR_, 'js/', $plugin_path['js']),
-                    array('position' => 'bottom', 'priority' => 100)
+                    ['position' => 'bottom', 'priority' => 100]
                 );
             }
             if ($css && !empty($plugin_path['css'])) {
                 $this->registerStylesheet(
                     str_replace(_PS_JS_DIR_ . 'jquery/plugins/', '', key($plugin_path['css'])),
                     str_replace(_PS_JS_DIR_, 'js/', key($plugin_path['css'])),
-                    array('media' => 'all', 'priority' => 100)
+                    ['media' => 'all', 'priority' => 100]
                 );
             }
         }
@@ -1264,12 +1266,12 @@ class FrontControllerCore extends Controller
             if (Validate::isLoadedObject($cart)) {
                 $customer = new Customer((int) $cart->id_customer);
                 if (Validate::isLoadedObject($customer)) {
-                    $customer->logged = 1;
+                    $customer->logged = true;
                     $this->context->customer = $customer;
                     $this->context->cookie->id_customer = (int) $customer->id;
                     $this->context->cookie->customer_lastname = $customer->lastname;
                     $this->context->cookie->customer_firstname = $customer->firstname;
-                    $this->context->cookie->logged = 1;
+                    $this->context->cookie->logged = true;
                     $this->context->cookie->check_cgv = 1;
                     $this->context->cookie->is_guest = $customer->isGuest();
                     $this->context->cookie->passwd = $customer->passwd;
@@ -1278,17 +1280,17 @@ class FrontControllerCore extends Controller
                     return $id_cart;
                 }
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * Sets template file for page content output.
      *
-     * @param string $default_template
+     * @param string $template
      */
-    public function setTemplate($template, $params = array(), $locale = null)
+    public function setTemplate($template, $params = [], $locale = null)
     {
         parent::setTemplate(
             $this->getTemplateFile($template, $params, $locale)
@@ -1341,13 +1343,13 @@ class FrontControllerCore extends Controller
 
         if ($overridden_layout = Hook::exec(
             'overrideLayoutTemplate',
-            array(
+            [
                 'default_layout' => $layout,
                 'entity' => $entity,
                 'locale' => $this->context->language->locale,
                 'controller' => $this,
                 'content_only' => $content_only,
-            )
+            ]
         )) {
             return $overridden_layout;
         }
@@ -1371,7 +1373,7 @@ class FrontControllerCore extends Controller
         return $template;
     }
 
-    public function getTemplateFile($template, $params = array(), $locale = null)
+    public function getTemplateFile($template, $params = [], $locale = null)
     {
         if (!isset($params['entity'])) {
             $params['entity'] = null;
@@ -1380,18 +1382,18 @@ class FrontControllerCore extends Controller
             $params['id'] = null;
         }
 
-        if (is_null($locale)) {
+        if (null === $locale) {
             $locale = $this->context->language->locale;
         }
 
         if ($overridden_template = Hook::exec(
             'DisplayOverrideTemplate',
-            array(
+            [
                 'controller' => $this,
                 'template_file' => $template,
                 'id' => $params['id'],
                 'locale' => $locale,
-            )
+            ]
         )) {
             return $overridden_template;
         }
@@ -1415,14 +1417,12 @@ class FrontControllerCore extends Controller
             return;
         }
 
-        $products_need_cache = array();
-        foreach ($products as &$product) {
+        $products_need_cache = [];
+        foreach ($products as $product) {
             if (!$this->isCached(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']))) {
                 $products_need_cache[] = (int) $product['id_product'];
             }
         }
-
-        unset($product);
 
         $colors = false;
         if (count($products_need_cache)) {
@@ -1432,13 +1432,13 @@ class FrontControllerCore extends Controller
         Tools::enableCache();
         foreach ($products as &$product) {
             $tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
-            $tpl->assign(array(
+            $tpl->assign([
                 'id_product' => $product['id_product'],
                 'colors_list' => isset($colors[$product['id_product']]) ? $colors[$product['id_product']] : null,
                 'link' => Context::getContext()->link,
                 'img_col_dir' => _THEME_COL_DIR_,
                 'col_img_dir' => _PS_COL_IMG_DIR_,
-            ));
+            ]);
             $product['color_list'] = $tpl->fetch(_PS_THEME_DIR_ . 'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
         }
         Tools::restoreCacheSettings();
@@ -1458,92 +1458,111 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarUrls()
     {
-        $http = Tools::getCurrentUrlProtocolPrefix();
-        $base_url = $this->context->shop->getBaseURL(true, true);
+        if ($this->urls === null) {
+            $http = Tools::getCurrentUrlProtocolPrefix();
+            $base_url = $this->context->shop->getBaseURL(true, true);
 
-        $urls = array(
-            'base_url' => $base_url,
-            'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
-            'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
-        );
+            $urls = [
+                'base_url' => $base_url,
+                'current_url' => $this->context->shop->getBaseURL(true, false) . $_SERVER['REQUEST_URI'],
+                'shop_domain_url' => $this->context->shop->getBaseURL(true, false),
+            ];
 
-        $assign_array = array(
-            'img_ps_url' => _PS_IMG_,
-            'img_cat_url' => _THEME_CAT_DIR_,
-            'img_lang_url' => _THEME_LANG_DIR_,
-            'img_prod_url' => _THEME_PROD_DIR_,
-            'img_manu_url' => _THEME_MANU_DIR_,
-            'img_sup_url' => _THEME_SUP_DIR_,
-            'img_ship_url' => _THEME_SHIP_DIR_,
-            'img_store_url' => _THEME_STORE_DIR_,
-            'img_col_url' => _THEME_COL_DIR_,
-            'img_url' => _THEME_IMG_DIR_,
-            'css_url' => _THEME_CSS_DIR_,
-            'js_url' => _THEME_JS_DIR_,
-            'pic_url' => _THEME_PROD_PIC_DIR_,
-        );
+            $assign_array = [
+                'img_ps_url' => _PS_IMG_,
+                'img_cat_url' => _THEME_CAT_DIR_,
+                'img_lang_url' => _THEME_LANG_DIR_,
+                'img_prod_url' => _THEME_PROD_DIR_,
+                'img_manu_url' => _THEME_MANU_DIR_,
+                'img_sup_url' => _THEME_SUP_DIR_,
+                'img_ship_url' => _THEME_SHIP_DIR_,
+                'img_store_url' => _THEME_STORE_DIR_,
+                'img_col_url' => _THEME_COL_DIR_,
+                'img_url' => _THEME_IMG_DIR_,
+                'css_url' => _THEME_CSS_DIR_,
+                'js_url' => _THEME_JS_DIR_,
+                'pic_url' => _THEME_PROD_PIC_DIR_,
+                'theme_assets' => _THEME_DIR_ . 'assets/',
+            ];
 
-        foreach ($assign_array as $assign_key => $assign_value) {
-            if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
-                $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
-            } else {
-                $urls[$assign_key] = $assign_value;
+            $themeAssetsConfig = $this->context->shop->theme->get('assets', false);
+
+            if (!empty($themeAssetsConfig['use_parent_assets'])) {
+                $assign_array['theme_assets'] = _PS_PARENT_THEME_URI_ . 'assets/';
+                $assign_array['img_url'] = $assign_array['theme_assets'] . 'img/';
+                $assign_array['css_url'] = $assign_array['theme_assets'] . 'css/';
+                $assign_array['js_url'] = $assign_array['theme_assets'] . 'js/';
+                $assign_array['child_theme_assets'] = _THEME_DIR_ . 'assets/';
+                $assign_array['child_img_url'] = $assign_array['child_theme_assets'] . 'img/';
+                $assign_array['child_css_url'] = $assign_array['child_theme_assets'] . 'css/';
+                $assign_array['child_js_url'] = $assign_array['child_theme_assets'] . 'js/';
             }
+
+            foreach ($assign_array as $assign_key => $assign_value) {
+                if (substr($assign_value, 0, 1) == '/' || $this->ssl) {
+                    $urls[$assign_key] = $http . Tools::getMediaServer($assign_value) . $assign_value;
+                } else {
+                    $urls[$assign_key] = $assign_value;
+                }
+            }
+
+            $pages = [];
+            $p = [
+                'address', 'addresses', 'authentication', 'manufacturer', 'cart', 'category', 'cms', 'contact',
+                'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
+                'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
+                'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
+                'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
+            ];
+            foreach ($p as $page_name) {
+                $index = str_replace('-', '_', $page_name);
+                $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
+            }
+            $pages['brands'] = $pages['manufacturer'];
+            $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
+            $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
+            $urls['pages'] = $pages;
+
+            $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
+
+            $urls['actions'] = [
+                'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
+            ];
+
+            $imageRetriever = new ImageRetriever($this->context->link);
+            $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
+
+            $this->urls = $urls;
         }
 
-        $pages = array();
-        $p = array(
-            'address', 'addresses', 'authentication', 'cart', 'category', 'cms', 'contact',
-            'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
-            'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
-            'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
-            'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
-        );
-        foreach ($p as $page_name) {
-            $index = str_replace('-', '_', $page_name);
-            $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
-        }
-        $pages['register'] = $this->context->link->getPageLink('authentication', true, null, array('create_account' => '1'));
-        $pages['order_login'] = $this->context->link->getPageLink('order', true, null, array('login' => '1'));
-        $urls['pages'] = $pages;
-
-        $urls['alternative_langs'] = $this->getAlternativeLangsUrl();
-
-        $urls['theme_assets'] = __PS_BASE_URI__ . 'themes/' . $this->context->shop->theme->getName() . '/assets/';
-
-        $urls['actions'] = array(
-            'logout' => $this->context->link->getPageLink('index', true, null, 'mylogout'),
-        );
-
-        $imageRetriever = new ImageRetriever($this->context->link);
-        $urls['no_picture_image'] = $imageRetriever->getNoPictureImage($this->context->language);
-
-        return $urls;
+        return $this->urls;
     }
 
     public function getTemplateVarConfiguration()
     {
         $quantity_discount_price = Configuration::get('PS_DISPLAY_DISCOUNT_PRICE');
 
-        return array(
+        return [
             'display_taxes_label' => $this->getDisplayTaxesLabel(),
+            'display_prices_tax_incl' => (bool) (new TaxConfiguration())->includeTaxes(),
+            'taxes_enabled' => (bool) Configuration::get('PS_TAX'),
             'low_quantity_threshold' => (int) Configuration::get('PS_LAST_QTIES'),
             'is_b2b' => (bool) Configuration::get('PS_B2B_ENABLE'),
             'is_catalog' => (bool) Configuration::isCatalogMode(),
             'show_prices' => (bool) Configuration::showPrices(),
-            'opt_in' => array(
+            'opt_in' => [
                 'partner' => (bool) Configuration::get('PS_CUSTOMER_OPTIN'),
-            ),
-            'quantity_discount' => array(
+            ],
+            'quantity_discount' => [
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
                 'label' => ($quantity_discount_price)
-                    ? $this->getTranslator()->trans('Price', array(), 'Shop.Theme.Catalog')
-                    : $this->getTranslator()->trans('Discount', array(), 'Shop.Theme.Catalog'),
-            ),
+                    ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
+                    : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
+            ],
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
             'number_of_days_for_return' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
-        );
+        ];
     }
 
     protected function getDisplayTaxesLabel()
@@ -1553,8 +1572,8 @@ class FrontControllerCore extends Controller
 
     public function getTemplateVarCurrency()
     {
-        $curr = array();
-        $fields = array('name', 'iso_code', 'iso_code_num', 'sign');
+        $curr = [];
+        $fields = ['id', 'name', 'iso_code', 'iso_code_num', 'sign'];
         foreach ($fields as $field_name) {
             $curr[$field_name] = $this->context->currency->{$field_name};
         }
@@ -1570,12 +1589,15 @@ class FrontControllerCore extends Controller
             $cust = $this->objectPresenter->present($this->context->customer);
         }
 
-        unset($cust['secure_key']);
-        unset($cust['passwd']);
-        unset($cust['show_public_prices']);
-        unset($cust['deleted']);
-        unset($cust['id_lang']);
+        unset(
+            $cust['secure_key'],
+            $cust['passwd'],
+            $cust['show_public_prices'],
+            $cust['deleted'],
+            $cust['id_lang']
+        );
 
+        $cust['id'] = $this->context->customer->id;
         $cust['is_logged'] = $this->context->customer->isLogged(true);
 
         $cust['gender'] = $this->objectPresenter->present(new Gender($cust['id_gender']));
@@ -1586,18 +1608,49 @@ class FrontControllerCore extends Controller
 
         $addresses = $this->context->customer->getSimpleAddresses();
         foreach ($addresses as &$a) {
-            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), array(), '<br>');
+            $a['formatted'] = AddressFormat::generateAddress(new Address($a['id']), [], '<br>');
         }
         $cust['addresses'] = $addresses;
 
         return $cust;
     }
 
+    /**
+     * Get the shop logo with its dimensions
+     *
+     * @return array<string, string|int>
+     */
+    public function getShopLogo(): array
+    {
+        if (!Configuration::hasKey('PS_LOGO')) {
+            return [];
+        }
+
+        $logoFileName = Configuration::get('PS_LOGO');
+        $logoFileDir = _PS_IMG_DIR_ . $logoFileName;
+
+        if (!file_exists($logoFileDir)) {
+            return [];
+        }
+
+        list($logoWidth, $logoHeight) = getimagesize($logoFileDir);
+
+        return [
+            'src' => ($this->getTemplateVarUrls()['img_ps_url'] ?? _PS_IMG_) . $logoFileName,
+            'width' => $logoWidth,
+            'height' => $logoHeight,
+        ];
+    }
+
     public function getTemplateVarShop()
     {
         $address = $this->context->shop->getAddress();
 
-        $shop = array(
+        $urls = $this->getTemplateVarUrls();
+        $psImageUrl = $urls['img_ps_url'] ?? _PS_IMG_;
+
+        $shop = [
+            'id' => $this->context->shop->id,
             'name' => Configuration::get('PS_SHOP_NAME'),
             'email' => Configuration::get('PS_SHOP_EMAIL'),
             'registration_number' => Configuration::get('PS_SHOP_DETAILS'),
@@ -1605,23 +1658,24 @@ class FrontControllerCore extends Controller
             'long' => Configuration::get('PS_STORES_CENTER_LONG'),
             'lat' => Configuration::get('PS_STORES_CENTER_LAT'),
 
-            'logo' => (Configuration::get('PS_LOGO')) ? _PS_IMG_ . Configuration::get('PS_LOGO') : '',
-            'stores_icon' => (Configuration::get('PS_STORES_ICON')) ? _PS_IMG_ . Configuration::get('PS_STORES_ICON') : '',
-            'favicon' => (Configuration::get('PS_FAVICON')) ? _PS_IMG_ . Configuration::get('PS_FAVICON') : '',
+            'logo' => Configuration::hasKey('PS_LOGO') ? $psImageUrl . Configuration::get('PS_LOGO') : '',
+            'logo_details' => $this->getShopLogo(),
+            'stores_icon' => Configuration::hasKey('PS_STORES_ICON') ? $psImageUrl . Configuration::get('PS_STORES_ICON') : '',
+            'favicon' => Configuration::hasKey('PS_FAVICON') ? $psImageUrl . Configuration::get('PS_FAVICON') : '',
             'favicon_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
 
-            'address' => array(
-                'formatted' => AddressFormat::generateAddress($address, array(), '<br>'),
+            'address' => [
+                'formatted' => AddressFormat::generateAddress($address, [], '<br>'),
                 'address1' => $address->address1,
                 'address2' => $address->address2,
                 'postcode' => $address->postcode,
                 'city' => $address->city,
                 'state' => (new State($address->id_state))->name,
                 'country' => (new Country($address->id_country))->name[$this->context->language->id],
-            ),
+            ],
             'phone' => Configuration::get('PS_SHOP_PHONE'),
             'fax' => Configuration::get('PS_SHOP_FAX'),
-        );
+        ];
 
         return $shop;
     }
@@ -1631,7 +1685,7 @@ class FrontControllerCore extends Controller
         $page_name = $this->getPageName();
         $meta_tags = Meta::getMetaTags($this->context->language->id, $page_name);
 
-        $my_account_controllers = array(
+        $my_account_controllers = [
             'address',
             'authentication',
             'discount',
@@ -1641,9 +1695,9 @@ class FrontControllerCore extends Controller
             'order-slip',
             'password',
             'guest-tracking',
-        );
+        ];
 
-        $body_classes = array(
+        $body_classes = [
             'lang-' . $this->context->language->iso_code => true,
             'lang-rtl' => (bool) $this->context->language->is_rtl,
             'country-' . $this->context->country->iso_code => true,
@@ -1651,25 +1705,25 @@ class FrontControllerCore extends Controller
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
             'page-' . $this->php_self => true,
             'tax-display-' . ($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
-        );
+        ];
 
         if (in_array($this->php_self, $my_account_controllers)) {
             $body_classes['page-customer-account'] = true;
         }
 
-        $page = array(
+        $page = [
             'title' => '',
             'canonical' => $this->getCanonicalURL(),
-            'meta' => array(
+            'meta' => [
                 'title' => $meta_tags['meta_title'],
                 'description' => $meta_tags['meta_description'],
                 'keywords' => $meta_tags['meta_keywords'],
                 'robots' => 'index',
-            ),
+            ],
             'page_name' => $page_name,
             'body_classes' => $body_classes,
-            'admin_notifications' => array(),
-        );
+            'admin_notifications' => [],
+        ];
 
         return $page;
     }
@@ -1684,12 +1738,12 @@ class FrontControllerCore extends Controller
 
     protected function getBreadcrumbLinks()
     {
-        $breadcrumb = array();
+        $breadcrumb = [];
 
-        $breadcrumb['links'][] = array(
-            'title' => $this->getTranslator()->trans('Home', array(), 'Shop.Theme.Global'),
+        $breadcrumb['links'][] = [
+            'title' => $this->getTranslator()->trans('Home', [], 'Shop.Theme.Global'),
             'url' => $this->context->link->getPageLink('index', true),
-        );
+        ];
 
         return $breadcrumb;
     }
@@ -1697,24 +1751,31 @@ class FrontControllerCore extends Controller
     protected function getCategoryPath($category)
     {
         if ($category->id_parent != 0 && !$category->is_root_category) {
-            return array(
+            return [
                 'title' => $category->name,
                 'url' => $this->context->link->getCategoryLink($category),
-            );
+            ];
         }
     }
 
     protected function addMyAccountToBreadcrumb()
     {
-        return array(
-            'title' => $this->getTranslator()->trans('Your account', array(), 'Shop.Theme.Customeraccount'),
+        return [
+            'title' => $this->getTranslator()->trans('Your account', [], 'Shop.Theme.Customeraccount'),
             'url' => $this->context->link->getPageLink('my-account', true),
-        );
+        ];
     }
 
+    /**
+     * Generate the canonical URL of the current page
+     *
+     * Mainly used for ProductController and CategoryController
+     * but can be implemented by other classes inheriting from FrontController
+     *
+     * @return string|void
+     */
     public function getCanonicalURL()
     {
-        return;
     }
 
     /**
@@ -1730,7 +1791,7 @@ class FrontControllerCore extends Controller
     {
         $uriWithoutParams = explode('?', $_SERVER['REQUEST_URI'])[0];
         $url = Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $uriWithoutParams;
-        $params = array();
+        $params = [];
         $paramsFromUri = '';
         if (strpos($_SERVER['REQUEST_URI'], '?') !== false) {
             $paramsFromUri = explode('?', $_SERVER['REQUEST_URI'])[1];
@@ -1754,7 +1815,7 @@ class FrontControllerCore extends Controller
                 }
             }
         } else {
-            $params = array();
+            $params = [];
         }
 
         $queryString = str_replace('%2F', '/', http_build_query($params, '', '&'));
@@ -1782,8 +1843,8 @@ class FrontControllerCore extends Controller
         } elseif (Tools::getValue('fc') == 'module' && $module_name != '' && (Module::getInstanceByName($module_name) instanceof PaymentModule)) {
             $page_name = 'module-payment-submit';
         } elseif (preg_match('#^' . preg_quote($this->context->shop->physical_uri, '#') . 'modules/([a-zA-Z0-9_-]+?)/(.*)$#', $_SERVER['REQUEST_URI'], $m)) {
-            // @retrocompatibility Are we in a module ?
-            $page_name = 'module-' . $m[1] . '-' . str_replace(array('.php', '/'), array('', '-'), $m[2]);
+            /** @retrocompatibility Are we in a module ? */
+            $page_name = 'module-' . $m[1] . '-' . str_replace(['.php', '/'], ['', '-'], $m[2]);
         } else {
             $page_name = Dispatcher::getInstance()->getController();
             $page_name = (preg_match('/^[0-9]/', $page_name) ? 'page_' . $page_name : $page_name);
@@ -1792,7 +1853,7 @@ class FrontControllerCore extends Controller
         return $page_name;
     }
 
-    protected function render($template, array $params = array())
+    protected function render($template, array $params = [])
     {
         $templateContent = '';
         $scope = $this->context->smarty->createData(
@@ -1811,9 +1872,10 @@ class FrontControllerCore extends Controller
         } catch (PrestaShopException $e) {
             PrestaShopLogger::addLog($e->getMessage());
 
+            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 $this->warning[] = $e->getMessage();
-                $scope->assign(array('notifications' => $this->prepareNotifications()));
+                $scope->assign(['notifications' => $this->prepareNotifications()]);
 
                 $tpl = $this->context->smarty->createTemplate(
                     $this->getTemplateFile('_partials/notifications'),
@@ -1859,8 +1921,7 @@ class FrontControllerCore extends Controller
         $formatter
             ->setAskForPartnerOptin(Configuration::get('PS_CUSTOMER_OPTIN'))
             ->setAskForBirthdate(Configuration::get('PS_CUSTOMER_BIRTHDATE'))
-            ->setPartnerOptinRequired($customer->isFieldRequired('optin'))
-        ;
+            ->setPartnerOptinRequired($customer->isFieldRequired('optin'));
 
         return $formatter;
     }
@@ -1972,18 +2033,95 @@ class FrontControllerCore extends Controller
      */
     protected function getAlternativeLangsUrl()
     {
-        $alternativeLangs = array();
+        $alternativeLangs = [];
         $languages = Language::getLanguages(true, $this->context->shop->id);
 
-        if ($languages < 2) {
+        if (count($languages) < 2) {
             // No need to display alternative lang if there is only one enabled
             return $alternativeLangs;
         }
 
         foreach ($languages as $lang) {
-            $alternativeLangs[$lang['language_code']] = $this->context->link->getLanguageLink($lang['id_lang']);
+            $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
+            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
         }
 
         return $alternativeLangs;
+    }
+
+    /**
+     * Sanitize / Clean params of an URL
+     *
+     * @param string $url URL to clean
+     *
+     * @return string cleaned URL
+     */
+    protected function sanitizeUrl(string $url): string
+    {
+        $params = [];
+        $url_details = parse_url($url);
+
+        if (!empty($url_details['query'])) {
+            parse_str($url_details['query'], $query);
+            $params = $this->sanitizeQueryOutput($query);
+        }
+
+        $excluded_key = ['isolang', 'id_lang', 'controller', 'fc', 'id_product', 'id_category', 'id_manufacturer', 'id_supplier', 'id_cms'];
+        $excluded_key = array_merge($excluded_key, $this->redirectionExtraExcludedKeys);
+        foreach ($_GET as $key => $value) {
+            if (in_array($key, $excluded_key)
+                || !Validate::isUrl($key)
+                || !$this->validateInputAsUrl($value)
+            ) {
+                continue;
+            }
+
+            $params[Tools::safeOutput($key)] = is_array($value) ? array_walk_recursive($value, 'Tools::safeOutput') : Tools::safeOutput($value);
+        }
+
+        $str_params = http_build_query($params, '', '&');
+        $sanitizedUrl = preg_replace('/^([^?]*)?.*$/', '$1', $url) . (!empty($str_params) ? '?' . $str_params : '');
+
+        return $sanitizedUrl;
+    }
+
+    /**
+     * Recursively sanitize output query
+     *
+     * @param array $query URL query
+     *
+     * @return array
+     */
+    protected function sanitizeQueryOutput(array $query): array
+    {
+        $params = [];
+        foreach ($query as $key => $value) {
+            if (is_array($value)) {
+                $params[Tools::safeOutput($key)] = $this->sanitizeQueryOutput($value);
+            } else {
+                $params[Tools::safeOutput($key)] = Tools::safeOutput($value);
+            }
+        }
+
+        return $params;
+    }
+
+    /**
+     * Validate data recursively to be sure it's URL compliant
+     *
+     * @return bool
+     */
+    protected function validateInputAsUrl($data): bool
+    {
+        if (is_array($data)) {
+            $returnStatement = true;
+            foreach ($data as $value) {
+                $returnStatement = $returnStatement && $this->validateInputAsUrl($value);
+            }
+
+            return $returnStatement;
+        }
+
+        return Validate::isUrl($data);
     }
 }

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -34,26 +34,8 @@ class DbPDOCore extends Db
     /** @var PDO */
     protected $link;
 
-    /* @var PDOStatement */
+    /** @var PDOStatement */
     protected $result;
-
-    /**
-     * Returns a new PDO object (database link).
-     *
-     * @deprecated use getPDO
-     *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $dbname
-     * @param int $timeout
-     *
-     * @return PDO
-     */
-    protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
-    {
-        return static::getPDO($host, $user, $host, $dbname, $timeout);
-    }
 
     /**
      * Returns a new PDO object (database link).
@@ -79,9 +61,18 @@ class DbPDOCore extends Db
         } else {
             $dsn .= 'host=' . $host;
         }
-        $dsn .= ';charset=utf8';
+        $dsn .= ';charset=utf8mb4';
 
-        return new PDO($dsn, $user, $password, array(PDO::ATTR_TIMEOUT => $timeout, PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true));
+        return new PDO(
+            $dsn,
+            $user,
+            $password,
+            [
+                PDO::ATTR_TIMEOUT => $timeout,
+                PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4',
+            ]
+        );
     }
 
     /**
@@ -291,8 +282,8 @@ class DbPDOCore extends Db
      */
     public function _escape($str)
     {
-        $search = array('\\', "\0", "\n", "\r", "\x1a", "'", '"');
-        $replace = array('\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"');
+        $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
+        $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
 
         return str_replace($search, $replace, $str);
     }
@@ -358,20 +349,70 @@ class DbPDOCore extends Db
             return false;
         }
 
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
+        }
+
+        foreach ($enginesToTest as $engineToTest) {
+            $result = $link->query('
+            CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
+
+            if ($result) {
+                $link->query('DROP TABLE `' . $prefix . 'test`');
+
+                return true;
+            }
+        }
+
+        $error = $link->errorInfo();
+
+        return $error[2];
+    }
+
+    /**
+     * Tries to connect to the database and select content (checking select privileges).
+     *
+     * @param string $server
+     * @param string $user
+     * @param string $pwd
+     * @param string $db
+     * @param string $prefix
+     * @param string|null $engine Table engine
+     *
+     * @return bool|string True, false or error
+     */
+    public static function checkSelectPrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
+    {
+        try {
+            $link = DbPDO::getPDO($server, $user, $pwd, $db, 5);
+        } catch (PDOException $e) {
+            return false;
+        }
+
         if ($engine === null) {
             $engine = 'MyISAM';
         }
 
-        $result = $link->query('
+        // Create a table
+        $link->query('
 		CREATE TABLE `' . $prefix . 'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE=' . $engine);
+
+        // Select content
+        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+
+        // Drop the table
+        $link->query('DROP TABLE `' . $prefix . 'test`');
+
         if (!$result) {
             $error = $link->errorInfo();
 
             return $error[2];
         }
-        $link->query('DROP TABLE `' . $prefix . 'test`');
 
         return true;
     }
@@ -385,7 +426,7 @@ class DbPDOCore extends Db
      * @param string $user Login for database connection
      * @param string $pwd Password for database connection
      * @param string $db Database name
-     * @param bool $newDbLink
+     * @param bool $new_db_link
      * @param string|bool $engine
      * @param int $timeout
      *
@@ -430,9 +471,10 @@ class DbPDOCore extends Db
         $result = $this->link->query($sql);
         while ($row = $result->fetch()) {
             if ($row['Engine'] == 'InnoDB') {
-                if (in_array($row['Support'], array('DEFAULT', 'YES'))) {
+                if (in_array($row['Support'], ['DEFAULT', 'YES'])) {
                     $value = 'InnoDB';
                 }
+
                 break;
             }
         }
@@ -458,32 +500,9 @@ class DbPDOCore extends Db
         } catch (PDOException $e) {
             return false;
         }
-        $result = $link->exec('SET NAMES \'utf8\'');
+        $result = $link->exec('SET NAMES utf8mb4');
         unset($link);
 
         return ($result === false) ? false : true;
-    }
-
-    /**
-     * Checks if auto increment value and offset is 1.
-     *
-     * @param string $server
-     * @param string $user
-     * @param string $pwd
-     *
-     * @return bool
-     */
-    public static function checkAutoIncrement($server, $user, $pwd)
-    {
-        try {
-            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
-        } catch (PDOException $e) {
-            return false;
-        }
-        $ret = (bool) (($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
-        $ret &= (bool) (($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
-        unset($link);
-
-        return $ret;
     }
 }

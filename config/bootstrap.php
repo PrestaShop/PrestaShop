@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,29 +17,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\ContainerBuilder;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerAggregate;
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOException;
 
 $container_builder = new ContainerBuilder();
-$container = $container_builder->build();
-ServiceLocator::setServiceContainerInstance($container);
+$legacyContainer = $container_builder->build();
+ServiceLocator::setServiceContainerInstance($legacyContainer);
 
 if (!file_exists(_PS_CACHE_DIR_)) {
     @mkdir(_PS_CACHE_DIR_);
     $warmer = new CacheWarmerAggregate([
-        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en') //@replace hard-coded Lang
+        new PrestaShopBundle\Cache\LocalizationWarmer(_PS_VERSION_, 'en'), //@replace hard-coded Lang
     ]);
     $warmer->warmUp(_PS_CACHE_DIR_);
 }
@@ -55,12 +55,13 @@ $exportPhpConfigFile = function ($config, $destination) use ($filesystem) {
     } catch (IOException $e) {
         return false;
     }
+
     return true;
 };
 
 // Bootstrap an application with parameters.yml, which has been installed before PHP parameters file support
 if (!file_exists($phpParametersFilepath) && file_exists($yamlParametersFilepath)) {
-    $parameters = Yaml::parse($yamlParametersFilepath);
+    $parameters = Yaml::parseFile($yamlParametersFilepath);
     if ($exportPhpConfigFile($parameters, $phpParametersFilepath)) {
         $filesystem->dumpFile($yamlParametersFilepath, 'parameters:' . "\n");
     }
@@ -75,10 +76,10 @@ if ($lastParametersModificationTime) {
     if (!$lastParametersCacheModificationTime || $lastParametersCacheModificationTime < $lastParametersModificationTime) {
         // When parameters file is available, update its cache if it is stale.
         if (file_exists($phpParametersFilepath)) {
-            $config = require($phpParametersFilepath);
+            $config = require $phpParametersFilepath;
             $exportPhpConfigFile($config, $cachedParameters);
         } elseif (file_exists($yamlParametersFilepath)) {
-            $config = Yaml::parse($yamlParametersFilepath);
+            $config = Yaml::parseFile($yamlParametersFilepath);
             $exportPhpConfigFile($config, $cachedParameters);
         }
     }
@@ -106,6 +107,7 @@ if ($lastParametersModificationTime) {
     define('_DB_PREFIX_',  $config['parameters']['database_prefix']);
     define('_MYSQL_ENGINE_',  $config['parameters']['database_engine']);
     define('_PS_CACHING_SYSTEM_',  $config['parameters']['ps_caching']);
+
     if (!defined('PS_IN_UPGRADE') && !defined('_PS_IN_TEST_')) {
         define('_PS_CACHE_ENABLED_', $config['parameters']['ps_cache_enable']);
     } else {
@@ -125,7 +127,7 @@ if ($lastParametersModificationTime) {
         define('_COOKIE_IV_', $config['parameters']['cookie_iv']);
     } else {
         // Define cookie IV if missing to prevent failure in composer post-install script
-        define('_COOKIE_IV_', Tools::passwdGen(8));
+        define('_COOKIE_IV_', Tools::passwdGen(32));
     }
 
     // New cookie
@@ -139,10 +141,10 @@ if ($lastParametersModificationTime) {
 
     define('_PS_CREATION_DATE_', $config['parameters']['ps_creation_date']);
 
-    if (isset($config['parameters']['_rijndael_key']) && isset($config['parameters']['_rijndael_iv'])) {
+    if (isset($config['parameters']['_rijndael_key'], $config['parameters']['_rijndael_iv'])) {
         define('_RIJNDAEL_KEY_', $config['parameters']['_rijndael_key']);
         define('_RIJNDAEL_IV_', $config['parameters']['_rijndael_iv']);
     }
-} else if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
-    require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
+} elseif (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+    require_once _PS_ROOT_DIR_.'/config/settings.inc.php';
 }

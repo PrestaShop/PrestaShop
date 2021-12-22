@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -43,37 +43,37 @@ class AdminReturnControllerCore extends AdminController
         $this->_join .= 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
 
-        $this->fields_list = array(
-            'id_order_return' => array('title' => $this->trans('ID', array(), 'Admin.Global'), 'align' => 'center', 'width' => 25),
-            'id_order' => array('title' => $this->trans('Order ID', array(), 'Admin.Orderscustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key' => 'a!id_order', 'havingFilter' => true),
-            'name' => array('title' => $this->trans('Status', array(), 'Admin.Global'), 'color' => 'color', 'width' => 'auto', 'align' => 'left'),
-            'date_add' => array('title' => $this->trans('Date issued', array(), 'Admin.Orderscustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key' => 'a!date_add'),
-        );
+        $this->fields_list = [
+            'id_order_return' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
+            'id_order' => ['title' => $this->trans('Order ID', [], 'Admin.Orderscustomers.Feature'), 'width' => 100, 'align' => 'center', 'filter_key' => 'a!id_order', 'havingFilter' => true],
+            'name' => ['title' => $this->trans('Status', [], 'Admin.Global'), 'color' => 'color', 'width' => 'auto', 'align' => 'left'],
+            'date_add' => ['title' => $this->trans('Date issued', [], 'Admin.Orderscustomers.Feature'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key' => 'a!date_add'],
+        ];
 
-        $this->fields_options = array(
-            'general' => array(
-                'title' => $this->trans('Merchandise return (RMA) options', array(), 'Admin.Orderscustomers.Feature'),
-                'fields' => array(
-                    'PS_ORDER_RETURN' => array(
-                        'title' => $this->trans('Enable returns', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', array(), 'Admin.Orderscustomers.Help'),
-                        'cast' => 'intval', 'type' => 'bool', ),
-                    'PS_ORDER_RETURN_NB_DAYS' => array(
-                        'title' => $this->trans('Time limit of validity', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', array(), 'Admin.Orderscustomers.Help'),
+        $this->fields_options = [
+            'general' => [
+                'title' => $this->trans('Merchandise return (RMA) options', [], 'Admin.Orderscustomers.Feature'),
+                'fields' => [
+                    'PS_ORDER_RETURN' => [
+                        'title' => $this->trans('Enable returns', [], 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Would you like to allow merchandise returns in your shop?', [], 'Admin.Orderscustomers.Help'),
+                        'cast' => 'intval', 'type' => 'bool', ],
+                    'PS_ORDER_RETURN_NB_DAYS' => [
+                        'title' => $this->trans('Time limit of validity', [], 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('How many days after the delivery date does the customer have to return a product?', [], 'Admin.Orderscustomers.Help'),
                         'cast' => 'intval',
                         'type' => 'text',
-                        'size' => '2', ),
-                    'PS_RETURN_PREFIX' => array(
-                        'title' => $this->trans('Returns prefix', array(), 'Admin.Orderscustomers.Feature'),
-                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', array(), 'Admin.Orderscustomers.Help'),
+                        'size' => '2', ],
+                    'PS_RETURN_PREFIX' => [
+                        'title' => $this->trans('Returns prefix', [], 'Admin.Orderscustomers.Feature'),
+                        'desc' => $this->trans('Prefix used for return name (e.g. RE00001).', [], 'Admin.Orderscustomers.Help'),
                         'size' => 6,
                         'type' => 'textLang',
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-        );
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+        ];
 
         $this->_where = Shop::addSqlRestriction(false, 'o');
         $this->_use_found_rows = false;
@@ -81,77 +81,77 @@ class AdminReturnControllerCore extends AdminController
 
     public function renderForm()
     {
-        $this->fields_form = array(
-            'legend' => array(
-                'title' => $this->trans('Return Merchandise Authorization (RMA)', array(), 'Admin.Orderscustomers.Feature'),
+        $this->fields_form = [
+            'legend' => [
+                'title' => $this->trans('Return Merchandise Authorization (RMA)', [], 'Admin.Orderscustomers.Feature'),
                 'icon' => 'icon-clipboard',
-            ),
-            'input' => array(
-                array(
+            ],
+            'input' => [
+                [
                     'type' => 'hidden',
                     'name' => 'id_order',
-                ),
-                array(
+                ],
+                [
                     'type' => 'hidden',
                     'name' => 'id_customer',
-                ),
-                array(
+                ],
+                [
                     'type' => 'text_customer',
-                    'label' => $this->trans('Customer', array(), 'Admin.Global'),
+                    'label' => $this->trans('Customer', [], 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                ),
-                array(
+                ],
+                [
                     'type' => 'text_order',
-                    'label' => $this->trans('Order', array(), 'Admin.Global'),
+                    'label' => $this->trans('Order', [], 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                ),
-                array(
+                ],
+                [
                     'type' => 'free',
-                    'label' => $this->trans('Customer explanation', array(), 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Customer explanation', [], 'Admin.Orderscustomers.Feature'),
                     'name' => 'question',
                     'size' => '',
                     'required' => false,
-                ),
-                array(
+                ],
+                [
                     'type' => 'select',
-                    'label' => $this->trans('Status', array(), 'Admin.Global'),
+                    'label' => $this->trans('Status', [], 'Admin.Global'),
                     'name' => 'state',
                     'required' => false,
-                    'options' => array(
+                    'options' => [
                         'query' => OrderReturnState::getOrderReturnStates($this->context->language->id),
                         'id' => 'id_order_return_state',
                         'name' => 'name',
-                    ),
-                    'desc' => $this->trans('Merchandise return (RMA) status.', array(), 'Admin.Orderscustomers.Help'),
-                ),
-                array(
+                    ],
+                    'desc' => $this->trans('Merchandise return (RMA) status.', [], 'Admin.Orderscustomers.Help'),
+                ],
+                [
                     'type' => 'list_products',
-                    'label' => $this->trans('Products', array(), 'Admin.Global'),
+                    'label' => $this->trans('Products', [], 'Admin.Global'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('List of products in return package.', array(), 'Admin.Orderscustomers.Help'),
-                ),
-                array(
+                    'desc' => $this->trans('List of products in return package.', [], 'Admin.Orderscustomers.Help'),
+                ],
+                [
                     'type' => 'pdf_order_return',
-                    'label' => $this->trans('Returns form', array(), 'Admin.Orderscustomers.Feature'),
+                    'label' => $this->trans('Returns form', [], 'Admin.Orderscustomers.Feature'),
                     'name' => '',
                     'size' => '',
                     'required' => false,
-                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', array(), 'Admin.Orderscustomers.Help'),
-                ),
-            ),
-            'submit' => array(
-                'title' => $this->trans('Save', array(), 'Admin.Actions'),
-            ),
-        );
+                    'desc' => $this->trans('The link is only available after validation and before the parcel gets delivered.', [], 'Admin.Orderscustomers.Help'),
+                ],
+            ],
+            'submit' => [
+                'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+        ];
 
         $order = new Order($this->object->id_order);
-        $quantity_displayed = array();
+        $quantity_displayed = [];
         // Customized products */
         if ($returned_customizations = OrderReturn::getReturnedCustomizedProducts((int) ($this->object->id_order))) {
             foreach ($returned_customizations as $returned_customization) {
@@ -165,18 +165,24 @@ class AdminReturnControllerCore extends AdminController
         // Prepare customer explanation for display
         $this->object->question = '<span class="normal-text">' . nl2br($this->object->question) . '</span>';
 
-        $this->tpl_form_vars = array(
+        $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
+        $orderUrl = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
+
+        $this->tpl_form_vars = [
             'customer' => new Customer($this->object->id_customer),
-            'url_customer' => 'index.php?tab=AdminCustomers&id_customer=' . (int) $this->object->id_customer . '&viewcustomer&token=' . Tools::getAdminToken('AdminCustomers' . (int) (Tab::getIdFromClassName('AdminCustomers')) . (int) $this->context->employee->id),
+            'url_customer' => $this->context->link->getAdminLink('AdminCustomers', true, [], [
+                'id_customer' => $this->object->id_customer,
+                'viewcustomer' => 1,
+            ]),
             'text_order' => $this->trans(
                 'Order #%id% from %date%',
-                array(
+                [
                     '%id%' => $order->id,
                     '%date%' => Tools::displayDate($order->date_upd),
-                ),
+                ],
                 'Admin.Orderscustomers.Feature'
             ),
-            'url_order' => 'index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder&token=' . Tools::getAdminToken('AdminOrders' . (int) Tab::getIdFromClassName('AdminOrders') . (int) $this->context->employee->id),
+            'url_order' => $orderUrl,
             'picture_folder' => _THEME_PROD_PIC_DIR_,
             'returnedCustomizations' => $returned_customizations,
             'customizedDatas' => Product::getAllCustomizedDatas((int) ($order->id_cart)),
@@ -184,7 +190,7 @@ class AdminReturnControllerCore extends AdminController
             'quantityDisplayed' => $quantity_displayed,
             'id_order_return' => $this->object->id,
             'state_order_return' => $this->object->state,
-        );
+        ];
 
         return parent::renderForm();
     }
@@ -195,12 +201,12 @@ class AdminReturnControllerCore extends AdminController
         if (!$this->display || $this->display == 'list') {
             return;
         } elseif ($this->display != 'options') {
-            $this->toolbar_btn['save-and-stay'] = array(
+            $this->toolbar_btn['save-and-stay'] = [
                 'short' => 'SaveAndStay',
                 'href' => '#',
-                'desc' => $this->trans('Save and stay', array(), 'Admin.Actions'),
+                'desc' => $this->trans('Save and stay', [], 'Admin.Actions'),
                 'force_desc' => true,
-            );
+            ];
         }
 
         parent::initToolbar();
@@ -221,19 +227,19 @@ class AdminReturnControllerCore extends AdminController
                             if (OrderReturn::deleteOrderReturnDetail($id_order_return, $id_order_detail, (int) (Tools::getValue('id_customization', 0)))) {
                                 Tools::redirectAdmin(self::$currentIndex . '&conf=4token=' . $this->token);
                             } else {
-                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', array(), 'Admin.Orderscustomers.Notification');
+                                $this->errors[] = $this->trans('An error occurred while deleting the details of your order return.', [], 'Admin.Orderscustomers.Notification');
                             }
                         } else {
-                            $this->errors[] = $this->trans('You need at least one product.', array(), 'Admin.Orderscustomers.Notification');
+                            $this->errors[] = $this->trans('You need at least one product.', [], 'Admin.Orderscustomers.Notification');
                         }
                     } else {
-                        $this->errors[] = $this->trans('The order return is invalid.', array(), 'Admin.Orderscustomers.Notification');
+                        $this->errors[] = $this->trans('The order return is invalid.', [], 'Admin.Orderscustomers.Notification');
                     }
                 } else {
-                    $this->errors[] = $this->trans('The order return content is invalid.', array(), 'Admin.Orderscustomers.Notification');
+                    $this->errors[] = $this->trans('The order return content is invalid.', [], 'Admin.Orderscustomers.Notification');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to delete this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to delete this.', [], 'Admin.Notifications.Error');
             }
         } elseif (Tools::isSubmit('submitAddorder_return') || Tools::isSubmit('submitAddorder_returnAndStay')) {
             if ($this->access('edit')) {
@@ -245,17 +251,18 @@ class AdminReturnControllerCore extends AdminController
                     $orderReturn->state = (int) (Tools::getValue('state'));
                     if ($orderReturn->save()) {
                         $orderReturnState = new OrderReturnState($orderReturn->state);
-                        $vars = array(
-                        '{lastname}' => $customer->lastname,
-                        '{firstname}' => $customer->firstname,
-                        '{id_order_return}' => $id_order_return,
-                        '{state_order_return}' => (isset($orderReturnState->name[(int) $order->id_lang]) ? $orderReturnState->name[(int) $order->id_lang] : $orderReturnState->name[(int) Configuration::get('PS_LANG_DEFAULT')]), );
+                        $vars = [
+                            '{lastname}' => $customer->lastname,
+                            '{firstname}' => $customer->firstname,
+                            '{id_order_return}' => $id_order_return,
+                            '{state_order_return}' => (isset($orderReturnState->name[(int) $order->id_lang]) ? $orderReturnState->name[(int) $order->id_lang] : $orderReturnState->name[(int) Configuration::get('PS_LANG_DEFAULT')]),
+                        ];
                         Mail::Send(
                             (int) $order->id_lang,
                             'order_return_state',
                             $this->trans(
                                 'Your order return status has changed',
-                                array(),
+                                [],
                                 'Emails.Subject',
                                 $orderLanguage->locale
                             ),
@@ -278,10 +285,10 @@ class AdminReturnControllerCore extends AdminController
                         }
                     }
                 } else {
-                    $this->errors[] = $this->trans('No order return ID has been specified.', array(), 'Admin.Orderscustomers.Notification');
+                    $this->errors[] = $this->trans('No order return ID has been specified.', [], 'Admin.Orderscustomers.Notification');
                 }
             } else {
-                $this->errors[] = $this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error');
+                $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
             }
         }
         parent::postProcess();

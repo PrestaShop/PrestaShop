@@ -1,0 +1,96 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="modal fade" id="addOrderDiscountModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      {{ form_start(addOrderCartRuleForm, {'action': path('admin_orders_add_cart_rule', {'orderId': orderForViewing.id})}) }}
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              {{ 'Add new cart rule'|trans({}, 'Admin.Catalog.Feature') }}
+            </h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="{{ 'Close'|trans({}, 'Admin.Actions') }}">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <div class="form-group">
+              <label class="form-control-label" for="{{ addOrderCartRuleForm.name.vars.id }}">
+                {{ 'Name'|trans({}, 'Admin.Global') }}
+              </label>
+              {{ form_widget(addOrderCartRuleForm.name) }}
+            </div>
+
+            <div class="row">
+              <div class="col">
+                <div class="form-group">
+                  <label class="form-control-label" for="{{ addOrderCartRuleForm.type.vars.id }}">
+                    {{ 'Type'|trans({}, 'Admin.Global') }}
+                  </label>
+                  {{ form_widget(addOrderCartRuleForm.type) }}
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group mb-0">
+                  <label class="form-control-label" for="{{ addOrderCartRuleForm.value.vars.id }}">
+                    {{ 'Value'|trans({}, 'Admin.Global') }}
+                  </label>
+
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text" id="add_order_cart_rule_value_unit" data-currency-symbol="{{ orderCurrency.symbol }}">%</div>
+                    </div>
+                    {{ form_widget(addOrderCartRuleForm.value) }}
+                  </div>
+                  <small class="text-muted js-cart-rule-value-help d-none">
+                    {{ 'This value must include taxes.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group {% if not orderForViewing.hasInvoice %}d-none{% endif %}">
+              <label class="form-control-label" for="{{ addOrderCartRuleForm.invoice_id.vars.id }}">
+                {{ 'Invoice'|trans({}, 'Admin.Global') }}
+              </label>
+              {{ form_widget(addOrderCartRuleForm.invoice_id, {'attr': {
+                'disabled': not orderForViewing.hasInvoice
+              }}) }}
+            </div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+              {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+            </button>
+            <button type="submit" class="btn btn-primary" id="add_order_cart_rule_submit">
+              {{ 'Add'|trans({}, 'Admin.Actions') }}
+            </button>
+          </div>
+        </div>
+      {{ form_end(addOrderCartRuleForm) }}
+    </div>
+</div>

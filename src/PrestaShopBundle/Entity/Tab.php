@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Entity;
@@ -69,9 +69,16 @@ class Tab
     /**
      * @var string
      *
-     * @ORM\Column(name="class_name", type="string", length=64, nullable=true)
+     * @ORM\Column(name="class_name", type="string", length=64)
      */
     private $className;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="route_name", type="string", length=256, nullable=true)
+     */
+    private $routeName;
 
     /**
      * @var bool
@@ -83,9 +90,9 @@ class Tab
     /**
      * @var bool
      *
-     * @ORM\Column(name="hide_host_mode", type="boolean")
+     * @ORM\Column(name="enabled", type="boolean")
      */
-    private $hideHostMode;
+    private $enabled = true;
 
     /**
      * @var string
@@ -95,7 +102,21 @@ class Tab
     private $icon;
 
     /**
-     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="tab")
+     * @var string|null
+     *
+     * @ORM\Column(name="wording", type="string", length=255, nullable=true)
+     */
+    private $wording;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="wording_domain", type="string", length=255, nullable=true)
+     */
+    private $wordingDomain;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PrestaShopBundle\Entity\TabLang", mappedBy="id")
      */
     private $tabLangs;
 
@@ -129,11 +150,6 @@ class Tab
         return $this->active;
     }
 
-    public function getHideHostMode()
-    {
-        return $this->hideHostMode;
-    }
-
     public function getIcon()
     {
         return $this->icon;
@@ -142,6 +158,22 @@ class Tab
     public function getTabLangs()
     {
         return $this->tabLangs;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWording(): ?string
+    {
+        return $this->wording;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getWordingDomain(): ?string
+    {
+        return $this->wordingDomain;
     }
 
     /**
@@ -154,6 +186,46 @@ class Tab
     public function setActive($active)
     {
         $this->active = $active;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->routeName;
+    }
+
+    /**
+     * @param string $routeName
+     *
+     * @return Tab
+     */
+    public function setRouteName($routeName)
+    {
+        $this->routeName = $routeName;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param bool $enabled
+     *
+     * @return Tab
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }

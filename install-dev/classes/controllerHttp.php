@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 use PrestaShopBundle\Install\LanguageList;
@@ -36,12 +36,12 @@ class InstallControllerHttp
     /**
      * @var string
      */
-    protected $phone;
+    protected $content;
 
     /**
      * @var array
      */
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      * @var string Current step
@@ -51,7 +51,7 @@ class InstallControllerHttp
     /**
      * @var array List of errors
      */
-    public $errors = array();
+    public $errors = [];
 
     public $controller;
 
@@ -88,43 +88,49 @@ class InstallControllerHttp
     /**
      * @var array Magic vars
      */
-    protected $__vars = array();
+    protected $__vars = [];
+
+    /**
+     * @var array Configuration
+     */
+    protected static $config;
 
     private function initSteps()
     {
-        $stepConfig = array(
-            array(
+        $stepConfig = [
+            [
                 'name' => 'welcome',
-                'displayName' => $this->translator->trans('Choose your language', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpWelcome'
-            ),
-            array(
+                'displayName' => $this->translator->trans('Choose your language', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpWelcome',
+            ],
+            [
                 'name' => 'license',
-                'displayName' => $this->translator->trans('License agreements', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpLicense'
-            ),
-            array(
+                'displayName' => $this->translator->trans('License agreements', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpLicense',
+            ],
+            [
                 'name' => 'system',
-                'displayName' => $this->translator->trans('System compatibility', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpSystem'
-            ),
-            array(
+                'displayName' => $this->translator->trans('System compatibility', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpSystem',
+            ],
+            [
                 'name' => 'configure',
-                'displayName' => $this->translator->trans('Store information', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpConfigure'
-            ),
-            array(
+                'displayName' => $this->translator->trans('Store information', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpConfigure',
+            ],
+            [
                 'name' => 'database',
-                'displayName' => $this->translator->trans('System configuration', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpDatabase'
-            ),
-            array(
+                'displayName' => $this->translator->trans('System configuration', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpDatabase',
+            ],
+            [
                 'name' => 'process',
-                'displayName' => $this->translator->trans('Store installation', array(), 'Install'),
-                'controllerClass' => 'InstallControllerHttpProcess'
-            ),
-        );
-        self::$steps = new StepList($stepConfig);
+                'displayName' => $this->translator->trans('Store installation', [], 'Install'),
+                'controllerClass' => 'InstallControllerHttpProcess',
+            ],
+        ];
+
+        static::$steps = new StepList($stepConfig);
     }
 
     public function __construct()
@@ -143,7 +149,7 @@ class InstallControllerHttp
             $this->session->lang ?: false
         );
 
-        $this->translator = Context::getContext()->getTranslator();
+        $this->translator = Context::getContext()->getTranslator(true);
 
         if (isset($this->session->lang)) {
             $lang = $this->session->lang;
@@ -156,10 +162,11 @@ class InstallControllerHttp
         }
         $this->language->setLanguage($lang);
 
-        if (empty(self::$steps)) {
+        if (empty(self::getSteps())) {
             $this->initSteps();
         }
 
+        $this->loadConfiguration();
         $this->init();
     }
 
@@ -172,20 +179,20 @@ class InstallControllerHttp
 
     final public static function execute()
     {
-        $self = new self();
+        $self = new static();
 
         if (Tools::getValue('compile_templates')) {
-            require_once(_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
+            require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'http/smarty_compile.php';
             exit;
         }
 
         $session = InstallSession::getInstance();
-        if (!$session->last_step || $session->last_step == 'welcome') {
+        if (!$session->last_step || $session->last_step === 'welcome') {
             Tools::generateIndex();
         }
 
         if (empty($session->last_step)) {
-            $session->last_step = self::$steps->current()->getName();
+            $session->last_step = self::getSteps()->current()->getName();
         }
 
         // Set timezone
@@ -197,6 +204,7 @@ class InstallControllerHttp
                     foreach ($abbreviations as $abbreviation) {
                         if ($session->shop_timezone == $abbreviation['timezone_id']) {
                             @date_default_timezone_set($session->shop_timezone);
+
                             break 2;
                         }
                     }
@@ -210,58 +218,63 @@ class InstallControllerHttp
 
         // Get current step (check first if step is changed, then take it from session)
         if (Tools::getValue('step')) {
-            self::$steps->setOffsetFromStepName(Tools::getValue('step'));
-            $session->step = self::$steps->current()->getName();
+            self::getSteps()->setOffsetFromStepName(Tools::getValue('step'));
+            $session->step = self::getSteps()->current()->getName();
         } elseif (!empty($session->step)) {
-            self::$steps->setOffsetFromStepName($session->step);
+            self::getSteps()->setOffsetFromStepName($session->step);
         }
 
         // Validate all steps until current step. If a step is not valid, use it as current step.
-        foreach (self::$steps as $key => $check_step) {
+        foreach (self::getSteps() as $key => $check_step) {
             // Do not validate current step
 
-            if (self::$steps->current() == $check_step) {
+            if (self::getSteps()->current() == $check_step) {
                 break;
             }
 
             // no need to validate several time the system step
             if (!(($check_step->getControllerInstance()) instanceof InstallControllerHttpSystem)
                 && !$check_step->getControllerInstance()->validate()) {
-                self::$steps->setOffset($key);
-                $session->step = $session->last_step = self::$steps->current()->getName();
+                self::getSteps()->setOffset($key);
+                $session->step = $session->last_step = self::getSteps()->current()->getName();
+
                 break;
             }
         }
 
         // Submit form to go to next step
         if (Tools::getValue('submitNext')) {
-
-            self::$steps->current()->getControllerInstance()->processNextStep();
+            self::getSteps()->current()->getControllerInstance()->processNextStep();
 
             // If current step is validated, let's go to next step
-            if (self::$steps->current()->getControllerInstance()->validate()) {
-                self::$steps->next();
+            if (self::getSteps()->current()->getControllerInstance()->validate()) {
+                self::getSteps()->next();
             }
-            $session->step = self::$steps->current()->getName();
+
+            // Don't display system step if mandatory requirements is valid
+            if (self::getSteps()->current()->getName() == 'system' && self::getSteps()->current()->getControllerInstance()->validate()) {
+                self::getSteps()->next();
+            }
+
+            $session->step = self::getSteps()->current()->getName();
 
             // Change last step
-            if (self::$steps->getOffset() > self::getStepOffset($session->last_step)) {
-                $session->last_step = self::$steps->current()->getName();
+            if (self::getSteps()->getOffset() > $self->getStepOffset($session->last_step)) {
+                $session->last_step = self::getSteps()->current()->getName();
             }
         }
         // Go to previous step
-        elseif (Tools::getValue('submitPrevious') && 0 !== self::$steps->getOffset()) {
-            self::$steps->previous();
-            $session->step = self::$steps->current()->getName();
+        elseif (Tools::getValue('submitPrevious') && 0 !== self::getSteps()->getOffset()) {
+            self::getSteps()->previous();
+            $session->step = self::getSteps()->current()->getName();
         }
 
-        self::$steps->current()->getControllerInstance()->process();
-        self::$steps->current()->getControllerInstance()->display();
+        self::getSteps()->current()->getControllerInstance()->process();
+        self::getSteps()->current()->getControllerInstance()->display();
     }
 
     public function init()
     {
-
     }
 
     public function process()
@@ -271,11 +284,11 @@ class InstallControllerHttp
     /**
      * Get steps list
      *
-     * @return array
+     * @return StepList
      */
-    public function getSteps()
+    public static function getSteps(): ?StepList
     {
-        return self::$steps;
+        return static::$steps;
     }
 
     public function getLastStep()
@@ -287,11 +300,12 @@ class InstallControllerHttp
      * Find offset of a step by name
      *
      * @param string $step Step name
+     *
      * @return int
      */
-    public static function getStepOffset($step)
+    public function getStepOffset($step)
     {
-        return self::$steps->getOffsetFromStepName($step);
+        return self::getSteps()->getOffsetFromStepName($step);
     }
 
     /**
@@ -299,9 +313,9 @@ class InstallControllerHttp
      *
      * @param string $step
      */
-    public function redirect($step)
+    public function redirect(string $step)
     {
-        header('location: index.php?step='.$step);
+        header('location: index.php?step=' . $step);
         exit;
     }
 
@@ -312,7 +326,7 @@ class InstallControllerHttp
      */
     public function isFirstStep()
     {
-        return self::$steps->isFirstStep();
+        return self::getSteps()->isFirstStep();
     }
 
     /**
@@ -322,109 +336,19 @@ class InstallControllerHttp
      */
     public function isLastStep()
     {
-        return self::$steps->isLastStep();
+        return self::getSteps()->isLastStep();
     }
 
     /**
      * Check is given step is already finished
      *
      * @param string $step
+     *
      * @return bool
      */
-    public function isStepFinished($step)
+    public function isStepFinished(string $step): bool
     {
-        return self::getStepOffset($step) < self::$steps->getOffset();
-    }
-
-    /**
-     * Get telephone used for this language
-     *
-     * @return string
-     */
-    public function getPhone()
-    {
-        if (InstallSession::getInstance()->support_phone != null) {
-            return InstallSession::getInstance()->support_phone;
-        }
-        if ($this->phone === null) {
-            $this->phone = '';
-            if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3)) {
-                if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1])) {
-                    $this->phone = $matches[1];
-                }
-            }
-        }
-        InstallSession::getInstance()->support_phone = $this->phone;
-        return $this->phone;
-    }
-
-    /**
-     * Get link to documentation for this language
-     *
-     * Enter description here ...
-     */
-    public function getDocumentationLink()
-    {
-        /* Link to translated documentation (if available) */
-        return $this->translator->trans('http://doc.prestashop.com/display/PS17/Installing+PrestaShop', array(), 'Install');
-    }
-
-    /**
-     * Get link to tutorial video for this language
-     *
-     * Enter description here ...
-     */
-    public function getTutorialLink()
-    {
-        /* Link to localized video tutorial (if available) */
-        return $this->translator->trans('https://www.youtube.com/watch?v=cANFwuJqdgM', array(), 'Install');
-    }
-
-    /**
-     * Get link to tailored help for this language
-     *
-     * Enter description here ...
-     */
-    public function getTailoredHelp()
-    {
-        /* Link to support on addons */
-        return $this->translator->trans('https://addons.prestashop.com/en/388-support', array(), 'Install');
-    }
-
-    /**
-     * Get link to forum for this language
-     *
-     * Enter description here ...
-     */
-    public function getForumLink()
-    {
-        /* Link to localized forum */
-        return $this->translator->trans('http://www.prestashop.com/forums/', array(), 'Install');
-    }
-
-    /**
-     * Get link to blog for this language
-     *
-     * Enter description here ...
-     */
-    public function getBlogLink()
-    {
-        return $this->translator->trans('http://www.prestashop.com/blog/', array(), 'Install');
-    }
-
-    /**
-     * Get link to support for this language
-     *
-     * Enter description here ...
-     */
-    public function getSupportLink()
-    {
-        return $this->translator->trans('https://www.prestashop.com/en/support', array(), 'Install');
-    }
-
-    public function getDocumentationUpgradeLink()
-    {
-        return $this->translator->trans('http://docs.prestashop.com/display/PS16/Updating+PrestaShop', array(), 'Install');
+        return $this->getStepOffset($step) < self::getSteps()->getOffset();
     }
 
     /**
@@ -433,48 +357,108 @@ class InstallControllerHttp
      * @param bool $success
      * @param string $message
      */
-    public function ajaxJsonAnswer($success, $message = '')
+    public function ajaxJsonAnswer(bool $success, string $message = ''): void
     {
         if (!$success && empty($message)) {
             $message = print_r(@error_get_last(), true);
         }
-        die(json_encode(array(
-            'success' => (bool)$success,
+
+        die(json_encode([
+            'success' => (bool) $success,
             'message' => $message,
-            // 'memory' => round(memory_get_peak_usage()/1024/1024, 2).' Mo',
-        )));
+        ]));
     }
 
     /**
      * Display a template
      *
      * @param string $template Template name
-     * @param bool $get_output Is true, return template html
-     * @return string
      */
-    public function displayTemplate($template, $get_output = false, $path = null)
+    public function getTemplate(string $template): string
     {
-        if (!$path) {
-            $path = _PS_INSTALL_PATH_.'theme/views/';
+        $path = _PS_INSTALL_PATH_ . 'theme/views/';
+        $customPath = _PS_INSTALL_PATH_ . 'theme/custom/';
+
+        if (file_exists($customPath . $template . '.php')) {
+            return $this->renderTemplate($customPath, $template);
         }
 
-        if (!file_exists($path.$template.'.php')) {
-            throw new PrestashopInstallerException("Template '{$template}.php' not found");
+        if (file_exists($path . $template . '.php')) {
+            return $this->renderTemplate($path, $template);
         }
 
-        if ($get_output) {
-            ob_start();
+        throw new PrestashopInstallerException("Template '{$template}.php' not found");
+    }
+
+    /**
+     * Display a hook template
+     *
+     * @param string $template Template name
+     */
+    public function getHook(string $template): string
+    {
+        $path = _PS_INSTALL_PATH_ . 'theme/custom/hooks/';
+
+        if (file_exists($path . $template . '.php')) {
+            return $this->renderTemplate($path, $template);
         }
 
-        include($path.$template.'.php');
+        return '';
+    }
 
-        if ($get_output) {
-            $content = ob_get_contents();
-            if (ob_get_level() && ob_get_length() > 0) {
-                ob_end_clean();
+    protected function loadConfiguration(): void
+    {
+        if (self::$config === null) {
+            $path = _PS_INSTALL_PATH_ . 'theme/config.php';
+            $customPath = _PS_INSTALL_PATH_ . 'theme/custom/config.php';
+
+            if (file_exists($customPath)) {
+                self::$config = include $customPath;
+                return;
             }
-            return $content;
+
+            if (file_exists($path)) {
+                self::$config = include $path;
+                return;
+            }
+
+            throw new PrestashopInstallerException("Config file not found");
         }
+    }
+
+    public function getConfig(string $element)
+    {
+        return self::$config[$element] ?: null;
+    }
+
+    public function displayContent(string $content): void
+    {
+        $this->setContent($this->getTemplate($content));
+        echo $this->getTemplate('layout');
+    }
+
+    protected function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    protected function getContent(): string
+    {
+        return $this->content;
+    }
+
+    protected function renderTemplate(string $path, string $template): string
+    {
+        ob_start();
+
+        include $path . $template . '.php';
+
+        $content = ob_get_contents();
+        if (ob_get_level() && ob_get_length() > 0) {
+            ob_end_clean();
+        }
+
+        return $content;
     }
 
     public function &__get($varname)
@@ -485,6 +469,7 @@ class InstallControllerHttp
             $null = null;
             $ref = &$null;
         }
+
         return $ref;
     }
 

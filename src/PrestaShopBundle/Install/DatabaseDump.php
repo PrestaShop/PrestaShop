@@ -1,12 +1,13 @@
 <?php
 
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -17,26 +18,76 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Install;
 
+use AppKernel;
+use Db;
 use Exception;
 
 class DatabaseDump
 {
+    /**
+     * Database host
+     *
+     * @var string
+     */
     private $host;
+
+    /**
+     * Database port
+     *
+     * @var int|string
+     */
     private $port;
+
+    /**
+     * Database user
+     *
+     * @var string
+     */
     private $user;
+
+    /**
+     * Database password
+     *
+     * @var string
+     */
     private $password;
+
+    /**
+     * Database name
+     *
+     * @var string
+     */
     private $databaseName;
+
+    /**
+     * Database prefix for table names
+     *
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * Generic dump file path (dump of the whole database)
+     *
+     * @var string
+     */
     private $dumpFile;
+
+    /**
+     * Db instance to perform queries
+     *
+     * @var Db
+     */
+    private $db;
 
     /**
      * Constructor extracts database connection info from PrestaShop's configuration,
@@ -56,14 +107,51 @@ class DatabaseDump
             $this->port = $host_and_maybe_port[1];
         }
 
+        $this->databaseName = _DB_NAME_;
         if ($dumpFile === null) {
-            $this->dumpFile = sys_get_temp_dir() . '/' . 'ps_dump.sql';
+            $this->dumpFile = sprintf('%s/ps_dump_%s_%s.sql', sys_get_temp_dir(), $this->databaseName, AppKernel::VERSION);
         } else {
             $this->dumpFile = $dumpFile;
         }
-        $this->databaseName = _DB_NAME_;
         $this->user = _DB_USER_;
         $this->password = _DB_PASSWD_;
+        $this->dbPrefix = _DB_PREFIX_;
+        $this->db = Db::getInstance();
+    }
+
+    /**
+     * Restore the dump to the actual database.
+     */
+    public function restore(): void
+    {
+        $this->checkDumpFile();
+
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
+        $this->exec($restoreCommand);
+    }
+
+    /**
+     * Restore a specific table in the database.
+     *
+     * @param string $table
+     */
+    public function restoreTable(string $table): void
+    {
+        $tableName = $this->dbPrefix . $table;
+        $this->checkTableDumpFile($tableName);
+
+        $dumpChecksum = file_get_contents($this->getTableChecksumPath($tableName));
+        $checksum = $this->getTableChecksum($tableName);
+        // Table was not modified, no need to restore
+        if ($checksum === $dumpChecksum) {
+            return;
+        }
+
+        $dumpFile = $this->getTableDumpPath($tableName);
+        $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
+        $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
+        $this->exec($restoreCommand);
     }
 
     /**
@@ -74,14 +162,14 @@ class DatabaseDump
      *
      * @return string
      */
-    private function buildMySQLCommand($executable, array $arguments = array())
+    private function buildMySQLCommand($executable, array $arguments = []): string
     {
-        $parts = array(
+        $parts = [
             escapeshellarg($executable),
             '-u', escapeshellarg($this->user),
             '-P', escapeshellarg($this->port),
             '-h', escapeshellarg($this->host),
-        );
+        ];
 
         if ($this->password) {
             $parts[] = '-p' . escapeshellarg($this->password);
@@ -101,9 +189,9 @@ class DatabaseDump
      *
      * @throws Exception
      */
-    private function exec($command)
+    private function exec($command): array
     {
-        $output = array();
+        $output = [];
         $ret = 1;
         exec($command, $output, $ret);
 
@@ -117,40 +205,189 @@ class DatabaseDump
     /**
      * The actual dump function.
      */
-    private function dump()
+    private function dump(): void
     {
-        $dumpCommand = $this->buildMySQLCommand('mysqldump', array($this->databaseName));
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName]);
         $dumpCommand .= ' > ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($dumpCommand);
     }
 
-    /**
-     * Restore the dump to the actual database.
-     */
-    public function restore()
+    private function dumpAllTables(): void
     {
-        $restoreCommand = $this->buildMySQLCommand('mysql', array($this->databaseName));
-        $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
-        $this->exec($restoreCommand);
+        $tables = $this->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $this->dumpTable(reset($table));
+        }
+    }
+
+    private function dumpTable(string $table): void
+    {
+        $dumpCommand = $this->buildMySQLCommand('mysqldump', [$this->databaseName, $table]);
+        $tableDumpFile = $this->getTableDumpPath($table);
+        $dumpCommand .= ' > ' . escapeshellarg($tableDumpFile) . ' 2> /dev/null';
+        $this->exec($dumpCommand);
+
+        $checksum = $this->getTableChecksum($table);
+        $checksumFile = $this->getTableChecksumPath($table);
+        file_put_contents($checksumFile, $checksum);
+    }
+
+    private function getTableDumpPath(string $table): string
+    {
+        return sprintf(
+            '%s/ps_dump_%s_%s_%s.sql',
+            sys_get_temp_dir(),
+            $this->databaseName,
+            AppKernel::VERSION,
+            $table
+        );
+    }
+
+    private function getTableChecksumPath(string $table): string
+    {
+        return sprintf(
+            '%s/ps_dump_%s_%s_%s.md5',
+            sys_get_temp_dir(),
+            $this->databaseName,
+            AppKernel::VERSION,
+            $table
+        );
+    }
+
+    /**
+     * Get checksum of the table to compare if the conent has been modified and needs to be restored. Since the checksum
+     * doesn't take the auto increment index into consideration we fetch it manually and append it to the original
+     * checksum, this allows to restore the index when needed as well.
+     *
+     * @param string $table
+     *
+     * @return string
+     */
+    private function getTableChecksum(string $table): string
+    {
+        $checksum = $this->db->executeS(sprintf('CHECKSUM TABLE %s;', $table));
+        $checksum = $checksum[0]['Checksum'];
+
+        // The content only is not enough we must make sure that the auto increment index is the same
+        $autoIncrement = $this->db->executeS(sprintf(
+            'SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = "%s" AND TABLE_NAME = "%s";',
+            $this->databaseName,
+            $table
+        ));
+        // Some tables have no auto increment (like relation tables for example)
+        $autoIncrement = (int) ($autoIncrement[0]['AUTO_INCREMENT'] ?? 0);
+
+        return $checksum . $autoIncrement;
+    }
+
+    private function checkDumpFile(): void
+    {
+        if (!file_exists($this->dumpFile)) {
+            throw new Exception('You need to run \'composer create-test-db\' to create the initial test database');
+        }
+    }
+
+    private function checkTableDumpFile(string $tableName): void
+    {
+        $dumpFile = $this->getTableDumpPath($tableName);
+        if (!file_exists($dumpFile)) {
+            throw new Exception(sprintf(
+                'Cannot find dump for table %s, you need to run \'composer create-test-db\' to create the initial test database',
+                $tableName
+            ));
+        }
     }
 
     /**
      * Make a database dump.
      */
-    public static function create()
+    public static function create(): void
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->dump();
     }
 
     /**
+     * Make dump for each table in the database.
+     */
+    public static function dumpTables(): void
+    {
+        $dump = new static();
+
+        $dump->dumpAllTables();
+    }
+
+    /**
+     * Check that dump file exists
+     *
+     * @throws Exception
+     */
+    public static function checkDump(): void
+    {
+        $dump = new static();
+
+        $dump->checkDumpFile();
+    }
+
+    /**
      * Restore a database dump.
      */
-    public static function restoreDb()
+    public static function restoreDb(): void
     {
-        $dump = new DatabaseDump();
+        $dump = new static();
 
         $dump->restore();
+    }
+
+    /**
+     * Restore all tables (only modified tables are restored)
+     */
+    public static function restoreAllTables(): void
+    {
+        $dump = new static();
+
+        $tables = $dump->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            $tableName = substr($tableName, strlen($dump->dbPrefix));
+            $dump->restoreTable($tableName);
+        }
+    }
+
+    /**
+     * Restore a list of tables in the database
+     *
+     * @param array $tableNames
+     */
+    public static function restoreTables(array $tableNames): void
+    {
+        $dump = new static();
+
+        foreach ($tableNames as $tableName) {
+            $dump->restoreTable($tableName);
+        }
+    }
+
+    /**
+     * Restore a list of tables in the database which name match th regexp
+     *
+     * @param string $regexp
+     */
+    public static function restoreMatchingTables(string $regexp): void
+    {
+        $dump = new static();
+
+        $tables = $dump->db->executeS('SHOW TABLES;');
+        foreach ($tables as $table) {
+            // $table is an array looking like this [Tables_in_database_name => 'ps_access']
+            $tableName = reset($table);
+            $tableName = substr($tableName, strlen($dump->dbPrefix));
+            if (preg_match($regexp, $tableName)) {
+                $dump->restoreTable($tableName);
+            }
+        }
     }
 }

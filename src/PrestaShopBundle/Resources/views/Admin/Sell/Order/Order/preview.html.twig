@@ -1,0 +1,180 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% block order_preview %}
+  <div class="row order-preview-content mt-2">
+    <div class="col-5">
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <div class="col-1">
+              <p class="mb-0">
+                <i class="material-icons pr-1">local_shipping</i>
+              </p>
+            </div>
+            <div class="col">
+              <p class="mb-0">
+                <strong>{{ 'Carrier'|trans({}, 'Admin.Global') }}:</strong>
+                {% if not orderPreview.isVirtual %}
+                  {{ orderPreview.shippingDetails.carrierName }}
+                {% else %}
+                  -
+                {% endif %}
+              </p>
+
+              <p class="mb-0">
+                <strong>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}:</strong>
+                {% if not orderPreview.isVirtual and orderPreview.shippingDetails.trackingNumber is not empty %}
+                  {% if orderPreview.shippingDetails.trackingUrl %}
+                    <a href="{{ orderPreview.shippingDetails.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ orderPreview.shippingDetails.trackingNumber }}</a>
+                  {% else %}
+                    {{ orderPreview.shippingDetails.trackingNumber }}
+                  {% endif %}
+                {% else %}
+                  -
+                {% endif %}
+              </p>
+
+              <p class="mb-2">
+                <strong>{{ 'Shipping details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
+                {% if orderPreview.virtual %}
+                  -
+                {% endif %}
+              </p>
+
+              {% if not orderPreview.virtual %}
+                {% for line in orderPreview.shippingAddressFormatted|split("\n") %}
+                  <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="row">
+            <div class="col-1">
+              <p class="mb-0">
+                <i class="material-icons pr-1">email</i>
+              </p>
+            </div>
+            <div class="col">
+              <p class="mb-1">
+                <strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong>
+              </p>
+
+              <p class="mb-0">{{ orderPreview.invoiceDetails.email }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-1">
+              <p class="mb-0">
+                <i class="material-icons pr-1">receipt</i>
+              </p>
+            </div>
+            <div class="col">
+              <p class="mb-1">
+                <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
+              </p>
+
+
+              {% for line in orderPreview.invoiceAddressFormatted|split("\n") %}
+                <p{% if not loop.last %} class="mb-0"{% endif %}>{{ line }}</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-7">
+      <div class="table-responsive">
+        <table class="table product table-borderless border-bottom-0">
+          <thead>
+          <tr>
+            {% if orderPreview.taxIncluded %}
+              {% set taxInclusion = 'Tax included'|trans({}, 'Admin.Global') %}
+            {% else %}
+              {% set taxInclusion = 'Tax excluded'|trans({}, 'Admin.Global') %}
+            {% endif %}
+
+            <th>
+              {{ 'Products'|trans({}, 'Admin.Global') }}
+              ({{ orderPreview.productDetails|length }})
+            </th>
+            <th>{{ 'Reference'|trans({}, 'Admin.Global') }}</th>
+            <th class="js-cell-product-stock-location">{{ 'Stock location'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+            {% if orderPreview.taxIncluded == false %}
+              <th class="text-center">
+                {{ 'Tax'|trans({}, 'Admin.Global') }}
+              </th>
+            {% endif %}
+            <th class="text-center">{{ 'Quantity'|trans({}, 'Admin.Global') }}</th>
+            <th class="text-center">
+              {{ 'Total'|trans({}, 'Admin.Global') }}
+              <small>{{ taxInclusion }}</small>
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for productDetail in orderPreview.productDetails %}
+            <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
+              <td class="p-1">{{ productDetail.name }}</td>
+              <td class="p-1">{{ productDetail.reference }}</td>
+              <td class="p-1 js-cell-product-stock-location">
+                {% if productDetail.location is not empty %}{{ productDetail.location }}{% endif %}
+              </td>
+              {% if orderPreview.taxIncluded == false %}
+                <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
+              {% endif %}
+              <td class="p-1 text-center">{{ productDetail.quantity }}</td>
+              <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
+            </tr>
+          {% endfor %}
+
+          {% if orderPreview.productDetails|length > productsPreviewLimit %}
+            <tr>
+              <td colspan="6">
+                <a href="#" class="js-preview-more-products-btn text-dark">
+                  <i class="material-icons">more_horiz</i>
+                  {{ '(%count% more)'|trans({
+                    '%count%': orderPreview.productDetails|length - productsPreviewLimit
+                  }, 'Admin.Global') }}
+                </a>
+              </td>
+            </tr>
+          {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-right">
+        <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
+          {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}
+          <i class="material-icons">arrow_right_alt</i>
+        </a>
+      </div>
+    </div>
+  </div>
+  {{ renderhook('displayOrderPreview', {'order_id': orderId}) }}
+{% endblock %}

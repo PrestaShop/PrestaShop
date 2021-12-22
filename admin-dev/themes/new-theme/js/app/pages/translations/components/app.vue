@@ -1,10 +1,11 @@
 <!--**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,59 +16,77 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div v-if="isReady" id="app" class="translations-app">
-    <TranslationsHeader />
+  <div
+    v-if="isReady"
+    id="app"
+    class="translations-app"
+  >
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center">
         <Search @search="onSearch" />
         <div class="translations-summary">
           <span>{{ totalTranslations }}</span>
-          <span v-show="totalMissingTranslations"> - <span class="missing">{{ totalMissingTranslationsString }}</span></span>
+          <span v-show="totalMissingTranslations">
+            -
+            <span class="missing">{{ totalMissingTranslationsString }}</span>
+          </span>
         </div>
       </div>
 
       <div class="row">
-        <Sidebar :modal="this.$refs.transModal" :principal="this.$refs.principal"/>
-        <Principal :modal="this.$refs.transModal" ref="principal" />
+        <Sidebar
+          :modal="this.$refs.transModal"
+          :principal="this.$refs.principal"
+        />
+        <Principal
+          :modal="this.$refs.transModal"
+          ref="principal"
+        />
       </div>
     </div>
-    <PSModal ref="transModal" :translations="translations"/>
+    <PSModal
+      ref="transModal"
+      :translations="translations"
+    />
   </div>
 </template>
 
-<script>
-  import TranslationsHeader from './header/translations-header';
-  import Search from './header/search';
-  import Sidebar from './sidebar';
-  import Principal from './principal';
-  import PSModal from 'app/widgets/ps-modal';
-  import { EventBus } from 'app/utils/event-bus';
+<script lang="ts">
+  import Vue from 'vue';
+  import Search from '@app/pages/translations/components/header/search.vue';
+  import Sidebar from '@app/pages/translations/components/sidebar/index.vue';
+  import Principal from '@app/pages/translations/components/principal/index.vue';
+  import PSModal from '@app/widgets/ps-modal.vue';
 
-
-  export default {
-    name: 'app',
+  export default Vue.extend({
+    name: 'App',
     computed: {
-      isReady() {
+      isReady(): boolean {
         return this.$store.getters.isReady;
       },
-      totalTranslations() {
-        return (this.$store.state.totalTranslations <= 1) ? this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.totalTranslations) : this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.totalTranslations);
+      totalTranslations(): string {
+        return this.$store.state.totalTranslations <= 1
+          ? this.trans('label_total_domain_singular')
+            .replace('%nb_translation%', this.$store.state.totalTranslations)
+          : this.trans('label_total_domain')
+            .replace('%nb_translations%', this.$store.state.totalTranslations);
       },
-      totalMissingTranslations() {
+      totalMissingTranslations(): number {
         return this.$store.state.totalMissingTranslations;
       },
-      totalMissingTranslationsString() {
-        return this.totalMissingTranslations === 1 ? this.trans('label_missing_singular') : this.trans('label_missing').replace('%d', this.totalMissingTranslations);
+      totalMissingTranslationsString(): string {
+        return this.totalMissingTranslations === 1
+          ? this.trans('label_missing_singular')
+          : this.trans('label_missing').replace('%d', <string><unknown> this.totalMissingTranslations);
       },
-      translations() {
+      translations(): Record<string, any> {
         return {
           button_save: this.trans('button_save'),
           button_leave: this.trans('button_leave'),
@@ -77,70 +96,73 @@
       },
     },
     mounted() {
-      $('a').on('click', (e) => {
+      $('a').on('click', (e: JQueryEventObject): void => {
         if ($(e.currentTarget).attr('href')) {
-          this.destHref = $(e.currentTarget).attr('href');
+          this.destHref = <string>$(e.currentTarget).attr('href');
         }
       });
-      window.onbeforeunload = () => {
+      window.onbeforeunload = (): any => {
         if (!this.destHref && this.isEdited() && !this.leave) {
           return true;
         }
+
         if (!this.leave && this.isEdited()) {
           setTimeout(() => {
             window.stop();
           }, 500);
-          this.$refs.transModal.showModal();
-          this.$refs.transModal.$once('save', () => {
-            this.$refs.principal.saveTranslations();
-            this.leavePage();
-          });
-          this.$refs.transModal.$once('leave', () => {
-            this.leavePage();
-          });
+
+          if (this.$refs.transModal && this.$refs.principal) {
+            const refTransModal = this.$refs.transModal as VTransModal;
+            refTransModal.showModal();
+            refTransModal.$once('save', (): void => {
+              (this.$refs.principal as VPrincipal).saveTranslations();
+              this.leavePage();
+            });
+
+            refTransModal.$once('leave', () => {
+              this.leavePage();
+            });
+          }
           return null;
         }
+
+        return undefined;
       };
     },
     methods: {
-      onSearch(keywords) {
+      onSearch(): void {
         this.$store.dispatch('getDomainsTree', {
           store: this.$store,
         });
-        this.$store.currentDomain = '';
+        this.$store.state.currentDomain = '';
       },
       /**
        * Set leave to true and redirect the user to the new location
        */
-      leavePage() {
+      leavePage(): void {
         this.leave = true;
-        window.location.href = this.destHref;
+        window.location.href = <string> this.destHref;
       },
-      isEdited() {
-        return this.$refs.principal.edited();
+      isEdited(): boolean {
+        return (this.$refs.principal as VPrincipal).edited();
       },
     },
     data: () => ({
-      destHref: null,
+      destHref: null as null | string,
       leave: false,
     }),
     components: {
-      TranslationsHeader,
       Search,
       Sidebar,
       Principal,
       PSModal,
     },
-  };
+  });
 </script>
 
-<style lang="sass" type="text/scss">
-  @import "../../../../../scss/config/_settings.scss";
-  // hide the layout header
-  #main-div > .header-toolbar {
-    height: 0;
-    display: none;
-  }
+<style lang="scss" type="text/scss">
+  @import '~@scss/config/_settings.scss';
+
   .flex {
     display: flex;
     align-items: center;

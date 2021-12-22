@@ -1,0 +1,142 @@
+// stylelint-disable-next-line
+$component-name: multistore-dropdown;
+
+.#{$component-name} {
+  &.btn-group {
+    height: 2.25rem;
+  }
+
+  > .btn {
+    &::after {
+      margin-left: 0;
+    }
+  }
+
+  &-search {
+    min-height: auto;
+    padding: 0.3rem 1rem;
+    padding-left: 2.2rem;
+
+    &-container {
+      position: relative;
+      margin-bottom: 1rem;
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+
+      i {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.75rem;
+        z-index: 1;
+        font-size: 1.2rem;
+        color: $medium-gray;
+        pointer-events: none;
+      }
+
+      .tt-menu {
+        width: 100%;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.1);
+        @include border-bottom-radius(4px);
+
+        .tt-dataset > div {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          @include transition(0.25s ease-out);
+
+          &:hover,
+          &.tt-cursor {
+            background-color: #f4fcfd;
+          }
+        }
+      }
+    }
+  }
+
+  .dropdown-menu {
+    width: 100vw;
+    max-width: 27.5rem;
+    max-height: 50vh;
+    padding: 1.25rem;
+    overflow: auto;
+
+    ul,
+    li {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+  }
+
+  &-group {
+    &-name {
+      display: block;
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: $gray-dark;
+    }
+
+    li.#{$component-name}-group-item {
+      &:not(:first-of-type) {
+        margin-top: 1.25rem;
+      }
+    }
+  }
+
+  ul.#{$component-name}-shops {
+    padding-left: 0.5rem;
+
+    .#{$component-name}-shop {
+      &:not(:last-of-type) {
+        margin-bottom: 0.875rem;
+      }
+    }
+  }
+
+  &-shop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    p {
+      margin: 0;
+    }
+
+    &-name {
+      font-size: 0.875rem;
+      line-height: 19px;
+      color: $gray-dark;
+      text-decoration: underline;
+      letter-spacing: 0;
+    }
+
+    &-status {
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 19px;
+      color: $success;
+
+      &-locked {
+        color: #000;
+        opacity: 0.35;
+
+        i.material-icons {
+          padding-right: 0;
+          margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+
+  &-no-url {
+    cursor: not-allowed;
+  }
+
+  &-no-url:hover {
+    color: #4a4a4a;
+  }
+}

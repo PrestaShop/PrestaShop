@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class GroupCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Lastname */
+    /** @var string|array<int, string> */
     public $name;
 
     /** @var string Reduction */
@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
     public $price_display_method;
 
     /** @var bool Show prices */
-    public $show_prices = 1;
+    public $show_prices = true;
 
     /** @var string Object creation date */
     public $date_add;
@@ -48,30 +48,33 @@ class GroupCore extends ObjectModel
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'group',
         'primary' => 'id_group',
         'multilang' => true,
-        'fields' => array(
-            'reduction' => array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
-            'price_display_method' => array('type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true),
-            'show_prices' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'date_add' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-            'date_upd' => array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+        'fields' => [
+            'reduction' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
+            'price_display_method' => ['type' => self::TYPE_INT, 'validate' => 'isPriceDisplayMethod', 'required' => true],
+            'show_prices' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
 
             /* Lang fields */
-            'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-        ),
-    );
+            'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32],
+        ],
+    ];
 
-    protected static $cache_reduction = array();
-    protected static $group_price_display_method = array();
+    protected static $cache_reduction = [];
+    protected static $group_price_display_method = [];
     protected static $ps_group_feature_active = null;
-    protected static $groups = array();
+    protected static $groups = [];
     protected static $ps_unidentified_group = null;
     protected static $ps_customer_group = null;
 
-    protected $webserviceParameters = array();
+    protected $webserviceParameters = [];
+
+    public const PRICE_DISPLAY_METHOD_TAX_INCL = 0;
+    public const PRICE_DISPLAY_METHOD_TAX_EXCL = 1;
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
@@ -86,10 +89,10 @@ class GroupCore extends ObjectModel
      */
     public static function clearCachedValues()
     {
-        self::$cache_reduction = array();
-        self::$group_price_display_method = array();
+        self::$cache_reduction = [];
+        self::$group_price_display_method = [];
         self::$ps_group_feature_active = null;
-        self::$groups = array();
+        self::$groups = [];
         self::$ps_unidentified_group = null;
         self::$ps_customer_group = null;
     }
@@ -164,7 +167,8 @@ class GroupCore extends ObjectModel
     public static function getPriceDisplayMethod($id_group)
     {
         if (!isset(Group::$group_price_display_method[$id_group])) {
-            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+            self::$group_price_display_method[$id_group] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                '
                 SELECT `price_display_method`
                 FROM `' . _DB_PREFIX_ . 'group`
                 WHERE `id_group` = ' . (int) $id_group
@@ -205,7 +209,7 @@ class GroupCore extends ObjectModel
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
         }
 
-        return parent::update($autodate, $null_values);
+        return parent::update($null_values);
     }
 
     public function delete()
@@ -268,8 +272,8 @@ class GroupCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */
@@ -309,13 +313,13 @@ class GroupCore extends ObjectModel
     /**
      * Adding restrictions modules to the group with id $id_group.
      *
-     * @param $id_group
-     * @param $modules
+     * @param int $id_group
+     * @param array $modules
      * @param array $shops
      *
      * @return bool
      */
-    public static function addModulesRestrictions($id_group, $modules, $shops = array(1))
+    public static function addModulesRestrictions($id_group, $modules, $shops = [1])
     {
         if (!is_array($modules) || !count($modules) || !is_array($shops) || !count($shops)) {
             return false;
@@ -350,7 +354,7 @@ class GroupCore extends ObjectModel
      *
      * @return bool
      */
-    public static function addRestrictionsForModule($id_module, $shops = array(1))
+    public static function addRestrictionsForModule($id_module, $shops = [1])
     {
         if (!is_array($shops) || !count($shops)) {
             return false;
@@ -358,7 +362,7 @@ class GroupCore extends ObjectModel
 
         $res = true;
         foreach ($shops as $shop) {
-            $res &= Db::getInstance()->execute('
+            $res = $res && Db::getInstance()->execute('
 			INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`)
 			(SELECT ' . (int) $id_module . ', ' . (int) $shop . ', id_group FROM `' . _DB_PREFIX_ . 'group`)');
         }

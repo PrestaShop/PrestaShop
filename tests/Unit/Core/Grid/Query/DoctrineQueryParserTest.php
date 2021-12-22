@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,20 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Core\Grid\Query;
 
-use stdClass;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Exception\UnsupportedParameterException;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryParser;
+use stdClass;
 
 class DoctrineQueryParserTest extends TestCase
 {
@@ -41,7 +43,7 @@ class DoctrineQueryParserTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->queryParser = new DoctrineQueryParser();
     }
@@ -83,7 +85,7 @@ class DoctrineQueryParserTest extends TestCase
                 'ok',
                 'nok',
                 'none',
-            ]
+            ],
         ];
 
         $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IN ('great', 'good', 'ok', 'nok', 'none')";
@@ -107,7 +109,7 @@ class DoctrineQueryParserTest extends TestCase
                 'ok',
                 'nok',
                 'none',
-            ]
+            ],
         ];
 
         $this->queryParser->parse($preparedQuery, $queryParameters);
@@ -120,7 +122,7 @@ class DoctrineQueryParserTest extends TestCase
             'motivation' => null,
         ];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation IS NULL";
+        $expectedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation IS NULL';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }
@@ -132,7 +134,7 @@ class DoctrineQueryParserTest extends TestCase
             'motivation' => false,
         ];
 
-        $expectedQuery = "SELECT tests FROM pierre_rambaud WHERE motivation = FALSE";
+        $expectedQuery = 'SELECT tests FROM pierre_rambaud WHERE motivation = FALSE';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
@@ -141,7 +143,7 @@ class DoctrineQueryParserTest extends TestCase
             'energy' => true,
         ];
 
-        $expectedQuery2 = "SELECT tests FROM pierre_rambaud WHERE energy = TRUE";
+        $expectedQuery2 = 'SELECT tests FROM pierre_rambaud WHERE energy = TRUE';
 
         $this->assertSame($expectedQuery2, $this->queryParser->parse($preparedQuery2, $queryParameters2));
     }
@@ -166,7 +168,7 @@ class DoctrineQueryParserTest extends TestCase
             'id_product' => 2,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE id_product = 2";
+        $expectedQuery = 'SELECT * FROM product WHERE id_product = 2';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
 
@@ -175,7 +177,7 @@ class DoctrineQueryParserTest extends TestCase
             'price' => 3.99,
         ];
 
-        $expectedQuery = "SELECT * FROM product WHERE price = 3.99";
+        $expectedQuery = 'SELECT * FROM product WHERE price = 3.99';
 
         $this->assertSame($expectedQuery, $this->queryParser->parse($preparedQuery, $queryParameters));
     }

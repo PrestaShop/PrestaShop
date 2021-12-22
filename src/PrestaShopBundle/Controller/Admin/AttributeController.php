@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,19 +17,19 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Product;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Product;
 
 /**
  * Admin controller for the attribute / attribute group.
@@ -38,7 +39,9 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get All Attributes as json.
      *
-     * @return string
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
      */
     public function getAllAttributesAction()
     {
@@ -79,9 +82,13 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Attributes generator.
      *
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller'))"
+     * )
+     *
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function attributesGeneratorAction(Request $request)
     {
@@ -92,6 +99,7 @@ class AttributeController extends FrameworkBundleAdminController
 
         //get product
         $productAdapter = $this->get('prestashop.adapter.data_provider.product');
+        /** @var Product $product */
         $product = $productAdapter->getProduct((int) $idProduct);
 
         if (!is_object($product) || empty($product->id) || empty($options) || !is_array($options)) {
@@ -137,12 +145,11 @@ class AttributeController extends FrameworkBundleAdminController
         $attributes = $product->sortCombinationByAttributePosition($newCombinationIds, $locales[0]['id_lang']);
         $this->ensureProductHasDefaultCombination($product, $attributes);
 
-        $response = new JsonResponse();
         $combinationDataProvider = $this->get('prestashop.adapter.data_provider.combination');
-        $result = array(
-            'ids_product_attribute' => array(),
+        $result = [
+            'ids_product_attribute' => [],
             'form' => '',
-        );
+        ];
 
         foreach ($attributes as $attribute) {
             foreach ($attribute as $combination) {
@@ -154,9 +161,9 @@ class AttributeController extends FrameworkBundleAdminController
                     );
                 $result['form'] .= $this->renderView(
                     '@Product/ProductPage/Forms/form_combination.html.twig',
-                    array(
+                    [
                         'form' => $form->createView(),
-                    )
+                    ]
                 );
                 $result['ids_product_attribute'][] = $combination['id_product_attribute'];
             }
@@ -174,8 +181,20 @@ class AttributeController extends FrameworkBundleAdminController
         if (count($combinations)) {
             $defaultProductAttributeId = $product->getDefaultIdProductAttribute();
             if (!$defaultProductAttributeId) {
-                list(, $firstAttributeCombination) = each($combinations[0]);
-                $product->setDefaultAttribute($firstAttributeCombination['id_product_attribute']);
+                /*
+                 * Combinations indexed by position, then attribute id
+                 * ex: $combinations = [
+                 *  3 => [ //4th position attribute
+                 *      45 => [ //product_attribute id
+                 *      ]
+                 *  ]
+                 * ]
+                 */
+                $firstPosition = array_keys($combinations)[0];
+                if (!empty($combinations[$firstPosition])) {
+                    $firstAttributeId = array_keys($combinations[$firstPosition])[0];
+                    $product->setDefaultAttribute($firstAttributeId);
+                }
             }
         }
     }
@@ -183,10 +202,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete a product attribute.
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product ID
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function deleteAttributeAction($idProduct, Request $request)
     {
@@ -218,10 +239,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * Delete all product attributes.
      *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product ID
      * @param Request $request The request
      *
-     * @return string
+     * @return JsonResponse
      */
     public function deleteAllAttributeAction($idProduct, Request $request)
     {
@@ -243,6 +266,7 @@ class AttributeController extends FrameworkBundleAdminController
 
             if ($res['status'] == 'error') {
                 $response->setStatusCode(400);
+
                 break;
             }
         }
@@ -255,10 +279,12 @@ class AttributeController extends FrameworkBundleAdminController
     /**
      * get the images form for a product combinations.
      *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
      * @param int $idProduct The product id
      * @param Request $request The request
      *
-     * @return string Json
+     * @return JsonResponse
      */
     public function getFormImagesAction($idProduct, Request $request)
     {

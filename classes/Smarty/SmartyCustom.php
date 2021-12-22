@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 class SmartyCustomCore extends Smarty
 {
@@ -109,7 +109,7 @@ class SmartyCustomCore extends Smarty
     {
         $this->check_compile_cache_invalidation();
 
-        return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+        return parent::fetch($template, $cache_id, $compile_id, $parent);
     }
 
     /**
@@ -129,7 +129,7 @@ class SmartyCustomCore extends Smarty
      * Handle the lazy template cache invalidation.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
+     * @param string|array|object|null $cache_id cache id
      * @param string $compile_id compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)
@@ -196,7 +196,7 @@ class SmartyCustomCore extends Smarty
      */
     public function is_in_lazy_cache($template, $cache_id, $compile_id)
     {
-        static $is_in_lazy_cache = array();
+        static $is_in_lazy_cache = [];
         $template_md5 = md5($template);
 
         if (strlen($compile_id) > 32) {
@@ -272,7 +272,7 @@ class SmartyCustomCore extends Smarty
      * @param string $cache_id cache id
      * @param string $compile_id compile id
      *
-     * @return bool
+     * @return bool|int
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {

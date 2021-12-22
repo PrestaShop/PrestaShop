@@ -1,0 +1,15 @@
+<phpunit bootstrap="bootstrap.php"
+         stopOnFailure="true"
+         processIsolation="true"
+>
+    <!-- process isolation is required since the introduction of GenerateMailTemplatesCommandTest file -->
+    <php>
+      <env name="KERNEL_CLASS" value="AppKernel" />
+      <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+    </php>
+    <testsuites>
+        <testsuite name="Integration">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -1,10 +1,11 @@
 <!--**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,77 +16,107 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
-  <div class="modal fade" id="ps-modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="material-icons">close</i>
-                </button>
-                <h4 class="modal-title">{{translations.modal_title}}</h4>
-            </div>
-            <div class="modal-body">
-              {{translations.modal_content}}
-            </div>
-            <div class="modal-footer">
-                <PSButton @click="onSave" class="btn-lg" primary data-dismiss="modal">{{translations.button_save}}</PSButton>
-                <PSButton @click="onLeave" class="btn-lg" ghost data-dismiss="modal">{{translations.button_leave}}</PSButton>
-            </div>
-          </div>
+  <div
+    class="modal fade"
+    id="ps-modal"
+    tabindex="-1"
+    role="dialog"
+  >
+    <div
+      class="modal-dialog"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+          >
+            <i class="material-icons">close</i>
+          </button>
+          <h4 class="modal-title">
+            {{ translations.modal_title }}
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{ translations.modal_content }}
+        </div>
+        <div class="modal-footer">
+          <PSButton
+            @click="onSave"
+            class="btn-lg"
+            primary
+            data-dismiss="modal"
+          >
+            {{ translations.button_save }}
+          </PSButton>
+          <PSButton
+            @click="onLeave"
+            class="btn-lg"
+            ghost
+            data-dismiss="modal"
+          >
+            {{ translations.button_leave }}
+          </PSButton>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
-<script>
-import PSButton from 'app/widgets/ps-button';
-import { EventBus } from 'app/utils/event-bus';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import {EventBus} from '@app/utils/event-bus';
 
-export default {
-  props: {
-    translations: {
-      type: Object,
-      required: false,
+  export default Vue.extend({
+    props: {
+      translations: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
     },
-  },
-  mounted() {
-    EventBus.$on('showModal', () => {
-      this.showModal();
-    });
-    EventBus.$on('hideModal', () => {
-      this.hideModal();
-    });
-  },
-  methods: {
-    showModal() {
-      $(this.$el).modal('show');
+    mounted() {
+      EventBus.$on('showModal', () => {
+        this.showModal();
+      });
+      EventBus.$on('hideModal', () => {
+        this.hideModal();
+      });
     },
-    hideModal() {
-      $(this.$el).modal('hide');
+    methods: {
+      showModal(): void {
+        $(this.$el).modal('show');
+      },
+      hideModal(): void {
+        $(this.$el).modal('hide');
+      },
+      onSave(): void {
+        this.$emit('save');
+      },
+      onLeave(): void {
+        this.$emit('leave');
+      },
     },
-    onSave() {
-      this.$emit('save');
+    components: {
+      PSButton,
     },
-    onLeave() {
-      this.$emit('leave');
-    },
-  },
-  components: {
-    PSButton,
-  },
-};
+  });
 
 </script>
 
-<style lang="sass" scoped>
-   @import "../../../scss/config/_settings.scss";
+<style lang="scss" scoped>
+  @import '~@scss/config/_settings.scss';
+
   .modal-header .close {
     font-size: 1.2rem;
     color: $gray-medium;

@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,15 +16,14 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 {block name='order_products_table'}
-  <form id="order-return-form" action="{$urls.pages.order_follow}" method="post">
+  <form id="order-return-form" class="js-order-return-form" action="{$urls.pages.order_follow}" method="post">
 
     <div class="box hidden-sm-down">
       <table id="order-products" class="table table-bordered return">
@@ -40,22 +40,34 @@
         {foreach from=$order.products item=product name=products}
           <tr>
             <td>
-              {if !$product.customizations}
-                <span id="_desktop_product_line_{$product.id_order_detail}">
+              <span id="_desktop_product_line_{$product.id_order_detail}">
                 <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
               </span>
-              {else}
-                {foreach $product.customizations  as $customization}
-                  <span id="_desktop_product_customization_line_{$product.id_order_detail}_{$customization.id_customization}">
-                  <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
-                </span>
-                {/foreach}
-              {/if}
+
+            {if !$product.is_virtual}
+                {if !$product.customizations}
+                  <span id="_desktop_product_line_{$product.id_order_detail}">
+                    <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
+                  </span>
+                {else}
+                  {foreach $product.customizations as $customization}
+                    <span id="_desktop_product_customization_line_{$product.id_order_detail}_{$customization.id_customization}">
+                      <input type="checkbox" id="cb_{$product.id_order_detail}" name="customization_ids[{$product.id_order_detail}][]" value="{$customization.id_customization}">
+                    </span>
+                  {/foreach}
+                {/if}
+            {/if}
             </td>
             <td>
               <strong>{$product.name}</strong><br/>
-              {if $product.reference}
-                {l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}<br/>
+              {if $product.product_reference}
+                {l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}<br/>
+              {/if}
+              {if isset($product.download_link)}
+                <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
+              {/if}
+              {if $product.is_virtual}
+                {l s='Virtual products can\'t be returned.' d='Shop.Theme.Customeraccount'}</br>
               {/if}
               {if $product.customizations}
                 {foreach from=$product.customizations item="customization"}
@@ -67,7 +79,7 @@
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="{l s='Close' d='Shop.Theme.Global'}">
                               <span aria-hidden="true">&times;</span>
                             </button>
                             <h4 class="modal-title">{l s='Product customization' d='Shop.Theme.Catalog'}</h4>
@@ -86,7 +98,7 @@
                                       {$field.text}
                                     {/if}
                                   {elseif $field.type == 'image'}
-                                    <img src="{$field.image.small.url}">
+                                    <img src="{$field.image.small.url}" loading="lazy">
                                   {/if}
                                 </div>
                               </div>
@@ -100,11 +112,22 @@
               {/if}
             </td>
             <td class="qty">
-              {if !$product.customizations}
-                <div class="current">
-                  {$product.quantity}
+              <div class="current">
+                {$product.quantity}
+              </div>
+              {if $product.quantity > $product.qty_returned}
+                <div class="select" id="_desktop_return_qty_{$product.id_order_detail}">
+                  <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
+                    {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
+                      <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                    {/section}
+                  </select>
+                  {if $product.customizations}
+                    <input type="hidden" value="1" name="customization_qty_input[{$customization.id_customization}]" />
+                  {/if}
                 </div>
-                {if $product.quantity > $product.qty_returned}
+                {/if}
+                {if $product.quantity > $product.qty_returned && !$product.is_virtual}
                   <div class="select" id="_desktop_return_qty_{$product.id_order_detail}">
                     <select name="order_qte_input[{$product.id_order_detail}]" class="form-control form-control-select">
                       {section name=quantity start=1 loop=$product.quantity+1-$product.qty_returned}
@@ -118,16 +141,18 @@
                   <div class="current">
                     {$customization.quantity}
                   </div>
-                  <div class="select" id="_desktop_return_qty_{$product.id_order_detail}_{$customization.id_customization}">
-                    <select
-                      name="customization_qty_input[{$customization.id_customization}]"
-                      class="form-control form-control-select"
-                    >
-                      {section name=quantity start=1 loop=$customization.quantity+1}
-                        <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
-                      {/section}
-                    </select>
-                  </div>
+                  {if !$product.is_virtual}
+                    <div class="select" id="_desktop_return_qty_{$product.id_order_detail}_{$customization.id_customization}">
+                      <select
+                        name="customization_qty_input[{$customization.id_customization}]"
+                        class="form-control form-control-select"
+                      >
+                        {section name=quantity start=1 loop=$customization.quantity+1}
+                          <option value="{$smarty.section.quantity.index}">{$smarty.section.quantity.index}</option>
+                        {/section}
+                      </select>
+                    </div>
+                  {/if}
                 {/foreach}
                 <div class="clearfix"></div>
               {/if}
@@ -171,8 +196,11 @@
               <div class="row">
                 <div class="col-sm-5 desc">
                   <div class="name">{$product.name}</div>
-                  {if $product.reference}
-                    <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.reference}</div>
+                  {if $product.product_reference}
+                    <div class="ref">{l s='Reference' d='Shop.Theme.Catalog'}: {$product.product_reference}</div>
+                  {/if}
+                  {if isset($product.download_link)}
+                    <a href="{$product.download_link}">{l s='Download' d='Shop.Theme.Actions'}</a><br/>
                   {/if}
                   {if $product.customizations}
                     {foreach $product.customizations as $customization}

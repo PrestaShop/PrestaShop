@@ -9,10 +9,6 @@
     <access id="access_1_1" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINACCESS_READ"/>
     <access id="access_1_2" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINACCESS_UPDATE"/>
     <access id="access_1_3" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINACCESS_DELETE"/>
-    <access id="access_1_4" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINADDONSCATALOG_CREATE"/>
-    <access id="access_1_5" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINADDONSCATALOG_READ"/>
-    <access id="access_1_7" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINADDONSCATALOG_UPDATE"/>
-    <access id="access_1_8" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINADDONSCATALOG_DELETE"/>
     <access id="access_1_9" id_profile="SuperAdmin"   id_authorization_role="TAB_ADMINADDRESSES_CREATE"/>
     <access id="access_1_10" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINADDRESSES_READ"/>
     <access id="access_1_11" id_profile="SuperAdmin"  id_authorization_role="TAB_ADMINADDRESSES_UPDATE"/>
@@ -397,10 +393,6 @@
     <access id="access_1_406" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMES_READ"/>
     <access id="access_1_407" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMES_UPDATE"/>
     <access id="access_1_408" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMES_DELETE"/>
-    <access id="access_1_409" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMESCATALOG_CREATE"/>
-    <access id="access_1_410" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMESCATALOG_READ"/>
-    <access id="access_1_411" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMESCATALOG_UPDATE"/>
-    <access id="access_1_412" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTHEMESCATALOG_DELETE"/>
     <access id="access_1_413" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRACKING_CREATE"/>
     <access id="access_1_414" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRACKING_READ"/>
     <access id="access_1_415" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTRACKING_UPDATE"/>
@@ -457,5 +449,25 @@
     <access id="access_1_466" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_READ"/>
     <access id="access_1_467" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_UPDATE"/>
     <access id="access_1_468" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSHOPURL_DELETE"/>
+    <access id="access_1_469" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_CREATE"/>
+    <access id="access_1_470" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_READ"/>
+    <access id="access_1_471" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_UPDATE"/>
+    <access id="access_1_472" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESUPDATES_DELETE"/>
+    <access id="access_1_473" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_CREATE"/>
+    <access id="access_1_474" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_READ"/>
+    <access id="access_1_475" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_UPDATE"/>
+    <access id="access_1_476" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMODULESNOTIFICATIONS_DELETE"/>
+    <access id="access_1_477" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_CREATE"/>
+    <access id="access_1_478" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_READ"/>
+    <access id="access_1_479" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_UPDATE"/>
+    <access id="access_1_480" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPARENTMAILTHEME_DELETE"/>
+    <access id="access_1_481" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_CREATE"/>
+    <access id="access_1_482" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_READ"/>
+    <access id="access_1_483" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_UPDATE"/>
+    <access id="access_1_484" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINMAILTHEME_DELETE"/>
+    <access id="access_1_485" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_CREATE"/>
+    <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_READ"/>
+    <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_UPDATE"/>
+    <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_DELETE"/>
   </entities>
 </entity_access>

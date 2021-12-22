@@ -1,8 +1,11 @@
-parameters:
+imports:
+    - { resource: ../common.yml }
+    - { resource: ../../../src/PrestaShopBundle/Resources/config/services/adapter/news.yml }
 
 services:
     filesystem:
         class: Symfony\Component\Filesystem\Filesystem
+
     finder:
         class: Symfony\Component\Finder\Finder
 
@@ -24,5 +27,5 @@ services:
         class: PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManager
         arguments: ["@shop", "@configuration", "@theme_validator", "@employee", "@filesystem", "@finder", "@hook_configurator"]
 
-    hashing:
-        class: PrestaShop\PrestaShop\Core\Crypto\Hashing
+    context.static:
+        class: Context

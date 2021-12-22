@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -112,9 +112,9 @@ class MailCore extends ObjectModel
      * @param int $idLang Language ID of the email (to translate the template)
      * @param string $template Template: the name of template not be a var but a string !
      * @param string $subject Subject of the email
-     * @param string $templateVars Template variables for the email
-     * @param string $to To email
-     * @param string $toName To name
+     * @param array $templateVars Template variables for the email
+     * @param string|array<string> $to To email
+     * @param string|array<string> $toName To name
      * @param string $from From email
      * @param string $fromName To email
      * @param array $fileAttachment array with three parameters (content, mime and name).
@@ -123,9 +123,9 @@ class MailCore extends ObjectModel
      * @param string $templatePath Template path
      * @param bool $die Die after error
      * @param int $idShop Shop ID
-     * @param string $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
-     * @param string $replyTo Reply-To recipient address
-     * @param string $replyToName Reply-To recipient name
+     * @param string|array<string>|null $bcc Bcc recipient address. You can use an array of array to send to multiple recipients
+     * @param string|null $replyTo Reply-To recipient address
+     * @param string|null $replyToName Reply-To recipient name
      *
      * @return bool|int Whether sending was successful. If not at all, false, otherwise amount of recipients succeeded.
      */
@@ -151,34 +151,40 @@ class MailCore extends ObjectModel
             $idShop = Context::getContext()->shop->id;
         }
 
-        $keepGoing = array_reduce(
-            Hook::exec(
-                'actionEmailSendBefore',
-                [
-                    'idLang' => &$idLang,
-                    'template' => &$template,
-                    'subject' => &$subject,
-                    'templateVars' => &$templateVars,
-                    'to' => &$to,
-                    'toName' => &$toName,
-                    'from' => &$from,
-                    'fromName' => &$fromName,
-                    'fileAttachment' => &$fileAttachment,
-                    'mode_smtp' => &$mode_smtp,
-                    'templatePath' => &$templatePath,
-                    'die' => &$die,
-                    'idShop' => &$idShop,
-                    'bcc' => &$bcc,
-                    'replyTo' => &$replyTo,
-                ],
-                null,
-                true
-            ),
-            function ($carry, $item) {
-                return ($item === false) ? false : $carry;
-            },
+        $hookBeforeEmailResult = Hook::exec(
+            'actionEmailSendBefore',
+            [
+                'idLang' => &$idLang,
+                'template' => &$template,
+                'subject' => &$subject,
+                'templateVars' => &$templateVars,
+                'to' => &$to,
+                'toName' => &$toName,
+                'from' => &$from,
+                'fromName' => &$fromName,
+                'fileAttachment' => &$fileAttachment,
+                'mode_smtp' => &$mode_smtp,
+                'templatePath' => &$templatePath,
+                'die' => &$die,
+                'idShop' => &$idShop,
+                'bcc' => &$bcc,
+                'replyTo' => &$replyTo,
+            ],
+            null,
             true
         );
+
+        if ($hookBeforeEmailResult === null) {
+            $keepGoing = false;
+        } else {
+            $keepGoing = array_reduce(
+                $hookBeforeEmailResult,
+                function ($carry, $item) {
+                    return ($item === false) ? false : $carry;
+                },
+                true
+            );
+        }
 
         if (!$keepGoing) {
             return true;
@@ -186,6 +192,12 @@ class MailCore extends ObjectModel
 
         if (is_numeric($idShop) && $idShop) {
             $shop = new Shop((int) $idShop);
+        }
+
+        if (!isset($shop)) {
+            self::dieOrLog($die, 'Error: parameter "idShop" is corrupted');
+
+            return false;
         }
 
         $configuration = Configuration::getMultiple(
@@ -199,6 +211,10 @@ class MailCore extends ObjectModel
                 'PS_MAIL_SMTP_ENCRYPTION',
                 'PS_MAIL_SMTP_PORT',
                 'PS_MAIL_TYPE',
+                'PS_MAIL_DKIM_ENABLE',
+                'PS_MAIL_DKIM_DOMAIN',
+                'PS_MAIL_DKIM_SELECTOR',
+                'PS_MAIL_DKIM_KEY',
             ],
             null,
             null,
@@ -260,8 +276,8 @@ class MailCore extends ObjectModel
             return false;
         }
 
-        // if bcc is not null, make sure it's a vaild e-mail
-        if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc)) {
+        // if bcc is not null, make sure it's a valid e-mail
+        if (null !== $bcc && !is_array($bcc) && !Validate::isEmail($bcc)) {
             self::dieOrLog($die, 'Error: parameter "bcc" is corrupted');
             $bcc = null;
         }
@@ -287,9 +303,24 @@ class MailCore extends ObjectModel
             return false;
         }
 
+        $message = new Swift_Message();
+
+        /* Create new message and DKIM sign it, if enabled and all data for signature are provided */
+        if ((bool) $configuration['PS_MAIL_DKIM_ENABLE'] === true
+            && !empty($configuration['PS_MAIL_DKIM_DOMAIN'])
+            && !empty($configuration['PS_MAIL_DKIM_SELECTOR'])
+            && !empty($configuration['PS_MAIL_DKIM_KEY'])
+        ) {
+            $signer = new Swift_Signers_DKIMSigner(
+                $configuration['PS_MAIL_DKIM_KEY'],
+                $configuration['PS_MAIL_DKIM_DOMAIN'],
+                $configuration['PS_MAIL_DKIM_SELECTOR']
+            );
+            $message->attachSigner($signer);
+        }
+
         /* Construct multiple recipients list if needed */
-        $message = \Swift_Message::newInstance();
-        if (is_array($to) && isset($to)) {
+        if (is_array($to)) {
             foreach ($to as $key => $addr) {
                 $addr = trim($addr);
                 if (!Validate::isEmail($addr)) {
@@ -341,22 +372,25 @@ class MailCore extends ObjectModel
                     return false;
                 }
 
-                $connection = \Swift_SmtpTransport::newInstance(
+                $connection = (new Swift_SmtpTransport(
                     $configuration['PS_MAIL_SERVER'],
                     $configuration['PS_MAIL_SMTP_PORT'],
                     $configuration['PS_MAIL_SMTP_ENCRYPTION']
-                )
+                ))
                     ->setUsername($configuration['PS_MAIL_USER'])
                     ->setPassword($configuration['PS_MAIL_PASSWD']);
             } else {
-                $connection = \Swift_MailTransport::newInstance();
+                /**
+                 * mail() support was removed from SwiftMailer for security reasons
+                 * previously => $connection = \Swift_MailTransport::newInstance();
+                 * Use Swift_SendmailTransport instead
+                 *
+                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
+                 */
+                $connection = new Swift_SendmailTransport();
             }
 
-            if (!$connection) {
-                return false;
-            }
-
-            $swift = \Swift_Mailer::newInstance($connection);
+            $swift = new Swift_Mailer($connection);
             /* Get templates content */
             $iso = Language::getIsoById((int) $idLang);
             $isoDefault = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
@@ -382,6 +416,7 @@ class MailCore extends ObjectModel
                 $moduleName = $res[1];
             }
 
+            $isoTemplate = '';
             foreach ($isoArray as $isoCode) {
                 $isoTemplate = $isoCode . '/' . $template;
                 $templatePath = self::getTemplateBasePath($isoTemplate, $moduleName, $shop->theme);
@@ -414,6 +449,7 @@ class MailCore extends ObjectModel
                     );
                 } else {
                     $templatePathExists = true;
+
                     break;
                 }
             }
@@ -458,7 +494,7 @@ class MailCore extends ObjectModel
             );
 
             /* Create mail and attach differents parts */
-            $subject = '[' . Configuration::get('PS_SHOP_NAME', null, null, $idShop) . '] ' . $subject;
+            $subject = '[' . strip_tags($configuration['PS_SHOP_NAME']) . '] ' . $subject;
             $message->setSubject($subject);
 
             $message->setCharset('utf-8');
@@ -473,9 +509,6 @@ class MailCore extends ObjectModel
             if (isset($replyTo) && $replyTo) {
                 $message->setReplyTo($replyTo, ($replyToName !== '' ? $replyToName : null));
             }
-
-            $templateVars = array_map(['Tools', 'htmlentitiesDecodeUTF8'], $templateVars);
-            $templateVars = array_map(['Tools', 'stripslashes'], $templateVars);
 
             if (false !== Configuration::get('PS_LOGO_MAIL') &&
                 file_exists(_PS_IMG_DIR_ . Configuration::get('PS_LOGO_MAIL', null, null, $idShop))
@@ -494,11 +527,11 @@ class MailCore extends ObjectModel
                 $templateVars['{shop_logo}'] = $message->embed(\Swift_Image::fromPath($logo));
             }
 
-            if ((Context::getContext()->link instanceof Link) === false) {
+            if (!(Context::getContext()->link instanceof Link)) {
                 Context::getContext()->link = new Link();
             }
 
-            $templateVars['{shop_name}'] = Tools::safeOutput(Configuration::get('PS_SHOP_NAME', null, null, $idShop));
+            $templateVars['{shop_name}'] = Tools::safeOutput($configuration['PS_SHOP_NAME']);
             $templateVars['{shop_url}'] = Context::getContext()->link->getPageLink(
                 'index',
                 true,
@@ -531,6 +564,14 @@ class MailCore extends ObjectModel
                 false,
                 $idShop
             );
+            $templateVars['{order_slip_url}'] = Context::getContext()->link->getPageLink(
+                'order-slip',
+                true,
+                $idLang,
+                null,
+                false,
+                $idShop
+            );
             $templateVars['{color}'] = Tools::safeOutput(Configuration::get('PS_MAIL_COLOR', null, null, $idShop));
             // Get extra template_vars
             $extraTemplateVars = [];
@@ -546,7 +587,7 @@ class MailCore extends ObjectModel
                 true
             );
             $templateVars = array_merge($templateVars, $extraTemplateVars);
-            $swift->registerPlugin(new \Swift_Plugins_DecoratorPlugin(array($toPlugin => $templateVars)));
+            $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
             ) {
@@ -561,22 +602,22 @@ class MailCore extends ObjectModel
             if ($fileAttachment && !empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
-                    $fileAttachment = array($fileAttachment);
+                    $fileAttachment = [$fileAttachment];
                 }
 
                 foreach ($fileAttachment as $attachment) {
-                    if (isset($attachment['content']) && isset($attachment['name']) && isset($attachment['mime'])) {
+                    if (isset($attachment['content'], $attachment['name'], $attachment['mime'])) {
                         $message->attach(
-                            \Swift_Attachment::newInstance()->setFilename(
+                            (new Swift_Attachment())->setFilename(
                                 $attachment['name']
                             )->setContentType($attachment['mime'])
-                            ->setBody($attachment['content'])
+                                ->setBody($attachment['content'])
                         );
                     }
                 }
             }
             /* Send mail */
-            $message->setFrom(array($from => $fromName));
+            $message->setFrom([$from => $fromName]);
 
             // Hook to alter Swift Message before sending mail
             Hook::exec('actionMailAlterMessageBeforeSend', [
@@ -590,7 +631,7 @@ class MailCore extends ObjectModel
             if ($send && Configuration::get('PS_LOG_EMAILS')) {
                 $mail = new Mail();
                 $mail->template = Tools::substr($template, 0, 62);
-                $mail->subject = Tools::substr($subject, 0, 255);
+                $mail->subject = Tools::substr($message->getSubject(), 0, 255);
                 $mail->id_lang = (int) $idLang;
                 $recipientsTo = $message->getTo();
                 $recipientsCc = $message->getCc();
@@ -613,12 +654,12 @@ class MailCore extends ObjectModel
             }
 
             return $send;
-        } catch (\Swift_SwiftException $e) {
+        } catch (Swift_SwiftException $e) {
             PrestaShopLogger::addLog(
                 'Swift Error: ' . $e->getMessage(),
                 3,
                 null,
-                'Swift_Message'
+                'SwiftMessage'
             );
 
             return false;
@@ -650,7 +691,7 @@ class MailCore extends ObjectModel
     }
 
     /**
-     * @param $idMail Mail ID
+     * @param int $idMail Mail ID
      *
      * @return bool Whether removal succeeded
      */
@@ -671,7 +712,7 @@ class MailCore extends ObjectModel
      * Send a test email.
      *
      * @param bool $smtpChecked Is SMTP checked?
-     * @param string $smtp_server SMTP Server hostname
+     * @param string $smtpServer SMTP Server hostname
      * @param string $content Content of the email
      * @param string $subject Subject of the email
      * @param bool $type Deprecated
@@ -686,7 +727,7 @@ class MailCore extends ObjectModel
      */
     public static function sendMailTest(
         $smtpChecked,
-        $smtp_server,
+        $smtpServer,
         $content,
         $subject,
         $type,
@@ -695,23 +736,53 @@ class MailCore extends ObjectModel
         $smtpLogin,
         $smtpPassword,
         $smtpPort,
-        $smtpEncryption
+        $smtpEncryption,
+        bool $dkimEnable = false,
+        string $dkimKey = '',
+        string $dkimDomain = '',
+        string $dkimSelector = ''
     ) {
         $result = false;
+
         try {
             if ($smtpChecked) {
                 if (Tools::strtolower($smtpEncryption) === 'off') {
                     $smtpEncryption = false;
                 }
-                $smtp = \Swift_SmtpTransport::newInstance($smtp_server, $smtpPort, $smtpEncryption)
+                $connection = (new Swift_SmtpTransport(
+                    $smtpServer,
+                    $smtpPort,
+                    $smtpEncryption
+                ))
                     ->setUsername($smtpLogin)
                     ->setPassword($smtpPassword);
-                $swift = \Swift_Mailer::newInstance($smtp);
             } else {
-                $swift = \Swift_Mailer::newInstance(\Swift_MailTransport::newInstance());
+                /**
+                 * mail() support was removed from SwiftMailer for security reasons
+                 * previously => $connection = \Swift_MailTransport::newInstance();
+                 * Use Swift_SendmailTransport instead
+                 *
+                 * @see https://github.com/swiftmailer/swiftmailer/issues/866
+                 */
+                $connection = new Swift_SendmailTransport();
             }
 
-            $message = \Swift_Message::newInstance();
+            $swift = new Swift_Mailer($connection);
+            $message = new Swift_Message();
+
+            /* Create new message and DKIM sign it, if enabled and all data for signature are provided */
+            if ($dkimEnable === true
+                && !empty($dkimKey)
+                && !empty($dkimDomain)
+                && !empty($dkimSelector)
+            ) {
+                $signer = new Swift_Signers_DKIMSigner(
+                    $dkimKey,
+                    $dkimDomain,
+                    $dkimSelector
+                );
+                $message->attachSigner($signer);
+            }
 
             $message
                 ->setFrom($from)
@@ -864,6 +935,9 @@ class MailCore extends ObjectModel
     /**
      * Automatically convert email to Punycode.
      *
+     * Try to use INTL_IDNA_VARIANT_UTS46 only if defined, else use INTL_IDNA_VARIANT_2003
+     * See https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+     *
      * @param string $to Email address
      *
      * @return string
@@ -873,6 +947,18 @@ class MailCore extends ObjectModel
         $address = explode('@', $to);
         if (empty($address[0]) || empty($address[1])) {
             return $to;
+        }
+
+        if (defined('INTL_IDNA_VARIANT_UTS46')) {
+            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_UTS46);
+        }
+
+        /*
+         * INTL_IDNA_VARIANT_2003 const will be removed in PHP 8.
+         * See https://wiki.php.net/rfc/deprecate-and-remove-intl_idna_variant_2003
+         */
+        if (defined('INTL_IDNA_VARIANT_2003')) {
+            return $address[0] . '@' . idn_to_ascii($address[1], 0, INTL_IDNA_VARIANT_2003);
         }
 
         return $address[0] . '@' . idn_to_ascii($address[1]);

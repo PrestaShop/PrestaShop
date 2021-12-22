@@ -1,13 +1,14 @@
 <?php
-/*
- * 2007-2018 PrestaShop
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
+ * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
  * obtain it through the world-wide-web, please send an email
  * to license@prestashop.com so we can send you a copy immediately.
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- *  @author PrestaShop SA <contact@prestashop.com>
- *  @copyright  2007-2018 PrestaShop SA
- *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- *  International Registered Trademark & Property of PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
@@ -32,7 +32,7 @@ use PrestaShopBundle\Security\Voter\PageVoter;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
-    const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
     /**
      * Common method of alerts & updates routes for getting template variables.
@@ -57,7 +57,6 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
             'modules' => $modules->{$type},
-            'requireAddonsSearch' => false,
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -77,10 +76,10 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
 
         if (!in_array(
             $this->authorizationLevel($this::CONTROLLER_NAME),
-            array(
+            [
                 PageVoter::LEVEL_READ,
                 PageVoter::LEVEL_UPDATE,
-            )
+            ]
         )) {
             $toolbarButtons['add_module'] = [
                 'href' => '#',
@@ -90,37 +89,6 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return array_merge($toolbarButtons, $this->getAddonsConnectToolbar());
-    }
-
-    /**
-     * Create a button in the header for the marketplace account (login or logout).
-     *
-     * @return array
-     */
-    protected function getAddonsConnectToolbar()
-    {
-        $addonsProvider = $this->get('prestashop.core.admin.data_provider.addons_interface');
-        if ($addonsProvider->isAddonsAuthenticated()) {
-            $addonsEmail = $addonsProvider->getAddonsEmail();
-
-            return [
-                'addons_logout' => [
-                    'href' => '#',
-                    'desc' => $addonsEmail['username_addons'],
-                    'icon' => 'exit_to_app',
-                    'help' => $this->trans('Synchronized with Addons marketplace!', 'Admin.Modules.Notification'),
-                ],
-            ];
-        }
-
-        return [
-            'addons_connect' => [
-                'href' => '#',
-                'desc' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-                'icon' => 'vpn_key',
-                'help' => $this->trans('Connect to Addons marketplace', 'Admin.Modules.Feature'),
-            ],
-        ];
+        return $toolbarButtons;
     }
 }

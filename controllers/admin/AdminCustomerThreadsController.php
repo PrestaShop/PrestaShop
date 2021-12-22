@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 /**
@@ -37,14 +37,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->className = 'CustomerThread';
         $this->lang = false;
 
-        $contact_array = array();
+        $contact_array = [];
         $contacts = Contact::getContacts($this->context->language->id);
 
         foreach ($contacts as $contact) {
             $contact_array[$contact['id_contact']] = $contact['name'];
         }
 
-        $language_array = array();
+        $language_array = [];
         $languages = Language::getLanguages();
         foreach ($languages as $language) {
             $language_array[$language['id_lang']] = $language['name'];
@@ -52,187 +52,188 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         parent::__construct();
 
-        $icon_array = array(
-            'open' => array('class' => 'icon-circle text-success', 'alt' => $this->trans('Open', array(), 'Admin.Catalog.Feature')),
-            'closed' => array('class' => 'icon-circle text-danger', 'alt' => $this->trans('Closed', array(), 'Admin.Catalog.Feature')),
-            'pending1' => array('class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 1', array(), 'Admin.Catalog.Feature')),
-            'pending2' => array('class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 2', array(), 'Admin.Catalog.Feature')),
-        );
+        $icon_array = [
+            'open' => ['class' => 'icon-circle text-success', 'alt' => $this->trans('Open', [], 'Admin.Catalog.Feature')],
+            'closed' => ['class' => 'icon-circle text-danger', 'alt' => $this->trans('Closed', [], 'Admin.Catalog.Feature')],
+            'pending1' => ['class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 1', [], 'Admin.Catalog.Feature')],
+            'pending2' => ['class' => 'icon-circle text-warning', 'alt' => $this->trans('Pending 2', [], 'Admin.Catalog.Feature')],
+        ];
 
-        $status_array = array();
+        $status_array = [];
         foreach ($icon_array as $k => $v) {
             $status_array[$k] = $v['alt'];
         }
 
-        $this->fields_list = array(
-            'id_customer_thread' => array(
-                'title' => $this->trans('ID', array(), 'Admin.Global'),
+        $this->fields_list = [
+            'id_customer_thread' => [
+                'title' => $this->trans('ID', [], 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ),
-            'customer' => array(
-                'title' => $this->trans('Customer', array(), 'Admin.Global'),
+            ],
+            'customer' => [
+                'title' => $this->trans('Customer', [], 'Admin.Global'),
                 'filter_key' => 'customer',
                 'tmpTableFilter' => true,
-            ),
-            'email' => array(
-                'title' => $this->trans('Email', array(), 'Admin.Global'),
+            ],
+            'email' => [
+                'title' => $this->trans('Email', [], 'Admin.Global'),
                 'filter_key' => 'a!email',
-            ),
-            'contact' => array(
-                'title' => $this->trans('Type', array(), 'Admin.Catalog.Feature'),
+            ],
+            'contact' => [
+                'title' => $this->trans('Type', [], 'Admin.Catalog.Feature'),
                 'type' => 'select',
                 'list' => $contact_array,
                 'filter_key' => 'cl!id_contact',
                 'filter_type' => 'int',
-            ),
-            'language' => array(
-                'title' => $this->trans('Language', array(), 'Admin.Global'),
+            ],
+            'language' => [
+                'title' => $this->trans('Language', [], 'Admin.Global'),
                 'type' => 'select',
                 'list' => $language_array,
                 'filter_key' => 'l!id_lang',
                 'filter_type' => 'int',
-            ),
-            'status' => array(
-                'title' => $this->trans('Status', array(), 'Admin.Global'),
+            ],
+            'status' => [
+                'title' => $this->trans('Status', [], 'Admin.Global'),
                 'type' => 'select',
                 'list' => $status_array,
                 'icon' => $icon_array,
                 'align' => 'center',
                 'filter_key' => 'a!status',
                 'filter_type' => 'string',
-            ),
-            'employee' => array(
-                'title' => $this->trans('Employee', array(), 'Admin.Global'),
+            ],
+            'employee' => [
+                'title' => $this->trans('Employee', [], 'Admin.Global'),
                 'filter_key' => 'employee',
                 'tmpTableFilter' => true,
-            ),
-            'messages' => array(
-                'title' => $this->trans('Messages', array(), 'Admin.Catalog.Feature'),
+            ],
+            'messages' => [
+                'title' => $this->trans('Messages', [], 'Admin.Catalog.Feature'),
                 'filter_key' => 'messages',
                 'tmpTableFilter' => true,
                 'maxlength' => 40,
-            ),
-            'private' => array(
-                'title' => $this->trans('Private', array(), 'Admin.Catalog.Feature'),
+            ],
+            'private' => [
+                'title' => $this->trans('Private', [], 'Admin.Catalog.Feature'),
                 'type' => 'select',
                 'filter_key' => 'private',
                 'align' => 'center',
                 'cast' => 'intval',
                 'callback' => 'printOptinIcon',
-                'list' => array(
-                    '0' => $this->trans('No', array(), 'Admin.Global'),
-                    '1' => $this->trans('Yes', array(), 'Admin.Global'),
-                ),
-            ),
-            'date_upd' => array(
-                'title' => $this->trans('Last message', array(), 'Admin.Catalog.Feature'),
+                'list' => [
+                    '0' => $this->trans('No', [], 'Admin.Global'),
+                    '1' => $this->trans('Yes', [], 'Admin.Global'),
+                ],
+            ],
+            'date_upd' => [
+                'title' => $this->trans('Last message', [], 'Admin.Catalog.Feature'),
                 'havingFilter' => true,
                 'type' => 'datetime',
-            ),
-        );
+            ],
+        ];
 
-        $this->bulk_actions = array(
-            'delete' => array(
-                'text' => $this->trans('Delete selected', array(), 'Admin.Actions'),
-                'confirm' => $this->trans('Delete selected items?', array(), 'Admin.Notifications.Warning'),
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
                 'icon' => 'icon-trash',
-            ),
-        );
+            ],
+        ];
 
         $this->shopLinkType = 'shop';
 
-        $this->fields_options = array(
-            'contact' => array(
-                'title' => $this->trans('Contact options', array(), 'Admin.Catalog.Feature'),
-                'fields' => array(
-                    'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => array(
-                            'title' => $this->trans('Allow file uploading', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Allow customers to upload files using the contact page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'bool',
-                        ),
-                    'PS_CUSTOMER_SERVICE_SIGNATURE' => array(
-                            'title' => $this->trans('Default message', array(), 'Admin.Catalog.Feature'),
-                            'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', array(), 'Admin.Catalog.Help'),
-                            'type' => 'textareaLang',
-                            'lang' => true,
-                        ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-            'general' => array(
-                'title' => $this->trans('Customer service options', array(), 'Admin.Catalog.Feature'),
-                'fields' => array(
-                    'PS_SAV_IMAP_URL' => array(
-                        'title' => $this->trans('IMAP URL', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', array(), 'Admin.Catalog.Help'),
+        $this->fields_options = [
+            'contact' => [
+                'title' => $this->trans('Contact options', [], 'Admin.Catalog.Feature'),
+                'fields' => [
+                    'PS_CUSTOMER_SERVICE_FILE_UPLOAD' => [
+                        'title' => $this->trans('Allow file uploading', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Allow customers to upload files using the contact page.', [], 'Admin.Catalog.Help'),
+                        'type' => 'bool',
+                    ],
+                    'PS_CUSTOMER_SERVICE_SIGNATURE' => [
+                        'title' => $this->trans('Default message', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Please fill out the message fields that appear by default when you answer a thread on the customer service page.', [], 'Admin.Catalog.Help'),
+                        'type' => 'textareaLang',
+                        'lang' => true,
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+            'general' => [
+                'title' => $this->trans('Customer service options', [], 'Admin.Catalog.Feature'),
+                'fields' => [
+                    'PS_SAV_IMAP_URL' => [
+                        'title' => $this->trans('IMAP URL', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('URL for your IMAP server (ie.: mail.server.com).', [], 'Admin.Catalog.Help'),
                         'type' => 'text',
-                    ),
-                    'PS_SAV_IMAP_PORT' => array(
-                        'title' => $this->trans('IMAP port', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('Port to use to connect to your IMAP server.', array(), 'Admin.Catalog.Help'),
+                        'validation' => 'isValidImapUrl',
+                    ],
+                    'PS_SAV_IMAP_PORT' => [
+                        'title' => $this->trans('IMAP port', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Port to use to connect to your IMAP server.', [], 'Admin.Catalog.Help'),
                         'type' => 'text',
                         'defaultValue' => 143,
-                    ),
-                    'PS_SAV_IMAP_USER' => array(
-                        'title' => $this->trans('IMAP user', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('User to use to connect to your IMAP server.', array(), 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_USER' => [
+                        'title' => $this->trans('IMAP user', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('User to use to connect to your IMAP server.', [], 'Admin.Catalog.Help'),
                         'type' => 'text',
-                    ),
-                    'PS_SAV_IMAP_PWD' => array(
-                        'title' => $this->trans('IMAP password', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('Password to use to connect your IMAP server.', array(), 'Admin.Catalog.Help'),
-                        'type' => 'text',
-                    ),
-                    'PS_SAV_IMAP_DELETE_MSG' => array(
-                        'title' => $this->trans('Delete messages', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.', array(), 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_PWD' => [
+                        'title' => $this->trans('IMAP password', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Password to use to connect your IMAP server.', [], 'Admin.Catalog.Help'),
+                        'type' => 'password',
+                    ],
+                    'PS_SAV_IMAP_DELETE_MSG' => [
+                        'title' => $this->trans('Delete messages', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.', [], 'Admin.Catalog.Help'),
                         'type' => 'bool',
-                    ),
-                    'PS_SAV_IMAP_CREATE_THREADS' => array(
-                        'title' => $this->trans('Create new threads', array(), 'Admin.Catalog.Feature'),
-                        'hint' => $this->trans('Create new threads for unrecognized emails.', array(), 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_CREATE_THREADS' => [
+                        'title' => $this->trans('Create new threads', [], 'Admin.Catalog.Feature'),
+                        'hint' => $this->trans('Create new threads for unrecognized emails.', [], 'Admin.Catalog.Help'),
                         'type' => 'bool',
-                    ),
-                    'PS_SAV_IMAP_OPT_POP3' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/pop3)',
-                        'hint' => $this->trans('Use POP3 instead of IMAP.', array(), 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_POP3' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/pop3)',
+                        'hint' => $this->trans('Use POP3 instead of IMAP.', [], 'Admin.Catalog.Help'),
                         'type' => 'bool',
-                    ),
-                    'PS_SAV_IMAP_OPT_NORSH' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/norsh)',
+                    ],
+                    'PS_SAV_IMAP_OPT_NORSH' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/norsh)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.', array(), 'Admin.Catalog.Help'),
-                    ),
-                    'PS_SAV_IMAP_OPT_SSL' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/ssl)',
+                        'hint' => $this->trans('Do not use RSH or SSH to establish a preauthenticated IMAP sessions.', [], 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_SSL' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/ssl)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.', array(), 'Admin.Catalog.Help'),
-                    ),
-                    'PS_SAV_IMAP_OPT_VALIDATE-CERT' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/validate-cert)',
+                        'hint' => $this->trans('Use the Secure Socket Layer (TLS/SSL) to encrypt the session.', [], 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_VALIDATE-CERT' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/validate-cert)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Validate certificates from the TLS/SSL server.', array(), 'Admin.Catalog.Help'),
-                    ),
-                    'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/novalidate-cert)',
+                        'hint' => $this->trans('Validate certificates from the TLS/SSL server.', [], 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_NOVALIDATE-CERT' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/novalidate-cert)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.', array(), 'Admin.Catalog.Help'),
-                    ),
-                    'PS_SAV_IMAP_OPT_TLS' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/tls)',
+                        'hint' => $this->trans('Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.', [], 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_TLS' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/tls)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.', array(), 'Admin.Catalog.Help'),
-                    ),
-                    'PS_SAV_IMAP_OPT_NOTLS' => array(
-                        'title' => $this->trans('IMAP options', array(), 'Admin.Catalog.Feature') . ' (/notls)',
+                        'hint' => $this->trans('Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.', [], 'Admin.Catalog.Help'),
+                    ],
+                    'PS_SAV_IMAP_OPT_NOTLS' => [
+                        'title' => $this->trans('IMAP options', [], 'Admin.Catalog.Feature') . ' (/notls)',
                         'type' => 'bool',
-                        'hint' => $this->trans('Do not use start-TLS to encrypt the session, even with servers that support it.', array(), 'Admin.Catalog.Help'),
-                    ),
-                ),
-                'submit' => array('title' => $this->trans('Save', array(), 'Admin.Actions')),
-            ),
-        );
+                        'hint' => $this->trans('Do not use start-TLS to encrypt the session, even with servers that support it.', [], 'Admin.Catalog.Help'),
+                    ],
+                ],
+                'submit' => ['title' => $this->trans('Save', [], 'Admin.Actions')],
+            ],
+        ];
     }
 
     public function renderList()
@@ -244,7 +245,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $this->addRowAction('delete');
 
         $this->_select = '
-			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages, cm.private,
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(cm.`message`) as messages, cm.private,
 			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `' . _DB_PREFIX_ . 'customer_message` cm2
@@ -277,20 +278,20 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $categories = Contact::getCategoriesContacts();
 
-        $params = array(
-            $this->trans('Total threads', array(), 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
-            $this->trans('Threads pending', array(), 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
-            $this->trans('Total number of customer messages', array(), 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
-            $this->trans('Total number of employee messages', array(), 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
-            $this->trans('Unread threads', array(), 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
-            $this->trans('Closed threads', array(), 'Admin.Catalog.Feature') => $all - ($unread + $pending),
-        );
+        $params = [
+            $this->trans('Total threads', [], 'Admin.Catalog.Feature') => $all = CustomerThread::getTotalCustomerThreads(),
+            $this->trans('Threads pending', [], 'Admin.Catalog.Feature') => $pending = CustomerThread::getTotalCustomerThreads('status LIKE "%pending%"'),
+            $this->trans('Total number of customer messages', [], 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee = 0'),
+            $this->trans('Total number of employee messages', [], 'Admin.Catalog.Feature') => CustomerMessage::getTotalCustomerMessages('id_employee != 0'),
+            $this->trans('Unread threads', [], 'Admin.Catalog.Feature') => $unread = CustomerThread::getTotalCustomerThreads('status = "open"'),
+            $this->trans('Closed threads', [], 'Admin.Catalog.Feature') => $all - ($unread + $pending),
+        ];
 
-        $this->tpl_list_vars = array(
+        $this->tpl_list_vars = [
             'contacts' => $contacts,
             'categories' => $categories,
             'params' => $params,
-        );
+        ];
 
         return parent::renderList();
     }
@@ -310,7 +311,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
     {
         if ($id_customer_thread = (int) Tools::getValue('id_customer_thread')) {
             if (($id_contact = (int) Tools::getValue('id_contact'))) {
-                $result = Db::getInstance()->execute('
+                $result = Db::getInstance()->execute(
+                    '
 					UPDATE ' . _DB_PREFIX_ . 'customer_thread
 					SET id_contact = ' . $id_contact . '
 					WHERE id_customer_thread = ' . $id_customer_thread
@@ -320,7 +322,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 }
             }
             if ($id_status = (int) Tools::getValue('setstatus')) {
-                $status_array = array(1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2');
+                $status_array = [1 => 'open', 2 => 'closed', 3 => 'pending1', 4 => 'pending2'];
                 $result = Db::getInstance()->execute('
 					UPDATE ' . _DB_PREFIX_ . 'customer_thread
 					SET status = "' . $status_array[$id_status] . '"
@@ -350,29 +352,29 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = (int) Tools::getValue('id_customer_thread');
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $current_employee = $this->context->employee;
                 $id_employee = (int) Tools::getValue('id_employee_forward');
                 $employee = new Employee($id_employee);
                 $email = Tools::getValue('email');
                 $message = Tools::getValue('message_forward');
-                if (($error = $cm->validateField('message', $message, null, array(), true)) !== true) {
+                if (($error = $cm->validateField('message', $message, null, [], true)) !== true) {
                     $this->errors[] = $error;
                 } elseif ($id_employee && $employee && Validate::isLoadedObject($employee)) {
-                    $params = array(
-                        '{messages}' => stripslashes($output),
+                    $params = [
+                        '{messages}' => Tools::stripslashes($output),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => stripslashes(Tools::nl2br($_POST['message_forward'])),
+                        '{comment}' => Tools::stripslashes(Tools::nl2br($_POST['message_forward'])),
                         '{firstname}' => $employee->firstname,
                         '{lastname}' => $employee->lastname,
-                    );
+                    ];
 
                     if (Mail::Send(
                         $this->context->language->id,
                         'forward_msg',
                         $this->trans(
                             'Fwd: Customer message',
-                            array(),
+                            [],
                             'Emails.Subject',
                             $this->context->language->locale
                         ),
@@ -381,37 +383,48 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $employee->firstname . ' ' . $employee->lastname,
                         $current_employee->email,
                         $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
-                        $cm->private = 1;
-                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
+                        $cm->private = true;
+                        $cm->message = $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
                 } elseif ($email && Validate::isEmail($email)) {
-                    $params = array(
-                        '{messages}' => Tools::nl2br(stripslashes($output)),
+                    $params = [
+                        '{messages}' => Tools::nl2br(Tools::stripslashes($output)),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => stripslashes($_POST['message_forward']),
+                        '{comment}' => Tools::stripslashes($_POST['message_forward']),
                         '{firstname}' => '',
                         '{lastname}' => '',
-                    );
+                    ];
 
                     if (Mail::Send(
                         $this->context->language->id,
                         'forward_msg',
                         $this->trans(
                             'Fwd: Customer message',
-                            array(),
+                            [],
                             'Emails.Subject',
                             $this->context->language->locale
                         ),
-                        $params, $email, null,
-                        $current_employee->email, $current_employee->firstname . ' ' . $current_employee->lastname,
-                        null, null, _PS_MAIL_DIR_, true)) {
-                        $cm->message = $this->trans('Message forwarded to', array(), 'Admin.Catalog.Feature') . ' ' . $email . "\n" . $this->trans('Comment:') . ' ' . $message;
+                        $params,
+                        $email,
+                        null,
+                        $current_employee->email,
+                        $current_employee->firstname . ' ' . $current_employee->lastname,
+                        null,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true
+                    )) {
+                        $cm->message = $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature') . ' ' . $email . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
                 } else {
-                    $this->errors[] = '<div class="alert error">' . $this->trans('The email address is invalid.', array(), 'Admin.Notifications.Error') . '</div>';
+                    $this->errors[] = '<div class="alert error">' . $this->trans('The email address is invalid.', [], 'Admin.Notifications.Error') . '</div>';
                 }
             }
             if (Tools::isSubmit('submitReply')) {
@@ -422,12 +435,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = $ct->id;
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $cm->message = Tools::getValue('reply_message');
-                if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true) {
+                if (($error = $cm->validateField('message', $cm->message, null, [], true)) !== true) {
                     $this->errors[] = $error;
-                } elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
-                    $this->errors[] = $this->trans('An error occurred during the file upload process.', array(), 'Admin.Notifications.Error');
+                } elseif (!empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
+                    $this->errors[] = $this->trans('An error occurred during the file upload process.', [], 'Admin.Notifications.Error');
                 } elseif ($cm->add()) {
                     $file_attachment = null;
                     if (!empty($_FILES['joinFile']['name'])) {
@@ -436,15 +449,16 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $file_attachment['mime'] = $_FILES['joinFile']['type'];
                     }
                     $customer = new Customer($ct->id_customer);
-                    $params = array(
-                        '{reply}' => Tools::nl2br(Tools::getValue('reply_message')),
+
+                    $params = [
+                        '{reply}' => Tools::nl2br(Tools::htmlentitiesUTF8(Tools::getValue('reply_message'))),
                         '{link}' => Tools::url(
                             $this->context->link->getPageLink('contact', true, null, null, false, $ct->id_shop),
                             'id_customer_thread=' . (int) $ct->id . '&token=' . $ct->token
                         ),
                         '{firstname}' => $customer->firstname,
                         '{lastname}' => $customer->lastname,
-                    );
+                    ];
                     //#ct == id_customer_thread    #tc == token of thread   <== used in the synchronization imap
                     $contact = new Contact((int) $ct->id_contact, (int) $ct->id_lang);
 
@@ -463,15 +477,24 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         'reply_msg',
                         $this->trans(
                             'An answer to your message is available #ct%thread_id% #tc%thread_token%',
-                            array(
+                            [
                                 '%thread_id%' => $ct->id,
                                 '%thread_token%' => $ct->token,
-                            ),
+                            ],
                             'Emails.Subject',
                             $language->locale
                         ),
-                        $params, Tools::getValue('msg_email'), null, $from_email, $from_name, $file_attachment, null,
-                        _PS_MAIL_DIR_, true, $ct->id_shop)) {
+                        $params,
+                        Tools::getValue('msg_email'),
+                        null,
+                        $from_email,
+                        $from_name,
+                        $file_attachment,
+                        null,
+                        _PS_MAIL_DIR_,
+                        true,
+                        $ct->id_shop
+                    )) {
                         $ct->status = 'closed';
                         $ct->update();
                     }
@@ -479,7 +502,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         self::$currentIndex . '&id_customer_thread=' . (int) $id_customer_thread . '&viewcustomer_thread&token=' . Tools::getValue('token')
                     );
                 } else {
-                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', array(), 'Admin.Orderscustomers.Notification');
+                    $this->errors[] = $this->trans('An error occurred. Your message was not sent. Please contact your system administrator.', [], 'Admin.Orderscustomers.Notification');
                 }
             }
         }
@@ -490,17 +513,17 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function initContent()
     {
         if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_ . $_GET['filename']) && Validate::isFileName($_GET['filename'])) {
-            AdminCustomerThreadsController::openUploadedFile();
+            $this->openUploadedFile();
         }
 
-        return parent::initContent();
+        parent::initContent();
     }
 
     protected function openUploadedFile()
     {
         $filename = $_GET['filename'];
 
-        $extensions = array(
+        $extensions = [
             '.txt' => 'text/plain',
             '.rtf' => 'application/rtf',
             '.doc' => 'application/msword',
@@ -511,12 +534,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
             '.jpeg' => 'image/jpeg',
             '.gif' => 'image/gif',
             '.jpg' => 'image/jpeg',
-        );
+        ];
 
         $extension = false;
         foreach ($extensions as $key => $val) {
             if (substr(Tools::strtolower($filename), -4) == $key || substr(Tools::strtolower($filename), -5) == $key) {
                 $extension = $val;
+
                 break;
             }
         }
@@ -537,7 +561,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function renderKpis()
     {
         $time = time();
-        $kpis = array();
+        $kpis = [];
 
         /* The data generation is located in AdminStatsControllerCore */
 
@@ -546,7 +570,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->icon = 'icon-envelope';
         $helper->color = 'color1';
         $helper->href = $this->context->link->getAdminLink('AdminCustomerThreads');
-        $helper->title = $this->trans('Pending Discussion Threads', array(), 'Admin.Catalog.Feature');
+        $helper->title = $this->trans('Pending Discussion Threads', [], 'Admin.Catalog.Feature');
         if (ConfigurationKPI::get('PENDING_MESSAGES') !== false) {
             $helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
         }
@@ -558,8 +582,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-age';
         $helper->icon = 'icon-time';
         $helper->color = 'color2';
-        $helper->title = $this->trans('Average Response Time', array(), 'Admin.Catalog.Feature');
-        $helper->subtitle = $this->trans('30 days', array(), 'Admin.Global');
+        $helper->title = $this->trans('Average Response Time', [], 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->trans('30 days', [], 'Admin.Global');
         if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false) {
             $helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
         }
@@ -571,8 +595,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $helper->id = 'box-messages-per-thread';
         $helper->icon = 'icon-copy';
         $helper->color = 'color3';
-        $helper->title = $this->trans('Messages per Thread', array(), 'Admin.Catalog.Feature');
-        $helper->subtitle = $this->trans('30 day', array(), 'Admin.Global');
+        $helper->title = $this->trans('Messages per Thread', [], 'Admin.Catalog.Feature');
+        $helper->subtitle = $this->trans('30 day', [], 'Admin.Global');
         if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false) {
             $helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
         }
@@ -617,7 +641,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $product = new Product((int) $mess['id_product'], false, $this->context->language->id);
                 if (Validate::isLoadedObject($product)) {
                     $messages[$key]['product_name'] = $product->name;
-                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts') . '&updateproduct&id_product=' . (int) $product->id;
+                    $messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts', true, ['id_product' => (int) $product->id, 'updateproduct' => '1']);
                 }
             }
         }
@@ -626,61 +650,61 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
         $contacts = Contact::getContacts($this->context->language->id);
 
-        $actions = array();
+        $actions = [];
 
         if ($next_thread) {
-            $next_thread = array(
+            $next_thread = [
                 'href' => self::$currentIndex . '&id_customer_thread=' . (int) $next_thread . '&viewcustomer_thread&token=' . $this->token,
-                'name' => $this->trans('Reply to the next unanswered message in this thread', array(), 'Admin.Catalog.Feature'),
-            );
+                'name' => $this->trans('Reply to the next unanswered message in this thread', [], 'Admin.Catalog.Feature'),
+            ];
         }
 
         if ($thread->status != 'closed') {
-            $actions['closed'] = array(
+            $actions['closed'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=2&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Mark as "handled"', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Mark as "handled"', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 2,
-            );
+            ];
         } else {
-            $actions['open'] = array(
+            $actions['open'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Re-open', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Re-open', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
-            );
+            ];
         }
 
         if ($thread->status != 'pending1') {
-            $actions['pending1'] = array(
+            $actions['pending1'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=3&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Mark as "pending 1" (will be answered later)', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Mark as "pending 1" (will be answered later)', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 3,
-            );
+            ];
         } else {
-            $actions['pending1'] = array(
+            $actions['pending1'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
-            );
+            ];
         }
 
         if ($thread->status != 'pending2') {
-            $actions['pending2'] = array(
+            $actions['pending2'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=4&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Mark as "pending 2" (will be answered later)', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Mark as "pending 2" (will be answered later)', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 4,
-            );
+            ];
         } else {
-            $actions['pending2'] = array(
+            $actions['pending2'] = [
                 'href' => self::$currentIndex . '&viewcustomer_thread&setstatus=1&id_customer_thread=' . (int) Tools::getValue('id_customer_thread') . '&viewmsg&token=' . $this->token,
-                'label' => $this->trans('Disable pending status', array(), 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Disable pending status', [], 'Admin.Catalog.Feature'),
                 'name' => 'setstatus',
                 'value' => 1,
-            );
+            ];
         }
 
         if ($thread->id_customer) {
@@ -688,14 +712,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $orders = Order::getCustomerOrders($customer->id);
             if ($orders && count($orders)) {
                 $total_ok = 0;
-                $orders_ok = array();
+                $orders_ok = [];
                 foreach ($orders as $key => $order) {
                     if ($order['valid']) {
                         $orders_ok[] = $order;
                         $total_ok += $order['total_paid_real'] / $order['conversion_rate'];
                     }
                     $orders[$key]['date_add'] = Tools::displayDate($order['date_add']);
-                    $orders[$key]['total_paid_real'] = Tools::displayPrice($order['total_paid_real'], new Currency((int) $order['id_currency']));
+                    $orders[$key]['total_paid_real'] = $this->context->getCurrentLocale()->formatPrice($order['total_paid_real'], Currency::getIsoCodeById((int) $order['id_currency']));
                 }
             }
 
@@ -720,7 +744,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             }
         }
 
-        $this->tpl_view_vars = array(
+        $this->tpl_view_vars = [
             'id_customer_thread' => $id_customer_thread,
             'thread' => $thread,
             'actions' => $actions,
@@ -733,12 +757,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
             'orders' => isset($orders) ? $orders : false,
             'customer' => isset($customer) ? $customer : false,
             'products' => isset($products) ? $products : false,
-            'total_ok' => isset($total_ok) ? Tools::displayPrice($total_ok, $this->context->currency) : false,
+            'total_ok' => isset($total_ok) ? $this->context->getCurrentLocale()->formatPrice($total_ok, $this->context->currency->iso_code) : false,
             'orders_ok' => isset($orders_ok) ? $orders_ok : false,
             'count_ok' => isset($orders_ok) ? count($orders_ok) : false,
             'PS_CUSTOMER_SERVICE_SIGNATURE' => str_replace('\r\n', "\n", Configuration::get('PS_CUSTOMER_SERVICE_SIGNATURE', (int) $thread->id_lang)),
             'timeline_items' => $timeline_items,
-        );
+        ];
 
         if ($next_thread) {
             $this->tpl_view_vars['next_thread'] = $next_thread;
@@ -749,40 +773,40 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
     public function getTimeline($messages, $id_order)
     {
-        $timeline = array();
+        $timeline = [];
         foreach ($messages as $message) {
             $product = new Product((int) $message['id_product'], false, $this->context->language->id);
-            $link_product = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $product->id;
 
             $content = '';
             if (!$message['private']) {
-                $content .= $this->trans('Message to: ', array(), 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
+                $content .= $this->trans('Message to:', [], 'Admin.Catalog.Feature') . ' <span class="badge">' . (!$message['id_employee'] ? $message['subject'] : $message['customer_name']) . '</span><br/>';
             }
             if (Validate::isLoadedObject($product)) {
-                $content .= '<br/>' . $this->trans('Product: ', array(), 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
+                $content .= '<br/>' . $this->trans('Product:', [], 'Admin.Catalog.Feature') . '<span class="label label-info">' . $product->name . '</span><br/><br/>';
             }
             $content .= Tools::safeOutput($message['message']);
 
-            $timeline[$message['date_add']][] = array(
+            $timeline[$message['date_add']][] = [
                 'arrow' => 'left',
                 'background_color' => '',
                 'icon' => 'icon-envelope',
                 'content' => $content,
                 'date' => $message['date_add'],
-            );
+            ];
         }
 
         $order = new Order((int) $id_order);
         if (Validate::isLoadedObject($order)) {
             $order_history = $order->getHistory($this->context->language->id);
             foreach ($order_history as $history) {
-                $link_order = $this->context->link->getAdminLink('AdminOrders') . '&vieworder&id_order=' . (int) $order->id;
+                $parameters = ['vieworder' => 1, 'id_order' => (int) $order->id];
+                $link_order = $this->context->link->getAdminLink('AdminOrders', true, [], $parameters);
 
-                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', array(), 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
+                $content = '<a class="badge" target="_blank" href="' . Tools::safeOutput($link_order) . '">' . $this->trans('Order', [], 'Admin.Global') . ' #' . (int) $order->id . '</a><br/><br/>';
 
-                $content .= '<span>' . $this->trans('Status:', array(), 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
+                $content .= '<span>' . $this->trans('Status:', [], 'Admin.Catalog.Feature') . ' ' . $history['ostate_name'] . '</span>';
 
-                $timeline[$history['date_add']][] = array(
+                $timeline[$history['date_add']][] = [
                     'arrow' => 'right',
                     'alt' => true,
                     'background_color' => $history['color'],
@@ -790,7 +814,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     'content' => $content,
                     'date' => $history['date_add'],
                     'see_more_link' => $link_order,
-                );
+                ];
             }
         }
         krsort($timeline);
@@ -803,8 +827,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $tpl = $this->createTemplate('message.tpl');
 
         $contacts = Contact::getContacts($this->context->language->id);
+        $contact_array = [];
         foreach ($contacts as $contact) {
-            $contact_array[$contact['id_contact']] = array('id_contact' => $contact['id_contact'], 'name' => $contact['name']);
+            $contact_array[$contact['id_contact']] = ['id_contact' => $contact['id_contact'], 'name' => $contact['name']];
         }
         $contacts = $contact_array;
 
@@ -818,8 +843,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $message['message'] = preg_replace(
             '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
             '<a href="\1">\1</a>\2',
-            html_entity_decode($message['message'],
-            ENT_QUOTES, 'UTF-8')
+            html_entity_decode(
+                $message['message'],
+            ENT_QUOTES,
+                'UTF-8'
+            )
         );
 
         $is_valid_order_id = true;
@@ -829,10 +857,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $is_valid_order_id = false;
         }
 
-        $tpl->assign(array(
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
-                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+        $tpl->assign([
+            'thread_url' => $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1',
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
             'token' => $this->token,
@@ -844,7 +871,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             'file_name' => file_exists(_PS_UPLOAD_DIR_ . $message['file_name']),
             'contacts' => $contacts,
             'is_valid_order_id' => $is_valid_order_id,
-        ));
+        ]);
 
         return $tpl->fetch();
     }
@@ -868,36 +895,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return parent::renderOptions();
     }
 
-    /**
-     * AdminController::getList() override.
-     *
-     * @see AdminController::getList()
-     *
-     * @param int $id_lang
-     * @param string|null $order_by
-     * @param string|null $order_way
-     * @param int $start
-     * @param int|null $limit
-     * @param int|bool $id_lang_shop
-     *
-     * @throws PrestaShopException
-     */
-    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
-    {
-        parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
-
-        $nb_items = count($this->_list);
-        for ($i = 0; $i < $nb_items; ++$i) {
-            if (isset($this->_list[$i]['messages'])) {
-                $this->_list[$i]['messages'] = Tools::htmlentitiesDecodeUTF8($this->_list[$i]['messages']);
-            }
-        }
-    }
-
     public function updateOptionPsSavImapOpt($value)
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         if (!$this->errors && $value) {
@@ -908,7 +909,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function ajaxProcessMarkAsRead()
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         $id_thread = Tools::getValue('id_thread');
@@ -926,7 +927,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function ajaxProcessSyncImap()
     {
         if ($this->access('edit') != '1') {
-            throw new PrestaShopException($this->trans('You do not have permission to edit this.', array(), 'Admin.Notifications.Error'));
+            throw new PrestaShopException($this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error'));
         }
 
         if (Tools::isSubmit('syncImapMail')) {
@@ -954,7 +955,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         // Show the errors.
         if (isset($sync_errors['hasError']) && $sync_errors['hasError']) {
             if (isset($sync_errors['errors'])) {
-                foreach ($sync_errors['errors'] as &$error) {
+                foreach ($sync_errors['errors'] as $error) {
                     $this->displayWarning($error);
                 }
             }
@@ -972,13 +973,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
             || !($port = Configuration::get('PS_SAV_IMAP_PORT'))
             || !($user = Configuration::get('PS_SAV_IMAP_USER'))
             || !($password = Configuration::get('PS_SAV_IMAP_PWD'))) {
-            return array('hasError' => true, 'errors' => array('IMAP configuration is not correct'));
+            return ['hasError' => true, 'errors' => ['IMAP configuration is not correct']];
         }
 
-        $conf = Configuration::getMultiple(array(
+        $conf = Configuration::getMultiple([
             'PS_SAV_IMAP_OPT_POP3', 'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
             'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
-            'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS', ));
+            'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS', ]);
 
         $conf_str = '';
         if ($conf['PS_SAV_IMAP_OPT_POP3']) {
@@ -1004,7 +1005,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         if (!function_exists('imap_open')) {
-            return array('hasError' => true, 'errors' => array('imap is not installed on this server'));
+            return ['hasError' => true, 'errors' => ['imap is not installed on this server']];
         }
 
         $mbox = @imap_open('{' . $url . ':' . $port . $conf_str . '}', $user, $password);
@@ -1017,7 +1018,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $str_errors = '';
         $str_error_delete = '';
 
-        if (count($errors) && is_array($errors)) {
+        if (is_array($errors) && count($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
                 $str_errors .= $error . ', ';
@@ -1026,21 +1027,21 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         //checks if imap connexion is active
         if (!$mbox) {
-            return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />' . ($str_errors)));
+            return ['hasError' => true, 'errors' => ['Cannot connect to the mailbox :<br />' . ($str_errors)]];
         }
 
         //Returns information about the current mailbox. Returns FALSE on failure.
         $check = imap_check($mbox);
         if (!$check) {
-            return array('hasError' => true, 'errors' => array('Fail to get information about the current mailbox'));
+            return ['hasError' => true, 'errors' => ['Fail to get information about the current mailbox']];
         }
 
         if ($check->Nmsgs == 0) {
-            return array('hasError' => true, 'errors' => array('NO message to sync'));
+            return ['hasError' => true, 'errors' => ['NO message to sync']];
         }
 
         $result = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
-        $message_errors = array();
+        $message_errors = [];
         foreach ($result as $overview) {
             //check if message exist in database
             if (isset($overview->subject)) {
@@ -1053,7 +1054,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $exist = Db::getInstance()->getValue(
                 'SELECT `md5_header`
 						 FROM `' . _DB_PREFIX_ . 'customer_message_sync_imap`
-						 WHERE `md5_header` = \'' . pSQL($md5) . '\'');
+						 WHERE `md5_header` = \'' . pSQL($md5) . '\''
+            );
             if ($exist) {
                 if (Configuration::get('PS_SAV_IMAP_DELETE_MSG')) {
                     if (!imap_delete($mbox, $overview->msgno)) {
@@ -1065,7 +1067,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 preg_match('/\#ct([0-9]*)/', $subject, $matches1);
                 preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
                 $match_found = false;
-                if (isset($matches1[1]) && isset($matches2[1])) {
+                if (isset($matches1[1], $matches2[1])) {
                     $match_found = true;
                 }
 
@@ -1075,11 +1077,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 if ($match_found || $new_ct) {
                     if ($new_ct) {
                         // parse from attribute and fix it if needed
-                        $from_parsed = array();
+                        $from_parsed = [];
                         if (!isset($overview->from)
                             || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
-                            $message_errors[] = $this->trans('Cannot create message in a new thread.', array(), 'Admin.Orderscustomers.Notification');
+                            $message_errors[] = $this->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification');
+
                             continue;
                         }
 
@@ -1136,29 +1139,33 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         switch ($structure->encoding) {
                             case 3:
                                 $message = imap_base64($message);
+
                                 break;
                             case 4:
                                 $message = imap_qprint($message);
+
                                 break;
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
                         if (!$message || strlen($message) == 0) {
-                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
+                            $message_errors[] = $this->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
                             $fetch_succeed = false;
+
                             continue;
                         }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
                         if (empty($message) || !Validate::isCleanHtml($message)) {
-                            $str_errors .= $this->trans('Invalid message content for subject: %s', array($subject), 'Admin.Orderscustomers.Notification');
+                            $str_errors .= $this->trans('Invalid message content for subject: %s', [$subject], 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
                                 $cm->message = $message;
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
-                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', array(), 'Admin.Orderscustomers.Notification');
+                                $message_errors[] = $this->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification');
                                 $fetch_succeed = false;
+
                                 continue;
                             }
                         }
@@ -1171,24 +1178,24 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
         imap_expunge($mbox);
         imap_close($mbox);
-        if (sizeof($message_errors) > 0) {
+        if (count($message_errors) > 0) {
             if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
-                $message_errors = array_merge(array($more_error), $message_errors);
+                $message_errors = array_merge([$more_error], $message_errors);
             }
 
-            return array('hasError' => true, 'errors' => $message_errors);
+            return ['hasError' => true, 'errors' => $message_errors];
         }
         if ($str_errors . $str_error_delete) {
-            return array('hasError' => true, 'errors' => array($str_errors . $str_error_delete));
+            return ['hasError' => true, 'errors' => [$str_errors . $str_error_delete]];
         } else {
-            return array('hasError' => false, 'errors' => '');
+            return ['hasError' => false, 'errors' => ''];
         }
     }
 
     protected function getEncoding($structure)
     {
         foreach ($structure->parameters as $parameter) {
-            if ($parameter->attribute == 'CHARSET') {
+            if (strtoupper($parameter->attribute) == 'CHARSET') {
                 return $parameter->value;
             }
         }

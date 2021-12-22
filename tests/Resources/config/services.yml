@@ -1,0 +1,31 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.bundle.routing.converter.cache:
+        class: Symfony\Component\Cache\Adapter\ArrayAdapter
+
+    prestashop.adapter.image.uploader.category_cover_image_uploader:
+        class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryCoverImageUploader'
+
+    prestashop.adapter.shop.url.product_image_folder_provider:
+        class: 'Tests\Integration\Adapter\Shop\Url\TestProductImageFolderProvider'
+
+    prestashop.adapter.shop.url.category_image_folder_provider:
+        class: 'Tests\Integration\Adapter\Shop\Url\TestCategoryImageFolderProvider'
+
+    # Advanced form type
+    test.integration.prestashop_bundle.form.advanced_form_type:
+        class: 'Tests\Integration\PrestaShopBundle\Form\AdvancedFormType'
+        parent: 'form.type.translatable.aware'
+        public: true
+        tags:
+            - { name: form.type }
+
+    test.integration.core.form.identifiable_object.handler.form_handler_factory:
+        decorates: prestashop.core.form.identifiable_object.handler.form_handler_factory
+        class: 'Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerFactory'
+        arguments:
+            - '@prestashop.core.hook.dispatcher'
+            - '@translator'
+            - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'

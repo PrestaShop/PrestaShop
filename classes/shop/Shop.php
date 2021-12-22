@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 
@@ -42,6 +42,9 @@ class ShopCore extends ObjectModel
     /** @var string Shop name */
     public $name;
 
+    /** @var string Shop color */
+    public $color;
+
     public $active = true;
     public $deleted;
 
@@ -57,47 +60,56 @@ class ShopCore extends ObjectModel
     /** @var string Domain SSL of main url (read only) */
     public $domain_ssl;
 
-    /** @var ShopGroup Shop group object */
+    /** @var ShopGroup|null Shop group object */
     protected $group;
+
+    /**
+     * @var Address|null
+     */
+    public $address;
 
     /**
      * @see ObjectModel::$definition
      */
-    public static $definition = array(
+    public static $definition = [
         'table' => 'shop',
         'primary' => 'id_shop',
-        'fields' => array(
-            'active' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'deleted' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-            'name' => array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
-            'id_category' => array('type' => self::TYPE_INT, 'required' => true),
-            'theme_name' => array('type' => self::TYPE_STRING, 'validate' => 'isThemeName'),
-            'id_shop_group' => array('type' => self::TYPE_INT, 'required' => true),
-        ),
-    );
+        'fields' => [
+            'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'name' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
+            'color' => ['type' => self::TYPE_STRING, 'validate' => 'isColor'],
+            'id_category' => ['type' => self::TYPE_INT, 'required' => true],
+            'theme_name' => ['type' => self::TYPE_STRING, 'validate' => 'isThemeName'],
+            'id_shop_group' => ['type' => self::TYPE_INT, 'required' => true],
+        ],
+    ];
 
     /** @var array List of shops cached */
     protected static $shops;
 
-    protected static $asso_tables = array();
-    protected static $id_shop_default_tables = array();
+    protected static $asso_tables = [];
+    protected static $id_shop_default_tables = [];
     protected static $initialized = false;
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_shop_group' => array('xlink_resource' => 'shop_groups'),
-            'id_category' => array(),
-        ),
-    );
+    protected $webserviceParameters = [
+        'fields' => [
+            'id_shop_group' => ['xlink_resource' => 'shop_groups'],
+            'id_category' => [],
+        ],
+    ];
 
-    /** @var int Store the current context of shop (CONTEXT_ALL, CONTEXT_GROUP, CONTEXT_SHOP) */
+    /** @var int|null Store the current context of shop (CONTEXT_ALL, CONTEXT_GROUP, CONTEXT_SHOP) */
     protected static $context;
 
-    /** @var int ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
+    /** @var int|null ID shop in the current context (will be empty if context is not CONTEXT_SHOP) */
     protected static $context_id_shop;
 
-    /** @var int ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
+    /** @var int|null ID shop group in the current context (will be empty if context is CONTEXT_ALL) */
     protected static $context_id_shop_group;
+
+    /** @var bool|null is multistore activated */
+    protected static $feature_active;
 
     /** @var Theme * */
     public $theme;
@@ -140,48 +152,48 @@ class ShopCore extends ObjectModel
      */
     protected static function init()
     {
-        Shop::$id_shop_default_tables = array('product', 'category');
+        Shop::$id_shop_default_tables = ['product', 'category'];
 
-        $asso_tables = array(
-            'carrier' => array('type' => 'shop'),
-            'carrier_lang' => array('type' => 'fk_shop'),
-            'category' => array('type' => 'shop'),
-            'category_lang' => array('type' => 'fk_shop'),
-            'cms' => array('type' => 'shop'),
-            'cms_lang' => array('type' => 'fk_shop'),
-            'cms_category' => array('type' => 'shop'),
-            'cms_category_lang' => array('type' => 'fk_shop'),
-            'contact' => array('type' => 'shop'),
-            'country' => array('type' => 'shop'),
-            'currency' => array('type' => 'shop'),
-            'employee' => array('type' => 'shop'),
-            'hook_module' => array('type' => 'fk_shop'),
-            'hook_module_exceptions' => array('type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'),
-            'image' => array('type' => 'shop'),
-            'lang' => array('type' => 'shop'),
-            'meta_lang' => array('type' => 'fk_shop'),
-            'module' => array('type' => 'shop'),
-            'module_currency' => array('type' => 'fk_shop'),
-            'module_country' => array('type' => 'fk_shop'),
-            'module_group' => array('type' => 'fk_shop'),
-            'product' => array('type' => 'shop'),
-            'product_attribute' => array('type' => 'shop'),
-            'product_lang' => array('type' => 'fk_shop'),
-            'referrer' => array('type' => 'shop'),
-            'store' => array('type' => 'shop'),
-            'webservice_account' => array('type' => 'shop'),
-            'warehouse' => array('type' => 'shop'),
-            'stock_available' => array('type' => 'fk_shop', 'primary' => 'id_stock_available'),
-            'carrier_tax_rules_group_shop' => array('type' => 'fk_shop'),
-            'attribute' => array('type' => 'shop'),
-            'feature' => array('type' => 'shop'),
-            'group' => array('type' => 'shop'),
-            'attribute_group' => array('type' => 'shop'),
-            'tax_rules_group' => array('type' => 'shop'),
-            'zone' => array('type' => 'shop'),
-            'manufacturer' => array('type' => 'shop'),
-            'supplier' => array('type' => 'shop'),
-        );
+        $asso_tables = [
+            'carrier' => ['type' => 'shop'],
+            'carrier_lang' => ['type' => 'fk_shop'],
+            'category' => ['type' => 'shop'],
+            'category_lang' => ['type' => 'fk_shop'],
+            'cms' => ['type' => 'shop'],
+            'cms_lang' => ['type' => 'fk_shop'],
+            'cms_category' => ['type' => 'shop'],
+            'cms_category_lang' => ['type' => 'fk_shop'],
+            'contact' => ['type' => 'shop'],
+            'country' => ['type' => 'shop'],
+            'currency' => ['type' => 'shop'],
+            'employee' => ['type' => 'shop'],
+            'hook_module' => ['type' => 'fk_shop'],
+            'hook_module_exceptions' => ['type' => 'fk_shop', 'primary' => 'id_hook_module_exceptions'],
+            'image' => ['type' => 'shop'],
+            'lang' => ['type' => 'shop'],
+            'meta_lang' => ['type' => 'fk_shop'],
+            'module' => ['type' => 'shop'],
+            'module_currency' => ['type' => 'fk_shop'],
+            'module_country' => ['type' => 'fk_shop'],
+            'module_group' => ['type' => 'fk_shop'],
+            'product' => ['type' => 'shop'],
+            'product_attribute' => ['type' => 'shop'],
+            'product_lang' => ['type' => 'fk_shop'],
+            'referrer' => ['type' => 'shop'],
+            'store' => ['type' => 'shop'],
+            'webservice_account' => ['type' => 'shop'],
+            'warehouse' => ['type' => 'shop'],
+            'stock_available' => ['type' => 'fk_shop', 'primary' => 'id_stock_available'],
+            'carrier_tax_rules_group_shop' => ['type' => 'fk_shop'],
+            'attribute' => ['type' => 'shop'],
+            'feature' => ['type' => 'shop'],
+            'group' => ['type' => 'shop'],
+            'attribute_group' => ['type' => 'shop'],
+            'tax_rules_group' => ['type' => 'shop'],
+            'zone' => ['type' => 'shop'],
+            'manufacturer' => ['type' => 'shop'],
+            'supplier' => ['type' => 'shop'],
+        ];
 
         foreach ($asso_tables as $table_name => $table_details) {
             Shop::addTableAssociation($table_name, $table_details);
@@ -266,22 +278,22 @@ class ShopCore extends ObjectModel
         }
 
         // removes stock available
-        $res &= Db::getInstance()->delete('stock_available', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('stock_available', 'id_shop = ' . (int) $this->id);
 
         // Remove urls
-        $res &= Db::getInstance()->delete('shop_url', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('shop_url', 'id_shop = ' . (int) $this->id);
 
         // Remove currency restrictions
-        $res &= Db::getInstance()->delete('module_currency', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_currency', 'id_shop = ' . (int) $this->id);
 
         // Remove group restrictions
-        $res &= Db::getInstance()->delete('module_group', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_group', 'id_shop = ' . (int) $this->id);
 
         // Remove country restrictions
-        $res &= Db::getInstance()->delete('module_country', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_country', 'id_shop = ' . (int) $this->id);
 
         // Remove carrier restrictions
-        $res &= Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
+        $res = $res && Db::getInstance()->delete('module_carrier', 'id_shop = ' . (int) $this->id);
 
         Shop::cacheShops(true);
 
@@ -331,18 +343,16 @@ class ShopCore extends ObjectModel
         if (!($id_shop = Tools::getValue('id_shop')) || defined('_PS_ADMIN_DIR_')) {
             $found_uri = '';
             $is_main_uri = false;
-            $host = Tools::getHttpHost();
+            $host = Tools::getHttpHost(false, false, true);
             $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
-            $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
-                    FROM ' . _DB_PREFIX_ . 'shop_url su
-                    LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
-                    WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
-                        AND s.active = 1
-                        AND s.deleted = 0
-                    ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
+            $result = self::findShopByHost($host);
 
-            $result = Db::getInstance()->executeS($sql);
+            // If could not find a matching, try with port
+            if (empty($result)) {
+                $host = Tools::getHttpHost(false, false, false);
+                $result = self::findShopByHost($host);
+            }
 
             $through = false;
             foreach ($result as $row) {
@@ -354,6 +364,7 @@ class ShopCore extends ObjectModel
                     if ($row['main']) {
                         $is_main_uri = true;
                     }
+
                     break;
                 }
             }
@@ -369,7 +380,7 @@ class ShopCore extends ObjectModel
                         $redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
                         header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
                         header('Cache-Control: no-cache');
-                        header('Location: http://' . $url);
+                        header('Location: ' . Tools::getShopProtocol() . $url);
                         exit;
                     }
                 }
@@ -441,7 +452,7 @@ class ShopCore extends ObjectModel
                 $redirect_code = ($redirect_type == 1 ? '302' : '301');
                 $redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
                 header('HTTP/1.0 ' . $redirect_code . ' ' . $redirect_header);
-                header('Location: http://' . $url);
+                header('Location: ' . Tools::getShopProtocol() . $url);
                 exit;
             } elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri)) {
                 $shop_default = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
@@ -465,8 +476,8 @@ class ShopCore extends ObjectModel
         if (!isset($this->address)) {
             $address = new Address();
             $address->company = Configuration::get('PS_SHOP_NAME');
-            $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID') ? Configuration::get('PS_SHOP_COUNTRY_ID') : Configuration::get('PS_COUNTRY_DEFAULT');
-            $address->id_state = Configuration::get('PS_SHOP_STATE_ID');
+            $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID') ? (int) Configuration::get('PS_SHOP_COUNTRY_ID') : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+            $address->id_state = (int) Configuration::get('PS_SHOP_STATE_ID');
             $address->address1 = Configuration::get('PS_SHOP_ADDR1');
             $address->address2 = Configuration::get('PS_SHOP_ADDR2');
             $address->postcode = Configuration::get('PS_SHOP_CODE');
@@ -493,18 +504,6 @@ class ShopCore extends ObjectModel
     }
 
     /**
-     * Get theme directory name.
-     *
-     * @return string $this->theme->theme_name
-     */
-    public function getTheme()
-    {
-        Tools::displayAsDeprecated('Please use $this->theme->getDirectory() instead');
-
-        return $this->theme->getDirectory();
-    }
-
-    /**
      * Get shop URI.
      *
      * @return string
@@ -517,26 +516,30 @@ class ShopCore extends ObjectModel
     /**
      * Get shop URL.
      *
-     * @param string $auto_secure_mode if set to true, secure mode will be checked
-     * @param string $add_base_uri if set to true, shop base uri will be added
+     * @param bool $auto_secure_mode if set to true, secure mode will be checked
+     * @param bool $add_base_uri if set to true, shop base uri will be added
      *
-     * @return string complete base url of current shop
+     * @return string|bool complete base url of current shop
      */
     public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
     {
-        if (($auto_secure_mode && Tools::usingSecureMode() && !$this->domain_ssl) || !$this->domain) {
-            return false;
+        if ($auto_secure_mode && Tools::usingSecureMode()) {
+            if (!$this->domain_ssl) {
+                return false;
+            }
+            $url = 'https://' . $this->domain_ssl;
+        } else {
+            if (!$this->domain) {
+                return false;
+            }
+            $url = 'http://' . $this->domain;
         }
-
-        $url = array();
-        $url['protocol'] = $auto_secure_mode && Tools::usingSecureMode() ? 'https://' : 'http://';
-        $url['domain'] = $auto_secure_mode && Tools::usingSecureMode() ? $this->domain_ssl : $this->domain;
 
         if ($add_base_uri) {
-            $url['base_uri'] = $this->getBaseURI();
+            $url .= $this->getBaseURI();
         }
 
-        return implode('', $url);
+        return $url;
     }
 
     /**
@@ -591,7 +594,7 @@ class ShopCore extends ObjectModel
     /**
      * Get the associated table if available.
      *
-     * @return array
+     * @return array|false
      */
     public static function getAssoTable($table)
     {
@@ -599,7 +602,7 @@ class ShopCore extends ObjectModel
             Shop::init();
         }
 
-        return isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false;
+        return Shop::$asso_tables[$table] ?? false;
     }
 
     /**
@@ -672,11 +675,11 @@ class ShopCore extends ObjectModel
      */
     public static function cacheShops($refresh = false)
     {
-        if (!is_null(self::$shops) && !$refresh) {
+        if (null !== self::$shops && !$refresh) {
             return;
         }
 
-        self::$shops = array();
+        self::$shops = [];
 
         $from = '';
         $where = '';
@@ -704,19 +707,19 @@ class ShopCore extends ObjectModel
         if ($results = Db::getInstance()->executeS($sql)) {
             foreach ($results as $row) {
                 if (!isset(self::$shops[$row['id_shop_group']])) {
-                    self::$shops[$row['id_shop_group']] = array(
+                    self::$shops[$row['id_shop_group']] = [
                         'id' => $row['id_shop_group'],
                         'name' => $row['group_name'],
                         'share_customer' => $row['share_customer'],
                         'share_order' => $row['share_order'],
                         'share_stock' => $row['share_stock'],
-                        'shops' => array(),
-                    );
+                        'shops' => [],
+                    ];
                 }
 
-                $row = $row + array('theme_name' => '');
+                $row = $row + ['theme_name' => ''];
 
-                self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = array(
+                self::$shops[$row['id_shop_group']]['shops'][$row['id_shop']] = [
                     'id_shop' => $row['id_shop'],
                     'id_shop_group' => $row['id_shop_group'],
                     'name' => $row['shop_name'],
@@ -726,7 +729,7 @@ class ShopCore extends ObjectModel
                     'domain_ssl' => $row['domain_ssl'],
                     'uri' => $row['physical_uri'] . $row['virtual_uri'],
                     'active' => $row['active'],
-                );
+                ];
             }
         }
     }
@@ -735,7 +738,7 @@ class ShopCore extends ObjectModel
     {
         $cache_id = 'Shop::getCompleteListOfShopsID';
         if (!Cache::isStored($cache_id)) {
-            $list = array();
+            $list = [];
             $sql = 'SELECT id_shop FROM ' . _DB_PREFIX_ . 'shop';
             foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row) {
                 $list[] = $row['id_shop'];
@@ -762,7 +765,7 @@ class ShopCore extends ObjectModel
     {
         Shop::cacheShops();
 
-        $results = array();
+        $results = [];
         foreach (self::$shops as $group_id => $group_data) {
             foreach ($group_data['shops'] as $id => $shop_data) {
                 if ((!$active || $shop_data['active']) && (!$id_shop_group || $id_shop_group == $group_id)) {
@@ -790,7 +793,7 @@ class ShopCore extends ObjectModel
         $query->where('main = 1');
         $query->where('active = 1');
         $query .= $this->addSqlRestriction(Shop::SHARE_ORDER);
-        $domains = array();
+        $domains = [];
         foreach (Db::getInstance()->executeS($query) as $row) {
             $domains[] = $row['domain'];
         }
@@ -825,7 +828,7 @@ class ShopCore extends ObjectModel
      *
      * @param int $shop_id
      *
-     * @return array
+     * @return array|bool
      */
     public static function getShop($shop_id)
     {
@@ -844,7 +847,7 @@ class ShopCore extends ObjectModel
      *
      * @param string $name
      *
-     * @return int
+     * @return int|bool
      */
     public static function getIdByName($name)
     {
@@ -875,15 +878,16 @@ class ShopCore extends ObjectModel
      * Retrieve group ID of a shop.
      *
      * @param int $shop_id Shop ID
+     * @param bool $as_id
      *
-     * @return int Group ID
+     * @return int|array|bool Group ID
      */
     public static function getGroupFromShop($shop_id, $as_id = true)
     {
         Shop::cacheShops();
         foreach (self::$shops as $group_id => $group_data) {
             if (array_key_exists($shop_id, $group_data['shops'])) {
-                return ($as_id) ? $group_id : $group_data;
+                return $as_id ? $group_id : $group_data;
             }
         }
 
@@ -894,13 +898,13 @@ class ShopCore extends ObjectModel
      * If the shop group has the option $type activated, get all shops ID of this group, else get current shop ID.
      *
      * @param int $shop_id
-     * @param int $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER
+     * @param string $type Shop::SHARE_CUSTOMER | Shop::SHARE_ORDER
      *
      * @return array
      */
     public static function getSharedShops($shop_id, $type)
     {
-        if (!in_array($type, array(Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, SHOP::SHARE_STOCK))) {
+        if (!in_array($type, [Shop::SHARE_CUSTOMER, Shop::SHARE_ORDER, Shop::SHARE_STOCK])) {
             die('Wrong argument ($type) in Shop::getSharedShops() method');
         }
 
@@ -911,20 +915,20 @@ class ShopCore extends ObjectModel
             }
         }
 
-        return array($shop_id);
+        return [$shop_id];
     }
 
     /**
      * Get a list of ID concerned by the shop context (E.g. if context is shop group, get list of children shop ID).
      *
-     * @param string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param bool|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
      *
      * @return array
      */
     public static function getContextListShopID($share = false)
     {
         if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            $list = ($share) ? Shop::getSharedShops(Shop::getContextShopID(), $share) : array(Shop::getContextShopID());
+            $list = $share ? Shop::getSharedShops(Shop::getContextShopID(), $share) : [Shop::getContextShopID()];
         } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
             $list = Shop::getShops(true, Shop::getContextShopGroupID(), true);
         } else {
@@ -964,14 +968,17 @@ class ShopCore extends ObjectModel
             case self::CONTEXT_ALL:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = null;
+
                 break;
             case self::CONTEXT_GROUP:
                 self::$context_id_shop = null;
                 self::$context_id_shop_group = (int) $id;
+
                 break;
             case self::CONTEXT_SHOP:
                 self::$context_id_shop = (int) $id;
                 self::$context_id_shop_group = Shop::getGroupFromShop($id);
+
                 break;
             default:
                 throw new PrestaShopException('Unknown context for shop');
@@ -996,6 +1003,8 @@ class ShopCore extends ObjectModel
     public static function resetContext()
     {
         self::$context = null;
+        self::$feature_active = null;
+        self::$context_id_shop = null;
     }
 
     /**
@@ -1009,7 +1018,7 @@ class ShopCore extends ObjectModel
     /**
      * Get current ID of shop if context is CONTEXT_SHOP.
      *
-     * @return int
+     * @return int|null
      */
     public static function getContextShopID($null_value_without_multishop = false)
     {
@@ -1035,7 +1044,7 @@ class ShopCore extends ObjectModel
     /**
      * Get current ID of shop group if context is CONTEXT_SHOP or CONTEXT_GROUP.
      *
-     * @return int
+     * @return int|null
      */
     public static function getContextShopGroupID($null_value_without_multishop = false)
     {
@@ -1059,8 +1068,8 @@ class ShopCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields.
      *
-     * @param int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
-     * @param string $alias
+     * @param bool|int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param string|null $alias
      */
     public static function addSqlRestriction($share = false, $alias = null)
     {
@@ -1101,7 +1110,7 @@ class ShopCore extends ObjectModel
 
         $asso_table = Shop::getAssoTable($table);
         if ($asso_table === false || $asso_table['type'] != 'shop') {
-            return;
+            return '';
         }
         $sql = (($inner_join) ? ' INNER' : ' LEFT') . ' JOIN ' . _DB_PREFIX_ . $table . '_shop ' . $table_alias . '
         ON (' . $table_alias . '.id_' . $table . ' = ' . $alias . '.id_' . $table;
@@ -1120,21 +1129,21 @@ class ShopCore extends ObjectModel
     /**
      * Add a restriction on id_shop for multishop lang table.
      *
-     * @param string $alias
-     * @param Context $context
+     * @param string|null $alias
+     * @param int|null $id_shop
      *
      * @return string
      */
     public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
     {
-        if (isset(Context::getContext()->shop) && is_null($id_shop)) {
+        if (isset(Context::getContext()->shop) && null === $id_shop) {
             $id_shop = (int) Context::getContext()->shop->id;
         }
         if (!$id_shop) {
             $id_shop = (int) Configuration::get('PS_SHOP_DEFAULT');
         }
 
-        return ' AND ' . (($alias) ? Db::getInstance()->escape($alias) . '.' : '') . 'id_shop = ' . $id_shop . ' ';
+        return ' AND ' . ($alias ? Db::getInstance()->escape($alias) . '.' : '') . 'id_shop = ' . $id_shop . ' ';
     }
 
     /**
@@ -1154,14 +1163,12 @@ class ShopCore extends ObjectModel
      */
     public static function isFeatureActive()
     {
-        static $feature_active = null;
-
-        if ($feature_active === null) {
-            $feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
+        if (static::$feature_active === null) {
+            static::$feature_active = (bool) Db::getInstance()->getValue('SELECT value FROM `' . _DB_PREFIX_ . 'configuration` WHERE `name` = "PS_MULTISHOP_FEATURE_ACTIVE"')
                 && (Db::getInstance()->getValue('SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'shop') > 1);
         }
 
-        return $feature_active;
+        return static::$feature_active;
     }
 
     public function copyShopData($old_id, $tables_import = false, $deleted = false)
@@ -1255,10 +1262,10 @@ class ShopCore extends ObjectModel
         if (is_array($modules_list) && count($modules_list) > 0) {
             foreach ($modules_list as $m) {
                 if (!$tables_import || isset($tables_import['Module' . ucfirst($m['module'])])) {
-                    Hook::exec('actionShopDataDuplication', array(
+                    Hook::exec('actionShopDataDuplication', [
                         'old_id_shop' => (int) $old_id,
                         'new_id_shop' => (int) $this->id,
-                    ), $m['id_module']);
+                    ], $m['id_module']);
                 }
             }
         }
@@ -1284,7 +1291,7 @@ class ShopCore extends ObjectModel
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
         if ($only_id) {
-            $array = array();
+            $array = [];
             foreach ($result as $row) {
                 $array[] = $row['id_category'];
             }
@@ -1317,5 +1324,27 @@ class ShopCore extends ObjectModel
             ($active ? ' AND entity.`active` = 1' : '') .
             ($delete ? ' AND entity.deleted = 0' : '')
         );
+    }
+
+    /**
+     * @param string $host
+     *
+     * @return array
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    private static function findShopByHost($host)
+    {
+        $sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
+                    FROM ' . _DB_PREFIX_ . 'shop_url su
+                    LEFT JOIN ' . _DB_PREFIX_ . 'shop s ON (s.id_shop = su.id_shop)
+                    WHERE (su.domain = \'' . pSQL($host) . '\' OR su.domain_ssl = \'' . pSQL($host) . '\')
+                        AND s.active = 1
+                        AND s.deleted = 0
+                    ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
+
+        $result = Db::getInstance()->executeS($sql);
+
+        return $result;
     }
 }

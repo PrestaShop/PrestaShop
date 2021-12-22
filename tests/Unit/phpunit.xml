@@ -1,0 +1,20 @@
+<phpunit bootstrap="bootstrap.php"
+         stopOnFailure="true"
+         backupGlobals="true"
+>
+  <php>
+    <server name="KERNEL_CLASS" value="AppKernel" />
+  </php>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../../src</directory>
+            <directory suffix=".php">../../classes</directory>
+            <directory suffix=".php">../../controllers</directory>
+        </whitelist>
+    </filter>
+</phpunit>

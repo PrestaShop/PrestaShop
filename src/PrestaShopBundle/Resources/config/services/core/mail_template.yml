@@ -1,0 +1,49 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.mail_template.mail_template_renderer: '@prestashop.adapter.mail_template.twig_renderer'
+  prestashop.core.mail_template.theme_catalog: '@prestashop.core.mail_template.theme_folder_catalog'
+
+  prestashop.core.mail_template.theme_folder_scanner:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeScanner'
+
+  prestashop.core.mail_template.theme_folder_catalog:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\FolderThemeCatalog'
+    arguments:
+      - '%mail_themes_dir%'
+      - '@prestashop.core.mail_template.theme_folder_scanner'
+      - '@prestashop.core.hook.dispatcher'
+
+  prestashop.core.mail_template.variables_builder:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Layout\LayoutVariablesBuilder'
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.language.language_default_fonts_catalog'
+      - mailThemesUrl: "@=service('prestashop.adapter.legacy.context').getMailThemesUrl()"
+
+  prestashop.core.mail_template.generator:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateGenerator'
+    arguments:
+      - '@prestashop.core.mail_template.mail_template_renderer'
+      - '@logger'
+
+  prestashop.core.mail_template.transformation.css_inline:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation'
+
+  prestashop.core.mail_template.transformation.html_textify:
+    class: 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\HTMLToTextTransformation'
+
+  prestashop.core.mail_template.command_handler.generate_theme_mails_handler:
+    class: 'PrestaShop\PrestaShop\Core\Domain\MailTemplate\CommandHandler\GenerateThemeMailTemplatesCommandHandler'
+    arguments:
+      - '@prestashop.core.admin.lang.repository'
+      - '@prestashop.core.mail_template.theme_catalog'
+      - '@prestashop.core.mail_template.generator'
+      - '@translator'
+      - '%kernel.project_dir%/mails'
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+    public: true
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand

@@ -1,0 +1,70 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShopBundle\Command\AppendConfigurationFileHooksListCommand:
+    arguments:
+      - '%kernel.environment%'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
+      - '@prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
+      - '@prestashop.core.hook.generator.hook_description_generator'
+      - '%prestashop.core.grid.definition.service_ids%'
+      - '%prestashop.hook.option_form_hook_names%'
+      - '%prestashop.core.form.identifiable_object.form_types%'
+      - '%kernel.root_dir%/../install-dev/data/xml/hook.xml'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\AppendHooksListForSqlUpgradeFileCommand:
+    arguments:
+      - '%kernel.environment%'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
+      - '@prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
+      - '@prestashop.adapter.legacy.hook'
+      - '@prestashop.core.hook.generator.hook_description_generator'
+      - '%prestashop.core.grid.definition.service_ids%'
+      - '%prestashop.hook.option_form_hook_names%'
+      - '%prestashop.core.form.identifiable_object.form_types%'
+      - '%kernel.root_dir%/../install-dev/upgrade/sql/'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\CheckTranslationDuplicatesCommand:
+    arguments:
+      - '@translator'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\LegacyLinkLinterCommand:
+    arguments:
+      - '@prestashop.bundle.routing.linter.legacy_link_linter'
+      - '@prestashop.bundle.routing.linter.admin_route_provider'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ListCommandsAndQueriesCommand:
+    arguments:
+      - '@prestashop.core.provider.command_definition_provider'
+      - '%prestashop.commands_and_queries%'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\NamingConventionLinterCommand:
+    arguments:
+      - '@prestashop.bundle.routing.linter.admin_route_provider'
+      - '@prestashop.bundle.routing.linter.naming_convention_linter'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\SecurityAnnotationLinterCommand:
+    arguments:
+      - '@prestashop.bundle.routing.linter.admin_route_provider'
+      - '@prestashop.bundle.routing.linter.security_annotation_linter'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\UpdateLicensesCommand:
+    tags:
+      - 'console.command'

@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters\BackupFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,19 +77,23 @@ class BackupController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
             'backupGrid' => $this->presentGrid($backupGrid),
             'backupForm' => $backupForm->createView(),
-            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'dbPrefix' => $configuration->get('_DB_PREFIX_'),
             'hasDownloadFile' => $hasDownloadFile,
             'downloadFile' => $downloadFile,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
         ]);
     }
 
     /**
      * Show file download view.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -112,9 +117,28 @@ class BackupController extends FrameworkBundleAdminController
     }
 
     /**
+     * Return a backup content as a download.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @DemoRestricted(redirectRoute="admin_backup")
+     *
+     * @param string $downloadFileName
+     *
+     * @return BinaryFileResponse
+     */
+    public function downloadContentAction($downloadFileName)
+    {
+        $backup = new Backup($downloadFileName);
+
+        return new BinaryFileResponse($backup->getFilePath());
+    }
+
+    /**
      * Process backup options saving.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -144,7 +168,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @return RedirectResponse
@@ -182,7 +206,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param string $deleteFileName
@@ -215,7 +239,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -275,7 +299,7 @@ class BackupController extends FrameworkBundleAdminController
      *
      * @return FormHandlerInterface
      */
-    protected function getBackupFormHandler()
+    protected function getBackupFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.admin.backup.form_handler');
     }

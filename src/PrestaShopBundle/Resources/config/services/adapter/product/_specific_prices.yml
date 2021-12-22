@@ -1,0 +1,74 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.product.specific_price.query_handler.get_editable_specific_price_list_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetEditableSpecificPricesListHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList
+
+  prestashop.adapter.product.specific_price.query_handler.get_specific_price_for_editing_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\QueryHandler\GetSpecificPriceForEditingHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing
+
+  prestashop.adapter.product.specific_price.command_handler.add_product_specific_price:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand
+
+  prestashop.adapter.product.specific_price.command_handler.edit_product_specific_price_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand
+
+
+  prestashop.adapter.product.specific_price.command_handler.set_specific_price_priority_for_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.update.specific_price_priority_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand
+
+  prestashop.adapter.product.specific_price.command_handler.set_global_specific_price_priority_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandler
+    arguments:
+      - '@prestashop.adapter.product.specific_price.update.specific_price_priority_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand
+
+  prestashop.adapter.product.specific_price.update.specific_price_priority_updater:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater
+
+  prestashop.adapter.product.specific_price.validate.specific_price_validator:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator
+    arguments:
+      - '@prestashop.adapter.shop.repository.shop_group_repository'
+      - '@prestashop.adapter.shop.repository.shop_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.currency.repository.currency_repository'
+      - '@prestashop.adapter.country.repository.country_repository'
+      - '@prestashop.adapter.customer.group.repository.group_repository'
+      - '@prestashop.adapter.customer.repository.customer_repository'
+      - '@prestashop.adapter.product.repository.product_repository'
+
+  prestashop.adapter.product.specific_price.repository.specific_price_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.product.specific_price.validate.specific_price_validator'

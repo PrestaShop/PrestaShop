@@ -1,0 +1,84 @@
+services:
+  _defaults:
+    public: true
+
+  # Command handlers
+
+  prestashop.adapter.address.command_handler.delete_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\DeleteAddressHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\DeleteAddressCommand' }
+
+  prestashop.adapter.address.command_handler.bulk_delete_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\BulkDeleteAddressHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\BulkDeleteAddressCommand' }
+
+  prestashop.adapter.address.command_handler.add_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddManufacturerAddressCommand'
+
+  prestashop.adapter.address.command_handler.edit_manufacturer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditManufacturerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditManufacturerAddressCommand'
+
+  prestashop.adapter.address.query_handler.get_manufacturer_address_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetManufacturerAddressForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetManufacturerAddressForEditing'
+
+  prestashop.adapter.address.query_handler.get_required_fields_for_address:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetRequiredFieldsForAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress'
+
+  prestashop.adapter.address.command_handler.set_required_fields_for_address:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\SetRequiredFieldsForAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\SetRequiredFieldsForAddressCommand'
+
+  prestashop.adapter.address.command_handler.add_customer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\AddCustomerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\AddCustomerAddressCommand'
+
+  prestashop.adapter.address.query_handler.get_customer_address_for_editing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetCustomerAddressForEditingHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetCustomerAddressForEditing'
+
+  prestashop.adapter.address.command_handler.edit_customer_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditCustomerAddressHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCustomerAddressCommand'
+
+  prestashop.adapter.address.command_handler.edit_order_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditOrderAddressHandler'
+    arguments:
+      - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
+      - '@prestashop.adapter.order.command_handler.change_order_delivery_address_handler'
+      - '@prestashop.adapter.order.command_handler.change_order_invoice_address_handler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditOrderAddressCommand'
+
+  prestashop.adapter.address.command_handler.edit_cart_address_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\CommandHandler\EditCartAddressHandler'
+    arguments:
+      - '@prestashop.adapter.address.command_handler.edit_customer_address_handler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Command\EditCartAddressCommand'
+
+  prestashop.adapter.address.formatter:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\AddressFormatter'

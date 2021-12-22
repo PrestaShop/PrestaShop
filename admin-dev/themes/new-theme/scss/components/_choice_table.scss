@@ -3,3 +3,18 @@
   overflow-y: auto;
 }
 
+.choice-table-headers-fixed {
+  table {
+    tbody {
+      display: block;
+      @extend .choice-table;
+    }
+
+    thead,
+    tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+  }
+}

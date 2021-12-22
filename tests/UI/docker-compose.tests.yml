@@ -1,0 +1,33 @@
+version: '3'
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+services:
+  tests:
+    build:
+      context: ./
+      dockerfile: ./.docker/Dockerfile
+    environment:
+      URL_FO: "http://prestashop-web/"
+      URL_BO: "http://prestashop-web/admin-dev/"
+      EMAIL: "demo@prestashop.com"
+      PASSWD: "prestashop_demo"
+      HEADLESS: "true"
+      DB_SERVER: "db"
+      SMTP_SERVER: "172.20.0.4"
+    depends_on:
+      - "prestashop"
+    command: ["/tmp/wait-for-it.sh", "--timeout=1800", "--strict", "prestashop-web:80", "--", "/bin/bash"]
+    tty: true
+    volumes:
+      - .docker:/tmp/docker
+      - ./reports:/tests/reports
+      - ./mochawesome-report:/tests/mochawesome-report
+      - /dev/shm:/dev/shm
+    networks:
+      default:
+        ipv4_address: 172.20.0.4

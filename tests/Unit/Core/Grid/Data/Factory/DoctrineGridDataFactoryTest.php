@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,16 +17,21 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Unit\Core\Grid\Data\Factory;
 
+use Doctrine\DBAL\Query\QueryBuilder;
+use PDOStatement;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
 use PrestaShop\PrestaShop\Core\Grid\Query\DoctrineQueryBuilderInterface;
@@ -33,9 +39,6 @@ use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use Doctrine\DBAL\Query\QueryBuilder;
-use PHPUnit\Framework\TestCase;
-use PDOStatement;
 
 class DoctrineGridDataFactoryTest extends TestCase
 {
@@ -43,8 +46,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     {
         $hookDispatcher = $this->createHookDispatcherMock();
         $hookDispatcher->expects($this->once())
-            ->method('dispatchWithParameters')
-        ;
+            ->method('dispatchWithParameters');
 
         $queryParser = $this->createQueryParserMock();
 
@@ -62,14 +64,13 @@ class DoctrineGridDataFactoryTest extends TestCase
         $this->assertInstanceOf(GridDataInterface::class, $data);
         $this->assertInstanceOf(RecordCollectionInterface::class, $data->getRecords());
 
-
         $this->assertEquals(4, $data->getRecordsTotal());
         $this->assertCount(2, $data->getRecords());
         $this->assertEquals('SELECT * FROM ps_test WHERE id = 1', $data->getQuery());
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createDoctrineQueryBuilderMock()
     {
@@ -96,8 +97,7 @@ class DoctrineGridDataFactoryTest extends TestCase
         $qb->method('getParameters')
             ->willReturn([
                 'id' => 1,
-            ])
-        ;
+            ]);
 
         $doctrineQueryBuilder = $this->createMock(DoctrineQueryBuilderInterface::class);
         $doctrineQueryBuilder->method('getSearchQueryBuilder')
@@ -109,7 +109,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createHookDispatcherMock()
     {
@@ -121,7 +121,7 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      */
     private function createQueryParserMock()
     {

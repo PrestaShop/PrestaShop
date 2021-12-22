@@ -1,10 +1,11 @@
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Academic Free License 3.0 (AFL-3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/AFL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,95 +16,92 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License 3.0 (AFL-3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 const webpack = require('webpack');
 const path = require('path');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 let config = {
   entry: {
-    main: [
-      './js/theme.js',
-      './css/theme.scss'
-    ]
+    theme: ['./js/theme.js', './css/theme.scss'],
+    error: ['./css/error.scss'],
   },
   output: {
     path: path.resolve(__dirname, '../assets/js'),
-    filename: 'theme.js'
+    filename: '[name].js',
+  },
+  resolve: {
+    preferRelative: true,
   },
   module: {
     rules: [
       {
         test: /\.js/,
-        loader: 'babel-loader'
+        loader: 'esbuild-loader',
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true
-              }
-            },
+        use:[ 
+            MiniCssExtractPlugin.loader,
+            'css-loader',
             'postcss-loader',
-            'sass-loader'
-          ]
-        })
+            'sass-loader',
+          ],
       },
       {
-        test: /.(png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
+        test: /.(png|woff(2)?|eot|otf|ttf|svg|gif)(\?[a-z0-9=\.]+)?$/,
         use: [
           {
             loader: 'file-loader',
             options: {
-              name: '../css/[hash].[ext]'
-            }
-          }
-        ]
+              name: '../css/[hash].[ext]',
+            },
+          },
+        ],
       },
       {
-        test : /\.css$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader']
-      }
-    ]
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'style-loader', 'css-loader', 'postcss-loader'],
+      },
+    ],
   },
   externals: {
     prestashop: 'prestashop',
     $: '$',
-    jquery: 'jQuery'
+    jquery: 'jQuery',
   },
   plugins: [
-    new ExtractTextPlugin(path.join('..', 'css', 'theme.css'))
+    new MiniCssExtractPlugin({filename: path.join('..', 'css', '[name].css')}),
   ]
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true
-      },
-      output: {
-        comments: false
-      },
-      minimize: true
-    })
-  );
+  config.optimization = {
+    minimizer: [
+      new UglifyJsPlugin({
+        sourceMap: false,
+        uglifyOptions: {
+          compress: {
+            sequences: true,
+            conditionals: true,
+            booleans: true,
+            if_return: true,
+            join_vars: true,
+            drop_console: true,
+          },
+          output: {
+            comments: false,
+          },
+        }
+      })
+    ]
+  }
 }
 
 module.exports = config;

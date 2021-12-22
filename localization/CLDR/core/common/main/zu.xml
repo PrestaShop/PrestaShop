@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE ldml SYSTEM "../../common/dtd/ldml.dtd">
-<!-- Copyright © 1991-2017 Unicode, Inc.
+<!-- Copyright © 1991-2020 Unicode, Inc.
 For terms of use, see http://www.unicode.org/copyright.html
 Unicode and the Unicode Logo are registered trademarks of Unicode, Inc. in the U.S. and other countries.
 CLDR data files are interpreted according to the LDML specification (http://unicode.org/reports/tr35/)
@@ -9,7 +9,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 -->
 <ldml>
 	<identity>
-		<version number="$Revision: 13701 $"/>
+		<version number="$Revision$"/>
 		<language type="zu"/>
 	</identity>
 	<localeDisplayNames>
@@ -30,7 +30,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="ain">isi-Ainu</language>
 			<language type="ak">isi-Akan</language>
 			<language type="ale">isi-Aleut</language>
-			<language type="alt">i-Southern Altai</language>
+			<language type="alt">isi-Southern Altai</language>
 			<language type="am">isi-Amharic</language>
 			<language type="an">isi-Aragonese</language>
 			<language type="anp">isi-Angika</language>
@@ -55,9 +55,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="bg">isi-Bulgari</language>
 			<language type="bgn">isi-Western Balochi</language>
 			<language type="bho">isi-Bhojpuri</language>
-			<language type="bi">i-Bislama</language>
-			<language type="bin">i-Bini</language>
-			<language type="bla">i-Siksika</language>
+			<language type="bi">isi-Bislama</language>
+			<language type="bin">isi-Bini</language>
+			<language type="bla">isi-Siksika</language>
 			<language type="bm">isi-Bambara</language>
 			<language type="bn">isi-Bengali</language>
 			<language type="bo">isi-Tibetan</language>
@@ -65,8 +65,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="brx">isi-Bodo</language>
 			<language type="bs">isi-Bosnian</language>
 			<language type="bug">isi-Buginese</language>
-			<language type="byn">i-Blin</language>
+			<language type="byn">isi-Blin</language>
 			<language type="ca">isi-Catalan</language>
+			<language type="ccp">i-Chakma</language>
 			<language type="ce">isi-Chechen</language>
 			<language type="ceb">isi-Cebuano</language>
 			<language type="cgg">isi-Chiga</language>
@@ -89,9 +90,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="dav">isi-Taita</language>
 			<language type="de">isi-German</language>
 			<language type="de_AT">isi-Austrian German</language>
-			<language type="de_CH">i-Swiss High German</language>
+			<language type="de_CH">Isi-Swiss High German</language>
 			<language type="dgr">isi-Dogrib</language>
 			<language type="dje">isi-Zarma</language>
+			<language type="doi">isi-Dogri</language>
 			<language type="dsb">isi-Lower Sorbian</language>
 			<language type="dua">isi-Duala</language>
 			<language type="dv">isi-Divehi</language>
@@ -104,7 +106,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="eka">isi-Ekajuk</language>
 			<language type="el">isi-Greek</language>
 			<language type="en">i-English</language>
-			<language type="en_AU">isi-Austrillian English</language>
+			<language type="en_AU">i-Australian English</language>
 			<language type="en_CA">i-Canadian English</language>
 			<language type="en_GB">i-British English</language>
 			<language type="en_GB" alt="short">i-UK English</language>
@@ -113,12 +115,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="eo">isi-Esperanto</language>
 			<language type="es">isi-Spanish</language>
 			<language type="es_419">isi-Latin American Spanish</language>
-			<language type="es_ES">i-European Spanish</language>
-			<language type="es_MX">i-Mexican Spanish</language>
+			<language type="es_ES">isi-European Spanish</language>
+			<language type="es_MX">isi-Mexican Spanish</language>
 			<language type="et">isi-Estonia</language>
 			<language type="eu">isi-Basque</language>
 			<language type="ewo">isi-Ewondo</language>
 			<language type="fa">isi-Persian</language>
+			<language type="fa_AF">isi-Dari</language>
 			<language type="ff">isi-Fulah</language>
 			<language type="fi">isi-Finnish</language>
 			<language type="fil">isi-Filipino</language>
@@ -126,15 +129,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="fo">isi-Faroese</language>
 			<language type="fon">isi-Fon</language>
 			<language type="fr">isi-French</language>
-			<language type="fr_CA">i-Canadian French</language>
-			<language type="fr_CH">i-Swiss French</language>
+			<language type="fr_CA">isi-Canadian French</language>
+			<language type="fr_CH">isi-Swiss French</language>
+			<language type="frc">isi-Cajun French</language>
 			<language type="fur">isi-Friulian</language>
 			<language type="fy">isi-Western Frisian</language>
 			<language type="ga">isi-Irish</language>
 			<language type="gaa">isi-Ga</language>
 			<language type="gag">isi-Gagauz</language>
 			<language type="gan">isi-Gan Chinese</language>
-			<language type="gd">i-Scottish Gaelic</language>
+			<language type="gd">isi-Scottish Gaelic</language>
 			<language type="gez">isi-Geez</language>
 			<language type="gil">isi-Gilbertese</language>
 			<language type="gl">isi-Galicia</language>
@@ -226,7 +230,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="li">isi-Limburgish</language>
 			<language type="lkt">isi-Lakota</language>
 			<language type="ln">isi-Lingala</language>
-			<language type="lo">i-Lao</language>
+			<language type="lo">isi-Lao</language>
+			<language type="lou">isi-Louisiana Creole</language>
 			<language type="loz">isi-Lozi</language>
 			<language type="lrc">isi-Northern Luri</language>
 			<language type="lt">isi-Lithuanian</language>
@@ -285,19 +290,19 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="nl">isi-Dutch</language>
 			<language type="nl_BE">isi-Flemish</language>
 			<language type="nmg">isi-Kwasio</language>
-			<language type="nn">i-Norwegian Nynorsk</language>
+			<language type="nn">isi-Norwegian Nynorsk</language>
 			<language type="nnh">isi-Ngiemboon</language>
 			<language type="no">isi-Norwegian</language>
 			<language type="nog">isi-Nogai</language>
 			<language type="nqo">isi-N’Ko</language>
-			<language type="nr">i-South Ndebele</language>
+			<language type="nr">isi-South Ndebele</language>
 			<language type="nso">isi-Northern Sotho</language>
 			<language type="nus">isi-Nuer</language>
 			<language type="nv">isi-Navajo</language>
 			<language type="ny">isi-Nyanja</language>
 			<language type="nyn">isi-Nyankole</language>
 			<language type="oc">isi-Occitan</language>
-			<language type="om">i-Oromo</language>
+			<language type="om">isi-Oromo</language>
 			<language type="or">isi-Odia</language>
 			<language type="os">isi-Ossetic</language>
 			<language type="pa">isi-Punjabi</language>
@@ -315,28 +320,28 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="pt_PT">isi-European Portuguese</language>
 			<language type="qu">isi-Quechua</language>
 			<language type="quc">isi-Kʼicheʼ</language>
-			<language type="rap">i-Rapanui</language>
-			<language type="rar">i-Rarotongan</language>
+			<language type="rap">isi-Rapanui</language>
+			<language type="rar">isi-Rarotongan</language>
 			<language type="rm">isi-Romansh</language>
 			<language type="rn">isi-Rundi</language>
 			<language type="ro">isi-Romanian</language>
 			<language type="ro_MD">isi-Moldavian</language>
 			<language type="rof">isi-Rombo</language>
-			<language type="root">i-Root</language>
+			<language type="root">isi-Root</language>
 			<language type="ru">isi-Russian</language>
 			<language type="rup">isi-Aromanian</language>
 			<language type="rw">isi-Kinyarwanda</language>
 			<language type="rwk">isi-Rwa</language>
 			<language type="sa">isi-Sanskrit</language>
-			<language type="sad">i-Sandawe</language>
+			<language type="sad">isi-Sandawe</language>
 			<language type="sah">i-Sakha</language>
 			<language type="saq">isi-Samburu</language>
-			<language type="sat">i-Santali</language>
+			<language type="sat">isi-Santali</language>
 			<language type="sba">isi-Ngambay</language>
 			<language type="sbp">isi-Sangu</language>
-			<language type="sc">i-Sardinian</language>
-			<language type="scn">i-Sicilian</language>
-			<language type="sco">i-Scots</language>
+			<language type="sc">isi-Sardinian</language>
+			<language type="scn">isi-Sicilian</language>
+			<language type="sco">isi-Scots</language>
 			<language type="sd">isi-Sindhi</language>
 			<language type="sdh">i-Southern Kurdish</language>
 			<language type="se">isi-Northern Sami</language>
@@ -345,31 +350,31 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="sg">isi-Sango</language>
 			<language type="sh">isi-Serbo-Croatian</language>
 			<language type="shi">isi-Tachelhit</language>
-			<language type="shn">i-Shan</language>
-			<language type="si">i-Sinhala</language>
+			<language type="shn">isi-Shan</language>
+			<language type="si">isi-Sinhala</language>
 			<language type="sk">isi-Slovak</language>
 			<language type="sl">isi-Slovenian</language>
 			<language type="sm">isi-Samoan</language>
-			<language type="sma">i-Southern Sami</language>
+			<language type="sma">isi-Southern Sami</language>
 			<language type="smj">isi-Lule Sami</language>
 			<language type="smn">isi-Inari Sami</language>
 			<language type="sms">isi-Skolt Sami</language>
 			<language type="sn">isiShona</language>
-			<language type="snk">i-Soninke</language>
+			<language type="snk">isi-Soninke</language>
 			<language type="so">isi-Somali</language>
 			<language type="sq">isi-Albania</language>
 			<language type="sr">isi-Serbian</language>
-			<language type="srn">i-Sranan Tongo</language>
+			<language type="srn">isi-Sranan Tongo</language>
 			<language type="ss">isiSwati</language>
-			<language type="ssy">i-Saho</language>
-			<language type="st">isiSuthu</language>
+			<language type="ssy">isi-Saho</language>
+			<language type="st">isi-Southern Sotho</language>
 			<language type="su">isi-Sundanese</language>
-			<language type="suk">i-Sukuma</language>
+			<language type="suk">isi-Sukuma</language>
 			<language type="sv">isi-Swedish</language>
 			<language type="sw">isiSwahili</language>
 			<language type="sw_CD">isi-Congo Swahili</language>
 			<language type="swb">isi-Comorian</language>
-			<language type="syr">i-Syriac</language>
+			<language type="syr">isi-Syriac</language>
 			<language type="ta">isi-Tamil</language>
 			<language type="te">isi-Telugu</language>
 			<language type="tem">isi-Timne</language>
@@ -422,57 +427,185 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<language type="yi">isi-Yiddish</language>
 			<language type="yo">isi-Yoruba</language>
 			<language type="yue">isi-Cantonese</language>
+			<language type="yue" alt="menu">isi-Chinese, Cantonese</language>
 			<language type="zgh">isi-Moroccan Tamazight esivamile</language>
 			<language type="zh">isi-Chinese</language>
+			<language type="zh" alt="menu">isi-Chinese, Mandarin</language>
 			<language type="zh_Hans">isi-Chinese (esenziwe-lula)</language>
-			<language type="zh_Hant">isi-Chinese (Okosiko)</language>
+			<language type="zh_Hant">isi-Chinese (Sasendulo)</language>
+			<language type="zh_Hant" alt="long">isi-Chinese (sasendulo)</language>
 			<language type="zu">isiZulu</language>
 			<language type="zun">isi-Zuni</language>
 			<language type="zxx">akukho okuqukethwe kolimi</language>
 			<language type="zza">isi-Zaza</language>
 		</languages>
 		<scripts>
+			<script type="Adlm">isi-Adlam</script>
+			<script type="Aghb">isi-Caucasian Albanian</script>
+			<script type="Ahom">isi-Ahom</script>
 			<script type="Arab">isi-Arabic</script>
 			<script type="Arab" alt="variant">isi-Perso-Arabic</script>
+			<script type="Aran">i-Nastaliq</script>
+			<script type="Armi">isi-Imperial Aramaic</script>
 			<script type="Armn">isi-Armenian</script>
+			<script type="Avst">isi-Avestan</script>
+			<script type="Bali">isi-Balinese</script>
+			<script type="Bamu">isi-Bamum</script>
+			<script type="Bass">isi-Bassa Vah</script>
+			<script type="Batk">isi-Batak</script>
 			<script type="Beng">isi-Bangla</script>
+			<script type="Bhks">isi-Bhaiksuki</script>
 			<script type="Bopo">isi-Bopomofo</script>
+			<script type="Brah">isi-Brahmi</script>
 			<script type="Brai">i-Braille</script>
+			<script type="Bugi">isi-Buginese</script>
+			<script type="Buhd">isi-Buhid</script>
+			<script type="Cakm">isi-Chakma</script>
+			<script type="Cans">i-Unified Canadian Aboriginal Syllabics</script>
+			<script type="Cari">isi-Carian</script>
+			<script type="Cham">isi-Cham</script>
+			<script type="Cher">isi-Cherokee</script>
+			<script type="Chrs">isi-Chorasmian</script>
+			<script type="Copt">isi-Coptic</script>
+			<script type="Cprt">isi-Cypriot</script>
 			<script type="Cyrl">isi-Cyrillic</script>
 			<script type="Deva">isi-Devanagari</script>
+			<script type="Diak">isi-Dives Akuru</script>
+			<script type="Dogr">isi-Dogra</script>
+			<script type="Dsrt">isi-Deseret</script>
+			<script type="Dupl">isi-Duployan shorthand</script>
+			<script type="Egyp">i-Egyptian hieroglyphs</script>
+			<script type="Elba">isi-Elbasan</script>
+			<script type="Elym">isi-Elymaic</script>
 			<script type="Ethi">isi-Ethiopic</script>
 			<script type="Geor">isi-Georgian</script>
+			<script type="Glag">isi-Glagolitic</script>
+			<script type="Gong">isi-Gunjala Gondi</script>
+			<script type="Gonm">isi-Masaram Gondi</script>
+			<script type="Goth">isi-Gothic</script>
+			<script type="Gran">isi-Grantha</script>
 			<script type="Grek">isi-Greek</script>
 			<script type="Gujr">isi-Gujarati</script>
 			<script type="Guru">isi-Gurmukhi</script>
 			<script type="Hanb">isi-Hanb</script>
 			<script type="Hang">isi-Hangul</script>
 			<script type="Hani">isi-Han</script>
+			<script type="Hano">isi-Hanunoo</script>
 			<script type="Hans">enziwe lula</script>
 			<script type="Hans" alt="stand-alone">isi-Han esenziwe lula</script>
 			<script type="Hant">okosiko</script>
 			<script type="Hant" alt="stand-alone">isi-Han sosiko</script>
+			<script type="Hatr">isi-Hatran</script>
 			<script type="Hebr">isi-Hebrew</script>
 			<script type="Hira">isi-Hiragana</script>
+			<script type="Hluw">isi-Anatolian Hieroglyphs</script>
+			<script type="Hmng">isi-Pahawh Hmong</script>
+			<script type="Hmnp">i-Nyiakeng Puachue Hmong</script>
 			<script type="Hrkt">i-Japanese syllabaries</script>
+			<script type="Hung">isi-Old Hungarian</script>
+			<script type="Ital">i-Old Italic</script>
 			<script type="Jamo">isi-Jamo</script>
+			<script type="Java">isi-Javanese</script>
 			<script type="Jpan">isi-Japanese</script>
+			<script type="Kali">isi-Kayah Li</script>
 			<script type="Kana">isi-Katakana</script>
+			<script type="Khar">isi-Kharoshthi</script>
 			<script type="Khmr">isi-Khmer</script>
+			<script type="Khoj">isi-Khojki</script>
+			<script type="Kits">i-Khitan small script</script>
 			<script type="Knda">isi-Kannada</script>
 			<script type="Kore">isi-Korean</script>
+			<script type="Kthi">isi-Kaithi</script>
+			<script type="Lana">isi-Lanna</script>
 			<script type="Laoo">isi-Lao</script>
 			<script type="Latn">isi-Latin</script>
+			<script type="Lepc">isi-Lepcha</script>
+			<script type="Limb">isi-Limbu</script>
+			<script type="Lina">i-Linear A</script>
+			<script type="Linb">i-Linear B</script>
+			<script type="Lisu">isi-Fraser</script>
+			<script type="Lyci">i-Lycian</script>
+			<script type="Lydi">i-Lydian</script>
+			<script type="Mahj">i-Mahajani</script>
+			<script type="Maka">i-Makasar</script>
+			<script type="Mand">isi-Mandaean</script>
+			<script type="Mani">i-Manichaean</script>
+			<script type="Marc">i-Marchen</script>
+			<script type="Medf">i-Medefaidrin</script>
+			<script type="Mend">i-Mende</script>
+			<script type="Merc">i-Meroitic Cursive</script>
+			<script type="Mero">i-Meroitic</script>
 			<script type="Mlym">isi-Malayalam</script>
+			<script type="Modi">i-Modi</script>
 			<script type="Mong">isi-Mongolian</script>
+			<script type="Mroo">i-Mro</script>
+			<script type="Mtei">isi-Meitei Mayek</script>
+			<script type="Mult">i-Multani</script>
 			<script type="Mymr">isi-Myanmar</script>
+			<script type="Nand">i-Nandinagari</script>
+			<script type="Narb">i-Old North Arabian</script>
+			<script type="Nbat">i-Nabataean</script>
+			<script type="Nkoo">isi-N’Ko</script>
+			<script type="Nshu">i-Nüshu</script>
+			<script type="Ogam">i-Ogham</script>
+			<script type="Olck">isi-Ol Chiki</script>
+			<script type="Orkh">i-Orkhon</script>
 			<script type="Orya">isi-Odia</script>
+			<script type="Osge">isi-Osage</script>
+			<script type="Osma">i-Osmanya</script>
+			<script type="Palm">i-Palmyrene</script>
+			<script type="Pauc">i-Pau Cin Hau</script>
+			<script type="Perm">i-Old Permic</script>
+			<script type="Phag">i-Phags-pa</script>
+			<script type="Phli">i-Inscriptional Pahlavi</script>
+			<script type="Phlp">i-Psalter Pahlavi</script>
+			<script type="Phnx">i-Phoenician</script>
+			<script type="Plrd">isi-Pollard Phonetic</script>
+			<script type="Prti">i-Inscriptional Parthian</script>
+			<script type="Qaag">i-Zawgyi</script>
+			<script type="Rjng">i-Rejang</script>
+			<script type="Rohg">isi-Hanifi Rohingya</script>
+			<script type="Runr">i-Runic</script>
+			<script type="Samr">i-Samaritan</script>
+			<script type="Sarb">i-Old South Arabian</script>
+			<script type="Saur">isi-Saurashtra</script>
+			<script type="Sgnw">i-SignWriting</script>
+			<script type="Shaw">i-Shavian</script>
+			<script type="Shrd">i-Sharada</script>
+			<script type="Sidd">i-Siddham</script>
+			<script type="Sind">i-Khudawadi</script>
 			<script type="Sinh">isi-Sinhala</script>
+			<script type="Sogd">i-Sogdian</script>
+			<script type="Sogo">i-Old Sogdian</script>
+			<script type="Sora">i-Sora Sompeng</script>
+			<script type="Soyo">i-Soyombo</script>
+			<script type="Sund">isi-Sundanese</script>
+			<script type="Sylo">isi-Syloti Nagri</script>
+			<script type="Syrc">isi-Syriac</script>
+			<script type="Tagb">i-Tagbanwa</script>
+			<script type="Takr">i-Takri</script>
+			<script type="Tale">isi-Tai Le</script>
+			<script type="Talu">isi-New Tai Lue</script>
 			<script type="Taml">isi-Tamil</script>
+			<script type="Tang">i-Tangut</script>
+			<script type="Tavt">isi-Tai Viet</script>
 			<script type="Telu">isi-Telugu</script>
+			<script type="Tfng">isi-Tifinagh</script>
+			<script type="Tglg">i-Tagalog</script>
 			<script type="Thaa">isi-Thaana</script>
 			<script type="Thai">isi-Thai</script>
 			<script type="Tibt">i-Tibetan</script>
+			<script type="Tirh">i-Tirhuta</script>
+			<script type="Ugar">i-Ugaritic</script>
+			<script type="Vaii">isi-Vai</script>
+			<script type="Wara">i-Varang Kshiti</script>
+			<script type="Wcho">isi-Wancho</script>
+			<script type="Xpeo">i-Old Persian</script>
+			<script type="Xsux">i-Sumero-Akkadian Cuneiform</script>
+			<script type="Yezi">i-Yezidi</script>
+			<script type="Yiii">isi-Yi</script>
+			<script type="Zanb">i-Zanabazar Square</script>
+			<script type="Zinh">Okuthethwe</script>
 			<script type="Zmth">i-Mathematical Notation</script>
 			<script type="Zsye">i-Emoji</script>
 			<script type="Zsym">amasimbuli</script>
@@ -510,6 +643,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="151">i-Eastern Europe</territory>
 			<territory type="154">i-Northern Europe</territory>
 			<territory type="155">i-Western Europe</territory>
+			<territory type="202">Sub-Saharan Africa</territory>
 			<territory type="419">i-Latin America</territory>
 			<territory type="AC">i-Ascension Island</territory>
 			<territory type="AD">i-Andorra</territory>
@@ -589,7 +723,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="ES">i-Spain</territory>
 			<territory type="ET">i-Ethiopia</territory>
 			<territory type="EU">i-European Union</territory>
-			<territory type="EZ">EZ</territory>
+			<territory type="EZ">I-Eurozone</territory>
 			<territory type="FI">i-Finland</territory>
 			<territory type="FJ">i-Fiji</territory>
 			<territory type="FK">i-Falkland Islands</territory>
@@ -619,7 +753,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="GY">i-Guyana</territory>
 			<territory type="HK">i-Hong Kong SAR China</territory>
 			<territory type="HK" alt="short">i-Hong Kong</territory>
-			<territory type="HM">i-Heard Island ne-McDonald Islands</territory>
+			<territory type="HM">I-Heard &amp; McDonald Island</territory>
 			<territory type="HN">i-Honduras</territory>
 			<territory type="HR">i-Croatia</territory>
 			<territory type="HT">i-Haiti</territory>
@@ -668,8 +802,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="MF">i-Saint Martin</territory>
 			<territory type="MG">i-Madagascar</territory>
 			<territory type="MH">i-Marshall Islands</territory>
-			<territory type="MK">i-Macedonia</territory>
-			<territory type="MK" alt="variant">i-Macedonia (FYROM)</territory>
+			<territory type="MK">i-North Macedonia</territory>
 			<territory type="ML">iMali</territory>
 			<territory type="MM">i-Myanmar (Burma)</territory>
 			<territory type="MN">i-Mongolia</territory>
@@ -762,7 +895,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="TZ">i-Tanzania</territory>
 			<territory type="UA">i-Ukraine</territory>
 			<territory type="UG">i-Uganda</territory>
-			<territory type="UM">i-U.S. Minor Outlying Islands</territory>
+			<territory type="UM">I-U.S. Outlying Islands</territory>
 			<territory type="UN">I-United Nations</territory>
 			<territory type="UN" alt="short">ifulegi</territory>
 			<territory type="US">i-United States</territory>
@@ -778,6 +911,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="VU">i-Vanuatu</territory>
 			<territory type="WF">i-Wallis ne-Futuna</territory>
 			<territory type="WS">i-Samoa</territory>
+			<territory type="XA">Pseudo-Accents</territory>
+			<territory type="XB">Pseudo-Bidi</territory>
 			<territory type="XK">i-Kosovo</territory>
 			<territory type="YE">i-Yemen</territory>
 			<territory type="YT">i-Mayotte</territory>
@@ -786,6 +921,109 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<territory type="ZW">iZimbabwe</territory>
 			<territory type="ZZ">iSifunda esingaziwa</territory>
 		</territories>
+		<variants>
+			<variant type="1901">Ubhalomagama lwase-German losiko</variant>
+			<variant type="1994">Ubhalomagama lwase-Russia olusezingeni</variant>
+			<variant type="1996">Ubhalomagama lwase-German lwango-1996</variant>
+			<variant type="1606NICT">Isi-French esimaphakathi kuya ku-1606</variant>
+			<variant type="1694ACAD">isi-French Samanje</variant>
+			<variant type="1959ACAD">Okwemfundo</variant>
+			<variant type="ABL1943">Ukwakhiwa kobhalomagama kwango-1943</variant>
+			<variant type="AKUAPEM">i-AKUAPEM</variant>
+			<variant type="ALALC97">i-ALA-LC Romanization, i-edishini yango-1997</variant>
+			<variant type="ALUKU">Ulwimi lwesi-Aluku</variant>
+			<variant type="AO1990">Isivumelwano Sobhalomagama Lolwimi lesi-Portuguese sango-1990</variant>
+			<variant type="ARANES">i-ARANES</variant>
+			<variant type="ASANTE">i-ASANTE</variant>
+			<variant type="AUVERN">i-AUVERN</variant>
+			<variant type="BAKU1926">Uhlamvu lwesi-Turkic Latin oluhlanganisiwe</variant>
+			<variant type="BALANKA">Ulwimi lwe-Balank lwe-Anii</variant>
+			<variant type="BARLA">Iqembu lolwomi lwesi-Barlavento lwe-Kabuverdianu</variant>
+			<variant type="BASICENG">i-BASICENG</variant>
+			<variant type="BAUDDHA">i-BAUDDHA</variant>
+			<variant type="BISCAYAN">i-BISCAYAN</variant>
+			<variant type="BISKE">Ulwimi lwe-San Giorgio/Bila</variant>
+			<variant type="BOHORIC">Uhlambu lwe-Bohorič</variant>
+			<variant type="BOONT">i-Boontling</variant>
+			<variant type="BORNHOLM">i-BORNHOLM</variant>
+			<variant type="CISAUP">i-CISAUP</variant>
+			<variant type="COLB1945">Ubhalomagama lwe-Portuguese-Brazilian lwango-1945</variant>
+			<variant type="CORNU">i-CORNU</variant>
+			<variant type="CREISS">i-CREISS</variant>
+			<variant type="DAJNKO">Uhlamvu lwe-Dajnko</variant>
+			<variant type="EKAVSK">isi-Serbian esinokuphimisa kwe-Ekavian</variant>
+			<variant type="EMODENG">i-English Yesimanje</variant>
+			<variant type="FONIPA">Ifonotiki ye-IPA</variant>
+			<variant type="FONKIRSH">i-FONKIRSH</variant>
+			<variant type="FONNAPA">i-FONNAPA</variant>
+			<variant type="FONUPA">Ifonotiki ye-UPA</variant>
+			<variant type="FONXSAMP">i-FONXSAMP</variant>
+			<variant type="GASCON">i-GASCON</variant>
+			<variant type="GRCLASS">i-GRCLASS</variant>
+			<variant type="GRITAL">i-GRITAL</variant>
+			<variant type="GRMISTR">i-GRMISTR</variant>
+			<variant type="HEPBURN">i-Hepburn romanization</variant>
+			<variant type="HOGNORSK">i-HOGNORSK</variant>
+			<variant type="HSISTEMO">i-HSISTEMO</variant>
+			<variant type="IJEKAVSK">Isi-Serbian esinokuphimisa kwe-Ijekavian</variant>
+			<variant type="ITIHASA">i-ITIHASA</variant>
+			<variant type="IVANCHOV">i-IVANCHOV</variant>
+			<variant type="JAUER">i-JAUER</variant>
+			<variant type="JYUTPING">i-JYUTPING</variant>
+			<variant type="KKCOR">Ubhalomagama oluvamile</variant>
+			<variant type="KOCIEWIE">i-KOCIEWIE</variant>
+			<variant type="KSCOR">Ubhalomagama olusezingeni</variant>
+			<variant type="LAUKIKA">i-LAUKIKA</variant>
+			<variant type="LEMOSIN">i-LEMOSIN</variant>
+			<variant type="LENGADOC">i-LENGADOC</variant>
+			<variant type="LIPAW">Ulwimi lwesi-Lipovaz lase-Resian</variant>
+			<variant type="LUNA1918">i-LUNA1918</variant>
+			<variant type="METELKO">Uhlambu lwe-Metelko</variant>
+			<variant type="MONOTON">i-Monotonic</variant>
+			<variant type="NDYUKA">Ulwimi lwesi-Ndyuka</variant>
+			<variant type="NEDIS">Ulwimi lwesi-Natisone</variant>
+			<variant type="NEWFOUND">i-NEWFOUND</variant>
+			<variant type="NICARD">i-NICARD</variant>
+			<variant type="NJIVA">Ulwimi lwesi-Gniva/Njiva</variant>
+			<variant type="NULIK">i-Volapük yesimanje</variant>
+			<variant type="OSOJS">Ulwimi lwesi-Oseacco/Osojane</variant>
+			<variant type="OXENDICT">Ukupela Kwesichazamazwi se-Oxford EnglishOxford English Dictionary spelling</variant>
+			<variant type="PAHAWH2">i-PAHAWH2</variant>
+			<variant type="PAHAWH3">i-PAHAWH3</variant>
+			<variant type="PAHAWH4">i-PAHAWH4</variant>
+			<variant type="PAMAKA">ulwimi lwesi-Pamaka</variant>
+			<variant type="PETR1708">i-PETR1708</variant>
+			<variant type="PINYIN">i-Pinyin Romanization</variant>
+			<variant type="POLYTON">i-Polytonic</variant>
+			<variant type="POSIX">Ikhompyutha</variant>
+			<variant type="PROVENC">i-PROVENC</variant>
+			<variant type="PUTER">i-PUTER</variant>
+			<variant type="REVISED">Ubhalomagama Olubuyekeziwe</variant>
+			<variant type="RIGIK">I-Volapük Yakudala</variant>
+			<variant type="ROZAJ">i-Resian</variant>
+			<variant type="RUMGR">i-RUMGR</variant>
+			<variant type="SAAHO">i-Saho</variant>
+			<variant type="SCOTLAND">i-English Esezingeni ye-Scotish</variant>
+			<variant type="SCOUSE">i-Scouse</variant>
+			<variant type="SIMPLE">OKULULA</variant>
+			<variant type="SOLBA">Ulwimi lwesi-Stolvizza/Solbica</variant>
+			<variant type="SOTAV">Iqembu lolwimi lwesi-Sotavento lwe-Kabuverdianu</variant>
+			<variant type="SPANGLIS">i-SPANGLIS</variant>
+			<variant type="SURMIRAN">i-SURMIRAN</variant>
+			<variant type="SURSILV">i-SURSILV</variant>
+			<variant type="SUTSILV">i-SUTSILV</variant>
+			<variant type="TARASK">Ubhalomagama lwesi-Taraskievica</variant>
+			<variant type="UCCOR">Ubhalomagama Oluhlanganisiwe</variant>
+			<variant type="UCRCOR" draft="provisional">Ubhalomagama Olubuyekeziwe Oluhlanganisiwe</variant>
+			<variant type="ULSTER">i-ULSTER</variant>
+			<variant type="UNIFON">Uhlamvu lwefonotiki lwe-Unifon</variant>
+			<variant type="VAIDIKA">i-VAIDIKA</variant>
+			<variant type="VALENCIA">i-Valencian</variant>
+			<variant type="VALLADER">i-VALLADER</variant>
+			<variant type="VIVARAUP">i-VIVARAUP</variant>
+			<variant type="WADEGILE">i-Wade-Giles Romanization</variant>
+			<variant type="XSISTEMO">i-XSISTEMO</variant>
+		</variants>
 		<keys>
 			<key type="calendar">Ikhalenda</key>
 			<key type="cf">Ifomethi yemali</key>
@@ -797,31 +1035,34 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<key type="colNormalization">Ukuhlelwa Okulinganisiwe</key>
 			<key type="colNumeric">Ukuhlelwa Ngezinombolo</key>
 			<key type="colStrength">Amandla Okuhlelwa</key>
-			<key type="currency">Ikharensi</key>
+			<key type="currency">Imali</key>
 			<key type="hc">Umjikelezo wehora (12 vs 24</key>
 			<key type="lb">I-Line Break Style</key>
 			<key type="ms">Isistimu yokulinganisa</key>
 			<key type="numbers">Izinombolo</key>
-			<key type="timezone">Izoni yesikhathi:</key>
+			<key type="timezone">Isikhathi Sendawo</key>
 			<key type="va">Okokwehlukanisa Kwasendaweni</key>
-			<key type="x">i-Private-Use</key>
+			<key type="x">Yokusetshenziswa Ngasese</key>
 		</keys>
 		<types>
 			<type key="calendar" type="buddhist">ikhalenda lesi-Buddhist</type>
-			<type key="calendar" type="chinese">ikhalenda lesi-Chinese</type>
+			<type key="calendar" type="chinese">Ikhalenda lesi-Chinese</type>
 			<type key="calendar" type="coptic">i-Coptic Calender</type>
-			<type key="calendar" type="dangi">ikhalenda lesi-Dangi</type>
-			<type key="calendar" type="ethiopic">ikhalenda lesi-Ethiopic</type>
+			<type key="calendar" type="dangi">Ikhalenda lesi-Dangi</type>
+			<type key="calendar" type="ethiopic">Ikhalenda lesi-Ethiopic</type>
 			<type key="calendar" type="ethiopic-amete-alem">i-Ethiopic Amete Alem Calender</type>
 			<type key="calendar" type="gregorian">ikhalenda lesi-Gregorian</type>
-			<type key="calendar" type="hebrew">ikhalenda lesi-Hebrew</type>
+			<type key="calendar" type="hebrew">Ikhalenda lesi-Hebrew</type>
 			<type key="calendar" type="indian">i-Indian National Calender</type>
-			<type key="calendar" type="islamic">ikhalenda lesi-Islamic</type>
+			<type key="calendar" type="islamic">Ikhalenda lesi-Islamic</type>
 			<type key="calendar" type="islamic-civil">i-Islamic-Civil Calendar</type>
-			<type key="calendar" type="iso8601">ikhalenda le-ISO-8601</type>
-			<type key="calendar" type="japanese">ikhalenda lesi-Japanese</type>
-			<type key="calendar" type="persian">ikhalenda lesi-Persian</type>
-			<type key="calendar" type="roc">ikhalenda lesi-Minguo</type>
+			<type key="calendar" type="islamic-rgsa">Ikhalenda yesi-Islamic (Saudi Arabia, sighting)</type>
+			<type key="calendar" type="islamic-tbla">Ikhalenda yesi-Islamic (tabular, astronomical epoch)</type>
+			<type key="calendar" type="islamic-umalqura">Ikhalenda yesi-Islamic (Umm al-Qura)</type>
+			<type key="calendar" type="iso8601">Ikhalenda le-ISO-8601</type>
+			<type key="calendar" type="japanese">Ikhalenda lesi-Japanese</type>
+			<type key="calendar" type="persian">Ikhalenda lesi-Persian</type>
+			<type key="calendar" type="roc">Ikhalenda lesi-Minguo</type>
 			<type key="cf" type="account">Ifomethi yemali ye-Accounting</type>
 			<type key="cf" type="standard">Ifomethi yemali ejwayelekile</type>
 			<type key="colAlternate" type="non-ignorable">Hlela Izimpawu</type>
@@ -834,8 +1075,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="colCaseLevel" type="no">Hlela Okungancikile Ezinkinobhweni</type>
 			<type key="colCaseLevel" type="yes">Hlela Okuncike Ekumeni Kwezinkinobho</type>
 			<type key="collation" type="big5han">Ukuhlunga kwe-Traditional Chinese - Big5</type>
-			<type key="collation" type="dictionary">Ukuhlunga kwesichazimazwi</type>
+			<type key="collation" type="compat">Ukuhlunga Kwangaphambilini, ngokusebenzisana</type>
+			<type key="collation" type="dictionary">Uhlelo Lokuhlunga Lesichazamazwi</type>
 			<type key="collation" type="ducet">Ukuhlunga okuzenzakalelayo kwe-Unicode</type>
+			<type key="collation" type="emoji">Uhlelo Lokuhlunga le-Emoji</type>
+			<type key="collation" type="eor">Imithetho Yokuhlunga ye-European</type>
 			<type key="collation" type="gb2312han">Ukuhlunga kwe-Simplified Chinese - GB2312</type>
 			<type key="collation" type="phonebook">Ukuhlunga kwebhuku lefoni</type>
 			<type key="collation" type="phonetic">Hlela Ngokwefonetiki</type>
@@ -847,6 +1091,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="collation" type="stroke">Ukuhlunga kwe-Stroke</type>
 			<type key="collation" type="traditional">Ukuhlunga ngokisiko</type>
 			<type key="collation" type="unihan">Ukuhlunga kwe-Radical-Stroke</type>
+			<type key="collation" type="zhuyin">Ukuhlunga kwe-Zhuyin</type>
 			<type key="colNormalization" type="no">Hlela Ngaphandle Kokulinganisa</type>
 			<type key="colNormalization" type="yes">Ukuhlelwa Khekhodi Enye Kulinganisiwe</type>
 			<type key="colNumeric" type="no">Hlela Izinhlamvu Zenombolo Ngazinye</type>
@@ -871,16 +1116,25 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="ms" type="metric">isistimu ye-Metric</type>
 			<type key="ms" type="uksystem">isistimu yokulinganisa ebusayo</type>
 			<type key="ms" type="ussystem">isistimu yokulinganisa yase-US</type>
+			<type key="numbers" type="ahom">Izinombolo ze-Ahom</type>
 			<type key="numbers" type="arab">amadijithi esi-Arabic-Indic</type>
 			<type key="numbers" type="arabext">amadijithi esi-Arabic-Indic eluliwe</type>
 			<type key="numbers" type="armn">izinombolo zesi-Armenian</type>
 			<type key="numbers" type="armnlow">izinombolo ezincane zesi-Armenian</type>
+			<type key="numbers" type="bali">Izinombolo ze-Balinese</type>
 			<type key="numbers" type="beng">izinombolo zesi-Bengali</type>
+			<type key="numbers" type="brah">Izinombolo ze-Brahmi</type>
+			<type key="numbers" type="cakm">Izinombolo ze-Chakma</type>
+			<type key="numbers" type="cham">Izinombolo ze-Cham</type>
+			<type key="numbers" type="cyrl">Izinombolo ze-Cyrillic</type>
 			<type key="numbers" type="deva">izinombolo zesi-Devanagari</type>
+			<type key="numbers" type="diak">Izinombolo ze-Dives Akuru</type>
 			<type key="numbers" type="ethi">izinombolo zesi-Ethiopic</type>
 			<type key="numbers" type="finance">Izinombolo Zezomnotho</type>
 			<type key="numbers" type="fullwide">ububanzi obugcwele bamadijithi</type>
 			<type key="numbers" type="geor">izinombolo zesi-Georgian</type>
+			<type key="numbers" type="gong">Izinombolo ze-Gunjala Gondi</type>
+			<type key="numbers" type="gonm">Izinombolo ze-Masaram Gondi</type>
 			<type key="numbers" type="grek">izinombolo zesi-Greek</type>
 			<type key="numbers" type="greklow">izinombolo ezincane zesi-Greek</type>
 			<type key="numbers" type="gujr">amadijithi esi-Gujarati</type>
@@ -891,26 +1145,59 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<type key="numbers" type="hant">izinombolo zosiko zesi-Chinese</type>
 			<type key="numbers" type="hantfin">izinombolo zosiko zezezimali zesi-Chinese</type>
 			<type key="numbers" type="hebr">izinombolo zesi-Hebrew</type>
+			<type key="numbers" type="hmng">Izinombolo ze-Pahawh Hmong</type>
+			<type key="numbers" type="hmnp">Izinombolo ze-Nyiakeng Puachue Hmong</type>
+			<type key="numbers" type="java">Izinombolo ze-Javanese</type>
 			<type key="numbers" type="jpan">izinombolo zesi-Japanese</type>
 			<type key="numbers" type="jpanfin">izinombolo zezezimali zesi-Japanese</type>
+			<type key="numbers" type="kali">Izinombolo ze-Kayah Li</type>
 			<type key="numbers" type="khmr">amadijithi esi-Khmer</type>
 			<type key="numbers" type="knda">amadijithi esi-Kannada</type>
+			<type key="numbers" type="lana">Izinombolo ze-Tai Tham Hora</type>
+			<type key="numbers" type="lanatham">Izinombolo ze-Tai Tham Tham</type>
 			<type key="numbers" type="laoo">amadijithi esi-Lao</type>
 			<type key="numbers" type="latn">amadijithi ase-Western</type>
+			<type key="numbers" type="lepc">Izinombolo ze-Lepcha</type>
+			<type key="numbers" type="limb">Izinombolo ze-Limbu</type>
+			<type key="numbers" type="mathbold">Izinombolo ze-Mathematical Bold</type>
+			<type key="numbers" type="mathdbl">Izinombolo ze-Mathematical Double-Struck</type>
+			<type key="numbers" type="mathmono">Izinombolo ze-Mathematical Monospace</type>
+			<type key="numbers" type="mathsanb">Izinombolo ze-Mathematical Sans-Serif Bold</type>
+			<type key="numbers" type="mathsans">Izinombolo ze-Mathematical Sans-Serif</type>
 			<type key="numbers" type="mlym">amadijithi esi-Malayalam</type>
+			<type key="numbers" type="modi">Izinombolo ze-Modi</type>
 			<type key="numbers" type="mong">i-Mongolian Digits</type>
+			<type key="numbers" type="mroo">Izinombolo ze-Mro</type>
+			<type key="numbers" type="mtei">Izinombolo ze-Meetei Mayek</type>
 			<type key="numbers" type="mymr">amadijithi esi-Maynmar</type>
+			<type key="numbers" type="mymrshan">Izinombolo ze-Myanmar Shan</type>
+			<type key="numbers" type="mymrtlng">Izinombolo ze-Myanmar Tai Laing</type>
 			<type key="numbers" type="native">Izinkinobho Zasendaweni</type>
+			<type key="numbers" type="nkoo">Izinombolo ze-N’Ko</type>
+			<type key="numbers" type="olck">Izinombolo ze-Ol Chiki</type>
 			<type key="numbers" type="orya">Amadijithi ase-Odia</type>
+			<type key="numbers" type="osma">Izinombolo ze-Osmanya</type>
+			<type key="numbers" type="rohg">Izinombolo ze-Hanifi Rohingya</type>
 			<type key="numbers" type="roman">izinombolo zesi-Roman</type>
 			<type key="numbers" type="romanlow">izinombolo zesi-Tamil</type>
+			<type key="numbers" type="saur">Izinombolo ze-Saurashtra</type>
+			<type key="numbers" type="shrd">Izinombolo ze-Sharada</type>
+			<type key="numbers" type="sind">Izinombolo ze-Khudawadi</type>
+			<type key="numbers" type="sinh">Izinombolo ze-Sinhala Lith</type>
+			<type key="numbers" type="sora">Izinombolo ze-Sora Sompeng</type>
+			<type key="numbers" type="sund">Izinombolo ze-Sundanese</type>
+			<type key="numbers" type="takr">Izinombolo ze-Takri</type>
+			<type key="numbers" type="talu">Izinombolo ze-New Tai Lue</type>
 			<type key="numbers" type="taml">izinombolo zesi-Tamil</type>
 			<type key="numbers" type="tamldec">amadijithi esi-Tamil</type>
 			<type key="numbers" type="telu">amadijithi esi-Telegu</type>
 			<type key="numbers" type="thai">amadijithi esi-Thai</type>
 			<type key="numbers" type="tibt">amadijithi esi-Tibetan</type>
+			<type key="numbers" type="tirh">Izinombolo ze-Tirhuta</type>
 			<type key="numbers" type="traditional">Izinombolo Ezijwayelekile</type>
 			<type key="numbers" type="vaii">Izinhlazu Zezinombolo ze-Vai</type>
+			<type key="numbers" type="wara">Izinombolo ze-Warang Citi</type>
+			<type key="numbers" type="wcho">Izinombolo ze-Wancho</type>
 		</types>
 		<measurementSystemNames>
 			<measurementSystemName type="metric">i-Metric</measurementSystemName>
@@ -926,8 +1213,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	<characters>
 		<exemplarCharacters>[a b {bh} c {ch} d {dl} {dy} e f g {gc} {gq} {gx} h {hh} {hl} i j k {kh} {kl} {kp} l m n {nc} {ngc} {ngq} {ngx} {nhl} {nk} {nkc} {nkq} {nkx} {nq} {ntsh} {nx} {ny} o p {ph} q {qh} r {rh} s {sh} t {th} {tl} {ts} {tsh} u v w x {xh} y z]</exemplarCharacters>
 		<exemplarCharacters type="auxiliary">[á à ă â å ä ã ā æ ç é è ĕ ê ë ē í ì ĭ î ï ī ñ ó ò ŏ ô ö ø ō œ ú ù ŭ û ü ū ÿ]</exemplarCharacters>
-		<exemplarCharacters type="index" draft="unconfirmed">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
-		<exemplarCharacters type="numbers">[\- , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="index" draft="contributed">[A B C D E F G H I J K L M N O P Q R S T U V W X Y Z]</exemplarCharacters>
+		<exemplarCharacters type="numbers">[\- ‑ , . % ‰ + 0 1 2 3 4 5 6 7 8 9]</exemplarCharacters>
+		<exemplarCharacters type="punctuation" draft="contributed">[\- ‑ , ; \: ! ? . ( ) \[ \] \{ \}]</exemplarCharacters>
 		<ellipsis type="final">{0}…</ellipsis>
 		<ellipsis type="initial">…{0}</ellipsis>
 		<ellipsis type="medial">{0}…{1}</ellipsis>
@@ -936,14 +1224,22 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<ellipsis type="word-medial">{0} … {1}</ellipsis>
 		<moreInformation>?</moreInformation>
 		<parseLenients scope="date" level="lenient">
-			<parseLenient sample="-" draft="provisional">[\--/]</parseLenient>
+			<parseLenient sample="-" draft="contributed">[\--/]</parseLenient>
 			<parseLenient sample=":" draft="contributed">[\:∶]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="general" level="lenient">
 			<parseLenient sample="." draft="contributed">[.․。︒﹒．｡]</parseLenient>
+			<parseLenient sample="$" draft="contributed">[\$﹩＄]</parseLenient>
+			<parseLenient sample="₹" draft="contributed">[₨₹{Rp}{Rs}]</parseLenient>
 		</parseLenients>
 		<parseLenients scope="number" level="lenient">
+			<parseLenient sample="-" draft="contributed">[\-‒⁻₋−➖﹣－]</parseLenient>
+			<parseLenient sample="," draft="contributed">[,،٫、︐︑﹐﹑，､]</parseLenient>
 			<parseLenient sample="+" draft="contributed">[+⁺₊➕﬩﹢＋]</parseLenient>
+		</parseLenients>
+		<parseLenients scope="number" level="stricter">
+			<parseLenient sample="," draft="contributed">[,٫︐﹐，]</parseLenient>
+			<parseLenient sample="." draft="contributed">[.․﹒．｡]</parseLenient>
 		</parseLenients>
 	</characters>
 	<delimiters>
@@ -1530,7 +1826,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 						<dateFormatItem id="MMMd">MMM d</dateFormatItem>
 						<dateFormatItem id="MMMEd">E, MMM d</dateFormatItem>
 						<dateFormatItem id="MMMMd">MMMM d</dateFormatItem>
-						<dateFormatItem id="MMMMW" count="one">'week' W 'of' MMM</dateFormatItem>
+						<dateFormatItem id="MMMMW" count="one">'week' W 'of' MMMM</dateFormatItem>
 						<dateFormatItem id="MMMMW" count="other">'week' W 'of' MMMM</dateFormatItem>
 						<dateFormatItem id="ms">mm:ss</dateFormatItem>
 						<dateFormatItem id="y">y</dateFormatItem>
@@ -1831,6 +2127,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="day-short">
 				<displayName>Usuku</displayName>
+				<relative type="-1">izolo</relative>
+				<relative type="0">namhlanje</relative>
+				<relative type="1">kusasa</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">osukwini olungu-{0} oluzayo</relativeTimePattern>
 					<relativeTimePattern count="other">ezinsukwini ezingu-{0} ezizayo</relativeTimePattern>
@@ -1842,6 +2141,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</field>
 			<field type="day-narrow">
 				<displayName>Usuku</displayName>
+				<relative type="-1">izolo</relative>
+				<relative type="0">namhlanje</relative>
+				<relative type="1">kusasa</relative>
 				<relativeTime type="future">
 					<relativeTimePattern count="one">osukwini olungu-{0} oluzayo</relativeTimePattern>
 					<relativeTimePattern count="other">ezinsukwini ezingu-{0} ezizayo</relativeTimePattern>
@@ -2654,6 +2956,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Pacific/Easter">
 				<exemplarCity>i-Easter</exemplarCity>
 			</zone>
+			<zone type="America/Punta_Arenas">
+				<exemplarCity>i-Punta Arenas</exemplarCity>
+			</zone>
 			<zone type="America/Santiago">
 				<exemplarCity>i-Santiago</exemplarCity>
 			</zone>
@@ -2682,7 +2987,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<exemplarCity>i-Curaçao</exemplarCity>
 			</zone>
 			<zone type="Indian/Christmas">
-				<exemplarCity>i-Christmas</exemplarCity>
+				<exemplarCity>Ukhisimusi</exemplarCity>
 			</zone>
 			<zone type="Asia/Nicosia">
 				<exemplarCity>i-Nicosia</exemplarCity>
@@ -2948,11 +3253,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Asia/Oral">
 				<exemplarCity>i-Oral</exemplarCity>
 			</zone>
-			<zone type="Asia/Atyrau">
-				<exemplarCity>Atyrau</exemplarCity>
-			</zone>
 			<zone type="Asia/Aqtobe">
 				<exemplarCity>i-Aqtobe</exemplarCity>
+			</zone>
+			<zone type="Asia/Qostanay">
+				<exemplarCity>I-Kostanay</exemplarCity>
 			</zone>
 			<zone type="Asia/Qyzylorda">
 				<exemplarCity>i-Qyzylorda</exemplarCity>
@@ -2967,7 +3272,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<exemplarCity>i-Beirut</exemplarCity>
 			</zone>
 			<zone type="America/St_Lucia">
-				<exemplarCity>i-</exemplarCity>
+				<exemplarCity>I-St. Lucia</exemplarCity>
 			</zone>
 			<zone type="Europe/Vaduz">
 				<exemplarCity>i-Vaduz</exemplarCity>
@@ -3221,14 +3526,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Europe/Kaliningrad">
 				<exemplarCity>i-Kaliningrad</exemplarCity>
 			</zone>
-			<zone type="Europe/Simferopol">
-				<exemplarCity>i-Simferopol</exemplarCity>
-			</zone>
 			<zone type="Europe/Moscow">
 				<exemplarCity>i-Moscow</exemplarCity>
 			</zone>
 			<zone type="Europe/Volgograd">
 				<exemplarCity>i-Volgograd</exemplarCity>
+			</zone>
+			<zone type="Europe/Saratov">
+				<exemplarCity>i-Saratov</exemplarCity>
 			</zone>
 			<zone type="Europe/Astrakhan">
 				<exemplarCity>i-Astrakhan</exemplarCity>
@@ -3416,6 +3721,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<zone type="Europe/Kiev">
 				<exemplarCity>i-Kiev</exemplarCity>
 			</zone>
+			<zone type="Europe/Simferopol">
+				<exemplarCity>i-Simferopol</exemplarCity>
+			</zone>
 			<zone type="Europe/Zaporozhye">
 				<exemplarCity>i-Zaporozhye</exemplarCity>
 			</zone>
@@ -3583,13 +3891,13 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Africa_Southern">
 				<long>
-					<standard>Isikhathi esijwayelekile saseNingizimu Afrika</standard>
+					<standard>Isikhathi esivamile saseNingizimu Afrika</standard>
 				</long>
 			</metazone>
 			<metazone type="Africa_Western">
 				<long>
 					<generic>Isikhathi saseNtshonalanga Afrika</generic>
-					<standard>Isikhathi esijwayelekile saseNtshonalanga Afrika</standard>
+					<standard>Isikhathi esivamile saseNtshonalanga Afrika</standard>
 					<daylight>Isikhathi sasehlobo saseNtshonalanga Afrika</daylight>
 				</long>
 			</metazone>
@@ -3673,7 +3981,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Armenia">
 				<long>
 					<generic>Isikhathi saseArmenia</generic>
-					<standard>Isikhathi esezingeni sase-Armenia</standard>
+					<standard>Isikhathi esivamile sase-Armenia</standard>
 					<daylight>Isikhathi sehlobo sase-Armenia</daylight>
 				</long>
 			</metazone>
@@ -3764,7 +4072,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Chamorro">
 				<long>
-					<standard>Isikhathi esijwayelekile sase-Chamorro</standard>
+					<standard>Isikhathi esivamile sase-Chamorro</standard>
 				</long>
 			</metazone>
 			<metazone type="Chatham">
@@ -3791,7 +4099,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Choibalsan">
 				<long>
 					<generic>Isikhathi sase-Choibalsan</generic>
-					<standard>Isikhathi Esimisiwe sase-Choibalsan</standard>
+					<standard>Isikhathi Esivamile sase-Choibalsan</standard>
 					<daylight>Isikhathi sehlobo e-Choibalsan</daylight>
 				</long>
 			</metazone>
@@ -4015,7 +4323,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Irkutsk">
 				<long>
 					<generic>Isikhathi sase-Irkutsk</generic>
-					<standard>Isikhathi Esimisiwe sase-Irkutsk</standard>
+					<standard>Isikhathi Esivamile sase-Irkutsk</standard>
 					<daylight>Isikhathi sasehlobo e-Irkutsk</daylight>
 				</long>
 			</metazone>
@@ -4053,7 +4361,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Korea">
 				<long>
 					<generic>Isikhathi sase-Korea</generic>
-					<standard>Isikhathi esisezengeni sase-Korea</standard>
+					<standard>Isikhathi Esivamile sase-Korea</standard>
 					<daylight>Isikhathi semini sase-Korea</daylight>
 				</long>
 			</metazone>
@@ -4065,7 +4373,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Krasnoyarsk">
 				<long>
 					<generic>Isikhathi sase-Krasnoyarsk</generic>
-					<standard>Isikhathi Esimisiwe sase-Krasnoyarsk</standard>
+					<standard>Isikhathi Esivamile sase-Krasnoyarsk</standard>
 					<daylight>Isikhathi sasehlobo e-Krasnoyarsk</daylight>
 				</long>
 			</metazone>
@@ -4094,7 +4402,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Magadan">
 				<long>
 					<generic>Isikhathi sase-Magadan</generic>
-					<standard>Isikhathi Esimisiwe sase-Magadan</standard>
+					<standard>Isikhathi Esivamile sase-Magadan</standard>
 					<daylight>Isikhathi sasehlobo e-Magadan</daylight>
 				</long>
 			</metazone>
@@ -4176,7 +4484,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="New_Caledonia">
 				<long>
 					<generic>Isikhathi sase-New Caledonia</generic>
-					<standard>Isikhathi sase-New Caledonia esijwayelekile</standard>
+					<standard>Isikhathi sase-New Caledonia esivamile</standard>
 					<daylight>Isikhathi sase-New Caledonia sasehlobo</daylight>
 				</long>
 			</metazone>
@@ -4201,27 +4509,29 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</metazone>
 			<metazone type="Norfolk">
 				<long>
-					<standard>Isikhathi sase-Norfolk Islands</standard>
+					<generic>Isikhathi sase-Norfolk Islands</generic>
+					<standard>Isikhathi sase-Norfolk Islands esivamile</standard>
+					<daylight>Isikhathi sase-Norfolk Islands sasehlobo</daylight>
 				</long>
 			</metazone>
 			<metazone type="Noronha">
 				<long>
 					<generic>Isikhathi sase-Fernando de Noronha</generic>
-					<standard>Isikhathi sase-Fernando de Noronha esijwayelekile</standard>
+					<standard>Isikhathi sase-Fernando de Noronha esivamile</standard>
 					<daylight>Isikhathi sase-Fernando de Noronha sasehlobo</daylight>
 				</long>
 			</metazone>
 			<metazone type="Novosibirsk">
 				<long>
 					<generic>Isikhathi sase-Novosibirsk</generic>
-					<standard>Isikhathi Esimisiwe sase-Novosibirsk</standard>
+					<standard>Isikhathi Esivamile sase-Novosibirsk</standard>
 					<daylight>Isikhathi sasehlobo sase-Novosibirsk</daylight>
 				</long>
 			</metazone>
 			<metazone type="Omsk">
 				<long>
 					<generic>Isikhathi sase-Omsk</generic>
-					<standard>Isikhathi Esimisiwe sase-Omsk</standard>
+					<standard>Isikhathi Esivamile sase-Omsk</standard>
 					<daylight>Isikhathi sasehlobo sase-Omsk</daylight>
 				</long>
 			</metazone>
@@ -4245,14 +4555,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Paraguay">
 				<long>
 					<generic>Isikhathi sase-Paraguay</generic>
-					<standard>Isikhathi sase-Paraguay esijwayelekile</standard>
+					<standard>Isikhathi sase-Paraguay esivamile</standard>
 					<daylight>Isikhathi sase-Paraguay sasehlobo</daylight>
 				</long>
 			</metazone>
 			<metazone type="Peru">
 				<long>
 					<generic>Isikhathi sase-Peru</generic>
-					<standard>Isikhathi sase-Peru esijwayelekile</standard>
+					<standard>Isikhathi sase-Peru esivamile</standard>
 					<daylight>Isikhathi sase-Peru sasehlobo</daylight>
 				</long>
 			</metazone>
@@ -4303,7 +4613,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Sakhalin">
 				<long>
 					<generic>Isikhathi sase-Sakhalin</generic>
-					<standard>Isikhathi Esimisiwe sase-Sakhalin</standard>
+					<standard>Isikhathi Esivamile sase-Sakhalin</standard>
 					<daylight>Isikhathi sasehlobo e-Sakhalin</daylight>
 				</long>
 			</metazone>
@@ -4317,7 +4627,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Samoa">
 				<long>
 					<generic>Isikhathi sase-Samoa</generic>
-					<standard>Isikhathi sase-Samoa esijwayelekile</standard>
+					<standard>Isikhathi sase-Samoa esivamile</standard>
 					<daylight>Isikhathi sase-Samoa sasemini</daylight>
 				</long>
 			</metazone>
@@ -4376,7 +4686,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Tonga">
 				<long>
 					<generic>Isikhathi sase-Tonga</generic>
-					<standard>Isikhathi sase-Tonga esijwayelekile</standard>
+					<standard>Isikhathi sase-Tonga esivamile</standard>
 					<daylight>Isikhathi sase-Tonga sasehlobo</daylight>
 				</long>
 			</metazone>
@@ -4426,14 +4736,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Vladivostok">
 				<long>
 					<generic>Isikhathi sase-Vladivostok</generic>
-					<standard>Isikhathi Esimisiwe sase-Vladivostok</standard>
+					<standard>Isikhathi Esivamile sase-Vladivostok</standard>
 					<daylight>Isikhathi sasehlobo e-Vladivostok</daylight>
 				</long>
 			</metazone>
 			<metazone type="Volgograd">
 				<long>
 					<generic>Isikhathi sase-Volgograd</generic>
-					<standard>Isikhathi Esimisiwe sase-Volgograd</standard>
+					<standard>Isikhathi Esivamile sase-Volgograd</standard>
 					<daylight>Isikhathi sase-Volgograd sasehlobo</daylight>
 				</long>
 			</metazone>
@@ -4455,14 +4765,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<metazone type="Yakutsk">
 				<long>
 					<generic>Isikhathi sase-Yakutsk</generic>
-					<standard>Isikhathi Esimisiwe sase-Yakutsk</standard>
+					<standard>Isikhathi Esivamile sase-Yakutsk</standard>
 					<daylight>Isikhathi sasehlobo e-Yakutsk</daylight>
 				</long>
 			</metazone>
 			<metazone type="Yekaterinburg">
 				<long>
 					<generic>Isikhathi sase-Yekaterinburg</generic>
-					<standard>Isikhathi Esimisiwe sase-Yekaterinburg</standard>
+					<standard>Isikhathi Esivamile sase-Yekaterinburg</standard>
 					<daylight>Isikhathi sasehlobo e-Yekaterinburg</daylight>
 				</long>
 			</metazone>
@@ -4475,12 +4785,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		</otherNumberingSystems>
 		<minimumGroupingDigits draft="contributed">1</minimumGroupingDigits>
 		<symbols numberSystem="latn">
-			<decimal>.</decimal>
-			<group>,</group>
+			<decimal draft="contributed">.</decimal>
+			<group draft="contributed">,</group>
 			<list>;</list>
 			<percentSign>%</percentSign>
-			<plusSign>+</plusSign>
-			<minusSign>-</minusSign>
+			<plusSign draft="contributed">+</plusSign>
+			<minusSign draft="contributed">-</minusSign>
 			<exponential>E</exponential>
 			<superscriptingExponent>×</superscriptingExponent>
 			<perMille>‰</perMille>
@@ -4491,7 +4801,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<decimalFormats numberSystem="latn">
 			<decimalFormatLength>
 				<decimalFormat>
-					<pattern>#,##0.###</pattern>
+					<pattern draft="contributed">#,##0.###</pattern>
 				</decimalFormat>
 			</decimalFormatLength>
 			<decimalFormatLength type="long">
@@ -4571,7 +4881,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 					<pattern>¤#,##0.00</pattern>
 				</currencyFormat>
 				<currencyFormat type="accounting">
-					<pattern>¤#,##0.00</pattern>
+					<pattern>¤#,##0.00;(¤#,##0.00)</pattern>
 				</currencyFormat>
 			</currencyFormatLength>
 			<currencyFormatLength type="short">
@@ -4634,7 +4944,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Netherlands Antillean Guilder</displayName>
 				<displayName count="one">i-Netherlands Antillean Guilder</displayName>
 				<displayName count="other">i-Netherlands Antillean Guilder</displayName>
-				<symbol>ANG</symbol>
+				<symbol draft="contributed">ANG</symbol>
 			</currency>
 			<currency type="AOA">
 				<displayName>i-Angolan Kwanza</displayName>
@@ -4647,21 +4957,20 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Argentina Peso</displayName>
 				<displayName count="one">i-Argentina Peso</displayName>
 				<displayName count="other">i-Argentina Peso</displayName>
-				<symbol draft="contributed">ARS</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AUD">
 				<displayName>i-Austrilian Dollar</displayName>
 				<displayName count="one">i-Austrilian Dollar</displayName>
 				<displayName count="other">i-Austrilian Dollar</displayName>
-				<symbol>A$</symbol>
+				<symbol draft="contributed">A$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="AWG">
 				<displayName>i-Aruban Florin</displayName>
 				<displayName count="one">i-Aruban Florin</displayName>
 				<displayName count="other">i-Aruban Florin</displayName>
-				<symbol>AWG</symbol>
+				<symbol draft="contributed">AWG</symbol>
 			</currency>
 			<currency type="AZN">
 				<displayName>i-Azerbaijani Manat</displayName>
@@ -4680,7 +4989,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Barbadian Dollar</displayName>
 				<displayName count="one">i-Barbadian Dollar</displayName>
 				<displayName count="other">i-Barbadian Dollar</displayName>
-				<symbol>BBD</symbol>
+				<symbol draft="contributed">BBD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BDT">
@@ -4712,7 +5021,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Bermudan Dollar</displayName>
 				<displayName count="one">i-Bermudan Dollar</displayName>
 				<displayName count="other">i-Bermudan Dollar</displayName>
-				<symbol>BMD</symbol>
+				<symbol draft="contributed">BMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BND">
@@ -4733,14 +5042,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Brazilian Real</displayName>
 				<displayName count="one">i-Brazilian Real</displayName>
 				<displayName count="other">i-Brazilian Real</displayName>
-				<symbol>R$</symbol>
+				<symbol draft="contributed">R$</symbol>
 				<symbol alt="narrow" draft="contributed">R$</symbol>
 			</currency>
 			<currency type="BSD">
 				<displayName>i-Bahamian Dollar</displayName>
 				<displayName count="one">i-Bahamian Dollar</displayName>
 				<displayName count="other">i-Bahamian Dollar</displayName>
-				<symbol>BSD</symbol>
+				<symbol draft="contributed">BSD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="BTN">
@@ -4773,14 +5082,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Belize Dollar</displayName>
 				<displayName count="one">i-Belize Dollar</displayName>
 				<displayName count="other">i-Belize Dollar</displayName>
-				<symbol>BZD</symbol>
+				<symbol draft="contributed">BZD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CAD">
 				<displayName>i-Candian Dollar</displayName>
 				<displayName count="one">i-Candian Dollar</displayName>
 				<displayName count="other">i-Candian Dollar</displayName>
-				<symbol>CA$</symbol>
+				<symbol draft="contributed">CA$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CDF">
@@ -4793,7 +5102,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Swiss Franc</displayName>
 				<displayName count="one">i-Swiss Franc</displayName>
 				<displayName count="other">i-Swiss Franc</displayName>
-				<symbol>CHF</symbol>
+				<symbol draft="contributed">CHF</symbol>
 			</currency>
 			<currency type="CLP">
 				<displayName>i-Chilean Peso</displayName>
@@ -4803,15 +5112,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CNH">
-				<displayName>CNH</displayName>
-				<displayName count="one">CNH</displayName>
-				<displayName count="other">CNH</displayName>
+				<displayName>i-CNH</displayName>
+				<displayName count="one">i-Chinese yuan (offshore)</displayName>
+				<displayName count="other">i-CNH</displayName>
 			</currency>
 			<currency type="CNY">
 				<displayName>i-Chinese Yuan</displayName>
 				<displayName count="one">i-Chinese Yuan</displayName>
 				<displayName count="other">i-Chinese Yuan</displayName>
-				<symbol>CN¥</symbol>
+				<symbol draft="contributed">CN¥</symbol>
 				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="COP">
@@ -4825,21 +5134,21 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Costa Rican Colón</displayName>
 				<displayName count="one">i-Costa Rican Colón</displayName>
 				<displayName count="other">i-Costa Rican Colón</displayName>
-				<symbol>CRC</symbol>
+				<symbol draft="contributed">CRC</symbol>
 				<symbol alt="narrow" draft="contributed">₡</symbol>
 			</currency>
 			<currency type="CUC">
 				<displayName>i-Cuban Convertable Peso</displayName>
 				<displayName count="one">i-Cuban Convertable Peso</displayName>
 				<displayName count="other">i-Cuban Convertable Peso</displayName>
-				<symbol>CUC</symbol>
+				<symbol draft="contributed">CUC</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CUP">
 				<displayName>i-Cuban Peso</displayName>
 				<displayName count="one">i-Cuban pesos</displayName>
 				<displayName count="other">i-Cuban pesos</displayName>
-				<symbol>CUP</symbol>
+				<symbol draft="contributed">CUP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="CVE">
@@ -4865,14 +5174,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Danish Krone</displayName>
 				<displayName count="one">i-Danish Krone</displayName>
 				<displayName count="other">i-Danish Krone</displayName>
-				<symbol>DKK</symbol>
+				<symbol draft="contributed">DKK</symbol>
 				<symbol alt="narrow" draft="contributed">Kr</symbol>
 			</currency>
 			<currency type="DOP">
 				<displayName>i-Dominican Peso</displayName>
 				<displayName count="one">i-Dominican Peso</displayName>
 				<displayName count="other">i-Dominican Peso</displayName>
-				<symbol>DOP</symbol>
+				<symbol draft="contributed">DOP</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="DZD">
@@ -4904,7 +5213,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Euro</displayName>
 				<displayName count="one">i-Euro</displayName>
 				<displayName count="other">i-Euro</displayName>
-				<symbol>€</symbol>
 				<symbol alt="narrow" draft="contributed">€</symbol>
 			</currency>
 			<currency type="FJD">
@@ -4925,7 +5233,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-British Pound</displayName>
 				<displayName count="one">i-British Pound</displayName>
 				<displayName count="other">i-British Pound</displayName>
-				<symbol>£</symbol>
+				<symbol draft="contributed">£</symbol>
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="GEL">
@@ -4966,7 +5274,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Guatemalan Quetzal</displayName>
 				<displayName count="one">i-Guatemalan Quetzal</displayName>
 				<displayName count="other">i-Guatemalan Quetzal</displayName>
-				<symbol>GTQ</symbol>
+				<symbol draft="contributed">GTQ</symbol>
 				<symbol alt="narrow" draft="contributed">Q</symbol>
 			</currency>
 			<currency type="GYD">
@@ -4980,14 +5288,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Hong Kong Dollar</displayName>
 				<displayName count="one">i-Hong Kong Dollar</displayName>
 				<displayName count="other">i-Hong Kong Dollar</displayName>
-				<symbol>HK$</symbol>
+				<symbol draft="contributed">HK$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="HNL">
 				<displayName>i-Honduran Lempira</displayName>
 				<displayName count="one">i-Honduran Lempira</displayName>
 				<displayName count="other">i-Honduran lempiras</displayName>
-				<symbol>HNL</symbol>
+				<symbol draft="contributed">HNL</symbol>
 				<symbol alt="narrow" draft="contributed">L</symbol>
 			</currency>
 			<currency type="HRK">
@@ -5001,7 +5309,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Haitian Gourde</displayName>
 				<displayName count="one">i-Haitian Gourde</displayName>
 				<displayName count="other">i-Haitian Gourde</displayName>
-				<symbol>HTG</symbol>
+				<symbol draft="contributed">HTG</symbol>
 			</currency>
 			<currency type="HUF">
 				<displayName>i-Hungarian Forint</displayName>
@@ -5014,7 +5322,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Indonesian Rupiah</displayName>
 				<displayName count="one">i-Indonesian Rupiah</displayName>
 				<displayName count="other">i-Indonesian Rupiah</displayName>
-				<symbol>IDR</symbol>
+				<symbol draft="contributed">IDR</symbol>
 				<symbol alt="narrow" draft="contributed">Rp</symbol>
 			</currency>
 			<currency type="ILS">
@@ -5028,7 +5336,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Indian Rupee</displayName>
 				<displayName count="one">i-Indian Rupee</displayName>
 				<displayName count="other">i-Indian Rupee</displayName>
-				<symbol>₹</symbol>
+				<symbol draft="contributed">₹</symbol>
 				<symbol alt="narrow" draft="contributed">₹</symbol>
 			</currency>
 			<currency type="IQD">
@@ -5054,7 +5362,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Jamaican Dollar</displayName>
 				<displayName count="one">i-Jamaican Dollar</displayName>
 				<displayName count="other">i-Jamaican Dollar</displayName>
-				<symbol>JMD</symbol>
+				<symbol draft="contributed">JMD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="JOD">
@@ -5067,7 +5375,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Japanese Yen</displayName>
 				<displayName count="one">i-Japanese Yen</displayName>
 				<displayName count="other">i-Japanese Yen</displayName>
-				<symbol>JP¥</symbol>
+				<symbol draft="contributed">JP¥</symbol>
 				<symbol alt="narrow" draft="contributed">¥</symbol>
 			</currency>
 			<currency type="KES">
@@ -5107,7 +5415,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-South Korean Won</displayName>
 				<displayName count="one">i-South Korean Won</displayName>
 				<displayName count="other">i-South Korean Won</displayName>
-				<symbol>₩</symbol>
+				<symbol draft="contributed">₩</symbol>
 				<symbol alt="narrow" draft="contributed">₩</symbol>
 			</currency>
 			<currency type="KWD">
@@ -5120,7 +5428,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Cayman Islands Dollar</displayName>
 				<displayName count="one">i-Cayman Islands Dollar</displayName>
 				<displayName count="other">i-Cayman Islands Dollar</displayName>
-				<symbol>KYD</symbol>
+				<symbol draft="contributed">KYD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="KZT">
@@ -5219,10 +5527,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">MOP</symbol>
 			</currency>
 			<currency type="MRO">
+				<displayName>i-Mauritanian Ouguiya (1973–2017)</displayName>
+				<displayName count="one">i-Mauritanian Ouguiya (1973–2017)</displayName>
+				<displayName count="other">i-Mauritanian Ouguiya (1973–2017)</displayName>
+				<symbol draft="contributed">MRO</symbol>
+			</currency>
+			<currency type="MRU">
 				<displayName>i-Mauritanian Ouguiya</displayName>
 				<displayName count="one">i-Mauritanian Ouguiya</displayName>
 				<displayName count="other">i-Mauritanian Ouguiya</displayName>
-				<symbol draft="contributed">MRO</symbol>
 			</currency>
 			<currency type="MUR">
 				<displayName>i-Mauritian Rupee</displayName>
@@ -5247,7 +5560,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Mexican Peso</displayName>
 				<displayName count="one">i-Mexican Peso</displayName>
 				<displayName count="other">i-Mexican Peso</displayName>
-				<symbol>MX$</symbol>
+				<symbol draft="contributed">MX$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="MYR">
@@ -5281,14 +5594,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Nicaraguan Córdoba</displayName>
 				<displayName count="one">i-Nicaraguan Córdoba</displayName>
 				<displayName count="other">i-Nicaraguan Córdoba</displayName>
-				<symbol>NIO</symbol>
+				<symbol draft="contributed">NIO</symbol>
 				<symbol alt="narrow" draft="contributed">C$</symbol>
 			</currency>
 			<currency type="NOK">
 				<displayName>i-Norwegian Krone</displayName>
 				<displayName count="one">i-Norwegian Krone</displayName>
 				<displayName count="other">i-Norwegian Krone</displayName>
-				<symbol>NOK</symbol>
+				<symbol draft="contributed">NOK</symbol>
 				<symbol alt="narrow" draft="contributed">Kr</symbol>
 			</currency>
 			<currency type="NPR">
@@ -5315,7 +5628,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Panamanian Balboa</displayName>
 				<displayName count="one">i-Panamanian Balboa</displayName>
 				<displayName count="other">i-Panamanian Balboa</displayName>
-				<symbol>PAB</symbol>
+				<symbol draft="contributed">PAB</symbol>
 			</currency>
 			<currency type="PEN">
 				<displayName>i-Peruvian Nuevo Sol</displayName>
@@ -5347,7 +5660,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Polish Zloty</displayName>
 				<displayName count="one">i-Polish Zloty</displayName>
 				<displayName count="other">i-Polish Zloty</displayName>
-				<symbol>PLN</symbol>
+				<symbol draft="contributed">PLN</symbol>
 				<symbol alt="narrow" draft="contributed">Zł</symbol>
 			</currency>
 			<currency type="PYG">
@@ -5379,7 +5692,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Russian Ruble</displayName>
 				<displayName count="one">i-Russian Ruble</displayName>
 				<displayName count="other">i-Russian Ruble</displayName>
-				<symbol>RUB</symbol>
+				<symbol draft="contributed">RUB</symbol>
 				<symbol alt="narrow" draft="contributed">₽</symbol>
 			</currency>
 			<currency type="RWF">
@@ -5393,7 +5706,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Saudi Riyal</displayName>
 				<displayName count="one">i-Saudi Riyal</displayName>
 				<displayName count="other">i-Saudi Riyal</displayName>
-				<symbol>SAR</symbol>
+				<symbol draft="contributed">SAR</symbol>
 			</currency>
 			<currency type="SBD">
 				<displayName>i-Solomon Islands Dollar</displayName>
@@ -5418,7 +5731,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Swedish Krona</displayName>
 				<displayName count="one">i-Swedish Krona</displayName>
 				<displayName count="other">i-Swedish Krona</displayName>
-				<symbol>SEK</symbol>
+				<symbol draft="contributed">SEK</symbol>
 				<symbol alt="narrow" draft="contributed">Kr</symbol>
 			</currency>
 			<currency type="SGD">
@@ -5462,10 +5775,15 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol alt="narrow" draft="contributed">£</symbol>
 			</currency>
 			<currency type="STD">
+				<displayName>i-São Tomé kanye ne-Príncipe Dobra (1977–2017)</displayName>
+				<displayName count="one">i-São Tomé kanye ne-Príncipe Dobra (1977–2017)</displayName>
+				<displayName count="other">i-São Tomé kanye ne-Príncipe Dobra (1977–2017)</displayName>
+				<symbol draft="contributed">STD</symbol>
+			</currency>
+			<currency type="STN">
 				<displayName>i-São Tomé kanye ne-Príncipe Dobra</displayName>
 				<displayName count="one">i-São Tomé kanye ne-Príncipe Dobra</displayName>
 				<displayName count="other">i-São Tomé kanye ne-Príncipe Dobra</displayName>
-				<symbol draft="contributed">STD</symbol>
 				<symbol alt="narrow" draft="contributed">Db</symbol>
 			</currency>
 			<currency type="SYP">
@@ -5517,7 +5835,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Turkish Lira</displayName>
 				<displayName count="one">i-Turkish Lira</displayName>
 				<displayName count="other">i-Turkish Lira</displayName>
-				<symbol>TRY</symbol>
+				<symbol draft="contributed">TRY</symbol>
 				<symbol alt="narrow" draft="contributed">₺</symbol>
 				<symbol alt="variant" draft="contributed">TL</symbol>
 			</currency>
@@ -5525,14 +5843,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-Trinidad and Tobago Dollar</displayName>
 				<displayName count="one">i-Trinidad and Tobago dollar</displayName>
 				<displayName count="other">i-Trinidad &amp; Tobago dollars</displayName>
-				<symbol>TTD</symbol>
+				<symbol draft="contributed">TTD</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="TWD">
 				<displayName>i-New Taiwan Dollar</displayName>
 				<displayName count="one">i-New Taiwan Dollar</displayName>
 				<displayName count="other">i-New Taiwan Dollar</displayName>
-				<symbol>NT$</symbol>
+				<symbol draft="contributed">NT$</symbol>
 				<symbol alt="narrow" draft="contributed">NT$</symbol>
 			</currency>
 			<currency type="TZS">
@@ -5558,7 +5876,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-US Dollar</displayName>
 				<displayName count="one">i-US Dollar</displayName>
 				<displayName count="other">i-US Dollar</displayName>
-				<symbol>US$</symbol>
+				<symbol draft="contributed">$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="UYU">
@@ -5575,11 +5893,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<symbol draft="contributed">UZS</symbol>
 			</currency>
 			<currency type="VEF">
+				<displayName>i-Venezuelan Bolívar (2008–2018)</displayName>
+				<displayName count="one">i-Venezuelan Bolívar (2008–2018)</displayName>
+				<displayName count="other">i-Venezuelan Bolívar (2008–2018)</displayName>
+				<symbol draft="contributed">VEF</symbol>
+				<symbol alt="narrow" draft="contributed">Bs</symbol>
+			</currency>
+			<currency type="VES">
 				<displayName>i-Venezuelan Bolívar</displayName>
 				<displayName count="one">i-Venezuelan Bolívar</displayName>
 				<displayName count="other">i-Venezuelan Bolívar</displayName>
-				<symbol draft="contributed">VEF</symbol>
-				<symbol alt="narrow" draft="contributed">Bs</symbol>
 			</currency>
 			<currency type="VND">
 				<displayName>i-Vietnamese Dong</displayName>
@@ -5610,7 +5933,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>i-East Caribbean Dollar</displayName>
 				<displayName count="one">i-East Caribbean Dollar</displayName>
 				<displayName count="other">i-East Caribbean Dollar</displayName>
-				<symbol>EC$</symbol>
+				<symbol draft="contributed">EC$</symbol>
 				<symbol alt="narrow" draft="contributed">$</symbol>
 			</currency>
 			<currency type="XOF">
@@ -5655,7 +5978,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</currency>
 		</currencies>
 		<miscPatterns numberSystem="latn">
+			<pattern type="approximately">~{0}</pattern>
 			<pattern type="atLeast">{0}+</pattern>
+			<pattern type="atMost">≤{0}</pattern>
 			<pattern type="range">{0}–{1}</pattern>
 		</miscPatterns>
 		<minimalPairs>
@@ -5666,15 +5991,85 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 	</numbers>
 	<units>
 		<unitLength type="long">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>deci{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>centi{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>milli{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>micro{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>nano{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>i-pico{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>femto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>atto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>i-zepto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>i-yocto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>deka{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>hecto{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>kilo{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>mega{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>giga{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>tera{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>peta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>exa{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>zetta{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>yotta{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0} nge-{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1>square {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">square {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">square {0}</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1>cubic {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">cubic {0}</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">cubic {0}</compoundUnitPattern1>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>g-force</displayName>
 				<unitPattern count="one">{0} g-force</unitPattern>
 				<unitPattern count="other">{0} g-force</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>m/s²</displayName>
 				<unitPattern count="one">{0} m/s²</unitPattern>
 				<unitPattern count="other">{0} m/s²</unitPattern>
@@ -5769,17 +6164,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} mmol/L</unitPattern>
 				<unitPattern count="other">{0} mmol/L</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>ppm</displayName>
 				<unitPattern count="one">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
+			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>permille</displayName>
+				<unitPattern count="one">{0}‰</unitPattern>
+				<unitPattern count="other">{0}‰</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>L/km</displayName>
 				<unitPattern count="one">{0} L/km</unitPattern>
 				<unitPattern count="other">{0} L/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="one">{0} L/100km</unitPattern>
 				<unitPattern count="other">{0} L/100km</unitPattern>
@@ -5793,6 +6198,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mpg Imp.</displayName>
 				<unitPattern count="one">{0} mpg Imp.</unitPattern>
 				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PB</displayName>
+				<unitPattern count="one">{0} PB</unitPattern>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TB</displayName>
@@ -5848,6 +6258,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>c</displayName>
 				<unitPattern count="one">{0} c</unitPattern>
 				<unitPattern count="other">{0} c</unitPattern>
+			</unit>
+			<unit type="duration-decade">
+				<unitPattern count="one">{0} dec</unitPattern>
+				<unitPattern count="other">{0} decades</unitPattern>
 			</unit>
 			<unit type="duration-year">
 				<displayName>y</displayName>
@@ -5976,6 +6390,10 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} Hz</unitPattern>
 				<unitPattern count="other">{0} Hz</unitPattern>
 			</unit>
+			<unit type="graphics-megapixel">
+				<unitPattern count="one">{0} MP</unitPattern>
+				<unitPattern count="other">{0} megapixels</unitPattern>
+			</unit>
 			<unit type="length-kilometer">
 				<displayName>km</displayName>
 				<unitPattern count="one">{0} km</unitPattern>
@@ -6076,6 +6494,14 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} i-lux</unitPattern>
 				<unitPattern count="other">{0} i-lux</unitPattern>
 			</unit>
+			<unit type="light-candela">
+				<unitPattern count="one">{0} cd</unitPattern>
+				<unitPattern count="other">{0} candela</unitPattern>
+			</unit>
+			<unit type="light-lumen">
+				<unitPattern count="one">{0} i-lumen</unitPattern>
+				<unitPattern count="other">{0} lm</unitPattern>
+			</unit>
 			<unit type="mass-metric-ton">
 				<displayName>t</displayName>
 				<unitPattern count="one">{0} t</unitPattern>
@@ -6160,22 +6586,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} hp</unitPattern>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="one">{0} mm Hg</unitPattern>
 				<unitPattern count="other">{0} mm Hg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="one">{0} psi</unitPattern>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inHg</displayName>
 				<unitPattern count="one">{0} inHg</unitPattern>
 				<unitPattern count="other">{0} inHg</unitPattern>
@@ -6184,6 +6605,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mbar</displayName>
 				<unitPattern count="one">{0} mbar</unitPattern>
 				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="one">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/h</displayName>
@@ -6202,8 +6633,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="speed-knot">
 				<displayName>knot</displayName>
-				<unitPattern count="one">{0} knots</unitPattern>
-				<unitPattern count="other">{0} knots</unitPattern>
+				<unitPattern count="one">{0} amafindo</unitPattern>
+				<unitPattern count="other">{0} amafindo</unitPattern>
 			</unit>
 			<unit type="temperature-generic">
 				<displayName>°</displayName>
@@ -6350,7 +6781,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} tsp</unitPattern>
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
+			<unit type="volume-dessert-spoon">
+				<unitPattern count="one">{0} sipuni dessert</unitPattern>
+				<unitPattern count="other">{0} dstspn</unitPattern>
+			</unit>
+			<unit type="volume-dessert-spoon-imperial">
+				<unitPattern count="one">{0} Imp. isipuni dessert</unitPattern>
+				<unitPattern count="other">{0} dstspn Imp</unitPattern>
+			</unit>
 			<coordinateUnit>
+				<displayName>indlela</displayName>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
@@ -6358,15 +6798,85 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="short">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>d{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>c{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>m{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>µ{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>n{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>i-p{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>f{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>a{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>z{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>i-y{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>da{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>h{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>k{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>M{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>G{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>T{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>P{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>E{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>Z{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>Y{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1>{0}²</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">{0}²</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0}²</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1>{0}³</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">{0}³</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0}³</compoundUnitPattern1>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<displayName>g-force</displayName>
 				<unitPattern count="one">{0} G</unitPattern>
 				<unitPattern count="other">{0} G</unitPattern>
 			</unit>
-			<unit type="acceleration-meter-per-second-squared">
+			<unit type="acceleration-meter-per-square-second">
 				<displayName>m/s²</displayName>
 				<unitPattern count="one">{0} m/s²</unitPattern>
 				<unitPattern count="other">{0} m/s²</unitPattern>
@@ -6446,6 +6956,9 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} in²</unitPattern>
 				<perUnitPattern>{0}/in²</perUnitPattern>
 			</unit>
+			<unit type="area-dunam">
+				<displayName>dunams</displayName>
+			</unit>
 			<unit type="concentr-karat">
 				<displayName>karats</displayName>
 				<unitPattern count="one">{0} kt</unitPattern>
@@ -6461,17 +6974,27 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} mmol/L</unitPattern>
 				<unitPattern count="other">{0} mmol/L</unitPattern>
 			</unit>
-			<unit type="concentr-part-per-million">
+			<unit type="concentr-permillion">
 				<displayName>izingxenye/izigidi</displayName>
 				<unitPattern count="one">{0} ppm</unitPattern>
 				<unitPattern count="other">{0} ppm</unitPattern>
+			</unit>
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="concentr-permille">
+				<displayName>‰</displayName>
+				<unitPattern count="one">{0}‰</unitPattern>
+				<unitPattern count="other">{0}‰</unitPattern>
 			</unit>
 			<unit type="consumption-liter-per-kilometer">
 				<displayName>L/km</displayName>
 				<unitPattern count="one">{0} L/km</unitPattern>
 				<unitPattern count="other">{0} L/km</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="one">{0} L/100km</unitPattern>
 				<unitPattern count="other">{0} L/100km</unitPattern>
@@ -6485,6 +7008,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mpg Imp.</displayName>
 				<unitPattern count="one">{0} mpg Imp.</unitPattern>
 				<unitPattern count="other">{0} mpg Imp.</unitPattern>
+			</unit>
+			<unit type="digital-petabyte">
+				<displayName>PB</displayName>
+				<unitPattern count="one">{0} PB</unitPattern>
+				<unitPattern count="other">{0} PB</unitPattern>
 			</unit>
 			<unit type="digital-terabyte">
 				<displayName>TB</displayName>
@@ -6575,7 +7103,6 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>amaminithi</displayName>
 				<unitPattern count="one">{0} iminithi</unitPattern>
 				<unitPattern count="other">{0} iminithi</unitPattern>
-				<perUnitPattern>{0}/min</perUnitPattern>
 			</unit>
 			<unit type="duration-second">
 				<displayName>amasekhondi</displayName>
@@ -6852,22 +7379,17 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0} hp</unitPattern>
 				<unitPattern count="other">{0} hp</unitPattern>
 			</unit>
-			<unit type="pressure-hectopascal">
-				<displayName>hPa</displayName>
-				<unitPattern count="one">{0} hPa</unitPattern>
-				<unitPattern count="other">{0} hPa</unitPattern>
-			</unit>
-			<unit type="pressure-millimeter-of-mercury">
+			<unit type="pressure-millimeter-ofhg">
 				<displayName>mm Hg</displayName>
 				<unitPattern count="one">{0} mm Hg</unitPattern>
 				<unitPattern count="other">{0} mm Hg</unitPattern>
 			</unit>
-			<unit type="pressure-pound-per-square-inch">
+			<unit type="pressure-pound-force-per-square-inch">
 				<displayName>psi</displayName>
 				<unitPattern count="one">{0} psi</unitPattern>
 				<unitPattern count="other">{0} psi</unitPattern>
 			</unit>
-			<unit type="pressure-inch-hg">
+			<unit type="pressure-inch-ofhg">
 				<displayName>inHg</displayName>
 				<unitPattern count="one">{0} inHg</unitPattern>
 				<unitPattern count="other">{0} inHg</unitPattern>
@@ -6876,6 +7398,16 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<displayName>mbar</displayName>
 				<unitPattern count="one">{0} mbar</unitPattern>
 				<unitPattern count="other">{0} mbar</unitPattern>
+			</unit>
+			<unit type="pressure-atmosphere">
+				<displayName>atm</displayName>
+				<unitPattern count="one">{0} atm</unitPattern>
+				<unitPattern count="other">{0} atm</unitPattern>
+			</unit>
+			<unit type="pressure-hectopascal">
+				<displayName>hPa</displayName>
+				<unitPattern count="one">{0} hPa</unitPattern>
+				<unitPattern count="other">{0} hPa</unitPattern>
 			</unit>
 			<unit type="speed-kilometer-per-hour">
 				<displayName>km/h</displayName>
@@ -7043,6 +7575,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} tsp</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>indlela</displayName>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
@@ -7050,8 +7583,78 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</coordinateUnit>
 		</unitLength>
 		<unitLength type="narrow">
+			<compoundUnit type="10p-1">
+				<unitPrefixPattern>d{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-2">
+				<unitPrefixPattern>c{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-3">
+				<unitPrefixPattern>m{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-6">
+				<unitPrefixPattern>µ{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-9">
+				<unitPrefixPattern>n{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-12">
+				<unitPrefixPattern>i-p{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-15">
+				<unitPrefixPattern>f{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-18">
+				<unitPrefixPattern>a{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-21">
+				<unitPrefixPattern>i-z{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p-24">
+				<unitPrefixPattern>i-y{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p1">
+				<unitPrefixPattern>da{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p2">
+				<unitPrefixPattern>h{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p3">
+				<unitPrefixPattern>k{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p6">
+				<unitPrefixPattern>M{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p9">
+				<unitPrefixPattern>G{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p12">
+				<unitPrefixPattern>T{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p15">
+				<unitPrefixPattern>P{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p18">
+				<unitPrefixPattern>E{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p21">
+				<unitPrefixPattern>Z{0}</unitPrefixPattern>
+			</compoundUnit>
+			<compoundUnit type="10p24">
+				<unitPrefixPattern>Y{0}</unitPrefixPattern>
+			</compoundUnit>
 			<compoundUnit type="per">
 				<compoundUnitPattern>{0}/{1}</compoundUnitPattern>
+			</compoundUnit>
+			<compoundUnit type="power2">
+				<compoundUnitPattern1>{0}²</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">{0}²</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0}²</compoundUnitPattern1>
+			</compoundUnit>
+			<compoundUnit type="power3">
+				<compoundUnitPattern1>{0}³</compoundUnitPattern1>
+				<compoundUnitPattern1 count="one">{0}³</compoundUnitPattern1>
+				<compoundUnitPattern1 count="other">{0}³</compoundUnitPattern1>
 			</compoundUnit>
 			<unit type="acceleration-g-force">
 				<unitPattern count="one">{0} G</unitPattern>
@@ -7069,7 +7672,12 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="one">{0}″</unitPattern>
 				<unitPattern count="other">{0}″</unitPattern>
 			</unit>
-			<unit type="consumption-liter-per-100kilometers">
+			<unit type="concentr-percent">
+				<displayName>%</displayName>
+				<unitPattern count="one">{0}%</unitPattern>
+				<unitPattern count="other">{0}%</unitPattern>
+			</unit>
+			<unit type="consumption-liter-per-100-kilometer">
 				<displayName>L/100km</displayName>
 				<unitPattern count="one">{0}L/100km</unitPattern>
 				<unitPattern count="other">{0}L/100km</unitPattern>
@@ -7101,8 +7709,8 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			</unit>
 			<unit type="duration-minute">
 				<displayName>amaminithi</displayName>
-				<unitPattern count="one">{0} min</unitPattern>
-				<unitPattern count="other">{0} min</unitPattern>
+				<unitPattern count="one">{0} umzuzu</unitPattern>
+				<unitPattern count="other">{0} umzuzu</unitPattern>
 			</unit>
 			<unit type="duration-second">
 				<displayName>isekhondi</displayName>
@@ -7164,6 +7772,7 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 				<unitPattern count="other">{0} l</unitPattern>
 			</unit>
 			<coordinateUnit>
+				<displayName>indlela</displayName>
 				<coordinateUnitPattern type="east">{0}E</coordinateUnitPattern>
 				<coordinateUnitPattern type="north">{0}N</coordinateUnitPattern>
 				<coordinateUnitPattern type="south">{0}S</coordinateUnitPattern>
@@ -7192,6 +7801,11 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 			<listPatternPart type="middle">{0}, {1}</listPatternPart>
 			<listPatternPart type="end">{0}, or {1}</listPatternPart>
 			<listPatternPart type="2">{0} or {1}</listPatternPart>
+		</listPattern>
+		<listPattern type="standard-narrow">
+			<listPatternPart type="middle">{0}, {1}</listPatternPart>
+			<listPatternPart type="end">{0}, {1}</listPatternPart>
+			<listPatternPart type="2">{0}, {1}</listPatternPart>
 		</listPattern>
 		<listPattern type="standard-short">
 			<listPatternPart type="start">{0}, {1}</listPatternPart>
@@ -7323,4 +7937,73 @@ Warnings: All cp values have U+FE0F characters removed. See /annotationsDerived/
 		<characterLabel type="western_asian_scripts">Amaskripthi ase-Western Asia</characterLabel>
 		<characterLabel type="whitespace">i-Whitespace</characterLabel>
 	</characterLabels>
+	<typographicNames>
+		<axisName type="ital">italic</axisName>
+		<axisName type="opsz">optical size</axisName>
+		<axisName type="slnt">islanti</axisName>
+		<axisName type="wdth">ububanzi</axisName>
+		<axisName type="wght">isisindo</axisName>
+		<styleName type="ital" subtype="1">cursive</styleName>
+		<styleName type="opsz" subtype="8">caption</styleName>
+		<styleName type="opsz" subtype="18">umbhalo</styleName>
+		<styleName type="opsz" subtype="72">display</styleName>
+		<styleName type="opsz" subtype="144">poster</styleName>
+		<styleName type="slnt" subtype="-12">backslanted</styleName>
+		<styleName type="slnt" subtype="0">upright</styleName>
+		<styleName type="slnt" subtype="12">slanted</styleName>
+		<styleName type="slnt" subtype="24">extra-slanted</styleName>
+		<styleName type="wdth" subtype="50">ultracondensed</styleName>
+		<styleName type="wdth" subtype="50" alt="compressed">ultracompressed</styleName>
+		<styleName type="wdth" subtype="50" alt="narrow">ultranarrow</styleName>
+		<styleName type="wdth" subtype="62.5">extra-condensed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="compressed">extra-compressed</styleName>
+		<styleName type="wdth" subtype="62.5" alt="narrow">extra-narrow</styleName>
+		<styleName type="wdth" subtype="75">condensed</styleName>
+		<styleName type="wdth" subtype="75" alt="compressed">fingqiwe</styleName>
+		<styleName type="wdth" subtype="75" alt="narrow">compressed</styleName>
+		<styleName type="wdth" subtype="87.5">semicondensed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="compressed">semicompressed</styleName>
+		<styleName type="wdth" subtype="87.5" alt="narrow">seminarrow</styleName>
+		<styleName type="wdth" subtype="100">normal</styleName>
+		<styleName type="wdth" subtype="112.5">semiexpanded</styleName>
+		<styleName type="wdth" subtype="112.5" alt="extended">semiextended</styleName>
+		<styleName type="wdth" subtype="112.5" alt="wide">semiwide</styleName>
+		<styleName type="wdth" subtype="125">expanded</styleName>
+		<styleName type="wdth" subtype="125" alt="extended">nwetshiwe</styleName>
+		<styleName type="wdth" subtype="125" alt="wide">banzi</styleName>
+		<styleName type="wdth" subtype="150">extra-expanded</styleName>
+		<styleName type="wdth" subtype="150" alt="extended">nwetshwe-kakhulu</styleName>
+		<styleName type="wdth" subtype="150" alt="wide">khulu-kakhulu</styleName>
+		<styleName type="wdth" subtype="200">ultraexpanded</styleName>
+		<styleName type="wdth" subtype="200" alt="extended">ultraextended</styleName>
+		<styleName type="wdth" subtype="200" alt="wide">ultrawide</styleName>
+		<styleName type="wght" subtype="100">ncane</styleName>
+		<styleName type="wght" subtype="200">extra-light</styleName>
+		<styleName type="wght" subtype="200" alt="ultra">ultralight</styleName>
+		<styleName type="wght" subtype="300">ukukhanya</styleName>
+		<styleName type="wght" subtype="350">semilight</styleName>
+		<styleName type="wght" subtype="380">incwadi</styleName>
+		<styleName type="wght" subtype="400">jwayele</styleName>
+		<styleName type="wght" subtype="500">lingene</styleName>
+		<styleName type="wght" subtype="600">cishe kulingane</styleName>
+		<styleName type="wght" subtype="600" alt="demi">demibold</styleName>
+		<styleName type="wght" subtype="700">khulu</styleName>
+		<styleName type="wght" subtype="800">khulu kakhulu</styleName>
+		<styleName type="wght" subtype="900">mnyama</styleName>
+		<styleName type="wght" subtype="900" alt="heavy">sindayo</styleName>
+		<styleName type="wght" subtype="950">okumnyama kakhulu</styleName>
+		<styleName type="wght" subtype="950" alt="ultrablack">okumnyama kakhulu</styleName>
+		<styleName type="wght" subtype="950" alt="ultraheavy">okusinda kakhulu</styleName>
+		<featureName type="afrc">vertical fractions</featureName>
+		<featureName type="cpsp">capital spacing</featureName>
+		<featureName type="dlig">optional ligatures</featureName>
+		<featureName type="frac">diagonal fractions</featureName>
+		<featureName type="lnum">lining numbers</featureName>
+		<featureName type="onum">old-style figures</featureName>
+		<featureName type="ordn">ordinals</featureName>
+		<featureName type="pnum">proportional numbers</featureName>
+		<featureName type="smcp">small capitals</featureName>
+		<featureName type="tnum">tabular numbers</featureName>
+		<featureName type="zero">slashed zero</featureName>
+	</typographicNames>
 </ldml>

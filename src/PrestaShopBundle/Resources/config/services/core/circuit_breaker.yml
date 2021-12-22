@@ -1,0 +1,24 @@
+# circuit_breaker.yml
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.circuit_breaker.cache:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - ''
+      - 0
+      - '@=service("prestashop.adapter.environment").getCacheDir() ~ "/circuit_breaker"'
+
+  prestashop.core.circuit_breaker.doctrine_cache:
+    class: Symfony\Component\Cache\DoctrineProvider
+    arguments:
+      - '@prestashop.core.circuit_breaker.cache'
+
+  prestashop.core.circuit_breaker.storage:
+    class: PrestaShop\CircuitBreaker\Storage\DoctrineCache
+    arguments:
+      - "@prestashop.core.circuit_breaker.doctrine_cache"
+
+  prestashop.core.circuit_breaker.advanced_factory:
+    class: PrestaShop\CircuitBreaker\AdvancedCircuitBreakerFactory

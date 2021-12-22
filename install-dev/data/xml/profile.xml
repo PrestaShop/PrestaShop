@@ -2,6 +2,8 @@
 <entity_profile>
   <fields id="name" class="Profile" sql="a.id_profile = 1"/>
   <entities>
-    <profile id="SuperAdmin"/>
+    <profile id="SuperAdmin">
+      <name>SuperAdmin</name>
+    </profile>
   </entities>
 </entity_profile>

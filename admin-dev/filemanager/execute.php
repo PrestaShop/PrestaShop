@@ -1,12 +1,16 @@
 <?php
-include('config/config.php');
-if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
-    die('forbiden');
-}
-include('include/utils.php');
 
-$_POST['path_thumb'] = $thumbs_base_path.$_POST['path_thumb'];
-if (!isset($_POST['path_thumb']) && trim($_POST['path_thumb']) == '') {
+include 'config/config.php';
+
+if ($_SESSION['verify'] != 'RESPONSIVEfilemanager') {
+    die('Forbidden');
+}
+include 'include/utils.php';
+
+$_POST['path'] = isset($_POST['path']) ? str_replace("\0", '', $_POST['path']) : null;
+$_POST['path_thumb'] = isset($_POST['path_thumb']) ? $thumbs_base_path . str_replace("\0", '', $_POST['path_thumb']) : null;
+
+if (trim($_POST['path_thumb']) == '') {
     die('wrong path');
 }
 
@@ -31,12 +35,7 @@ if (isset($_GET['lang']) && $_GET['lang'] != 'undefined' && $_GET['lang'] != '')
 require_once $language_file;
 
 $base = $current_path;
-
-if (isset($_POST['path'])) {
-    $path = $current_path.str_replace("\0", "", $_POST['path']);
-} else {
-    $path = $current_path;
-}
+$path = isset($_POST['path']) ? ($current_path . $_POST['path']) : $current_path;
 
 $cycle = true;
 $max_cycles = 50;
@@ -48,15 +47,16 @@ while ($cycle && $i < $max_cycles) {
     }
 
     if (file_exists($path.'config.php')) {
-        require_once($path.'config.php');
+        require_once $path.'config.php';
         $cycle = false;
     }
     $path = fix_dirname($path).'/';
     $cycle = false;
 }
 
-$path = $current_path.str_replace("\0", "", $_POST['path']);
+$path = $current_path . $_POST['path'];
 $path_thumb = $_POST['path_thumb'];
+
 if (isset($_POST['name'])) {
     $name = $_POST['name'];
     if (preg_match('/\.{1,2}[\/|\\\]/', $name) !== 0) {
@@ -103,6 +103,7 @@ if (isset($_GET['action'])) {
                     }
                 }
             }
+
             break;
         case 'delete_folder':
             if ($delete_folders) {
@@ -126,11 +127,13 @@ if (isset($_GET['action'])) {
                     }
                 }
             }
+
             break;
         case 'create_folder':
             if ($create_folders) {
                 create_folder(fix_path($path, $transliteration), fix_path($path_thumb, $transliteration));
             }
+
             break;
         case 'rename_folder':
             if ($rename_folders) {
@@ -156,6 +159,7 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         case 'rename_file':
             if ($rename_files) {
@@ -182,6 +186,7 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         case 'duplicate_file':
             if ($duplicate_files) {
@@ -207,9 +212,11 @@ if (isset($_GET['action'])) {
                     die(lang_Empty_name);
                 }
             }
+
             break;
         default:
             die('wrong action');
+
             break;
     }
 }

@@ -1,0 +1,59 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% block layouts_configuration %}
+  <div class="col-12 layout-configuration">
+    <div class="inner-content">
+      <div class="float-left">
+        <div class="d-inline-block layout-logo">
+          <img src="{{ asset('themes/new-theme/public/pages/themes/icon_layouts.png') }}" alt="{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}">
+        </div>
+        <div class="d-inline-block">
+          <span class="title">{{ 'Configure your page layouts'|trans({}, 'Admin.Design.Feature') }}</span>
+          <p class="mb-0 description">{{ 'Each page can use a different layout, choose it among the layouts bundled in your theme.'|trans({}, 'Admin.Design.Feature') }}</p>
+        </div>
+      </div>
+      <div class="float-right">
+        <a href="{{ path('admin_theme_customize_layouts') }}"
+          class="btn btn-tertiary choose-layouts-button"
+        >
+          {{ 'Choose layouts'|trans({}, 'Admin.Design.Feature') }}
+        </a>
+
+        {% if isDevModeOn %}
+          <button class="btn btn-tertiary-outline js-reset-theme-layouts-btn"
+            type="button"
+            data-submit-url="{{ path('admin_themes_reset_layouts', {'themeName': currentlyUsedTheme.name}) }}"
+            data-csrf-token="{{ csrf_token('reset-theme-layouts') }}"
+          >
+            <i class="material-icons">settings_backup_restore</i>
+            {{ 'Reset to defaults'|trans({}, 'Admin.Design.Feature') }}
+          </button>
+        {% endif %}
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+{% endblock %}

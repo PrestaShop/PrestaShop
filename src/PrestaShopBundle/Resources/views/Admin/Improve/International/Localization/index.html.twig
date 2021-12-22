@@ -1,10 +1,11 @@
 {#**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,43 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
-{% set configurationForm, localUnitsForm, advancedForm = localizationForm.configuration, localizationForm.local_units, localizationForm.advanced %}
-
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-xl-10">
-      {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/import_localization_pack_block.html.twig' %}
 
-  {{ form_start(localizationForm, {'action': path('admin_localization_save_options')}) }}
-    <div class="row justify-content-center">
-      <div class="col-xl-10">
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
-      </div>
-      <div class="col-xl-10">
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
-      </div>
-      <div class="col-xl-10">
-        {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
-      </div>
+  {{ form_start(configurationForm, {'action': path('admin_localization_configuration_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/configuration.html.twig' %}
+  {{ form_end(configurationForm) }}
 
-      {% block localization_settings_form_rest %}
-        {{ form_rest(localizationForm) }}
-      {% endblock %}
-    </div>
-  {{ form_end(localizationForm) }}
+  {{ form_start(localUnitsForm, {'action': path('admin_localization_local_units_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/local_units.html.twig' %}
+  {{ form_end(localUnitsForm) }}
+
+  {{ form_start(advancedForm, {'action': path('admin_localization_advanced_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Localization/Blocks/advanced_configuration.html.twig' %}
+  {{ form_end(advancedForm) }}
+
 {% endblock %}
 
 {% block javascripts %}

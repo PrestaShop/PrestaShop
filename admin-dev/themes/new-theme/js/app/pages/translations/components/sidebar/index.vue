@@ -1,10 +1,11 @@
 <!--**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *-->
 <template>
   <div class="col-sm-3">
@@ -28,9 +28,9 @@
       <PSTree
         ref="domainTree"
         :model="domainsTree"
-        className="translationTree"
+        class-name="translationTree"
         :translations="translations"
-        :currentItem="currentItem"
+        :current-item="currentItem"
         v-if="treeReady"
       />
       <PSSpinner v-else />
@@ -38,21 +38,30 @@
   </div>
 </template>
 
-<script>
-  import PSTree from 'app/widgets/ps-tree/ps-tree';
-  import PSSpinner from 'app/widgets/ps-spinner';
-  import { EventBus } from 'app/utils/event-bus';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
+  import PSSpinner from '@app/widgets/ps-spinner.vue';
+  import {EventBus} from '@app/utils/event-bus';
 
-  export default {
-    props: [
-      'modal',
-      'principal',
-    ],
+  export default Vue.extend({
+    props: {
+      modal: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
+      principal: {
+        type: Object,
+        required: false,
+        default: () => ({}),
+      },
+    },
     computed: {
-      treeReady() {
+      treeReady(): boolean {
         return !this.$store.state.sidebarLoading;
       },
-      currentItem() {
+      currentItem(): string {
         if (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined') {
           if (this.domainsTree.length) {
             const domain = this.getFirstDomainToDisplay(this.domainsTree);
@@ -60,9 +69,9 @@
             this.$store.dispatch('updateCurrentDomain', domain);
 
             if (domain !== '') {
-              this.$store.dispatch('getCatalog', { url: domain.dataValue });
-              EventBus.$emit('setCurrentElement', domain.full_name);
-              return domain.full_name;
+              this.$store.dispatch('getCatalog', {url: (<Record<string, any>>domain).dataValue});
+              EventBus.$emit('setCurrentElement', (<Record<string, any>>domain).full_name);
+              return (<Record<string, any>>domain).full_name;
             }
 
             this.$store.dispatch('updatePrincipalLoading', false);
@@ -72,10 +81,10 @@
 
         return this.$store.getters.currentDomain;
       },
-      domainsTree() {
+      domainsTree(): Record<string, any> {
         return this.$store.getters.domainsTree;
       },
-      translations() {
+      translations(): Record<string, any> {
         return {
           expand: this.trans('sidebar_expand'),
           reduce: this.trans('sidebar_collapse'),
@@ -88,7 +97,7 @@
       this.$store.dispatch('getDomainsTree', {
         store: this.$store,
       });
-      EventBus.$on('lastTreeItemClick', (el) => {
+      EventBus.$on('lastTreeItemClick', (el: any): void => {
         if (this.edited()) {
           this.modal.showModal();
           this.modal.$once('save', () => {
@@ -109,17 +118,17 @@
        * and reset the modified translations
        * @param {object} el - Domain to set
        */
-      itemClick: function itemClick(el) {
+      itemClick: function itemClick(el: any): void {
         this.$store.dispatch('updateCurrentDomain', el.item);
-        this.$store.dispatch('getCatalog', { url: el.item.dataValue });
+        this.$store.dispatch('getCatalog', {url: el.item.dataValue});
         this.$store.dispatch('updatePageIndex', 1);
         this.$store.state.modifiedTranslations = [];
       },
-      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree) {
+      getFirstDomainToDisplay: function getFirstDomainToDisplay(tree: any): string | Record<string, any> {
         const keys = Object.keys(tree);
         let toDisplay = '';
 
-        for (let i = 0; i < tree.length; i++) {
+        for (let i = 0; i < tree.length; i += 1) {
           if (!tree[keys[i]].disable) {
             if (tree[keys[i]].children && tree[keys[i]].children.length > 0) {
               return getFirstDomainToDisplay(tree[keys[i]].children);
@@ -136,19 +145,20 @@
        * Check if some translations have been edited
        * @returns {boolean}
        */
-      edited: function edited() {
-        return this.$store.state.modifiedTranslations.length > 0;
+      edited: function edited(): boolean {
+        return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     components: {
       PSTree,
       PSSpinner,
     },
-  };
+  });
 </script>
 
-<style lang="sass" type="text/scss">
-  @import "../../../../../../scss/config/_settings.scss";
+<style lang="scss" type="text/scss">
+  @import '~@scss/config/_settings.scss';
+
   .translationTree {
     .tree-name {
       margin-bottom: .9375rem;
@@ -161,6 +171,7 @@
         color: $danger;
       }
     }
+
     .tree-extra-label {
       color: $danger;
       text-transform: uppercase;
@@ -183,13 +194,16 @@
       }
     }
   }
+
   .ps-loader {
     $loader-white-height: 20px;
     $loader-line-height: 16px;
+
     .animated-background {
       height: 144px!important;
       animation-duration: 2s!important;
     }
+
     .background-masker {
       &.header-left {
         left: 0;
@@ -197,21 +211,25 @@
         height: 108px;
         width: 20px;
       }
+
       &.content-top {
         left: 0;
         top: $loader-line-height;
         height: $loader-white-height;
       }
+
       &.content-first-end {
         left: 0;
         top: $loader-line-height*2+$loader-white-height;
         height: $loader-white-height;
       }
+
       &.content-second-end {
         left: 0;
         top: $loader-line-height*3+$loader-white-height*2;
         height: $loader-white-height;
       }
+
       &.content-third-end {
         left: 0;
         top: $loader-line-height*4+$loader-white-height*3;

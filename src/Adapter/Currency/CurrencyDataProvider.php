@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,26 +17,28 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Currency;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use Currency;
+use Exception;
+use Language;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Currency\CurrencyDataProviderInterface;
 
 /**
  * This class will provide data from DB / ORM about Currency.
  */
-class CurrencyDataProvider
+class CurrencyDataProvider implements CurrencyDataProviderInterface
 {
     /**
-     * @var \PrestaShop\PrestaShop\Adapter\Configuration
+     * @var ConfigurationInterface
      */
     private $configuration;
 
@@ -44,16 +47,21 @@ class CurrencyDataProvider
      */
     private $shopId;
 
-    public function __construct(Configuration $configuration, $shopId)
+    /** @var Currency */
+    private $defaultCurrency;
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param int $shopId
+     */
+    public function __construct(ConfigurationInterface $configuration, $shopId)
     {
         $this->configuration = $configuration;
         $this->shopId = $shopId;
     }
 
     /**
-     * Return available currencies.
-     *
-     * @return array Currencies
+     * {@inheritdoc}
      */
     public function getCurrencies($object = false, $active = true, $group_by = false)
     {
@@ -61,25 +69,32 @@ class CurrencyDataProvider
     }
 
     /**
-     * Get a Currency entity instance by ISO code.
-     *
-     * @param string $isoCode
-     *                        An ISO 4217 currency code
-     * @param int|null $idLang
-     *                         Set this parameter if you want the currency in a specific language.
-     *                         If null, default language will be used
-     *
-     * @return currency|null
-     *                       The asked Currency object, or null if not found
+     * {@inheritdoc}
+     */
+    public function findAll($currentShopOnly = true)
+    {
+        return Currency::findAll(true, false, $currentShopOnly);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findAllInstalled()
+    {
+        return Currency::findAllInstalled();
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCurrencyByIsoCode($isoCode, $idLang = null)
     {
-        $currencyId = Currency::getIdByIsoCode($isoCode);
+        $currencyId = Currency::getIdByIsoCode($isoCode, 0, false, true);
         if (!$currencyId) {
             return null;
         }
 
-        if (null === $idLang) {
+        if (empty($idLang)) {
             $idLang = $this->configuration->get('PS_LANG_DEFAULT');
         }
 
@@ -87,26 +102,29 @@ class CurrencyDataProvider
     }
 
     /**
-     * Get a Currency entity instance.
-     * If the passed ISO code is known, this Currency entity will be loaded with known data.
-     *
      * @param string $isoCode
-     *                        An ISO 4217 currency code
-     * @param int|null $idLang
-     *                         Set this parameter if you want the currency in a specific language.
-     *                         If null, default language will be used
+     * @param string $locale
      *
-     * @return currency
-     *                  The asked Currency object, loaded with relevant data if passed ISO code is known
+     * @return Currency|null
+     */
+    public function getCurrencyByIsoCodeAndLocale($isoCode, $locale)
+    {
+        $idLang = Language::getIdByLocale($locale, true);
+
+        return $this->getCurrencyByIsoCode($isoCode, $idLang);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getCurrencyByIsoCodeOrCreate($isoCode, $idLang = null)
     {
-        if (null === $idLang) {
-            $idLang = $this->configuration->get('PS_LANG_DEFAULT');
-        }
-
+        // Soft deleted currencies are not kept duplicated any more, so if one try to recreate it the one in database is reused
         $currency = $this->getCurrencyByIsoCode($isoCode, $idLang);
         if (null === $currency) {
+            if (null === $idLang) {
+                $idLang = $this->configuration->get('PS_LANG_DEFAULT');
+            }
             $currency = new Currency(null, $idLang);
         }
 
@@ -114,16 +132,7 @@ class CurrencyDataProvider
     }
 
     /**
-     * Persists a Currency entity into DB.
-     * If this entity already exists in DB (has a known currency_id), it will be updated.
-     *
-     * @param Currency $currencyEntity
-     *                                 Currency object model to save
-     *
-     * @throws PrestaShopException
-     *                             If something wrong happened with DB when saving $currencyEntity
-     * @throws Exception
-     *                   If an unexpected result is retrieved when saving $currencyEntity
+     * {@inheritdoc}
      */
     public function saveCurrency(Currency $currencyEntity)
     {
@@ -133,11 +142,7 @@ class CurrencyDataProvider
     }
 
     /**
-     * Gets a legacy Currency instance by ID.
-     *
-     * @param int $currencyId
-     *
-     * @return Currency
+     * {@inheritdoc}
      */
     public function getCurrencyById($currencyId)
     {
@@ -145,12 +150,24 @@ class CurrencyDataProvider
     }
 
     /**
-     * Get Default currency Iso code.
+     * {@inheritdoc}
      */
     public function getDefaultCurrencyIsoCode()
     {
-        $defaultCurrencyId = $this->configuration->get('PS_CURRENCY_DEFAULT');
+        return $this->getDefaultCurrency()->iso_code;
+    }
 
-        return (new Currency($defaultCurrencyId, null, $this->shopId))->iso_code;
+    /**
+     * Returns default Currency set in Configuration
+     *
+     * @return Currency
+     */
+    public function getDefaultCurrency()
+    {
+        if (null === $this->defaultCurrency) {
+            $this->defaultCurrency = new Currency((int) $this->configuration->get('PS_CURRENCY_DEFAULT'), null, $this->shopId);
+        }
+
+        return $this->defaultCurrency;
     }
 }

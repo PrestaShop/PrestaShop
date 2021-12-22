@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,22 +17,23 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Utils;
 
-use PrestaShopBundle\Utils\FloatParser;
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Util\ArabicToLatinDigitConverter;
+use PrestaShopBundle\Utils\FloatParser;
 
 class FloatParserTest extends TestCase
 {
-
     /**
      * Given a string containing a number with arbitrary characters as thousand and decimal separators
      * When constructing an ImmutableFloat from that string
@@ -44,26 +46,29 @@ class FloatParserTest extends TestCase
      */
     public function testItParsesNumbersFromString($string, $expected)
     {
-        $this->assertSame($expected, (new FloatParser())->fromString($string));
+        $this->assertSame($expected, (new FloatParser(new ArabicToLatinDigitConverter()))->fromString($string));
     }
 
     /**
      * Given a value that is not a string
      * When constructing an ImmutableFloat from that value using ::fromString
      * Then an InvalidArgumentException should be thrown
+     *
      * @param mixed $value
      *
-     * @expectedException \InvalidArgumentException
      * @dataProvider provideInvalidValues
      */
     public function testItThrowsExceptionIfNotValid($value)
     {
-        (new FloatParser())->fromString($value);
+        $this->expectException(\InvalidArgumentException::class);
+
+        (new FloatParser(new ArabicToLatinDigitConverter()))->fromString($value);
     }
 
     public function provideValidStrings()
     {
         $expected = 1234567.89;
+
         return [
             ['1234567.89', $expected],
             ['1234567,89', $expected],
@@ -108,8 +113,8 @@ class FloatParserTest extends TestCase
             [false],
             [true],
             [null],
-            [array()],
-            [array(123)],
+            [[]],
+            [[123]],
             [new \stdClass()],
         ];
     }

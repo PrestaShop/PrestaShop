@@ -1,0 +1,93 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.supplier.provider.supplier_logo:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierLogoThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@prestashop.adapter.image_manager'
+
+  prestashop.adapter.supplier.provider.supplier_address:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierAddressProvider'
+
+  prestashop.adapter.supplier.supplier_order_validator:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\SupplierOrderValidator'
+
+  # Command handlers
+
+  prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AbstractDeleteSupplierHandler'
+    abstract: true
+    arguments:
+      - '@prestashop.adapter.supplier.supplier_order_validator'
+      - '@prestashop.adapter.supplier.provider.supplier_address'
+      - '%database_prefix%'
+    public: false
+
+  prestashop.adapter.supplier.command_handler.toggle_supplier_status_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\ToggleSupplierStatusHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand'
+
+  prestashop.adapter.supplier.command_handler.delete_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\DeleteSupplierHandler'
+    parent: 'prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand'
+    public: true
+
+  prestashop.adapter.supplier.command_handler.bulk_delete_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDeleteSupplierHandler'
+    parent: 'prestashop.adapter.supplier.command_handler.abstract_delete_supplier_handler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDeleteSupplierCommand'
+    public: true
+
+  prestashop.adapter.supplier.command_handler.bulk_disable_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkDisableSupplierHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkDisableSupplierCommand'
+
+  prestashop.adapter.supplier.command_handler.bulk_enable_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\BulkEnableSupplierHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\BulkEnableSupplierCommand'
+
+  prestashop.adapter.supplier.query_handler.get_supplier_for_viewing_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForViewingHandler'
+    arguments:
+      - '@prestashop.core.localization.locale.context_locale'
+      - '@=service("prestashop.adapter.legacy.context").getContext().currency.iso_code'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing'
+
+  prestashop.adapter.supplier.command_handler.add_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\AddSupplierHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand'
+
+  prestashop.adapter.supplier.query_handler.get_supplier_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForEditingHandler'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing'
+
+  prestashop.adapter.supplier.command_handler.edit_supplier_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\CommandHandler\EditSupplierHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Command\EditSupplierCommand'
+
+  prestashop.adapter.supplier.repository.supplier_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository'

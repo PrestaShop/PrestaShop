@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShopBundle\Form\Admin\Type\Material;
@@ -44,7 +44,7 @@ class MaterialChoiceTreeType extends AbstractType
         }
 
         $view->vars['multiple'] = $options['multiple'];
-        $view->vars['choices_tree'] = $options['choices_tree'];
+        $view->vars['choices_tree'] = $this->getFormattedChoicesTree($options, $selectedData);
         $view->vars['choice_label'] = $options['choice_label'];
         $view->vars['choice_value'] = $options['choice_value'];
         $view->vars['choice_children'] = $options['choice_children'];
@@ -64,6 +64,7 @@ class MaterialChoiceTreeType extends AbstractType
                 'choice_value' => 'id',
                 'choice_children' => 'children',
                 'disabled_values' => [],
+                'disabled' => false,
                 'multiple' => false,
                 'compound' => false,
             ])
@@ -73,8 +74,8 @@ class MaterialChoiceTreeType extends AbstractType
             ->setAllowedTypes('choice_label', 'string')
             ->setAllowedTypes('choice_children', 'string')
             ->setAllowedTypes('disabled_values', 'array')
-            ->addAllowedValues('compound', false)
-        ;
+            ->setAllowedTypes('disabled', 'bool')
+            ->addAllowedValues('compound', false);
     }
 
     /**
@@ -83,5 +84,69 @@ class MaterialChoiceTreeType extends AbstractType
     public function getBlockPrefix()
     {
         return 'material_choice_tree';
+    }
+
+    /**
+     * @param array $options
+     * @param array $selectedData
+     *
+     * @return array
+     */
+    private function getFormattedChoicesTree(array $options, array $selectedData)
+    {
+        $tree = $options['choices_tree'];
+
+        foreach ($tree as &$choice) {
+            $this->fillChoiceWithChildrenSelection(
+                $choice,
+                $options['choice_value'],
+                $options['choice_children'],
+                $selectedData
+            );
+        }
+
+        return $tree;
+    }
+
+    /**
+     * @param array $choice
+     * @param string $choiceValueName
+     * @param string $choiceChildrenName
+     * @param array $selectedValues
+     *
+     * @return bool
+     */
+    private function fillChoiceWithChildrenSelection(
+        array &$choice,
+        $choiceValueName,
+        $choiceChildrenName,
+        array $selectedValues
+    ) {
+        $isSelected = false;
+        $isChildrenSelected = false;
+
+        if (in_array($choice[$choiceValueName], $selectedValues)) {
+            $isSelected = true;
+        }
+
+        if (isset($choice[$choiceChildrenName])) {
+            foreach ($choice[$choiceChildrenName] as &$child) {
+                $selected = $this->fillChoiceWithChildrenSelection(
+                    $child,
+                    $choiceValueName,
+                    $choiceChildrenName,
+                    $selectedValues
+                );
+
+                if ($selected) {
+                    $isChildrenSelected = true;
+                }
+            }
+            unset($child);
+        }
+
+        $choice['has_selected_children'] = $isChildrenSelected;
+
+        return $isSelected || $isChildrenSelected;
     }
 }

@@ -1,0 +1,93 @@
+admin_taxes_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::indexAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes
+
+admin_taxes_save_options:
+  path: /save-options
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::saveOptionsAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitOptionstax
+
+admin_taxes_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.tax
+    redirectRoute: admin_taxes_index
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitFiltertax
+
+admin_taxes_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::createAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:addtax
+
+admin_taxes_edit:
+  path: /{taxId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::editAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:updatetax
+    _legacy_parameters:
+      id_tax: taxId
+  requirements:
+    taxId: \d+
+
+admin_taxes_delete:
+  path: /{taxId}/delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::deleteAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:deletetax
+    _legacy_parameters:
+      id_tax: taxId
+  requirements:
+    taxId: \d+
+
+admin_taxes_toggle_status:
+  path: /{taxId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::toggleStatusAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:statustax
+    _legacy_parameters:
+      id_tax: taxId
+  requirements:
+    taxId: \d+
+
+admin_taxes_bulk_enable_status:
+  path: /bulk-enable-status
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkEnableStatusAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkenableSelectiontax
+
+admin_taxes_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkDisableStatusAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkdisableSelectiontax
+
+admin_taxes_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\TaxController::bulkDeleteAction'
+    _legacy_controller: AdminTaxes
+    _legacy_link: AdminTaxes:submitBulkdeletetax

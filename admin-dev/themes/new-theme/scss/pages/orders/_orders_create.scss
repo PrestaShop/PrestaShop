@@ -1,0 +1,17 @@
+#order-creation-container {
+  .custom-fields-container {
+    padding-bottom: 0.9375rem;
+
+    .custom-file {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  #products-table {
+    .js-product-qty-input {
+      margin-top: 22px;
+    }
+  }
+}

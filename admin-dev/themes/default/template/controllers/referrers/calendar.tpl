@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 
 <div id="referrersContainer">
@@ -35,11 +35,13 @@
 					<input type="submit" name="submitDateYearPrev" class="btn btn-default submitDateYearPrev" value="{$translations.Year}-1" />
 					<p>
 						<span>{if isset($translations.From)}{$translations.From}{else}{l s='From:' d='Admin.Global'}{/if}</span>
-						<input type="text" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" class="datepicker" />
+            <input type="text" class="datepicker" data-target="#datepickerFrom"/>
+            <input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$datepickerFrom|escape}" />
 					</p>
 					<p>
 						<span>{if isset($translations.To)}{$translations.To}{else}<span>{l s='To:' d='Admin.Global'}</span>{/if}</span>
-						<input type="text" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" class="datepicker" />
+            <input type="text" class="datepicker" data-target="#datepickerTo"/>
+						<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$datepickerTo|escape}" />
 					</p>
 					<button type="submit" name="submitDatePicker" id="submitDatePicker" class="btn btn-default">
 						<i class="icon-save"></i> {if isset($translations.Save)}{$translations.Save}{else}{l s='Save' d='Admin.Actions'}{/if}
@@ -49,12 +51,25 @@
 
 			<script type="text/javascript">
 				$(document).ready(function() {
-					if ($("form#calendar_form .datepicker").length > 0)
-						$("form#calendar_form .datepicker").datepicker({
-							prevText: '',
-							nextText: '',
-							dateFormat: 'yy-mm-dd'
-						});
-				});
+          if ($("form#calendar_form .datepicker").length > 0) {
+            const dateFormat = $.datepicker.regional[window.full_language_code]
+                ? $.datepicker.regional[window.full_language_code].dateFormat
+                : 'yy-mm-dd';
+            $("form#calendar_form .datepicker").each(function() {
+              var altField = $(this).data('target');
+              $(this).datepicker({
+                altField: altField,
+                altFormat: 'yy-mm-dd',
+                prevText: '',
+                nextText: '',
+                dateFormat: dateFormat,
+              });
+              $(this).datepicker(
+                'setDate',
+                new Date($(altField).val())
+              );
+            });
+          }
+        });
 			</script>
 	</div>

@@ -1,10 +1,11 @@
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,31 +16,31 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 const path = require('path');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const keepLicense = require('uglify-save-license');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
 
   const config = {
     entry: [
-      './js/theme.js'
+      './js/theme.js',
     ],
     output: {
       path: path.resolve(__dirname, 'public'),
-      filename: 'bundle.js'
+      publicPath: '',
+      filename: 'bundle.js',
     },
-    //devtool: 'source-map', // uncomment me to build source maps (really slow)
     module: {
       rules: [{
         test: path.join(__dirname, 'js'),
@@ -47,46 +48,49 @@ module.exports = (env, argv) => {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['@babel/preset-env', {modules: false}]
-            ]
-          }
-        }]
+              ['@babel/preset-env', {modules: false}],
+            ],
+          },
+        }],
       }, {
-        test: /\.(scss|sass)$/,
+        test: /\.(scss|sass|css)$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
             loader: 'css-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
           },
           {
             loader: 'postcss-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
           },
           {
             loader: 'sass-loader',
-            options: {
-              //sourceMap: true, // uncomment me to generate source maps
-            }
-          }
-        ]
+          },
+        ],
       }, {
         test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        loader: 'file-loader?name=[hash].[ext]'
-      }]
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: '[hash].[ext]',
+          },
+        }],
+      }],
     },
     optimization: {
 
     },
     plugins: [
+      new CleanWebpackPlugin({
+        root: path.resolve(__dirname),
+        cleanOnceBeforeBuildPatterns: [
+          '**/*', // required
+          '!theme.rtlfix', // exclusion
+        ],
+      }),
       new MiniCssExtractPlugin({
-        filename: 'theme.css'
-      })
-    ]
+        filename: 'theme.css',
+      }),
+    ],
   };
 
   if (!devMode) {
@@ -95,14 +99,13 @@ module.exports = (env, argv) => {
         sourceMap: false,
         uglifyOptions: {
           compress: {
-            drop_console: true
+            drop_console: true,
           },
           output: {
-            comments: keepLicense
-          }
+            comments: keepLicense,
+          },
         },
       }),
-      new OptimizeCSSAssetsPlugin()
     ];
   }
 

@@ -1,0 +1,56 @@
+# @todo: add legacy links after page is fully migrated. (including condition groups)
+admin_catalog_price_rules_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::indexAction'
+    _legacy_controller: AdminSpecificPriceRule
+#  _legacy_link: AdminSpecificPriceRule
+
+admin_catalog_price_rules_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::searchAction'
+    _legacy_controller: AdminSpecificPriceRule
+#  _legacy_link: AdminSpecificPriceRule:submitFilterspecific_price_rule
+
+admin_catalog_price_rules_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::createAction'
+    _legacy_controller: AdminSpecificPriceRule
+    # _legacy_link: AdminSpecificPriceRule:addspecific_price_rule
+
+admin_catalog_price_rules_edit:
+  path: /{catalogPriceRuleId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::editAction'
+    _legacy_controller: AdminSpecificPriceRule
+    # _legacy_link: AdminSpecificPriceRule:updatespecific_price_rule
+    _legacy_parameters:
+      id_specific_price_rule: catalogPriceRuleId
+  requirements:
+    catalogPriceRuleId: \d+
+
+admin_catalog_price_rules_delete:
+  path: /{catalogPriceRuleId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::deleteAction'
+    _legacy_controller: AdminSpecificPriceRule
+    # _legacy_link: AdminSpecificPriceRule:deletespecific_price_rule
+    _legacy_parameters:
+      id_specific_price_rule: catalogPriceRuleId
+  requirements:
+    catalogPriceRuleId: \d+
+
+admin_catalog_price_rules_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::bulkDeleteAction'
+    _legacy_controller: AdminSpecificPriceRule
+#  _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule

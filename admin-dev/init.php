@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,12 +17,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 ob_start();
@@ -42,18 +42,22 @@ try {
 
     $iso = $context->language->iso_code;
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/errors.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
+        @trigger_error(
+            'Translating ObjectModel fields using fields.php is deprecated since version 8.0.0.',
+            E_USER_DEPRECATED
+        );
+        include _PS_TRANSLATIONS_DIR_.$iso.'/fields.php';
     }
     if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php')) {
-        include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
+        include _PS_TRANSLATIONS_DIR_.$iso.'/admin.php';
     }
 
     /* Server Params */
     $protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-    $protocol_content = (isset($useSSL) and $useSSL and Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+    $protocol_content = (isset($useSSL) && $useSSL && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
     $link = new Link($protocol_link, $protocol_content);
     $context->link = $link;
     if (!defined('_PS_BASE_URL_')) {
@@ -77,6 +81,7 @@ try {
             foreach (scandir($path, SCANDIR_SORT_NONE) as $theme) {
                 if ($theme[0] != '.' && file_exists($path.$theme.'/template/layout.tpl')) {
                     $context->employee->bo_theme = $theme;
+
                     break;
                 }
             }
@@ -98,8 +103,7 @@ try {
         Tools::redirectAdmin($url['path'] . '?' . http_build_query($parseQuery, '', '&'));
     }
 
-    $context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
+    $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
     if ($context->employee->isLoggedBack()) {
         $shop_id = '';
@@ -108,15 +112,15 @@ try {
             $split = explode('-', $context->cookie->shopContext);
             if (count($split) == 2) {
                 if ($split[0] == 'g') {
-                    if ($context->employee->hasAuthOnShopGroup($split[1])) {
-                        Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+                    if ($context->employee->hasAuthOnShopGroup((int) $split[1])) {
+                        Shop::setContext(Shop::CONTEXT_GROUP, (int) $split[1]);
                     } else {
                         $shop_id = $context->employee->getDefaultShopID();
                         Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                     }
-                } elseif ($context->employee->hasAuthOnShop($split[1])) {
+                } elseif ($context->employee->hasAuthOnShop((int) $split[1])) {
                     $shop_id = $split[1];
-                    Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
+                    Shop::setContext(Shop::CONTEXT_SHOP, (int) $shop_id);
                 } else {
                     $shop_id = $context->employee->getDefaultShopID();
                     Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
@@ -126,7 +130,7 @@ try {
 
         // Replace existing shop if necessary
         if (!$shop_id) {
-            $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+            $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         } elseif ($context->shop->id != $shop_id) {
             $context->shop = new Shop($shop_id);
         }

@@ -1,0 +1,2 @@
+imports:
+  - { resource: config_legacy_dev.yml }

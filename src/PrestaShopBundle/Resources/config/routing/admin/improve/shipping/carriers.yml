@@ -1,0 +1,91 @@
+admin_carriers_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::indexAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers
+
+admin_carriers_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::searchAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers:submitFiltercarrier
+
+admin_carriers_edit:
+  path: /{carrierId}/edit
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::editAction'
+  requirements:
+    carrierId: \d+
+
+admin_carriers_delete:
+  path: /{carrierId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::deleteAction'
+    _legacy_controller: AdminCarriers
+    #     _legacy_link: AdminCarriers:deletecarrier
+    _legacy_parameters:
+      id_carrier: carrierId
+  requirements:
+    carrierId: \d+
+
+admin_carriers_toggle_status:
+  path: /{carrierId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::toggleStatusAction'
+    _legacy_controller: AdminCarriers
+    #     _legacy_link: AdminCarriers:statuscarrier
+    _legacy_parameters:
+      id_carrier: carrierId
+  requirements:
+    carrierId: \d+
+
+admin_carriers_toggle_is_free:
+  path: /{carrierId}/toggle-is-free
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::toggleIsFreeAction'
+    _legacy_controller: AdminCarriers
+    #     _legacy_link: AdminCarriers:isFreecarrier
+    _legacy_parameters:
+      id_carrier: carrierId
+  requirements:
+    carrierId: \d+
+
+admin_carriers_update_position:
+  path: /update-position
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::updatePositionAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers:updatePositions
+
+admin_carriers_bulk_enable_status:
+  path: /bulk-enable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::bulkEnableStatusAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers:submitBulkenableSelectioncarrier
+
+admin_carriers_bulk_disable_status:
+  path: /bulk-disable
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::bulkDisableStatusAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers:submitBulkdisableSelectioncarrier
+
+admin_carriers_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Shipping\CarriersController::bulkDeleteAction'
+    _legacy_controller: AdminCarriers
+#     _legacy_link: AdminCarriers:submitBulkdeletecarrier

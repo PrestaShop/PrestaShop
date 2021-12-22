@@ -1,0 +1,127 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{% form_theme currencyForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% block form %}
+  {{ form_start(currencyForm, {
+    'attr': {
+      'id': 'currency_form',
+      'data-reference-url': path('admin_currencies_get_reference_data', {'currencyIsoCode': 'CURRENCY_ISO_CODE'})|replace({'/CURRENCY_ISO_CODE': '{/id}'}),
+      'data-languages': languages|json_encode,
+      'data-translations': {
+        'step.symbol': '1. Enter symbol'|trans({}, 'Admin.International.Feature'),
+        'step.format': '2. Choose format'|trans({}, 'Admin.International.Feature'),
+        'modal.title': 'Customize symbol and format'|trans({}, 'Admin.International.Feature'),
+        'modal.apply': 'Apply'|trans({}, 'Admin.Actions'),
+        'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'modal.close': 'Close'|trans({}, 'Admin.Actions'),
+        'list.language': 'Language'|trans({}, 'Admin.Global'),
+        'list.example': 'Example'|trans({}, 'Admin.Global'),
+        'list.edit': 'Edit symbol / format'|trans({}, 'Admin.International.Feature'),
+        'list.reset': 'Reset'|trans({}, 'Admin.Actions'),
+        'list.reset.success': 'Your symbol and format customizations have been successfully reset for this language.'|trans({}, 'Admin.Notifications.Success'),
+        'list.example.format': '%price%'|trans({}, 'Admin.International.Feature'),
+        'modal.restore.title': 'Are you sure you want to restore default settings?'|trans({}, 'Admin.International.Feature'),
+        'modal.restore.apply': 'Restore'|trans({}, 'Admin.Actions'),
+        'modal.restore.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+        'modal.restore.body': 'Restoring your currency\'s default settings will delete all the customizations you made before. Parameters will look just the same as when the currency is freshly imported.'|trans({}, 'Admin.International.Feature')
+      }|json_encode
+    }
+    }) }}
+
+    <div class="card card-currency">
+      <div class="card-header">
+        {{ 'Currencies'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="card-block row">
+        <div class="card-text">
+          {{ form_errors(currencyForm) }}
+
+          {% if not currencyForm.vars.data.id is defined %}
+
+            {{ form_row(currencyForm.selected_iso_code) }}
+            <div class="form-group row type-checkbox ">
+              <label for="currency_unofficial" class="form-control-label ">
+                {{ 'or'|trans({}, 'Admin.Global') }}
+              </label>
+              {{ form_widget(currencyForm.unofficial) }}
+            </div>
+          {% endif %}
+
+          {{ form_row(currencyForm.names) }}
+
+          {% set symbolsClass = currencyForm.symbols.vars.errors|length ? '' : 'd-none' %}
+          {{ form_row(currencyForm.symbols, {'row_attr': {'class': symbolsClass}}) }}
+          {{ form_widget(currencyForm) }}
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="card-footer-left">
+          <a href="{{ path('admin_currencies_index') }}" class="btn btn-outline-secondary">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </a>
+
+          {% if currencyForm.vars.data.id is defined and not currencyForm.vars.data.unofficial %}
+            <button type="button" id="currency_reset_default_settings" class="btn btn-outline-primary card-currency-reset">
+              <i class="material-icons">refresh</i>
+              {{ 'Restore default settings'|trans({}, 'Admin.International.Feature') }}
+            </button>
+          {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      </div>
+    </div>
+  {{ form_end(currencyForm) }}
+
+  {% if languageDataError is defined and languageDataError %}
+    <div class="card">
+      <div class="card-body">
+        <div class="alert alert-danger">
+          {{ 'Could not display symbol and format customization:'|trans({}, 'Admin.International.Notification') }} {{ languageDataError }}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <!-- Modal -->
+    <div class="modal fade" id="currency_loading_data_modal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">{{ 'Loading currency data'|trans({}, 'Admin.International.Feature') }}</h5>
+          </div>
+          <div class="modal-body">
+            {{ 'Please wait while currency data is being loaded'|trans({}, 'Admin.International.Feature') }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary spinner">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

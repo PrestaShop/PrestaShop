@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,37 +17,32 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use DbQuery;
-use Db;
-use Shop;
 use Cache;
+use Db;
+use DbQuery;
+use ObjectModel;
+use Shop;
 
-/**
- * Not used in PrestaShop core, only in tests.
- *
- * @deprecated since 1.7.5, to be removed in 1.8
- */
 class EntityMapper
 {
     /**
      * Load ObjectModel.
      *
-     * @param $id
-     * @param $id_lang
-     * @param $entity \ObjectModel
-     * @param $entity_defs
-     * @param $id_shop
-     * @param $should_cache_objects
+     * @param int $id
+     * @param int $id_lang
+     * @param ObjectModel $entity
+     * @param array<string,string|array> $entity_defs
+     * @param int $id_shop
+     * @param bool $should_cache_objects
      *
      * @throws \PrestaShopDatabaseException
      */
@@ -54,7 +50,7 @@ class EntityMapper
     {
         // Load object from database if object id is present
         $cache_id = 'objectmodel_' . $entity_defs['classname'] . '_' . (int) $id . '_' . (int) $id_shop . '_' . (int) $id_lang;
-        if (!$should_cache_objects || !\Cache::isStored($cache_id)) {
+        if (!$should_cache_objects || !Cache::isStored($cache_id)) {
             $sql = new DbQuery();
             $sql->from($entity_defs['table'], 'a');
             $sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int) $id);
@@ -73,6 +69,7 @@ class EntityMapper
             }
 
             if ($object_datas = Db::getInstance()->getRow($sql)) {
+                $objectVars = get_object_vars($entity);
                 if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
                     $sql = 'SELECT *
 							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
@@ -82,9 +79,9 @@ class EntityMapper
                     if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
                         foreach ($object_datas_lang as $row) {
                             foreach ($row as $key => $value) {
-                                if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
+                                if ($key != $entity_defs['primary'] && array_key_exists($key, $objectVars)) {
                                     if (!isset($object_datas[$key]) || !is_array($object_datas[$key])) {
-                                        $object_datas[$key] = array();
+                                        $object_datas[$key] = [];
                                     }
 
                                     $object_datas[$key][$row['id_lang']] = $value;
@@ -93,10 +90,11 @@ class EntityMapper
                         }
                     }
                 }
+
                 $entity->id = (int) $id;
                 foreach ($object_datas as $key => $value) {
                     if (array_key_exists($key, $entity_defs['fields'])
-                        || array_key_exists($key, $entity)) {
+                        || array_key_exists($key, $objectVars)) {
                         $entity->{$key} = $value;
                     } else {
                         unset($object_datas[$key]);

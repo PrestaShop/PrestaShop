@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,21 +17,20 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
+use Module as LegacyModule;
+use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use Module as LegacyModule;
 
 /**
  * This class is the interface to the legacy Module class.
@@ -39,7 +39,18 @@ use Module as LegacyModule;
  */
 class Module implements ModuleInterface
 {
-    /** @var legacyInstance Module The instance of the legacy module */
+    public const ACTION_INSTALL = 'install';
+    public const ACTION_UNINSTALL = 'uninstall';
+    public const ACTION_ENABLE = 'enable';
+    public const ACTION_DISABLE = 'disable';
+    public const ACTION_ENABLE_MOBILE = 'enable_mobile';
+    public const ACTION_DISABLE_MOBILE = 'disable_mobile';
+    public const ACTION_RESET = 'reset';
+    public const ACTION_UPGRADE = 'upgrade';
+
+    /**
+     * @var LegacyModule Module The instance of the legacy module
+     */
     public $instance = null;
 
     /**
@@ -68,7 +79,7 @@ class Module implements ModuleInterface
      *
      * @var array
      */
-    private $attributes_default = array(
+    private $attributes_default = [
         'id' => 0,
         'name' => '',
         'categoryName' => '',
@@ -80,22 +91,22 @@ class Module implements ModuleInterface
         'tab' => 'others',
         'is_configurable' => 0,
         'need_instance' => 0,
-        'limited_countries' => array(),
+        'limited_countries' => [],
         'parent_class' => 'Module',
         'is_paymentModule' => false,
         'productType' => 'module',
         'warning' => '',
         'img' => '',
-        'badges' => array(),
-        'cover' => array(),
-        'screenshotsUrls' => array(),
+        'badges' => [],
+        'cover' => [],
+        'screenshotsUrls' => [],
         'videoUrl' => null,
-        'refs' => array('unknown'),
-        'price' => array(
+        'refs' => ['unknown'],
+        'price' => [
             'EUR' => 0,
             'USD' => 0,
             'GBP' => 0,
-        ),
+        ],
         'type' => '',
         // From the marketplace
         'url' => null,
@@ -103,27 +114,27 @@ class Module implements ModuleInterface
         'nbRates' => 0,
         'fullDescription' => '',
         'confirmUninstall' => '',
-    );
+    ];
 
     /**
      * Default values for ParameterBag disk.
      *
      * @var array
      */
-    private $disk_default = array(
+    private $disk_default = [
         'filemtype' => 0,
         'is_present' => 0,
         'is_valid' => 0,
         'version' => null,
         'path' => '',
-    );
+    ];
 
     /**
      * Default values for ParameterBag database.
      *
      * @var array
      */
-    private $database_default = array(
+    private $database_default = [
         'installed' => 0,
         'active' => 0,
         'active_on_mobile' => true,
@@ -131,14 +142,14 @@ class Module implements ModuleInterface
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
         'date_upd' => null,
-    );
+    ];
 
     /**
      * @param array $attributes
      * @param array $disk
      * @param array $database
      */
-    public function __construct(array $attributes = array(), array $disk = array(), array $database = array())
+    public function __construct(array $attributes = [], array $disk = [], array $database = [])
     {
         $this->attributes = new ParameterBag($this->attributes_default);
         $this->disk = new ParameterBag($this->disk_default);
@@ -150,7 +161,7 @@ class Module implements ModuleInterface
 
         if ($this->database->get('installed')) {
             $version = $this->database->get('version');
-        } elseif (is_null($this->attributes->get('version')) && $this->disk->get('is_valid')) {
+        } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
         } else {
             $version = $this->attributes->get('version');
@@ -171,7 +182,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return legacyInstance|void
+     * @return LegacyModule|void
      *
      * @throws \Exception
      */
@@ -198,7 +209,7 @@ class Module implements ModuleInterface
         if ($this->instance === null) {
             // We try to instantiate the legacy class if not done yet
             try {
-                $this->instanciateLegacyModule($this->attributes->get('name'));
+                $this->instanciateLegacyModule();
             } catch (\Exception $e) {
                 $this->disk->set('is_valid', false);
 
@@ -222,7 +233,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onInstall()
+    public function onInstall(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -232,7 +243,13 @@ class Module implements ModuleInterface
         // "Notice: Use of undefined constant _PS_INSTALL_LANGS_PATH_ - assumed '_PS_INSTALL_LANGS_PATH_'"
         LegacyModule::updateTranslationsAfterInstall(false);
 
-        $result = $this->instance->install();
+        // Casted to Boolean, because some modules returns 1 instead true and 0 instead false.
+        // Other value types are not expected. See also: https://github.com/PrestaShop/PrestaShop/pull/11442#issuecomment-440485268
+        // The best way is to check for non Boolean type and `throw \UnexpectedValueException`,
+        // but it's need much refactoring and testing.
+        // TODO: refactoring.
+        $result = (bool) $this->instance->install();
+
         $this->database->set('installed', $result);
         $this->database->set('active', $result);
         $this->database->set('version', $this->attributes->get('version'));
@@ -243,7 +260,19 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUninstall()
+    public function onPostInstall(): bool
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+
+        return $this->instance->postInstall();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onUninstall(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -258,7 +287,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUpgrade($version)
+    public function onUpgrade($version): bool
     {
         $this->database->set('version', $this->attributes->get('version_available'));
 
@@ -268,7 +297,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onEnable()
+    public function onEnable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -283,7 +312,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onDisable()
+    public function onDisable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -298,7 +327,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onMobileEnable()
+    public function onMobileEnable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -313,7 +342,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onMobileDisable()
+    public function onMobileDisable(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
@@ -328,13 +357,13 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onReset()
+    public function onReset(): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
         }
 
-        return $this->instance->reset();
+        return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
     }
 
     /**
@@ -342,7 +371,7 @@ class Module implements ModuleInterface
      */
     protected function instanciateLegacyModule()
     {
-        /*
+        /**
          * @TODO Temporary: This test prevents an error when switching branches with the cache.
          * Can be removed at the next release (when we will be sure that it is defined)
          */
@@ -356,7 +385,7 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
      *
      * @return mixed
      */
@@ -366,8 +395,8 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $attribute
-     * @param $value
+     * @param string $attribute
+     * @param mixed $value
      */
     public function set($attribute, $value)
     {
@@ -375,16 +404,16 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @param $value
+     * @param string $value
      *
      * @return mixed|string
      */
     private function convertType($value)
     {
-        $conversionTable = array(
+        $conversionTable = [
             AddonListFilterOrigin::ADDONS_CUSTOMER => 'addonsBought',
             AddonListFilterOrigin::ADDONS_MUST_HAVE => 'addonsMustHave',
-        );
+        ];
 
         return isset($conversionTable[$value]) ? $conversionTable[$value] : '';
     }
@@ -400,11 +429,12 @@ class Module implements ModuleInterface
         }
         $this->attributes->set('logo', __PS_BASE_URI__ . 'img/questionmark.png');
 
-        foreach (array('logo.png', 'logo.gif') as $logo) {
+        foreach (['logo.png', 'logo.gif'] as $logo) {
             $logo_path = _PS_MODULE_DIR_ . $this->get('name') . DIRECTORY_SEPARATOR . $logo;
             if (file_exists($logo_path)) {
                 $this->attributes->set('img', __PS_BASE_URI__ . basename(_PS_MODULE_DIR_) . '/' . $this->get('name') . '/' . $logo);
                 $this->attributes->set('logo', $logo);
+
                 break;
             }
         }
@@ -458,7 +488,7 @@ class Module implements ModuleInterface
      *
      * @param int $moduleId Module id
      *
-     * @return Module instance
+     * @return Module|false
      */
     public function getInstanceById($moduleId)
     {

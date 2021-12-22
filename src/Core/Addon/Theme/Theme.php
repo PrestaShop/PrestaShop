@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop.
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,29 +17,45 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
-use Shudrum\Component\ArrayFinder\ArrayFinder;
-use Symfony\Component\Yaml\Yaml;
 use AbstractAssetManager;
+use Configuration;
+use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
+use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 
 class Theme implements AddonInterface
 {
+    /**
+     * @var ArrayFinder
+     */
     private $attributes;
 
-    public function __construct(array $attributes)
-    {
+    /**
+     * @param array $attributes Theme attributes
+     * @param string|null $configurationCacheDirectory Default _PS_CACHE_DIR_
+     * @param string $themesDirectory Default _PS_ALL_THEMES_DIR_
+     */
+    public function __construct(
+        array $attributes,
+        ?string $configurationCacheDirectory = null,
+        string $themesDirectory = _PS_ALL_THEMES_DIR_
+    ) {
         if (isset($attributes['parent'])) {
-            $parentAttributes = Yaml::parse(file_get_contents(_PS_ALL_THEMES_DIR_ . '/' . $attributes['parent'] . '/config/theme.yml'));
+            if (null === $configurationCacheDirectory) {
+                $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
+            }
+
+            $yamlParser = new YamlParser($configurationCacheDirectory);
+            $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
@@ -46,7 +63,7 @@ class Theme implements AddonInterface
 
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        if (file_exists(_PS_ALL_THEMES_DIR_ . $attributes['name'] . '/preview.png')) {
+        if (file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
             $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
         }
 
@@ -75,8 +92,8 @@ class Theme implements AddonInterface
 
     public function getModulesToEnable()
     {
-        $modulesToEnable = $this->get('global_settings.modules.to_enable', array());
-        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', array());
+        $modulesToEnable = $this->get('global_settings.modules.to_enable', []);
+        $modulesToHook = $this->get('global_settings.hooks.modules_to_hook', []);
 
         foreach ($modulesToHook as $hookName => $modules) {
             if (is_array($modules)) {
@@ -96,7 +113,7 @@ class Theme implements AddonInterface
 
     public function getModulesToDisable()
     {
-        return $this->get('dependencies.modules', array());
+        return $this->get('dependencies.modules', []);
     }
 
     public function getPageSpecificAssets($pageId)
@@ -208,6 +225,7 @@ class Theme implements AddonInterface
             // Required parameters
             if (!isset($entry['id']) || !isset($entry['path'])) {
                 unset($css[$key]);
+
                 continue;
             }
             if (!isset($entry['media'])) {
@@ -234,6 +252,7 @@ class Theme implements AddonInterface
             // Required parameters
             if (!isset($entry['id']) || !isset($entry['path'])) {
                 unset($js[$key]);
+
                 continue;
             }
             if (!isset($entry['position'])) {

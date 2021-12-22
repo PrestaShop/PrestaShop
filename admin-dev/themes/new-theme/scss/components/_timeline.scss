@@ -1,0 +1,123 @@
+.timeline {
+  position: relative;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+  border-collapse: collapse;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    bottom: 30px;
+    left: 50%;
+    z-index: 0;
+    width: 6px;
+    margin-left: -4px;
+    content: "";
+    background-color: #ddd;
+  }
+
+  .timeline-item {
+    display: table-row;
+
+    &.alt {
+      text-align: right;
+
+      &::before {
+        display: none;
+      }
+
+      .timeline-panel {
+        margin-right: 42px;
+        margin-left: 0;
+      }
+
+      .timeline-caption {
+        .timeline-panel {
+          .timeline-icon {
+            right: -60px;
+            left: auto;
+          }
+
+          .timeline-date {
+            right: -220px;
+            left: auto;
+            text-align: left;
+          }
+        }
+      }
+    }
+
+    &::before,
+    &.alt::after {
+      display: block;
+      width: 50%;
+      content: "";
+    }
+
+    .timeline-caption {
+      display: table-cell;
+      width: 50%;
+      vertical-align: top;
+
+      .timeline-panel {
+        position: relative;
+        display: inline-block;
+        padding: 20px;
+        margin-bottom: 20px;
+        margin-left: 42px;
+        text-align: left;
+        background-color: $white;
+        border: 1px solid #ddd;
+        @include border-radius(5px);
+
+        .timeline-icon {
+          position: absolute;
+          top: -2px;
+          left: -62px;
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          background-color: #666;
+          border: 2px solid $white;
+          @include border-radius(40px);
+        }
+
+        .timeline-date {
+          position: absolute;
+          top: 10px;
+          left: -270px;
+          width: 200px;
+          text-align: right;
+        }
+      }
+    }
+  }
+
+  .arrow::after,
+  .arrow::before {
+    position: absolute;
+    display: inline-block;
+    content: "";
+    border-color: transparent;
+    border-style: solid;
+  }
+
+  .arrow-left::before {
+    top: 6px;
+    left: 0;
+    margin-left: -7px;
+    border-width: 7px 7px 7px 0;
+    border-right-color: #d1d4d7;
+  }
+
+  .arrow-right::before {
+    top: 6px;
+    right: 0;
+    margin-right: -7px;
+    border-width: 7px 0 7px 7px;
+    border-left-color: #d1d4d7;
+  }
+}

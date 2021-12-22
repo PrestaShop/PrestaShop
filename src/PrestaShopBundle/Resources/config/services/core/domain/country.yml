@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.domain.country.zip_code_format_resolver:
+    class: 'PrestaShop\PrestaShop\Core\Domain\Country\ZipCodePatternResolver'

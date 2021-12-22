@@ -1,0 +1,441 @@
+#order_grid {
+  position: relative;
+
+  #order_filter_form {
+    .dropdown {
+      position: inherit;
+    }
+  }
+
+  // Do not break text for Shop column in Orders grid
+  .column-shop_name {
+    word-break: normal;
+  }
+
+  // Do not break order status change button
+  .column-osname .btn {
+    white-space: nowrap;
+  }
+
+  .order-preview-content {
+    .details th,
+    .product th,
+    .details td,
+    .product td {
+      padding-top: 3.2px;
+      padding-bottom: 3.2px;
+      border: none;
+    }
+
+    .details td,
+    .product td {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .product th {
+      background-color: #f8f8f8;
+    }
+
+    $order-details-text-padding-left: 34px;
+
+    .details {
+      td {
+        padding-left: 34px;
+      }
+    }
+  }
+}
+
+#orderProductsPanel {
+  .btn-product-pack-modal {
+    color: $primary;
+    cursor: pointer;
+  }
+
+  input[type="number"] {
+    width: 80px;
+  }
+
+  .order-product-pagination {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+#addProductTableRow,
+.editProductRow {
+  /* stylelint-disable */
+  // div selector is important here, it is used for empty labels regular labels must not be hidden
+  div.form-control-label {
+    display: none;
+  }
+  /* stylelint-enable */
+
+  .addProductInvoice {
+    > .form-group {
+      margin-top: 23px;
+      margin-bottom: 0;
+    }
+  }
+
+  #addProductAvailable,
+  #addProductTotalPrice {
+    padding-top: calc(0.4rem + 24px);
+  }
+
+  .editProductActions-container {
+    > .form-group {
+      margin-bottom: 0;
+    }
+  }
+
+  .cellProductTaxes,
+  .cellProductQuantity,
+  .cellProductInvoice {
+    > .form-group:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+#addProductNewInvoiceInfo h4 {
+  margin-top: 8px;
+}
+
+.info-block {
+  padding-top: 18px;
+  padding-right: 18px;
+  padding-bottom: 16px;
+  padding-left: 18px;
+  background-color: $info-block-background;
+
+  & &-col {
+    > .row {
+      flex-wrap: nowrap;
+    }
+  }
+}
+
+#order-creation-container {
+  .found-cart-rule:hover {
+    color: $primary;
+    cursor: pointer;
+  }
+
+  #search-cart-rules-result-box {
+    z-index: 10;
+  }
+
+  #summary-block {
+    .badge {
+      font-size: 100%;
+    }
+  }
+
+  #customer-tab-content-container-toggler .material-icons::before {
+    content: "keyboard_arrow_up";
+  }
+
+  #customer-tab-content-container-toggler[aria-expanded="false"].material-icons::before {
+    content: "keyboard_arrow_down";
+  }
+}
+
+.messages-block {
+  padding: 3rem 0;
+  background-color: $info-block-background;
+  $private-message-color: #7a8a8f;
+
+  .employee-icon {
+    &::before {
+      font-family: "Material Icons", sans-serif;
+      content: "account_circle";
+    }
+    color: #36b9d7;
+  }
+
+  .employee-icon--private {
+    &::before {
+      font-family: "Material Icons", sans-serif;
+      content: "visibility_off";
+    }
+    color: $private-message-color;
+  }
+
+  &#all-messages-list {
+    height: 80vh;
+    overflow-y: scroll;
+  }
+
+  .message {
+    padding: 10px;
+    @include border-radius(5px);
+
+    &.customer-message {
+      background-color: $white;
+    }
+
+    &.employee-message {
+      background-color: $primary-disabled;
+    }
+
+    &.employee-message--private {
+      color: $white;
+      background-color: $private-message-color;
+    }
+  }
+
+  li {
+    &.messages-block-employee {
+      padding-left: 3.7rem;
+
+      .row {
+        justify-content: flex-end;
+      }
+    }
+
+    &.messages-block-customer {
+      padding-right: 3.7rem;
+    }
+
+    .row {
+      flex-wrap: nowrap;
+
+      .messages-block-icon {
+        width: 100%;
+        max-width: 3.7rem;
+        text-align: center;
+      }
+
+      .messages-block-content {
+        width: 100%;
+
+        .message {
+          padding: 0.7rem;
+          box-shadow: 0 6px 12px 0 $background-grey;
+        }
+      }
+
+      .text-muted {
+        margin-top: 0.6rem;
+      }
+    }
+  }
+}
+
+#view_all_messages_modal {
+  .modal-content {
+    padding: 0;
+    background-color: inherit;
+  }
+
+  .modal-body {
+    padding: 0;
+  }
+}
+
+td .editProductInvoice {
+  min-width: 130px;
+}
+
+@media only screen and (max-width: map-get($grid-breakpoints, xxl)) {
+  .messages-block {
+    li .row {
+      .messages-block-icon {
+        width: 100%;
+        max-width: 2.5rem;
+      }
+    }
+
+    li.messages-block-customer {
+      padding-right: 2rem;
+    }
+
+    li.messages-block-employee {
+      padding-left: 2rem;
+    }
+  }
+}
+
+/* Cancel/refund products */
+.shipping-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .cancel-product-element {
+    margin-top: 10px;
+  }
+}
+
+.shipping-refund-amount {
+  margin-left: 10px;
+}
+
+.shipping-refund .form-group {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+
+  .shipping-refund-amount {
+    margin-left: 5px;
+  }
+}
+
+.partial-refund {
+  .shipping-price-container {
+    display: flex;
+    margin-top: 8px;
+  }
+
+  .form-group {
+    width: max-content;
+  }
+}
+
+.cancel-product-element,
+.cancel-product-selector,
+.cancel-product-amount {
+  display: none;
+}
+
+.cancel-product-element.form-submit {
+  width: 100%;
+  margin-top: -10px;
+  margin-right: 20px;
+}
+
+.refund-checkboxes-container {
+  display: none;
+  width: fit-content;
+  margin: 16px auto;
+}
+
+.refund-checkboxes-container .form-group {
+  width: max-content;
+}
+
+th.cancel-product-element,
+td.cancel-product-element {
+  max-width: 420px;
+}
+
+@include media-breakpoint-down(lg) {
+  .partial-refund {
+    .cancel-product-cell {
+      .cancel-product-cell-elements {
+        flex-direction: column;
+        align-items: flex-end;
+
+        .cancel-product-quantity {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+}
+
+.cancel-product-cell {
+  max-width: 400px;
+  padding-right: 0;
+  margin-right: 0;
+
+  .cancel-product-cell-elements {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    .cancel-product-selector {
+      align-self: center;
+      width: 30px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0;
+
+      .form-control-label {
+        padding: 0;
+        margin-bottom: 0;
+        font-weight: 600;
+        line-height: 30px;
+      }
+
+      .input-group {
+        min-width: 90px;
+        max-width: 130px;
+
+        .form-control {
+          min-width: 30px;
+          max-width: 80px;
+          height: 35px;
+        }
+
+        .input-group-append {
+          height: 35px;
+        }
+
+        .max-refund {
+          flex-basis: 100%;
+          padding-left: 10px;
+        }
+      }
+
+      &.cancel-product-amount {
+        .input-group {
+          min-width: 125px;
+        }
+      }
+    }
+  }
+}
+
+.voucher-refund-type-negative-error {
+  display: none;
+  color: $danger;
+}
+
+input.refund-quantity {
+  max-width: 160px;
+  margin-left: 10px;
+}
+
+input.refund-amount,
+input#partial_refund_shipping {
+  max-width: 80px;
+  margin-left: 10px;
+}
+
+.cellProductActions .btn,
+.discountList .btn {
+  color: $medium-gray;
+  background-color: transparent;
+}
+
+.cellProductActions .btn:hover,
+.discountList .btn:hover {
+  color: $primary;
+}
+
+.spinner-order-products-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background: $white;
+
+  .spinner {
+    position: relative;
+    top: 50%;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

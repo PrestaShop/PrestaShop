@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_legalcompliance/ps_legalcompliance.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7c5b051f9cd69598866d9abe424ace5b">
+        <source>The order will only be confirmed when you click on the button 'Order with an obligation to pay' at the end of the checkout!</source>
+        <target>The order will only be confirmed when you click on the button 'Order with an obligation to pay' at the end of the checkout!</target>
+        <note>Line: 227</note>
+      </trans-unit>
+      <trans-unit id="272c87c1b60ba25f293fab358ba94a39">
+        <source>You must agree to our Terms of Service before going any further!</source>
+        <target>You must agree to our Terms of Service before going any further!</target>
+        <note>Line: 631</note>
+      </trans-unit>
+      <trans-unit id="2223d375913a9a3b4619a1ada82f8de7">
+        <source>Something went wrong. If the problem persists, please contact us.</source>
+        <target>Something went wrong. If the problem persists, please contact us.</target>
+        <note>Line: 632</note>
+      </trans-unit>
+      <trans-unit id="7219074549f88adb580bf5a6fe57c459">
+        <source>Select a payment option first.</source>
+        <target>Select a payment option first.</target>
+        <note>Line: 633</note>
+      </trans-unit>
+      <trans-unit id="8b70c72bfa7600032a1cbd6a554d8828">
+        <source>Please check the "Revocation of virtual products" box first!</source>
+        <target>Please check the "Revocation of virtual products" box first!</target>
+        <note>Line: 634</note>
+      </trans-unit>
+      <trans-unit id="60657eaf863277872e2c9a2d31423842">
+        <source>I agree to the [terms of service] and [revocation terms] and will adhere to them unconditionally.</source>
+        <target>I agree to the [terms of service] and [revocation terms] and will adhere to them unconditionally.</target>
+        <note>Line: 794</note>
+      </trans-unit>
+      <trans-unit id="6f06a13b9608ee5f2da343a3ca049f31">
+        <source>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</source>
+        <target>[1]For digital goods:[/1] I want immediate access to the digital content and I acknowledge that thereby I lose my right to cancel once the service has begun.[2][1]For services:[/1] I agree to the starting of the service and I acknowledge that I lose my right to cancel once the service has been fully performed.</target>
+        <note>Line: 808</note>
+      </trans-unit>
+      <trans-unit id="5da618e8e4b89c66fe86e32cdafde142">
+        <source>From</source>
+        <target>From</target>
+        <note>Line: 888</note>
+      </trans-unit>
+      <trans-unit id="16b24a264ab76a36917095bf6e41ef62">
+        <source>Our previous price</source>
+        <target>Our previous price</target>
+        <note>Line: 901</note>
+      </trans-unit>
+      <trans-unit id="89bea8045e50a337d8ce9849a4e1633c">
+        <source>Shipping excluded</source>
+        <target>Shipping excluded</target>
+        <note>Line: 926</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSDisputeInformation.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ded564687a6602917eb07c460577f456">
+        <source>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</source>
+        <target>Information regarding online dispute resolution pursuant to Art. 14 Para. 1 of the ODR (Online Dispute Resolution Regulation):</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="29bd9770285cd28ad9e55714db33e8bd">
+        <source>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</source>
+        <target>The European Commission gives consumers the opportunity to resolve online disputes pursuant to Art. 14 Para. 1 of the ODR on one of their platforms. The platform ([1]http://ec.europa.eu/consumers/odr[/1]) serves as a site where consumers can try to reach out-of-court settlements of disputes arising from online purchases and contracts for services.</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCMSPrintButton.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="427e29628d9f5d9bfde0e58b32569619">
+        <source>Print this page</source>
+        <target>Print this page</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCartPriceBlock_shipping_details.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6af90b162bd8ab1c547c76492d8a2380">
+        <source>(Under conditions)</source>
+        <target>(Under conditions)</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayCheckoutSummaryTop.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="59a297091dace235b4bce5af7b86ead6">
+        <source>My shopping cart</source>
+        <target>My shopping cart</target>
+        <note>Line: 26</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_legalcompliance/views/templates/hook/hookDisplayFooterAfter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5fb4f05f62f9967052977077d783fc2d">
+        <source>Shipping and payment</source>
+        <target>Shipping and payment</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="361e7fe59f227267dd4a926de69fc658">
+        <source>All prices are mentioned tax included</source>
+        <target>All prices are mentioned tax included</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="ceae7caad3d61341d1ddc4c78b21546c">
+        <source>All prices are mentioned tax excluded</source>
+        <target>All prices are mentioned tax excluded</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="be5d5d37542d75f93a87094459f76678">
+        <source>and</source>
+        <target>and</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="53ae8b43aace8a1d1349d659c150d99f">
+        <source>shipping excluded</source>
+        <target>shipping excluded</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="themes/classic/modules/ps_legalcompliance/views/templates/hook/hookDisplayFooter.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a82be0f551b8708bc08eb33cd9ded0cf">
+        <source>Information</source>
+        <target>Information</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

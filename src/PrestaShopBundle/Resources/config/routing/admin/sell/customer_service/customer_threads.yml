@@ -1,0 +1,39 @@
+admin_customer_threads_view:
+  path: /{customerThreadId}/view
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::viewAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_reply:
+  path: /{customerThreadId}/reply
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::replyAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_update_status:
+  path: /{customerThreadId}/update-status/{newStatus}
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::updateStatusAction
+    _legacy_controller: AdminCustomerThreads
+  #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+
+
+admin_customer_threads_forward:
+  path: /{customerThreadId}/forward
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::forwardAction
+    _legacy_controller: AdminCustomerThreads
+    #  _legacy_link: AdminCustomerThreads
+  requirements:
+    customerThreadId: \d+

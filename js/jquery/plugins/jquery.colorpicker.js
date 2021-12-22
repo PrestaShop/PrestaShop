@@ -30,6 +30,7 @@
   var $o;
 
   $.fn.mColorPicker = function(options) {
+    var inputs = $(this);
 
     $o = $.extend($.fn.mColorPicker.defaults, options);
 
@@ -39,28 +40,37 @@
     if ($('#css_disabled_color_picker').length < 1) $('head').prepend('<style id="css_disabled_color_picker" type="text/css">.mColorPicker[disabled] + span, .mColorPicker[disabled="disabled"] + span, .mColorPicker[disabled="true"] + span {filter:alpha(opacity=50);-moz-opacity:0.5;-webkit-opacity:0.5;-khtml-opacity: 0.5;opacity: 0.5;}</style>');
 
     $(document).on('keyup', '.mColorPicker', function () {
-
-      try {
-
-        $(this).css({
-          'background-color': $(this).val()
-        }).css({
-          'color': $.fn.mColorPicker.textColor($(this).css('background-color'))
-        }).trigger('change');
-      } catch (r) {}
+     $.fn.mColorPicker.setTextColor($(this));
     });
 
     $(document).on('click', '.mColorPickerTrigger', function () {
-
       $.fn.mColorPicker.colorShow($(this).attr('id').replace('icp_', ''));
     });
 
+    inputs = $();
     this.each(function () {
+      // collect the newly created inputs so that we can update their colors on document ready
+      inputs.push($.fn.mColorPicker.drawPickerTriggers($(this)));
+    });
 
-      $.fn.mColorPicker.drawPickerTriggers($(this));
+    // update the colors of the newly created inputs
+    $(document).ready(function() {
+      $(inputs).each(function(){
+        $.fn.mColorPicker.setTextColor($(this));
+      });
     });
 
     return this;
+  };
+
+  $.fn.mColorPicker.setTextColor = function(element) {
+    try {
+      element.css({
+        'background-color': element.val()
+      }).css({
+        'color': $.fn.mColorPicker.textColor(element.css('background-color'))
+      }).trigger('change');
+    } catch (r) {}
   };
 
   $.fn.mColorPicker.currentColor = false;

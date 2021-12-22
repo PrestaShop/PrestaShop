@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,31 +17,72 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
+
+declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Sell\Order;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\Integration\PrestaShopBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 
-/**
- * @group demo
- */
 class DeliveryControllerTest extends WebTestCase
 {
-    public function setUp()
+    /**
+     * @var KernelBrowser
+     */
+    protected $client;
+    /**
+     * @var Router
+     */
+    protected $router;
+    /**
+     * @var CsrfTokenManager
+     */
+    protected $tokenManager;
+    /**
+     * @var Session
+     */
+    protected $session;
+
+    protected function setUp(): void
     {
         parent::setUp();
-        $this->enableDemoMode();
+        self::bootKernel();
+
+        // Enable debug mode
+        $configurationMock = $this->getMockBuilder(Configuration::class)
+            ->setMethods(['get'])
+            ->disableOriginalConstructor()
+            ->disableAutoload()
+            ->getMock();
+
+        $values = [
+            ['_PS_MODE_DEMO_', null, null, true],
+            ['_PS_MODULE_DIR_', null, null, dirname(__DIR__, 3) . '/resources/modules/'],
+        ];
+
+        $configurationMock->method('get')
+            ->will($this->returnValueMap($values));
+
+        self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
+        $this->client = self::createClient();
+        $this->router = self::$kernel->getContainer()->get('router');
+        $this->tokenManager = self::$kernel->getContainer()->get('security.csrf.token_manager');
+        $this->session = self::$kernel->getContainer()->get('session');
     }
 
-    public function testSlipAction()
+    public function testSlipAction(): void
     {
         $this->client->request(
             'GET',
@@ -52,9 +94,9 @@ class DeliveryControllerTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
     }
 
-    public function testSlipActionWithInvalidData()
+    public function testSlipActionWithInvalidData(): void
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
+        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -62,10 +104,8 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'options' => [
-                        'number' => 'foo'
-                    ],
-                    '_token' => $token
+                    'number' => 'foo',
+                    '_token' => $token->getValue(),
                 ],
             ]
         );
@@ -74,12 +114,12 @@ class DeliveryControllerTest extends WebTestCase
             Response::HTTP_OK,
             $response->getStatusCode()
         );
-        $this->assertContains('This value is not valid.', $response->getContent());
+        $this->assertStringContainsString('This value is not valid.', $response->getContent());
     }
 
-    public function testSlipActionWithValidData()
+    public function testSlipActionWithValidData(): void
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('form');
+        $token = $this->tokenManager->getToken('form');
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -87,10 +127,8 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'options' => [
-                        'number' => '100'
-                    ],
-                    '_token' => $token
+                    'number' => '100',
+                    '_token' => $token->getValue(),
                 ],
             ]
         );
@@ -102,13 +140,13 @@ class DeliveryControllerTest extends WebTestCase
 
         $this->assertArrayHasKey(
             'success',
-            self::$kernel->getContainer()->get('session')->getFlashBag()->all()
+            $this->session->getFlashBag()->all()
         );
     }
 
-    public function testPdfActionWithInvalidData()
+    public function testPdfActionWithInvalidData(): void
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('slip_pdf_form');
+        $token = $this->tokenManager->getToken('slip_pdf_form');
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -116,10 +154,8 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'slip_pdf_form' => [
-                    'pdf' => [
-                        'date_from' => 'foo'
-                    ],
-                    '_token' => $token
+                    'date_from' => 'foo',
+                    '_token' => $token->getValue(),
                 ],
             ]
         );
@@ -130,14 +166,14 @@ class DeliveryControllerTest extends WebTestCase
         );
         $this->assertArrayHasKey(
             'error',
-            self::$kernel->getContainer()->get('session')->getFlashBag()->all()
+            $this->session->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 
-    public function testPdfActionWithEmptyData()
+    public function testPdfActionWithEmptyData(): void
     {
-        $token = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('slip_pdf_form');
+        $token = $this->tokenManager->getToken('slip_pdf_form');
         $this->client->request(
             'POST',
             $this->router->generate(
@@ -145,8 +181,7 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'slip_pdf_form' => [
-                    'pdf' => [],
-                    '_token' => $token
+                    '_token' => $token->getValue(),
                 ],
             ]
         );
@@ -158,8 +193,8 @@ class DeliveryControllerTest extends WebTestCase
 
         $this->assertArrayHasKey(
             'error',
-            self::$kernel->getContainer()->get('session')->getFlashBag()->all()
+            $this->session->getFlashBag()->all()
         );
-        $this->assertContains('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
+        $this->assertStringContainsString('/sell/orders/delivery-slips/?_token', $response->getTargetUrl());
     }
 }

@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.customer_message.command_handler.add_order_customer_message:
+    class: PrestaShop\PrestaShop\Adapter\CustomerService\CommandHandler\AddOrderCustomerMessageHandler
+    arguments:
+      - '@translator'
+      - '@validator'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand

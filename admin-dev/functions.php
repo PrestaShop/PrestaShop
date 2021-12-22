@@ -1,11 +1,12 @@
 <?php
 /**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -16,18 +17,17 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  */
 
 if (!defined('_PS_ADMIN_DIR_')) {
-    define('_PS_ADMIN_DIR_', getcwd());
+    define('_PS_ADMIN_DIR_', __DIR__);
 }
-require_once(_PS_ADMIN_DIR_.'/../images.inc.php');
+require_once _PS_ADMIN_DIR_.'/../images.inc.php';
 function bindDatepicker($id, $time)
 {
     if ($time) {
@@ -80,9 +80,9 @@ function includeDatepicker($id, $time = false)
 /**
  * Generate a new settings file, only transmitted parameters are updated
  *
- * @param string $baseUri Base URI
- * @param string $theme Theme name (eg. default)
- * @param array $array_db Parameters in order to connect to database
+ * @param string|null $base_urls Base URI
+ * @param string|null $theme Theme name (eg. default)
+ * @param array|null $array_db Parameters in order to connect to database
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
@@ -115,11 +115,13 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
         $content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
     }
     copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
-    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w')) {
+    if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'wb')) {
         fwrite($fd, $content);
         fclose($fd);
+
         return true;
     }
+
     return false;
 }
 
@@ -142,7 +144,8 @@ function displayDate($sql_date, $with_time = false)
  * @param int $id_category Start category
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
- * @param string $type Category type (products/cms)
+ * @param string $category_type Category type (products/cms)
+ * @param bool $home
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
@@ -198,6 +201,7 @@ function getPath($url_base, $id_category, $path = '', $highlight = '', $category
         if ($category->id == 1) {
             return substr($path, 0, strlen($path) - 3);
         }
+
         return getPath($url_base, $category->id_parent, $path, '', 'cms');
     }
 }
@@ -208,12 +212,13 @@ function getDirContent($path)
     if (is_dir($path)) {
         $d = dir($path);
         while (false !== ($entry = $d->read())) {
-            if ($entry{0} != '.') {
+            if ($entry[0] != '.') {
                 $content[] = $entry;
             }
         }
         $d->close();
     }
+
     return $content;
 }
 
@@ -222,6 +227,7 @@ function createDir($path, $rights)
     if (file_exists($path)) {
         return true;
     }
+
     return @mkdir($path, $rights);
 }
 
@@ -230,24 +236,6 @@ function checkPSVersion()
     $upgrader = new Upgrader();
 
     return $upgrader->checkPSVersion();
-}
-
-/**
- * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
- * @param string $string
- * @return string
- */
-function translate($string)
-{
-    Tools::displayAsDeprecated();
-
-    global $_LANGADM;
-    if (!is_array($_LANGADM)) {
-        return str_replace('"', '&quot;', $string);
-    }
-    $key = md5(str_replace('\'', '\\\'', $string));
-    $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
-    return str_replace('"', '&quot;', stripslashes($str));
 }
 
 /**
@@ -264,24 +252,25 @@ function checkingTab($tab)
     }
     $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
     if (!$row['id_tab']) {
-        if (isset(AdminTab::$tabParenting[$tab])) {
-            Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-        }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
+
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
-    if (!class_exists($tab, false) || !$row['id_tab']) {
+    if (!class_exists($tab, false)) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
+
         return false;
     }
-    $admin_obj = new $tab;
+    $admin_obj = new $tab();
     if (!$admin_obj->viewAccess() && ($admin_obj->table != 'employee' || Context::getContext()->employee->id != Tools::getValue('id_employee') || !Tools::isSubmit('updateemployee'))) {
         $admin_obj->_errors = array(Tools::displayError('Access denied.'));
         echo $admin_obj->displayErrors();
+
         return false;
     }
+
     return $admin_obj;
 }
 
@@ -297,11 +286,11 @@ function checkTabRights($id_tab)
     }
 
     if (isset($tab_accesses[(int)$id_tab]['view'])) {
-        return ($tab_accesses[(int)$id_tab]['view'] === '1');
+        return $tab_accesses[(int)$id_tab]['view'] === '1';
     }
+
     return false;
 }
-
 
 /**
  * Converts a simpleXML element into an array. Preserves attributes and everything.
@@ -412,7 +401,7 @@ function runAdminTab($tab, $ajax_mode = false)
 {
     $ajax_mode = (bool)$ajax_mode;
 
-    require_once(_PS_ADMIN_DIR_.'/init.php');
+    require_once _PS_ADMIN_DIR_.'/init.php';
     $cookie = Context::getContext()->cookie;
     if (empty($tab) && !count($_POST)) {
         $tab = 'AdminDashboard';
@@ -431,7 +420,7 @@ function runAdminTab($tab, $ajax_mode = false)
             $admin_obj->run();
         } else {
             if (!$ajax_mode) {
-                require_once(_PS_ADMIN_DIR_.'/header.inc.php');
+                require_once _PS_ADMIN_DIR_.'/header.inc.php';
             }
             $iso_user = Context::getContext()->language->id;
             $tabs = array();
@@ -483,7 +472,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
                     } else {
                         /* Filter memorization */
-                        if (isset($_POST) && !empty($_POST) && isset($admin_obj->table)) {
+                        if (!empty($_POST) && isset($admin_obj->table)) {
                             foreach ($_POST as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
@@ -497,7 +486,7 @@ function runAdminTab($tab, $ajax_mode = false)
                             }
                         }
 
-                        if (isset($_GET) && !empty($_GET) && isset($admin_obj->table)) {
+                        if (!empty($_GET) && isset($admin_obj->table)) {
                             foreach ($_GET as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
@@ -514,7 +503,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         $admin_obj->postProcess();
                         $admin_obj->displayErrors();
                         $admin_obj->display();
-                        include(_PS_ADMIN_DIR_.'/footer.inc.php');
+                        include _PS_ADMIN_DIR_.'/footer.inc.php';
                     }
                 } else {
                     if ($ajax_mode) {
@@ -530,8 +519,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
 
                         // we can display the correct url
-                        // die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
-                        die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
+                        die(json_encode(Translate::getAdminTranslation('Invalid security token')));
                     } else {
                         // If this is an XSS attempt, then we should only display a simple, secure page
                         if (ob_get_level() && ob_get_length() > 0) {

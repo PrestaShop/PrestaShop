@@ -4,42 +4,162 @@
 *.log
 npm-debug.log.*
 .sass-cache/
+*.swp
+*.swo
+.cache/
+
+# Cache
 /cache/*
-download/*
+!/cache/.htaccess
+!/cache/cachefs/index.php
+!/cache/deprecated.txt
+!/cache/index.php
+!/cache/purifier/index.php
+!/cache/push/activity
+!/cache/push/index.php
+!/cache/push/trends
+!/cache/sandbox/index.php
+!/cache/smarty/cache/index.php
+!/cache/smarty/compile/index.php
+!/cache/smarty/index.php
+!/cache/tcpdf/index.php
+/tests/Integration/.phpunit.result.cache
+
+# Download
+/download/*
+!/download/.htaccess
+!/download/index.php
+
+# Images
 /img/*
-/log/*
+!/img/.htaccess
+!/img/index.php
+!/img/404.gif
+!/img/app_icon.png
+!/img/bg_500.png
+!/img/bg_loader.png
+!/img/favicon.ico
+!/img/loader.gif
+!/img/loadingAnimation.gif
+!/img/logo.jpg
+!/img/logo.png
+!/img/logo_invoice.jpg
+!/img/logo_stores.png
+!/img/macFFBgHack.png
+!/img/prestashop-avatar.png
+!/img/prestashop@2x.png
+!/img/preston-login-wink@2x.png
+!/img/preston-login@2x.png
+!/img/questionmark.png
+!/img/genders/index.php
+!/img/admin/index.php
+!/img/c/index.php
+!/img/cms/index.php
+!/img/co/index.php
+!/img/e/index.php
+!/img/jquery-ui
+!/img/l/index.php
+!/img/m/index.php
+!/img/os/index.php
+!/img/p/index.php
+!/img/pr/index.php
+!/img/pr/default.jpg
+!/img/s/index.php
+!/img/scenes
+!/img/st/index.php
+!/img/su/index.php
+!/img/t/index.php
+!/img/tmp/index.php
+
+# Upload
 /upload/*
-vendor/*
-docs/phpdoc-sf/
-composer.lock
-tests/Selenium/errorShots/
-tests/Selenium/errorDumps/
-tests/resources/modules/
+!/upload/index.php
+!/upload/.htaccess
+
+/docs/phpdoc-sf/
 *.hot-update.js
 *.hot-update.json
 
-admin-dev/autoupgrade/*
-admin-dev/backups/*
-admin-dev/import/*
+tests-legacy/resources/modules/followup/
+tests-legacy/resources/modules/ps_emailalerts/
+tests-legacy/resources/modules/ps_emailsubscription/mails/
+tests-legacy/resources/modules/referralprogram/
 
-admin-dev/import/*
-!admin-dev/import/.htaccess
-!admin-dev/import/index.php
+# themes listed in the modules_to_hook section of the theme.yml
+tests-legacy/resources/modules/blockreassurance
+tests-legacy/resources/modules/ps_contactinfo
+tests-legacy/resources/modules/ps_languageselector
+tests-legacy/resources/modules/ps_currencyselector
+tests-legacy/resources/modules/ps_customersignin
+tests-legacy/resources/modules/ps_shoppingcart
+tests-legacy/resources/modules/ps_mainmenu
+tests-legacy/resources/modules/ps_searchbar
+tests-legacy/resources/modules/ps_imageslider
+tests-legacy/resources/modules/ps_customtext
+tests-legacy/resources/modules/ps_socialfollow
+tests-legacy/resources/modules/ps_linklist
+tests-legacy/resources/modules/ps_customeraccountlinks
+tests-legacy/resources/modules/ps_categorytree
+tests-legacy/resources/modules/ps_facetedsearch
+tests-legacy/resources/modules/ps_sharebuttons
 
-admin-dev/export/*
-!admin-dev/export/.htaccess
-!admin-dev/export/index.php
+# Installed with test data maybe via API push
+tests-legacy/resources/modules/ps_reminder
+
+tests/Resources/img/*
+tests/Resources/img/tmp/*
+tests/Resources/img/tmp/.gitkeep
+!tests/Resources/download/.gitkeep
+tests/Resources/download/*
+tests/Unit/.phpunit.result.cache
+
+/admin-dev/autoupgrade/*
+!/admin-dev/autoupgrade/index.php
+!/admin-dev/autoupgrade/backup/index.php
+
+/admin-dev/backups/*
+!/admin-dev/backups/.htaccess
+
+/admin-dev/import/*
+!/admin-dev/import/.htaccess
+!/admin-dev/import/index.php
+
+/admin-dev/export/*
+!/admin-dev/export/.htaccess
+!/admin-dev/export/index.php
+
+# Downloaded RTL files
+/admin-dev/themes/default/css/bundle/default_rtl.css
+/admin-dev/themes/default/css/bundle/shared_rtl.css
+/admin-dev/themes/default/css/font_rtl.css
+/admin-dev/themes/default/css/overrides_rtl.css
+/admin-dev/themes/default/css/vendor/font-awesome/font-awesome_rtl.css
+/admin-dev/themes/default/css/vendor/nv.d3_rtl.css
+/admin-dev/themes/default/css/vendor/titatoggle-min_rtl.css
+/admin-dev/themes/default/public/theme_rtl.css
+/admin-dev/themes/default/public/*
+/admin-dev/themes/new-theme/css/module/drop_rtl.css
+/admin-dev/themes/new-theme/css/right-sidebar_rtl.css
+/admin-dev/themes/new-theme/public/*
+!/admin-dev/themes/new-theme/public/theme.rtlfix
+!/admin-dev/themes/default/public/theme.rtlfix
 
 themes/*/cache/*
+themes/core.js.map
+themes/core.js
+
+# Install folder
+/install-dev/theme/custom/*
+!/install-dev/theme/custom/.gitkeep
 
 # Config
 
+config/defines_custom.inc.php
 config/settings.inc.php
 config/settings.old.php
 config/xml/*
 config/themes/*
 !config/xml/themes/default.xml
-tests/Selenium/settings.js
 themes/*/config/settings_*.json
 app/config/parameters.old.yml
 app/config/config.php
@@ -50,8 +170,10 @@ modules/*
 override/*
 themes/*/
 !themes/classic
+themes/classic/assets
 !themes/_core
 !themes/_libraries
+themes/classic/assets/css/*_rtl.css
 
 # Vendors and dependencies
 
@@ -64,8 +186,10 @@ php-cs-fixer
 # Translations and emails templates
 
 translations/*
+!translations/default
 mails/*
-!mails/en/
+!mails/themes/
+!mails/_partials/
 themes/default-bootstrap/lang/*
 themes/default-bootstrap/modules/*/translations/*.php
 themes/default-bootstrap/mails/*
@@ -82,8 +206,7 @@ themes/default-bootstrap/modules/*/mails/*
 
 /bin/
 /.web-server-pid
-/app/Resources/translations/*
-!/app/Resources/translations/default
+/app/Resources/geoip/GeoLite2-City.mmdb
 /app/config/parameters.yml
 /app/config/parameters.php
 /build/
@@ -99,6 +222,9 @@ themes/default-bootstrap/modules/*/mails/*
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!/var/modules
+/var/modules/*
+!/var/modules/.gitkeep
 /vendor/
 /web/bundles/
 
@@ -210,8 +336,7 @@ crashlytics.properties
 crashlytics-build.properties
 
 ### NetBeans ###
-nbproject/private/
-/build/
+nbproject/
 nbbuild/
 dist/
 nbdist/
@@ -228,3 +353,6 @@ nb-configuration.xml
 ### Release creation ###
 tools/build/releases/*
 !tools/build/releases/.gitkeep
+
+## Docker configuration
+install.lock

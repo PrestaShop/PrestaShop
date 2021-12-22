@@ -1,10 +1,11 @@
 {**
- * 2007-2018 PrestaShop
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
  * NOTICE OF LICENSE
  *
  * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
+ * that is bundled with this package in the file LICENSE.md.
  * It is also available through the world-wide-web at this URL:
  * https://opensource.org/licenses/OSL-3.0
  * If you did not receive a copy of the license and are unable to
@@ -15,12 +16,11 @@
  *
  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
  * versions in the future. If you wish to customize PrestaShop for your
- * needs please refer to http://www.prestashop.com for more information.
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
  *
- * @author    PrestaShop SA <contact@prestashop.com>
- * @copyright 2007-2018 PrestaShop SA
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- * International Registered Trademark & Property of PrestaShop SA
  *}
 <div id="login-panel">
 	<div id="login-header">
@@ -81,7 +81,7 @@
 								{l s='Stay logged in' d='Admin.Login.Feature'}
 							</label>
 						</div>
-						<a href="#" class="show-forgot-password pull-right" >
+						<a href="#" id="forgot-password-link" class="show-forgot-password pull-right" >
 							{l s='I forgot my password' d='Admin.Login.Feature'}
 						</a>
 					</div>
@@ -133,7 +133,7 @@
 							<i class="icon-caret-left"></i>
 							{l s='Cancel' d='Admin.Actions'}
 						</button>
-						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
+						<button id="reset-password-button" class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
 							{l s='Send reset link' d='Admin.Login.Feature'}
 						</button>
@@ -164,10 +164,11 @@
 		</div>
 		{/if}
 	</div>
+    <p class='text-center'><i class="icon-caret-left"></i> {l s='Back to' d='Admin.Actions'} <a href='{$homeUrl}'>{$shop_name}</a></p>
 	{hook h="displayAdminLogin"}
 	<div id="login-footer">
 		<p class="text-center text-muted">
-			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
+			<a href="https://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
 		</p>
@@ -180,9 +181,6 @@
 			</a>
 			<a class="link-social link-github _blank" href="https://www.prestashop.com/github" title="Github">
 				<i class="icon-github"></i>
-			</a>
-			<a class="link-social link-google _blank" href="https://plus.google.com/+prestashop/" title="Google">
-				<i class="icon-google-plus"></i>
 			</a>
 		</p>
 	</div>
