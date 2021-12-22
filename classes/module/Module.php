@@ -233,6 +233,11 @@ abstract class ModuleCore implements ModuleInterface
 
     public static $hosted_modules_blacklist = ['autoupgrade'];
 
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+    }
+
     public static function setContextInstanceForTesting(Context $context)
     {
         /** @var Module $module */
