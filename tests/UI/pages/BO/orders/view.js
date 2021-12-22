@@ -206,7 +206,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isUpdateStatusButtonDisabled(page) {
-    return this.elementVisible(page, `${this.updateStatusButton},disabled`, 1000);
+    return this.elementVisible(page, `${this.updateStatusButton}[disabled]`, 1000);
   }
 
   /**
@@ -667,7 +667,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
+    return this.elementVisible(page, `${this.addProductAddButton}[disabled]`, 1000);
   }
 
   /**
