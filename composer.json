@@ -185,30 +185,30 @@
     ],
     "phpunit-legacy": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit.xml"
     ],
     "phpunit-endpoints": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit-endpoints.xml"
     ],
     "unit-tests": [
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
     ],
     "integration-tests": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml"
     ],
     "phpunit-admin": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-admin.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit-admin.xml"
     ],
     "phpunit-sf": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/sf-tests.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/sf-tests.xml"
     ],
     "phpunit-controllers": [
       "@composer create-test-db",
-      "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/old-controllers.xml"
+      "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/old-controllers.xml"
     ],
     "integration-behaviour-tests": [
       "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
