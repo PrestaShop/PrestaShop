@@ -198,11 +198,11 @@
         ],
         "integration-tests": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml"
         ],
         "phpunit-endpoints": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
@@ -216,7 +216,7 @@
             "@composer integration-behaviour-tests"
         ],
         "unit-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
         ]
     },
     "scripts-descriptions": {
