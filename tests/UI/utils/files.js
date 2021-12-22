@@ -64,7 +64,6 @@ module.exports = {
     }
 
     const pageTexts = await Promise.all(pageTextPromises);
-    console.log(pageTexts.join(' '));
 
     return (pageTexts.join(' ').indexOf(text) !== -1);
   },
