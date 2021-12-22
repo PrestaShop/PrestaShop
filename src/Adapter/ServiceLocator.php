@@ -47,6 +47,11 @@ class ServiceLocator
         self::$service_container = $container;
     }
 
+    public static function getContainer(): Container
+    {
+        return self::$service_container;
+    }
+
     /**
      * Get a service depending on its given $serviceName.
      *

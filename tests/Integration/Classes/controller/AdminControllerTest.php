@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -54,6 +55,11 @@ class AdminControllerTest extends TestCase
      */
     private $context;
 
+    /**
+     * @var Container
+     */
+    private $container;
+
     protected function setUp(): void
     {
         $this->declareRequiredConstants();
@@ -62,12 +68,14 @@ class AdminControllerTest extends TestCase
         $this->context = Context::getContext();
         Context::setInstanceForTesting($this->getMockContext());
 
+        $this->container = ServiceLocator::getContainer();
         ServiceLocator::setServiceContainerInstance($this->getMockLegacyContainer());
     }
 
     protected function tearDown(): void
     {
         Context::setInstanceForTesting($this->context);
+        ServiceLocator::setServiceContainerInstance($this->container);
     }
 
     public static function tearDownAfterClass(): void

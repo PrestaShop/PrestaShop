@@ -62,6 +62,11 @@ class TaxRulesTaxManagerTest extends TestCase
      */
     private $configuration;
 
+    /**
+     * @var Container
+     */
+    private $container;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -74,6 +79,7 @@ class TaxRulesTaxManagerTest extends TestCase
 
         Db::setInstanceForTesting($mockDatabase);
 
+        $this->container = ServiceLocator::getContainer();
         $container = new Container();
         ServiceLocator::setServiceContainerInstance($container);
 
@@ -97,6 +103,12 @@ class TaxRulesTaxManagerTest extends TestCase
             '\\PrestaShop\\PrestaShop\\Core\\ConfigurationInterface',
             $this->configuration
         );
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        ServiceLocator::setServiceContainerInstance($this->container);
     }
 
     public function testGetTaxCalculatorShouldUseFirstComputationMethodFromTaxes()

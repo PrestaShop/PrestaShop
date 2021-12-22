@@ -33,6 +33,18 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class ModuleTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        Module::resetStaticCache();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        Module::resetStaticCache();
+    }
+
     /**
      * @return array a list of modules to control override features
      */
@@ -83,7 +95,6 @@ class ModuleTest extends TestCase
      */
     public function testGetRightListForModule(): void
     {
-        define('STDIN', true);
         ModuleManagerBuilder::getInstance()->build()->install('bankwire');
         $module = Module::getInstanceByName('bankwire');
         Cache::clean('hook_alias');
