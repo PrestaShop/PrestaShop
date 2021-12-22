@@ -1,8 +1,8 @@
-name: Integration tests
+name: Behaviour tests
 on: [ push, pull_request ]
 jobs:
   integration:
-    name: Integration tests
+    name: Behaviour tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -65,7 +65,7 @@ jobs:
       - name: Prepare PrestaShop parameters
         run: cp .github/workflows/phpunit/parameters.php app/config/parameters.php
 
-      - name: Run integration-tests
-        run: composer run-script integration-tests --timeout=0
+      - name: Run integration-behaviour-tests
+        run: composer run-script integration-behaviour-tests --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
