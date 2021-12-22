@@ -202,6 +202,14 @@ class ShopCore extends ObjectModel
         Shop::$initialized = true;
     }
 
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        static::$shops = null;
+        static::$feature_active = null;
+        Cache::clean('Shop::*');
+    }
+
     public function setUrl()
     {
         $cache_id = 'Shop::setUrl_' . (int) $this->id;
