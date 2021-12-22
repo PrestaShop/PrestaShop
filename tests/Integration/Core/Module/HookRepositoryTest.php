@@ -59,6 +59,12 @@ class HookRepositoryTest extends KernelTestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        Context::setInstanceForTesting($this->context);
+    }
+
     protected function getMockContext(): Context
     {
         $mockContext = $this->getMockBuilder(Context::class)->getMock();
