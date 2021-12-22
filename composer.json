@@ -143,9 +143,12 @@
     },
     "config": {
         "allow-plugins": {
+            "behat/behat": true,
             "composer/installers": true,
             "composer/package-versions-deprecated": true,
-            "ergebnis/composer-normalize": true
+            "ergebnis/composer-normalize": true,
+            "phpunit/phpunit": true,
+            "symfony/phpunit-bridge": true
         },
         "platform": {
             "php": "7.2.5"
