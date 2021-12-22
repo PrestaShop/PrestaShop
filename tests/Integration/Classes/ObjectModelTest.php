@@ -64,16 +64,34 @@ class ObjectModelTest extends TestCase
      */
     private $secondShopId;
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::cleanDatabase();
+
+        static::installTestableObjectTables();
+        static::installLanguages();
+        static::installShops();
+        Shop::resetStaticCache();
+        Language::resetStaticCache();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::cleanDatabase();
+        Shop::resetStaticCache();
+        Language::resetStaticCache();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Because if process isolation we cannot rely on setupBeforeClass because it is called on each run, so we have
-        // to initialize our test data during setup which implies checking at each time if the fixtures data have been
-        // created or not
-        $this->installTestableObjectTables();
-        $this->installLanguages();
-        $this->installShops();
+        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
+        $this->secondLanguageId = (int) Language::getIdByIso('fr');
+        $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
+        $this->secondShopId = Shop::getIdByName('Shop 2');
     }
 
     public function testAdd(): void
@@ -604,25 +622,6 @@ class ObjectModelTest extends TestCase
     }
 
     /**
-     * @depends testPartialMultiShopUpdate
-     *
-     * Since we can't properly use setUpBEforeClass and setUpAfterClass we cannot clear our data properly so we cheat
-     * on rely on the "depends" annotation so that all tests happen in the expected sequence when they all finished we
-     * know everything was tested and we can clear the database.
-     */
-    public function testCleanUp(): void
-    {
-        $db = Db::getInstance();
-        $db->execute(sprintf('DROP TABLE %stestable_object', _DB_PREFIX_));
-        $db->execute(sprintf('DROP TABLE %stestable_object_lang', _DB_PREFIX_));
-        $db->execute(sprintf('DROP TABLE %stestable_object_shop', _DB_PREFIX_));
-        DatabaseDump::restoreAllTables();
-
-        // Just to make PHPUnit happy ^^
-        $this->assertTrue(true);
-    }
-
-    /**
      * @param TestableObjectModel $object
      * @param array $expectedProperties
      */
@@ -669,7 +668,16 @@ class ObjectModelTest extends TestCase
      * Following are fixtures installation functions
      */
 
-    private function installTestableObjectTables(): void
+    private static function cleanDatabase(): void
+    {
+        $db = Db::getInstance();
+        $db->execute(sprintf('DROP TABLE IF EXISTS %stestable_object', _DB_PREFIX_));
+        $db->execute(sprintf('DROP TABLE IF EXISTS %stestable_object_lang', _DB_PREFIX_));
+        $db->execute(sprintf('DROP TABLE IF EXISTS %stestable_object_shop', _DB_PREFIX_));
+        DatabaseDump::restoreAllTables();
+    }
+
+    private static function installTestableObjectTables(): void
     {
         $testableObjectSqlFile = dirname(__DIR__, 2) . '/Resources/sql/install_testable_object.sql';
         $sqlRequest = file_get_contents($testableObjectSqlFile);
@@ -686,36 +694,18 @@ class ObjectModelTest extends TestCase
         $db->execute($sqlRequest);
     }
 
-    private function installLanguages(): void
+    private static function installLanguages(): void
     {
-        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
-        $this->secondLanguageId = (int) Language::getIdByIso('fr');
-        if ($this->secondLanguageId) {
-            $this->cleanUndesiredLanguages();
-
-            return;
-        }
-
         $language = new Language();
         $language->name = 'fr';
         $language->iso_code = 'fr';
         $language->locale = 'fr-FR';
         $language->language_code = 'fr-FR';
         $language->add();
-        $this->secondLanguageId = (int) $language->id;
-        $this->cleanUndesiredLanguages();
     }
 
-    private function installShops(): void
+    private static function installShops(): void
     {
-        $this->defaultShopId = (int) Configuration::get('PS_SHOP_DEFAULT');
-        $this->secondShopId = Shop::getIdByName('Shop 2');
-        if ($this->secondShopId) {
-            $this->cleanUndesiredShops();
-
-            return;
-        }
-
         $shop = new Shop();
         $shop->name = 'Shop 2';
         $shop->id_category = 1;
@@ -723,42 +713,5 @@ class ObjectModelTest extends TestCase
         $shop->domain = Configuration::get('PS_SHOP_DOMAIN');
         $shop->physical_uri = '/';
         $shop->add();
-        $this->secondShopId = (int) $shop->id;
-        $this->cleanUndesiredShops();
-    }
-
-    /**
-     * We need to remove extra languages because they would mess with the expected content,
-     * but we don't want to use DatabaseDump::restoredDB because all the tests are process
-     * isolated and it would be dumped on each test which would take too long.
-     */
-    private function cleanUndesiredLanguages(): void
-    {
-        // Clean undesired languages
-        $db = Db::getInstance();
-        $db->execute(sprintf(
-            'DELETE FROM %slang WHERE id_lang != %d AND id_lang != %d',
-            _DB_PREFIX_,
-            $this->defaultLanguageId,
-            $this->secondLanguageId
-        ));
-        Language::resetCache();
-    }
-
-    /**
-     * We need to remove extra shops because they would mess with the expected content,
-     * but we don't want to use DatabaseDump::restoredDB because all the tests are process
-     * isolated and it would be dumped on each test which would take too long.
-     */
-    private function cleanUndesiredShops(): void
-    {
-        // Clean undesired shops
-        $db = Db::getInstance();
-        $db->execute(sprintf(
-            'DELETE FROM %sshop WHERE id_shop != %d AND id_shop != %d',
-            _DB_PREFIX_,
-            $this->defaultShopId,
-            $this->secondShopId
-        ));
     }
 }
