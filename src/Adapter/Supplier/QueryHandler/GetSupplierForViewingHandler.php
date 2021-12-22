@@ -180,7 +180,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
     private function findProductSupplierCombinations(Product $product, Supplier $supplier, LanguageId $languageId): array
     {
         $productCombinations = $product->getAttributeCombinations($languageId->getValue());
-        if (!$productCombinations) {
+        if (empty($productCombinations)) {
             return [];
         }
 
