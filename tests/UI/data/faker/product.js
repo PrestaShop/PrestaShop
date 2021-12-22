@@ -72,7 +72,7 @@ class ProductData {
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
-      ? faker.random.number({min: 10, max: 20})
+      ? faker.random.number({min: 1, max: 5})
       : productToCreate.ecoTax;
 
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
