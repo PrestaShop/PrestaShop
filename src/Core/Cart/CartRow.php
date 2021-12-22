@@ -41,13 +41,6 @@ use PrestaShop\PrestaShop\Adapter\Tools;
  */
 class CartRow
 {
-
-    /**
-     * Following PS 1.6 behaviour, sequential % discounts should be applied to initial price, rather than 
-     * to already discounted by previous rules 
-     */
-    const APPLY_PERCENT_TO_INITIAL_PRICE = true;
-
     /**
      * row round mode by item.
      */
@@ -483,18 +476,8 @@ class CartRow
         if ($percent < 0 || $percent > 100) {
             throw new \Exception('Invalid percentage discount given: ' . $percent);
         }
-
-        if (self::APPLY_PERCENT_TO_INITIAL_PRICE) {
-            $rowData              = $this->getRowData();
-            $quantity             = (int) $rowData['cart_quantity'];
-            $discountTaxIncluded = $this->getInitialUnitPrice()->getTaxIncluded() * $quantity * $percent / 100;
-            $discountTaxExcluded = $this->getInitialUnitPrice()->getTaxExcluded() * $quantity * $percent / 100;
-        }
-        else {
-            $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
-            $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
-        }
-
+        $discountTaxIncluded = $this->finalTotalPrice->getTaxIncluded() * $percent / 100;
+        $discountTaxExcluded = $this->finalTotalPrice->getTaxExcluded() * $percent / 100;
         $amount = new AmountImmutable($discountTaxIncluded, $discountTaxExcluded);
         $this->applyFlatDiscount($amount);
 
