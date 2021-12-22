@@ -90,5 +90,4 @@ Feature: Update product status from BO (Back Office)
       | locale     | value              |
       | en-US      | photo of funny mug |
     When I enable product "product4"
-    Then I should get no error
     And product "product4" should be enabled
