@@ -38,7 +38,7 @@ class LanguageTest extends TestCase
     {
         parent::setUp();
 
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreAllTables();
     }
 
     public function testGetIdByIso()

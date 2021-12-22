@@ -74,6 +74,6 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
     private static function restoreTestDB(): void
     {
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreAllTables();
     }
 }

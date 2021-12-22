@@ -38,7 +38,7 @@ class CurrencyTest extends TestCase
     {
         parent::setUp();
 
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreAllTables();
     }
 
     public function testGetIdByIsoCode(): void
