@@ -157,6 +157,7 @@ class GuestCore extends ObjectModel
     protected function getOs($userAgent)
     {
         $osArray = [
+            'Windows 11' => 'Windows NT 11',
             'Windows 10' => 'Windows NT 10',
             'Windows 8.1' => 'Windows NT 6.3',
             'Windows 8' => 'Windows NT 6.2',

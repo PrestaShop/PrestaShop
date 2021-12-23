@@ -22,6 +22,9 @@
     <operating_system id="Windows_10">
       <name>Windows 10</name>
     </operating_system>
+    <operating_system id="Windows_11">
+      <name>Windows 11</name>
+    </operating_system>
     <operating_system id="MacOsX">
       <name>MacOsX</name>
     </operating_system>
