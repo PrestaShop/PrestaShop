@@ -461,7 +461,7 @@ class AdminStoresControllerCore extends AdminController
             ],
             'PS_SHOP_DETAILS' => [
                 'title' => $this->trans('Company details', [], 'Admin.Shopparameters.Feature'),
-                'hint' => $this->trans('Company's registration details (e.g. DNI, VAT, SIRET, RCS, etc.).', [], 'Admin.Shopparameters.Help'),
+                'hint' => $this->trans('Company\'s registration details (e.g. DNI, VAT, SIRET, RCS, etc.).', [], 'Admin.Shopparameters.Help'),
                 'validation' => 'isGenericName',
                 'type' => 'textarea',
                 'cols' => 30,
