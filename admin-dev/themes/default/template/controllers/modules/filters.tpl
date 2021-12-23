@@ -52,7 +52,6 @@
           {foreach from=$list_modules_authors key=module_author item=status}
             <option value="authorModules[{$module_author}]" {if $status eq "selected"}selected{/if}>{$module_author|truncate:20:'...'}</option>
           {/foreach}
-          <!-- <option value="otherModules" {if $showTypeModules eq 'otherModules'}selected="selected"{/if}>{l s='Other Modules'}</option> -->
         </select>
       </div>
     </div>
