@@ -8,8 +8,9 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 const {getDateFormat} = require('@utils/date');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -21,10 +22,6 @@ const editMerchandiseReturnsPage = require('@pages/BO/customerService/merchandis
 // Import FO mages
 const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-const checkoutPage = require('@pages/FO/checkout');
 const myAccountPage = require('@pages/FO/myAccount');
 const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 const orderDetailsPage = require('@pages/FO/myAccount/orderDetails');
@@ -44,6 +41,14 @@ let orderID = 1;
 let trackingNumber = 1;
 const today = getDateFormat('mm/dd/yyyy');
 
+// New order by customer data
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
 /*
 Create order in FO
 Enable merchandise returns and check 'Return products' button
@@ -57,6 +62,9 @@ Check the new status on BO and FO
 Disable merchandise returns
  */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
+  // Pre-condition - Create order by default customer
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -65,82 +73,6 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });
-
-  describe('Create order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      // Go to FO and change language
-      await homePage.goToFo(page);
-
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      // Go to home page
-      await foLoginPage.goToHomePage(page);
-
-      // Go to the first product page
-      await homePage.goToProductPage(page, 1);
-
-      // Add the product to the cart
-      await productPage.addProductToTheCart(page);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
   });
 
   describe('Enable merchandise returns', async () => {
@@ -238,6 +170,23 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
+
+      await homePage.goToLoginPage(page);
+
+      const pageTitle = await foLoginPage.getPageTitle(page);
+      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+    });
+
+    it('should sign in with customer credentials', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+
+      await foLoginPage.customerLogin(page, DefaultCustomer);
+      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
 
     it('should go to account page', async function () {
