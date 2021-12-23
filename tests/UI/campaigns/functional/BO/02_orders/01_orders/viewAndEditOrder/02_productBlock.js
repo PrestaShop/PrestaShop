@@ -8,6 +8,8 @@ const testContext = require('@utils/testContext');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
+const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -18,14 +20,6 @@ const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
-const customersPage = require('@pages/BO/customers');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import faker data
 const CustomerFaker = require('@data/faker/customer');
@@ -45,6 +39,14 @@ let page;
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
 
+// New order by guest data
+const orderData = {
+  customer: customerData,
+  product: 4,
+  productQuantity: 1,
+  address: addressData,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
 const productOutOfStockAllowed = new ProductFaker({
   name: 'Out of stock allowed',
   type: 'Standard product',
@@ -144,7 +146,7 @@ const newCartRuleData = new CartRuleFaker(
     product: productWithCartRule.name,
   },
 );
-const productQuantity = 0;
+
 const newQuantity = 2;
 const newPrice = 25;
 let productNumber = 0;
@@ -181,6 +183,9 @@ Post-condition:
 - Delete cart rule
 */
 describe('BO - Orders - View and edit order : Check product block in view order page', async () => {
+  // Pre-condition: Create order by guest
+  createOrderByGuestTest(orderData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -191,74 +196,12 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should go to FO page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-    await foHomePage.goToFo(page);
-    await foHomePage.changeLanguage(page, 'en');
-
-    const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
   });
 
-  // Pre-condition - Create order by guest
-  describe('Create order by guest in FO', async () => {
-    it('should add product to cart and proceed to checkout', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      await foHomePage.goToHomePage(page);
-
-      // Go to the fourth product page
-      await foHomePage.goToProductPage(page, 4);
-
-      // Add the created product to the cart
-      await foProductPage.addProductToTheCart(page, productQuantity);
-
-      // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
-
-      // Go to checkout page
-      const isCheckoutPage = await foCheckoutPage.isCheckoutPage(page);
-      await expect(isCheckoutPage).to.be.true;
-    });
-
-    it('should fill guest personal information', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setPersonalInformation', baseContext);
-
-      const isStepPersonalInfoCompleted = await foCheckoutPage.setGuestPersonalInformation(page, customerData);
-      await expect(isStepPersonalInfoCompleted, 'Step personal information is not completed').to.be.true;
-    });
-
-    it('should fill address form and go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'setAddressStep', baseContext);
-
-      const isStepAddressComplete = await foCheckoutPage.setAddress(page, addressData);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should validate the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'validateOrder', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-
-      // Payment step - Choose payment step
-      await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-      const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-
-      // Check the confirmation message
-      await expect(cardTitle).to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
-      productNumber += 1;
-    });
-  });
-
-  // Pre-condition - Create 9 products, Enable ecoTax, Create cart rule
-  describe('Create 9 products in BO', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
+  // Pre-condition: Enable EcoTax
+  describe('PRE-TEST: Enable ecoTax', async () => {
     it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
 
@@ -276,7 +219,10 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       const textResult = await taxesPage.enableEcoTax(page, true);
       await expect(textResult).to.be.equal('Update successful');
     });
+  });
 
+  // Pre-condition: Create 9 products, Enable ecoTax, Create cart rule
+  describe('PRE-TEST: Create 9 products in BO', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
@@ -420,7 +366,6 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
       const textResult = await viewOrderPage.deleteProduct(page, 1);
       await expect(textResult).to.contains(viewOrderPage.successfulDeleteProductMessage);
-      productNumber -= 1;
     });
 
     it('should check number of products', async function () {
@@ -433,7 +378,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     describe('Add \'Simple product\' 2 times and check the error message', async () => {
       it(`should search for the product '${simpleProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchSimpleProduct1', baseContext);
+
         await viewOrderPage.searchProduct(page, simpleProduct.name);
+
         const result = await viewOrderPage.getSearchedProductDetails(page);
         await Promise.all([
           expect(result.stockLocation).to.equal(simpleProduct.stockLocation),
@@ -881,45 +828,11 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // Post-condition - Delete the created customer
-  describe('Delete the created customer', async () => {
-    it('should go \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+  // Post-condition: Delete the created customer
+  deleteCustomerTest(customerData, baseContext);
 
-      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it(`should filter list by email': '${customerData.email}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
-
-      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
-
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textResult).to.contains(customerData.email);
-    });
-
-    it('should delete customer and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
-
-      const deleteTextResult = await customersPage.deleteCustomer(page, 1);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
-
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.above(0);
-    });
-  });
-
-  // Post-condition - Delete the created products
-  describe('Delete the created products', async () => {
+  // Post-condition: Delete the created products
+  describe('POST-TEST: Delete the created products', async () => {
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
 
@@ -955,8 +868,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // Post-condition - Delete cart rule
-  describe('Delete the created cart rule', async () => {
+  // Post-condition: Delete cart rule
+  describe('POST-TEST: Delete the created cart rule', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage2', baseContext);
 
@@ -978,8 +891,8 @@ describe('BO - Orders - View and edit order : Check product block in view order 
     });
   });
 
-  // Post-condition - Disable EcoTax
-  describe('Disable Eco tax', async () => {
+  // Post-condition: Disable EcoTax
+  describe('POST-TEST: Disable EcoTax', async () => {
     it('should go to \'International > Taxes\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage2', baseContext);
 
