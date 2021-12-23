@@ -3,7 +3,7 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 const {createAccountTest, createAddressTest} = require('@commonTests/FO/createAccount');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
@@ -76,7 +76,6 @@ Post-condition
 - Delete the created customer
 */
 describe('BO - Orders - View and edit order : Check and edit customer block', async () => {
-
   // Pre-Condition: create customer
   createAccountTest(customerData, baseContext);
 

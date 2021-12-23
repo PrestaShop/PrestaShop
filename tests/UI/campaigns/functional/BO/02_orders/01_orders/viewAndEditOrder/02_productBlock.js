@@ -6,7 +6,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
 const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');

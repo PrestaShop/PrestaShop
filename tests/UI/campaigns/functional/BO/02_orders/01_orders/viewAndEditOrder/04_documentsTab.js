@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
