@@ -44,11 +44,6 @@ class CartRuleTest extends TestCase
     public $dummyCustomer;
 
     /**
-     * @var CartRule
-     */
-    public $dummyCartRule;
-
-    /**
      * @var Configuration
      */
     public $configuration;
@@ -60,7 +55,12 @@ class CartRuleTest extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreTables(
+            [
+                'cart_rule',
+                'cart_rule_lang',
+            ]
+        );
     }
 
     protected function setUp(): void
@@ -74,7 +74,7 @@ class CartRuleTest extends TestCase
 
     public function testGetCartRulesForCustomer(): void
     {
-        $this->dummyCartRule = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+        $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
 
         $customerCartRules = CartRule::getCustomerCartRules(
             $this->defaultLanguageId,
@@ -86,7 +86,7 @@ class CartRuleTest extends TestCase
 
     public function testGetAllCartRulesForCustomerEvenDisabled(): void
     {
-        $this->dummyCartRule = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
+        $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
 
         $customerCartRules = CartRule::getCustomerCartRules(
             $this->defaultLanguageId,
@@ -103,7 +103,7 @@ class CartRuleTest extends TestCase
 
     public function testGetAllCartRulesForCustomerWithDedicatedMethod(): void
     {
-        $this->dummyCartRule = $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
+        $this->createDummyCartRule(true, (int) $this->dummyCustomer->id);
 
         $customerCartRules = CartRule::getAllCustomerCartRules(
             (int) $this->dummyCustomer->id
@@ -114,7 +114,7 @@ class CartRuleTest extends TestCase
 
     public function testGetAllCartRulesForCustomerWithDedicatedMethodEvenDisabled(): void
     {
-        $this->dummyCartRule = $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
+        $this->createDummyCartRule(false, (int) $this->dummyCustomer->id);
 
         $customerCartRules = CartRule::getAllCustomerCartRules(
             (int) $this->dummyCustomer->id
