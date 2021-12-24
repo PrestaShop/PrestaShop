@@ -167,9 +167,12 @@ abstract class AdminStatsTabControllerCore extends AdminController
         return $tpl->fetch();
     }
 
-    public function checkModulesNames($a, $b)
+    public function checkModulesNames($a, $b): int
     {
-        return (bool) ($a['displayName'] > $b['displayName']);
+        if ($a['displayName'] == $b['displayName']) {
+            return 0;
+        }
+        return ($a['displayName'] < $b['displayName']) ? -1 : 1;
     }
 
     protected function getModules()
