@@ -1835,8 +1835,17 @@ class ToolsCore
         return strlen($str);
     }
 
+    /**
+     * @deprecated Since 8.0.0
+     */
     public static function stripslashes($string)
     {
+        @trigger_error(
+            'Tools::stripslashes() is deprecated since version 8.0.0.'
+            . 'Use PHP\'s stripslashes instead.',
+            E_USER_DEPRECATED
+        );
+
         return $string;
     }
 
