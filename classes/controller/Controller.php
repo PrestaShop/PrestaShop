@@ -372,7 +372,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Sets page header display.
+     * Sets page footer display.
      *
      * @param bool $display
      */
