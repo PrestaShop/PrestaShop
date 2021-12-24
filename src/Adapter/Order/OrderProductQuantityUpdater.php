@@ -511,7 +511,7 @@ class OrderProductQuantityUpdater
     {
         if (!Db::getInstance()->execute(
             'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
-            WHERE `id_customization` = '.(int)$id_customization)) {
+            WHERE `id_customization` = ' . (int) $id_customization)) {
             throw new OrderException('Could not delete customization from database.');
         }
     }
