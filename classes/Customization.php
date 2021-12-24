@@ -277,6 +277,8 @@ class CustomizationCore extends ObjectModel
     }
 
     /**
+     * @deprecated 8.0.0 This was needed to validate order canceling
+     *
      * Count quantity by Cart.
      *
      * @param int $idCart Cart ID
