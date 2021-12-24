@@ -1633,6 +1633,8 @@ class CartCore extends ObjectModel
 
             if ((int) $id_customization) {
                 $result_add &= Db::getInstance()->update('customization', [
+                    'id_product_attribute' => (int) $id_product_attribute,
+                    'id_address_delivery' => (int) $id_address_delivery,
                     'in_cart' => 1,
                 ], '`id_customization` = ' . (int) $id_customization);
             }
