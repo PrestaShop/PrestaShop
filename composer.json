@@ -226,7 +226,11 @@
     "platform": {
       "php": "7.1.3"
     },
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true,
+      "composer/installers": true
+    }
   },
   "extra": {
     "symfony-app-dir": "app",
