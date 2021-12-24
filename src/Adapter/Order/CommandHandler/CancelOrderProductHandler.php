@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Order\CommandHandler;
 
 use Cart;
 use Configuration;
-use Customization;
 use Hook;
 use Order;
 use OrderDetail;
