@@ -1320,7 +1320,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array<\stdClass> Modules
      */
-    public static function getModulesOnDisk($use_config = false, $logged_on_addons = false, $id_employee = false)
+    public static function getModulesOnDisk($use_config = false, $id_employee = false)
     {
         global $_MODULES;
 

@@ -30,33 +30,6 @@
 	{if isset($smarty.get.addnewmodule) && ($context_mode == Context::MODE_HOST)}
 
 		<div class="defaultForm form-horizontal">
-
-			{if $logged_on_addons}
-
-				<div class="panel">
-					<div class="row">
-						<div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-							<img class="img-responsive" alt="PrestaShop Addons" src="themes/default/img/prestashop-addons-logo.png">
-						</div>
-						<div class="col-lg-4 col-lg-offset-1 col-md-4 col-sm-7 col-xs-12 addons-style-search-bar">
-							<form id="addons-search-form" method="get" action="https://addons.prestashop.com/{$iso_code}/search" class="float">
-							<label>{l s='Search on PrestaShop Marketplace:'}</label>
-							<div class="input-group">
-								<input id="addons-search-box" class="form-control" type="text" autocomplete="off" name="query" value="" placeholder="Search on PrestaShop Marketplace">
-								<div id="addons-search-btn" class="btn btn-primary input-group-addon">
-									<i class="icon-search"></i>
-								</div>
-							</div>
-							</form>
-						</div>
-						<div class="col-lg-3 col-md-4 col-sm-5 col-xs-12 addons-see-all-themes">
-							{l s='Or'}<a href="https://addons.prestashop.com/{$iso_code}/2-modules-prestashop" class="btn btn-primary" onclick="return !window.open(this.href)">{l s='See all modules'}</a>
-						</div>
-					</div>
-				</div>
-
-			{else}
-
 				<div class="panel" id="">
 					<div class="panel-heading">
 						<i class="icon-picture"></i> {l s='Add a new module'}
@@ -77,8 +50,6 @@
 						</a>
 					</div>
 				</div>
-
-			{/if}
 
 				<div class="alert alert-info">
 					<h4>{l s='Can I add my own modules?'}</h4>

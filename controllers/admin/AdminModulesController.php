@@ -143,37 +143,6 @@ class AdminModulesControllerCore extends AdminController
         echo json_encode(['status' => $this->status]);
     }
 
-    public function ajaxProcessLogOnAddonsWebservices()
-    {
-        $content = Tools::addonsRequest('check_customer', ['username_addons' => pSQL(trim(Tools::getValue('username_addons'))), 'password_addons' => pSQL(trim(Tools::getValue('password_addons')))]);
-        $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-        if (!$xml) {
-            die('KO');
-        }
-        $result = strtoupper((string) $xml->success);
-        if (!in_array($result, ['OK', 'KO'])) {
-            die('KO');
-        }
-        if ($result == 'OK') {
-            Tools::clearXMLCache();
-            Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
-            $this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
-            $this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
-            $this->context->cookie->is_contributor = (int) $xml->is_contributor;
-            $this->context->cookie->write();
-        }
-        die($result);
-    }
-
-    public function ajaxProcessLogOutAddonsWebservices()
-    {
-        $this->context->cookie->username_addons = '';
-        $this->context->cookie->password_addons = '';
-        $this->context->cookie->is_contributor = 0;
-        $this->context->cookie->write();
-        die('OK');
-    }
-
     public function ajaxProcessReloadModulesList()
     {
         if (Tools::getValue('filterCategory')) {
@@ -659,14 +628,7 @@ class AdminModulesControllerCore extends AdminController
                     $modules = (array) $modules;
                 }
             } elseif ($key == 'updateAll') {
-                $loggedOnAddons = false;
-
-                if (!empty($this->context->cookie->username_addons)
-                    && !empty($this->context->cookie->password_addons)) {
-                    $loggedOnAddons = true;
-                }
-
-                $allModules = Module::getModulesOnDisk(true, $loggedOnAddons, $this->context->employee->id);
+                $allModules = Module::getModulesOnDisk(true, $this->context->employee->id);
 
                 $modules = [];
 
@@ -886,7 +848,7 @@ class AdminModulesControllerCore extends AdminController
      */
     protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
     {
-        $all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
+        $all_modules = Module::getModulesOnDisk(true, $this->id_employee);
         $all_unik_modules = [];
         $modules_list = ['installed' => [], 'not_installed' => []];
 
