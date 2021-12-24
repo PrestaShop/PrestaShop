@@ -99,7 +99,7 @@ jobs:
             run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
         -   name: Run phpunit
-            run: ./vendor/bin/phpunit -c tests/Unit/phpunit.xml
+            run: ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml
             env:
                 SYMFONY_DEPRECATIONS_HELPER: disabled
 
