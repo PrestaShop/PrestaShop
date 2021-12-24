@@ -4,32 +4,33 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
+
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
+// BO
 const dashboardPage = require('@pages/BO/dashboard');
+const customersPage = require('@pages/BO/customers');
+const addCustomerPage = require('@pages/BO/customers/add');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 const addCartRulePage = require('@pages/BO/catalog/discounts/add');
+
+// FO
 const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foVouchersPage = require('@pages/FO/myAccount/vouchers');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
 
-// import test context
+// Import test context
 const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_FO_userAccount_userDiscounts';
 
 let browserContext;
 let page;
-
-
-const today = new Date();
-// Create a previous date for cart rules (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() - 1);
-const previousDate = today.toISOString().slice(0, 10);
+const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 
 // Create customer data
 const CustomerFaker = require('@data/faker/customer');
@@ -45,7 +46,7 @@ const firstCartRule = new CartRuleFaker(
     customer: customerData.email,
     discountType: 'Percent',
     discountPercent: 20,
-    dateFrom: previousDate,
+    dateFrom: pastDate,
   },
 );
 
@@ -54,7 +55,7 @@ const secondCartRule = new CartRuleFaker(
     code: 'customerDataSecondCartRule',
     customer: customerData.email,
     freeShipping: true,
-    dateFrom: previousDate,
+    dateFrom: pastDate,
   },
 );
 
@@ -67,7 +68,7 @@ Sign in
 Check cart rules in account page
 Go Back to BO and delete cart rules
  */
-describe('View vouchers on FO account page', async () => {
+describe('FO - Account : View vouchers', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -177,6 +178,7 @@ describe('View vouchers on FO account page', async () => {
     it('should go to vouchers page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFOVouchersPage', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToVouchersPage(page);
       const pageHeaderTitle = await foVouchersPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foVouchersPage.pageTitle);

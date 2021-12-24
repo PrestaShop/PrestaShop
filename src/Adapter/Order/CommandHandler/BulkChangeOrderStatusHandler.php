@@ -80,8 +80,8 @@ final class BulkChangeOrderStatusHandler implements BulkChangeOrderStatusHandler
             $carrier = new Carrier($order->id_carrier, (int) $order->getAssociatedLanguage()->getId());
             $templateVars = [];
 
-            if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number) {
-                $templateVars['{followup}'] = str_replace('@', $order->shipping_number, $carrier->url);
+            if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->getShippingNumber()) {
+                $templateVars['{followup}'] = str_replace('@', $order->getShippingNumber(), $carrier->url);
             }
 
             if (!$history->add()) {

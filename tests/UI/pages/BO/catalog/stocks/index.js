@@ -317,6 +317,28 @@ class Stocks extends BOBasePage {
       this.waitForVisibleSelector(page, `${this.advancedFiltersButton}[aria-expanded='${toOpen.toString()}']`),
     ]);
   }
+
+  /**
+   * @override
+   * Open help side bar
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async openHelpSideBar(page) {
+    await page.$eval(this.helpButton, el => el.click());
+    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
+  }
+
+  /**
+   * @override
+   * Close help side bar
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeHelpSideBar(page) {
+    await page.$eval(this.helpButton, el => el.click());
+    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
+  }
 }
 
 module.exports = new Stocks();

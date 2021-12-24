@@ -35,7 +35,7 @@
     <div id="attributes-generator">
       <div class="alert alert-info" role="alert">
         <p class="alert-text">
-          {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '%generate_label%': 'Generate'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href=' ~ getAdminLink("AdminAttributesGroups") ~ ' target="_blank">', '[/1]': '</a>'})|raw }}
+          {{ 'To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!'|trans({'%attributes_and_features_label%': 'Attributes & Features'|trans({}, 'Admin.Navigation.Menu'), '%generate_label%': 'Generate'|trans({}, 'Admin.Actions')}, 'Admin.Catalog.Help')|replace({'[1]': '<a class="alert-link" href="' ~ getAdminLink("AdminAttributesGroups") ~ '" target="_blank">', '[/1]': '</a>'})|raw }}
         </p>
       </div>
       <div class="row">
@@ -54,24 +54,20 @@
     </div>
 
     <div id="combinations-bulk-form">
-      <div class="row">
-        <div class="col-md-12">
-          <p
-            class="form-control bulk-action"
-            data-toggle="collapse"
-            href="#bulk-combinations-container"
-            aria-expanded="false"
-            aria-controls="bulk-combinations-container"
-          >
-            {# First tag [1] is number of combinations selected. Second tag [2] is the total of combinations available. #}
-            <strong>{{ 'Bulk actions ([1]/[2] combination(s) selected)'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<span class="js-bulk-combinations">0</span>', '[2]': '<span id="js-bulk-combinations-total">' ~ combinations_count ~ '</span>' })|raw }}</strong>
-            <i class="material-icons float-right">keyboard_arrow_down</i>
-          </p>
-        </div>
-        <div class="col-md-12 collapse js-collapse" id="bulk-combinations-container">
-          <div class="border p-3">
-            {{ include('@Product/ProductPage/Forms/form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
-          </div>
+      <p
+        class="form-control bulk-action"
+        data-toggle="collapse"
+        href="#bulk-combinations-container"
+        aria-expanded="false"
+        aria-controls="bulk-combinations-container"
+      >
+        {# First tag [1] is number of combinations selected. Second tag [2] is the total of combinations available. #}
+        <strong>{{ 'Bulk actions ([1]/[2] combination(s) selected)'|trans({}, 'Admin.Catalog.Feature')|replace({ '[1]': '<span class="js-bulk-combinations">0</span>', '[2]': '<span id="js-bulk-combinations-total">' ~ combinations_count ~ '</span>' })|raw }}</strong>
+        <i class="material-icons float-right">keyboard_arrow_down</i>
+      </p>
+      <div class="collapse js-collapse" id="bulk-combinations-container">
+        <div class="border p-3">
+          {{ include('@Product/ProductPage/Forms/form_combinations_bulk.html.twig', { 'form': form_combination_bulk }) }}
         </div>
       </div>
     </div>

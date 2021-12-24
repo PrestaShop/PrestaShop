@@ -45,12 +45,19 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
     private $productRepository;
 
     /**
+     * @var int
+     */
+    private $defaultLanguageId;
+
+    /**
      * @param ProductRepository $productRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        int $defaultLanguageId
     ) {
         $this->productRepository = $productRepository;
+        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -84,6 +91,14 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
 
         $localizedNames = $command->getLocalizedNames();
         if (null !== $localizedNames) {
+            $defaultName = $localizedNames[$this->defaultLanguageId];
+            // Go through all the product languages and make sure name is filled for each of them
+            $productLanguages = array_keys($product->name);
+            foreach ($productLanguages as $languageId) {
+                if (empty($product->name[$languageId]) && empty($localizedNames[$languageId])) {
+                    $localizedNames[$languageId] = $defaultName;
+                }
+            }
             $product->name = $localizedNames;
             $updatableProperties['name'] = array_keys($localizedNames);
         }

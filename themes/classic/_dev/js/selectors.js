@@ -46,6 +46,7 @@ prestashop.themeSelectors = {
     searchFilters: '#search_filters',
     activeSearchFilters: '#js-active-search-filters',
     listTop: '#js-product-list-top',
+    product: '.js-product',
     list: '#js-product-list',
     listBottom: '#js-product-list-bottom',
     listHeader: '#js-product-list-header',
@@ -69,6 +70,22 @@ prestashop.themeSelectors = {
     giftCheckbox: '.js-gift-checkbox',
     imagesLink: '.card-block .cart-summary-products p a, .js-show-details',
     carrierExtraContent: '.carrier-extra-content, .js-carrier-extra-content',
+    btn: '.checkout a',
+  },
+  cart: {
+    productLineQty: '.js-cart-line-product-quantity',
+    quickview: '.quickview',
+    touchspin: '.bootstrap-touchspin',
+    promoCode: '#promo-code',
+    displayPromo: '.display-promo',
+    promoCodeButton: '.promo-code-button',
+    discountCode: '.js-discount .code',
+    discountName: '[name=discount_name]',
+    actions: '[data-link-action="delete-from-cart"], [data-link-action="remove-voucher"]',
+  },
+  notifications: {
+    dangerAlert: '#notifications article.alert-danger',
+    container: '#notifications .notifications-container',
   },
 };
 

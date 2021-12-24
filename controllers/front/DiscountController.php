@@ -98,7 +98,7 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
-     * @param $voucher
+     * @param array $voucher
      *
      * @return mixed
      */
@@ -114,9 +114,9 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
-     * @param $hasTaxIncluded
-     * @param $amount
-     * @param $currencyId
+     * @param bool $hasTaxIncluded
+     * @param float $amount
+     * @param int $currencyId
      *
      * @return string
      */
@@ -135,7 +135,7 @@ class DiscountControllerCore extends FrontController
     }
 
     /**
-     * @param $percentage
+     * @param float $percentage
      *
      * @return string
      */

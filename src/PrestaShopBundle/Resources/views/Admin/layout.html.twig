@@ -34,11 +34,10 @@
     help_link is defined ? help_link : '',
     js_router_metadata(),
     meta_title is defined ? meta_title : '',
-    use_regular_h1_structure is defined ? use_regular_h1_structure : true
+    use_regular_h1_structure is defined ? use_regular_h1_structure : true,
+    legacyBaseLayout is defined ? legacyBaseLayout : 'layout.tpl'
   )
   )) %}
-
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block javascripts %}
   <script src="{{ asset('themes/default/js/bundle/default.js') }}"></script>
@@ -91,6 +90,9 @@
   {% endif %}
   {% if app.session.flashbag.peek('warning')|length() > 0 %}
     {{ layout.alert('warning', app.session.flashbag.get('warning')) }}
+  {% endif %}
+  {% if app.session.flashbag.peek('info')|length() > 0 %}
+    {{ layout.alert('info', app.session.flashbag.get('info')) }}
   {% endif %}
 {% endblock %}
 

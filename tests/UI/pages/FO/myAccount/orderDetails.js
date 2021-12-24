@@ -62,7 +62,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(page, messageText) {
-    await page.check(`${this.tableBodyColumn(1, 1)} input`);
+    await this.setChecked(page, `${this.tableBodyColumn(1, 1)} input`);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
   }

@@ -28,54 +28,66 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\AssociateProductAttachmentCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllAssociatedProductAttachmentsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetAssociatedProductAttachmentsCommand;
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\RemoveAllAssociatedProductAttachmentsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Attachment\Command\SetAssociatedProductAttachmentsCommand;
 use Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext;
 
 class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I associate attachment :attachmentReference with product :productReference
-     *
-     * @param string $attachmentReference
-     * @param string $productReference
-     */
-    public function associateProductAttachment(string $attachmentReference, string $productReference): void
-    {
-        $this->getCommandBus()->handle(new AssociateProductAttachmentCommand(
-            $this->getSharedStorage()->get($productReference),
-            $this->getSharedStorage()->get($attachmentReference)
-        ));
-    }
-
-    /**
-     * @Then product :productReference should have following attachments associated: :attachmentReferences
-     *
-     * attachmentReferences transformation handled by @see StringToArrayTransformContext
+     * @Then product :productReference should have following attachments associated:
      *
      * @param string $productReference
-     * @param string[] $attachmentReferences
+     * @param AttachmentInformation[] $attachmentsInfo
+     *
+     * @see transformAttachmentsInfo()
      */
-    public function assertProductAttachments(string $productReference, array $attachmentReferences): void
+    public function assertProductAttachments(string $productReference, array $attachmentsInfo): void
     {
-        $attachmentIds = $this->getProductForEditing($productReference)->getAssociatedAttachmentIds();
+        $attachments = $this->getProductForEditing($productReference)->getAssociatedAttachments();
 
         Assert::assertEquals(
-            count($attachmentIds),
-            count($attachmentReferences),
+            count($attachments),
+            count($attachmentsInfo),
             'Unexpected associated product attachments count'
         );
 
-        foreach ($attachmentReferences as $key => $expectedReference) {
-            if ($attachmentIds[$key] === $this->getSharedStorage()->get($expectedReference)) {
-                continue;
-            }
-
-            throw new RuntimeException(sprintf('Unexpected associated product attachments'));
+        foreach ($attachmentsInfo as $key => $expectedAttachmentInfo) {
+            Assert::assertEquals(
+                $expectedAttachmentInfo,
+                $attachments[$key],
+                'Unexpected associated product attachments'
+            );
         }
+    }
+
+    /**
+     * @Transform table:attachment reference,title,description,file name,type,size
+     *
+     * @param TableNode $tableNode
+     *
+     * @return AttachmentInformation[]
+     */
+    public function transformAttachmentsInformation(TableNode $tableNode): array
+    {
+        $infos = $tableNode->getColumnsHash();
+
+        $attachmentsInfo = [];
+        foreach ($infos as $info) {
+            $attachmentsInfo[] = new AttachmentInformation(
+                $this->getSharedStorage()->get($info['attachment reference']),
+                $this->localizeByCell($info['title']),
+                $this->localizeByCell($info['description']),
+                $info['file name'],
+                $info['type'],
+                (int) $info['size']
+            );
+        }
+
+        return $attachmentsInfo;
     }
 
     /**
@@ -86,7 +98,7 @@ class UpdateAttachmentFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoAttachmentsAssociated(string $productReference)
     {
         Assert::assertEmpty(
-            $this->getProductForEditing($productReference)->getAssociatedAttachmentIds(),
+            $this->getProductForEditing($productReference)->getAssociatedAttachments(),
             'Product "%s" expected to have no attachments associated'
         );
     }

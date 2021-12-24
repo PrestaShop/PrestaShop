@@ -70,7 +70,7 @@ class ProductSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async changeCatalogModeStatus(page, toEnable = true) {
-    await page.check(this.catalogModeToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.catalogModeToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -82,7 +82,7 @@ class ProductSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async setShowPricesStatus(page, toEnable = true) {
-    await page.check(this.showPricesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.showPricesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -118,7 +118,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setForceUpdateFriendlyURLStatus(page, toEnable = true) {
-    await page.check(this.forceUpdateFriendlyUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.forceUpdateFriendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -130,7 +130,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDefaultActivationStatus(page, toEnable = true) {
-    await page.check(this.defaultActivationStatusToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.defaultActivationStatusToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductGeneralFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -154,7 +154,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayAvailableQuantitiesStatus(page, toEnable = true) {
-    await page.check(this.displayAvailableQuantitiesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayAvailableQuantitiesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -178,7 +178,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayUnavailableProductAttributesStatus(page, toEnable = true) {
-    await page.check(this.displayUnavailableAttributesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayUnavailableAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -202,7 +202,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setAllowOrderingOutOfStockStatus(page, toEnable = true) {
-    await page.check(this.allowOrderingOosToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.allowOrderingOosToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -214,9 +214,9 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setEnableStockManagementStatus(page, toEnable = true) {
-    await page.check(this.enableStockManagementToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableStockManagementToggleInput(toEnable ? 1 : 0));
     if (toEnable) {
-      await page.check(this.allowOrderingOosToggleInput(0));
+      await this.setChecked(page, this.allowOrderingOosToggleInput(0));
     }
     await this.clickAndWaitForNavigation(page, this.saveProductsStockForm);
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -287,7 +287,7 @@ class ProductSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setDisplayDiscountedPriceStatus(page, toEnable = true) {
-    await page.check(this.displayDiscountedPriceToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayDiscountedPriceToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveProductPageFormButton);
     return this.getAlertSuccessBlockParagraphContent(page);
   }

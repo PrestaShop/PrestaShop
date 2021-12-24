@@ -288,7 +288,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
         }
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
@@ -718,10 +717,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateOrdersToStatuses(string $orderReferencesString, string $status)
     {
-        /** @var string[] $orderReferencesString */
-        $orderReferencesString = explode(',', $orderReferencesString);
+        $orderReferences = explode(',', $orderReferencesString);
         $ordersIds = [];
-        foreach ($orderReferencesString as $orderReference) {
+        foreach ($orderReferences as $orderReference) {
             $ordersIds[] = SharedStorage::getStorage()->get($orderReference);
         }
 
@@ -1492,6 +1490,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderPreview->getInvoiceAddressFormatted();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         Assert::assertEquals(
             $address,
             $pyStringNode->getRaw(),
@@ -1893,6 +1895,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderForViewing->getInvoiceAddress();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         $expectedDetails = $table->getRowsHash();
         $arrayActual = [
             'Address' => $address->getAddress1(),
@@ -1940,6 +1946,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         } elseif ($addressType == 'invoice') {
             /** @var OrderInvoiceAddressForViewing $address */
             $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        if (!isset($address)) {
+            return;
         }
 
         Assert::assertEquals(

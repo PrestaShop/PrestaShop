@@ -105,6 +105,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ->setName($this->trans('Address', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'full_address',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -119,6 +120,7 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
                     ->setName($this->trans('Phone number(s)', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'phone_number',
+                        'sortable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))

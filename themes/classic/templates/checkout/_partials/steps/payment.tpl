@@ -14,7 +14,7 @@
   {/if}
 
   {if $is_free}
-    <p>{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
+    <p class="cart-payment-step-not-needed-info">{l s='No payment needed for this order' d='Shop.Theme.Checkout'}</p>
   {/if}
   <div class="payment-options {if $is_free}hidden-xs-up{/if}">
     {foreach from=$payment_options item="module_options"}
@@ -71,7 +71,7 @@
           {if $option.form}
             {$option.form nofilter}
           {else}
-            <form id="payment-form" method="POST" action="{$option.action nofilter}">
+            <form id="payment-{$option.id}-form" method="POST" action="{$option.action nofilter}">
               {foreach from=$option.inputs item=input}
                 <input type="{$input.type}" name="{$input.name}" value="{$input.value}">
               {/foreach}

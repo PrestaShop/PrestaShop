@@ -50,6 +50,7 @@ class UpgraderCore
     public $autoupgrade_module;
     public $autoupgrade_last_version;
     public $autoupgrade_module_link;
+    public $desc;
     public $changelog;
     public $md5;
 
@@ -175,7 +176,7 @@ class UpgraderCore
     /**
      * load the last version informations stocked in base.
      *
-     * @return Upgrader
+     * @return $this
      */
     public function loadFromConfig()
     {
@@ -273,7 +274,7 @@ class UpgraderCore
     }
 
     /**
-     * @param $node
+     * @param SimpleXMLElement $node
      * @param array $currentPath
      * @param int $level
      */

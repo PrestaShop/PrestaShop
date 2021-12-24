@@ -36,7 +36,7 @@ class FeatureValueCore extends ObjectModel
     public $value;
 
     /** @var bool Custom */
-    public $custom = 0;
+    public $custom = false;
 
     /**
      * @see ObjectModel::$definition
@@ -132,6 +132,8 @@ class FeatureValueCore extends ObjectModel
                 return $tab['value'];
             }
         }
+
+        return '';
     }
 
     /**
@@ -139,8 +141,8 @@ class FeatureValueCore extends ObjectModel
      *
      * @param int $idFeature
      * @param string $value
-     * @param null $idProduct
-     * @param null $idLang
+     * @param int|null $idProduct
+     * @param int|null $idLang
      * @param bool $custom
      *
      * @return int

@@ -3,7 +3,7 @@
   position: relative;
   display: block;
   width: 100%;
-  height: 21px;
+  height: 22px;
   margin-top: 7px;
 
   &-nolabel {
@@ -18,6 +18,7 @@
     left: 0;
     z-index: 1;
     padding-left: 45px;
+    margin: 0;
     font-size: 14px;
     font-weight: 500;
     opacity: 0;
@@ -25,27 +26,25 @@
   }
 
   .slide-button {
-    position: relative;
     position: absolute;
-    top: 50%;
+    top: 0;
     z-index: 0;
     display: block;
-    width: 35px;
-    height: 21px;
+    width: 36px;
+    height: 22px;
     background: #b3c7cd;
-    transform: translateY(-50%);
+    border: 0;
     @include transition(0.25s ease-out);
     @include border-radius(1000px);
 
     &::after {
       position: absolute;
-      top: 50%;
-      left: 0;
-      width: 50%;
-      height: calc(100% - 2px);
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
       content: "";
       background: #fff;
-      transform: translate(1px, -48%);
       @include border-radius(50%);
       @include transition(0.25s ease-out);
     }
@@ -64,6 +63,7 @@
     z-index: 3;
     width: 100%;
     height: 100%;
+    margin: 0;
     cursor: pointer;
     opacity: 0;
 
@@ -106,7 +106,7 @@
         background: $brand-success;
 
         &::after {
-          transform: translate(15px, -48%);
+          transform: translateX(14px);
         }
       }
     }

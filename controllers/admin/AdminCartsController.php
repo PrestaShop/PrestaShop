@@ -222,10 +222,10 @@ class AdminCartsControllerCore extends AdminController
 
     public function renderView()
     {
-        /** @var Cart $cart */
         if (!($cart = $this->loadObject(true))) {
             return;
         }
+        /** @var Cart $cart */
         $customer = new Customer($cart->id_customer);
         $currency = new Currency($cart->id_currency);
         $this->context->cart = $cart;
@@ -329,8 +329,8 @@ class AdminCartsControllerCore extends AdminController
             $this->context->cart = new Cart((int) $id_cart);
 
             if (!$this->context->cart->id) {
-                $this->context->cart->recyclable = 0;
-                $this->context->cart->gift = 0;
+                $this->context->cart->recyclable = false;
+                $this->context->cart->gift = false;
             }
 
             if (!$this->context->cart->id_customer) {
@@ -461,24 +461,28 @@ class AdminCartsControllerCore extends AdminController
             if (!$this->context->cart->id) {
                 return;
             }
+            $qty = Tools::getValue('qty');
+            $id_product = (int) Tools::getValue('id_product');
             if ($this->context->cart->OrderExists()) {
                 $errors[] = $this->trans('An order has already been placed with this cart.', [], 'Admin.Catalog.Notification');
-            } elseif (!($id_product = (int) Tools::getValue('id_product')) || !($product = new Product((int) $id_product, true, $this->context->language->id))) {
+            } elseif (!$id_product || !($product = new Product((int) $id_product, true, $this->context->language->id))) {
                 $errors[] = $this->trans('Invalid product', [], 'Admin.Catalog.Notification');
-            } elseif (!($qty = Tools::getValue('qty')) || $qty == 0) {
+            } elseif (!$qty || $qty == 0) {
                 $errors[] = $this->trans('Invalid quantity', [], 'Admin.Catalog.Notification');
             }
 
             // Don't try to use a product if not instanciated before due to errors
+            $id_customization = (int) Tools::getValue('id_customization', 0);
+            $id_product_attribute = Tools::getValue('id_product_attribute');
             if (isset($product) && $product->id) {
-                if (($id_product_attribute = Tools::getValue('id_product_attribute')) != 0) {
-                    if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty((int) $id_product_attribute, (int) $qty)) {
+                if ($id_product_attribute != 0) {
+                    if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !ProductAttribute::checkAttributeQty((int) $id_product_attribute, (int) $qty)) {
                         $errors[] = $this->trans('There are not enough products in stock.', [], 'Admin.Catalog.Notification');
                     }
                 } elseif (!$product->checkQty((int) $qty)) {
                     $errors[] = $this->trans('There are not enough products in stock.', [], 'Admin.Catalog.Notification');
                 }
-                if (!($id_customization = (int) Tools::getValue('id_customization', 0)) && !$product->hasAllRequiredCustomizableFields()) {
+                if (!$id_customization && !$product->hasAllRequiredCustomizableFields()) {
                     $errors[] = $this->trans('Please fill in all the required fields.', [], 'Admin.Notifications.Error');
                 }
                 $this->context->cart->save();
@@ -494,10 +498,10 @@ class AdminCartsControllerCore extends AdminController
                     $operator = 'up';
                 }
 
-                if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int) $id_product_attribute, (int) $id_customization, $operator))) {
+                if (!($qty_upd = $this->context->cart->updateQty($qty, $id_product, (int) $id_product_attribute, $id_customization, $operator))) {
                     $errors[] = $this->trans('You already have the maximum quantity available for this product.', [], 'Admin.Catalog.Notification');
-                } elseif ($qty_upd < 0) {
-                    $minimal_qty = $id_product_attribute ? Attribute::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
+                } elseif ($qty_upd < 0 && isset($product)) {
+                    $minimal_qty = $id_product_attribute ? ProductAttribute::getAttributeMinimalQty((int) $id_product_attribute) : $product->minimal_quantity;
                     $errors[] = $this->trans('You must add a minimum quantity of %d', [$minimal_qty], 'Admin.Orderscustomers.Notification');
                 }
             }
@@ -618,7 +622,7 @@ class AdminCartsControllerCore extends AdminController
                 $cart_rule->reduction_currency = (int) $this->context->cart->id_currency;
                 $cart_rule->date_from = date('Y-m-d H:i:s', time());
                 $cart_rule->date_to = date('Y-m-d H:i:s', time() + 24 * 36000);
-                $cart_rule->active = 1;
+                $cart_rule->active = true;
                 $cart_rule->add();
             } else {
                 $cart_rule = new CartRule((int) $id_cart_rule);
@@ -637,14 +641,20 @@ class AdminCartsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             $errors = [];
-            if (!($id_cart_rule = Tools::getValue('id_cart_rule')) || !$cart_rule = new CartRule((int) $id_cart_rule)) {
+            $id_cart_rule = Tools::getValue('id_cart_rule');
+            if (!$id_cart_rule) {
                 $errors[] = $this->trans('Invalid voucher.', [], 'Admin.Catalog.Notification');
-            } elseif ($err = $cart_rule->checkValidity($this->context)) {
-                $errors[] = $err;
-            }
-            if (!count($errors)) {
-                if (!$this->context->cart->addCartRule((int) $cart_rule->id)) {
-                    $errors[] = $this->trans('Can\'t add the voucher.', [], 'Admin.Advparameters.Notification');
+            } else {
+                $cart_rule = new CartRule((int) $id_cart_rule);
+                if (!Validate::isLoadedObject($cart_rule)) {
+                    $errors[] = $this->trans('Invalid voucher.', [], 'Admin.Catalog.Notification');
+                } elseif ($err = $cart_rule->checkValidity($this->context)) {
+                    $errors[] = $err;
+                }
+                if (!count($errors)) {
+                    if (!$this->context->cart->addCartRule((int) $cart_rule->id)) {
+                        $errors[] = $this->trans('Can\'t add the voucher.', [], 'Admin.Advparameters.Notification');
+                    }
                 }
             }
             echo json_encode(array_merge($this->ajaxReturnVars(), ['errors' => $errors]));

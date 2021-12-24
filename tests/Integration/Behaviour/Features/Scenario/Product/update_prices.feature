@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices
-@reset-database-before-feature
+@restore-products-before-feature
 @update-prices
 Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
@@ -21,6 +21,8 @@ Feature: Update product price fields from Back Office (BO).
 
   Scenario: I update product prices
     And tax rules group named "US-AL Rate (4%)" exists
+    And product product1 should not have any suppliers assigned
+    And product product1 should not have a default supplier
     When I update product "product1" prices with following information:
       | price              | 100.99          |
       | ecotax             | 0               |

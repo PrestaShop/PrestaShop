@@ -81,7 +81,7 @@ class TaxController extends FrameworkBundleAdminController
      * Process tax options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index"
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")

@@ -23,33 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-{if isset($href) && $href}
-  <a href="{$href|escape:'html':'UTF-8'}" id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
-{else}
-  <div id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
-{/if}
-  <div class="kpi-content -{$color|escape}" data-original-title="{$tooltip|escape}" data-toggle="pstooltip">
-    {if isset($icon) && $icon}
-      <i class="material-icons">{$icon|escape}</i>
-    {/if}
-    {if isset($chart) && $chart}
-      <div class="boxchart-overlay">
-        <div class="boxchart">
-        </div>
-      </div>
-    {/if}
-    <span class="title">{$title|escape}</span>
-    <div class="kpi-description">
-      <div class="subtitle">{$subtitle|escape}</div>
-      <div class="value">{$value|escape|replace:'&amp;':'&'}</div>
-    </div>
-  </div>
-{if isset($href) && $href}
-  </a>
-{else}
-  </div>
-{/if}
-
 <script>
   function refresh_{$id|replace:'-':'_'|addslashes}()
   {
@@ -117,3 +90,31 @@
     {/if}
   </script>
 {/if}
+
+{if isset($href) && $href}
+  <a href="{$href|escape:'html':'UTF-8'}" id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
+{else}
+  <div id="{$id|escape:'html':'UTF-8'}" class="kpi-container box-stats">
+{/if}
+  <div class="kpi-content -{$color|escape}" data-original-title="{$tooltip|escape}" data-toggle="pstooltip">
+    {if isset($icon) && $icon}
+      <i class="material-icons">{$icon|escape}</i>
+    {/if}
+    {if isset($chart) && $chart}
+      <div class="boxchart-overlay">
+        <div class="boxchart">
+        </div>
+      </div>
+    {/if}
+    <span class="title">{$title|escape}</span>
+    <div class="kpi-description">
+      <div class="subtitle">{$subtitle|escape}</div>
+      <div class="value">{$value|escape|replace:'&amp;':'&'}</div>
+    </div>
+  </div>
+{if isset($href) && $href}
+  </a>
+{else}
+  </div>
+{/if}
+

@@ -1,35 +1,39 @@
 parameters:
-    AdapterSecurityAdminClass:                LegacyTests\PrestaShopBundle\Mock\AdapterSecurityAdminMock
-    prestashop.security.voter.product.class:  LegacyTests\PrestaShopBundle\Mock\PageVoter
-    resources_dir: "%kernel.project_dir%/tests/Resources"
-    test_translations_dir: "%resources_dir%/translations"
-    translations_theme_dir: "%resources_dir%/themes"
-    translations_modules_dir: "%resources_dir%/modules"
+  resources_dir: "%kernel.project_dir%/tests/Resources"
+  test_translations_dir: "%resources_dir%/translations"
+  translations_theme_dir: "%resources_dir%/themes"
+  translations_modules_dir: "%resources_dir%/modules"
+  prestashop.security.voter.product.class: Tests\Integration\Utility\PageVoter
+  AdapterSecurityAdminClass: Tests\Integration\Utility\AdapterSecurityAdmin
 
 imports:
-    - { resource: config_dev.yml }
-    - { resource: "../../tests/Resources/config/services.yml" }
+  - { resource: config_dev.yml }
+  - { resource: "../../tests/Resources/config/services.yml" }
 
 framework:
-    test: ~
-    session:
-        storage_id: session.storage.mock_file
-    profiler:
-        collect: false
+  test: ~
+  session:
+    storage_id: session.storage.mock_file
+  profiler:
+    collect: false
 
 web_profiler:
-    toolbar: '%use_debug_toolbar%'
-    intercept_redirects: true
+  toolbar: '%use_debug_toolbar%'
+  intercept_redirects: true
 
 swiftmailer:
-    disable_delivery: true
+  disable_delivery: true
 
 # Doctrine Configuration
 doctrine:
-    dbal:
-        connections:
-            default:
-                dbname: "test_%database_name%"
-    orm:
-        metadata_cache_driver: "array"
-        query_cache_driver: "array"
+  dbal:
+    connections:
+      default:
+        dbname: "test_%database_name%"
+  orm:
+    metadata_cache_driver:
+      type: pool
+      pool: array
+    query_cache_driver:
+      type: pool
+      pool: array

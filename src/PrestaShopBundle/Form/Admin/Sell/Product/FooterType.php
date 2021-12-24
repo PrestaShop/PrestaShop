@@ -91,7 +91,7 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'arrow_back_ios',
                 'attr' => [
                     'class' => 'btn-outline-secondary',
-                    'href' => $this->router->generate('admin_product_catalog', ['offset' => 'last', 'limit' => 'last']),
+                    'href' => $this->router->generate('admin_products_v2_index', ['offset' => 'last', 'limit' => 'last']),
                 ],
             ])
             ->add('preview', IconButtonType::class, [
@@ -135,7 +135,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('save', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Actions'),
+                'label' => $options['active'] ? $this->trans('Save and publish', 'Admin.Actions') : $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
                     'data-toggle' => 'pstooltip',
                     'disabled' => true,
@@ -158,7 +158,7 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'add_circle_outline',
                 'attr' => [
-                    'class' => 'btn-outline-secondary',
+                    'class' => 'btn-outline-secondary new-product',
                     'href' => $this->router->generate('admin_products_v2_create'),
                     'disabled' => empty($productId),
                 ],
@@ -175,6 +175,7 @@ class FooterType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'product_id' => null,
+                'active' => false,
                 'required' => false,
                 'label' => false,
                 'attr' => [
@@ -182,6 +183,7 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setAllowedTypes('active', ['bool'])
         ;
     }
 }

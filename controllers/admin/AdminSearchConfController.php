@@ -396,7 +396,7 @@ class AdminSearchConfControllerCore extends AdminController
     public function renderOptions()
     {
         if ($this->fields_options && is_array($this->fields_options)) {
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->toolbar_scroll = true;
             $helper->toolbar_btn = ['save' => [
@@ -472,7 +472,11 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         if (empty($this->errors)) {
-            $this->confirmations[] = $this->trans('Creation successful', [], 'Admin.Shopparameters.Notification');
+            if (Tools::getValue('id_alias')) {
+                $this->confirmations[] = $this->trans('Update successful', [], 'Admin.Notifications.Success');
+            } else {
+                $this->confirmations[] = $this->trans('Successful creation', [], 'Admin.Notifications.Success');
+            }
         }
     }
 

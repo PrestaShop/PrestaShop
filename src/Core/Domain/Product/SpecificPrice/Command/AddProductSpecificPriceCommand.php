@@ -29,12 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
+use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 /**
  * Add specific price to a Product
@@ -69,11 +71,6 @@ class AddProductSpecificPriceCommand
     /**
      * @var int|null
      */
-    private $shopGroupId;
-
-    /**
-     * @var int|null
-     */
     private $shopId;
 
     /**
@@ -102,21 +99,27 @@ class AddProductSpecificPriceCommand
     private $customerId;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeFrom;
 
     /**
-     * @var DateTime|null
+     * @var DateTimeInterface
+     *
+     * @see DateTime
+     * @see NullDateTime
      */
     private $dateTimeTo;
 
     /**
      * @param int $productId
      * @param string $reductionType
-     * @param float $reductionValue
+     * @param string $reductionValue
      * @param bool $includeTax
-     * @param float $price
+     * @param string $price
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -125,16 +128,18 @@ class AddProductSpecificPriceCommand
     public function __construct(
         int $productId,
         string $reductionType,
-        float $reductionValue,
+        string $reductionValue,
         bool $includeTax,
-        float $price,
+        string $price,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
         $this->includesTax = $includeTax;
-        $this->price = new DecimalNumber((string) $price);
+        $this->price = new DecimalNumber($price);
         $this->fromQuantity = $fromQuantity;
+        $this->dateTimeFrom = new NullDateTime();
+        $this->dateTimeTo = new NullDateTime();
     }
 
     /**
@@ -178,19 +183,22 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface
      */
-    public function getDateTimeFrom(): ?DateTime
+    public function getDateTimeFrom(): DateTimeInterface
     {
         return $this->dateTimeFrom;
     }
 
     /**
-     * @param DateTime|null $dateTimeFrom
+     * @param DateTimeInterface $dateTimeFrom
      *
-     * @return $this
+     * @see DateTime
+     * @see NullDateTime
+     *
+     * @return AddProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTime $dateTimeFrom): self
+    public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
 
@@ -198,21 +206,24 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return DateTimeInterface
      */
-    public function getShopGroupId(): ?int
+    public function getDateTimeTo(): ?DateTimeInterface
     {
-        return $this->shopGroupId;
+        return $this->dateTimeTo;
     }
 
     /**
-     * @param int $shopGroupId
+     * @param DateTimeInterface $dateTimeTo
      *
-     * @return $this
+     * @see DateTime
+     * @see NullDateTime
+     *
+     * @return AddProductSpecificPriceCommand
      */
-    public function setShopGroupId(int $shopGroupId): self
+    public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {
-        $this->shopGroupId = $shopGroupId;
+        $this->dateTimeTo = $dateTimeTo;
 
         return $this;
     }
@@ -333,26 +344,6 @@ class AddProductSpecificPriceCommand
     public function setCustomerId(int $customerId): self
     {
         $this->customerId = $customerId;
-
-        return $this;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getDateTimeTo(): ?DateTime
-    {
-        return $this->dateTimeTo;
-    }
-
-    /**
-     * @param DateTime|null $dateTimeTo
-     *
-     * @return $this
-     */
-    public function setDateTimeTo(?DateTime $dateTimeTo): self
-    {
-        $this->dateTimeTo = $dateTimeTo;
 
         return $this;
     }

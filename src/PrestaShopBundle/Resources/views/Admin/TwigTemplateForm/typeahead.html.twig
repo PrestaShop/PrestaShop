@@ -37,7 +37,7 @@
           {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' form-control search typeahead ' ~ form.vars.id)|trim }) -%}
           {# We do not want the initial input name because the data is handled via a collection input with name="full_name[data][]" #}
           {%- set full_name = '' -%}
-          <input type="text" id="{{ form.vars.id }}" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
+          <input type="text" placeholder="{{ placeholder }}" autocomplete="off" {{ block('widget_attributes') }}>
         </div>
         <small class="form-text text-muted text-right typeahead-hint">
           {% if help %}
@@ -138,7 +138,7 @@
                         var html = '<li data-product="' + data.id + '-' + (data.id_product_attribute ? data.id_product_attribute : 0) + '" class="col-xl-3 col-lg-6 mb-1">';
                         html += '<div class="pack-product">';
                         html += '<img class="cover" src="' + data.image +'" />';
-                        html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', data.{{ mapping_name }}, data.ref, number);
+                        html += sprintf('{% apply spaceless %}{{ template_collection|raw }}{% endapply %}', data.{{ mapping_name }}, data.ref, number);
                         html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                         html += '</div>';
                         html += '</li>';
@@ -296,7 +296,7 @@
                 }
 
                 var html = '<li class="media">';
-                html += sprintf('{% spaceless %}{{ template_collection|raw }}{% endspaceless %}', suggestion.{{ mapping_name }});
+                html += sprintf('{% apply spaceless %}{{ template_collection|raw }}{% endapply %}', suggestion.{{ mapping_name }});
                 html += '<input type="hidden" name="{{ form.vars.full_name }}[data][]" value="' + value + '" />';
                 html += '</li>';
                 $('#{{ form.vars.id }}-data').show();

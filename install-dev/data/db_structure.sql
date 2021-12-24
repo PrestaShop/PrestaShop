@@ -95,7 +95,6 @@ CREATE TABLE `PREFIX_attribute_impact` (
 CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `id_reference` int(10) unsigned NOT NULL,
-  `id_tax_rules_group` int(10) unsigned DEFAULT '0',
   `name` varchar(64) NOT NULL,
   `url` varchar(255) DEFAULT NULL,
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -116,7 +115,6 @@ CREATE TABLE `PREFIX_carrier` (
   `grade` int(10) DEFAULT '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`, `active`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`),
   KEY `reference` (
     `id_reference`, `deleted`, `active`
   )
@@ -1242,7 +1240,6 @@ CREATE TABLE `PREFIX_orders` (
   `gift` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `gift_message` text,
   `mobile_theme` tinyint(1) NOT NULL DEFAULT '0',
-  `shipping_number` varchar(64) DEFAULT NULL,
   `total_discounts` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
@@ -1739,7 +1736,6 @@ CREATE TABLE `PREFIX_product_attribute` (
   `id_product` int(10) unsigned NOT NULL,
   `reference` varchar(64) DEFAULT NULL,
   `supplier_reference` varchar(64) DEFAULT NULL,
-  `location` varchar(255) NOT NULL DEFAULT '',
   `ean13` varchar(13) DEFAULT NULL,
   `isbn` varchar(32) DEFAULT NULL,
   `upc` varchar(12) DEFAULT NULL,
@@ -1747,7 +1743,6 @@ CREATE TABLE `PREFIX_product_attribute` (
   `wholesale_price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `price` decimal(20, 6) NOT NULL DEFAULT '0.000000',
   `ecotax` decimal(17, 6) NOT NULL DEFAULT '0.00',
-  `quantity` int(10) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20, 6) NOT NULL DEFAULT '0',
   `unit_price_impact` DECIMAL(20, 6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NULL DEFAULT NULL,

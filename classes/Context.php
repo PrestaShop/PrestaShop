@@ -34,6 +34,7 @@ use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -45,22 +46,22 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ContextCore
 {
-    /** @var Context */
+    /** @var Context|null */
     protected static $instance;
 
-    /** @var Cart */
+    /** @var Cart|null */
     public $cart;
 
-    /** @var Customer */
+    /** @var Customer|null */
     public $customer;
 
-    /** @var Cookie */
+    /** @var Cookie|null */
     public $cookie;
 
     /** @var SessionInterface|null */
     public $session;
 
-    /** @var Link */
+    /** @var Link|null */
     public $link;
 
     /** @var Country */
@@ -69,7 +70,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController */
+    /** @var AdminController|FrontController|null */
     public $controller;
 
     /** @var string */
@@ -94,7 +95,10 @@ class ContextCore
     /** @var Shop */
     public $shop;
 
-    /** @var Smarty */
+    /** @var Shop */
+    public $tmpOldShop;
+
+    /** @var Smarty|null */
     public $smarty;
 
     /** @var \Mobile_Detect */
@@ -103,8 +107,14 @@ class ContextCore
     /** @var int */
     public $mode;
 
-    /** @var ContainerBuilder */
+    /** @var ContainerBuilder|ContainerInterface */
     public $container;
+
+    /** @var float */
+    public $virtualTotalTaxExcluded = 0;
+
+    /** @var float */
+    public $virtualTotalTaxIncluded = 0;
 
     /** @var Translator */
     protected $translator = null;
@@ -288,6 +298,7 @@ class ContextCore
 
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+            && defined('_PS_THEME_MOBILE_DIR_')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
     }
@@ -307,8 +318,7 @@ class ContextCore
     }
 
     /**
-     * @param $testInstance Context
-     * Unit testing purpose only
+     * @param Context $testInstance Unit testing purpose only
      */
     public static function setInstanceForTesting($testInstance)
     {
@@ -326,7 +336,7 @@ class ContextCore
     /**
      * Clone current context object.
      *
-     * @return Context
+     * @return static
      */
     public function cloneContext()
     {
@@ -345,8 +355,8 @@ class ContextCore
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
         $this->cookie->passwd = $customer->passwd;
-        $this->cookie->logged = 1;
-        $customer->logged = 1;
+        $this->cookie->logged = true;
+        $customer->logged = true;
         $this->cookie->email = $customer->email;
         $this->cookie->is_guest = $customer->isGuest();
 
@@ -420,7 +430,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if ($locale === '' || null === $locale || count($translator->getCatalogue($locale)->all())) {
+        if (empty($locale) || count($translator->getCatalogue($locale)->all())) {
             return $translator;
         }
 
@@ -465,7 +475,7 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
+        $locations = [_PS_ROOT_DIR_ . '/translations'];
 
         if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';

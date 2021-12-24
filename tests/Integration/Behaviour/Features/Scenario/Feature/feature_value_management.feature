@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s feature --tags feature-value-management
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @feature-value-management
 Feature: Product feature value management
   PrestaShop allows BO users to manage product feature value

@@ -42,7 +42,7 @@ class PrestaShopExceptionCore extends Exception
         if (ToolsCore::isPHPCLI()) {
             echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
-        } elseif (_PS_MODE_DEV_) {
+        } elseif (_PS_MODE_DEV_) { /* @phpstan-ignore-line */
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -204,16 +204,6 @@ class PrestaShopExceptionCore extends Exception
         $logger = new FileLogger();
         $logger->setFilename(_PS_ROOT_DIR_ . '/var/logs/' . date('Ymd') . '_exception.log');
         $logger->logError($this->getExtendedMessage(false));
-    }
-
-    /**
-     * @deprecated 1.5.5
-     */
-    protected function getExentedMessage($html = true)
-    {
-        Tools::displayAsDeprecated('Use getExtendedMessage instead');
-
-        return $this->getExtendedMessage($html);
     }
 
     /**

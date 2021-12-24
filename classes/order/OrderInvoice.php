@@ -38,7 +38,7 @@ class OrderInvoiceCore extends ObjectModel
     /** @var int */
     public $delivery_number;
 
-    /** @var int */
+    /** @var string */
     public $delivery_date = '0000-00-00 00:00:00';
 
     /** @var float */
@@ -80,13 +80,13 @@ class OrderInvoiceCore extends ObjectModel
     /** @var string note */
     public $note;
 
-    /** @var int */
+    /** @var string */
     public $date_add;
 
     /** @var array Total paid cache */
     protected static $_total_paid_cache = [];
 
-    /** @var Order * */
+    /** @var Order|null */
     private $order;
 
     /**
@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
             'total_wrapping_tax_excl' => ['type' => self::TYPE_FLOAT],
             'total_wrapping_tax_incl' => ['type' => self::TYPE_FLOAT],
             'shop_address' => ['type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000],
-            'note' => ['type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000],
+            'note' => ['type' => self::TYPE_HTML],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
@@ -265,7 +265,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add stock information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductCurrentStock(&$product)
     {
@@ -281,7 +281,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * This method allow to add image information on a product detail.
      *
-     * @param array &$product
+     * @param array $product
      */
     protected function setProductImageInformations(&$product)
     {
@@ -578,8 +578,8 @@ class OrderInvoiceCore extends ObjectModel
      *
      * @since 1.5
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of OrderInvoice
      */
@@ -602,7 +602,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $id_order_state
+     * @param int $id_order_state
      *
      * @return array collection of OrderInvoice
      */
@@ -624,8 +624,8 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5.0.3
      *
-     * @param $date_from
-     * @param $date_to
+     * @param string $date_from
+     * @param string $date_to
      *
      * @return array collection of invoice
      */
@@ -647,7 +647,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrier($id_order_invoice)
     {
@@ -662,7 +662,7 @@ class OrderInvoiceCore extends ObjectModel
     /**
      * @since 1.5
      *
-     * @param $id_order_invoice
+     * @param int $id_order_invoice
      */
     public static function getCarrierId($id_order_invoice)
     {
@@ -772,6 +772,8 @@ class OrderInvoiceCore extends ObjectModel
      * Return total to paid of sibling invoices.
      *
      * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
+     *
+     * @return float|array
      *
      * @since 1.5.0.14
      */
@@ -925,7 +927,7 @@ class OrderInvoiceCore extends ObjectModel
         $address->postcode = Configuration::get('PS_SHOP_CODE', null, null, $id_shop);
         $address->city = Configuration::get('PS_SHOP_CITY', null, null, $id_shop);
         $address->phone = Configuration::get('PS_SHOP_PHONE', null, null, $id_shop);
-        $address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
+        $address->id_country = (int) Configuration::get('PS_SHOP_COUNTRY_ID', null, null, $id_shop);
 
         return AddressFormat::generateAddress($address, [], '<br />', ' ');
     }

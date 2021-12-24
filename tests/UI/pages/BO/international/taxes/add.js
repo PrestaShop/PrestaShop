@@ -61,7 +61,7 @@ class AddTax extends BOBasePage {
     await this.changeInputLanguage(page, 'fr');
     await this.setValue(page, this.nameFrInput, taxData.frName);
     await this.setValue(page, this.rateInput, taxData.rate);
-    await page.check(this.statusToggleInput(taxData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(taxData.enabled ? 1 : 0));
     // Save Tax
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
 

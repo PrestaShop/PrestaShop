@@ -33,7 +33,7 @@ class SqlManager extends BOBasePage {
     this.sqlQueryListTableViewLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-view-row-link`;
     this.sqlQueryListTableEditLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-edit-row-link`;
     this.sqlQueryListTableDeleteLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-delete-row-link`;
-    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a[href*='/export']`;
+    this.sqlQueryListTableExportLink = row => `${this.sqlQueryListTableColumnActions(row)} a.grid-export-row-link`;
 
     // Filters
     this.filterInput = filterBy => `${this.sqlQueryListForm} #sql_request_${filterBy}`;
@@ -53,7 +53,7 @@ class SqlManager extends BOBasePage {
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.sqlQueryGridPanel} .col-form-label`;
     this.paginationNextLink = `${this.sqlQueryGridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.sqlQueryGridPanel} [aria-label='Previous']`;
+    this.paginationPreviousLink = `${this.sqlQueryGridPanel} .pagination .previous a.page-link`;
 
     // Bulk Actions
     this.selectAllRowsDiv = `${this.sqlQueryListForm} tr.column-filters .grid_bulk_action_select_all`;

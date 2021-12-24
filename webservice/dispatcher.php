@@ -28,12 +28,18 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 
 ob_start();
 
-require_once dirname(__FILE__).'/../config/config.inc.php';
+require_once dirname(__FILE__) . '/../config/config.inc.php';
+
+global $kernel;
+if (null === $kernel) {
+    $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
+    $kernel->boot();
+}
 
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
 Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
-Context::getContext()->currency = Context::getContext()->currency ?? new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+Context::getContext()->currency = Context::getContext()->currency ?? new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
@@ -48,14 +54,14 @@ if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$
 }
 
 // Use for image management (using the POST method of the browser to simulate the PUT method)
-$method = isset($_REQUEST['ps_method']) ? $_REQUEST['ps_method'] : $_SERVER['REQUEST_METHOD'];
+$method = $_REQUEST['ps_method'] ?? $_SERVER['REQUEST_METHOD'];
 
 if (isset($_SERVER['PHP_AUTH_USER'])) {
     $key = $_SERVER['PHP_AUTH_USER'];
 } elseif (isset($_GET['ws_key'])) {
     $key = $_GET['ws_key'];
 } else {
-    header($_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized');
+    header($_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized');
     header('WWW-Authenticate: Basic realm="Welcome to PrestaShop Webservice, please enter the authentication key as the login. No password required."');
     die('401 Unauthorized');
 }
@@ -64,7 +70,7 @@ $input_xml = null;
 
 // if a XML is in PUT or in POST
 if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen("php://input", "rb");
+    $putresource = fopen('php://input', 'rb');
     while ($putData = fread($putresource, 1024)) {
         $input_xml .= $putData;
     }
@@ -85,7 +91,7 @@ if (!class_exists($class_name)) {
 }
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;
-$request = call_user_func(array($class_name, 'getInstance'));
+$request = call_user_func([$class_name, 'getInstance']);
 
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 
@@ -96,7 +102,7 @@ if (ob_get_length() != 0) {
 
 // Manage cache
 if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_SHA1'] == $result['content_sha1']) {
-    $result['status'] = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
+    $result['status'] = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
 }
 
 if (is_array($result['headers'])) {

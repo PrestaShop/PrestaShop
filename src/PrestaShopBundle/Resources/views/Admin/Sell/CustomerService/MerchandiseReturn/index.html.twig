@@ -26,23 +26,15 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Merchandise Returns'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block merchandise_returns_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': merchandiseReturnsGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': merchandiseReturnsGrid} %}
   {% endblock %}
 
   {% block merchandise_returns_options %}
-    <div class="row">
-      <div class="col-12">
-        {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig' %}
   {% endblock %}
 {% endblock %}
 

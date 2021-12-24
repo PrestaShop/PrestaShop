@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-details
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @update-details
 Feature: Update product details from Back Office (BO)

@@ -31,7 +31,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use Product;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -49,7 +48,6 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         $tableData = $table->getRowsHash();
         $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $this->getSharedStorage()->get($productReference),
@@ -104,18 +102,6 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
     public function assertProductHasNoCachedDefaultCombination(string $productReference): void
     {
         $this->assertCachedDefaultCombinationId($productReference, 0);
-    }
-
-    /**
-     * @When I remove combination :combinationReference
-     *
-     * @param string $combinationReference
-     */
-    public function removeCombination(string $combinationReference): void
-    {
-        $this->getCommandBus()->handle(new RemoveCombinationCommand(
-            (int) $this->getSharedStorage()->get($combinationReference)
-        ));
     }
 
     /**

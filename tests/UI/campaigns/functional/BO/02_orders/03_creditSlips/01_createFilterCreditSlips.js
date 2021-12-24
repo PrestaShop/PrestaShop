@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -37,25 +38,9 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const dateTodayToCheck = `${month}/${day}/${year}`;
-
 let numberOfCreditSlips = 0;
+const todayDate = getDateFormat('yyyy-mm-dd');
+const todayDateToCheck = getDateFormat('mm/dd/yyyy');
 
 /*
 Create order
@@ -297,7 +282,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
 
       // Filter credit slips
-      await creditSlipsPage.filterCreditSlipsByDate(page, dateToday, dateToday);
+      await creditSlipsPage.filterCreditSlipsByDate(page, todayDate, todayDate);
 
       // Check number of element
       const numberOfCreditSlipsAfterFilter = await creditSlipsPage.getNumberOfElementInGrid(page);
@@ -305,7 +290,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
         const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
-        await expect(textColumn).to.contains(dateTodayToCheck);
+        await expect(textColumn).to.contains(todayDateToCheck);
       }
     });
 

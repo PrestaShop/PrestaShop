@@ -30,17 +30,26 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
 use DateTime;
+use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
+use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryHandler\GetProductForEditingHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
@@ -60,7 +69,7 @@ use Product;
 use Tag;
 
 /**
- * Handles the query GetEditableProduct using legacy ObjectModel
+ * Handles the query @see GetProductForEditing using legacy ObjectModel
  */
 final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
@@ -75,6 +84,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $productRepository;
 
     /**
+     * @var CategoryRepository
+     */
+    private $categoryRepository;
+
+    /**
      * @var StockAvailableRepository
      */
     private $stockAvailableRepository;
@@ -83,6 +97,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @var VirtualProductFileRepository
      */
     private $virtualProductFileRepository;
+
+    /**
+     * @var ProductImageRepository
+     */
+    private $productImageRepository;
 
     /**
      * @var TaxComputer
@@ -95,27 +114,58 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $countryId;
 
     /**
+     * @var RedirectTargetProvider
+     */
+    private $targetProvider;
+
+    /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageUrlFactory;
+
+    /**
+     * @var AttachmentRepository
+     */
+    private $attachmentRepository;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductRepository $productRepository
+     * @param CategoryRepository $categoryRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
+     * @param ProductImageRepository $productImageRepository
+     * @param AttachmentRepository $attachmentRepository
      * @param TaxComputer $taxComputer
      * @param int $countryId
+     * @param RedirectTargetProvider $targetProvider
+     * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
         NumberExtractor $numberExtractor,
         ProductRepository $productRepository,
+        CategoryRepository $categoryRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
+        ProductImageRepository $productImageRepository,
+        AttachmentRepository $attachmentRepository,
         TaxComputer $taxComputer,
-        int $countryId
+        int $countryId,
+        RedirectTargetProvider $targetProvider,
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->productRepository = $productRepository;
+        $this->categoryRepository = $categoryRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
         $this->productRepository = $productRepository;
+        $this->attachmentRepository = $attachmentRepository;
+        $this->targetProvider = $targetProvider;
+        $this->productImageRepository = $productImageRepository;
+        $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
     /**
@@ -128,6 +178,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         return new ProductForEditing(
             (int) $product->id,
             $product->getProductType(),
+            (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
@@ -136,10 +187,35 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->getDetails($product),
             $this->getShippingInformation($product),
             $this->getSeoOptions($product),
-            $product->getAssociatedAttachmentIds(),
+            $this->getAttachments($query->getProductId()),
             $this->getProductStockInformation($product),
-            $this->getVirtualProductFile($product)
+            $this->getVirtualProductFile($product),
+            $this->getCover($product)
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return AttachmentInformation[]
+     */
+    private function getAttachments(ProductId $productId): array
+    {
+        $attachments = $this->attachmentRepository->getProductAttachments($productId);
+
+        $attachmentsInfo = [];
+        foreach ($attachments as $attachment) {
+            $attachmentsInfo[] = new AttachmentInformation(
+                (int) $attachment['id_attachment'],
+                $attachment['name'],
+                $attachment['description'],
+                $attachment['file_name'],
+                $attachment['mime'],
+                (int) $attachment['file_size']
+            );
+        }
+
+        return $attachmentsInfo;
     }
 
     /**
@@ -160,14 +236,26 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     /**
      * @param Product $product
      *
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    private function getCategoriesInformation(Product $product): ProductCategoriesInformation
+    private function getCategoriesInformation(Product $product): CategoriesInformation
     {
-        $categoryIds = array_map('intval', $product->getCategories());
+        $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 
-        return new ProductCategoriesInformation($categoryIds, $defaultCategoryId);
+        $categoryIds = [];
+        foreach ($categoryIdValues as $categoryIdValue) {
+            $categoryIds[] = new CategoryId((int) $categoryIdValue);
+        }
+
+        $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
+
+        $categoriesInformation = [];
+        foreach ($categoryNames as $categoryId => $localizedNames) {
+            $categoriesInformation[] = new CategoryInformation($categoryId, $localizedNames);
+        }
+
+        return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
     }
 
     /**
@@ -205,7 +293,6 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private function getOptions(Product $product): ProductOptions
     {
         return new ProductOptions(
-            (bool) $product->active,
             $product->visibility,
             (bool) $product->available_for_order,
             (bool) $product->online_only,
@@ -315,12 +402,17 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getSeoOptions(Product $product): ProductSeoOptions
     {
+        $redirectTarget = $this->targetProvider->getRedirectTarget(
+            $product->redirect_type,
+            (int) $product->id_type_redirected
+        );
+
         return new ProductSeoOptions(
             $product->meta_title,
             $product->meta_description,
             $product->link_rewrite,
             $product->redirect_type,
-            (int) $product->id_type_redirected
+            $redirectTarget
         );
     }
 
@@ -374,7 +466,22 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            $virtualProductFile->date_expiration === DateTimeUtil::NULL_DATETIME ? null : new DateTime($virtualProductFile->date_expiration)
+            DateTimeUtil::isNull($virtualProductFile->date_expiration) ? null : new DateTime($virtualProductFile->date_expiration)
         );
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return string
+     */
+    private function getCover(Product $product): string
+    {
+        $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));
+        if ($coverImage) {
+            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+        }
+
+        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
     }
 }

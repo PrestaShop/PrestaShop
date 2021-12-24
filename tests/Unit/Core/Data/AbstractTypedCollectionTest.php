@@ -48,7 +48,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidConstructor()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         new TestCollection([
             new InvalidCollectionTestElement(),
@@ -57,7 +58,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testPartialInvalidConstructor()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         new TestCollection([
             new CollectionTestElement(),
@@ -83,7 +85,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidRemoveElement()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $element = new CollectionTestElement();
         $collection = new TestCollection([$element]);
@@ -109,7 +112,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidOffsetSet()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);
@@ -133,7 +137,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidContains()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);
@@ -165,7 +170,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidIndexOf()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);
@@ -190,7 +196,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidSet()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);
@@ -214,7 +221,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidAdd()
     {
-        $this->expectException(TypeException::class, 'Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type Tests\Unit\Core\Data\InvalidCollectionTestElement, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);
@@ -242,7 +250,8 @@ class AbstractTypedCollectionTest extends TestCase
 
     public function testInvalidString()
     {
-        $this->expectException(TypeException::class, 'Invalid element type string, expected Tests\Unit\Core\Data\CollectionTestElement');
+        $this->expectException(TypeException::class);
+        $this->expectExceptionMessage('Invalid element type string, expected Tests\Unit\Core\Data\CollectionTestElement');
 
         $collection = new TestCollection();
         $this->assertNotNull($collection);

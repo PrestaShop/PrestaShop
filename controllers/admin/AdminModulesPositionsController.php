@@ -184,7 +184,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         }
 
                         // Add files exceptions
-                        if (!$module->editExceptions($id_hook, $exceptions, Shop::getContextListShopID())) {
+                        if (!$module->editExceptions($id_hook, $exceptions)) {
                             $this->errors[] = $this->trans('An error occurred while transplanting the module to its hook.', [], 'Admin.Modules.Notification');
                         } else {
                             Tools::redirectAdmin($baseUrl . '&conf=16' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
@@ -278,10 +278,9 @@ class AdminModulesPositionsControllerCore extends AdminController
         // Init toolbar
         $this->initToolbarTitle();
 
-        $admin_dir = basename(_PS_ADMIN_DIR_);
         $modules = Module::getModulesInstalled();
 
-        $assoc_modules_id = [];
+        $assoc_modules_id = $module_instances = [];
         foreach ($modules as $module) {
             if ($tmp_instance = Module::getInstanceById((int) $module['id_module'])) {
                 // We want to be able to sort modules by display name
@@ -414,7 +413,7 @@ class AdminModulesPositionsControllerCore extends AdminController
             'hooks' => $hooks,
             'exception_list' => $this->displayModuleExceptionList(array_shift($excepts_list), 0),
             'exception_list_diff' => $exception_list_diff,
-            'except_diff' => isset($excepts_diff) ? $excepts_diff : null,
+            'except_diff' => $excepts_diff,
             'display_key' => $this->display_key,
             'modules' => $modules,
             'show_toolbar' => true,

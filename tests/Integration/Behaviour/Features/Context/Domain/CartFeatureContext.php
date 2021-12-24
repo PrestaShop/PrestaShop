@@ -101,7 +101,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -137,9 +137,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -163,7 +161,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new AddProductToCartCommand(
@@ -197,7 +194,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $command = new AddSpecificPriceCommand(
             $productId,
             Reduction::TYPE_AMOUNT,
-            0,
+            '0',
             true,
             $price,
             1
@@ -264,7 +261,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -364,7 +360,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -1091,14 +1086,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsMinimumQuantityWhichMustBeAddedToCart(int $minQuantity)
     {
-        $this->assertLastErrorIs(
+        /** @var MinimalQuantityException $lastError */
+        $lastError = $this->assertLastErrorIs(
             MinimalQuantityException::class
         );
-        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
+        if ($minQuantity !== $lastError->getMinimalQuantity()) {
             throw new RuntimeException(sprintf(
                 'Minimal quantity in exception, expected %s but got %s',
                 $minQuantity,
-                $this->getLastException()->getMinimalQuantity()
+                $lastError->getMinimalQuantity()
             ));
         }
     }
@@ -1145,5 +1141,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cart->id_customer = $customerId;
         $cart->save();
         Context::getContext()->cart = $cart;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

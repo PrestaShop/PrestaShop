@@ -32,7 +32,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's name for the current language.
      *
-     * @var string
+     * @var string|string[]
      */
     public $name;
 
@@ -77,7 +77,7 @@ class CurrencyCore extends ObjectModel
      *
      * @var bool
      */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * Is this currency unofficial ?
@@ -112,7 +112,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's symbol for the current language.
      *
-     * @var string
+     * @var string|string[]
      */
     public $symbol;
 
@@ -155,7 +155,7 @@ class CurrencyCore extends ObjectModel
     /**
      * CLDR price pattern
      *
-     * @var string
+     * @var string|string[]
      */
     public $pattern;
 
@@ -376,8 +376,10 @@ class CurrencyCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
+        parent::resetStaticCache();
         static::$currencies = [];
         static::$countActiveCurrencies = [];
+        Cache::clean('Currency::*');
     }
 
     /**
@@ -754,8 +756,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Add Cldr datas to result query or signe object/array.
      *
-     * @param $currencies mixed object|array
-     * @param $isObject bool
+     * @param array|object $currencies
+     * @param bool $isObject
      *
      * @return mixed object|array
      */

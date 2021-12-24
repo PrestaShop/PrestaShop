@@ -107,6 +107,7 @@ final class UpdateCombinationDetailsHandler implements UpdateCombinationDetailsH
 
         if (null !== $command->getWeight()) {
             $combination->weight = (float) (string) $command->getWeight();
+            $updatableProperties[] = 'weight';
         }
 
         return $updatableProperties;

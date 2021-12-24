@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\DefaultProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -167,12 +167,11 @@ class ProductSupplierUpdater
     public function resetDefaultSupplier(Product $product): void
     {
         $product->supplier_reference = '';
-        $product->wholesale_price = '0';
         $product->id_supplier = 0;
 
         $this->productRepository->partialUpdate(
             $product,
-            ['supplier_reference', 'wholesale_price', 'id_supplier'],
+            ['supplier_reference', 'id_supplier'],
             CannotUpdateProductException::FAILED_UPDATE_DEFAULT_SUPPLIER
         );
     }
@@ -214,14 +213,14 @@ class ProductSupplierUpdater
 
         $productSuppliers = $this->productSupplierRepository->getAssociatedProductSuppliers($productId, $supplierId);
         if (empty($productSuppliers)) {
-            throw new DefaultProductSupplierNotAssociatedException(sprintf(
+            throw new ProductSupplierNotAssociatedException(sprintf(
                 'Supplier #%d is not associated with product #%d', $supplierIdValue, $productIdValue
             ));
         }
 
         $defaultSupplier = $this->productSupplierRepository->get(reset($productSuppliers));
         $product->supplier_reference = $defaultSupplier->product_supplier_reference;
-        $product->wholesale_price = (string) $defaultSupplier->product_supplier_price_te;
+        $product->wholesale_price = (float) (string) $defaultSupplier->product_supplier_price_te;
         $product->id_supplier = $supplierIdValue;
 
         $this->productRepository->partialUpdate(
@@ -251,7 +250,7 @@ class ProductSupplierUpdater
         }
 
         // Check if product has a default supplier if not use the first one
-        $defaultSupplierId = $this->productSupplierRepository->getProductDefaultSupplierId($productId);
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
         if (null === $defaultSupplierId) {
             /** @var ProductSupplier $defaultSupplier */
             $defaultSupplier = reset($productSuppliers);

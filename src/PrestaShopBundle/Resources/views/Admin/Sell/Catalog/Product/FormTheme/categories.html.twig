@@ -1,0 +1,93 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block category_tags_collection_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTagsWrapper form-group d-block')|trim }) -%}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  <div {{ block('widget_attributes') }}>
+    {{ block('form_rows') }}
+  </div>
+{% endblock %}
+
+{% block product_category_row %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag tag-item')|trim }) -%}
+
+  <span {{ block('widget_attributes') }}>
+    {{ form_widget(form.name) }}
+    {% set hideCross = (form.vars.data.id is defined) and (form.vars.data.id == form.parent.parent.vars.data.default_category_id) %}
+    <a class="pstaggerClosingCross {% if hideCross %}d-none{% endif %}" href="#">x</a>
+    {{ form_widget(form.id, {'attr': {'class': 'category-id-input'}}) }}
+  </span>
+{% endblock %}
+
+{% block category_tree_selector_row %}
+  <template id="categories-modal-template">
+    <div id="categories-modal-content">
+      {{ form_row(form.product_categories) }}
+
+      <fieldset class="form-group tree-fieldset d-none">
+        <div class="ui-widget">
+          <div class="search search-with-icon">
+            <input type="text" id="ps-select-product-category" class="form-control autocomplete search mb-1 ui-autocomplete-input" placeholder="{{ 'Search categories'|trans({}, 'Admin.Catalog.Help') }}" autocomplete="off">
+          </div>
+
+          <label class="form-control-label text-uppercase">{{ 'Associated categories'|trans({}, 'Admin.Catalog.Feature') }}</label>
+          {{ form_row(form.category_tree) }}
+        </div>
+      </fieldset>
+
+      <div class="categories-tree-loader">
+        <div class="spinner m-auto d-block"></div>
+      </div>
+
+      <div class="category-tree-footer">
+        {{ form_widget(form.cancel_btn) }}
+        {{ form_widget(form.apply_btn) }}
+      </div>
+    </div>
+  </template>
+{% endblock %}
+
+{% block category_tree_entry_row %}
+  <li class="category-tree-element">
+    <div class="checkbox category-tree-inputs">
+      {{ form_widget(form) }}
+    </div>
+    <ul class="children-list"></ul>
+  </li>
+{% endblock %}
+
+{% block category_tree_collection_row %}
+<div class="category-tree-container">
+  <div class="category-tree-overflow js-category-tree-overflow">
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+    {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' js-category-tree-list category-tree')|trim }) -%}
+    <ul {{ block('widget_attributes') }}>
+      {{- block('form_rows') -}}
+    </ul>
+  </div>
+</div>
+{% endblock %}

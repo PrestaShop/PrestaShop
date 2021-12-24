@@ -23,7 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class HookCore extends ObjectModel
@@ -411,21 +414,28 @@ class HookCore extends ObjectModel
      */
     private static function callHookOn(Module $module, string $hookName, array $hookArgs)
     {
-        // Note: we need to make sure to call the exact hook name first.
-        // This especially important when the module uses __call() to process the right hook.
-        // Since is_callable() will always return true when __call() is available,
-        // if the module was expecting an aliased hook name to be invoked, but we send
-        // the canonical hook name instead, the hook will never be acknowledged by the module.
-        $methodName = static::getMethodName($hookName);
-        if (is_callable([$module, $methodName])) {
-            return static::coreCallHook($module, $methodName, $hookArgs);
-        }
-
-        // fall back to all other names
-        foreach (static::getAllKnownNames($hookName) as $hook) {
-            $methodName = static::getMethodName($hook);
+        try {
+            // Note: we need to make sure to call the exact hook name first.
+            // This especially important when the module uses __call() to process the right hook.
+            // Since is_callable() will always return true when __call() is available,
+            // if the module was expecting an aliased hook name to be invoked, but we send
+            // the canonical hook name instead, the hook will never be acknowledged by the module.
+            $methodName = static::getMethodName($hookName);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
+            }
+
+            // fall back to all other names
+            foreach (static::getAllKnownNames($hookName) as $hook) {
+                $methodName = static::getMethodName($hook);
+                if (is_callable([$module, $methodName])) {
+                    return static::coreCallHook($module, $methodName, $hookArgs);
+                }
+            }
+        } catch (Exception $e) {
+            $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
+            if ($environment->isDebug()) {
+                throw new CoreException($e->getMessage(), $e->getCode(), $e);
             }
         }
 
@@ -443,7 +453,7 @@ class HookCore extends ObjectModel
      *
      * @param string $hookName Hook name
      *
-     * @return int Hook ID
+     * @return int|string Hook ID
      *
      * @deprecated 1.7.1.0
      */
@@ -469,16 +479,7 @@ class HookCore extends ObjectModel
      *
      * @since 1.5.0
      *
-     * @return array<int, array<int, array{
-     *                    id_hook: string|int,
-     *                    title: string,
-     *                    description: string,
-     *                    hm.position: string|int,
-     *                    m.position: string|int,
-     *                    id_module: string,
-     *                    name: string,
-     *                    active: string|int
-     *                    CS }>>
+     * @return array<int, array<int, array{id_hook:string|int,title:string,description:string,'hm.position':string|int,'m.position':string|int,id_module:string,name:string,active:string|int}>>
      */
     public static function getHookModuleList()
     {
@@ -600,7 +601,7 @@ class HookCore extends ObjectModel
                 $new_hook = new Hook();
                 $new_hook->name = pSQL($hook_name);
                 $new_hook->title = pSQL($hook_name);
-                $new_hook->position = 1;
+                $new_hook->position = true;
                 $new_hook->add();
                 $id_hook = $new_hook->id;
                 if (!$id_hook) {
@@ -752,7 +753,7 @@ class HookCore extends ObjectModel
      *
      * @param string $hook_name Hook Name
      * @param array $hook_args Parameters for the functions
-     * @param int|null $id_module Execute hook for this module only
+     * @param string|int|null $id_module Execute hook for this module only
      * @param bool $array_return If specified, module output will be set by name in an array
      * @param bool $check_exceptions Check permission exceptions
      * @param bool $use_push Force change to be refreshed on Dashboard widgets
@@ -773,6 +774,10 @@ class HookCore extends ObjectModel
         $id_shop = null,
         $chain = false
     ) {
+        if ($use_push) {
+            Tools::displayParameterAsDeprecated('use_push');
+        }
+
         if (defined('PS_INSTALLATION_IN_PROGRESS') || !self::getHookStatusByName($hook_name)) {
             return $array_return ? [] : null;
         }
@@ -912,20 +917,12 @@ class HookCore extends ObjectModel
                 continue;
             }
 
-            if ($use_push && !$moduleInstance->allow_push) {
-                continue;
-            }
-
             if ($isRegistryEnabled) {
                 $hookRegistry->hookedByModule($moduleInstance);
             }
 
             if (Hook::isHookCallableOn($moduleInstance, $registeredHookName)) {
                 $hook_args['altern'] = ++$altern;
-
-                if ($use_push && isset($moduleInstance->push_filename) && file_exists($moduleInstance->push_filename)) {
-                    Tools::waitUntilFileIsModified($moduleInstance->push_filename, $moduleInstance->push_time_limit);
-                }
 
                 if (0 !== $key && true === $chain) {
                     $hook_args = $output;
@@ -970,7 +967,9 @@ class HookCore extends ObjectModel
             }
         }
 
-        if ($different_shop) {
+        if ($different_shop
+            && isset($old_shop, $old_context, $shop->id)
+             ) {
             $context->shop = $old_shop;
             $context->shop->setContext($old_context, $shop->id);
         }
@@ -1004,7 +1003,16 @@ class HookCore extends ObjectModel
             return null;
         }
 
-        return $module->renderWidget($hook_name, $params);
+        try {
+            return $module->renderWidget($hook_name, $params);
+        } catch (Exception $e) {
+            $environment = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\Environment');
+            if ($environment->isDebug()) {
+                throw new CoreException($e->getMessage(), $e->getCode(), $e);
+            }
+        }
+
+        return '';
     }
 
     /**

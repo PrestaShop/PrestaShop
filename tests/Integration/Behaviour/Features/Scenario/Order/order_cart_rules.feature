@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-cart-rules
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-cart-rules
 @clear-cache-before-feature
 Feature: Order from Back Office (BO)
@@ -714,7 +714,6 @@ Feature: Order from Back Office (BO)
     When I add discount to order "bo_order1" with following details:
       | name      | Free Shipping |
       | type      | free_shipping |
-    Then I should get no error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
@@ -758,7 +757,6 @@ Feature: Order from Back Office (BO)
     When I add discount to order "bo_order1" on first invoice and following details:
       | name      | Free Shipping |
       | type      | free_shipping |
-    Then I should get no error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:

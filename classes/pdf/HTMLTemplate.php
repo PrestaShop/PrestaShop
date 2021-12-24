@@ -96,14 +96,7 @@ abstract class HTMLTemplateCore
      */
     protected function getShopAddress()
     {
-        $shop_address = '';
-
-        $shop_address_obj = $this->shop->getAddress();
-        if (isset($shop_address_obj) && $shop_address_obj instanceof Address) {
-            $shop_address = AddressFormat::generateAddress($shop_address_obj, [], ' - ', ' ');
-        }
-
-        return $shop_address;
+        return AddressFormat::generateAddress($this->shop->getAddress(), [], ' - ', ' ');
     }
 
     /**
@@ -213,7 +206,7 @@ abstract class HTMLTemplateCore
      * If the template is not present in the theme directory, it will return the default template
      * in _PS_PDF_DIR_ directory.
      *
-     * @param $template_name
+     * @param string $template_name
      *
      * @return string
      */

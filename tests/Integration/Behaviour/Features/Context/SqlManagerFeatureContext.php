@@ -37,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Query\GetDatabaseTableFields
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\DatabaseTableField;
 use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 use RuntimeException;
-use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 
 /**
@@ -202,10 +201,10 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsOnlySelectRequest(): void
     {
-        $this->assertLastErrorIs(SqlRequestConstraintException::class);
+        $lastError = $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             '"SELECT" does not exist.',
-            $this->getLastException()->getMessage()
+            $lastError->getMessage()
         );
     }
 
@@ -214,10 +213,10 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsAMalformedSqlRequest(): void
     {
-        $this->assertLastErrorIs(SqlRequestConstraintException::class);
+        $lastError = $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             'Bad SQL query',
-            $this->getLastException()->getMessage()
+            $lastError->getMessage()
         );
     }
 
@@ -226,10 +225,10 @@ class SqlManagerFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsAnUnknownTable(string $tableName): void
     {
-        $this->assertLastErrorIs(SqlRequestConstraintException::class);
+        $lastError = $this->assertLastErrorIs(SqlRequestConstraintException::class);
         Assert::assertEquals(
             sprintf('The "%s" table does not exist.', $tableName),
-            $this->getLastException()->getMessage()
+            $lastError->getMessage()
         );
     }
 }

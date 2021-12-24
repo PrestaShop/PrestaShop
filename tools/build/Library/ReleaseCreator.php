@@ -813,6 +813,8 @@ class ReleaseCreator
         );
         exec("rm -rf {$argTempProjectPath}");
         $this->consoleWriter->displayText(" DONE{$this->lineSeparator}", ConsoleWriter::COLOR_GREEN);
+
+        return $this;
     }
 
     /**
@@ -856,12 +858,12 @@ class ReleaseCreator
             if (is_numeric($key)) {
                 $md5 = md5_file($value);
                 $count = substr_count($value, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $file_name = str_replace($this->tempProjectPath, null, $value);
+                $file_name = str_replace($this->tempProjectPath, '', $value);
                 $file_name = pathinfo($file_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<md5file name=\"$file_name\">$md5</md5file>" . PHP_EOL;
             } else {
                 $count = substr_count($key, DIRECTORY_SEPARATOR) - $subCount + 1;
-                $dir_name = str_replace($this->tempProjectPath, null, $key);
+                $dir_name = str_replace($this->tempProjectPath, '', $key);
                 $dir_name = pathinfo($dir_name, PATHINFO_BASENAME);
                 $content .= str_repeat("\t", $count) . "<dir name=\"$dir_name\">" . PHP_EOL;
                 $content .= $this->generateXMLDirectoryChecksum($value);

@@ -2,7 +2,6 @@
 <entity_carrier>
   <fields id="name" class="Carrier" sql="a.id_carrier = 1">
     <field name="id_reference"/>
-    <field name="id_tax_rules_group"/>
     <field name="name"/>
     <field name="url"/>
     <field name="active"/>

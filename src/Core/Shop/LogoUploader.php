@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Shop;
 use Configuration;
 use Context;
 use ImageManager;
+use PrestaShop\PrestaShop\Core\Domain\Shop\DTO\ShopLogoSettings;
 use PrestaShopException;
 use Shop;
 use Tools;
@@ -101,7 +102,8 @@ class LogoUploader
         $files = empty($files) ? $_FILES : $files;
 
         if (isset($files[$fieldName]['tmp_name'], $files[$fieldName]['tmp_name'], $files[$fieldName]['size'])) {
-            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize())) {
+            $availableExtensions = (in_array($fieldName, ['PS_LOGO_MAIL', 'PS_LOGO_INVOICE'])) ? ShopLogoSettings::AVAILABLE_MAIL_AND_INVOICE_LOGO_IMAGE_EXTENSIONS : ShopLogoSettings::AVAILABLE_LOGO_IMAGE_EXTENSIONS;
+            if ($error = ImageManager::validateUpload($files[$fieldName], Tools::getMaxUploadSize(), $availableExtensions)) {
                 throw new PrestaShopException($error);
             }
             $tmpName = tempnam(_PS_TMP_IMG_DIR_, 'PS');
@@ -110,7 +112,11 @@ class LogoUploader
                 throw new PrestaShopException(sprintf('%Upload of temporary file to %s has failed.', $tmpName));
             }
 
-            $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
+                $fileExtension = '.svg';
+            } else {
+                $fileExtension = ($fieldName == 'PS_STORES_ICON') ? '.gif' : '.jpg';
+            }
             $logoName = $this->getLogoName($logoPrefix, $fileExtension);
 
             if ($fieldName == 'PS_STORES_ICON') {
@@ -118,7 +124,11 @@ class LogoUploader
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop icon %s.', $logoName));
                 }
             } else {
-                if (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                if (ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
+                    if (!copy($tmpName, _PS_IMG_DIR_ . $logoName)) {
+                        throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
+                    }
+                } elseif (!@ImageManager::resize($tmpName, _PS_IMG_DIR_ . $logoName)) {
                     throw new PrestaShopException(sprintf('An error occurred while attempting to copy shop logo %s.', $logoName));
                 }
             }
@@ -126,6 +136,25 @@ class LogoUploader
             $idShop = $this->shop->id;
             $idShopGroup = null;
 
+            // on updating PS_LOGO if the new file is an svg, copy old logo for mail and invoice
+            if ($fieldName == 'PS_LOGO' && ImageManager::isSvgMimeType($files[$fieldName]['type'])) {
+                if (empty(Configuration::get('PS_LOGO_MAIL'))) {
+                    $newLogoMail = $this->getLogoName('logo_mail', '.' . pathinfo(_PS_IMG_DIR_ . Configuration::get($fieldName), \PATHINFO_EXTENSION));
+                    // copy old logo file for mail
+                    if (@copy(_PS_IMG_DIR_ . Configuration::get($fieldName), _PS_IMG_DIR_ . $newLogoMail)) {
+                        Configuration::updateValue('PS_LOGO_MAIL', $newLogoMail);
+                    }
+                }
+                if (empty(Configuration::get('PS_LOGO_INVOICE'))) {
+                    $newLogoInvoice = $this->getLogoName('logo_invoice', '.' . pathinfo(Configuration::get($fieldName), \PATHINFO_EXTENSION));
+                    // copy old logo file for invoice
+                    if (@copy(_PS_IMG_DIR_ . Configuration::get($fieldName), _PS_IMG_DIR_ . $newLogoInvoice)) {
+                        Configuration::updateValue('PS_LOGO_INVOICE', $newLogoInvoice);
+                    }
+                }
+            }
+
+            // manage deleting old logo
             if (!count($this->errors) && @filemtime(_PS_IMG_DIR_ . Configuration::get($fieldName))) {
                 if (Shop::isFeatureActive()) {
                     $this->updateInMultiShopContext($idShop, $idShopGroup, $fieldName);

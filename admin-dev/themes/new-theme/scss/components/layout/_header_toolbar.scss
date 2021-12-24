@@ -1,26 +1,26 @@
 .header-toolbar {
-  position: fixed;
-  top: $size-header-height;
+  // stylelint-disable-next-line
+  position: sticky;
+  top: 2.5rem;
   right: 0;
-  left: $size-navbar-width;
   z-index: 990; // popup menus' z-index is 1000, so it has to be just below that
+  padding-left: $size-navbar-width;
   background: $white;
   border-bottom: 0.0625rem solid $color-separator;
   @include transition(
-    left 0.5s ease
+    padding 0.5s ease
   ); // transition when collapsing the nav menu
 
   .mobile & {
-    top: $size-header-height + ($header-mobile-padding-y * 2);
+    top: $size-header-height + ($header-mobile-padding-y / 2) - 0.1rem;
   }
 
   @include media-breakpoint-down(md) {
-    left: 0;
+    padding-left: 0;
   }
 
   @include media-breakpoint-down(sm) {
     top: 3.5rem;
-    padding-top: 0.3rem;
   }
 
   .container-fluid {

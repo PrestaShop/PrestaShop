@@ -41,11 +41,11 @@ final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilder
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['options']['customizations'])) {
+        if (!isset($formData['specifications']['customizations'])) {
             return [];
         }
 
-        $customizations = $formData['options']['customizations'];
+        $customizations = $formData['specifications']['customizations'];
 
         if (empty($customizations['customization_fields'])) {
             return [new RemoveAllCustomizationFieldsFromProductCommand($productId->getValue())];

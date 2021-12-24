@@ -31,11 +31,7 @@
   </h3>
   <div class="card-body">
     {% if customerDiscountGrid.data.records_total > 0 %}
-      <div class="row">
-        <div class="col">
-          {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerDiscountGrid} %}
-        </div>
-      </div>
+      {% include '@PrestaShop/Admin/Common/Grid/grid.html.twig' with {'grid': customerDiscountGrid} %}
     {% else %}
       <p class="text-muted text-center mb-0">
         {{ '%firstname% %lastname% has no discount vouchers'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}

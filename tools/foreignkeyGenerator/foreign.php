@@ -57,7 +57,7 @@ function clearForeignKeys()
 /**
  * Set id_parent to id_self when id_parent = 0.
  *
- * @param string table name to process
+ * @param string $table table name to process
  */
 function noNullParent($table)
 {
@@ -177,7 +177,7 @@ function forgeChangesQueries($changes)
 /**
  * Forge the Foreign keys queries.
  *
- * @param relations Array describing the foreign keys
+ * @param array $relations Array describing the foreign keys
  *
  * @return array of queries to be executed
  */
@@ -203,7 +203,11 @@ function forgeRelationsQueries($relations)
 clearForeignKeys();
 updateMismatchForeign();
 
-executeQueries(forgeChangesQueries($changes));
-executeQueries(forgeRelationsQueries($relations));
+if (isset($changes)) {
+    executeQueries(forgeChangesQueries($changes));
+}
+if (isset($relations)) {
+    executeQueries(forgeRelationsQueries($relations));
+}
 
 echo 'OK';

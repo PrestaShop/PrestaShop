@@ -26,7 +26,8 @@
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
 
-import CategoriesManager from '@pages/product/components/categories';
+import AttachmentsManager from '@pages/product/edit/attachments-manager';
+import CategoriesManager from '@pages/product/components/categories/categories-manager';
 import CombinationsManager from '@pages/product/edit/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
@@ -38,7 +39,8 @@ import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
-
+import RelatedProductsManager from '@pages/product/edit/related-products-manager';
+import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 
@@ -51,6 +53,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
+    'DeltaQuantityInput',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -65,20 +68,22 @@ $(() => {
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
-  if (productId && productType === ProductMap.productType.COMBINATIONS) {
+  if (productType === ProductMap.productType.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
-    // selected on load, it is only initialized when productId exists though (edition mode)
+    // selected on load
     new CombinationsManager(productId);
   }
 
-  new NavbarHandler(ProductMap.navigationBar);
-  new ProductSEOManager();
+  new NavbarHandler($(ProductMap.navigationBar));
+  new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
   new ProductModulesManager();
+  new RelatedProductsManager(eventEmitter);
+  new CreateProductModal();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(
@@ -87,19 +92,15 @@ $(() => {
     $productFormSubmitButton,
   ).watch();
 
-  // Form has no productId data means that we are in creation mode
-  if (!productId) {
-    return;
-  }
-
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);
 
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
+  new AttachmentsManager();
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
-    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true);
+    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
   }
   if (productType === ProductMap.productType.VIRTUAL) {
     new VirtualProductManager(productFormModel);

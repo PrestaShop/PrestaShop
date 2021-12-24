@@ -39,7 +39,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     /** @var Filesystem */
     private $fileSystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->fileSystem = new Filesystem();
@@ -48,7 +48,8 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
 
     public function testMissingArguments()
     {
-        $this->expectException(RuntimeException::class, 'Not enough arguments (missing: "theme, locale").');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Not enough arguments (missing: "theme, locale").');
 
         $application = new Application(static::$kernel);
 
@@ -207,7 +208,7 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
         return $outputFolder;
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         self::$kernel->shutdown();
     }

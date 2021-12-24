@@ -28,8 +28,9 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 module.exports = {
   externals: {
@@ -57,9 +58,9 @@ module.exports = {
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
     customer: './js/pages/customer',
-    customer_address_form: './js/pages/address/form.js',
+    customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
-    customer_thread_view: './js/pages/customer-thread/view.js',
+    customer_thread_view: './js/pages/customer-thread/view',
     email: './js/pages/email',
     employee: './js/pages/employee/index',
     employee_form: './js/pages/employee/form',
@@ -74,19 +75,20 @@ module.exports = {
     language: './js/pages/language',
     localization: './js/pages/localization',
     logs: './js/pages/logs',
-    main: './js/theme.js',
+    main: './js/theme',
     maintenance: './js/pages/maintenance',
     manufacturer: './js/pages/manufacturer',
-    manufacturer_address_form: './js/pages/manufacturer/manufacturer_address_form.js',
+    manufacturer_address_form:
+      './js/pages/manufacturer/manufacturer_address_form',
     merchandise_return: './js/pages/merchandise-return',
     meta: './js/pages/meta',
     module: './js/pages/module',
     module_card: './js/app/pages/module-card',
     monitoring: './js/pages/monitoring',
     multistore_dropdown: './js/components/multistore-dropdown',
-    multistore_header: './js/components/multistore-header.js',
+    multistore_header: './js/components/multistore-header',
     order: './js/pages/order',
-    order_create: './js/pages/order/create.js',
+    order_create: './js/pages/order/create',
     order_delivery: './js/pages/order/delivery',
     order_message: './js/pages/order_message',
     order_message_form: './js/pages/order_message/form',
@@ -94,20 +96,23 @@ module.exports = {
     order_return_states_form: './js/pages/order-return-states/form',
     order_states: './js/pages/order-states',
     order_states_form: './js/pages/order-states/form',
-    order_view: './js/pages/order/view.js',
+    order_view: './js/pages/order/view',
     orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
     product_edit: './js/pages/product/edit',
+    product_create: './js/pages/product/create',
+    product_index: './js/pages/product/index',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
+    search_engine: './js/pages/search-engine',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
     supplier: './js/pages/supplier',
-    supplier_form: './js/pages/supplier/supplier-form.js',
+    supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     theme: './scss/theme.scss',
@@ -127,7 +132,7 @@ module.exports = {
     chunkFilename: '[id].[hash:8].js',
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
       vue$: 'vue/dist/vue.common.js',
       '@app': path.resolve(__dirname, '../js/app'),
@@ -137,22 +142,34 @@ module.exports = {
       '@scss': path.resolve(__dirname, '../scss'),
       '@node_modules': path.resolve(__dirname, '../node_modules'),
       '@vue': path.resolve(__dirname, '../js/vue'),
+      '@PSTypes': path.resolve(__dirname, '../js/types'),
+      '@images': path.resolve(__dirname, '../img'),
     },
   },
   module: {
     rules: [
       {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+      },
+      {
         test: /\.js$/,
         include: path.resolve(__dirname, '../js'),
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: [['env', {useBuiltIns: 'usage', modules: false}]],
-              plugins: ['transform-object-rest-spread', 'transform-runtime'],
-            },
+            loader: 'esbuild-loader',
           },
         ],
+      },
+      {
+        test: /\.ts?$/,
+        include: path.resolve(__dirname, '../js'),
+        loader: 'esbuild-loader',
+        options: {
+          loader: 'ts',
+          target: 'es2015',
+        },
+        exclude: /node_modules/,
       },
       {
         test: /jquery-ui\.js/,
@@ -279,10 +296,6 @@ module.exports = {
         },
       },
       {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-      },
-      {
         test: /\.css$/,
         use: [
           {
@@ -294,7 +307,6 @@ module.exports = {
       {
         test: /\.scss$/,
         include: /scss/,
-        exclude: /js/,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -314,7 +326,7 @@ module.exports = {
             options: {
               sourceMap: true,
               sassOptions: {
-                includePaths: [bourbon.includePaths],
+                includePaths: bourbon.includePaths,
               },
             },
           },
@@ -336,7 +348,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new FixStyleOnlyEntriesPlugin(),
+    new RemoveEmptyScriptsPlugin(),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: ['!theme.rtlfix'],
     }),
@@ -350,5 +362,16 @@ module.exports = {
       patterns: [{from: 'static'}],
     }),
     new VueLoaderPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        extensions: {
+          vue: true,
+        },
+        diagnosticOptions: {
+          semantic: true,
+          syntactic: true,
+        },
+      },
+    }),
   ],
 };

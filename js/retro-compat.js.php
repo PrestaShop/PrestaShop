@@ -118,14 +118,20 @@ if (!array_key_exists($file, $plugins)) {
     die('file_not_found');
 } elseif ($file == 'jquery-ui-1.8.10.custom.min.js') {
     //jquery-ui cannot be call directly, now to include query UI, use Media::addJqueryUI('component_name');
-    $html = '$(document).ready( function () {
-	'.(_PS_MODE_DEV_ ? 'if (!$.browser.msie)console.log(\'MODE DEV : This file : "jquery-ui-1.8.10.custom.min.js" cannot be call directly please use Media::addJqueryUI("component_name")  \')' : '').'
-	});';
+    $html = '$(document).ready( function () {';
+    /** @phpstan-ignore-next-line */
+    if (_PS_MODE_DEV_) {
+        $html .= 'if (!$.browser.msie)console.log(\'MODE DEV : This file : "jquery-ui-1.8.10.custom.min.js" cannot be call directly please use Media::addJqueryUI("component_name")  \')';
+    }
+    $html .= '});';
     $html .= file_get_contents($plugins[$file]['new_file']);
 } else {
-    $html = '$(document).ready( function () {
-		'.(_PS_MODE_DEV_ ? 'if (!$.browser.msie)console.log(\'MODE DEV : This file : "'.$file.'" has been moved to this folder '.$plugins[$file]['new_file'].'  To include this plugin use Media::addJqueryPlugin("'.$plugins[$file]['name'].'")\')' : '').'
-	});';
+    $html = '$(document).ready( function () {';
+    /** @phpstan-ignore-next-line */
+    if (_PS_MODE_DEV_) {
+        $html .= 'if (!$.browser.msie)console.log(\'MODE DEV : This file : "' . $file . '" has been moved to this folder ' . $plugins[$file]['new_file'] . '  To include this plugin use Media::addJqueryPlugin("' . $plugins[$file]['name'] . '")\')';
+    }
+    $html .= '});';
     $html .= file_get_contents($plugins[$file]['new_file']);
 }
 echo $html ;

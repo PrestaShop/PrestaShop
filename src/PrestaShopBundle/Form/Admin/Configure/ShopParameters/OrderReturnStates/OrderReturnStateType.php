@@ -61,7 +61,7 @@ class OrderReturnStateType extends TranslatorAwareType
                 ],
             ])
             ->add('color', ColorPickerType::class, [
-                'required' => false,
+                'required' => true,
             ])
         ;
     }

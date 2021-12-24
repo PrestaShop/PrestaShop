@@ -1,8 +1,6 @@
 .content-div {
   // stylelint-disable
-  padding-top:
-    $size-header-height + $size-header-toolbar-height +
-    ($grid-gutter-width / 2);
+  padding-top: 1rem;
   // stylelint-enable
   padding-right: $grid-gutter-width / 2;
   padding-bottom: $grid-gutter-width / 2;
@@ -18,41 +16,34 @@
   }
 
   @include media-breakpoint-down(sm) {
-    padding-top: 10.4rem;
     padding-right: 1rem;
     padding-left: 1rem;
 
     .container {
       padding: 0;
     }
-
-    .col {
-      padding: 0;
-    }
-
-    // remove gutters (except on product page)
-    // @todo remove the :not() once the product page has been made responsive
-    body:not(.adminproducts) & .row {
-      margin-right: 0;
-      margin-left: 0;
-
-      [class*="col-"] {
-        padding-right: 0;
-        padding-left: 0;
-      }
-    }
   }
 
   &.-notoolbar {
-    padding-top: $size-header-height + $grid-gutter-width / 2;
+    padding-top: 0;
+
+    .header-toolbar {
+      padding-left: 0;
+      margin: 0 -#{$grid-gutter-width / 2};
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+#main-div {
+  padding-top: 2.5rem;
+
+  @include media-breakpoint-down(md) {
+    padding-top: 3.5rem;
   }
 
-  &.with-tabs {
-    // stylelint-disable
-    padding-top:
-      $size-header-height + $size-header-toolbar-height +
-      $grid-gutter-width + 2.5rem;
-    // stylelint-enable
+  &.light_display_layout {
+    padding-top: 0;
   }
 }
 

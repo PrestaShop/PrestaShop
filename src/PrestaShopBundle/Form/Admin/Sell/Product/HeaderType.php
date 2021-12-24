@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -44,17 +45,22 @@ class HeaderType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $nameConstraints = $options['active'] ? [new DefaultLanguage()] : [];
         $builder
+            ->add('cover_thumbnail', ImagePreviewType::class, [
+                'label' => false,
+            ])
             ->add('name', TranslatableType::class, [
                 'label' => false,
                 'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
+                'constraints' => $nameConstraints,
                 'options' => [
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
+                ],
+                'row_attr' => [
+                    'class' => 'header-name',
                 ],
             ])
             ->add('type', ChoiceType::class, [
@@ -90,9 +96,14 @@ class HeaderType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'required' => false,
-            'label' => false,
-        ]);
+
+        $resolver
+            ->setDefaults([
+                'active' => false,
+                'required' => false,
+                'label' => false,
+            ])
+            ->setAllowedTypes('active', ['bool'])
+        ;
     }
 }

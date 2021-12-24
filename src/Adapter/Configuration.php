@@ -395,13 +395,21 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * @param string $key
      * @param ShopConstraint $shopConstraint
+     *
+     * @throws ShopException
      */
     public function deleteFromContext(string $key, ShopConstraint $shopConstraint): void
     {
+        if ($shopConstraint->forAllShops()) {
+            throw new ShopException(
+                sprintf('This method can not be used for all shops, if you want to completely delete a configuration use %s::remove() instead', static::class)
+            );
+        }
+
         $shopId = $shopConstraint->getShopId();
         $shopGroupId = $shopConstraint->getShopGroupId();
 
-        ConfigurationLegacy::deleteFromContext(
+        ConfigurationLegacy::deleteFromGivenContext(
             $key,
             !empty($shopGroupId) ? $shopGroupId->getValue() : null,
             !empty($shopId) ? $shopId->getValue() : null

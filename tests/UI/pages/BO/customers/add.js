@@ -29,7 +29,12 @@ class AddCustomer extends BOBasePage {
     this.dayOfBirthSelect = 'select#customer_birthday_day';
     this.statusToggleInput = toggle => `#customer_is_enabled_${toggle}`;
     this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
+    // Group access selector
     this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
+    this.visitorChecbox = this.groupAccessCheckbox(0);
+    this.guestChecbox = this.groupAccessCheckbox(1);
+    this.customerChecbox = this.groupAccessCheckbox(2);
+
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
     this.saveCustomerButton = '#save-button';
@@ -47,12 +52,7 @@ class AddCustomer extends BOBasePage {
    */
   async fillCustomerForm(page, customerData) {
     // Click on label for social input
-    const socialTitleElement = await this.getParentElement(
-      page,
-      this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1),
-    );
-
-    await socialTitleElement.click();
+    await this.setHiddenCheckboxValue(page, this.socialTitleInput(customerData.socialTitle === 'Mr.' ? 0 : 1));
 
     // Fill form
     await this.setValue(page, this.firstNameInput, customerData.firstName);
@@ -62,8 +62,8 @@ class AddCustomer extends BOBasePage {
     await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
     await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
     await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
-    await page.check(this.statusToggleInput(customerData.enabled ? 1 : 0));
-    await page.check(this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(customerData.enabled ? 1 : 0));
+    await this.setChecked(page, this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);
     await this.selectByVisibleText(page, this.defaultCustomerGroupSelect, customerData.defaultCustomerGroup);
   }
@@ -93,35 +93,20 @@ class AddCustomer extends BOBasePage {
   async setCustomerGroupAccess(page, customerGroup) {
     switch (customerGroup) {
       case 'Customer':
-        await this.changeCheckboxValue(page, this.selectAllGroupAccessCheckbox);
+        await this.setCheckedWithIcon(page, this.selectAllGroupAccessCheckbox);
         break;
       case 'Guest':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1));
+        await this.setCheckedWithIcon(page, this.visitorChecbox, false);
+        await this.setCheckedWithIcon(page, this.customerChecbox, false);
+        await this.setCheckedWithIcon(page, this.guestChecbox);
         break;
       case 'Visitor':
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(1), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(2), false);
-        await this.changeCheckboxValue(page, this.groupAccessCheckbox(0));
+        await this.setCheckedWithIcon(page, this.guestChecbox, false);
+        await this.setCheckedWithIcon(page, this.customerChecbox, false);
+        await this.setCheckedWithIcon(page, this.visitorChecbox);
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);
-    }
-  }
-
-  /**
-   * @override
-   * Select, unselect checkbox
-   * @param page {Page} Browser tab
-   * @param checkboxSelector {string} Selector of checkbox
-   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
-   * @return {Promise<void>}
-   */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      // The selector is not visible, that why '+ i' is required here
-      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
   }
 }

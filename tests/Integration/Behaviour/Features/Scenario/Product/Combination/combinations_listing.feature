@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combinations-listing
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
 @combinations-listing
@@ -181,19 +181,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
       | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
       | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
-    When I search product "product1" combinations list by following search criteria:
-      | criteria  | value    |
-      | order by  | quantity |
-      | order way | asc      |
-    Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
-    # This sorts by Combination::quantity
+    # This sorts by StockAvailable::quantity
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value    |
       | order by  | quantity |
@@ -206,19 +194,18 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    # This sorts by StockAvailable::quantity
     When I search product "product1" combinations list by following search criteria:
-      | criteria  | value          |
-      | order by  | stock_quantity |
-      | order way | desc           |
+      | criteria  | value    |
+      | order by  | quantity |
+      | order way | asc      |
     Then I should see following combinations in paginated list of product "product1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
 
   Scenario: I can filter combinations by reference
     Given product "product1" combinations list search criteria is set to defaults

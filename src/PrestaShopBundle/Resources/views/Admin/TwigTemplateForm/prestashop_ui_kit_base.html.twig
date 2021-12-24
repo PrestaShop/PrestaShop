@@ -47,6 +47,7 @@
 {# Use bootstrap4 theme (from the Symfony framework) as default base #}
 {% use 'bootstrap_4_layout.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/typeahead.html.twig' %}
+{% use '@PrestaShop/Admin/TwigTemplateForm/entity_search_input.html.twig' %}
 {% use '@PrestaShop/Admin/TwigTemplateForm/material.html.twig' %}
 
 {# overrides from bootstrap_4_layout #}
@@ -94,12 +95,13 @@
   <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
     {{- form_label(form) -}}
     {{- block('form_prepend_alert') -}}
+    {{- block('form_prepend_external_link') -}}
 
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
 
-    {{- block('form_external_link') -}}
     {{- block('form_append_alert') -}}
+    {{- block('form_append_external_link') -}}
   </div>
 
   {% if column_breaker %}
@@ -109,7 +111,7 @@
 
 {% block widget_type_class %}
 {% if not compound and form.vars.block_prefixes|length > 2 %}
- {% spaceless %}
+ {% apply spaceless %}
 
     {% set index = form.vars.block_prefixes|length - 2 %}
     {% set widgetType = form.vars.block_prefixes[index] %}
@@ -123,7 +125,7 @@
       {% endif %}
     {% endif %}
     {{ widgetType }}-widget
-{% endspaceless %}
+{% endapply %}
 {% endif %}
 {% endblock %}
 
@@ -167,7 +169,7 @@
     {% endif %}
     </{{ labelTag }}>
     {% if label_subtitle is defined %}
-      <p class="subtitle">{{ label_subtitle }}</p>
+      <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
     {% endif %}
   {%- endif -%}
 {%- endblock form_label -%}
@@ -490,7 +492,7 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
     <div class="input-group datepicker">
       <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
@@ -501,18 +503,18 @@
       </div>
     </div>
     {{ block('form_help') }}
-  {% endspaceless %}
+  {% endapply %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {{ form_widget(form.from) }}
     {{ form_widget(form.to) }}
-  {% endspaceless %}
+  {% endapply %}
 {% endblock date_range_widget %}
 
 {% block search_and_reset_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <button type="submit"
             class="btn btn-primary grid-search-button d-block float-right"
             title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
@@ -535,22 +537,29 @@
         </button>
       </div>
     {% endif %}
-  {% endspaceless %}
+  {% endapply %}
 {% endblock search_and_reset_widget %}
 
 {% block switch_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
   <div class="input-group">
     <span class="ps-switch">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
-          <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio">
+          <input id="{{inputId}}"
+            {{ block('attributes') }}
+            name="{{ full_name }}"
+            value="{{ choice.value }}"
+            {% if choice is selectedchoice(value) %}checked=""{% endif %}
+            {% if disabled %}disabled=""{% endif %}
+            type="radio"
+          >
           <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
         {% endfor %}
         <span class="slide-button"></span>
     </span>
   </div>
-  {% endspaceless %}
+  {% endapply %}
   {{- block('form_help') -}}
 {% endblock switch_widget %}
 
@@ -756,7 +765,7 @@
 {# Material design widgets #}
 
 {% block material_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table">
       <table class="table table-bordered mb-0">
         <thead>
@@ -764,7 +773,13 @@
           <th class="checkbox">
             <div class="md-checkbox">
               <label>
-                <input type="checkbox" class="js-choice-table-select-all">
+                <input
+                  type="checkbox"
+                  class="js-choice-table-select-all"
+                  {% if isCheckSelectAll %}
+                    checked
+                  {% endif %}
+                >
                 <i class="md-checkbox-control"></i>
                 {{ 'Select all'|trans({}, 'Admin.Actions') }}
               </label>
@@ -783,11 +798,11 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_choice_table_widget %}
 
 {% block material_multiple_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
@@ -836,7 +851,7 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_multiple_choice_table_widget %}
 
 {# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
@@ -1077,13 +1092,25 @@
 {%- endblock number_widget -%}
 
 {% block form_help %}
-  {% if help %}
+  {% if help is not null %}
     <small class="form-text">{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
   {% endif %}
 {% endblock form_help %}
+
+{% block form_prepend_external_link %}
+  {% if external_link is defined and external_link.position == 'prepend' %}
+    {{- block('form_external_link') -}}
+  {% endif %}
+{% endblock %}
+
+{% block form_append_external_link %}
+  {% if external_link is defined and external_link.position == 'append' %}
+    {{- block('form_external_link') -}}
+  {% endif %}
+{% endblock %}
 
 {% block form_external_link %}
   {% if external_link is defined %}
@@ -1184,4 +1211,56 @@
       {{ 'Not available yet'|trans({}, 'Admin.Catalog.Feature') }}
     </p>
   </div>
+{% endblock %}
+
+{% block text_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <span class="label {{ preview_class }}">
+    {# Allows to insert content as prefix, like an icon #}
+    {% if prefix is defined %}
+      {{ prefix|raw }}
+    {% endif %}
+
+    {# This just outputs the value #}
+    {{ form.vars.value|e('html') }}
+
+    {# Allows to insert content as suffix, like an icon #}
+    {% if suffix is defined %}
+      {{ suffix|raw }}
+    {% endif %}
+  </span>
+{% endblock %}
+
+{% block image_preview_widget %}
+  {# This is the hidden input #}
+  {{- block('form_widget_simple') -}}
+  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+{% endblock %}
+
+{% block delta_quantity_widget %}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': form.quantity.vars.value}) -%}
+  <div {{ block('widget_container_attributes') }}>
+    {{ form_widget(form.quantity) }}
+    {{ form_row(form.delta) }}
+  </div>
+{% endblock %}
+
+{% block delta_quantity_quantity_widget %}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
+  <div {{ block('widget_container_attributes') }}>
+    {{- block('form_widget_simple') -}}
+    <span class="initial-quantity">{{ form.vars.value }}</span>
+    <span class="quantity-update">
+      <i class="material-icons">trending_flat</i>
+      <span class="new-quantity">{{ form.vars.value }}</span>
+    </span>
+  </div>
+
+{% endblock %}
+
+{% block delta_quantity_delta_widget %}
+  {%- set type = 'number' -%}
+  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-delta')|trim}) -%}
+  {{- block('form_widget_simple') -}}
 {% endblock %}

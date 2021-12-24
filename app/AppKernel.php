@@ -32,11 +32,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.8.1';
-    const MAJOR_VERSION_STRING = '1.7';
-    const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 8;
-    const RELEASE_VERSION = 1;
+    const VERSION = '8.0.0';
+    const MAJOR_VERSION_STRING = '8';
+    const MAJOR_VERSION = 8;
+    const MINOR_VERSION = 0;
+    const RELEASE_VERSION = 0;
 
     /**
      * {@inheritdoc}
@@ -56,7 +56,7 @@ class AppKernel extends Kernel
             // PrestaShop Translation parser
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
             // REST API consumer
-            new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
+            new EightPoints\Bundle\GuzzleBundle\EightPointsGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
@@ -64,11 +64,6 @@ class AppKernel extends Kernel
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
-            $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-        }
-
-        if ('dev' === $this->getEnvironment()) {
-            $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
         }
 
         /* Will not work until PrestaShop is installed */

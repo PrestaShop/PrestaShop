@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-multi-shop
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @mock-context-on-scenario
 @clear-cache-before-feature
 @order-multi-shop
@@ -344,4 +344,3 @@ Feature: Order from Back Office (BO)
     And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
       | amount        | 30                      |
       | price         | 78.90                   |
-    Then I should get no error

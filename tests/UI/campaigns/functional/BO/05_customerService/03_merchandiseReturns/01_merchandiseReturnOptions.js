@@ -251,6 +251,7 @@ describe('BO - Customer Service - Merchandise Returns : Merchandise return (RMA)
         const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
         await expect(isCustomerConnected).to.be.true;
 
+        await homePage.goToMyAccountPage(page);
         const pageTitle = await myAccountPage.getPageTitle(page);
         await expect(pageTitle).to.contains(myAccountPage.pageTitle);
       });

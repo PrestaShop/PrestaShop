@@ -88,7 +88,7 @@ class LanguageController extends FrameworkBundleAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *

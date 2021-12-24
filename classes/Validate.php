@@ -35,6 +35,8 @@ use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
+    public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+
     const ADMIN_PASSWORD_LENGTH = 8;
     const PASSWORD_LENGTH = 5;
 
@@ -187,7 +189,7 @@ class ValidateCore
             new CustomerName(),
         ]);
 
-        return (count($violations) !== 0) ? 0 : 1;
+        return count($violations) === 0;
     }
 
     /**
@@ -510,21 +512,6 @@ class ValidateCore
     }
 
     /**
-     * Check for password validity.
-     *
-     * @param string $passwd Password to validate
-     * @param int $size
-     *
-     * @return bool Validity is ok or not
-     *
-     * @deprecated 1.7.0
-     */
-    public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
-    {
-        return self::isPlaintextPassword($passwd, $size);
-    }
-
-    /**
      * Check if plaintext password is valid
      * Size is limited by `password_hash()` (72 chars).
      *
@@ -548,7 +535,6 @@ class ValidateCore
      * Anything else is invalid.
      *
      * @param string $hashedPasswd Password to validate
-     * @param int $size
      *
      * @return bool Indicates whether the given string is a valid hashed password
      *
@@ -654,7 +640,7 @@ class ValidateCore
     /**
      * Check for boolean validity.
      *
-     * @param bool $bool Boolean to validate
+     * @param bool|string|null $bool Boolean to validate
      *
      * @return bool Validity is ok or not
      */
@@ -774,7 +760,7 @@ class ValidateCore
      */
     public static function isOrderBy($order)
     {
-        return preg_match('/^[a-zA-Z0-9.!_-]+$/', $order);
+        return preg_match(static::ORDER_BY_REGEXP, $order);
     }
 
     /**
@@ -817,7 +803,7 @@ class ValidateCore
     /**
      * Check for an integer validity.
      *
-     * @param int $value Integer to validate
+     * @param int|bool $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -829,7 +815,7 @@ class ValidateCore
     /**
      * Check for an integer validity (unsigned).
      *
-     * @param int $value Integer to validate
+     * @param mixed $value Integer to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1125,7 +1111,7 @@ class ValidateCore
     /**
      * Check for PHP serialized data.
      *
-     * @param string $data Serialized data to validate
+     * @param string|null $data Serialized data to validate
      *
      * @return bool Validity is ok or not
      */
@@ -1151,7 +1137,7 @@ class ValidateCore
     /**
      * Check for Latitude/Longitude.
      *
-     * @param string $data Coordinate to validate
+     * @param string|null $data Coordinate to validate
      *
      * @return bool Validity is ok or not
      */

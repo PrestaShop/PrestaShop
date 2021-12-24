@@ -44,13 +44,15 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+
   const ALERT_TYPE_INFO = 'ALERT_TYPE_INFO';
   const ALERT_TYPE_WARNING = 'ALERT_TYPE_WARNING';
   const ALERT_TYPE_DANGER = 'ALERT_TYPE_DANGER';
   const ALERT_TYPE_SUCCESS = 'ALERT_TYPE_SUCCESS';
 
-  export default {
+  export default Vue.extend({
     props: {
       duration: {
         type: Boolean,
@@ -67,7 +69,12 @@
       },
     },
     computed: {
-      classObject() {
+      classObject(): {
+        'alert-info': boolean,
+        'alert-warning': boolean,
+        'alert-danger': boolean,
+        'alert-success': boolean
+      } {
         return {
           'alert-info': this.alertType === ALERT_TYPE_INFO,
           'alert-warning': this.alertType === ALERT_TYPE_WARNING,
@@ -75,14 +82,14 @@
           'alert-success': this.alertType === ALERT_TYPE_SUCCESS,
         };
       },
-      isInfo() {
+      isInfo(): boolean {
         return this.alertType === ALERT_TYPE_INFO;
       },
     },
     methods: {
-      onClick() {
+      onClick(): void {
         this.$emit('closeAlert');
       },
     },
-  };
+  });
 </script>

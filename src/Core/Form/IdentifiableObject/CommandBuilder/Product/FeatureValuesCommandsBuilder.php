@@ -39,11 +39,11 @@ final class FeatureValuesCommandsBuilder implements ProductCommandsBuilderInterf
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['basic']['features']['feature_values'])) {
+        if (!isset($formData['specifications']['features']['feature_values'])) {
             return [];
         }
 
-        $featureValuesData = $formData['basic']['features']['feature_values'];
+        $featureValuesData = $formData['specifications']['features']['feature_values'];
         if (empty($featureValuesData)) {
             return [new RemoveAllFeatureValuesFromProductCommand($productId->getValue())];
         }

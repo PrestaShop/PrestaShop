@@ -129,7 +129,6 @@ final class AddOfficialCurrencyHandler extends AbstractCurrencyHandler implement
         $cldrLocale = $this->getCLDRLocale();
         $allCurrencies = $cldrLocale->getAllCurrencies();
 
-        $matchingRealCurrency = null;
         foreach ($allCurrencies as $currencyData) {
             if ($currencyData->getIsoCode() === $isoCode) {
                 return $currencyData->getNumericIsoCode();

@@ -134,22 +134,26 @@ class OrderDetailCore extends ObjectModel
     /** @var int */
     public $discount_quantity_applied;
 
-    /** @var string */
+    /** @var string|null */
     public $download_hash;
 
     /** @var int */
     public $download_nb;
 
-    /** @var datetime */
+    /** @var string */
     public $download_deadline;
 
     /**
-     * @var string @deprecated Order Detail Tax is saved in order_detail_tax table now
+     * @var string
+     *
+     * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
     public $tax_name;
 
     /**
-     * @var float @deprecated Order Detail Tax is saved in order_detail_tax table now
+     * @var float
+     *
+     * @deprecated Order Detail Tax is saved in order_detail_tax table now
      */
     public $tax_rate;
 
@@ -266,7 +270,7 @@ class OrderDetailCore extends ObjectModel
     /** @var Address object */
     protected $vat_address = null;
 
-    /** @var Address object */
+    /** @var Address|null */
     protected $specificPrice = null;
 
     /** @var Customer object */
@@ -413,6 +417,7 @@ class OrderDetailCore extends ObjectModel
 
         $values = '';
         foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount) {
+            $unit_amount = $total_amount = 0;
             switch (Configuration::get('PS_ROUND_TYPE')) {
                 case Order::ROUND_ITEM:
                     $unit_amount = (float) Tools::ps_round($amount, Context::getContext()->getComputingPrecision());
@@ -555,7 +560,7 @@ class OrderDetailCore extends ObjectModel
     /**
      * Apply tax to the product.
      *
-     * @param object $order
+     * @param Order $order
      * @param array $product
      */
     protected function setProductTax(Order $order, $product)
@@ -583,7 +588,8 @@ class OrderDetailCore extends ObjectModel
     /**
      * Set specific price of the product.
      *
-     * @param object $order
+     * @param Order $order
+     * @param array|null $product
      */
     protected function setSpecificPrice(Order $order, $product = null)
     {
@@ -625,9 +631,9 @@ class OrderDetailCore extends ObjectModel
     /**
      * Set detailed product price to the order detail.
      *
-     * @param object $order
-     * @param object $cart
-     * @param array $product
+     * @param Order $order
+     * @param Cart $cart
+     * @param array<string, int|float> $product
      */
     protected function setDetailProductPrice(Order $order, Cart $cart, $product)
     {
@@ -676,12 +682,7 @@ class OrderDetailCore extends ObjectModel
             (int) $this->customer->id_default_group,
             (int) $product['cart_quantity'],
             false,
-            null,
-            null,
-            $null,
-            true,
-            true,
-            $this->context
+            null
         );
 
         $unit_price = Product::getPriceStatic(
@@ -720,12 +721,13 @@ class OrderDetailCore extends ObjectModel
     /**
      * Create an order detail liable to an id_order.
      *
-     * @param object $order
-     * @param object $cart
+     * @param Order $order
+     * @param Cart $cart
      * @param array $product
-     * @param int $id_order_status
+     * @param int $id_order_state
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param int $id_warehouse
      */
     protected function create(Order $order, Cart $cart, $product, $id_order_state, $id_order_invoice, $use_taxes = true, $id_warehouse = 0)
     {
@@ -752,9 +754,13 @@ class OrderDetailCore extends ObjectModel
         $this->product_weight = $product['id_product_attribute'] ? (float) $product['weight_attribute'] : (float) $product['weight'];
         $this->id_warehouse = $id_warehouse;
 
-        $product_quantity = (int) Product::getQuantity($this->product_id, $this->product_attribute_id, null, $cart);
-        $this->product_quantity_in_stock = ($product_quantity - (int) $product['cart_quantity'] < 0) ?
-            $product_quantity : (int) $product['cart_quantity'];
+        // We get the real quantity of the product in stock and save how much of the ordered quantity was in stock
+        $product_quantity_in_stock = (int) Product::getQuantity($this->product_id, $this->product_attribute_id);
+
+        // Ordered 3 pcs, in stock 10 pcs, result is 3
+        // Ordered 3 pcs, in stock 1 pcs, result is 1
+        $this->product_quantity_in_stock = ($product_quantity_in_stock - (int) $product['cart_quantity'] < 0) ?
+            $product_quantity_in_stock : (int) $product['cart_quantity'];
 
         $this->setVirtualProductInformation($product);
         $this->checkProductStock($product, $id_order_state);
@@ -783,11 +789,13 @@ class OrderDetailCore extends ObjectModel
     /**
      * Create a list of order detail for a specified id_order using cart.
      *
-     * @param object $order
-     * @param object $cart
-     * @param int $id_order_status
+     * @param Order $order
+     * @param Cart $cart
+     * @param int $id_order_state
+     * @param array $product_list
      * @param int $id_order_invoice
      * @param bool $use_taxes set to false if you don't want to use taxes
+     * @param int $id_warehouse
      */
     public function createList(Order $order, Cart $cart, $id_order_state, $product_list, $id_order_invoice = 0, $use_taxes = true, $id_warehouse = 0)
     {
@@ -810,7 +818,7 @@ class OrderDetailCore extends ObjectModel
     /**
      * Get the state of the current stock product.
      *
-     * @return array
+     * @return bool
      */
     public function getStockState()
     {
@@ -821,7 +829,7 @@ class OrderDetailCore extends ObjectModel
      * Set the additional shipping information.
      *
      * @param Order $order
-     * @param $product
+     * @param array $product
      */
     public function setShippingCost(Order $order, $product)
     {
@@ -944,7 +952,7 @@ class OrderDetailCore extends ObjectModel
 
         if ($this->product_attribute_id) {
             $combination = new Combination((int) $this->product_attribute_id);
-            if ($combination && $combination->wholesale_price != '0.000000') {
+            if ($combination->wholesale_price != '0.000000') {
                 $wholesale_price = $combination->wholesale_price;
             }
         }

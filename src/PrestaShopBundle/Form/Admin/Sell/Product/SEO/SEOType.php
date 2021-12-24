@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -57,22 +59,31 @@ class SEOType extends TranslatorAwareType
     private $forceFriendlyUrl;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
      * @param bool $friendlyUrlEnabled
+     * @param bool $forceFriendlyUrl
+     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         RouterInterface $router,
         bool $friendlyUrlEnabled,
-        bool $forceFriendlyUrl
+        bool $forceFriendlyUrl,
+        LegacyContext $legacyContext
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -154,7 +165,35 @@ class SEOType extends TranslatorAwareType
                     ],
                 ],
             ])
-            ->add('redirect_option', RedirectOptionType::class)
+            ->add('redirect_option', RedirectOptionType::class, [
+                'product_id' => $options['product_id'],
+            ])
+            ->add('tags', TranslatableType::class, [
+                'required' => false,
+                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'help' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                    ],
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                    ],
+                    'required' => false,
+                ],
+                'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
+                'alert_message' => [
+                    $this->trans('Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', 'Admin.Catalog.Help'),
+                    $this->trans('You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Help', [
+                        '[1]' => sprintf(
+                            '<a target="_blank" href="%s">',
+                            $this->legacyContext->getAdminLink('AdminSearchConf')
+                        ),
+                        '[/1]' => '</a>',
+                    ]),
+                ],
+            ])
         ;
     }
 
@@ -206,11 +245,15 @@ class SEOType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => $this->trans('Search Engine Optimization', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
-            'required' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'product_id' => null,
+                'label' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
+                'required' => false,
+            ])
+            ->setAllowedTypes('product_id', ['null', 'int'])
+        ;
     }
 }

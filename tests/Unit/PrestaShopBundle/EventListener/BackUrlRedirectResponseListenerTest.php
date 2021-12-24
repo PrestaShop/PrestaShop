@@ -44,7 +44,7 @@ class BackUrlRedirectResponseListenerTest extends TestCase
      */
     private $filterResponseEventMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

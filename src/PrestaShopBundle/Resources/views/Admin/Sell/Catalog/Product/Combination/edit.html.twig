@@ -24,31 +24,28 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme combinationForm '@PrestaShop/Admin/Sell/Catalog/Product/Form/combination_form_theme.html.twig' %}
-{% form_theme combinationForm.suppliers '@PrestaShop/Admin/Sell/Catalog/Product/Form/suppliers_form_theme.html.twig' %}
+{% form_theme combinationForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig' %}
+{% form_theme combinationForm.suppliers '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/suppliers.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-sm-12">
-    {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
-    <div class="card">
-      <div class="card-header">
-        {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }} -
-        <span>{{ combinationForm.vars.value.name }}</span>
-      </div>
-      <div class="card-block row">
-        <div id="{{ combinationForm.vars.id }}">
-          {{ form_row(combinationForm) }}
-        </div>
+  {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
+  <div class="card">
+    <div class="card-header">
+      {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }}
+      -
+      <span>{{ combinationForm.vars.value.name }}</span>
+    </div>
+    <div class="card-block row">
+      <div id="{{ combinationForm.vars.id }}">
+        {{ form_row(combinationForm) }}
       </div>
     </div>
-    {{ form_end(combinationForm) }}
   </div>
-</div>
+  {{ form_end(combinationForm) }}
 {% endblock %}
 
 {% block javascripts %}

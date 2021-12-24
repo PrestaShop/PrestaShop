@@ -34,6 +34,11 @@ class PdfInvoiceControllerCore extends FrontController
     protected $template;
     public $filename;
 
+    /**
+     * @var Order
+     */
+    public $order;
+
     public function postProcess()
     {
         if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key')) {

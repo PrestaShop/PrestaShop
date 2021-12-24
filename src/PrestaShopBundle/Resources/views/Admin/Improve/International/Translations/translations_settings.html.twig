@@ -27,36 +27,18 @@
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col-xl-12">
-      <div class="card card-kpis">
-        {% block translations_kpis_row %}
-          <div class="row">
-            {{ render(controller(
-              'PrestaShopBundle:Admin\\Common:renderKpiRow',
-              { 'kpiRow': kpiRow }
-            )) }}
-          </div>
-        {% endblock %}
-      </div>
-    </div>
+  {% block translations_kpis_row %}
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      { 'kpiRow': kpiRow }
+    )) }}
+  {% endblock %}
 
-    <div class="col-xl-12">
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
-    </div>
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/modify_translations.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
+  {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
 
-    <div class="col-xl-12">
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/add_update_language.html.twig' %}
-    </div>
-
-    <div class="col-xl-12">
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/export_language.html.twig' %}
-    </div>
-
-    <div class="col-xl-12">
-      {% include '@PrestaShop/Admin/Improve/International/Translations/Blocks/copy_language.html.twig' %}
-    </div>
-  </div>
 {% endblock %}
 
 {% block javascripts %}

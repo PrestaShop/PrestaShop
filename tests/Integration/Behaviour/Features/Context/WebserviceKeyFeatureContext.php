@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use RuntimeException;
@@ -35,10 +37,9 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then webservice key :reference key should be :key
      */
-    public function assertWebserviceKeyMatches($reference, $key)
+    public function assertWebserviceKeyMatches(string $reference, string $key): void
     {
-        /** @var WebserviceKey $webserviceKey */
-        $webserviceKey = SharedStorage::getStorage()->get($reference);
+        $webserviceKey = $this->getWebserviceKeyFromKey($reference);
 
         if ($webserviceKey->key !== $key) {
             throw new RuntimeException(sprintf('Webservice key "%s" does not match "%s" key.', $webserviceKey->key, $key));
@@ -48,10 +49,9 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then webservice key :reference description should be :description
      */
-    public function assertWebserviceDescriptionMatches($reference, $description)
+    public function assertWebserviceDescriptionMatches(string $reference, string $description): void
     {
-        /** @var WebserviceKey $webserviceKey */
-        $webserviceKey = SharedStorage::getStorage()->get($reference);
+        $webserviceKey = $this->getWebserviceKeyFromKey($reference);
 
         if ($webserviceKey->description !== $description) {
             throw new RuntimeException(sprintf('Webservice key "%s" description is not "%s".', $webserviceKey->id, $description));
@@ -61,10 +61,9 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^webservice key "(.+)" should be (enabled|disabled)$/
      */
-    public function assertWebserviceKeyStatus($reference, $status)
+    public function assertWebserviceKeyStatus(string $reference, string $status): void
     {
-        /** @var WebserviceKey $webserviceKey */
-        $webserviceKey = SharedStorage::getStorage()->get($reference);
+        $webserviceKey = $this->getWebserviceKeyFromKey($reference);
 
         $isEnabled = 'enabled' === $status;
 
@@ -74,34 +73,36 @@ class WebserviceKeyFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then /^webservice key "(.+)" should have "(View|Add|Modify|Delete|Fast view)" permission for "([^"]*)" resources$/
+     * @Then /^webservice key "(.+)" should have "(GET|POST|PUT|DELETE|HEAD)" permission for "([^"]*)" resources$/
      */
-    public function assertWebserviceKeyPermission($reference, $permission, $resources)
+    public function assertWebserviceKeyPermission(string $reference, string $permission, string $resources): void
     {
-        /** @var WebserviceKey $webserviceKey */
-        $webserviceKey = SharedStorage::getStorage()->get($reference);
-
-        $permissionsMap = [
-            'View' => 'GET',
-            'Add' => 'POST',
-            'Modify' => 'PUT',
-            'Delete' => 'DELETE',
-            'Fast view' => 'HEAD',
-        ];
+        $webserviceKey = $this->getWebserviceKeyFromKey($reference);
 
         $resources = PrimitiveUtils::castStringArrayIntoArray($resources);
 
-        $method = $permissionsMap[$permission];
         $permissions = WebserviceKey::getPermissionForAccount($webserviceKey->key);
 
         foreach ($resources as $resource) {
             if (!isset($permissions[$resource])) {
-                throw new RuntimeException(sprintf('Resource "%s" is not configured for "%s" key', $resources, $webserviceKey->key));
+                throw new RuntimeException(sprintf('Resource "%s" is not configured for "%s" key', $resource, $webserviceKey->key));
             }
 
-            if (!in_array($method, $permissions[$resource], true)) {
-                throw new RuntimeException(sprintf('"%s" permission is not configured for resource "%s" for "%s" key', $permission, $resources, $webserviceKey->key));
+            if (!in_array($permission, $permissions[$resource], true)) {
+                throw new RuntimeException(sprintf('"%s" permission is not configured for resource "%s" for "%s" key', $permission, $resource, $webserviceKey->key));
             }
         }
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return WebserviceKey
+     */
+    private function getWebserviceKeyFromKey(string $key): WebserviceKey
+    {
+        $webserviceKeyId = WebserviceKey::getIdFromKey($key);
+
+        return new WebserviceKey($webserviceKeyId);
     }
 }

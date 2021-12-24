@@ -62,7 +62,7 @@ class LanguageImageManager
     public const IMAGE_DIRECTORIES = [
         _PS_CAT_IMG_DIR_,
         _PS_MANU_IMG_DIR_,
-        _PS_PROD_IMG_DIR_,
+        _PS_PRODUCT_IMG_DIR_,
         _PS_SUPP_IMG_DIR_,
     ];
 

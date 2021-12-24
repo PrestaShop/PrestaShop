@@ -27,15 +27,16 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Tests\Resources\DummyMultistoreConfiguration;
+use Tests\TestCase\AbstractConfigurationTestCase;
 
-class AbstractMultistoreConfigurationTest extends TestCase
+class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
 {
     /**
      * @dataProvider provideForGetShopConstraint
@@ -90,7 +91,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
     {
         // this will test that inside the `UpdateConfigurationValue` method, the right update method will be called depending on situation
         $abstractMultistoreConfiguration = $this->getTestableClass(false, $expectedMethodToBeCalled, $isMultistoreUsed);
-        $abstractMultistoreConfiguration->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $this->getShopConstraintMock());
+        $abstractMultistoreConfiguration->dummyUpdateConfigurationValue($fieldName, $inputValues, $this->getShopConstraintMock());
     }
 
     /**
@@ -124,22 +125,11 @@ class AbstractMultistoreConfigurationTest extends TestCase
         int $shopGroupId = 1,
         int $shopId = 1
     ): AbstractMultistoreConfiguration {
-        return new class($this->createShopConfigurationMock($expectedCalledMethod), $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId), $this->getMultistoreFeatureMock($isMultistoreUsed)) extends AbstractMultistoreConfiguration {
-            public function getConfiguration()
-            {
-                return [];
-            }
-
-            public function validateConfiguration(array $configuration)
-            {
-                return true;
-            }
-
-            public function updateConfiguration(array $configuration)
-            {
-                return [];
-            }
-        };
+        return new DummyMultistoreConfiguration(
+            $this->createShopConfigurationMock($expectedCalledMethod),
+            $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId),
+            $this->getMultistoreFeatureMock($isMultistoreUsed)
+        );
     }
 
     /**

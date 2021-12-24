@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --tags remove-cart-rule
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @cart-rule-usage-limit
 
 Feature: A cart rule's usage limit per user is detected

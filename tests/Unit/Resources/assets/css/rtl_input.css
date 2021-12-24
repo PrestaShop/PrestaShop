@@ -1,0 +1,15 @@
+.fooa { left: 10px; }
+.foob { right:-1.5em; }
+.fooc { padding: .25em 15px 0pt 0ex; }
+.food { padding: 1.1px 4.4px 3.3px 2.2px; }
+.fooe { padding: 1px 4px 3px 2px !important; }
+.food { float: left !important; }
+.foof { text-shadow: -1px 2px 3px red; }
+.foog { border-color: red #f00 hsl(0, 100%, 50%) hsla(0, 100%, 50%, 0.5); }
+.fooh { border-top-left-radius: 0; }
+.fooi { background: url(/foo/bar.png) no-repeat left top; }
+.fooj { background: #000 url(/foo/bar.png) no-repeat 77% 40%; }
+.fook { background: url(/foo/bar-ltr_left.png);right:10px; direction: ltr }
+/* @noflip */ div { float: left; } div { float: right; }
+.fool .left .bar #myid { width: 0; }
+body { direction: ltr; }

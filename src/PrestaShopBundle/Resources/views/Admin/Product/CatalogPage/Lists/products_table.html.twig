@@ -25,7 +25,7 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 <div class="table-responsive">
   <table
-    class="table product mt-3"
+    class="table product"
     redirecturl="{{ path('admin_product_catalog', {
         'limit': limit,
         'offset': offset,
@@ -37,8 +37,8 @@
     <thead class="with-filters">
       {% block product_catalog_form_table_header %}
         <tr class="column-headers">
-          <th scope="col" style="width: 2rem"></th>
-          <th scope="col" style="width: 5rem">
+          <th scope="col"></th>
+          <th scope="col" class="text-center" style="width: 9%">
             {{ ps.sortable_column_header("ID"|trans({}, 'Admin.Global'), 'id_product', orderBy, sortOrder) }}
           </th>
           <th scope="col">
@@ -85,7 +85,22 @@
       {% block product_catalog_form_table_filters %}
         {% set filters_disabled = activate_drag_and_drop %}
         <tr class="column-filters">
-          <th colspan="2">
+          <td class="text-center" style="vertical-align: middle;">
+            {% block product_catalog_filter_select_all %}
+              <div class="md-checkbox md-checkbox-inline">
+                <label>
+                  <input
+                    type="checkbox"
+                    id="bulk_action_select_all"
+                    onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
+                    value=""
+                  >
+                  <i class="md-checkbox-control"></i>
+                </label>
+              </div>
+            {% endblock %}
+          </td>
+          <td>
             {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_id_product",
               'min': '0',
@@ -95,9 +110,9 @@
               'value': filter_column_id_product,
               'disabled': filters_disabled,
             } %}
-          </th>
-          <th>&nbsp;</th>
-          <th>
+          </td>
+          <td>&nbsp;</td>
+          <td>
             <input
               type="text"
               class="form-control"
@@ -107,8 +122,8 @@
               aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_name'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
-          </th>
-          <th>
+          </td>
+          <td>
             <input
               type="text"
               class="form-control"
@@ -118,8 +133,8 @@
               aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_reference'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
-          </th>
-          <th>
+          </td>
+          <td>
             <input
               type="text"
               class="form-control"
@@ -129,8 +144,8 @@
               aria-label="{{ "%inputId% input"|trans({'%inputId%': 'filter_column_name_category'}, 'Admin.Global') }}"
               {% if filters_disabled %}disabled{% endif %}
             />
-          </th>
-          <th class="text-center">
+          </td>
+          <td class="text-center">
             {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_price",
               'min': '0',
@@ -140,10 +155,10 @@
               'value': filter_column_price,
               'disabled': filters_disabled,
             } %}
-          </th>
-          <th class="text-center"></th>
+          </td>
+          <td class="text-center"></td>
           {% if configuration('PS_STOCK_MANAGEMENT') %}
-          <th class="text-center">
+          <td class="text-center">
             {% include '@PrestaShop/Admin/Helpers/range_inputs.html.twig' with {
               'input_name': "filter_column_sav_quantity",
               'min': '-1000000',
@@ -153,12 +168,12 @@
               'value': filter_column_sav_quantity,
               'disabled': filters_disabled,
             } %}
-          </th>
+          </td>
           {% else %}
-            <th></th>
+            <td></td>
           {% endif %}
 
-          <th id="product_filter_column_active" class="text-center">
+          <td id="product_filter_column_active" class="text-center">
             <div class="form-select">
               <select class="custom-select"  name="filter_column_active"{% if filters_disabled %} disabled{% endif %} aria-label="{{ "%inputId% select"|trans({'%inputId%': 'filter_column_active'}, 'Admin.Global') }}"
                 >
@@ -167,17 +182,17 @@
                 <option value="0" {% if (filter_column_active is defined) and filter_column_active == '0' %}selected="selected"{% endif %}>Inactive</option>
               </select>
             </div>
-          </th>
+          </td>
           {% if has_category_filter == true %}
-            <th>
+            <td>
               {% if not(activate_drag_and_drop) %}
                 <input type="button" class="btn btn-outline-secondary" name="products_filter_position_asc" value="{{ "Reorder"|trans({}, 'Admin.Actions') }}" onclick="productOrderPrioritiesTable();" />
                 {% else %}
                 <input type="button" id="bulk_edition_save_keep" class="btn" onclick="bulkProductAction(this, 'edition');" value="{{ "Save & refresh"|trans({}, 'Admin.Actions')|raw }}" />
               {% endif %}
-            </th>
+            </td>
           {% endif %}
-          <th class="text-right" style="width: 5rem">
+          <td class="text-right" style="width: 5rem">
             <button
               type="submit"
               class="btn btn-primary"
@@ -197,7 +212,7 @@
               <i class="material-icons">clear</i>
               {{ "Reset"|trans({}, 'Admin.Actions') }}
             </button>
-          </th>
+          </td>
         </tr>
       {% endblock %}
     </thead>

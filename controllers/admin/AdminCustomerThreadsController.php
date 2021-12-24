@@ -352,7 +352,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = (int) Tools::getValue('id_customer_thread');
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $current_employee = $this->context->employee;
                 $id_employee = (int) Tools::getValue('id_employee_forward');
                 $employee = new Employee($id_employee);
@@ -388,7 +388,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         _PS_MAIL_DIR_,
                         true
                     )) {
-                        $cm->private = 1;
+                        $cm->private = true;
                         $cm->message = $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
@@ -435,11 +435,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = $ct->id;
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $cm->message = Tools::getValue('reply_message');
                 if (($error = $cm->validateField('message', $cm->message, null, [], true)) !== true) {
                     $this->errors[] = $error;
-                } elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
+                } elseif (!empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
                     $this->errors[] = $this->trans('An error occurred during the file upload process.', [], 'Admin.Notifications.Error');
                 } elseif ($cm->add()) {
                     $file_attachment = null;
@@ -513,10 +513,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function initContent()
     {
         if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_ . $_GET['filename']) && Validate::isFileName($_GET['filename'])) {
-            AdminCustomerThreadsController::openUploadedFile();
+            $this->openUploadedFile();
         }
 
-        return parent::initContent();
+        parent::initContent();
     }
 
     protected function openUploadedFile()
@@ -827,6 +827,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $tpl = $this->createTemplate('message.tpl');
 
         $contacts = Contact::getContacts($this->context->language->id);
+        $contact_array = [];
         foreach ($contacts as $contact) {
             $contact_array[$contact['id_contact']] = ['id_contact' => $contact['id_contact'], 'name' => $contact['name']];
         }
@@ -857,9 +858,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $tpl->assign([
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
-                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+            'thread_url' => $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1',
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
             'token' => $this->token,
@@ -1018,7 +1018,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $str_errors = '';
         $str_error_delete = '';
 
-        if (count($errors) && is_array($errors)) {
+        if (is_array($errors) && count($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
                 $str_errors .= $error . ', ';
@@ -1195,7 +1195,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     protected function getEncoding($structure)
     {
         foreach ($structure->parameters as $parameter) {
-            if ($parameter->attribute == 'CHARSET') {
+            if (strtoupper($parameter->attribute) == 'CHARSET') {
                 return $parameter->value;
             }
         }

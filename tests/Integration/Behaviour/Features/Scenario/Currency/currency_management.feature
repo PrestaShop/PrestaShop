@@ -1,5 +1,8 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency
-@reset-database-before-feature
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s currency --tags currency-management
+@restore-all-tables-before-feature
+@clear-cache-before-feature
+@reboot-kernel-before-feature
+@currency-management
 Feature: Currency Management
   PrestaShop allows BO users to manage currencies
   As a BO user
@@ -19,7 +22,6 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then I should get no error
     And currency "currency1" should be "EUR"
     And currency "currency1" exchange rate should be 0.88
     And currency "currency1" numeric iso code should be 978
@@ -99,7 +101,6 @@ Feature: Currency Management
       | is_enabled       | 0             |
       | is_unofficial    | 0             |
       | shop_association | shop1         |
-    Then I should get no error
     And database contains 1 rows of currency "GBP"
     And currency with "GBP" is not deleted
     And currency "currency5" should be "GBP"
@@ -134,7 +135,6 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then I should get no error
     And database contains 1 rows of currency "CST"
     And currency "currency7" should be "CST"
     And currency "currency7" exchange rate should be 0.77
@@ -153,7 +153,6 @@ Feature: Currency Management
       | is_enabled       | 0             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
-    Then I should get no error
     And database contains 0 rows of currency "CST"
     And database contains 1 rows of currency "CUS"
     And currency "currency7" should be "CUS"
@@ -173,7 +172,6 @@ Feature: Currency Management
       | is_enabled       | 1             |
       | is_unofficial    | 1             |
       | shop_association | shop1         |
-    Then I should get no error
     And currency "currency7" should be "CUS"
     And currency "currency7" exchange rate should be 0.88
     And currency "currency7" numeric iso code should be null
@@ -195,7 +193,6 @@ Feature: Currency Management
       | is_enabled       | 1                |
       | is_unofficial    | 1                |
       | shop_association | shop1            |
-    Then I should get no error
     And database contains 1 rows of currency "CST"
     And currency "currency8" should be "CST"
     And currency "currency8" exchange rate should be 0.77
@@ -253,7 +250,6 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 0         |
       | shop_association | shop1     |
-    Then I should get no error
     And currency "currency14" should be "AUD"
     And currency "currency14" exchange rate should be 0.88
     And currency "currency14" numeric iso code should be 036
@@ -272,7 +268,6 @@ Feature: Currency Management
       | is_enabled       | 1         |
       | is_unofficial    | 1         |
       | shop_association | shop1     |
-    Then I should get no error
     And currency "currency15" should be "BTC"
     And currency "currency15" exchange rate should be 0.88
     And currency "currency15" numeric iso code should be null
@@ -292,7 +287,6 @@ Feature: Currency Management
       | is_unofficial          | 0             |
       | shop_association       | shop1         |
       | transformations[fr-FR] | leftWithSpace |
-    Then I should get no error
     And currency "currency16" should be "JPY"
     And currency "currency16" exchange rate should be 0.08
     And currency "currency16" numeric iso code should be 392
@@ -336,7 +330,6 @@ Feature: Currency Management
       | is_unofficial          | 1                 |
       | shop_association       | shop1             |
       | transformations[fr-FR] | leftWithoutSpace  |
-    Then I should get no error
     And currency "currency17" should be "JPP"
     And currency "currency17" exchange rate should be 0.8
     And currency "currency17" numeric iso code should be null
@@ -381,7 +374,6 @@ Feature: Currency Management
       | is_enabled       | 0     |
       | is_unofficial    | 1     |
       | shop_association | shop1 |
-    Then I should get no error
     And database contains 1 rows of currency "JPP"
     And currency with "JPP" is not deleted
     And currency "currency18" should be "JPP"

@@ -30,19 +30,23 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
+use DateTimeInterface;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -59,14 +63,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     public function transformSpecificPrice(TableNode $tableNode): SpecificPriceForEditing
     {
         $dataRows = $tableNode->getRowsHash();
-        $from = null;
-        if (!empty($dataRows['from'])) {
-            $from = new DateTime($dataRows['from']);
-        }
-        $to = null;
-        if (!empty($dataRows['to'])) {
-            $to = new DateTime($dataRows['to']);
-        }
 
         return new SpecificPriceForEditing(
             42, // The ID does not matter we don't check it
@@ -75,9 +71,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             new DecimalNumber($dataRows['price']),
             (int) $dataRows['from quantity'],
-            $from,
-            $to,
-            $this->getStoredId($dataRows, 'shop group'),
+            DateTimeUtil::buildNullableDateTime($dataRows['from']),
+            DateTimeUtil::buildNullableDateTime($dataRows['to']),
             $this->getStoredId($dataRows, 'shop'),
             $this->getStoredId($dataRows, 'currency'),
             $this->getStoredId($dataRows, 'country'),
@@ -97,7 +92,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $this->cleanLastException();
         try {
             $command = $this->createAddSpecificPriceCommand($productId, $tableNode);
 
@@ -105,6 +99,23 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $specificPriceId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($specificPriceReference, $specificPriceId->getValue());
         } catch (SpecificPriceException | DomainConstraintException | ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit specific price ":specificPriceReference" with following details:
+     *
+     * @param string $specificPriceReference
+     * @param TableNode $tableNode
+     */
+    public function editSpecificPrice(string $specificPriceReference, TableNode $tableNode): void
+    {
+        $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
+        try {
+            $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
+            $this->getCommandBus()->handle($command);
+        } catch (DomainException $e) {
             $this->setLastException($e);
         }
     }
@@ -130,6 +141,8 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      *
      * @param string $specificPriceReference
      * @param SpecificPriceForEditing $expectedSpecificPrice
+     *
+     * @see transformSpecificPrice for TablenNode to SpecificPrice transformation
      */
     public function assertProductSpecificPrice(string $specificPriceReference, SpecificPriceForEditing $expectedSpecificPrice): void
     {
@@ -139,7 +152,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         $specificPricePropertyNames = [
-            'reductionType', 'includesTax', 'fromQuantity', 'shopGroupId',
+            'reductionType', 'includesTax', 'fromQuantity',
             'shopId', 'currencyId', 'countryId', 'groupId', 'customerId',
         ];
         foreach ($specificPricePropertyNames as $propertyName) {
@@ -152,17 +165,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
         $specificPriceDateTimeProperties = ['dateTimeFrom', 'dateTimeTo'];
         foreach ($specificPriceDateTimeProperties as $dateTimeProperty) {
-            /** @var DateTime|null $expectedDateTime */
+            /** @var DateTimeInterface $expectedDateTime */
             $expectedDateTime = $propertyAccessor->getValue($expectedSpecificPrice, $dateTimeProperty);
-            /** @var DateTime|null $productDateTime */
+            /** @var DateTimeInterface $productDateTime */
             $productDateTime = $propertyAccessor->getValue($productSpecificPrice, $dateTimeProperty);
-            if (null === $expectedDateTime && null !== $productDateTime) {
-                throw new RuntimeException(sprintf(
-                    'Expected %s of "%s" to be null',
-                    $dateTimeProperty,
-                    $specificPriceReference
-                ));
-            }
+
+            Assert::assertSame(
+                $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                $productDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'Unexpected specific price date time'
+            );
         }
 
         $specificPriceDecimalProperties = ['reductionAmount', 'price'];
@@ -217,6 +229,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             'price' => SpecificPriceConstraintException::INVALID_PRICE,
             'from' => SpecificPriceConstraintException::INVALID_FROM_DATETIME,
             'to' => SpecificPriceConstraintException::INVALID_TO_DATETIME,
+            'date range' => SpecificPriceConstraintException::INVALID_DATE_RANGE,
         ];
 
         if (!array_key_exists($fieldName, $constraintErrorFieldMap)) {
@@ -241,17 +254,14 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $addCommand = new AddProductSpecificPriceCommand(
             $productId,
             $dataRows['reduction type'],
-            (float) $dataRows['reduction value'],
+            $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
-            (float) $dataRows['price'],
+            $dataRows['price'],
             (int) $dataRows['from quantity']
         );
 
         if (!empty($dataRows['combination'])) {
             $addCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
-        }
-        if (!empty($dataRows['shop group'])) {
-            $addCommand->setShopGroupId($this->getStoredId($dataRows, 'shop group'));
         }
         if (!empty($dataRows['shop'])) {
             $addCommand->setShopId($this->getStoredId($dataRows, 'shop'));
@@ -276,6 +286,84 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $addCommand;
+    }
+
+    /**
+     * @param int $specificPriceId
+     * @param TableNode $tableNode
+     *
+     * @return EditProductSpecificPriceCommand
+     */
+    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditProductSpecificPriceCommand
+    {
+        $dataRows = $tableNode->getRowsHash();
+        $editCommand = new EditProductSpecificPriceCommand($specificPriceId);
+
+        if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
+            $editCommand->setReduction($dataRows['reduction type'], (string) $dataRows['reduction value']);
+        }
+        if (isset($dataRows['includes tax'])) {
+            $editCommand->setIncludesTax(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']));
+        }
+        if (isset($dataRows['price'])) {
+            $editCommand->setPrice($dataRows['price']);
+        }
+        if (isset($dataRows['from quantity'])) {
+            $editCommand->setFromQuantity((int) $dataRows['from quantity']);
+        }
+        if (isset($dataRows['combination'])) {
+            $editCommand->setCombinationId($this->getStoredId($dataRows, 'combination'));
+        }
+        if (isset($dataRows['shop'])) {
+            $editCommand->setShopId($this->getNullableIdForEdit($dataRows, 'shop'));
+        }
+        if (isset($dataRows['currency'])) {
+            $editCommand->setCurrencyId($this->getNullableIdForEdit($dataRows, 'currency'));
+        }
+        if (isset($dataRows['country'])) {
+            $editCommand->setCountryId($this->getNullableIdForEdit($dataRows, 'country'));
+        }
+        if (isset($dataRows['group'])) {
+            $editCommand->setGroupId($this->getNullableIdForEdit($dataRows, 'group'));
+        }
+        if (isset($dataRows['customer'])) {
+            $editCommand->setCustomerId($this->getNullableIdForEdit($dataRows, 'customer'));
+        }
+        if (isset($dataRows['from'])) {
+            $editCommand->setDateTimeFrom($this->getDateTime($dataRows['from']));
+        }
+        if (isset($dataRows['to'])) {
+            $editCommand->setDateTimeTo($this->getDateTime($dataRows['to']));
+        }
+
+        return $editCommand;
+    }
+
+    /**
+     * @param string $input
+     *
+     * @return DateTimeInterface
+     */
+    private function getDateTime(string $input): DateTimeInterface
+    {
+        return DateTimeUtil::buildNullableDateTime($input);
+    }
+
+    /**
+     * When editing the id fields can be 0 (if we leave it empty it acts as reset action)
+     *
+     * @param array $dataRows
+     * @param string $fieldId
+     *
+     * @return int
+     */
+    private function getNullableIdForEdit(array $dataRows, string $fieldId): int
+    {
+        if (empty($dataRows[$fieldId])) {
+            return 0;
+        }
+
+        return $this->getStoredId($dataRows, $fieldId);
     }
 
     /**

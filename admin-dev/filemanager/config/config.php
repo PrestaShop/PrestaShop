@@ -103,7 +103,7 @@ $duplicate_files=true;
 //**********************
 //Allowed extensions (lowercase insert)
 //**********************
-$ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg'); //Images
+$ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp'); //Images
 $ext_file = array('pdf'); //array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
 $ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //Video
 $ext_music = array(); //array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
@@ -114,7 +114,7 @@ $ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allo
 //**********************
 //Allowed mime types
 //**********************
-$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg');
+$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg', 'image/svg+xml', 'image/webp');
 $mime_file = array('application/pdf');
 $mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm');
 

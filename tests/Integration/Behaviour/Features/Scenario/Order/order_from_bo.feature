@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-from-bo
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
 @order-from-bo
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers
@@ -97,10 +98,10 @@ Feature: Order from Back Office (BO)
       | transaction_id | test123             |
       | currency       | USD                 |
       | amount         | 6.00                |
-    Then order "bo_order1" payments should have the following details:
+    Then order "bo_order1" payment in first position should have the following details:
       | date           | 2019-11-26 13:56:23 |
-      | payment_method | Payments by check   |
-      | transaction_id | test123             |
+      | paymentMethod  | Payments by check   |
+      | transactionId  | test123             |
       | amount         | $6.00               |
     And order "bo_order1" should have following details:
       | total_products           | 23.80 |

@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
+use Currency;
 use Tools;
 
 /**
@@ -35,7 +36,7 @@ class PriceFormatter
 {
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param int|null $currency
      *
      * @return float
      */
@@ -46,7 +47,7 @@ class PriceFormatter
 
     /**
      * @param float $price
-     * @param string|null $currency
+     * @param int|Currency|array|null $currency
      *
      * @return string
      */

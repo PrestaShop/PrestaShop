@@ -31,48 +31,36 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/orders.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/orders' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block content %}
-  <div id="order-view-page"
-       data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
-    <div class="row d-print-none">
+  <div id="order-view-page" data-order-title="{{ 'Order'|trans({}, 'Admin.Global') }} #{{ orderForViewing.id }} {{ orderForViewing.reference }}">
+    <div class="d-print-none">
       {% set displayAdminOrderTopHookContent = renderhook('displayAdminOrderTop', {'id_order': orderForViewing.id}) %}
-
       {% if displayAdminOrderTopHookContent != '' %}
-        <div class="col-md-12">
-          {{ displayAdminOrderTopHookContent|raw }}
-        </div>
+        {{ displayAdminOrderTopHookContent|raw }}
       {% endif %}
-      <div class="order-actions col-md-12">
+      <div class="order-actions">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/order_actions.html.twig' %}
       </div>
     </div>
 
-    <div class="row d-none d-print-block mb-4">
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
-      </div>
+    <div class="d-none d-print-block mb-4">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_order_statistics.html.twig' %}
     </div>
 
-    <div class="row d-none mb-4">
-      <div class="col-12" id="orderProductsModificationPosition"></div>
-    </div>
+    <div id="orderProductsModificationPosition" class="d-none mb-4"></div>
 
-    <div class="row d-none d-print-block mb-4">
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
-      </div>
+    <div class="d-none d-print-block mb-4">
+      {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/print_title.html.twig' %}
     </div>
 
     <div class="product-row row">
       <div class="col-md-4 left-column">
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/customer.html.twig' %}
-
         {{ renderhook('displayAdminOrderSide', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/messages.html.twig' %}
-
         {{ renderhook('displayAdminOrderSideBottom', {'id_order': orderForViewing.id}) }}
       </div>
 
@@ -81,17 +69,15 @@
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/products.html.twig' %}
         </div>
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details.html.twig' %}
-
         {{ renderhook('displayAdminOrderMain', {'id_order': orderForViewing.id}) }}
         {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/payments.html.twig' %}
-
         {{ renderhook('displayAdminOrderMainBottom', {'id_order': orderForViewing.id}) }}
       </div>
     </div>
 
     {% if orderForViewing.sources.sources is not empty %}
-      <div class="product-row row">
-        <div class="col-md-12 left-column">
+      <div class="product-row">
+        <div class="left-column">
           {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/sources.html.twig' %}
         </div>
       </div>
@@ -108,7 +94,6 @@
     {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
       {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/update_customer_address_modal.html.twig' %}
     {% endif %}
-
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_all_messages_modal.html.twig' %}
     {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/Modal/view_product_pack_modal.html.twig' %}
   </div>

@@ -3,6 +3,7 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
@@ -26,13 +27,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Get today date
-const today = new Date();
-
-// Create a future date that there is no delivery slips (yyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
+const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 
 /*
 Update the last order status to shipped

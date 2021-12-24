@@ -177,7 +177,7 @@ final class ChangeOrderDeliveryAddressHandler extends AbstractOrderCommandHandle
                 && (int) $product['id_product_attribute'] === $combinationId
             ) {
                 $orderDetail = new OrderDetail();
-                $orderDetail->createList($order, $cart, $order->getCurrentOrderState(), [$product]);
+                $orderDetail->createList($order, $cart, $order->getCurrentState(), [$product]);
 
                 return $orderDetail;
             }
