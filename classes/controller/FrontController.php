@@ -607,11 +607,20 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Renders and outputs maintenance page and ends controller process.
+     * Initialize the invalid doom page of death.
      */
     public function initCursedPage()
     {
-        $this->displayMaintenancePage();
+        header('HTTP/1.1 403 Forbidden');
+
+        $this->registerStylesheet('theme-error', '/assets/css/error.css', ['media' => 'all', 'priority' => 50]);
+        $this->context->smarty->assign([
+            'layout' => 'layouts/layout-error.tpl',
+            'urls' => $this->getTemplateVarUrls(),
+            'shop' => $this->getTemplateVarShop(),
+            'stylesheets' => $this->getStylesheets(),
+        ]);
+        $this->layout = 'errors/forbidden.tpl';
     }
 
     /**
