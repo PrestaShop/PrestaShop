@@ -41,17 +41,17 @@ class CartRuleTest extends TestCase
     /**
      * @var Customer
      */
-    public $dummyCustomer;
+    protected $dummyCustomer;
 
     /**
      * @var Configuration
      */
-    public $configuration;
+    protected $configuration;
 
     /**
      * @var int
      */
-    public $defaultLanguageId;
+    protected $defaultLanguageId;
 
     public static function setUpBeforeClass(): void
     {
