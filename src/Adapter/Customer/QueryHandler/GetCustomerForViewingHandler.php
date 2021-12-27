@@ -55,7 +55,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrderInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\OrdersInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\PersonalInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ProductsInformation;
-use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ReferrerInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\SentEmailInformation;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\Subscriptions;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewableCustomer;
@@ -63,7 +62,6 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\ViewedProductInformat
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use Product;
-use Referrer;
 use Shop;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -144,7 +142,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $this->getLastEmailsSentToCustomer($customer),
             $this->getLastCustomerConnections($customer),
             $this->getCustomerGroups($customer),
-            $this->getCustomerReferrers($customer),
             $this->getCustomerAddresses($customer)
         );
     }
@@ -524,27 +521,6 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         }
 
         return $customerGroups;
-    }
-
-    /**
-     * @param Customer $customer
-     *
-     * @return ReferrerInformation[]
-     */
-    private function getCustomerReferrers(Customer $customer)
-    {
-        $referrers = Referrer::getReferrers($customer->id);
-        $customerReferrers = [];
-
-        foreach ($referrers as $referrer) {
-            $customerReferrers[] = new ReferrerInformation(
-                Tools::displayDate($referrer['date_add'], null, true),
-                $referrer['name'],
-                $referrer['shop_name']
-            );
-        }
-
-        return $customerReferrers;
     }
 
     /**

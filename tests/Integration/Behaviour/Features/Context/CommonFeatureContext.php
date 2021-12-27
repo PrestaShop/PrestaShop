@@ -88,7 +88,6 @@ use Profile;
 use QuickAccess;
 use RangePrice;
 use RangeWeight;
-use Referrer;
 use RequestSql;
 use Risk;
 use SearchEngine;
@@ -426,7 +425,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         ProductSupplier::resetStaticCache();
         Profile::resetStaticCache();
         QuickAccess::resetStaticCache();
-        Referrer::resetStaticCache();
         RequestSql::resetStaticCache();
         Risk::resetStaticCache();
         SearchEngine::resetStaticCache();
