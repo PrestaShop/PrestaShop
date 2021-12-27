@@ -3650,7 +3650,7 @@ class AdminControllerCore extends Controller
      * @param string $key Field name
      * @param int|null $id_lang Language id (optional)
      *
-     * @return string|false
+     * @return false|mixed
      */
     public function getFieldValue($obj, $key, $id_lang = null)
     {

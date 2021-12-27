@@ -26,7 +26,7 @@
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 
 /**
- * @property Product $object
+ * @property Product|null $object
  */
 class AdminProductsControllerCore extends AdminController
 {
@@ -3182,7 +3182,8 @@ class AdminProductsControllerCore extends AdminController
                             $position = $position + (($page - 1) * $selected_pagination);
                         }
 
-                        if ($product = new Product((int) $pos[2])) {
+                        $product = new Product((int) $pos[2]);
+                        if (Validate::isLoadedObject($product)) {
                             if ($product->updatePosition($way, $position)) {
                                 $category = new Category((int) $id_category);
                                 if (Validate::isLoadedObject($category)) {

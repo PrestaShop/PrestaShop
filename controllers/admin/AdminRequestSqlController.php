@@ -178,6 +178,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -195,6 +196,7 @@ class AdminRequestSqlControllerCore extends AdminController
     public function ajaxProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line  */
         if (_PS_MODE_DEMO_) {
             die($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }

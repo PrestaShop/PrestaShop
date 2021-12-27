@@ -137,6 +137,7 @@ class AdminAccessControllerCore extends AdminController
 
     public function ajaxProcessUpdateAccess()
     {
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
@@ -162,6 +163,7 @@ class AdminAccessControllerCore extends AdminController
 
     public function ajaxProcessUpdateModuleAccess()
     {
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }

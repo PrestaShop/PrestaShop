@@ -465,7 +465,7 @@ class AdminCartsControllerCore extends AdminController
             $id_product = (int) Tools::getValue('id_product');
             if ($this->context->cart->OrderExists()) {
                 $errors[] = $this->trans('An order has already been placed with this cart.', [], 'Admin.Catalog.Notification');
-            } elseif (!$id_product || !($product = new Product((int) $id_product, true, $this->context->language->id))) {
+            } elseif (!$id_product || !Validate::isLoadedObject($product = new Product((int) $id_product, true, $this->context->language->id))) {
                 $errors[] = $this->trans('Invalid product', [], 'Admin.Catalog.Notification');
             } elseif (!$qty || $qty == 0) {
                 $errors[] = $this->trans('Invalid quantity', [], 'Admin.Catalog.Notification');
@@ -672,13 +672,13 @@ class AdminCartsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             if (($id_address_delivery = (int) Tools::getValue('id_address_delivery')) &&
-                ($address_delivery = new Address((int) $id_address_delivery)) &&
+                Validate::isLoadedObject($address_delivery = new Address((int) $id_address_delivery)) &&
                 $address_delivery->id_customer == $this->context->cart->id_customer) {
                 $this->context->cart->id_address_delivery = (int) $address_delivery->id;
             }
 
             if (($id_address_invoice = (int) Tools::getValue('id_address_invoice')) &&
-                ($address_invoice = new Address((int) $id_address_invoice)) &&
+                Validate::isLoadedObject($address_invoice = new Address((int) $id_address_invoice)) &&
                 $address_invoice->id_customer = $this->context->cart->id_customer) {
                 $this->context->cart->id_address_invoice = (int) $address_invoice->id;
             }

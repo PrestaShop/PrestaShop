@@ -298,6 +298,7 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$email) {
@@ -306,7 +307,7 @@ class AdminLoginControllerCore extends AdminController
             $this->errors[] = $this->trans('Invalid email address.', [], 'Admin.Notifications.Error');
         } else {
             $employee = new Employee();
-            if (!$employee->getByEmail($email) || !$employee) {
+            if (!$employee->getByEmail($email)) {
                 $this->errors[] = $this->trans('This account does not exist.', [], 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')], 'Admin.Login.Notification');
@@ -389,6 +390,7 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$reset_token_value) {
@@ -409,7 +411,7 @@ class AdminLoginControllerCore extends AdminController
             $this->errors[] = $this->trans('The password and its confirmation do not match. Please double check both passwords.', [], 'Admin.Login.Notification');
         } else {
             $employee = new Employee();
-            if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) { // check matching employee id with its email
+            if (!$employee->getByEmail($reset_email) || $employee->id != $id_employee) { // check matching employee id with its email
                 $this->errors[] = $this->trans('This account does not exist.', [], 'Admin.Login.Notification');
             } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')], 'Admin.Login.Notification');
