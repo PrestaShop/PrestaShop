@@ -562,7 +562,6 @@ class AdminShopControllerCore extends AdminController
             'group' => $this->trans('Customer groups', [], 'Admin.Advparameters.Feature'),
             'tax_rules_group' => $this->trans('Tax rules groups', [], 'Admin.Advparameters.Feature'),
             'supplier' => $this->trans('Suppliers', [], 'Admin.Global'),
-            'referrer' => $this->trans('Referrers/affiliates', [], 'Admin.Advparameters.Feature'),
             'zone' => $this->trans('Zones', [], 'Admin.International.Feature'),
             'cart_rule' => $this->trans('Cart rules', [], 'Admin.Advparameters.Feature'),
         ];

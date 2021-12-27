@@ -536,11 +536,6 @@
                         <wording>Search Engines</wording>
                         <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
-                    <tab id="Referrers" id_parent="Traffic" active="1" enabled="1" icon="">
-                        <class_name>AdminReferrers</class_name>
-                        <wording>Referrers</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
 
                 <tab id="Search" id_parent="Shop_parameters" active="1" enabled="1" icon="">
                     <class_name>AdminParentSearchConf</class_name>

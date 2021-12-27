@@ -927,18 +927,6 @@ $relations = array(
         ),
     ),
 
-    'referrer' => array(
-    ),
-
-    'referrer_cache' => array(
-        'id_connections_source' => array(
-            'connections_source' => 'id_connections_source',
-        ),
-        'id_referrer' => array(
-            'referrer' => 'id_referrer',
-        ),
-    ),
-
     'scene' => array(
     ),
 

@@ -1919,50 +1919,6 @@ CREATE TABLE `PREFIX_range_weight` (
   )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
-/* Referrer stats */
-CREATE TABLE `PREFIX_referrer` (
-  `id_referrer` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(64) NOT NULL,
-  `passwd` varchar(255) DEFAULT NULL,
-  `http_referer_regexp` varchar(64) DEFAULT NULL,
-  `http_referer_like` varchar(64) DEFAULT NULL,
-  `request_uri_regexp` varchar(64) DEFAULT NULL,
-  `request_uri_like` varchar(64) DEFAULT NULL,
-  `http_referer_regexp_not` varchar(64) DEFAULT NULL,
-  `http_referer_like_not` varchar(64) DEFAULT NULL,
-  `request_uri_regexp_not` varchar(64) DEFAULT NULL,
-  `request_uri_like_not` varchar(64) DEFAULT NULL,
-  `base_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
-  `percent_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
-  `click_fee` decimal(5, 2) NOT NULL DEFAULT '0.00',
-  `date_add` datetime NOT NULL,
-  PRIMARY KEY (`id_referrer`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-/* Referrer cache (stats) */
-CREATE TABLE `PREFIX_referrer_cache` (
-  `id_connections_source` int(11) unsigned NOT NULL,
-  `id_referrer` int(11) unsigned NOT NULL,
-  PRIMARY KEY (
-    `id_connections_source`, `id_referrer`
-  )
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
-/* Referrer shop info (stats) */
-CREATE TABLE `PREFIX_referrer_shop` (
-  `id_referrer` int(10) unsigned NOT NULL auto_increment,
-  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
-  `cache_visitors` int(11) DEFAULT NULL,
-  `cache_visits` int(11) DEFAULT NULL,
-  `cache_pages` int(11) DEFAULT NULL,
-  `cache_registrations` int(11) DEFAULT NULL,
-  `cache_orders` int(11) DEFAULT NULL,
-  `cache_sales` decimal(17, 2) DEFAULT NULL,
-  `cache_reg_rate` decimal(5, 4) DEFAULT NULL,
-  `cache_order_rate` decimal(5, 4) DEFAULT NULL,
-  PRIMARY KEY (`id_referrer`, `id_shop`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
 /* List of custom SQL request saved on the admin (used to generate exports) */
 CREATE TABLE IF NOT EXISTS `PREFIX_request_sql` (
   `id_request_sql` int(11) NOT NULL AUTO_INCREMENT,

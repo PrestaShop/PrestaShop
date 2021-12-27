@@ -234,11 +234,6 @@
     <access id="access_5_54"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_READ"/>
     <access id="access_5_55"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_UPDATE"/>
     <access id="access_5_56"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_DELETE"/>
-    <!--<access id="access_5_92"  id_profile="Salesman"      id_authorization_role="Stats_1" view="1" add="1" edit="1" delete="1"/>-->
-    <access id="access_5_57"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_CREATE"/>
-    <access id="access_5_58"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_READ"/>
-    <access id="access_5_59"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_UPDATE"/>
-    <access id="access_5_60"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_DELETE"/>
     <access id="access_5_61" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_READ"/>
     <access id="access_5_87" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_DELETE"/>
     <access id="access_5_88" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_UPDATE"/>
@@ -259,10 +254,6 @@
     <access id="access_5_72" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_READ"/>
     <access id="access_5_73" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_UPDATE"/>
     <access id="access_5_74" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_DELETE"/>
-    <access id="access_5_75" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_CREATE"/>
-    <access id="access_5_76" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_READ"/>
-    <access id="access_5_77" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_UPDATE"/>
-    <access id="access_5_78" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_DELETE"/>
     <access id="access_5_79" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_CREATE"/>
     <access id="access_5_80" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_READ"/>
     <access id="access_5_81" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_UPDATE"/>
@@ -271,6 +262,6 @@
     <access id="access_5_84" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_READ"/>
     <access id="access_5_85" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_UPDATE"/>
     <access id="access_5_86" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_DELETE"/>
-	
+
   </entities>
 </entity_access>
