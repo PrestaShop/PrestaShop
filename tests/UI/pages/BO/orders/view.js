@@ -673,10 +673,9 @@ class Order extends BOBasePage {
     if (discountData.type !== 'Free shipping') {
       await this.setValue(page, this.addOrderCartRuleValueInput, discountData.value);
     }
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`),
-      page.$eval(this.addOrderCartRuleAddButton, el => el.click()),
-    ]);
+
+    await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
+    await page.$eval(this.addOrderCartRuleAddButton, el => el.click());
 
     return this.getTextContent(page, this.alertBlock);
   }
