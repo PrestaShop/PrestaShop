@@ -243,9 +243,6 @@ class ModuleManagerTest extends TestCase
             ->method('removeModuleFromDisk')
             ->willReturn(true);
         $this->moduleUpdaterS
-            ->method('setModuleOnDiskFromAddons')
-            ->willReturn(true);
-        $this->moduleUpdaterS
             ->method('upgrade')
             ->willReturn(true);
     }

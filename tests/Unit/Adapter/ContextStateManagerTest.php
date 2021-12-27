@@ -33,6 +33,7 @@ use Customer;
 use Language;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Shop;
 use Tests\TestCase\ContextStateTestCase;
 
 class ContextStateManagerTest extends ContextStateTestCase
