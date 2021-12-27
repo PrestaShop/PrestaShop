@@ -79,16 +79,6 @@ class HookCore extends ObjectModel
     ];
 
     /**
-     * @deprecated 1.5.0
-     */
-    protected static $_hook_modules_cache = null;
-
-    /**
-     * @deprecated 1.5.0
-     */
-    protected static $_hook_modules_cache_exec = null;
-
-    /**
      * List of all deprecated hooks.
      *
      * @var array
@@ -243,25 +233,6 @@ class HookCore extends ObjectModel
         }
 
         return Cache::retrieve($cache_id);
-    }
-
-    /**
-     * Returns a list of hook names, indexed by lower case alias.
-     *
-     * @since 1.5.0
-     *
-     * @return array Array of hookAlias => hookName
-     *
-     * @deprecated Since 1.7.1.0
-     */
-    public static function getHookAliasList()
-    {
-        @trigger_error(
-            __FUNCTION__ . ' is deprecated since version 1.7.1.0.',
-            E_USER_DEPRECATED
-        );
-
-        return static::getCanonicalHookNames();
     }
 
     /**
@@ -443,38 +414,6 @@ class HookCore extends ObjectModel
     }
 
     /**
-     * This function exists for retro compatibility only. Do not use!
-     *
-     * - If the provided hook name is an alias, it returns the canonical name of the aliased hook.
-     * - If the hook name is not an alias, but it has a know alias, then it will return that.
-     * - If the hook does not have an alias, it will return an empty string.
-     *
-     * @since 1.5.0
-     *
-     * @param string $hookName Hook name
-     *
-     * @return int|string Hook ID
-     *
-     * @deprecated 1.7.1.0
-     */
-    public static function getRetroHookName($hookName)
-    {
-        $hookNamesByAlias = static::getCanonicalHookNames();
-        if (isset($hookNamesByAlias[strtolower($hookName)])) {
-            // return the canonical name (?)
-            return $hookNamesByAlias[strtolower($hookName)];
-        }
-
-        $alias = array_search($hookName, $hookNamesByAlias);
-        if ($alias === false) {
-            return '';
-        }
-
-        // return the alias
-        return $alias;
-    }
-
-    /**
      * Get list of all registered hooks with modules, indexed by hook id and module id
      *
      * @since 1.5.0
@@ -513,9 +452,6 @@ class HookCore extends ObjectModel
             ];
         }
         Cache::store($cache_id, $list);
-
-        // @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
-        Hook::$_hook_modules_cache = $list;
 
         return $list;
     }
@@ -731,10 +667,13 @@ class HookCore extends ObjectModel
 
         // add modules that are registered to aliases of this hook
         $aliases = Hook::getHookAliasesFor($hookName);
+
         if (!empty($aliases)) {
             $alreadyIncludedModuleIds = array_column($modulesToInvoke, 'id_module');
+
             foreach ($aliases as $alias) {
                 $hookAlias = strtolower($alias);
+
                 if (isset($allHookRegistrations[$hookAlias])) {
                     foreach ($allHookRegistrations[$hookAlias] as $registeredAlias) {
                         if (!in_array($registeredAlias['id_module'], $alreadyIncludedModuleIds)) {
@@ -824,11 +763,6 @@ class HookCore extends ObjectModel
             return ($array_return) ? [] : false;
         }
 
-        if (array_key_exists($hook_name, static::$deprecated_hooks)) {
-            $deprecVersion = static::$deprecated_hooks[$hook_name]['from'] ?? _PS_VERSION_;
-            Tools::displayAsDeprecated('The hook ' . $hook_name . ' is deprecated in PrestaShop v.' . $deprecVersion);
-        }
-
         // Store list of executed hooks on this page
         Hook::$executed_hooks[$id_hook] = $hook_name;
 
@@ -877,6 +811,15 @@ class HookCore extends ObjectModel
             } else {
                 // the module is registered to an alias
                 $registeredHookName = static::getNameById($hookRegistration['id_hook']);
+                trigger_error(
+                    sprintf(
+                        'The hook "%s" is deprecated, please use "%s" instead in module "%s".',
+                        $registeredHookName,
+                        $hook_name,
+                        $hookRegistration['module']
+                    ),
+                    E_USER_DEPRECATED
+                );
             }
 
             // Check permissions
@@ -1195,8 +1138,6 @@ class HookCore extends ObjectModel
 
         if ($useCache) {
             Cache::store($cache_id, $allHookRegistrations);
-            // @todo remove this in 1.6, we keep it in 1.5 for backward compatibility
-            static::$_hook_modules_cache_exec = $allHookRegistrations;
         }
 
         return $allHookRegistrations;
