@@ -143,6 +143,7 @@ class ContextStateManagerTest extends ContextStateTestCase
             'language' => $this->createContextFieldMock(Language::class, 42),
         ]);
         $this->assertEquals(42, $context->language->id);
+        $this->assertEquals('test42', $context->getTranslator()->getLocale());
 
         $contextStateManager = new ContextStateManager($this->legacyContext);
         $this->assertNull($contextStateManager->getContextFieldsStack());
@@ -150,13 +151,145 @@ class ContextStateManagerTest extends ContextStateTestCase
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 51));
         $this->assertEquals(51, $context->language->id);
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+        $this->assertEquals('test51', $context->getTranslator()->getLocale());
 
         $contextStateManager->setLanguage($this->createContextFieldMock(Language::class, 69));
         $this->assertEquals(69, $context->language->id);
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+        $this->assertEquals('test69', $context->getTranslator()->getLocale());
 
         $contextStateManager->restorePreviousContext();
         $this->assertEquals(42, $context->language->id);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+        $this->assertEquals('test42', $context->getTranslator()->getLocale());
+    }
+
+    public function testShopState()
+    {
+        $context = $this->createContextMock([
+            'shop' => $this->createContextFieldMock(Shop::class, 42),
+        ]);
+        Shop::setContext(Shop::CONTEXT_SHOP, 42);
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(42, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
+        $this->assertEquals(51, $context->shop->id);
+        $this->assertEquals(51, Shop::getContextShopID());
+        $this->assertEquals(51, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
+        $this->assertEquals(69, $context->shop->id);
+        $this->assertEquals(69, Shop::getContextShopID());
+        $this->assertEquals(69, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(42, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(42, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    public function testShopStateAll()
+    {
+        $context = $this->createContextMock([
+            'shop' => $this->createContextFieldMock(Shop::class, 42),
+        ]);
+        Shop::setContext(Shop::CONTEXT_ALL);
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(null, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
+        $this->assertEquals(51, $context->shop->id);
+        $this->assertEquals(51, Shop::getContextShopID());
+        $this->assertEquals(51, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
+        $this->assertEquals(69, $context->shop->id);
+        $this->assertEquals(69, Shop::getContextShopID());
+        $this->assertEquals(69, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(null, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(null, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    public function testShopStateGroup()
+    {
+        $context = $this->createContextMock([
+            'shop' => $this->createContextFieldMock(Shop::class, 42),
+        ]);
+        Shop::setContext(Shop::CONTEXT_GROUP, 42);
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 51));
+        $this->assertEquals(51, $context->shop->id);
+        $this->assertEquals(51, Shop::getContextShopID());
+        $this->assertEquals(51, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShop($this->createContextFieldMock(Shop::class, 69));
+        $this->assertEquals(69, $context->shop->id);
+        $this->assertEquals(69, Shop::getContextShopID());
+        $this->assertEquals(69, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals(42, $context->shop->id);
+        $this->assertEquals(null, Shop::getContextShopID());
+        $this->assertEquals(42, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
         $this->assertNull($contextStateManager->getContextFieldsStack());
     }
 

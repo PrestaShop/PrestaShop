@@ -145,7 +145,12 @@
         "platform": {
             "php": "7.2.5"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true,
+            "composer/installers": true,
+            "ergebnis/composer-normalize": true
+        }
     },
     "extra": {
         "incenteev-parameters": {

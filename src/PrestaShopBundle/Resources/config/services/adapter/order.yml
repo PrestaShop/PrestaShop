@@ -88,6 +88,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\UpdateOrderShippingDetailsHandler
     arguments:
       - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\UpdateOrderShippingDetailsCommand
