@@ -2309,7 +2309,6 @@ $baseline = [
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getModule',
     'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::unhookAction',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getModuleZip',
-    'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getCustomerThemes',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getResponse',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getPostResponse',
     'PrestaShopBundle\Service\TranslationService::dataContainsSearchWord',

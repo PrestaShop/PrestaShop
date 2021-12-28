@@ -117,9 +117,6 @@ class AddonsDataProvider implements AddonsInterface
             switch ($action) {
                 case 'service':
                     return $this->marketplaceClient->getServices();
-                case 'customer_themes':
-                    return $this->marketplaceClient
-                        ->getCustomerThemes();
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
                 case 'categories':
