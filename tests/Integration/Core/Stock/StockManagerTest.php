@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Stock;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -41,7 +42,7 @@ use StockAvailable;
 class StockManagerTest extends TestCase
 {
     /**
-     * @var ConfigurationInterface
+     * @var ConfigurationInterface|MockObject
      */
     private $configuration;
     /**

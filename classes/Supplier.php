@@ -154,9 +154,8 @@ class SupplierCore extends ObjectModel
 					JOIN `' . _DB_PREFIX_ . 'product` p ON (ps.`id_product`= p.`id_product`)
 					' . Shop::addSqlAssociation('product', 'p') . '
 					LEFT JOIN `' . _DB_PREFIX_ . 'supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
-					WHERE ps.id_product_attribute = 0' .
+					WHERE product_shop.`visibility` NOT IN ("none")' .
                     ($active ? ' AND product_shop.`active` = 1' : '') .
-                    ' AND product_shop.`visibility` NOT IN ("none")' .
                     ($allGroups ? '' : '
 					AND ps.`id_product` IN (
 						SELECT cp.`id_product`
@@ -320,7 +319,6 @@ class SupplierCore extends ObjectModel
 			JOIN `' . _DB_PREFIX_ . 'product` p ON (ps.`id_product`= p.`id_product`)
 			' . Shop::addSqlAssociation('product', 'p') . '
 			WHERE ps.`id_supplier` = ' . (int) $idSupplier . '
-			AND ps.id_product_attribute = 0
 			' . ($active ? ' AND product_shop.`active` = 1' : '') . '
 			' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
 			AND p.`id_product` IN (
@@ -364,8 +362,7 @@ class SupplierCore extends ObjectModel
 					m.`name` AS manufacturer_name' . (Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '') . '
 				 FROM `' . _DB_PREFIX_ . 'product` p
 				' . Shop::addSqlAssociation('product', 'p') . '
-				JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (ps.id_product = p.id_product
-					AND ps.id_product_attribute = 0) ' .
+				JOIN `' . _DB_PREFIX_ . 'product_supplier` ps ON (ps.id_product = p.id_product) ' .
                 (Combination::isFeatureActive() ? 'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')' : '') . '
 				LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (p.`id_product` = pl.`id_product`

@@ -76,14 +76,13 @@ class AdminControllerTest extends TestCase
     }
 
     /**
-     * @test
      * @dataProvider getControllersClasses
      *
-     * @param $controllerClass
+     * @param string $controllerClass
      *
-     * @return mixed
+     * @return void
      */
-    public function itShouldRunTheTestedController($controllerClass): void
+    public function testItShouldRunTheTestedController(string $controllerClass): void
     {
         /**
          * @var Controller $testedController

@@ -29,13 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Classes\Smarty;
 
 use PHPUnit\Framework\TestCase;
-use SmartyDev;
 
-class SmartyDevTest extends TestCase
+class SmartySettingsTest extends TestCase
 {
-    /**
-     * @var SmartyDev
-     */
     private $smarty;
 
     protected function setUp(): void

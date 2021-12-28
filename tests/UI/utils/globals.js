@@ -5,6 +5,11 @@ global.FO = {
   URL: process.env.URL_FO || 'http://localhost/prestashop/',
 };
 
+/*
+Linked to the issue #22581
+ */
+global.URLHasPort = (global.FO.URL).match(/:\d+.+/) !== null;
+
 global.BO = {
   URL: process.env.URL_BO || `${global.FO.URL}admin-dev/`,
   EMAIL: process.env.LOGIN || DefaultEmployee.email,

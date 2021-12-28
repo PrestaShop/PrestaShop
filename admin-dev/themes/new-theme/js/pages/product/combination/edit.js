@@ -26,6 +26,7 @@
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ImageSelector from '@pages/product/combination/image-selector';
 import ProductMap from '@pages/product/product-map';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
@@ -38,6 +39,11 @@ $(() => {
     'TextWithLengthCounter',
   ]);
 
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false);
+  const $productForm = $(window.parent.document.querySelector(ProductMap.productForm));
+  const {eventEmitter} = window.prestashop.instance;
+  // Init product model along with input watching and syncing
+  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+
+  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
   new ImageSelector();
 });

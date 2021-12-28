@@ -18,4 +18,9 @@ RUN chown -R www-data:www-data /var/www/.composer
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt install -y nodejs
 
+# Install mailutils to make sendmail work
+RUN apt install -y \
+    apt-utils \
+    mailutils
+
 CMD ["/tmp/docker_run_git.sh"]

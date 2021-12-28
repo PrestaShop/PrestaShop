@@ -23,48 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Tests\Integration\Utility\ContextMocker;
+use RuntimeException;
+use Supplier;
 
-class ContextFeatureContext extends AbstractPrestaShopFeatureContext
+class SupplierFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @var ContextMocker
-     */
-    protected $contextMocker;
-
-    /**
-     * This hook can be used to properly mock context
+     * @Given /^supplier "(.+)" with name "(.+)" exists$/
      *
-     * @BeforeScenario
+     * @param string $reference
+     * @param string $supplierName
      */
-    public function mockContext()
+    public function existsByName(string $reference, string $supplierName): void
     {
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.context');
-        /*
-         * We need to call this before initializing the ContextMocker because this method forcefully init
-         * the shop context thus overriding the expected value
-         */
-        $legacyContext->getContext();
+        $id = (int) Supplier::getIdByName($supplierName);
 
-        $this->contextMocker = new ContextMocker();
-        $this->contextMocker->mockContext();
-    }
-
-    /**
-     * This hook can be used to properly reset previous context
-     *
-     * @AfterScenario
-     */
-    public function resetContext()
-    {
-        if (empty($this->contextMocker)) {
-            throw new \Exception('Context was not mocked');
+        if (!$id) {
+            throw new RuntimeException(sprintf('Supplier with name "%s" doesnt exist', $supplierName));
         }
-        $this->contextMocker->resetContext();
+
+        SharedStorage::getStorage()->set($reference, $id);
     }
 }

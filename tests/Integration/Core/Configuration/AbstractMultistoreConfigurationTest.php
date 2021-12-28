@@ -30,6 +30,7 @@ namespace Tests\Integration\Core\Configuration;
 
 use Configuration as LegacyConfiguration;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -103,7 +104,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
      */
     public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
     {
@@ -124,7 +124,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
      */
     public function testInvalidOptionsException(ShopConstraint $shopConstraint): void
     {
@@ -226,9 +225,9 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
-     * @return ShopContext
+     * @return MockObject
      */
-    protected function createShopContextMock(): Context
+    protected function createShopContextMock(): MockObject
     {
         return $this->getMockBuilder(Context::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])

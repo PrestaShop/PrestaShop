@@ -517,7 +517,7 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
      * @param string $url
      * @param array|null $ignoredParameters
      */
-    private function assertSameUrl($expectedUrl, $url, array $ignoredParameters = null)
+    private function assertSameUrl(string $expectedUrl, string $url, array $ignoredParameters = null)
     {
         $cleanUrl = $this->getCleanUrl($url, $ignoredParameters);
         $this->assertTrue($expectedUrl == $cleanUrl, sprintf(
@@ -528,12 +528,12 @@ class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
     }
 
     /**
-     * @param $url
+     * @param string $url
      * @param array|null $ignoredParameters
      *
      * @return string
      */
-    private function getCleanUrl($url, array $ignoredParameters = null)
+    private function getCleanUrl(string $url, array $ignoredParameters = null): string
     {
         $this->assertNotNull($url);
         $parsedUrl = parse_url($url);

@@ -29,7 +29,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
@@ -116,7 +115,7 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @param int $shopGroupId
      * @param int $shopId
      *
-     * @return AbstractMultistoreConfiguration
+     * @return DummyMultistoreConfiguration
      */
     private function getTestableClass(
         bool $isAllShopContext,
@@ -124,7 +123,7 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
         bool $isMultistoreUsed = true,
         int $shopGroupId = 1,
         int $shopId = 1
-    ): AbstractMultistoreConfiguration {
+    ): DummyMultistoreConfiguration {
         return new DummyMultistoreConfiguration(
             $this->createShopConfigurationMock($expectedCalledMethod),
             $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId),

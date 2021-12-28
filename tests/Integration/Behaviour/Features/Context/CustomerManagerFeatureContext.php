@@ -397,9 +397,8 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @throws \Exception
      */
-    protected function validateDeleteCustomerMethod($methodName)
+    protected function validateDeleteCustomerMethod(string $methodName)
     {
-        /** @var DefaultGroupsProviderInterface $groupProvider */
         $availableMethods = CustomerDeleteMethod::getAvailableMethods();
 
         if (!in_array($methodName, $availableMethods)) {

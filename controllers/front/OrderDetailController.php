@@ -183,6 +183,13 @@ class OrderDetailControllerCore extends FrontController
 
             $order = new Order($id_order);
             if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id) {
+                if ($order->id_shop != $this->context->shop->id && $this->context->customer->id_shop_group == $this->context->shop->id_shop_group) {
+                    $shopGroup = new ShopGroup($this->context->customer->id_shop_group);
+                    if (!$shopGroup->share_order) {
+                        $this->redirect_after = '404';
+                        $this->redirect();
+                    }
+                }
                 $this->order_to_display = (new OrderPresenter())->present($order);
 
                 $this->reference = $order->reference;

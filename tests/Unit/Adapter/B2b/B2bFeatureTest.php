@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\B2b;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\B2b\B2bFeature;
@@ -46,6 +47,7 @@ class B2bFeatureTest extends TestCase
             ->willReturn(0)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $this->assertFalse($feature->isUsed());
@@ -62,6 +64,7 @@ class B2bFeatureTest extends TestCase
             ->willReturn(1)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $this->assertTrue($feature->isUsed());
@@ -77,6 +80,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 1)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->enable();
@@ -91,6 +95,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 0)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->disable();
@@ -105,6 +110,7 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 1)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->update(true);
@@ -119,16 +125,16 @@ class B2bFeatureTest extends TestCase
             ->with(self::CONFIGURATION_FEATURE, 0)
         ;
 
+        /** @var Configuration $configurationMock */
         $feature = new B2bFeature($configurationMock);
 
         $feature->update(false);
     }
 
-    private function createConfigurationMock(): Configuration
+    private function createConfigurationMock(): MockObject
     {
         return $this->getMockBuilder(Configuration::class)
             ->disableOriginalConstructor()
-            ->getMock()
-            ;
+            ->getMock();
     }
 }

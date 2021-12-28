@@ -79,6 +79,7 @@ class HookDispatcherTest extends KernelTestCase
 
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2']);
         $hookDispatcher->addListener('test_test_2', [$this, 'listenerCallback2b']);
+        /** @var RenderingHookEvent $event */
         $event = $hookDispatcher->dispatch('test_test_2', new RenderingHookEvent());
 
         $subset = [
