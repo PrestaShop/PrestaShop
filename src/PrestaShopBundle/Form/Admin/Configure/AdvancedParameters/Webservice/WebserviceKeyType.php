@@ -96,7 +96,7 @@ class WebserviceKeyType extends TranslatorAwareType
                         [
                             '%length%' => Key::LENGTH,
                         ]
-                    ),
+                    )
                 ),
                 'generated_value_length' => Key::LENGTH,
                 'constraints' => [
