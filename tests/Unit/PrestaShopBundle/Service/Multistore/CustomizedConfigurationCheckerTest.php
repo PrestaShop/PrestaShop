@@ -26,33 +26,31 @@
 
 namespace Tests\Unit\PrestaShopBundle\Service\Multistore;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class CustomizedConfigurationCheckerTest extends TestCase
 {
     public function testIsConfigurationCustomizedForThisShop(): void
     {
         $customizedConfigurationChecker = new CustomizedConfigurationChecker($this->mockShopConfiguration(true));
-        $this->assertTrue($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal(), true));
-        $this->assertTrue($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal(), false));
+        $this->assertTrue($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity(), true));
+        $this->assertTrue($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity(), false));
 
         $customizedConfigurationChecker = new CustomizedConfigurationChecker($this->mockShopConfiguration(false));
-        $this->assertFalse($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal(), true));
-        $this->assertFalse($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity()->reveal(), false));
+        $this->assertFalse($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity(), true));
+        $this->assertFalse($customizedConfigurationChecker->isConfigurationCustomizedForThisShop('FAKE_CONFIG_KEY', $this->prophesizeShopEntity(), false));
     }
 
     /**
      * @param bool $hasConfig
      *
-     * @return MockObject
+     * @return ShopConfigurationInterface
      */
-    private function mockShopConfiguration(bool $hasConfig): MockObject
+    private function mockShopConfiguration(bool $hasConfig): ShopConfigurationInterface
     {
         $shopConfigurationMock = $this->createMock(ShopConfigurationInterface::class);
         $shopConfigurationMock->method('has')->willReturn($hasConfig);
@@ -61,15 +59,16 @@ class CustomizedConfigurationCheckerTest extends TestCase
     }
 
     /**
-     * @return ObjectProphecy
+     * @return Shop
      */
-    private function prophesizeShopEntity(): ObjectProphecy
+    private function prophesizeShopEntity(): Shop
     {
-        $shopMock = $this->prophesize(Shop::class);
-        $shopGroupMock = $this->prophesize(ShopGroup::class);
-        $shopGroupMock->getId()->willReturn(3); // id not important
-        $shopMock->getShopGroup()->willReturn($shopGroupMock->reveal());
-        $shopMock->getId()->willReturn(3); // id not important
+        $shopGroupMock = $this->createMock(ShopGroup::class);
+        $shopGroupMock->method('getId')->willReturn(3); // id not important
+
+        $shopMock = $this->createMock(Shop::class);
+        $shopMock->method('getShopGroup')->willReturn($shopGroupMock);
+        $shopMock->method('getId')->willReturn(3); // id not important
 
         return $shopMock;
     }

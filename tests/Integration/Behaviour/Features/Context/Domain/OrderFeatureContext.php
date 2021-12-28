@@ -111,10 +111,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given I add order :orderReference with the following details:
      *
-     * @param $orderReference
+     * @param string $orderReference
      * @param TableNode $table
      */
-    public function addOrderWithTheFollowingDetails($orderReference, TableNode $table)
+    public function addOrderWithTheFollowingDetails(string $orderReference, TableNode $table): void
     {
         $testCaseData = $table->getRowsHash();
 
@@ -425,14 +425,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then order :orderReference should have :expectedCount cart rule(s)
      *
-     * @param string$orderReference
+     * @param string $orderReference
      * @param int $expectedCount
      */
     public function checkOrderCartRulesCount(string $orderReference, int $expectedCount)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        /** @var OrderProductForViewing[] $orderProducts */
         $orderDiscounts = $this->getOrderDiscounts($orderId);
 
         if (count($orderDiscounts) == $expectedCount) {
@@ -749,7 +748,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderState $currentOrderState */
         $currentOrderStateId = $orderForViewing->getHistory()->getCurrentOrderStatusId();
 
         /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
@@ -1201,9 +1199,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @When I add discount to order :orderReference with following details:
      *
      * @param string $orderReference
-     * @param TableNode $data
+     * @param TableNode $table
      */
-    public function addCartRuleToOrder(string $orderReference, TableNode $table)
+    public function addCartRuleToOrder(string $orderReference, TableNode $table): void
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();

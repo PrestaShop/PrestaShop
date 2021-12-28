@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cache;
 use Context;
@@ -65,14 +66,16 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        $this->carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
     }
 
     /**
      * @Given /^there is a tax named "(.+)" and rate (\d+\.\d+)%$/
      */
-    public function createTax($name, $rate)
+    public function createTax(string $name, float $rate): void
     {
         $tax = new Tax();
         $tax->name = [(int) Context::getContext()->language->id => 'fake'];
@@ -136,17 +139,17 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
-    public function checkTaxWithNameExists($name)
+    public function checkTaxWithNameExists(string $name): void
     {
         $this->checkFixtureExists($this->taxes, 'Tax', $name);
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
-    public function checkTaxRuleWithNameExists($name)
+    public function checkTaxRuleWithNameExists(string $name): void
     {
         $this->checkFixtureExists($this->taxRules, 'Tax rule', $name);
     }

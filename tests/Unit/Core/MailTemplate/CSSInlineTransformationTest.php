@@ -27,7 +27,6 @@
 namespace Tests\Unit\Core\MailTemplate;
 
 use DOMElement;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
@@ -35,13 +34,13 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class CSSInlineTransformationTest extends TestCase
 {
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $transformation = new CSSInlineTransformation();
         $this->assertNotNull($transformation);
     }
 
-    public function testSetters()
+    public function testSetters(): void
     {
         $transformation = new CSSInlineTransformation();
 
@@ -52,15 +51,13 @@ class CSSInlineTransformationTest extends TestCase
         $this->assertEquals($transformation, $transformation->setLanguage($languageMock));
     }
 
-    public function testSimpleCss()
+    public function testSimpleCss(): void
     {
         $cssPath = realpath(__DIR__ . '/../../Resources/assets/css/titles.css');
         $simpleHtml = $this->createSimpleHtml($cssPath);
         $transformation = new CSSInlineTransformation();
 
-        $transformedHtml = $transformation
-            ->apply($simpleHtml, [], $this->buildLanguageMock())
-        ;
+        $transformedHtml = $transformation->apply($simpleHtml, []);
         $this->assertNotEquals($simpleHtml, $transformedHtml);
 
         $crawler = new Crawler($transformedHtml);
@@ -79,9 +76,7 @@ class CSSInlineTransformationTest extends TestCase
         $simpleHtml = $this->createSimpleHtml($cssPath);
         $transformation = new CSSInlineTransformation();
 
-        $transformedHtml = $transformation
-            ->apply($simpleHtml, [], $this->buildLanguageMock())
-        ;
+        $transformedHtml = $transformation->apply($simpleHtml, []);
         $this->assertNotNull($transformedHtml);
 
         $crawler = new Crawler($transformedHtml);
@@ -96,9 +91,7 @@ class CSSInlineTransformationTest extends TestCase
         $simpleHtml = $this->createSimpleHtml($cssPath);
         $transformation = new CSSInlineTransformation();
 
-        $transformedHtml = $transformation
-            ->apply($simpleHtml, [], $this->buildLanguageMock())
-        ;
+        $transformedHtml = $transformation->apply($simpleHtml, []);
         $this->assertNotNull($transformedHtml);
 
         $crawler = new Crawler($transformedHtml);
@@ -116,9 +109,7 @@ class CSSInlineTransformationTest extends TestCase
         $simpleHtml = $this->createSimpleHtml($cssPath);
         $transformation = new CSSInlineTransformation();
 
-        $transformedHtml = $transformation
-            ->apply($simpleHtml, [], $this->buildLanguageMock())
-        ;
+        $transformedHtml = $transformation->apply($simpleHtml, []);
         $this->assertNotNull($transformedHtml);
 
         $crawler = new Crawler($transformedHtml);
@@ -163,9 +154,7 @@ HTML;
 
         $transformation = new CSSInlineTransformation();
 
-        $transformedHtml = $transformation
-            ->apply($html, [], $this->buildLanguageMock())
-        ;
+        $transformedHtml = $transformation->apply($html, []);
         $this->assertNotEquals($html, $transformedHtml);
     }
 
@@ -200,18 +189,6 @@ HTML;
         }
 
         return $style;
-    }
-
-    /**
-     * @return MockObject|LanguageInterface
-     */
-    private function buildLanguageMock()
-    {
-        $languageMock = $this->getMockBuilder(LanguageInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $languageMock;
     }
 
     /**

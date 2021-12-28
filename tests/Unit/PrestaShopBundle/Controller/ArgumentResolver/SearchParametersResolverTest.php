@@ -43,8 +43,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SearchParametersResolverTest extends TestCase
 {
-    const EMPLOYEE_ID = 99;
-    const SHOP_ID = 13;
+    private const EMPLOYEE_ID = 99;
+    private const SHOP_ID = 13;
 
     public function testConstructor()
     {
@@ -376,11 +376,11 @@ class SearchParametersResolverTest extends TestCase
 
     /**
      * @param array|null $repoParameters
-     * @param array|null $requestParameters
+     * @param array $requestParameters
      *
-     * @return MockObject|SearchParametersInterface
+     * @return SearchParametersInterface
      */
-    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = [])
+    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = []): SearchParametersInterface
     {
         $searchParametersMock = $this->getMockBuilder(SearchParametersInterface::class)
             ->disableOriginalConstructor()

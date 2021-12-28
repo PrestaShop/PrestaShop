@@ -257,7 +257,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Transform table:name,group_name,color,group_color,is_shop_group
      *
-     * @param TableNode $tableNode
+     * @param TableNode $shopsTable
      *
      * @return array
      */

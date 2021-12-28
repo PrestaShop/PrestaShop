@@ -44,6 +44,9 @@ use Symfony\Component\Translation\Exception\InvalidArgumentException;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
+/**
+ * @property string $availability_message
+ */
 class ProductLazyArray extends AbstractLazyArray
 {
     /**

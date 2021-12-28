@@ -26,7 +26,12 @@
 
 namespace Tests\TestCase;
 
+use Cart;
 use Context;
+use Country;
+use Currency;
+use Customer;
+use Language;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -37,7 +42,7 @@ abstract class ContextStateTestCase extends TestCase
     /**
      * @param array $contextFields
      *
-     * @return MockObject|Context
+     * @return Context
      */
     protected function createContextMock(array $contextFields): Context
     {
@@ -61,9 +66,10 @@ abstract class ContextStateTestCase extends TestCase
      */
     protected function createContextFieldMock(string $className, int $objectId)
     {
-        $contextField = $this->getMockBuilder($className)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $contextFieldMockBuilder = $this->getMockBuilder($className)->disableOriginalConstructor();
+
+        /** @var Cart|Country|Currency|Customer|Language|Shop $contextField */
+        $contextField = $contextFieldMockBuilder->getMock();
 
         $contextField->id = $objectId;
 

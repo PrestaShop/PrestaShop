@@ -337,7 +337,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
 
     private static function mockContext()
     {
-        /** @var LegacyContext $localeRepository */
+        /** @var LegacyContext $legacyContext */
         $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
         /*
          * We need to call this before initializing the ContextMocker because this method forcefully init

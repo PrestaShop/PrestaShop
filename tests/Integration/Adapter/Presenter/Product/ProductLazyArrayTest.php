@@ -28,6 +28,7 @@ namespace Tests\Integration\Adapter\Presenter\Product;
 
 use Language;
 use Link;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\HookManager;
@@ -43,7 +44,7 @@ class ProductLazyArrayTest extends TestCase
 {
     protected $runTestInSeparateProcess = false;
     /**
-     * @var Configuration
+     * @var Configuration|MockObject
      */
     private $mockConfiguration;
     /**
@@ -71,7 +72,7 @@ class ProductLazyArrayTest extends TestCase
      */
     private $mockProductColorsRetriever;
     /**
-     * @var ProductPresentationSettings
+     * @var ProductPresentationSettings|MockObject
      */
     private $mockProductPresentationSettings;
     /**

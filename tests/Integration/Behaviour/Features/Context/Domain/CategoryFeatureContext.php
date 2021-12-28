@@ -186,10 +186,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $testCaseData = $table->getRowsHash();
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
 
-        /** @var EditableCategory $expectedEditableCategory */
+        /** @var EditableCategory $editableCategoryTestData */
         $editableCategoryTestData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
-        /** @var EditCategoryCommand $command */
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($editableCategoryTestData->isActive());
         $command->setLocalizedLinkRewrites($editableCategoryTestData->getLinkRewrite());
@@ -413,18 +412,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        ASSERT::assertCount(0, $menuThumbnailImages);
+        Assert::assertCount(0, $menuThumbnailImages);
     }
 
     /**
      * @Given category :categoryReference is disabled
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
-    public function categoryIsDisabled(string $categoryReference)
+    public function categoryIsDisabled(string $categoryReference): void
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertFalse($categoryIsEnabled);
+        Assert::assertFalse($categoryIsEnabled);
     }
 
     /**
@@ -444,7 +443,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I disable category :categoryReference
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
     public function disableCategory(string $categoryReference)
     {
@@ -463,7 +462,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryIsEnabled(string $categoryReference)
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertTrue($categoryIsEnabled);
+        Assert::assertTrue($categoryIsEnabled);
     }
 
     /**

@@ -74,6 +74,12 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
                 $this->setName('prestashop-tests:load-legacy-classes');
             }
 
+            /**
+             * @param InputInterface $input
+             * @param OutputInterface $output
+             *
+             * @return void
+             */
             protected function execute(InputInterface $input, OutputInterface $output)
             {
                 $products = Product::getNewProducts(1);
@@ -98,6 +104,12 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
                 $this->setName('prestashop-tests:load-legacy-classes');
             }
 
+            /**
+             * @param InputInterface $input
+             * @param OutputInterface $output
+             *
+             * @return void
+             */
             protected function execute(InputInterface $input, OutputInterface $output)
             {
                 $contextLoader = new LegacyContextLoader(Context::getContext());

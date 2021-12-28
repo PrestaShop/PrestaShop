@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
@@ -82,7 +83,9 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        $this->categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
     }
 
     /* PRODUCTS */
@@ -491,7 +494,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $productName
+     * @param string $productName
      */
     public function checkProductWithNameExists(string $productName): void
     {
@@ -503,7 +506,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^product "(.+)" has a specific price named "(.+)" with an amount discount of (\d+\.\d+)$/
      */
-    public function productWithNameHasASpecificPriceWithAmountDiscount($productName, $specificPriceName, $specificPriceDiscount)
+    public function productWithNameHasASpecificPriceWithAmountDiscount(string $productName, string $specificPriceName, $specificPriceDiscount)
     {
         if (isset($this->specificPrices[$productName][$specificPriceName])) {
             throw new \Exception('Product named "' . $productName . '" has already a specific price named "' . $specificPriceName . '"');
@@ -598,10 +601,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $productName
-     * @param $specificPriceName
+     * @param string $productName
+     * @param string $specificPriceName
      */
-    public function checkSpecificPriceWithNameExists($productName, $specificPriceName)
+    public function checkSpecificPriceWithNameExists(string $productName, string $specificPriceName): void
     {
         $this->checkFixtureExists($this->specificPrices[$productName], 'SpecificPrice', $specificPriceName);
     }
@@ -609,7 +612,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^product "(.+)" has following tax rule group id: (\d+)$/
      */
-    public function setProductTaxRuleGroupId($productName, $taxRuleGroupId)
+    public function setProductTaxRuleGroupId(string $productName, int $taxRuleGroupId): void
     {
         $this->checkProductWithNameExists($productName);
         $this->getProductWithName($productName)->id_tax_rules_group = $taxRuleGroupId;
@@ -621,7 +624,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^product "(.+)" has a combination named "(.+)" with (.*) items in stock$/
      */
-    public function productWithNameHasACombinationWithNameAndQuantity($productName, $combinationName, $combinationQuantity)
+    public function productWithNameHasACombinationWithNameAndQuantity(string $productName, string $combinationName, $combinationQuantity): void
     {
         if (isset($this->combinations[$productName][$combinationName])) {
             throw new \Exception('Product named "' . $productName . '" has already a combination named "' . $combinationName . '"');
@@ -747,10 +750,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $productName
-     * @param $combinationName
+     * @param string $productName
+     * @param string $combinationName
      */
-    public function checkCombinationWithNameExists($productName, $combinationName)
+    public function checkCombinationWithNameExists(string $productName, string $combinationName): void
     {
         $this->checkFixtureExists($this->combinations[$productName], 'Combination', $combinationName);
     }
@@ -760,7 +763,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^product "(.+)" has a customization field named "(.+)"$/
      */
-    public function productWithNameHasACustomizationWithName($productName, $customizationFieldName)
+    public function productWithNameHasACustomizationWithName(string $productName, string $customizationFieldName): void
     {
         $this->checkProductWithNameExists($productName);
         $this->getProductWithName($productName)->customizable = 1;
@@ -780,7 +783,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^the remaining available stock for customization "(.*)" of product "(.*)" should be (.*)$/
      */
-    public function remainingQuantityOfCustomizationNamedForProductNamedShouldBe($customizationFieldName, $productName, $customizationQuantity)
+    public function remainingQuantityOfCustomizationNamedForProductNamedShouldBe(string $customizationFieldName, string $productName, $customizationQuantity): void
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
@@ -793,7 +796,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I add (\d+) items of customization "(.+)" of product "(.+)"$/
      */
-    public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
+    public function iAddCustomizationNamedOfProductNamedInMyCartWithQuantity(int $customizationFieldQuantity, string $customizationFieldName, string $productName): void
     {
         $this->checkProductWithNameExists($productName);
         $this->addCustomizationInCurrentCartForProductNamedIfNotExist($productName);
@@ -806,7 +809,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I am not able to add (\d+) items of customization "(.+)" of product "(.+)" to my cart$/
      */
-    public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity($customizationFieldQuantity, $customizationFieldName, $productName)
+    public function iAmNotAbleToAddPCustomizationNamedOfroductNamedInMyCartWithQuantity(int $customizationFieldQuantity, string $customizationFieldName, string $productName)
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
@@ -820,7 +823,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I should have (\d+) items of customization "(.+)" of product "(.+)" in my cart$/
      */
-    public function quantityOfCustomizationNamedOfProductNamedInMyCartShouldBe($customizationFieldQuantity, $customizationFieldName, $productName)
+    public function quantityOfCustomizationNamedOfProductNamedInMyCartShouldBe(int $customizationFieldQuantity, string $customizationFieldName, string $productName)
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
@@ -830,7 +833,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         }
     }
 
-    protected function addCustomizationInCurrentCartForProductNamedIfNotExist($productName)
+    protected function addCustomizationInCurrentCartForProductNamedIfNotExist(string $productName)
     {
         if (isset($this->customizationsInCart[$productName])) {
             return;
@@ -855,7 +858,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterScenario
      */
-    public function cleanCustomizationFixtures()
+    public function cleanCustomizationFixtures(): void
     {
         foreach ($this->customizationFields as $productName => $customizationFields) {
             foreach ($customizationFields as $customizationFieldName => $customizationField) {
@@ -871,19 +874,18 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $productName
-     * @param $customizationFieldName
+     * @param string $productName
+     * @param string $customizationFieldName
      */
-    public function checkCustomizationWithNameExists($productName, $customizationFieldName)
+    public function checkCustomizationWithNameExists(string $productName, string $customizationFieldName): void
     {
         $this->checkFixtureExists($this->customizationFields[$productName], 'Customization field', $customizationFieldName);
     }
 
     /**
-     * @param $productName
-     * @param $customizationFieldName
+     * @param string $productName
      */
-    public function checkCustomizationIsInCart($productName)
+    public function checkCustomizationIsInCart(string $productName): void
     {
         $this->checkFixtureExists($this->customizationsInCart, 'Customization for product named ' . $productName, $productName);
     }

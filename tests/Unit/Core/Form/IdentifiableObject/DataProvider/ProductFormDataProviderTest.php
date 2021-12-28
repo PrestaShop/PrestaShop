@@ -1497,11 +1497,11 @@ class ProductFormDataProviderTest extends TestCase
 
     /**
      * @param CommandBusInterface $queryBusMock
-     * @param $activation
+     * @param bool $activation
      *
      * @return ProductFormDataProvider
      */
-    private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
+    private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
     {
         $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
         $urlGeneratorMock->method('generate')->willReturnArgument(0);
