@@ -73,12 +73,12 @@ class SpecificPriceFormatterTest extends KernelTestCase
      * @dataProvider dataProviderSpecificPriceFormatter
      *
      * @param float $price
-     * @param $taxRate
-     * @param $ecotaxAmount
-     * @param $currencyData
-     * @param $specificPrices
-     * @param $isTaxIncluded
-     * @param $expected
+     * @param float $taxRate
+     * @param float $ecotaxAmount
+     * @param array $currencyData
+     * @param array $specificPrices
+     * @param bool $isTaxIncluded
+     * @param array $expected
      */
     public function testSpecificPriceFormatter(
         float $price,
@@ -88,7 +88,7 @@ class SpecificPriceFormatterTest extends KernelTestCase
         array $specificPrices,
         bool $isTaxIncluded,
         array $expected
-    ) {
+    ): void {
         $context = Context::getContext();
 
         $currency = new Currency();

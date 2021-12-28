@@ -26,6 +26,7 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
@@ -45,7 +46,7 @@ class ThemeTranslationsFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @var ThemeProvider
+     * @var ThemeProvider|MockObject
      */
     private $themeProviderMock;
 

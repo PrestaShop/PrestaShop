@@ -213,7 +213,7 @@ class FolderThemeCatalogTest extends TestCase
         //No bug occurs if the folder does not exist
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
 
-        /** @var ThemeCollectionInterface $themeList */
+        /** @var ThemeCollectionInterface $themes */
         $themes = $catalog->listThemes();
         /** @var ThemeInterface $theme */
         $theme = $themes[0];
@@ -226,7 +226,7 @@ class FolderThemeCatalogTest extends TestCase
     {
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::MODULES_CATEGORY]));
-        /** @var ThemeCollectionInterface $themeList */
+        /** @var ThemeCollectionInterface $themes */
         $themes = $catalog->listThemes();
         /** @var ThemeInterface $theme */
         $theme = $themes[0];

@@ -39,7 +39,7 @@ interface ColumnCollectionInterface extends Iterator, Countable
      *
      * @param ColumnInterface $column
      *
-     * @return self
+     * @return static
      */
     public function add(ColumnInterface $column);
 

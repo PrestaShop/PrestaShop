@@ -116,9 +116,6 @@ class ModuleTemplateLoaderTest extends TestCase
         $this->assertEquals([], $loader->getPaths());
     }
 
-    /**
-     * @throws \Twig_Error_Loader
-     */
     public function testGetNamespaces(): void
     {
         $loader = new ModuleTemplateLoader([]);

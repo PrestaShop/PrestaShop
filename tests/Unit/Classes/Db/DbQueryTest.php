@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Classes;
+namespace Tests\Unit\Classes\Db;
 
 if (!defined('_DB_PREFIX_')) {
     define('_DB_PREFIX_', 'test_');
@@ -104,12 +104,12 @@ class DbQueryTest extends TestCase
     }
 
     /**
-     * @param mixed $dbQuery
-     * @param mixed $expectedValue
+     * @param DbQuery $dbQuery
+     * @param string $expectedValue
      *
      * @dataProvider providerBuild
      */
-    public function testBuild(DbQuery $dbQuery, $expectedValue)
+    public function testBuild(DbQuery $dbQuery, string $expectedValue): void
     {
         $this->assertSame(trim($dbQuery->build()), trim($expectedValue));
     }

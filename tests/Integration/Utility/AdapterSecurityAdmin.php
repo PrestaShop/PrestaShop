@@ -48,7 +48,7 @@ class AdapterSecurityAdmin
      *
      * @param GetResponseEvent $event
      *
-     * @return bool or redirect
+     * @return void
      */
     public function onKernelRequest(GetResponseEvent $event)
     {

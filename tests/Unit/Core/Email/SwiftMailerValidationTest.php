@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
 class SwiftMailerValidationTest extends TestCase
 {
     /**
-     * @var RFCValidation
+     * @var SwiftMailerValidation
      */
     protected $validator;
 

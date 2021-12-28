@@ -47,6 +47,7 @@ class LocaleReferenceTest extends TestCase
     protected function setUp(): void
     {
         $this->stubLocaleData = new CldrLocaleData();
+        /* @phpstan-ignore-next-line */
         $this->stubLocaleData->foo = ['bar', 'baz'];
 
         $fakeReader = $this->getMockBuilder(ReaderInterface::class)

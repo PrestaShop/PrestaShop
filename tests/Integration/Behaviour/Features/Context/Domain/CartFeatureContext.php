@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use CartRule;
@@ -79,7 +80,9 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
     }
 
     /**

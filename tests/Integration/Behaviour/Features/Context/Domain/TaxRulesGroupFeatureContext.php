@@ -37,7 +37,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param string $name
      *
-     * @return int
+     * @return TaxRulesGroup
      */
     public static function getTaxRulesGroupByName(string $name): TaxRulesGroup
     {

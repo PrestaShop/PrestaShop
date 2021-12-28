@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
@@ -87,11 +88,13 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->countryFeatureContext = $scope->getEnvironment()->getContext(CountryFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
-        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        $this->countryFeatureContext = $environment->getContext(CountryFeatureContext::class);
+        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        $this->carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        $this->customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+        $this->categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
     }
 
     /**
@@ -383,9 +386,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I use the discount "(.+)"$/
      *
-     * @param $cartRuleName
+     * @param string $cartRuleName
      */
-    public function iAddCartRuleNamedToMyCart($cartRuleName)
+    public function iAddCartRuleNamedToMyCart(string $cartRuleName): void
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->getCurrentCart()->addCartRule($this->cartRules[$cartRuleName]->id);
@@ -414,9 +417,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $cartRuleName
+     * @param string $cartRuleName
      */
-    public function checkCartRuleWithNameExists($cartRuleName)
+    public function checkCartRuleWithNameExists(string $cartRuleName): void
     {
         $this->checkFixtureExists($this->cartRules, 'Cart rule', $cartRuleName);
     }
@@ -424,7 +427,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^customer "(.+)" should have (\d+) cart rule(?:s)? that apply to (?:him|her)$/
      */
-    public function checkCartRuleCountForCustomer($customerName, $expectedCount)
+    public function checkCartRuleCountForCustomer(string $customerName, int $expectedCount)
     {
         $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);

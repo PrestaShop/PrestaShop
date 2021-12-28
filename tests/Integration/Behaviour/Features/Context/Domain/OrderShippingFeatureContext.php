@@ -112,15 +112,11 @@ class OrderShippingFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      *
-     * @return array|OrderCarrierForViewing[]
-     *
-     * @throws RuntimeException
+     * @return OrderCarrierForViewing[]
      */
-    private function getOrderCarriersForViewing(int $orderId)
+    private function getOrderCarriersForViewing(int $orderId): array
     {
-        /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderCarrierForViewing[] $orderCarriers */
         $orderCarriersForViewing = $orderForViewing->getShipping()->getCarriers();
 
         if (count($orderCarriersForViewing) == 0) {

@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\TranslationsFactory;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
@@ -40,7 +41,7 @@ class TranslationsFactoryTest extends TestCase
      */
     private $factory;
     /**
-     * @var AbstractProvider
+     * @var AbstractProvider|MockObject
      */
     private $providerMock;
 

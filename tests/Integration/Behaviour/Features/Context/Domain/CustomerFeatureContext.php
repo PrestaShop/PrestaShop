@@ -241,7 +241,7 @@ class CustomerFeatureContext extends AbstractDomainFeatureContext
      * @Transform table:firstName,lastName,email,birthday
      * @Transform table:firstName,lastName,email,birthday,companyName
      *
-     * @param TableNode $tableNode
+     * @param TableNode $customersTable
      *
      * @return array
      */

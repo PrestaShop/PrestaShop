@@ -57,20 +57,23 @@ class EntityRepositoryTest extends TestCase
         );
     }
 
-    public function testCallToInvalidMethodThrowsException()
+    public function testCallToInvalidMethodThrowsException(): void
     {
         $this->expectException(DatabaseException::class);
 
+        /* @phpstan-ignore-next-line */
         $this->repository->thisDoesNotExist();
     }
 
-    public function testCallToFindByDoesNotThrow()
+    public function testCallToFindByDoesNotThrow(): void
     {
+        /* @phpstan-ignore-next-line */
         $this->assertIsArray($this->repository->findByStuff('hey'));
     }
 
-    public function testCallToFindOneByDoesNotThrow()
+    public function testCallToFindOneByDoesNotThrow(): void
     {
+        /* @phpstan-ignore-next-line */
         $this->assertNull($this->repository->findOneByStuff('hey'));
     }
 }

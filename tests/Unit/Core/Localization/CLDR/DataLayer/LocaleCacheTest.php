@@ -63,6 +63,7 @@ class LocaleCacheTest extends TestCase
     public function testReadWrite()
     {
         $data = new CldrLocaleData();
+        /* @phpstan-ignore-next-line */
         $data->foo = ['bar', 'baz'];
 
         /* @noinspection PhpUnhandledExceptionInspection */

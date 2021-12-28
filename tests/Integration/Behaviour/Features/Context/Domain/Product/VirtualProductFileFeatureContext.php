@@ -61,7 +61,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $fileReference
      * @param string $productReference
-     * @param string $filePathReference
      * @param TableNode $dataTable
      */
     public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
