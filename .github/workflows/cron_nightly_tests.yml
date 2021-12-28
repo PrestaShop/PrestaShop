@@ -178,6 +178,9 @@ jobs:
         BRANCH:
           - develop
 
+    env:
+      GH_BRANCH: ${{ matrix.branch }}
+
     steps:
       - name: Push reports
         run: |
