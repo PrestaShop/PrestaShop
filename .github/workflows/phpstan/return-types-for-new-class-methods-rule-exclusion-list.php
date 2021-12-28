@@ -2304,7 +2304,6 @@ $baseline = [
     'PrestaShopBundle\Service\TranslationService::requiresThemeTranslationsFactory',
     'PrestaShopBundle\Service\TranslationService::listDomainTranslation',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getPrestaTrustCheck',
-    'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getServices',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getCategories',
     'PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient::getModule',
     'PrestaShopBundle\Controller\Admin\Improve\Design\PositionsController::unhookAction',
