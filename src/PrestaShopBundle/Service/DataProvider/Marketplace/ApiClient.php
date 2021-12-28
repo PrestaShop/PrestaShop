@@ -150,26 +150,6 @@ class ApiClient
             ->getPostResponse();
     }
 
-    /**
-     * Get list of themes bought by customer.
-     *
-     * @return object
-     */
-    public function getCustomerThemes()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('customer-themes')
-            ->getPostResponse();
-
-        $responseDecoded = json_decode($response);
-
-        if (!empty($responseDecoded->themes)) {
-            return $responseDecoded->themes;
-        }
-
-        return new \stdClass();
-    }
-
     public function getResponse()
     {
         return (string) $this->addonsApiClient
