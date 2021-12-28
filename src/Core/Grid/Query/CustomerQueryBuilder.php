@@ -158,11 +158,11 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     private function appendLastVisitQuery(QueryBuilder $queryBuilder)
     {
         $lastVisitQueryBuilder = $this->connection->createQueryBuilder()
-            ->select('con.date_add')
-            ->from($this->dbPrefix . 'guest', 'g')
-            ->leftJoin('g', $this->dbPrefix . 'connections', 'con', 'con.id_guest = g.id_guest')
+            ->select('c.date_add')
+            ->from($this->dbPrefix . 'connections', 'c')
+            ->leftJoin('c', $this->dbPrefix . 'guest', 'g', 'c.id_guest = g.id_guest')
             ->where('g.id_customer = c.id_customer')
-            ->orderBy('con.date_add', 'DESC')
+            ->orderBy('c.date_add', 'DESC')
             ->setMaxResults(1);
 
         $queryBuilder->addSelect('(' . $lastVisitQueryBuilder->getSQL() . ') as connect');
