@@ -231,6 +231,7 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\SupplierFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         attachment:

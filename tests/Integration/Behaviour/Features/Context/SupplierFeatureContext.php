@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,28 +23,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ImageSelector from '@pages/product/combination/image-selector';
-import ProductMap from '@pages/product/product-map';
-import ProductFormModel from '@pages/product/edit/product-form-model';
+namespace Tests\Integration\Behaviour\Features\Context;
 
-const {$} = window;
+use RuntimeException;
+use Supplier;
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'TranslatableField',
-    'TinyMCEEditor',
-    'TranslatableInput',
-    'EventEmitter',
-    'TextWithLengthCounter',
-  ]);
+class SupplierFeatureContext extends AbstractPrestaShopFeatureContext
+{
+    /**
+     * @Given /^supplier "(.+)" with name "(.+)" exists$/
+     *
+     * @param string $reference
+     * @param string $supplierName
+     */
+    public function existsByName(string $reference, string $supplierName): void
+    {
+        $id = (int) Supplier::getIdByName($supplierName);
 
-  const $productForm = $(window.parent.document.querySelector(ProductMap.productForm));
-  const {eventEmitter} = window.prestashop.instance;
-  // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+        if (!$id) {
+            throw new RuntimeException(sprintf('Supplier with name "%s" doesnt exist', $supplierName));
+        }
 
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
-  new ImageSelector();
-});
+        SharedStorage::getStorage()->set($reference, $id);
+    }
+}
