@@ -3918,57 +3918,6 @@ exit;
         return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
 
-    protected static $is_addons_up = true;
-
-    public static function addonsRequest($request, $params = [])
-    {
-        if (!self::$is_addons_up) {
-            return false;
-        }
-
-        $post_query_data = [
-            'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
-            'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
-            'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-            'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
-            'format' => isset($params['format']) ? $params['format'] : 'xml',
-        ];
-        if (isset($params['source'])) {
-            $post_query_data['source'] = $params['source'];
-        }
-
-        $post_data = http_build_query($post_query_data);
-
-        $end_point = 'api.addons.prestashop.com';
-
-        switch ($request) {
-            case 'module':
-                $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-
-                break;
-            default:
-                return false;
-        }
-
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'content' => $post_data,
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
-            ],
-        ]);
-
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
-            return $content;
-        }
-
-        self::$is_addons_up = false;
-
-        return false;
-    }
-
     /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).

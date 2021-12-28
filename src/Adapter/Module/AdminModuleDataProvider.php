@@ -345,16 +345,6 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param int $moduleId
-     *
-     * @return array
-     */
-    public function getModuleAttributesById($moduleId)
-    {
-        return (array) $this->addonsDataProvider->request('module', ['id_module' => $moduleId]);
-    }
-
-    /**
      * @param array $modules
      * @param array $filters
      *
