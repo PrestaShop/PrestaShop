@@ -109,6 +109,7 @@ class TaxRulesTaxManagerTest extends TestCase
     {
         parent::tearDown();
         ServiceLocator::setServiceContainerInstance($this->container);
+        Db::deleteTestingInstance();
     }
 
     public function testGetTaxCalculatorShouldUseFirstComputationMethodFromTaxes()
