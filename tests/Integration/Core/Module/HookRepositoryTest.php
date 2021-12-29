@@ -32,9 +32,12 @@ use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class HookRepositoryTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var HookRepository
      */

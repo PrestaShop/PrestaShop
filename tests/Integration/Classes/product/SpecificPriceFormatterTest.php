@@ -39,9 +39,12 @@ use Shop;
 use SpecificPriceFormatter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class SpecificPriceFormatterTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var Context
      */

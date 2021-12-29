@@ -39,18 +39,6 @@ class ProductTest extends TestCase
 {
     use ContextMockerTrait;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        static::mockContext();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        static::resetContext();
-    }
-
     protected function setUp(): void
     {
         parent::setUp();

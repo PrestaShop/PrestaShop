@@ -105,7 +105,7 @@ class ContextMocker
 
         Cache::clean('*');
 
-        $this->contextBackup = Context::getContext();
+        $this->backupContext();
         $context = clone $this->contextBackup;
         Context::setInstanceForTesting($context);
         LegacyContext::setInstanceForTesting($context);
@@ -130,7 +130,15 @@ class ContextMocker
     }
 
     /**
-     * restore previous context to avoid modifying global properties through tests
+     * Backup current context
+     */
+    public function backupContext(): void
+    {
+        $this->contextBackup = Context::getContext();
+    }
+
+    /**
+     * Restore previous context to avoid modifying global properties through tests
      */
     public function resetContext()
     {

@@ -46,10 +46,13 @@ use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
 class AdminControllerTest extends TestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var Context|null
      */

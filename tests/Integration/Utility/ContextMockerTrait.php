@@ -30,12 +30,41 @@ namespace Tests\Integration\Utility;
 
 use RuntimeException;
 
+/**
+ * This trait can be assigned to a test class when it is partially changing the context content or
+ * its instance completely using @see Context::setInstanceForTesting
+ *
+ * When this trait is used a backup of the context is automatically made befaore class, and after class
+ * it is all reset correctly.
+ *
+ * This trait can also be used to access a context mocker instance and mock it if needed.
+ */
 trait ContextMockerTrait
 {
     /**
      * @var ContextMocker
      */
     private static $contextMocker;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::backupContext();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::resetContext();
+    }
+
+    protected static function backupContext(): void
+    {
+        if (!static::$contextMocker) {
+            static::$contextMocker = new ContextMocker();
+        }
+        static::$contextMocker->backupContext();
+    }
 
     protected static function mockContext(): void
     {
@@ -48,7 +77,7 @@ trait ContextMockerTrait
     protected static function resetContext(): void
     {
         if (!static::$contextMocker) {
-            throw new RuntimeException('No context mocker set, you cannot reset a context that was never mocked.');
+            throw new RuntimeException('No context mocker set, you cannot reset a context that was never mocked or saved.');
         }
         static::$contextMocker->resetContext();
     }
