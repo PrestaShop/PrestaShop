@@ -5670,7 +5670,8 @@ class ProductCore extends ObjectModel
             $quantity = (int) $row['minimal_quantity'];
         }
 
-        $row['price_tax_exc'] = Product::getPriceStatic(
+        // We save value in $priceTaxExcluded and $priceTaxIncluded before they may be rounded
+        $row['price_tax_exc'] = $priceTaxExcluded = Product::getPriceStatic(
             (int) $row['id_product'],
             false,
             $id_product_attribute,
@@ -5682,8 +5683,8 @@ class ProductCore extends ObjectModel
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
-            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], Context::getContext()->getComputingPrecision());
-            $row['price'] = Product::getPriceStatic(
+            $row['price_tax_exc'] = Tools::ps_round($priceTaxExcluded, Context::getContext()->getComputingPrecision());
+            $row['price'] = $priceTaxIncluded = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
                 $id_product_attribute,
@@ -5705,19 +5706,17 @@ class ProductCore extends ObjectModel
                 $quantity
             );
         } else {
-            $row['price'] = Tools::ps_round(
-                Product::getPriceStatic(
-                    (int) $row['id_product'],
-                    true,
-                    $id_product_attribute,
-                    6,
-                    null,
-                    false,
-                    true,
-                    $quantity
-                ),
-                Context::getContext()->getComputingPrecision()
+            $priceTaxIncluded = Product::getPriceStatic(
+                (int) $row['id_product'],
+                true,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                true,
+                $quantity
             );
+            $row['price'] = Tools::ps_round($priceTaxIncluded, Context::getContext()->getComputingPrecision());
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
@@ -5841,51 +5840,11 @@ class ProductCore extends ObjectModel
             'context' => $context,
         ]);
 
-        $combination = new Combination($id_product_attribute);
-
-        $baseUnitPrice = 0.0;
-        if (isset($row['unit_price'])) {
-            // Unit price is supposed to be in DB and accessible in the row
-            $baseUnitPrice = (float) $row['unit_price'];
-        }
-
-        // Then if combination has an impact we apply it on unit price
-        if (0 != $combination->unit_price_impact && 0 != $baseUnitPrice) {
-            $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
-        }
-
-        // Finally, we apply the currency rate
-        $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : (int) Configuration::get('PS_CURRENCY_DEFAULT');
-        $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
-
-        if ($baseUnitPrice != 0) {
-            // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
-            $noSpecificPrice = null;
-            $baseProductPrice = Product::getPriceStatic(
-                (int) $row['id_product'],
-                false,
-                $id_product_attribute,
-                6,
-                null,
-                false,
-                false,
-                $quantity,
-                false,
-                null,
-                null,
-                null,
-                $noSpecificPrice,
-                true,
-                false
-            );
-            $row['unit_price_ratio'] = $baseProductPrice / $baseUnitPrice;
-        } else {
-            $row['unit_price_ratio'] = 0;
-        }
-
         // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
-        $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_tax_exc'] / $row['unit_price_ratio'] : 0.0;
-        $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0.0;
+        $unitPriceRatio = static::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
+        $row['unit_price_ratio'] = $unitPriceRatio;
+        $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
+        $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
             'id_lang' => $id_lang,
@@ -5896,6 +5855,67 @@ class ProductCore extends ObjectModel
         self::$productPropertiesCache[$cache_key] = $row;
 
         return self::$productPropertiesCache[$cache_key];
+    }
+
+    /**
+     * Compute unit price ratio based on the saved unit price, we make sure that quantities, currency rates and
+     * combination impact are taken into account.
+     *
+     * @param array $productRow
+     * @param int $combinationId
+     * @param int $quantity
+     * @param Context $context
+     *
+     * @return float
+     */
+    private static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
+    {
+        $baseUnitPrice = 0.0;
+        if (isset($productRow['unit_price'])) {
+            // Unit price is supposed to be in DB and accessible in the row
+            $baseUnitPrice = (float) $productRow['unit_price'];
+        }
+
+        // Then if combination has an impact we apply it on unit price
+        if ($combinationId) {
+            $combination = new Combination($combinationId);
+            if (0 != $combination->unit_price_impact && 0 != $baseUnitPrice) {
+                $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
+            }
+        }
+
+        // Finally, we apply the currency rate
+        $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : $defaultCurrencyId;
+        if ($currencyId !== $defaultCurrencyId) {
+            $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
+        }
+
+        if ($baseUnitPrice == 0) {
+            return 0;
+        }
+
+        // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
+        $noSpecificPrice = null;
+        $baseProductPrice = Product::getPriceStatic(
+            (int) $productRow['id_product'],
+            false,
+            $combinationId,
+            6,
+            null,
+            false,
+            false,
+            $quantity,
+            false,
+            null,
+            null,
+            null,
+            $noSpecificPrice,
+            true,
+            false
+        );
+
+        return $baseProductPrice / $baseUnitPrice;
     }
 
     /**
