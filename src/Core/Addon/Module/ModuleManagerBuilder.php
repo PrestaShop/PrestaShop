@@ -98,9 +98,22 @@ class ModuleManagerBuilder
 
     public static function resetStaticCache(): void
     {
+        if (static::$modulesRepository) {
+            static::$modulesRepository->clearCache();
+        }
         static::$modulesRepository = null;
-        static::$moduleManager = null;
+
+        if (static::$adminModuleDataProvider) {
+            static::$adminModuleDataProvider->clearCatalogCache();
+        }
         static::$adminModuleDataProvider = null;
+
+        if (static::$cacheProvider) {
+            static::$cacheProvider->deleteAll();
+        }
+        static::$cacheProvider = null;
+
+        static::$moduleManager = null;
         static::$lecacyContext = null;
         static::$legacyLogger = null;
         static::$moduleDataProvider = null;
@@ -109,8 +122,8 @@ class ModuleManagerBuilder
         static::$translator = null;
         static::$addonsDataProvider = null;
         static::$categoriesProvider = null;
+
         static::$instance = null;
-        static::$cacheProvider = null;
     }
 
     /**
