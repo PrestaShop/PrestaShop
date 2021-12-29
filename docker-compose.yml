@@ -35,6 +35,7 @@ services:
       PS_FOLDER_ADMIN: ${PS_FOLDER_ADMIN:-admin-dev}
       PS_COUNTRY: ${PS_COUNTRY:-fr}
       PS_LANGUAGE: ${PS_LANGUAGE:-fr}
+      PS_DEV_MODE: ${PS_DEV_MODE:-0}
     command: ["/tmp/wait-for-it.sh", "--timeout=60", "--strict", "mysql:3306", "--", "/tmp/docker_run_git.sh"]
     ports:
       - "8001:80"
