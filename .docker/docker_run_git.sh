@@ -30,6 +30,11 @@ fi
 # From now, stop at error
 set -e
 
+if [ $PS_DEV_MODE -ne 1 ]; then
+  echo "\n* Disabling DEV mode ...";
+  sed -ie "s/define('_PS_MODE_DEV_', true);/define('_PS_MODE_DEV_',\ false);/g" /var/www/html/config/defines.inc.php
+fi
+
 if [ ! -f ./config/settings.inc.php ]; then
     if [ $PS_INSTALL_AUTO = 1 ]; then
 
