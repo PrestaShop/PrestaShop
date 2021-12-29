@@ -285,7 +285,6 @@ class CartTest extends TestCase
         $cartRule->date_to = $date_to->format('Y-m-d H:i:s');
 
         $cartRule->quantity = 1;
-        $cartRule->quantity_per_user;
 
         if ($type === 'before tax') {
             $cartRule->reduction_amount = $amount;
@@ -399,7 +398,7 @@ class CartTest extends TestCase
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
-        self::makeCartRule(5, 'before tax')->id;
+        self::makeCartRule(5, 'before tax');
         $cart = self::makeCart();
 
         $cart->updateQty(1, $product->id);

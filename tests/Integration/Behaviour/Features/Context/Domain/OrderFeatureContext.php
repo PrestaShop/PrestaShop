@@ -456,7 +456,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function deleteCartRuleFromOrder(string $cartRuleName, string $orderReference)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(
@@ -484,7 +483,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(
@@ -839,7 +837,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($reference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, self::ORDER_CART_RULE_FREE_SHIPPING);
         if (null === $discount) {
             throw new RuntimeException('Order should have free shipping.');
