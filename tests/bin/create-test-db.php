@@ -76,3 +76,4 @@ DatabaseDump::create();
 $resourceResetter = new ResourceResetter();
 $resourceResetter->backupImages();
 $resourceResetter->backupDownloads();
+$resourceResetter->backupTestModules();

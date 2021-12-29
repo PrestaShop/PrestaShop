@@ -40,6 +40,9 @@ class ResourceResetter
      */
     public const BACKUP_TEST_IMG_DIR = 'ps_backup_test_img';
     public const BACKUP_TEST_DOWNLOADS_DIR = 'ps_backup_test_download';
+    public const BACKUP_TEST_MODULES_DIR = 'ps_backup_test_modules';
+
+    public const TEST_MODULES_DIR = _PS_ROOT_DIR_ . '/tests/Resources/modules/';
 
     /**
      * @var Filesystem|null
@@ -80,6 +83,15 @@ class ResourceResetter
     }
 
     /**
+     * Backs up test modules directory to allow resetting their original state later in tests
+     */
+    public function backupTestModules(): void
+    {
+        echo sprintf('Backup modules from %s to %s%s', static::TEST_MODULES_DIR, $this->getBackupTestModulesDir(), PHP_EOL);
+        $this->filesystem->mirror(static::TEST_MODULES_DIR, $this->getBackupTestModulesDir(), null, ['delete' => true]);
+    }
+
+    /**
      * Resets test images directory to initial state
      */
     public function resetImages(): void
@@ -95,6 +107,15 @@ class ResourceResetter
     {
         $this->filesystem->remove(_PS_DOWNLOAD_DIR_);
         $this->filesystem->mirror($this->getBackupTestDownloadsDir(), _PS_DOWNLOAD_DIR_, null, ['delete' => true]);
+    }
+
+    /**
+     * Resets test modules directory to initial state
+     */
+    public function resetTestModules(): void
+    {
+        $this->filesystem->remove(static::TEST_MODULES_DIR);
+        $this->filesystem->mirror($this->getBackupTestModulesDir(), static::TEST_MODULES_DIR, null, ['delete' => true]);
     }
 
     /**
@@ -115,5 +136,15 @@ class ResourceResetter
     public function getBackupTestDownloadsDir(): string
     {
         return $this->backupRootDir . DIRECTORY_SEPARATOR . self::BACKUP_TEST_DOWNLOADS_DIR;
+    }
+
+    /**
+     * Provide test modules directory path, in which initial test modules state should be saved
+     *
+     * @return string
+     */
+    public function getBackupTestModulesDir(): string
+    {
+        return $this->backupRootDir . DIRECTORY_SEPARATOR . self::BACKUP_TEST_MODULES_DIR;
     }
 }
