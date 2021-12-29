@@ -65,21 +65,6 @@ class ModuleManagerBuilderTest extends TestCase
         }
     }
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Context::getContext()->employee = new Employee(1);
-
-        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $this->moduleManager = $this->moduleManagerBuilder->build();
-
-        $this->moduleNames = [
-            'pscsx32412',
-            'pscsx3241',
-        ];
-    }
-
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -105,6 +90,21 @@ class ModuleManagerBuilderTest extends TestCase
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
 
         ModuleManagerBuilder::resetStaticCache();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Context::getContext()->employee = new Employee(1);
+
+        $this->moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+        $this->moduleManager = $this->moduleManagerBuilder->build();
+
+        $this->moduleNames = [
+            'pscsx32412',
+            'pscsx3241',
+        ];
     }
 
     public function testInstall(): void
