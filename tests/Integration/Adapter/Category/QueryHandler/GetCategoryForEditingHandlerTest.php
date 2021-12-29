@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryE
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
+use PrestaShopBundle\Install\DatabaseDump;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class GetCategoryForEditingHandlerTest extends KernelTestCase
@@ -44,6 +45,29 @@ class GetCategoryForEditingHandlerTest extends KernelTestCase
      * @var int
      */
     private $rootCategory;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::resetDatabase();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::resetDatabase();
+    }
+
+    private static function resetDatabase(): void
+    {
+        DatabaseDump::restoreTables([
+            'category',
+            'category_lang',
+            'category_group',
+            'category_shop',
+            'layered_category',
+        ]);
+    }
 
     protected function setUp(): void
     {
