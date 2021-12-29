@@ -250,7 +250,7 @@ class CartRuleTest extends TestCase
         $customer = new Customer();
         $customer->firstname = 'Jenna';
         $customer->lastname = 'Doe';
-        $customer->email = 'pub+jenna+' . rand(0, 99) . '@prestashop.com';
+        $customer->email = 'pub+' . uniqid() . '@prestashop.com';
         $customer->passwd = Tools::hash('prestashop');
         $customer->save();
 
