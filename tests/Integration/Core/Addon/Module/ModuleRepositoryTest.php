@@ -50,14 +50,46 @@ class ModuleRepositoryTest extends TestCase
      */
     private $moduleRepository;
 
+    /**
+     * @var AdminModuleDataProvider
+     */
+    private $adminModuleDataProvider;
+
     protected function setUp(): void
     {
         /** We need a mock in order to change the module folder */
         $moduleDataProvider = $this->getMockBuilder(ModuleDataProvider::class)->disableOriginalConstructor()->getMock();
-        $moduleDataProvider->method('findByName')->willReturn([
-            'installed' => 0,
-            'active' => true,
-        ]);
+        // Mock the module database data
+        $modulesData = [
+            'bankwire' => [
+                'installed' => false,
+                'active' => true,
+            ],
+            'cronjobs' => [
+                'installed' => true,
+                'active' => true,
+            ],
+            'demo' => [
+                'installed' => true,
+                'active' => false,
+            ],
+            'dummy_payment' => [
+                'installed' => false,
+                'active' => false,
+            ],
+        ];
+        $moduleDataProvider->method('findByName')
+            ->willReturnCallback(function (string $moduleName) use ($modulesData) {
+                if (isset($modulesData[$moduleName])) {
+                    return $modulesData[$moduleName];
+                }
+
+                return [
+                    'installed' => 0,
+                    'active' => true,
+                ];
+            })
+        ;
         // required to have 'productType' field of module set up
         $moduleDataProvider->method('isModuleMainClassValid')->willReturn(true);
 
@@ -70,16 +102,16 @@ class ModuleRepositoryTest extends TestCase
         $translator = $this->getMockBuilder(Translator::class)->disableOriginalConstructor()->getMock();
         $translator->method('trans')->willReturnArgument(0);
 
-        $adminModuleDataProvider = $this->getMockBuilder(AdminModuleDataProvider::class)
+        $this->adminModuleDataProvider = $this->getMockBuilder(AdminModuleDataProvider::class)
             ->setConstructorArgs([$translator, $logger, $addonsDataProvider, $categoriesProvider, $moduleDataProvider])
             ->setMethods(['getCatalogModulesNames'])
             ->getMock();
 
-        $adminModuleDataProvider->method('getCatalogModulesNames')->willReturn([]);
+        $this->adminModuleDataProvider->method('getCatalogModulesNames')->willReturn([]);
 
         $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->setConstructorArgs([
-                $adminModuleDataProvider,
+                $this->adminModuleDataProvider,
                 $moduleDataProvider,
                 new ModuleDataUpdater(
                     $addonsDataProvider,
@@ -101,11 +133,26 @@ class ModuleRepositoryTest extends TestCase
         /* Mock function to disable the cache */
         $this->moduleRepository->method('readCacheFile')->willReturn([]);
         $this->moduleRepository->method('generateCacheFile')->will($this->returnArgument(0));
+
+        $this->clearServicesCache();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->clearServicesCache();
+    }
+
+    private function clearServicesCache(): void
+    {
+        $this->moduleRepository->clearCache();
+        $this->adminModuleDataProvider->clearCatalogCache();
     }
 
     public function testGetAtLeastOneModuleFromUniverse(): void
     {
-        $this->assertGreaterThan(0, count($this->moduleRepository->getList()));
+        $modulesList = $this->moduleRepository->getList();
+        $this->assertGreaterThan(0, count($modulesList));
     }
 
     public function testGetOnlyInstalledModules(): void
@@ -116,42 +163,78 @@ class ModuleRepositoryTest extends TestCase
         $filters
             ->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::INSTALLED);
-
         $installed_modules = $this->moduleRepository->getFilteredList($filters);
+        $filters = new AddonListFilter();
+        $filters
+            ->setType(AddonListFilterType::MODULE)
+            ->setStatus(~AddonListFilterStatus::UNINSTALLED);
+        $not_uninstalled_modules = $this->moduleRepository->getFilteredList($filters);
 
         // Each module MUST have its database installed attribute as true
         /** @var Module $module */
         foreach ($installed_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 1);
         }
+        /** @var Module $module */
+        foreach ($not_uninstalled_modules as $module) {
+            $this->assertTrue($module->database->get('installed') == 1);
+        }
+
+        $minimumExpectedModules = [
+            'cronjobs',
+            'demo',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $installed_modules);
+            $this->assertArrayHasKey($moduleName, $not_uninstalled_modules);
+        }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1) {
                 $this->assertArrayHasKey($name, $installed_modules, sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_uninstalled_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function testGetOnlyNOTInstalledModules(): void
+    public function testGetOnlyUninstalledModules(): void
     {
         $all_modules = $this->moduleRepository->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(~AddonListFilterStatus::INSTALLED);
+            ->setStatus(AddonListFilterStatus::UNINSTALLED);
+        $uninstalled_modules = $this->moduleRepository->getFilteredList($filters);
 
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(~AddonListFilterStatus::INSTALLED);
         $not_installed_modules = $this->moduleRepository->getFilteredList($filters);
 
         // Each module MUST have its database installed attribute as true
+        /** @var Module $module */
+        foreach ($uninstalled_modules as $module) {
+            $this->assertTrue($module->database->get('installed') == 0);
+        }
         /** @var Module $module */
         foreach ($not_installed_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 0);
         }
 
+        $minimumExpectedModules = [
+            'bankwire',
+            'dummy_payment',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $uninstalled_modules);
+            $this->assertArrayHasKey($moduleName, $not_installed_modules);
+        }
+
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 0) {
+                $this->assertArrayHasKey($name, $uninstalled_modules, sprintf('Module %s not found in the filtered list !', $name));
                 $this->assertArrayHasKey($name, $not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
@@ -164,44 +247,109 @@ class ModuleRepositoryTest extends TestCase
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(AddonListFilterStatus::ENABLED);
+        $enabled_modules = $this->moduleRepository->getFilteredList($filters);
 
-        $installed_and_active_modules = $this->moduleRepository->getFilteredList($filters);
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(~AddonListFilterStatus::DISABLED);
+        $not_disabled_modules = $this->moduleRepository->getFilteredList($filters);
 
         // Each module MUST have its database installed and enabled attributes as true
         /** @var Module $module */
-        foreach ($installed_and_active_modules as $module) {
-            $this->assertTrue($module->database->get('installed') == 1);
+        foreach ($enabled_modules as $module) {
             $this->assertTrue($module->database->get('active') == 1);
+        }
+        /** @var Module $module */
+        foreach ($not_disabled_modules as $module) {
+            $this->assertTrue($module->database->get('active') == 1);
+        }
+
+        $minimumExpectedModules = [
+            'bankwire',
+            'cronjobs',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $enabled_modules);
+            $this->assertArrayHasKey($moduleName, $not_disabled_modules);
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
-            if ($module->database->get('installed') == 1
-                && $module->database->get('active') == 1) {
-                $this->assertArrayHasKey($name, $installed_and_active_modules, sprintf('Module %s not found in the filtered list !', $name));
+            if ($module->database->get('active') == 1) {
+                $this->assertArrayHasKey($name, $enabled_modules, sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $not_disabled_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
 
-    public function testGetNotEnabledModules(): void
+    public function testGetDisabledModules(): void
     {
         $all_modules = $this->moduleRepository->getList();
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
             ->setStatus(~AddonListFilterStatus::ENABLED);
-
         $not_active_modules = $this->moduleRepository->getFilteredList($filters);
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(AddonListFilterStatus::DISABLED);
+        $disabled_modules = $this->moduleRepository->getFilteredList($filters);
 
         /** @var Module $module */
         foreach ($not_active_modules as $module) {
             $this->assertTrue($module->database->get('active') == 0);
+        }
+        /** @var Module $module */
+        foreach ($disabled_modules as $module) {
+            $this->assertTrue($module->database->get('active') == 0);
+        }
+
+        $minimumExpectedModules = [
+            'demo',
+            'dummy_payment',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $not_active_modules);
+            $this->assertArrayHasKey($moduleName, $disabled_modules);
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->attributes->get('productType') == 'module' && $module->database->get('installed') == 1 && $module->database->get('active') == 0) {
                 $this->assertArrayHasKey($name, $not_active_modules, sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $disabled_modules, sprintf('Module %s not found in the filtered list !', $name));
+            }
+        }
+    }
+
+    public function testGetInstalledAndEnabledModules(): void
+    {
+        $all_modules = $this->moduleRepository->getList();
+
+        $filters = new AddonListFilter();
+        $filters->setType(AddonListFilterType::MODULE)
+            ->setStatus(AddonListFilterStatus::INSTALLED | AddonListFilterStatus::ENABLED);
+
+        $installed_and_enabled_modules = $this->moduleRepository->getFilteredList($filters);
+
+        /** @var Module $module */
+        foreach ($installed_and_enabled_modules as $module) {
+            $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name') . ' marked as not installed ><');
+            $this->assertTrue($module->database->get('active') == 1, $module->attributes->get('name') . ' marked as disabled ><');
+        }
+
+        $minimumExpectedModules = [
+            'cronjobs',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $installed_and_enabled_modules);
+        }
+
+        foreach ($all_modules as $name => $module) {
+            // Each installed module must be found in the installed modules list
+            if ($module->database->get('installed') == 1 && $module->database->get('active') == 1) {
+                $this->assertArrayHasKey($name, $installed_and_enabled_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -212,20 +360,27 @@ class ModuleRepositoryTest extends TestCase
 
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED & ~AddonListFilterStatus::ENABLED);
+            ->setStatus(AddonListFilterStatus::INSTALLED | AddonListFilterStatus::DISABLED);
 
-        $installed_but_not_installed_modules = $this->moduleRepository->getFilteredList($filters);
+        $installed_but_disabled_modules = $this->moduleRepository->getFilteredList($filters);
 
         /** @var Module $module */
-        foreach ($installed_but_not_installed_modules as $module) {
+        foreach ($installed_but_disabled_modules as $module) {
             $this->assertTrue($module->database->get('installed') == 1, $module->attributes->get('name') . ' marked as not installed ><');
             $this->assertTrue($module->database->get('active') == 0, $module->attributes->get('name') . ' marked as enabled ><');
+        }
+
+        $minimumExpectedModules = [
+            'demo',
+        ];
+        foreach ($minimumExpectedModules as $moduleName) {
+            $this->assertArrayHasKey($moduleName, $installed_but_disabled_modules);
         }
 
         foreach ($all_modules as $name => $module) {
             // Each installed module must be found in the installed modules list
             if ($module->database->get('installed') == 1 && $module->database->get('active') == 0) {
-                $this->assertArrayHasKey($name, $installed_but_not_installed_modules, sprintf('Module %s not found in the filtered list !', $name));
+                $this->assertArrayHasKey($name, $installed_but_disabled_modules, sprintf('Module %s not found in the filtered list !', $name));
             }
         }
     }
@@ -236,8 +391,9 @@ class ModuleRepositoryTest extends TestCase
         $filters->setOrigin(AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
+        $filteredModules = $this->moduleRepository->getFilteredList($filters);
         /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($filteredModules as $module) {
             $this->assertTrue($module->attributes->has('origin'), $module->attributes->get('name') . ' has not an origin attribute');
         }
     }
@@ -248,8 +404,9 @@ class ModuleRepositoryTest extends TestCase
         $filters->setOrigin(AddonListFilterOrigin::DISK);
 
         // Each module must have its origin attribute
+        $filteredModules = $this->moduleRepository->getFilteredList($filters);
         /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($filteredModules as $module) {
             $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name') . ' has an origin attribute, but should not');
         }
     }
@@ -260,8 +417,9 @@ class ModuleRepositoryTest extends TestCase
         $filters->setOrigin(~AddonListFilterOrigin::ADDONS_ALL);
 
         // Each module must have its origin attribute
+        $filteredModules = $this->moduleRepository->getFilteredList($filters);
         /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($filteredModules as $module) {
             $this->assertFalse($module->attributes->has('origin'), $module->attributes->get('name') . ' has an origin attribute, but should not !');
         }
     }
@@ -274,21 +432,20 @@ class ModuleRepositoryTest extends TestCase
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::MODULE);
 
+        $filteredModules = $this->moduleRepository->getFilteredList($filters);
         /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
+        foreach ($filteredModules as $module) {
             $this->assertTrue($module->attributes->get('productType') == 'module', $module->attributes->get('name') . ' has a product type "' . $module->attributes->get('productType') . '"');
         }
     }
 
-    public function testGetOnlyServices(): void
+    public function testShouldNotBeAbleToReturnServices(): void
     {
         $filters = new AddonListFilter();
         $filters->setType(AddonListFilterType::SERVICE);
 
-        /** @var Module $module */
-        foreach ($this->moduleRepository->getFilteredList($filters) as $module) {
-            $this->assertTrue($module->attributes->get('productType') == 'service');
-        }
+        $filteredModules = $this->moduleRepository->getFilteredList($filters);
+        $this->assertCount(0, $filteredModules);
     }
 
     public function testShouldNotBeAbleToReturnTheme(): void

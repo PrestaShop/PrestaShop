@@ -205,23 +205,22 @@ class ModuleRepository implements ModuleRepositoryInterface
             // Part Two : Remove module not installed if specified
             if ($filter->status != AddonListFilterStatus::ALL) {
                 if ($module->database->get('installed') == 1
-                    && ($filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
-                        || !$filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
+                    && $filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    && !$filter->hasStatus(AddonListFilterStatus::INSTALLED)) {
                     unset($modules[$key]);
 
                     continue;
                 }
 
                 if ($module->database->get('installed') == 0
-                    && (!$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
-                        || $filter->hasStatus(AddonListFilterStatus::INSTALLED))) {
+                    && !$filter->hasStatus(AddonListFilterStatus::UNINSTALLED)
+                    && $filter->hasStatus(AddonListFilterStatus::INSTALLED)) {
                     unset($modules[$key]);
 
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 1
+                if ($module->database->get('active') == 0
                     && !$filter->hasStatus(AddonListFilterStatus::DISABLED)
                     && $filter->hasStatus(AddonListFilterStatus::ENABLED)) {
                     unset($modules[$key]);
@@ -229,8 +228,7 @@ class ModuleRepository implements ModuleRepositoryInterface
                     continue;
                 }
 
-                if ($module->database->get('installed') == 1
-                    && $module->database->get('active') == 0
+                if ($module->database->get('active') == 1
                     && !$filter->hasStatus(AddonListFilterStatus::ENABLED)
                     && $filter->hasStatus(AddonListFilterStatus::DISABLED)) {
                     unset($modules[$key]);
@@ -519,6 +517,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
+            ->sortByName()
             ->ignoreVCS(true);
 
         foreach ($modulesDirsList as $moduleDir) {
