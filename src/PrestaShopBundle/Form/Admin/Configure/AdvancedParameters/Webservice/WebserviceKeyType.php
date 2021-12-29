@@ -87,7 +87,17 @@ class WebserviceKeyType extends TranslatorAwareType
         $builder
             ->add('key', GeneratableTextType::class, [
                 'label' => $this->trans('Key', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Webservice account key.', 'Admin.Advparameters.Feature'),
+                'help' => sprintf(
+                    '%s<br>%s',
+                    $this->trans('Webservice account key.', 'Admin.Advparameters.Feature'),
+                    $this->trans(
+                        'Key should be at least %length% characters long.',
+                        'Admin.Notifications.Info',
+                        [
+                            '%length%' => Key::LENGTH,
+                        ]
+                    )
+                ),
                 'generated_value_length' => Key::LENGTH,
                 'constraints' => [
                     new NotBlank([
