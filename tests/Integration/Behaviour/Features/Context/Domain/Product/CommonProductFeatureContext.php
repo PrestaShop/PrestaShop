@@ -34,13 +34,13 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
+use Tests\Resources\DatabaseDump;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {

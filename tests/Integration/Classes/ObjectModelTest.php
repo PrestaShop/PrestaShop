@@ -32,9 +32,9 @@ use Configuration;
 use Db;
 use Language;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Install\DatabaseDump;
 use Shop;
 use Tests\Resources\classes\TestableObjectModel;
+use Tests\Resources\DatabaseDump;
 
 class ObjectModelTest extends TestCase
 {

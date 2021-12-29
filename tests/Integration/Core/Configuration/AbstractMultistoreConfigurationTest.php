@@ -35,11 +35,11 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Shop;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Tests\Resources\DatabaseDump;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase

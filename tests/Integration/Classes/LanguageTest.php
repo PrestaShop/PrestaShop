@@ -30,7 +30,7 @@ namespace Tests\Integration\Classes;
 
 use Language;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Install\DatabaseDump;
+use Tests\Resources\DatabaseDump;
 
 class LanguageTest extends TestCase
 {

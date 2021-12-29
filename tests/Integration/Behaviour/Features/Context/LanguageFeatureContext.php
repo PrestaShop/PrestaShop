@@ -29,8 +29,8 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Configuration;
 use Db;
 use Language;
-use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
+use Tests\Resources\DatabaseDump;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {

@@ -25,8 +25,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Install\Install;
+use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
 
 define('_PS_ROOT_DIR_', dirname(__DIR__, 2));

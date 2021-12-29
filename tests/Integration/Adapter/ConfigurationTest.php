@@ -34,9 +34,9 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
-use PrestaShopBundle\Install\DatabaseDump;
 use Shop as LegacyShop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\DatabaseDump;
 
 class ConfigurationTest extends KernelTestCase
 {

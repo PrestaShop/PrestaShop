@@ -192,7 +192,7 @@ $baseline = [
     'PrestaShopBundle\Form\DataTransformer\DefaultLanguageToFilledArrayDataTransformer',
     'PrestaShopBundle\Form\DataTransformer\StringArrayToIntegerArrayDataTransformer',
     'PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences\HandlingType',
-    'PrestaShopBundle\Install\DatabaseDump',
+    'Tests\TestCase\DatabaseDump',
     'PrestaShopBundle\Form\Admin\Improve\International\Translations\ExportThemeLanguageType',
     'PrestaShopBundle\Form\Admin\Improve\International\Translations\AddUpdateLanguageType',
     'PrestaShopBundle\Form\Admin\Improve\International\Translations\TranslationsSettingsFormHandler',

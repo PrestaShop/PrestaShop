@@ -31,8 +31,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\TacticianCommandBusAdapter;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
-use PrestaShopBundle\Install\DatabaseDump;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\DatabaseDump;
 
 class EditRootCategoryHandlerTest extends KernelTestCase
 {

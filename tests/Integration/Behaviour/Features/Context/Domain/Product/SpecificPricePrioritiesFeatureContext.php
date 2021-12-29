@@ -33,8 +33,8 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
-use PrestaShopBundle\Install\DatabaseDump;
 use SpecificPrice;
+use Tests\Resources\DatabaseDump;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
 {
