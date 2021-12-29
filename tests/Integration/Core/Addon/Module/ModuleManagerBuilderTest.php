@@ -31,12 +31,13 @@ namespace Tests\Integration\Core\Addon\Module;
 use Context;
 use Employee;
 use Module;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\ResourceResetter;
 use Tools;
 
-class ModuleManagerBuilderTest extends TestCase
+class ModuleManagerBuilderTest extends KernelTestCase
 {
     /**
      * @var ModuleManagerBuilder
@@ -89,12 +90,21 @@ class ModuleManagerBuilderTest extends TestCase
         @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
 
+        // Reset modules folder
+        (new ResourceResetter())->resetTestModules();
+
         ModuleManagerBuilder::resetStaticCache();
     }
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        // Init Symfony for translator component
+        self::bootKernel();
+        // Global var for SymfonyContainer
+        global $kernel;
+        $kernel = self::$kernel;
 
         Context::getContext()->employee = new Employee(1);
 
