@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Install\DatabaseDump;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Shop;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -67,6 +68,32 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @var EntityManager
      */
     protected $entityManager;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::resetConfiguration();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::resetConfiguration();
+    }
+
+    private static function resetConfiguration(): void
+    {
+        // Reset created configurations and shops
+        DatabaseDump::restoreTables([
+            'configuration',
+            'configuration_lang',
+            'shop',
+        ]);
+
+        LegacyConfiguration::resetStaticCache();
+        // reset shop context
+        Shop::resetContext();
+    }
 
     public function setUp(): void
     {
@@ -248,20 +275,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
         $newShop->deleted = false;
         $newShop->add();
         $this->newShop = $newShop;
-        Shop::resetContext();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        // remove previously created shop
-        $newShopId = Shop::getIdByName('test_shop_2');
-        $newShop = new Shop($newShopId);
-        $newShop->delete();
-
-        // disable multistore
-        LegacyConfiguration::deleteByName('PS_MULTISHOP_FEATURE_ACTIVE');
-
-        // reset shop context
         Shop::resetContext();
     }
 }
