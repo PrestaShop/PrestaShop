@@ -160,8 +160,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
         $lastVisitQueryBuilder = $this->connection->createQueryBuilder()
             ->select('c.date_add')
             ->from($this->dbPrefix . 'connections', 'c')
-            ->leftJoin('c', $this->dbPrefix . 'guest', 'g', 'c.id_guest = g.id_guest')
-            ->where('g.id_customer = c.id_customer')
+            ->innerJoin('c', $this->dbPrefix . 'guest', 'g', 'c.id_guest = g.id_guest AND g.id_customer = c.id_customer')
             ->orderBy('c.date_add', 'DESC')
             ->setMaxResults(1);
 
