@@ -37,9 +37,12 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use Shop;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 abstract class ContextStateTestCase extends TestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @param array $contextFields
      *
