@@ -31,6 +31,7 @@ namespace Tests\Integration\Core\Addon\Module;
 use Context;
 use Employee;
 use Module;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -102,9 +103,11 @@ class ModuleManagerBuilderTest extends KernelTestCase
 
         // Init Symfony for translator component
         self::bootKernel();
-        // Global var for SymfonyContainer
+
+        // Global var for SymfonyContainer which needs to be reset to use the new kernel
         global $kernel;
         $kernel = self::$kernel;
+        SymfonyContainer::resetStaticCache();
 
         Context::getContext()->employee = new Employee(1);
 
