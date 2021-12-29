@@ -6705,16 +6705,16 @@
         },
         {
             "name": "prestashop/ps_supplierlist",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_supplierlist.git",
-                "reference": "04822b16126bd168384aa7363beda1fa4e9c105b"
+                "reference": "b2848891f60f5343e4a0f0231d75ad777c2c5dbf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_supplierlist/zipball/04822b16126bd168384aa7363beda1fa4e9c105b",
-                "reference": "04822b16126bd168384aa7363beda1fa4e9c105b",
+                "url": "https://api.github.com/repos/PrestaShop/ps_supplierlist/zipball/b2848891f60f5343e4a0f0231d75ad777c2c5dbf",
+                "reference": "b2848891f60f5343e4a0f0231d75ad777c2c5dbf",
                 "shasum": ""
             },
             "require": {
@@ -6723,7 +6723,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -6735,9 +6735,9 @@
             "homepage": "https://github.com/PrestaShop/ps_supplierlist",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_supplierlist/issues",
-                "source": "https://github.com/PrestaShop/ps_supplierlist/tree/dev"
+                "source": "https://github.com/PrestaShop/ps_supplierlist/tree/v1.0.4"
             },
-            "time": "2017-01-02T16:31:12+00:00"
+            "time": "2021-11-25T10:48:12+00:00"
         },
         {
             "name": "prestashop/ps_themecusto",
@@ -6821,16 +6821,16 @@
         },
         {
             "name": "prestashop/ps_wirepayment",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_wirepayment.git",
-                "reference": "99e8fbb3c66bad0217cf6f19a987d4f175aa2740"
+                "reference": "2c228b7050674d673d515baaedfaf469232a5e9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_wirepayment/zipball/99e8fbb3c66bad0217cf6f19a987d4f175aa2740",
-                "reference": "99e8fbb3c66bad0217cf6f19a987d4f175aa2740",
+                "url": "https://api.github.com/repos/PrestaShop/ps_wirepayment/zipball/2c228b7050674d673d515baaedfaf469232a5e9e",
+                "reference": "2c228b7050674d673d515baaedfaf469232a5e9e",
                 "shasum": ""
             },
             "require": {
@@ -6840,6 +6840,12 @@
                 "prestashop/php-dev-tools": "^3.4"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_wirepayment.php"
+                ],
+                "exclude-from-classmap": []
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -6853,9 +6859,9 @@
             "description": "PrestaShop module ps_wirepayment",
             "homepage": "https://github.com/PrestaShop/ps_wirepayment",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_wirepayment/tree/master"
+                "source": "https://github.com/PrestaShop/ps_wirepayment/tree/v2.1.1"
             },
-            "time": "2020-06-24T19:32:51+00:00"
+            "time": "2021-12-28T16:47:05+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
@@ -6894,25 +6900,28 @@
         },
         {
             "name": "prestashop/statsbestcustomers",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsbestcustomers.git",
-                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9"
+                "reference": "979518b00f321f1429ca8e251416bf2d2281a931"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/b0250e88e9144ca373d8006c922d3e84ea4987b9",
-                "reference": "b0250e88e9144ca373d8006c922d3e84ea4987b9",
+                "url": "https://api.github.com/repos/PrestaShop/statsbestcustomers/zipball/979518b00f321f1429ca8e251416bf2d2281a931",
+                "reference": "979518b00f321f1429ca8e251416bf2d2281a931",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -6923,9 +6932,9 @@
             "description": "PrestaShop module statsbestcustomers",
             "homepage": "https://github.com/PrestaShop/statsbestcustomers",
             "support": {
-                "source": "https://github.com/PrestaShop/statsbestcustomers/tree/v2.0.2"
+                "source": "https://github.com/PrestaShop/statsbestcustomers/tree/v2.0.3"
             },
-            "time": "2018-01-29T17:21:50+00:00"
+            "time": "2021-11-26T08:43:37+00:00"
         },
         {
             "name": "prestashop/statsbestmanufacturers",
