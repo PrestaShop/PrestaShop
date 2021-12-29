@@ -57,7 +57,7 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
         $countryId = Country::getByIso($countryIsoCode);
 
         $country = new Country($countryId);
-        $country->active = 1;
+        $country->active = true;
         $country->save();
     }
 
@@ -70,7 +70,7 @@ class CountryFeatureContext extends AbstractPrestaShopFeatureContext
         $countryId = Country::getByIso($countryIsoCode);
 
         $country = new Country($countryId);
-        $country->active = 0;
+        $country->active = false;
         $country->save();
     }
 

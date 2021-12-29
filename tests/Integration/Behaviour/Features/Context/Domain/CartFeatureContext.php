@@ -82,7 +82,10 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        /** @var ProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+
+        $this->productFeatureContext = $productFeatureContext;
     }
 
     /**
@@ -1041,7 +1044,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartRule->date_from = $now->format('Y-m-d H:i:s');
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = 1;
+        $cartRule->active = true;
         $cartRule->code = $voucherCode;
 
         return $cartRule;
@@ -1140,7 +1143,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $customerId = (int) SharedStorage::getStorage()->get($customerReference);
 
         $cart = new Cart($cartId);
-        $cart->id_guest = null;
+        $cart->id_guest = 0;
         $cart->id_customer = $customerId;
         $cart->save();
         Context::getContext()->cart = $cart;

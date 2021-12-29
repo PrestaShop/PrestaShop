@@ -72,7 +72,7 @@ class CarrierCore extends ObjectModel
     /** @var bool True if extra shipping handling cost should be applied to this Carrier */
     public $shipping_handling = true;
 
-    /** @var int Behavior taken for unknown range */
+    /** @var bool Behavior taken for unknown range */
     public $range_behavior;
 
     /** @var bool Carrier module */

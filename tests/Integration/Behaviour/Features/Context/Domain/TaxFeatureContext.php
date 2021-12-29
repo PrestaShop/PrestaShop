@@ -268,7 +268,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
         $taxRulesGroup = new TaxRulesGroup();
         $taxRulesGroup->name = $data['name'];
-        $taxRulesGroup->active = 1;
+        $taxRulesGroup->active = true;
         $taxRulesGroup->deleted = false;
         $taxRulesGroup->save();
         SharedStorage::getStorage()->set($taxGroupReference, $taxRulesGroup->id);

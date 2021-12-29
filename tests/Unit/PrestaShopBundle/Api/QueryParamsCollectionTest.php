@@ -477,7 +477,7 @@ AND EXISTS(SELECT 1
     /**
      * @param array $params
      *
-     * @return ParameterBag
+     * @return Request
      */
     private function mockRequest(array $params)
     {
