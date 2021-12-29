@@ -56,7 +56,7 @@ class CarrierFeatureContext extends AbstractDomainFeatureContext
         $carrier->name = $carrierName;
         $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
         $carrier->delay = '28 days later';
-        $carrier->active = 1;
+        $carrier->active = true;
         $carrier->add();
 
         $groups = Group::getGroups(Context::getContext()->language->id);

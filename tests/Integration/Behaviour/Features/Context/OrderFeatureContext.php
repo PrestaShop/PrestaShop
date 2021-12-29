@@ -80,6 +80,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             false,
             $cart->secure_key
         );
+        /** @var Order $order */
         $order = Order::getByCartId($cart->id);
         $this->orders[] = $order;
 

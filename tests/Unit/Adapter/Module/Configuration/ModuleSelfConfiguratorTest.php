@@ -347,28 +347,24 @@ class ConnectionMock extends Connection
         return true;
     }
 
-    /**
-     * @return void
-     */
     public function beginTransaction()
     {
+        return true;
     }
 
-    /**
-     * @return void
-     */
     public function commit()
     {
         $this->executedSql = array_merge($this->executedSql, $this->sql);
         $this->sql = [];
+
+        return true;
     }
 
-    /**
-     * @return void
-     */
     public function rollBack()
     {
         $this->sql = [];
+
+        return true;
     }
 
     public function prepare($statement)
@@ -386,10 +382,8 @@ class StatementMock extends Statement
     {
     }
 
-    /**
-     * @return void
-     */
     public function execute($params = null)
     {
+        return true;
     }
 }

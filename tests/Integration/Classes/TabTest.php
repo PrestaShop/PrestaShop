@@ -67,7 +67,7 @@ class TabTest extends TestCase
         $this->assertUnexpectedRoles($expectedRoles);
 
         $classNameTab = new Tab();
-        $classNameTab->active = 1;
+        $classNameTab->active = true;
         $classNameTab->class_name = 'AdminClassNameTest';
         $classNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
@@ -109,7 +109,7 @@ class TabTest extends TestCase
 
         for ($i = 0; $i < 3; ++$i) {
             $classNameTab = new Tab();
-            $classNameTab->active = 1;
+            $classNameTab->active = true;
             $classNameTab->class_name = 'AdminClassNameTest';
             $classNameTab->name = [];
             foreach (Language::getLanguages(true) as $lang) {
@@ -141,7 +141,7 @@ class TabTest extends TestCase
         $this->assertUnexpectedRoles($unexpectedRoles);
 
         $routeNameTab = new Tab();
-        $routeNameTab->active = 1;
+        $routeNameTab->active = true;
         $routeNameTab->class_name = 'AdminClassNameTest';
         $routeNameTab->route_name = 'admin_route_name_test';
         $routeNameTab->name = [];
@@ -188,7 +188,7 @@ class TabTest extends TestCase
     {
         for ($i = 0; $i < 3; ++$i) {
             $routeNameTab = new Tab();
-            $routeNameTab->active = 1;
+            $routeNameTab->active = true;
             $routeNameTab->class_name = 'AdminClassNameTest';
             $routeNameTab->route_name = 'admin_route_name_test';
             $routeNameTab->name = [];

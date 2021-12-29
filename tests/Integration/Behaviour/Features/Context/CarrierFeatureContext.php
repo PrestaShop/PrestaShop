@@ -90,7 +90,10 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        $this->customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+        /** @var CustomerFeatureContext $customerFeatureContext */
+        $customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+
+        $this->customerFeatureContext = $customerFeatureContext;
     }
 
     /**
@@ -127,7 +130,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $this->previousCountries[$countryName] = clone $country;
         $this->countries[$countryName] = $country;
         $country->id_zone = $this->zones[$zoneName]->id;
-        $country->active = 1;
+        $country->active = true;
         $country->save();
     }
 
@@ -232,7 +235,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $carrier->name = $carrierName;
         $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
         $carrier->delay = '28 days later';
-        $carrier->active = 1;
+        $carrier->active = true;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
         SharedStorage::getStorage()->set($carrierName, $carrier->id);

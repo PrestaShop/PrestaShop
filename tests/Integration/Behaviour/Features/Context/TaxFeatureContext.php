@@ -68,8 +68,13 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        $this->carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
-        $this->productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        /** @var CarrierFeatureContext $carrierFeatureContext */
+        $carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        /** @var ProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+
+        $this->carrierFeatureContext = $carrierFeatureContext;
+        $this->productFeatureContext = $productFeatureContext;
     }
 
     /**
@@ -80,7 +85,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $tax = new Tax();
         $tax->name = [(int) Context::getContext()->language->id => 'fake'];
         $tax->rate = $rate;
-        $tax->active = 1;
+        $tax->active = true;
         $tax->add();
         $this->taxes[$name] = $tax;
     }
@@ -95,7 +100,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkTaxWithNameExists($taxName);
 
         $taxRuleGroup = new TaxRulesGroup();
-        $taxRuleGroup->active = 1;
+        $taxRuleGroup->active = true;
         $taxRuleGroup->name = 'fake';
         $taxRuleGroup->add();
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
@@ -121,7 +126,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkTaxWithNameExists($taxName);
 
         $taxRuleGroup = new TaxRulesGroup();
-        $taxRuleGroup->active = 1;
+        $taxRuleGroup->active = true;
         $taxRuleGroup->name = 'fake';
         $taxRuleGroup->add();
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;

@@ -86,9 +86,9 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|ShopContext
      */
-    protected function createShopContextMock(): MockObject
+    protected function createShopContextMock()
     {
         return $this->getMockBuilder(ShopContext::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])

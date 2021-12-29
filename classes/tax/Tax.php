@@ -27,7 +27,7 @@ class TaxCore extends ObjectModel
 {
     const TAX_DEFAULT_PRECISION = 3;
 
-    /** @var array<int,string> Name */
+    /** @var array<int,string>|string Name */
     public $name;
 
     /** @var float Rate (%) */
