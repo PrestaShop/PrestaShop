@@ -7489,20 +7489,19 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v5.0.0",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "42d31c8e3d0e1faf090dd097dfedf6c437694a92"
+                "reference": "b4ebf59ec6a7598da010b8ef1a4f2b954ccd2db7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/42d31c8e3d0e1faf090dd097dfedf6c437694a92",
-                "reference": "42d31c8e3d0e1faf090dd097dfedf6c437694a92",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/b4ebf59ec6a7598da010b8ef1a4f2b954ccd2db7",
+                "reference": "b4ebf59ec6a7598da010b8ef1a4f2b954ccd2db7",
                 "shasum": ""
             },
             "require": {
-                "friendsofphp/php-cs-fixer": "^2.18",
                 "nikic/php-parser": "^4",
                 "php": ">=7.2",
                 "smarty/smarty": "^3.1",
@@ -7511,9 +7510,12 @@
             },
             "require-dev": {
                 "doctrine/common": "^2.10.0",
+                "friendsofphp/php-cs-fixer": "^3.2",
                 "phpunit/phpunit": "^7.5 || ^8.5",
                 "symfony/framework-bundle": "^3.4 || ^4.4 || ^5.0",
-                "symfony/translation": "^3.4 || ^4.4 || ^5.0"
+                "symfony/symfony": "^4",
+                "symfony/translation": "^3.4 || ^4.4 || ^5.0",
+                "symfony/twig-bundle": "^4"
             },
             "type": "bundle",
             "autoload": {
@@ -7532,7 +7534,7 @@
                 },
                 {
                     "name": "PrestaShop Community",
-                    "homepage": "http://contributors.prestashop.com/"
+                    "homepage": "https://contributors.prestashop.com/"
                 }
             ],
             "description": "Translation tools for PrestaShop",
@@ -7543,9 +7545,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v4.0.4"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v5.0.2"
             },
-            "time": "2020-11-13T08:11:44+00:00"
+            "time": "2021-11-19T15:01:56+00:00"
         },
         {
             "name": "psr/cache",
@@ -12542,5 +12544,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

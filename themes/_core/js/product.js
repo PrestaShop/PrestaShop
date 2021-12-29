@@ -125,7 +125,14 @@ function updateProduct(event, eventType, updateUrl) {
   const $form = $productActions.find('form:first');
   const formSerialized = $form.serialize();
   let preview = psGetRequestParameter('preview');
-  const updateRatingEvent = new Event('updateRating');
+  let updateRatingEvent;
+
+  if (typeof Event === 'function') {
+    updateRatingEvent = new Event('updateRating');
+  } else {
+    updateRatingEvent = document.createEvent('Event');
+    updateRatingEvent.initEvent('updateRating', true, true);
+  }
 
   if (preview !== null) {
     preview = `&preview=${preview}`;
