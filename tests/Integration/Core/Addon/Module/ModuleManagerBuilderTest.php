@@ -54,6 +54,7 @@ class ModuleManagerBuilderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        ModuleManagerBuilder::resetStaticCache();
 
         $dirResources = dirname(__DIR__, 4);
         if (is_dir($dirResources . '/Resources/modules_tests/pscsx3241')) {
@@ -102,6 +103,8 @@ class ModuleManagerBuilderTest extends TestCase
         // Remove overrides
         @unlink(_PS_ROOT_DIR_ . '/override/controllers/admin/AdminProductsController.php');
         @unlink(_PS_ROOT_DIR_ . '/override/classes/Cart.php');
+
+        ModuleManagerBuilder::resetStaticCache();
     }
 
     public function testInstall(): void
