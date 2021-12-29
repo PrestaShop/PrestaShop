@@ -494,6 +494,7 @@ class Order extends BOBasePage {
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
     await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
+
     return parseFloat(await this.getTextContent(page, this.productQuantitySpan(row)));
   }
 
@@ -506,10 +507,10 @@ class Order extends BOBasePage {
    */
   async modifyProductPrice(page, row, price) {
     this.dialogListener(page);
-    await Promise.all([
-      page.click(this.editProductButton(row)),
-      this.waitForVisibleSelector(page, this.editProductPriceInput),
-    ]);
+
+    await page.click(this.editProductButton(row));
+    await this.waitForVisibleSelector(page, this.editProductPriceInput);
+
     await this.setValue(page, this.editProductPriceInput, price);
     await Promise.all([
       page.click(this.UpdateProductButton),
