@@ -623,8 +623,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (!isset($invoiceIndexes[$invoicePosition])) {
             throw new RuntimeException(sprintf('Cannot interpret this invoice position %s', $invoicePosition));
         }
+        /** @var OrderInvoice $orderInvoice */
+        $orderInvoice = $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
 
-        return $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
+        return $orderInvoice;
     }
 
     /**
@@ -1724,7 +1726,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      *
-     * @return OrderProductForViewing[]
+     * @return OrderDiscountForViewing[]
      */
     private function getOrderDiscounts(int $orderId): array
     {

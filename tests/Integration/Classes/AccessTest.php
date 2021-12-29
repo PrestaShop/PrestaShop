@@ -34,16 +34,16 @@ use Tab;
 
 class AccessTest extends TestCase
 {
-    /** @var Tab */
+    /** @var Tab|null */
     private $classNameTab;
 
-    /** @var Tab */
+    /** @var Tab|null */
     private $classNameTabChild;
 
-    /** @var Tab */
+    /** @var Tab|null */
     private $routeNameTab;
 
-    /** @var Tab */
+    /** @var Tab|null */
     private $routeNameTabChild;
 
     protected function setUp(): void
@@ -141,7 +141,7 @@ class AccessTest extends TestCase
     private function createTestTabs(): void
     {
         $this->classNameTab = new Tab();
-        $this->classNameTab->active = 1;
+        $this->classNameTab->active = true;
         $this->classNameTab->class_name = 'AdminClassNameTest';
         $this->classNameTab->name = [];
         foreach (Language::getLanguages(true) as $lang) {
@@ -165,7 +165,7 @@ class AccessTest extends TestCase
     private function createTestTabsChildren(): void
     {
         $this->classNameTabChild = new Tab();
-        $this->classNameTabChild->active = 1;
+        $this->classNameTabChild->active = true;
         $this->classNameTabChild->class_name = 'AdminClassNameTestChild';
         $this->classNameTabChild->name = [];
         foreach (Language::getLanguages(true) as $lang) {

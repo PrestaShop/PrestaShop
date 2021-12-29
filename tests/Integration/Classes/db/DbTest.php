@@ -52,7 +52,7 @@ class DbTest extends TestCase
     protected function tearDown(): void
     {
         Db::$_slave_servers_loaded = false;
-        Db::$_servers = null;
+        Db::$_servers = [];
         Db::$instance = [];
     }
 

@@ -85,7 +85,10 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        $this->categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
+        /** @var CategoryFeatureContext $categoryFeatureContext */
+        $categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
+
+        $this->categoryFeatureContext = $categoryFeatureContext;
     }
 
     /* PRODUCTS */
@@ -772,7 +775,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $customizationField = new CustomizationField();
         $customizationField->id_product = $this->getProductWithName($productName)->id;
         $customizationField->type = 1; // text field
-        $customizationField->required = 1;
+        $customizationField->required = true;
         $customizationField->name = [
             (int) Configuration::get('PS_LANG_DEFAULT') => $customizationFieldName,
         ];
@@ -846,7 +849,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
         $customization->quantity = 0;
         $customization->quantity_refunded = 0;
         $customization->quantity_returned = 0;
-        $customization->in_cart = 0;
+        $customization->in_cart = false;
         $customization->id_cart = $this->getCurrentCart()->id;
         $customization->add();
 
@@ -947,7 +950,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function productWithNameProductIsVirtual($productName)
     {
         $this->checkProductWithNameExists($productName);
-        $this->getProductWithName($productName)->is_virtual = 1;
+        $this->getProductWithName($productName)->is_virtual = true;
         $this->getProductWithName($productName)->save();
     }
 

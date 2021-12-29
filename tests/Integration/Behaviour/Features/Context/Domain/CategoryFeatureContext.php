@@ -86,7 +86,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->container = $this->getContainer();
-        $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
 

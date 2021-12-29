@@ -225,9 +225,9 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
-     * @return MockObject
+     * @return MockObject|Context
      */
-    protected function createShopContextMock(): MockObject
+    protected function createShopContextMock()
     {
         return $this->getMockBuilder(Context::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])

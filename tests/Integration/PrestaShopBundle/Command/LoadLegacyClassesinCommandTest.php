@@ -78,11 +78,13 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
              * @param InputInterface $input
              * @param OutputInterface $output
              *
-             * @return void
+             * @return int
              */
             protected function execute(InputInterface $input, OutputInterface $output)
             {
                 $products = Product::getNewProducts(1);
+
+                return 0;
             }
         });
 
@@ -108,13 +110,15 @@ class LoadLegacyClassesinCommandTest extends KernelTestCase
              * @param InputInterface $input
              * @param OutputInterface $output
              *
-             * @return void
+             * @return int
              */
             protected function execute(InputInterface $input, OutputInterface $output)
             {
                 $contextLoader = new LegacyContextLoader(Context::getContext());
                 $contextLoader->loadGenericContext();
                 $products = Product::getNewProducts(1);
+
+                return 0;
             }
         });
 

@@ -29,13 +29,10 @@ namespace Tests\Unit\Core\Product\Search;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\Filter;
 
-/**
- * @doc ./vendor/bin/phpunit -c tests/phpunit.xml --filter="FilterTest"
- */
 class FilterTest extends TestCase
 {
     /**
-     * @var Filter
+     * @var Filter|null
      */
     private $filter;
 

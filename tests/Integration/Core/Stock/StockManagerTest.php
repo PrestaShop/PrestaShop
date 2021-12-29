@@ -388,9 +388,14 @@ class FakeProduct4759 extends Product
         $this->stock_available = new FakeStockAvailable4759($stock_available);
     }
 
-    public function hasAttributes(): bool
+    /**
+     * Check if product has attributes combinations.
+     *
+     * @return int Attributes combinations number
+     */
+    public function hasAttributes()
     {
-        return false;
+        return 0;
     }
 }
 

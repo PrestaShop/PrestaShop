@@ -30,13 +30,10 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\Facet;
 use PrestaShop\PrestaShop\Core\Product\Search\Filter;
 
-/**
- * @doc ./vendor/bin/phpunit -c tests/phpunit.xml --filter="FacetTest"
- */
 class FacetTest extends TestCase
 {
     /**
-     * @var Facet
+     * @var Facet|null
      */
     private $facet;
 

@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
 use AdminController;
 use Context;
+use Currency;
 use Employee;
 use Language;
 use Link;
@@ -49,7 +50,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $router;
 
     /**
-     * @var Client
+     * @var Client|null
      */
     protected static $client;
 
@@ -59,7 +60,7 @@ abstract class ApiTestCase extends WebTestCase
     protected $oldContext;
 
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|null
      */
     protected static $container;
 
@@ -87,7 +88,6 @@ abstract class ApiTestCase extends WebTestCase
         parent::tearDown();
 
         self::$container = null;
-        self::$kernel = null;
         self::$client = null;
         Context::setInstanceForTesting($this->oldContext);
     }
@@ -134,7 +134,8 @@ abstract class ApiTestCase extends WebTestCase
         $controllerMock = $this->mockController();
         $contextMock->controller = $controllerMock;
 
-        $contextMock->currency = (object) ['sign' => '$'];
+        $contextMock->currency = new Currency();
+        $contextMock->currency->sign = '$';
 
         Context::setInstanceForTesting($contextMock);
 
