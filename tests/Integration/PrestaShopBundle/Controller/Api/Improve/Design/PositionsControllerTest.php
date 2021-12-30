@@ -121,6 +121,17 @@ class PositionsControllerTest extends TestCase
         $this->router = self::$container->get('router');
     }
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Remove files generate during API calls
+        if (file_exists(_PS_THEME_DIR_ . 'shop1.json')) {
+            unlink(_PS_THEME_DIR_ . 'shop1.json');
+        }
+    }
+
+
     /**
      * Way = 1 means we increment the position (correspond to "bottom" of grid)
      * Module is unknown so we can't update it
