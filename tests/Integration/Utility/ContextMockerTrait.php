@@ -44,7 +44,7 @@ trait ContextMockerTrait
     /**
      * @var ContextMocker
      */
-    private static $contextMocker;
+    protected static $contextMocker;
 
     public static function setUpBeforeClass(): void
     {
