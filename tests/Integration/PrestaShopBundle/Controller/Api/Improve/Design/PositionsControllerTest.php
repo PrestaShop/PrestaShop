@@ -131,7 +131,6 @@ class PositionsControllerTest extends TestCase
         }
     }
 
-
     /**
      * Way = 1 means we increment the position (correspond to "bottom" of grid)
      * Module is unknown so we can't update it

@@ -38,16 +38,16 @@ class ServiceLocator
     /**
      * Set a service container Instance.
      *
-     * @var Container
+     * @var Container|null
      */
     private static $service_container;
 
-    public static function setServiceContainerInstance(Container $container)
+    public static function setServiceContainerInstance(?Container $container)
     {
         self::$service_container = $container;
     }
 
-    public static function getContainer(): Container
+    public static function getContainer(): ?Container
     {
         return self::$service_container;
     }
