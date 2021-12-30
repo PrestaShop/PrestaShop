@@ -34,7 +34,7 @@ use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 /**
  * Tests the extraction of wordings from a module using static code analysis
  *
- * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyModuleExtractorTest"
+ * ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyModuleExtractorTest"
  */
 class LegacyModuleExtractorTest extends KernelTestCase
 {
@@ -60,7 +60,6 @@ class LegacyModuleExtractorTest extends KernelTestCase
      * @param string $locale
      * @param array $expected
      *
-     * @cover extract
      * @dataProvider provideTestCases
      */
     public function testExtractedCatalogueContainsTheExpectedWordings($locale, $expected)
