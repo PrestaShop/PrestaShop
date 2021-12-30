@@ -124,9 +124,7 @@ class OrderControllerTest extends WebTestCase
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertIsArray($content);
-        $this->assertArrayHasKey(0, $content);
-        $this->assertIsArray($content[0]);
-        $this->assertArrayHasKey('message', $content[0]);
-        $this->assertEquals('Product search phrase must be a not empty string', $content[0]['message']);
+        $this->assertArrayHasKey('message', $content);
+        $this->assertEquals('Product search phrase must be a not empty string.', $content['message']);
     }
 }
