@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
+use Cache;
 use Doctrine\DBAL\Connection;
 use PrestaShopBundle\Api\QueryStockParamsCollection;
+use Tests\Resources\DatabaseDump;
 
 class StockManagementControllerTest extends ApiTestCase
 {
@@ -37,6 +39,26 @@ class StockManagementControllerTest extends ApiTestCase
      * @var Connection
      */
     private $connection;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::restoreDatabase();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::restoreDatabase();
+    }
+
+    private static function restoreDatabase(): void
+    {
+        DatabaseDump::restoreTables([
+            'stock_available',
+            'stock_mvt',
+        ]);
+    }
 
     protected function setUp(): void
     {
@@ -54,21 +76,12 @@ class StockManagementControllerTest extends ApiTestCase
         $this->restoreQuantityEditionFixtures();
     }
 
-    private function restoreMovements(): void
+    protected function tearDown(): void
     {
-        $deleteMovements = sprintf('DELETE FROM %sstock_mvt', _DB_PREFIX_);
-        $statement = $this->connection->prepare($deleteMovements);
-        $statement->executeStatement();
-    }
-
-    private function restoreQuantityEditionFixtures(): void
-    {
-        $updateProductQuantity = sprintf(
-            'UPDATE %sstock_available SET quantity = 8, physical_quantity = 10, reserved_quantity = 2 WHERE id_product = 1 AND id_product_attribute = 1',
-            _DB_PREFIX_
-        );
-        $statement = $this->connection->prepare($updateProductQuantity);
-        $statement->executeStatement();
+        parent::tearDown();
+        if (self::$container) {
+            self::$container->set('prestashop.core.api.stock_movement.repository', null);
+        }
     }
 
     public function testItShouldReturnBadRequestResponseOnInvalidPaginationParams(): void
@@ -506,5 +519,24 @@ class StockManagementControllerTest extends ApiTestCase
     public function testItShouldReturnOkResponseWhenRequestingMovementsEmployees(): void
     {
         $this->assertOkResponseOnList('api_stock_list_movements_employees');
+    }
+
+    private function restoreMovements(): void
+    {
+        $deleteMovements = sprintf('DELETE FROM %sstock_mvt', _DB_PREFIX_);
+        $statement = $this->connection->prepare($deleteMovements);
+        $statement->executeStatement();
+    }
+
+    private function restoreQuantityEditionFixtures(): void
+    {
+        $updateProductQuantity = sprintf(
+            'UPDATE %sstock_available SET quantity = 8, physical_quantity = 10, reserved_quantity = 2 WHERE id_product = 1 AND id_product_attribute = 1',
+            _DB_PREFIX_
+        );
+        $statement = $this->connection->prepare($updateProductQuantity);
+        $statement->executeStatement();
+        // Clear cache for entity manager to fetch the new updated values
+        Cache::clean('objectmodel_StockAvailable_*');
     }
 }
