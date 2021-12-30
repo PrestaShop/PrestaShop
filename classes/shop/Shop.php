@@ -85,7 +85,7 @@ class ShopCore extends ObjectModel
         ],
     ];
 
-    /** @var array List of shops cached */
+    /** @var array|null List of shops cached */
     protected static $shops;
 
     protected static $asso_tables = [];
