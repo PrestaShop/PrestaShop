@@ -29,13 +29,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Localization\Locale;
 
-use Currency;
-use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
+use LocalizationPack;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Tests\Resources\LanguageResetter;
+use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase
 {
@@ -49,6 +50,19 @@ class RepositoryTest extends KernelTestCase
      * @var LocaleRepository
      */
     protected $localeRepository;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        LanguageResetter::resetLanguages();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        LanguageResetter::resetLanguages();
+        (new ResourceResetter())->resetTestModules();
+    }
 
     protected function setUp(): void
     {

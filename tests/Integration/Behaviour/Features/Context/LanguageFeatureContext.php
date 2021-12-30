@@ -27,10 +27,9 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
-use Db;
 use Language;
 use RuntimeException;
-use Tests\Resources\DatabaseDump;
+use Tests\Resources\LanguageResetter;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -52,23 +51,10 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 
     private static function restoreLanguagesTables(): void
     {
-        // Removing Language manually includes cleaning all related lang tables, this cleaning is handled in
-        // Language::delete in a more efficient way than relying on table restoration
-        $langIds = Db::getInstance()->executeS(sprintf('SELECT id_lang FROM %slang;', _DB_PREFIX_));
-        unset($langIds[0]);
-        foreach ($langIds as $langId) {
-            $lang = new Language($langId['id_lang']);
-            $lang->delete();
-        }
-
-        // We still restore lang table to reset increment ID
-        DatabaseDump::restoreTables(['lang', 'lang_shop']);
+        LanguageResetter::resetLanguages();
 
         // Reset default language
         Configuration::updateValue('PS_LANG_DEFAULT', 1);
-
-        // Restore static cache
-        Language::resetStaticCache();
     }
 
     /**
