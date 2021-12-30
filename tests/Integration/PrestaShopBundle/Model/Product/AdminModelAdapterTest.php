@@ -28,14 +28,18 @@ namespace Tests\Integration\PrestaShopBundle\Model\Product;
 
 use Context;
 use Currency;
+use Employee;
 use Language;
 use PrestaShopBundle\Model\Product\AdminModelAdapter;
 use Product;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class AdminModelAdapterTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
     /** @var AdminModelAdapter */
     private $adminModelAdapter;
 
@@ -179,6 +183,8 @@ class AdminModelAdapterTest extends KernelTestCase
         Context::getContext()->shop = new Shop(1);
         Context::getContext()->language = new Language(1);
         Context::getContext()->currency = new Currency(1);
+        Context::getContext()->employee = new Employee(1);
+
         $this->product = $this->fakeProduct();
         $this->adminModelAdapter = new AdminModelAdapter(
             self::$kernel->getContainer()->get('prestashop.adapter.legacy.context'),
