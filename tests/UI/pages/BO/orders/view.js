@@ -23,6 +23,8 @@ class Order extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
+    this.errorAddSameProductInInvoice = invoice => `This product is already in the invoice #${invoice}, `
+      + 'please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
     this.commentSuccessfullMessage = 'Comment successfully added.';
@@ -637,6 +639,26 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
   }
 
+  async createNewInvoice(page) {
+    await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
+  }
+
+  getNewInvoiceCarrierName(page) {
+    return this.getTextContent(page, '#addProductNewInvoiceInfo div p');
+  }
+
+  isFreeShippingSelected(page) {
+    return this.isChecked(page, '#add_product_row_free_shipping');
+  }
+
+  async selectFreeShippingCheckbox(page) {
+    await this.setChecked(page, '#add_product_row_free_shipping');
+  }
+
+  async updateProductPrice(page, price) {
+    await this.setValue(page, '#add_product_row_price_tax_included', price);
+  }
+
   /**
    * Add product to cart
    * @param page {Page} Browser tab
@@ -649,9 +671,7 @@ class Order extends BOBasePage {
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
-    if (createNewInvoice) {
-      await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
-    }
+
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
     if (createNewInvoice) {
       await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
