@@ -185,7 +185,8 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
   });
 
   // Pre-condition - Create 4 products
-  [virtualProduct,
+  [
+    virtualProduct,
     customizedProduct,
     productWithSpecificPrice,
     productWithEcoTax,
@@ -247,41 +248,45 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
   // Pre-condition - Create second order from FO
   createOrderSpecificProductTest(secondOrderByCustomer, baseContext);
 
-  // Check invoice
+  // Create and check invoices on different cases
   [
+    // Data to edit the order row n°2 then to check the invoice
     {
       args: {
         orderRow: 2,
-        deliveryAddress: Address.second,
-        billingAddress: Address.third,
         product: virtualProduct,
         productQuantity: 13,
+        deliveryAddress: Address.second,
+        billingAddress: Address.third,
         tax: `${virtualProduct.tax} %`,
       },
     },
+    // Data to edit the order row n°1 then to check the invoice
     {
       args: {
-        deliveryAddress: Address.second,
-        billingAddress: Address.second,
         orderRow: 1,
         product: customizedProduct,
         productQuantity: 1,
-      },
-    },
-    {
-      args: {
         deliveryAddress: Address.second,
         billingAddress: Address.second,
+      },
+    },
+    // Data to edit the order row n°1 then to check the invoice
+    {
+      args: {
         product: productWithSpecificPrice,
         productQuantity: 1,
-      },
-    },
-    {
-      args: {
         deliveryAddress: Address.second,
         billingAddress: Address.second,
+      },
+    },
+    // Data to edit the order row n°1 then to check the invoice
+    {
+      args: {
         product: productWithEcoTax,
         productQuantity: 1,
+        deliveryAddress: Address.second,
+        billingAddress: Address.second,
       },
     },
   ].forEach((test, index) => {
@@ -415,6 +420,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
 
       // 3 - Check invoice
       describe('Check the invoice', async () => {
+        // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
         describe('Check Header', async () => {
           it('should check the header of the invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkHeaderInvoice${index}`, baseContext);
@@ -475,7 +481,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await expect(billingAddressExist, 'Billing address is not correct in invoice!').to.be.true;
           });
 
-          it('should check that the \'Invoice number, Invoice date, order Reference and Order date\' are correct',
+          it('should check that the \'Invoice number, Invoice date, Order reference and Order date\' are correct',
             async function () {
               await testContext.addContextItem(this, 'testIdentifier', `checkInvoiceNumber${index}`, baseContext);
 
@@ -488,6 +494,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             });
         });
 
+        // Check Products table: Check Product reference, Product name
         describe('Check Products table', async () => {
           it('should check that the \'Product reference, Product name\' are correct', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkProductReference${index}`, baseContext);
@@ -499,12 +506,12 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
           });
 
+          // If invoice contain virtual product: Check Tax Rate, Unit Price, Quantity and total price
           if (test.args.product === virtualProduct) {
             it('should check that the \'Product Tax Rate, Unit Price (tax excl.), quantity and Product Total price'
               + '(tax excl.)\' are correct', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkTaxRateVirtualProduct', baseContext);
 
-              // VIRTUAL PRODUCT, ,  20 %, ,  €12.50, ,  13, ,  €162.50,
               const productPriceExist = await files.isTextInPDF(
                 filePath,
                 `${test.args.product.name}, ,  `
@@ -520,6 +527,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             });
           }
 
+          // If invoice contain customized product: Check customized text, Unit price, quantity and total price
           if (test.args.product === customizedProduct) {
             it('should check that the customized text is visible', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkCustomizedText', baseContext);
@@ -550,6 +558,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             });
           }
 
+          // If invoice contain product with specific price: Check base price, Unit price, quantity and total price
           if (test.args.product === productWithSpecificPrice) {
             it('should check that the column \'Base price (Tax excl.)\' is visible', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnVisible', baseContext);
@@ -582,6 +591,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             });
           }
 
+          // If invoice contain product with specific price: Check unit price, EcoTax, quantity and total price
           if (test.args.product === productWithEcoTax) {
             it('should check that the column \'Base price (Tax excl.)\' is not visible', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnNotVisible', baseContext);
@@ -607,6 +617,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           }
         });
 
+        // If invoice contain customized product or product with specific price check that taxes table is not visible
         if (test.args.product === customizedProduct || test.args.product === productWithSpecificPrice) {
           describe('Check that Taxes table is not visible', async () => {
             it('should check that \'Tax Detail\' table is not visible', async function () {
@@ -618,6 +629,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           });
         }
 
+        // If invoice contain virtual product or product with ecoTax check: Tax Detail, Tax Rate, Base price, Total tax
         if (test.args.product === virtualProduct || test.args.product === productWithEcoTax) {
           describe('Check Taxes table', async () => {
             if (test.args.product === virtualProduct) {
@@ -664,6 +676,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           });
         }
 
+        // Check payments table: Payment method, Total and carrier name
         describe('Check Payments table', async () => {
           if (test.args.product === virtualProduct || test.args.product === customizedProduct) {
             it('should check that the \'Payment method and Total\' are correct', async function () {
@@ -691,15 +704,16 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             });
           }
 
+          // If invoice contain virtual product the carrier is not visible
           // Issue => https://github.com/PrestaShop/PrestaShop/issues/26977
-          /* if (test.args.product === virtualProduct) {
-             it('should check that the carrier is not visible', async function () {
-                await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierNotVisible', baseContext);
+          if (test.args.product === virtualProduct) {
+            it.skip('should check that the carrier is not visible', async function () {
+              await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierNotVisible', baseContext);
 
-                const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ${Carriers.default.name}`);
-                await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is visible!`).to.be.false;
-              });
-          } */
+              const isCarrierVisible = await files.isTextInPDF(filePath, `Carrier, ${Carriers.default.name}`);
+              await expect(isCarrierVisible, `Carrier '${Carriers.default.name}' is visible!`).to.be.false;
+            });
+          }
 
           it('should check that the carrier is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkCarrierVisible${index}`, baseContext);
@@ -709,7 +723,9 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
           });
         });
 
+        // Check total to pay table
         describe('Check Total to pay table', async () => {
+          // If invoice contain virtual product check: Total Products, Total(Tax exc.), Total Tax, Total
           if (test.args.product === virtualProduct) {
             it('should check that \'Total Products, Total(Tax exc.), Total Tax, Total\' are correct',
               async function () {
@@ -734,6 +750,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               });
           }
 
+          // If invoice contain customized product check: Total Products, Shipping Costs, Total(Tax exc.), Total
           if (test.args.product === customizedProduct) {
             it('should check that \'Total Products, Shipping Costs, Total(Tax exc.), Total\' are correct',
               async function () {
@@ -756,6 +773,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               });
           }
 
+          // If invoice contain product with specific price check: Total Products, Shipping Costs, Total(Tax exc.),Total
           if (test.args.product === productWithSpecificPrice) {
             it('should check that \'Total Products, Shipping Costs, Total(Tax exc.), Total\' are correct',
               async function () {
@@ -784,6 +802,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               });
           }
 
+          // If invoice contain product with ecoTax check: Total Products, Shipping Costs, Total(Tax exc.), Total
           if (test.args.product === productWithEcoTax) {
             it('should check that \'Total Products, Shipping Costs, Total(Tax exc.), Total\' are correct',
               async function () {
@@ -808,6 +827,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
         });
 
         if (index === 2) {
+          // Delete the added product and recheck the invoice
           describe('Delete the added product then recheck the invoice', async () => {
             it(`should delete the ordered product '${test.args.product.name}' from the list`, async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'deleteAddedProduct', baseContext);
