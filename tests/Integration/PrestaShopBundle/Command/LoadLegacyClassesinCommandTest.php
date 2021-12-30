@@ -40,7 +40,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use TypeError;
 
 /**
- * @isolatedProcess
+ * @group isolatedProcess
  */
 class LoadLegacyClassesinCommandTest extends KernelTestCase
 {
