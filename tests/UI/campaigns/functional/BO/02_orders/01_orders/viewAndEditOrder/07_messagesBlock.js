@@ -26,6 +26,7 @@ const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
+const {DefaultEmployee} = require('@data/demo/employees');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_messagesBlock';
@@ -214,7 +215,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
     });
 
     // Issue https://github.com/PrestaShop/PrestaShop/issues/26532
-    /* it('should check the message text', async function () {
+    it.skip('should check the message text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock2', baseContext);
 
       const message = await foOrderHistoryPage.getMessageRow(page);
@@ -222,7 +223,7 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
         .to.contain(today)
         .and.to.contain(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`)
         .and.to.contain(textMessage);
-    }); */
+    });
 
     it('should sign out from FO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
