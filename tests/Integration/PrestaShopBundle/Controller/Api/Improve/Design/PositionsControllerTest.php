@@ -41,6 +41,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 
+/**
+ * The controller installs and uninstalls modules so it needs to clear the cache, that's why it's better isolated
+ *
+ * @group isolatedProcess
+ */
 class PositionsControllerTest extends TestCase
 {
     /**

@@ -31,6 +31,11 @@ use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
+/**
+ * These tests install and uninstalls modules causing the cache to be cleared. So it's better to run it isolated.
+ *
+ * @group isolatedProcess
+ */
 class ModuleTest extends TestCase
 {
     public static function setUpBeforeClass(): void

@@ -38,6 +38,11 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\ResourceResetter;
 use Tools;
 
+/**
+ * These tests install and uninstalls modules causing the cache to be cleared. So it's better to run it isolated.
+ *
+ * @group isolatedProcess
+ */
 class ModuleManagerBuilderTest extends KernelTestCase
 {
     /**
