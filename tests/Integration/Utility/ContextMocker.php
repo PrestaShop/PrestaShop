@@ -144,7 +144,12 @@ class ContextMocker
     {
         Context::setInstanceForTesting($this->contextBackup);
         LegacyContext::setInstanceForTesting($this->contextBackup);
-        Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
+        // If a shop context was previously reset it, if not rest shop context
+        if (Context::getContext()->shop && Context::getContext()->shop->id) {
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
+        } else {
+            Shop::resetContext();
+        }
         Module::setContextInstanceForTesting($this->contextBackup);
     }
 }

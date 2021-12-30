@@ -92,7 +92,7 @@ class ContextCore
     /** @var Tab */
     public $tab;
 
-    /** @var Shop */
+    /** @var Shop|null */
     public $shop;
 
     /** @var Shop */
