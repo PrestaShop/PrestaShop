@@ -71,6 +71,7 @@ class ResourceResetter
      */
     public function backupImages(): void
     {
+        $this->filesystem->remove($this->getBackupTestImgDir());
         $this->filesystem->mirror(_PS_IMG_DIR_, $this->getBackupTestImgDir(), null, ['delete' => true]);
     }
 
@@ -79,6 +80,7 @@ class ResourceResetter
      */
     public function backupDownloads(): void
     {
+        $this->filesystem->remove($this->getBackupTestDownloadsDir());
         $this->filesystem->mirror(_PS_DOWNLOAD_DIR_, $this->getBackupTestDownloadsDir(), null, ['delete' => true]);
     }
 
@@ -87,7 +89,7 @@ class ResourceResetter
      */
     public function backupTestModules(): void
     {
-        echo sprintf('Backup modules from %s to %s%s', static::TEST_MODULES_DIR, $this->getBackupTestModulesDir(), PHP_EOL);
+        $this->filesystem->remove($this->getBackupTestModulesDir());
         $this->filesystem->mirror(static::TEST_MODULES_DIR, $this->getBackupTestModulesDir(), null, ['delete' => true]);
     }
 
