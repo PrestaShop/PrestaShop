@@ -34,6 +34,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Tests\Integration\Core\Form\IdentifiableObject\Handler\FormHandlerChecker;
 use Tests\Integration\PrestaShopBundle\Controller\FormGridControllerTestCase;
 use Tests\Integration\PrestaShopBundle\Controller\TestEntityDTO;
+use Tests\Resources\ProductResetter;
 
 class ProductControllerTest extends FormGridControllerTestCase
 {
@@ -45,6 +46,18 @@ class ProductControllerTest extends FormGridControllerTestCase
      * @var bool
      */
     private $changedProductFeatureFlag = false;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        ProductResetter::resetProducts();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        ProductResetter::resetProducts();
+    }
 
     public function setUp(): void
     {

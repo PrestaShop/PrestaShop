@@ -55,6 +55,8 @@ class StockManagementControllerTest extends ApiTestCase
     private static function restoreDatabase(): void
     {
         DatabaseDump::restoreTables([
+            'product',
+            'product_attribute',
             'stock_available',
             'stock_mvt',
         ]);
