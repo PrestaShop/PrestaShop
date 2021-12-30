@@ -34,8 +34,6 @@ use Employee;
 use EmployeeSession;
 use Shop;
 use PhpEncryption;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use ReflectionClass;
 
 abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
 {
@@ -88,13 +86,13 @@ abstract class AbstractEndpointAdminTest extends AbstractEndpointTest
      */
     private function initContainerInstance()
     {
-        $kernel = new AppKernel('test', true);
-        $kernel->boot();
+        $newKernel = new AppKernel('test', true);
+        $newKernel->boot();
 
-        $reflectedClass = new ReflectionClass(SymfonyContainer::class);
-        $instanceProperty = $reflectedClass->getProperty('instance');
-        $instanceProperty->setAccessible(true);
-        $instanceProperty->setValue($kernel->getContainer());
-        $instanceProperty->setAccessible(false);
+        // Make kernel accessible for SymfonyContainer
+        global $kernel;
+        $kernel = $newKernel;
+
+        Context::getContext()->container = $kernel->getContainer();
     }
 }
