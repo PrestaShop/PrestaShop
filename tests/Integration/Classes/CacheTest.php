@@ -54,6 +54,7 @@ class CacheTest extends TestCase
     protected function tearDown(): void
     {
         $this->cacheArray = [];
+        Cache::deleteTestingInstance();
     }
 
     public function getFromArray()
