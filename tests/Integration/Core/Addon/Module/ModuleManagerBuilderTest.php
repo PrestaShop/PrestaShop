@@ -107,7 +107,6 @@ class ModuleManagerBuilderTest extends KernelTestCase
         // Global var for SymfonyContainer which needs to be reset to use the new kernel
         global $kernel;
         $kernel = self::$kernel;
-        SymfonyContainer::resetStaticCache();
 
         Context::getContext()->employee = new Employee(1);
 
