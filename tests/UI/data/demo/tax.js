@@ -5,4 +5,10 @@ module.exports = {
     rate: 20,
     enabled: true,
   },
+  VatUkTax: {
+    id: 15,
+    name: 'VAT UK 20%',
+    rate: 20,
+    enabled: true,
+  },
 };
