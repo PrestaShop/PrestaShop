@@ -1255,7 +1255,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
+        // You can override the default timeout with an env var like this
+        // PACK_DOWNLOAD_TIMEOUT=60 php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml
+        $packDownloadTimeout = (int) getenv('PACK_DOWNLOAD_TIMEOUT') ?: static::PACK_DOWNLOAD_TIMEOUT;
+        $content = Tools::file_get_contents($url, false, null, $packDownloadTimeout);
 
         if (empty($content)) {
             $errors[] = Context::getContext()->getTranslator()->trans('Language pack unavailable.', [], 'Admin.International.Notification') . ' ' . $url;
