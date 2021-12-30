@@ -28,26 +28,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller\Api;
 
-use AdminController;
 use Context;
-use Currency;
-use Employee;
-use Language;
-use Link;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
-use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 abstract class ApiTestCase extends WebTestCase
 {
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
+    use ContextMockerTrait;
 
     /**
      * @var Client|null
@@ -55,158 +45,34 @@ abstract class ApiTestCase extends WebTestCase
     protected static $client;
 
     /**
+     * @var ContainerInterface|null
+     */
+    protected static $container;
+
+    /**
      * @var Context
      */
     protected $oldContext;
 
     /**
-     * @var ContainerInterface|null
+     * @var RouterInterface
      */
-    protected static $container;
+    protected $router;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::mockContext();
+    }
 
     protected function setUp(): void
     {
         parent::setUp();
-
         self::$kernel = static::bootKernel();
-        self::$container = self::$kernel->getContainer();
-
+        self::$client = self::$kernel->getContainer()->get('test.client');
+        self::$client->setServerParameters([]);
+        self::$container = self::$client->getContainer();
         $this->router = self::$container->get('router');
-
-        $this->oldContext = Context::getContext();
-        $legacyContextMock = $this->mockContextAdapter();
-        self::$container->set('prestashop.adapter.legacy.context', $legacyContextMock);
-
-        $client = self::$kernel->getContainer()->get('test.client');
-        $client->setServerParameters([]);
-
-        self::$client = $client;
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-
-        self::$container = null;
-        self::$client = null;
-        Context::setInstanceForTesting($this->oldContext);
-    }
-
-    protected function mockContextAdapter(): LegacyContext
-    {
-        $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
-            ->setMethods([
-                'getContext',
-                'getEmployeeLanguageIso',
-                'getEmployeeCurrency',
-                'getRootUrl',
-                'getLanguage',
-            ])
-            ->getMock();
-
-        $contextMock = $this->mockContext();
-        $legacyContextMock->expects($this->any())->method('getContext')->willReturn($contextMock);
-
-        $legacyContextMock->method('getEmployeeLanguageIso')->willReturn(null);
-        $legacyContextMock->method('getEmployeeCurrency')->willReturn(null);
-        $legacyContextMock->method('getRootUrl')->willReturn(null);
-        $legacyContextMock->method('getLanguage')->willReturn(new Language());
-
-        return $legacyContextMock;
-    }
-
-    private function mockContext(): Context
-    {
-        $contextMock = $this->getMockBuilder(Context::class)->getMock();
-
-        $employeeMock = $this->mockEmployee();
-        $contextMock->employee = $employeeMock;
-
-        $languageMock = $this->mockLanguage();
-        $contextMock->language = $languageMock;
-
-        $linkMock = $this->mockLink();
-        $contextMock->link = $linkMock;
-
-        $shopMock = $this->mockShop();
-        $contextMock->shop = $shopMock;
-
-        $controllerMock = $this->mockController();
-        $contextMock->controller = $controllerMock;
-
-        $contextMock->currency = new Currency();
-        $contextMock->currency->sign = '$';
-
-        Context::setInstanceForTesting($contextMock);
-
-        return $contextMock;
-    }
-
-    private function mockEmployee(): Employee
-    {
-        $employeeMock = $this->getMockBuilder(Employee::class)->getMock();
-        $employeeMock->id_lang = 1;
-
-        return $employeeMock;
-    }
-
-    private function mockLanguage(): Language
-    {
-        $languageMock = $this->getMockBuilder(Language::class)
-            ->getMock();
-
-        $languageMock->iso_code = 'en-US';
-
-        return $languageMock;
-    }
-
-    private function mockLink(): Link
-    {
-        return $this->getMockBuilder(Link::class)->getMock();
-    }
-
-    private function mockShop(): Shop
-    {
-        $shopMock = $this->getMockBuilder(Shop::class)
-            ->setMethods([
-                'getContextualShopId',
-                'getCategory',
-                'getContextType',
-                'getGroup',
-            ])
-            ->getMock();
-
-        $shopMock->method('getContextualShopId')->willReturn(1);
-        $shopMock->method('getCategory')->willReturn(1);
-        $shopMock->method('getContextType')->willReturn(Shop::CONTEXT_SHOP);
-        $shopMock->id = 1;
-
-        $themeMock = $this->getMockBuilder(Theme::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getName'])
-            ->getMock()
-        ;
-        $themeMock->method('getName')->willReturn('classic');
-
-        $shopMock->theme = $themeMock;
-
-        $shopGroupMock = $this->getMockBuilder('\ShopGroup')->getMock();
-
-        $shopGroupMock->id = 1;
-        $shopMock->method('getGroup')->willReturn($shopGroupMock);
-
-        return $shopMock;
-    }
-
-    private function mockController(): AdminController
-    {
-        $controller = $this->getMockBuilder(AdminController::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $controller->controller_type = 'admin';
-
-        return $controller;
     }
 
     /**
