@@ -30,6 +30,7 @@ use Cache;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 /**
  * These tests install and uninstalls modules causing the cache to be cleared. So it's better to run it isolated.
@@ -38,9 +39,12 @@ use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
  */
 class ModuleTest extends TestCase
 {
+    use ContextMockerTrait;
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        static::mockContext();
         Module::resetStaticCache();
     }
 

@@ -117,7 +117,8 @@ class ContextMocker
         $context->cookie = new Cookie('mycookie');
         $context->country = new Country((int) Configuration::get('PS_LANG_DEFAULT'));
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
-        $context->employee = new Employee();
+        // Use super admin employee by default
+        $context->employee = new Employee(1);
         $context->employee->id_lang = $context->language->id;
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
