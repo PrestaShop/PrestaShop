@@ -50,6 +50,10 @@ class StockManagerTest extends TestCase
      */
     private $container;
     /**
+     * @var Container
+     */
+    private $savedContainer;
+    /**
      * @var PackItemsManager
      */
     private $packItemsManager;
@@ -59,6 +63,7 @@ class StockManagerTest extends TestCase
         parent::setUp();
 
         $this->configuration = $this->createMock(ConfigurationInterface::class);
+        $this->savedContainer = ServiceLocator::getContainer();
 
         $this->container = new Container();
         $this->container->bind(
@@ -66,6 +71,12 @@ class StockManagerTest extends TestCase
             $this->configuration
         );
         ServiceLocator::setServiceContainerInstance($this->container);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        ServiceLocator::setServiceContainerInstance($this->savedContainer);
     }
 
     /**
