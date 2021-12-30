@@ -81,15 +81,34 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function reboot($warmupDir)
+    public function boot()
     {
-        parent::reboot($warmupDir);
+        parent::boot();
+        $this->cleanKernelReferences();
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function shutdown()
+    {
+        parent::shutdown();
+        $this->cleanKernelReferences();
+    }
+
+    /**
+     * The kernel and especially its container is cached in several PrestaShop classes, services or components So we
+     * need to clear this cache everytime the kernel is shutdown, rebooted, reset, ...
+     *
+     * This is very important in test environment to avoid invalid mocks to stay accessible and used, but it's also
+     * important because we may need to reboot the kernel (during module installation, after currency is installed
+     * to reset CLDR cache, ...)
+     */
+    protected function cleanKernelReferences(): void
+    {
         // We have classes to access the container from legacy code, they need to be cleaned after reboot
         Context::getContext()->container = null;
         SymfonyContainer::resetStaticCache();
-        // @todo: do not want to risk right now but maybe Context::getContext()->controller->container needs refreshing
-        //        but only if it is a Symfony container (do not override front legacy container)
     }
 
     /**
