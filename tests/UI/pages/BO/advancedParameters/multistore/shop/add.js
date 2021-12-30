@@ -40,7 +40,7 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForNavigation(page, this.saveButton, 'networkidle', 60000);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }

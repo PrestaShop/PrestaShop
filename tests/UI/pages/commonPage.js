@@ -290,12 +290,13 @@ class CommonPage {
    * Go to Page and wait for navigation
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element
-   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
+   * @param waitUntil {'load'|'domcontentloaded'|'networkidle'|'commit'} The event to wait after click
+   * @param timeout {number} Time to wait for navigation
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle') {
+  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle', timeout = 30000) {
     await Promise.all([
-      page.waitForNavigation({waitUntil}),
+      page.waitForNavigation({waitUntil, timeout}),
       page.click(selector),
     ]);
   }
