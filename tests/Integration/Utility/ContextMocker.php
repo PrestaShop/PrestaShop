@@ -37,6 +37,7 @@ use Cookie;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use Link;
 use Module;
@@ -114,8 +115,10 @@ class ContextMocker
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = new Customer();
         $context->cookie = new Cookie('mycookie');
-        $context->country = new Country();
+        $context->country = new Country((int) Configuration::get('PS_LANG_DEFAULT'));
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        $context->employee = new Employee();
+        $context->employee->id_lang = $context->language->id;
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
