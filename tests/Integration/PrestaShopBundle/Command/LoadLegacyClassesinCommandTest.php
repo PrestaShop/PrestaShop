@@ -37,31 +37,20 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
-use Tests\Integration\Utility\ContextMockerTrait;
 use TypeError;
 
+/**
+ * @isolatedProcess
+ */
 class LoadLegacyClassesinCommandTest extends KernelTestCase
 {
-    use ContextMockerTrait;
-
     private $previousErrorReportingLevel;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-        static::mockContext();
-    }
 
     public function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
         $this->previousErrorReportingLevel = error_reporting(E_WARNING);
-
-        // We force the test to fail by unsetting currency, this was not necessary in this test initially because it was
-        // run in an isolated process, now that all tests are in a common process the context may have been initialized
-        // by previous tests
-        Context::getContext()->currency = null;
     }
 
     public function testLoadLegacyCommandWithoutContextFails()
