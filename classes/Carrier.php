@@ -327,7 +327,7 @@ class CarrierCore extends ObjectModel
      * @param float $total_weight Total weight
      * @param int $id_zone Zone ID
      *
-     * @return float|bool Delivery price, false if not possible
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
@@ -349,7 +349,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_weight = Hook::exec('actionDeliveryPriceByWeight', ['id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_weight)) {
-            self::$price_by_weight2[$cache_key] = $price_by_weight;
+            self::$price_by_weight2[$cache_key] = true;
         }
 
         return self::$price_by_weight2[$cache_key];
@@ -433,7 +433,7 @@ class CarrierCore extends ObjectModel
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
      *
-     * @return float Delivery price
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
     {
@@ -459,7 +459,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_price)) {
-            self::$price_by_price2[$cache_key] = $price_by_price;
+            self::$price_by_price2[$cache_key] = true;
         }
 
         return self::$price_by_price2[$cache_key];
