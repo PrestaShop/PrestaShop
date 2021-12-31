@@ -2,7 +2,7 @@ admin_image_settings_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::indexAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages
 
@@ -10,7 +10,7 @@ admin_image_settings_save_options:
   path: /save-options
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:saveOptions'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::saveOptionsAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:submitOptionsimage_type
 
@@ -18,7 +18,7 @@ admin_image_settings_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:search'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::searchAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:submitFilterimage_type
 
@@ -26,7 +26,7 @@ admin_image_settings_regenerate_thumbnails:
   path: /regenerate-thumbnails
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:regenerateThumbnails'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::regenerateThumbnailsAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:submitRegenerateimage_type
 
@@ -34,7 +34,7 @@ admin_image_settings_move_images:
   path: /move-images
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:moveImages'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::moveImagesAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:submitMoveImagesimage_type
 
@@ -42,7 +42,7 @@ admin_image_settings_create:
   path: /new
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::createAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:addimage_type
 
@@ -50,7 +50,7 @@ admin_image_settings_edit:
   path: /{imageTypeId}/edit
   methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::editAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:updateimage_type
     _legacy_parameters:
@@ -62,7 +62,7 @@ admin_image_settings_delete:
   path: /{imageTypeId}/delete
   methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::deleteAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:deleteimage_type
     _legacy_parameters:
@@ -74,6 +74,6 @@ admin_image_settings_bulk_delete:
   path: /bulk-delete
   methods: [ POST, DELETE ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Improve\Design\ImageSettings:bulkDelete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Design\ImageSettingsController::bulkDeleteAction'
     _legacy_controller: AdminImages
     _legacy_link: AdminImages:submitBulkdeleteimage_type
