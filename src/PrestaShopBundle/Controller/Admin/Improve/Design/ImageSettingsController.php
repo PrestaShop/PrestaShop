@@ -87,7 +87,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * Process image generation options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_image_settings_index"
      * )
      *
@@ -120,7 +120,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
     /**
      * Provides filters functionality.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -143,7 +143,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * Regenerate image thumbnails.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_image_settings_index"
      * )
      *
@@ -172,7 +172,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
      * Moves images from old file system to new.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller'))",
      *     redirectRoute="admin_image_settings_index"
      * )
      *
