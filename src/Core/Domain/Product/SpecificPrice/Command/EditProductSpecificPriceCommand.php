@@ -66,7 +66,7 @@ class EditProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var FixedPrice|null
+     * @var FixedPriceInterface|null
      */
     private $fixedPrice;
 
