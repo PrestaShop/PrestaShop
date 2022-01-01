@@ -62,11 +62,11 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
             'name' => $editableImageType->getName(),
             'width' => $editableImageType->getWidth(),
             'height' => $editableImageType->getHeight(),
-            'products' => $editableImageType->isProductsEnabled(),
-            'categories' => $editableImageType->isCategoriesEnabled(),
-            'manufacturers' => $editableImageType->isManufacturersEnabled(),
-            'suppliers' => $editableImageType->isSuppliersEnabled(),
-            'stores' => $editableImageType->isStoresEnabled(),
+            'products_enabled' => $editableImageType->isProductsEnabled(),
+            'categories_enabled' => $editableImageType->isCategoriesEnabled(),
+            'manufacturers_enabled' => $editableImageType->isManufacturersEnabled(),
+            'suppliers_enabled' => $editableImageType->isSuppliersEnabled(),
+            'stores_enabled' => $editableImageType->isStoresEnabled(),
         ];
     }
 
@@ -76,11 +76,11 @@ final class ImageTypeFormDataProvider implements FormDataProviderInterface
     public function getDefaultData(): array
     {
         return [
-            'products' => false,
-            'categories' => false,
-            'manufacturers' => false,
-            'suppliers' => false,
-            'stores' => false,
+            'products_enabled' => false,
+            'categories_enabled' => false,
+            'manufacturers_enabled' => false,
+            'suppliers_enabled' => false,
+            'stores_enabled' => false,
         ];
     }
 }
