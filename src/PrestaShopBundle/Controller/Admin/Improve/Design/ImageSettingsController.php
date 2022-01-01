@@ -162,6 +162,11 @@ class ImageSettingsController extends FrameworkBundleAdminController
 
             if (!empty($errors)) {
                 $this->flashErrors($errors);
+            } else {
+                $this->addFlash(
+                    'success',
+                    $this->trans('The thumbnails were successfully regenerated.','Admin.Notifications.Success')
+                );
             }
         }
 
@@ -183,6 +188,11 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $errors = $this->get('prestashop.adapter.image_settings.helper')->moveImagesToNewFileSystem();
         if (count($errors)) {
             $this->flashErrors($errors);
+        } else {
+            $this->addFlash(
+                'success',
+                $this->trans('The selected images have successfully been moved.', 'Admin.Notifications.Success')
+            );
         }
 
         return $this->redirectToRoute('admin_image_settings_index');
