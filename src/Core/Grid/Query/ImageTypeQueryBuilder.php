@@ -64,7 +64,8 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $qb = $this->getImageTypeQueryBuilder($searchCriteria)
             ->addSelect('it.id_image_type, it.name, it.width, it.height')
-            ->addSelect('it.products, it.categories, it.manufacturers, it.suppliers, it.stores');
+            ->addSelect('it.products AS products_enabled, it.categories AS categories_enabled')
+            ->addSelect('it.manufacturers AS manufacturers_enabled, it.suppliers AS suppliers_enabled, it.stores AS stores_enabled');
 
         $this->criteriaApplicator
             ->applySorting($searchCriteria, $qb)
@@ -105,11 +106,19 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
             'name',
             'width',
             'height',
-            'products',
-            'categories',
-            'manufacturers',
-            'suppliers',
-            'stores',
+            'products_enabled',
+            'categories_enabled',
+            'manufacturers_enabled',
+            'suppliers_enabled',
+            'stores_enabled',
+        ];
+
+        $fieldOverwrites = [
+            'products_enabled' => 'products',
+            'categories_enabled' => 'categories',
+            'manufacturers_enabled' => 'manufacturers',
+            'suppliers_enabled' => 'suppliers',
+            'stores_enabled' => 'stores',
         ];
 
         foreach ($filters as $filterName => $filterValue) {
@@ -120,6 +129,15 @@ class ImageTypeQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('name' === $filterName) {
                 $qb->andWhere('it.name LIKE :' . $filterName);
                 $qb->set($filterName, '%' . $filterValue . '%');
+
+                continue;
+            }
+
+            if (array_key_exists($filterName, $fieldOverwrites)) {
+                $qb->andWhere('it.' . $fieldOverwrites[$filterName] . ' = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
+
+                continue;
             }
 
             $qb->andWhere('it.' . $filterName . ' = :' . $filterName);
