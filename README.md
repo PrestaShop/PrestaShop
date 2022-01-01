@@ -45,7 +45,7 @@ Installation
 
 If you downloaded the source code from GitHub, read our guide on [installing PrestaShop for development][install-guide-dev]. If you intend to install a production shop, make sure to download the latest version from [our download page][download], then read the [install guide for users][install-guide].
 
-Or Run without installation [![TeamCode try-it-now](https://static01.teamcode.com/badge/demo.svg)](https://www.teamcode.com/tin/clone?applicationId=275739756727967744)
+Or Run without installation [![TeamCode try-it-now](https://static01.teamcode.com/badge/run-in-cloud-en.svg)](https://www.teamcode.com/tin/clone?applicationId=275739756727967744)
 
 Docker compose
 --------
