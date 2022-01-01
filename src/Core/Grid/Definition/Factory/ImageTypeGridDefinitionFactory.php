@@ -280,7 +280,7 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions(): RowActionCollection
+    protected function getRowActions(): RowActionCollection
     {
         $rowActions = new RowActionCollection();
         $rowActions
