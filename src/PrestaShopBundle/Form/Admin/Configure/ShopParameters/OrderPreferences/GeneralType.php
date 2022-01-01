@@ -102,7 +102,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('autoremove_not_valid_cartrules', SwitchType::class, [
                 'required' => false,
-                'label' => $this->trans('Autoremove cart rules not valid from cart', 'Admin.Shopparameters.Feature'),
+                'label' => $this->trans('Automatically remove invalid promo codes from the cart', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans('Automatically removes expired or no valid cart rules from cart.', 'Admin.Shopparameters.Help'),
             ]);
 
