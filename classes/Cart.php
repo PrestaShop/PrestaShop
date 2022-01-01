@@ -491,7 +491,7 @@ class CartCore extends ObjectModel
         }
         if ($autoAdd) {
             $cache_key = 'Cart::getCartRules_autoRemoveFromCart';
-            if (!Cache::isStored($cache_key)) {
+            if (Configuration::get('PS_AUTOREMOVE_NOT_VALID_CARTRULES') && !Cache::isStored($cache_key)) {
                 CartRule::autoRemoveFromCart($virtual_context, $useOrderPrices, false);
                 Cache::store($cache_key, true);
             }
