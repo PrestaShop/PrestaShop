@@ -60,11 +60,11 @@ class ImageTypeFormDataHandler implements FormDataHandlerInterface
             (string) $data['name'],
             (int) $data['width'],
             (int) $data['height'],
-            (bool) $data['products'],
-            (bool) $data['categories'],
-            (bool) $data['manufacturers'],
-            (bool) $data['suppliers'],
-            (bool) $data['stores']
+            (bool) $data['products_enabled'],
+            (bool) $data['categories_enabled'],
+            (bool) $data['manufacturers_enabled'],
+            (bool) $data['suppliers_enabled'],
+            (bool) $data['stores_enabled']
         );
 
         /** @var ImageTypeId $imageTypeId */
@@ -82,11 +82,11 @@ class ImageTypeFormDataHandler implements FormDataHandlerInterface
             ->setName((string) $data['name'])
             ->setWidth((int) $data['width'])
             ->setHeight((int) $data['height'])
-            ->setProductsEnabled((bool) $data['products'])
-            ->setCategoriesEnabled((bool) $data['categories'])
-            ->setManufacturersEnabled((bool) $data['manufacturers'])
-            ->setSuppliersEnabled((bool) $data['suppliers'])
-            ->setStoresEnabled((bool) $data['stores']);
+            ->setProductsEnabled((bool) $data['products_enabled'])
+            ->setCategoriesEnabled((bool) $data['categories_enabled'])
+            ->setManufacturersEnabled((bool) $data['manufacturers_enabled'])
+            ->setSuppliersEnabled((bool) $data['suppliers_enabled'])
+            ->setStoresEnabled((bool) $data['stores_enabled']);
 
         $this->commandBus->handle($command);
     }

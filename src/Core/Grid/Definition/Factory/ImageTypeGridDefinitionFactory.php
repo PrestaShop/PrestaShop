@@ -111,42 +111,42 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new IconBooleanColumn('products'))
+                (new IconBooleanColumn('products_enabled'))
                     ->setName($this->trans('Products', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'products',
+                        'field' => 'products_enabled',
                         'clickable' => true,
                     ])
             )
             ->add(
-                (new IconBooleanColumn('categories'))
+                (new IconBooleanColumn('categories_enabled'))
                     ->setName($this->trans('Categories', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'categories',
+                        'field' => 'categories_enabled',
                         'clickable' => true,
                     ])
             )
             ->add(
-                (new IconBooleanColumn('manufacturers'))
+                (new IconBooleanColumn('manufacturers_enabled'))
                     ->setName($this->trans('Brands', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'manufacturers',
+                        'field' => 'manufacturers_enabled',
                         'clickable' => true,
                     ])
             )
             ->add(
-                (new IconBooleanColumn('suppliers'))
+                (new IconBooleanColumn('suppliers_enabled'))
                     ->setName($this->trans('Suppliers', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'suppliers',
+                        'field' => 'suppliers_enabled',
                         'clickable' => true,
                     ])
             )
             ->add(
-                (new IconBooleanColumn('stores'))
+                (new IconBooleanColumn('stores_enabled'))
                     ->setName($this->trans('Stores', [], 'Admin.Global'))
                     ->setOptions([
-                        'field' => 'stores',
+                        'field' => 'stores_enabled',
                         'clickable' => true,
                     ])
             )
@@ -193,36 +193,36 @@ class ImageTypeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new Filter('products', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('products')
+                (new Filter('products_enabled', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('products_enabled')
                     ->setTypeOptions([
                         'required' => false,
                     ])
             )
             ->add(
-                (new Filter('categories', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('categories')
+                (new Filter('categories_enabled', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('categories_enabled')
                     ->setTypeOptions([
                         'required' => false,
                     ])
             )
             ->add(
-                (new Filter('manufacturers', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('manufacturers')
+                (new Filter('manufacturers_enabled', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('manufacturers_enabled')
                     ->setTypeOptions([
                         'required' => false,
                     ])
             )
             ->add(
-                (new Filter('suppliers', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('suppliers')
+                (new Filter('suppliers_enabled', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('suppliers_enabled')
                     ->setTypeOptions([
                         'required' => false,
                     ])
             )
             ->add(
-                (new Filter('stores', YesAndNoChoiceType::class))
-                    ->setAssociatedColumn('stores')
+                (new Filter('stores_enabled', YesAndNoChoiceType::class))
+                    ->setAssociatedColumn('stores_enabled')
                     ->setTypeOptions([
                         'required' => false,
                     ])

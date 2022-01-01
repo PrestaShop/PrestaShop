@@ -118,27 +118,27 @@ class ImageTypeType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('products', SwitchType::class, [
+            ->add('products_enabled', SwitchType::class, [
                 'label' => $this->trans('Products', 'Admin.Global'),
                 'help' => $this->trans('This type will be used for Product images.', 'Admin.Design.Help'),
                 'required' => false,
             ])
-            ->add('categories', SwitchType::class, [
+            ->add('categories_enabled', SwitchType::class, [
                 'label' => $this->trans('Categories', 'Admin.Global'),
                 'help' => $this->trans('This type will be used for Category images.', 'Admin.Design.Help'),
                 'required' => false,
             ])
-            ->add('manufacturers', SwitchType::class, [
+            ->add('manufacturers_enabled', SwitchType::class, [
                 'label' => $this->trans('Brands', 'Admin.Global'),
                 'help' => $this->trans('This type will be used for Brand images.', 'Admin.Design.Help'),
                 'required' => false,
             ])
-            ->add('suppliers', SwitchType::class, [
+            ->add('suppliers_enabled', SwitchType::class, [
                 'label' => $this->trans('Suppliers', 'Admin.Global'),
                 'help' => $this->trans('This type will be used for Supplier images.', 'Admin.Design.Help'),
                 'required' => false,
             ])
-            ->add('stores', SwitchType::class, [
+            ->add('stores_enabled', SwitchType::class, [
                 'label' => $this->trans('Stores', 'Admin.Global'),
                 'help' => $this->trans('This type will be used for Store images.', 'Admin.Design.Help'),
                 'required' => false,
