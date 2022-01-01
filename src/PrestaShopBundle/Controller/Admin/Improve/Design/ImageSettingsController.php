@@ -102,7 +102,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $generationSettingsForm = $generationSettingsFormHandler->getForm();
         $generationSettingsForm->handleRequest($request);
 
-        if ($generationSettingsForm->isSubmitted()) {
+        if ($generationSettingsForm->isSubmitted() && $generationSettingsForm->isValid()) {
             $errors = $generationSettingsFormHandler->save($generationSettingsForm->getData());
 
             if (empty($errors)) {
@@ -156,7 +156,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
         $form = $this->createForm(ThumbnailRegenerationType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $errors = $this->get('prestashop.adapter.image_type.thumbnail_regenerator')->regenerateThumbnails($data);
 
