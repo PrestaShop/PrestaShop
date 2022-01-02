@@ -31,10 +31,9 @@ namespace Tests\Integration\Core\Addon\Module;
 use Context;
 use Employee;
 use Module;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Resources\ResourceResetter;
 use Tools;
 
@@ -43,7 +42,7 @@ use Tools;
  *
  * @group isolatedProcess
  */
-class ModuleManagerBuilderTest extends KernelTestCase
+class ModuleManagerBuilderTest extends TestCase
 {
     /**
      * @var ModuleManagerBuilder
@@ -61,7 +60,6 @@ class ModuleManagerBuilderTest extends KernelTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        ModuleManagerBuilder::resetStaticCache();
 
         $dirResources = dirname(__DIR__, 4);
         if (is_dir($dirResources . '/Resources/modules_tests/pscsx3241')) {
@@ -98,20 +96,11 @@ class ModuleManagerBuilderTest extends KernelTestCase
 
         // Reset modules folder
         (new ResourceResetter())->resetTestModules();
-
-        ModuleManagerBuilder::resetStaticCache();
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Init Symfony for translator component
-        self::bootKernel();
-
-        // Global var for SymfonyContainer which needs to be reset to use the new kernel
-        global $kernel;
-        $kernel = self::$kernel;
 
         Context::getContext()->employee = new Employee(1);
 

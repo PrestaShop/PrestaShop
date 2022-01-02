@@ -58,17 +58,17 @@ class ModuleManagerBuilder
     /**
      * Singleton of ModuleRepository.
      *
-     * @var ModuleRepository|null
+     * @var ModuleRepository
      */
     public static $modulesRepository = null;
     /**
      * Singleton of ModuleManager.
      *
-     * @var ModuleManager|null
+     * @var ModuleManager
      */
     public static $moduleManager = null;
     public static $adminModuleDataProvider = null;
-    public static $lecacyContext = null;
+    public static $lecacyContext;
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
@@ -94,36 +94,6 @@ class ModuleManagerBuilder
         }
 
         return self::$instance;
-    }
-
-    public static function resetStaticCache(): void
-    {
-        if (static::$modulesRepository) {
-            static::$modulesRepository->clearCache();
-        }
-        static::$modulesRepository = null;
-
-        if (static::$adminModuleDataProvider) {
-            static::$adminModuleDataProvider->clearCatalogCache();
-        }
-        static::$adminModuleDataProvider = null;
-
-        if (static::$cacheProvider) {
-            static::$cacheProvider->deleteAll();
-        }
-        static::$cacheProvider = null;
-
-        static::$moduleManager = null;
-        static::$lecacyContext = null;
-        static::$legacyLogger = null;
-        static::$moduleDataProvider = null;
-        static::$moduleDataUpdater = null;
-        static::$moduleZipManager = null;
-        static::$translator = null;
-        static::$addonsDataProvider = null;
-        static::$categoriesProvider = null;
-
-        static::$instance = null;
     }
 
     /**
