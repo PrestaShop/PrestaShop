@@ -32,8 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 
 /**
  * Holds valid specific price priority values
- *
- * @todo: there is more common Domain/SpecificPrice directory, probably this VO belongs there (as its not attached to product and may be reused in general settings to)
  */
 class PriorityList
 {
