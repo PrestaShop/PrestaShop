@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Resources;
 
+use Configuration;
 use Db;
 use Language;
 
@@ -46,6 +47,9 @@ class LanguageResetter
 
         // We still restore lang table to reset increment ID
         DatabaseDump::restoreTables(['lang', 'lang_shop']);
+
+        // Reset default language
+        Configuration::updateValue('PS_LANG_DEFAULT', 1);
 
         // Restore static cache
         Language::resetStaticCache();

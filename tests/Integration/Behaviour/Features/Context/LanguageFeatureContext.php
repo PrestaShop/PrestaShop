@@ -52,9 +52,6 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
     private static function restoreLanguagesTables(): void
     {
         LanguageResetter::resetLanguages();
-
-        // Reset default language
-        Configuration::updateValue('PS_LANG_DEFAULT', 1);
     }
 
     /**
