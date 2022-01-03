@@ -58,7 +58,7 @@ class PriorityListType extends AbstractType
 
         $priority = 0;
         foreach ($choices as $choice) {
-            $builder->add($priority, ChoiceType::class, [
+            $builder->add((string) $priority, ChoiceType::class, [
                 'choices' => $choices,
                 'label' => false,
                 'placeholder' => false,
