@@ -102,6 +102,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $shopMock->id = 1;
+        $shopMock->id_category = 1;
         $shopMock->theme = new Theme([
             'name' => 'classic',
             'directory' => _PS_ROOT_DIR_ . '/themes/',
