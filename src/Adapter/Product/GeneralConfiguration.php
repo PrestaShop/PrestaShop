@@ -27,7 +27,9 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -40,9 +42,21 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
-    {
+    /**
+     * @var SpecificPricePriorityUpdater
+     */
+    private $specificPricePriorityUpdater;
+
+    /**
+     * @param Configuration $configuration
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     */
+    public function __construct(
+        Configuration $configuration,
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+    ) {
         $this->configuration = $configuration;
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
     }
 
     /**
@@ -78,6 +92,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
             $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
             $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
+            $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
         }
 
         return $errors;
@@ -97,6 +112,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'quantity_discount',
             'force_friendly_url',
             'default_status',
+            'specific_price_priorities',
         ]);
 
         $resolver->resolve($configuration);
