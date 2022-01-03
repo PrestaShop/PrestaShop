@@ -41,9 +41,9 @@
           <tr>
             <td>
               {if !$product.is_virtual}
-              <span id="_desktop_product_line_{$product.id_order_detail}">
-                <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
-              </span>
+                <span id="_desktop_product_line_{$product.id_order_detail}">
+                  <input type="checkbox" id="cb_{$product.id_order_detail}" name="ids_order_detail[{$product.id_order_detail}]" value="{$product.id_order_detail}">
+                </span>
               {/if}
             </td>
             <td>
@@ -116,7 +116,7 @@
                 </div>
                 {/if}
             </td>
-              <td class="text-xs-right">{if !$product.is_virtual}{$product.qty_returned}{/if}</td>
+            <td class="text-xs-right">{if !$product.is_virtual}{$product.qty_returned}{/if}</td>
             <td class="text-xs-right">{$product.price}</td>
             <td class="text-xs-right">{$product.total}</td>
           </tr>
