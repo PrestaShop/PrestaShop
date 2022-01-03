@@ -56,7 +56,7 @@ final class SpecificPricePriorityTypeChoiceProvider implements FormChoiceProvide
     public function getChoices()
     {
         return [
-            $this->translator->trans('Default priority settings', [], 'Admin.Catalog.Feature') => false,
+            $this->translator->trans('Use default priority settings', [], 'Admin.Catalog.Feature') => false,
             $this->translator->trans('Specific priority settings to this product', [], 'Admin.Catalog.Feature') => true,
         ];
     }
