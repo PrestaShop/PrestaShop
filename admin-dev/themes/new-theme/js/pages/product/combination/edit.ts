@@ -40,7 +40,7 @@ $(() => {
     'DeltaQuantityInput',
   ]);
 
-  const $productForm = $(window.parent.document.querySelector(ProductMap.productForm));
+  const $productForm = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
   const {eventEmitter} = window.prestashop.instance;
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
