@@ -137,7 +137,9 @@ class BackupController extends FrameworkBundleAdminController
      * Process backup options saving.
      *
      * @AdminSecurity(
-     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to update this.",
+     *          redirectRoute="admin_backups_index"
      * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
@@ -168,7 +170,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))",
+     *          message="You do not have permission to create this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @return RedirectResponse
@@ -206,7 +211,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to delete this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param string $deleteFileName
@@ -239,7 +247,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to delete this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
