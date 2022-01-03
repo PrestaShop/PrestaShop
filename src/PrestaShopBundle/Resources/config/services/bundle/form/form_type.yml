@@ -1565,6 +1565,7 @@ services:
     parent: 'form.type.translatable.aware'
     arguments:
       - '@prestashop.core.form.choice_provider.specific_price_priority_type_choice_provider'
+      - '@router'
     public: true
     tags:
       - { name: form.type }
