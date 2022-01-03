@@ -227,7 +227,7 @@ export default {
   },
   specificPrice: {
     priority: {
-      priorityListWrapper: '.js-specific-price-priority-list',
+      priorityListWrapper: '.specific-price-priority-list',
       priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][priority_type]"]',
     },
   },

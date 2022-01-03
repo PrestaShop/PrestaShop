@@ -68,6 +68,7 @@ class GeneralType extends TranslatorAwareType
             ->add('default_status', SwitchType::class)
             ->add('specific_price_priorities', PriorityListType::class, [
                 'required' => false,
+                'label' => false,
             ])
         ;
     }
