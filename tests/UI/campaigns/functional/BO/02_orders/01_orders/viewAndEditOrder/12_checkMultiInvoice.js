@@ -15,6 +15,8 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view');
+const productsPage = require('@pages/BO/catalog/products');
+const addProductPage = require('@pages/BO/catalog/products/add');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -23,6 +25,9 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const {Products} = require('@data/demo/products');
 const {Carriers} = require('@data/demo/carriers');
 
+// Import faker data
+const ProductFaker = require('@data/faker/product');
+
 const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkMultiInvoice';
 
 let browserContext;
@@ -30,7 +35,15 @@ let page;
 let filePath;
 
 let fileName = '';
-const newProductprice = 35.50;
+const newProductPrice = 35.50;
+
+// New standard product
+const product = new ProductFaker({
+  name: 'Out of stock not allowed',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: 20,
+});
 
 // New order by customer data
 const orderByCustomerData = {
@@ -50,9 +63,6 @@ Post-condition
  */
 
 describe('BO - Orders - View and edit order: Check multi invoice', async () => {
-  // Pre-condition - Create order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
-
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -66,6 +76,46 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
+
+  // Pre-condition - Create product
+  describe('Create new product', async function () {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of products', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersBeforeCreate', baseContext);
+
+      const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfProducts).to.be.above(0);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goToAddProductPage${index}`, baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
+
+      const createProductMessage = await addProductPage.createEditBasicProduct(page, product);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition - Create order by default customer
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // 1 - Go to view order page
   describe('Go to view order page', async () => {
@@ -110,69 +160,123 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     });
   });
 
-  // 2 - Check multi invoice
+// 2 - Check multi invoice
   describe('Check multi invoice', async () => {
-    it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+    describe('Create the first invoice', async () => {
+      it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const textResult = await viewOrderPage.updateOrderStatus(page, Statuses.paymentAccepted.status);
-      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+        const textResult = await viewOrderPage.updateOrderStatus(page, Statuses.paymentAccepted.status);
+        await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+      });
+
+      it('should get the invoice file name', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceNumber', baseContext);
+
+        fileName = await viewOrderPage.getFileName(page);
+        await expect(filePath).is.not.equal('');
+      });
     });
 
-    it('should get the invoice number', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getInvoiceNumber', baseContext);
+    describe('Create the second invoice', async () => {
+      it('should add the same ordered product and check the error message', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct2', baseContext);
 
-      fileName = await viewOrderPage.getFileName(page);
-      await expect(filePath).is.not.equal('');
+        await viewOrderPage.searchProduct(page, Products.demo_1.name);
+
+        const textResult = await viewOrderPage.addProductToCart(page);
+        await expect(textResult).to.contains(viewOrderPage.errorAddSameProductInInvoice(fileName));
+      });
+
+      it('should add the product to the cart and create a new invoice', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'addProductWithNewInvoice', baseContext);
+
+        await viewOrderPage.createNewInvoice(page);
+
+        const carrierName = await viewOrderPage.getNewInvoiceCarrierName(page);
+        await expect(carrierName).to.contains(`Carrier : ${Carriers.default.name}`);
+
+        const isSelected = await viewOrderPage.isFreeShippingSelected(page);
+        await expect(isSelected).to.be.false;
+
+        await viewOrderPage.updateProductPrice(page, newProductPrice);
+
+        const textResult = await viewOrderPage.addProductToCart(page, 1, true);
+        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+      });
+
+      it('should check that order total price is correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkTotalToPay', baseContext);
+
+        const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
+        await expect(totalPrice.toFixed(2)).to.equal((newProductPrice * 2).toFixed(2));
+      });
+
+      it('should check that products number is equal to 2', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+        await viewOrderPage.reloadPage(page);
+
+        const productCount = await viewOrderPage.getProductsNumber(page);
+        await expect(productCount).to.equal(2);
+      });
+
+      it('should check that invoices number is equal to 2', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
+
+        const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
+        await expect(documentsNumber).to.be.equal(2);
+      });
     });
 
-    it('should add the same ordered product and check the error message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderSimpleProduct2', baseContext);
+    describe('Check the 2 invoices', async () => {
+      it('should download the first invoice', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'downloadFirstInvoice', baseContext);
 
-      await viewOrderPage.searchProduct(page, Products.demo_1.name);
+        filePath = await viewOrderPage.downloadInvoice(page, 1);
 
-      const textResult = await viewOrderPage.addProductToCart(page);
-      await expect(textResult).to.contains(viewOrderPage.errorAddSameProductInInvoice(fileName));
-    });
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        await expect(doesFileExist).to.be.true;
+      });
 
-    it('should add the product to the cart and create a new invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductWithNewInvoice', baseContext);
+      it('should check that the \'Product reference, Product name\' are correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference', baseContext);
 
-      await viewOrderPage.createNewInvoice(page);
+        const productReferenceExist = await files.isTextInPDF(
+          filePath,
+          `${test.args.product.reference}, ,  ${test.args.product.name}`,
+        );
+        await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
+      });
 
-      const carrierName = await viewOrderPage.getNewInvoiceCarrierName(page);
-      await expect(carrierName).to.contains(`Carrier : ${Carriers.default.name}`);
+      it('should check that the column \'Base price (Tax excl.)\' is visible', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceColumnVisible', baseContext);
 
-      const isSelected = await viewOrderPage.isFreeShippingSelected(page);
-      await expect(isSelected).to.be.false;
+        const basePriceColumnVisible = await files.isTextInPDF(filePath, 'Base,price,(Tax excl.)');
+        await expect(basePriceColumnVisible, 'Base price is not visible!').to.be.true;
+      });
 
-      await viewOrderPage.updateProductPrice(page, newProductprice);
+      it('should check that the \'Base price (Tax excl.), Unit Price, Quantity, Total (Tax excl.)\' '
+        + 'are correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceSpecificPrice', baseContext);
 
-      const textResult = await viewOrderPage.addProductToCart(page, 1, true);
-      await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
-    });
+        const discountValue = await viewOrderPage.percentage(
+          test.args.product.price,
+          test.args.product.specificPrice.discount,
+        );
+        const unitPrice = test.args.product.price - discountValue;
 
-    it('should check that order total price is correct', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalToPay', baseContext);
-
-      const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
-      await expect(totalPrice.toFixed(2)).to.equal((newProductprice * 2).toFixed(2));
-    });
-
-    it('should check that products number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
-
-      await viewOrderPage.reloadPage(page);
-
-      const productCount = await viewOrderPage.getProductsNumber(page);
-      await expect(productCount).to.equal(2);
-    });
-
-    it('should check that invoices number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
-
-      const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
-      await expect(documentsNumber).to.be.equal(2);
+        const basePriceVisible = await files.isTextInPDF(
+          filePath,
+          `${test.args.product.name}, ,  `
+          + `€${test.args.product.price.toFixed(2)}, ,  `
+          + `€${unitPrice.toFixed(2)}, ,  `
+          + `${test.args.productQuantity}, ,  `
+          + `€${unitPrice.toFixed(2)}`,
+        );
+        await expect(
+          basePriceVisible,
+          'Base price
+      });
     });
   });
-});
