@@ -40,7 +40,7 @@ const {$} = window;
 $(() => {
   $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
   $(ImageSettingsIndexMap.format(
-    $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val()),
+    String($(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val())),
   ).removeClass('d-none');
 
   const grid = new Grid('image_type');
@@ -58,7 +58,7 @@ $(() => {
   $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).change(() => {
     $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
     $(ImageSettingsIndexMap.format(
-      $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val()),
+      String($(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val())),
     ).removeClass('d-none');
   });
 });
