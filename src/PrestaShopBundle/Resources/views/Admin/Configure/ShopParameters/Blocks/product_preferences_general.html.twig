@@ -91,6 +91,7 @@
           {{ ps.label_with_help(('Default specific price priorities'|trans), ('Specific prices are applied based on this priority list to all products unless product has its own specific list configured.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(generalForm.specific_price_priorities) }}
+            {{ form_widget(generalForm.specific_price_priorities) }}
           </div>
         </div>
 

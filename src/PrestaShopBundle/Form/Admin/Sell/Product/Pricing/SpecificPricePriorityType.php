@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class SpecificPricePriorityType extends TranslatorAwareType
@@ -40,14 +41,21 @@ class SpecificPricePriorityType extends TranslatorAwareType
      */
     private $priorityTypeChoiceProvider;
 
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $priorityTypeChoiceProvider
+        FormChoiceProviderInterface $priorityTypeChoiceProvider,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
         $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
+        $this->router = $router;
     }
 
     /**
@@ -57,7 +65,6 @@ class SpecificPricePriorityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            //@todo: add link to general priorities settings when it exists
             ->add('priority_type', ChoiceType::class, [
                 'choices' => $this->priorityTypeChoiceProvider->getChoices(),
                 'default_empty_data' => false,
@@ -66,15 +73,18 @@ class SpecificPricePriorityType extends TranslatorAwareType
                 'multiple' => false,
                 'required' => false,
                 'label' => false,
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Global'),
+                    'href' => $this->router->generate('admin_product_preferences'),
+                ],
             ])
             ->add('priorities', PriorityListType::class, [
                 'label' => false,
                 'row_attr' => [
                     // hide by default. Javascript handles visibility based on priority type choice
-                    'class' => 'js-specific-price-priority-list d-none',
+                    'class' => 'specific-price-priority-list d-none',
                 ],
             ])
-            //@todo. some help text and link to global settings (when its done)
         ;
     }
 }
