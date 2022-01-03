@@ -35,8 +35,11 @@ class Order extends BOBasePage {
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
 
     // Order actions selectors
-    this.updateStatusButton = '#update_order_status_action_btn';
     this.orderStatusesSelect = '#update_order_status_action_input';
+    this.updateStatusButton = '#update_order_status_action_btn';
+    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
+    this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=\'view-delivery-slip\']';
+    this.partialRefundButton = 'button.partial-refund-display';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
@@ -87,7 +90,6 @@ class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
-    this.partialRefundButton = 'button.partial-refund-display';
     this.orderTotalPriceSpan = '#orderTotal';
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
@@ -197,6 +199,53 @@ class Order extends BOBasePage {
   Methods
    */
 
+  // Methods for order actions
+  /**
+   * Is update status button disabled
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isUpdateStatusButtonDisabled(page) {
+    return this.elementVisible(page, `${this.updateStatusButton}[disabled]`, 1000);
+  }
+
+  /**
+   * Is view invoice button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isViewInvoiceButtonVisible(page) {
+    return this.elementVisible(page, this.viewInvoiceButton, 1000);
+  }
+
+  /**
+   * Is partial refund button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isPartialRefundButtonVisible(page) {
+    return this.elementVisible(page, this.partialRefundButton, 1000);
+  }
+
+  /**
+   * Is delivery slip button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isDeliverySlipButtonVisible(page) {
+    return this.elementVisible(page, this.viewDeliverySlipButton, 1000);
+  }
+
+  /**
+   * Select order status
+   * @param page {Page} Browser tab
+   * @param status {string} Status to edit
+   * @returns {Promise<void>}
+   */
+  async selectOrderStatus(page, status) {
+    await this.selectByVisibleText(page, this.orderStatusesSelect, status);
+  }
+
   /**
    * Get order status
    * @param page {Page} Browser tab
@@ -237,6 +286,24 @@ class Order extends BOBasePage {
     );
 
     return options.indexOf(statusName) !== -1;
+  }
+
+  /**
+   * Click on view invoice button to download the invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async viewInvoice(page) {
+    return this.clickAndWaitForDownload(page, this.viewInvoiceButton);
+  }
+
+  /**
+   * Click on view delivery slip button to download the invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async viewDeliverySlip(page) {
+    return this.clickAndWaitForDownload(page, this.viewDeliverySlipButton);
   }
 
   /**
@@ -600,7 +667,7 @@ class Order extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addProductAddButton},disabled`, 1000);
+    return this.elementVisible(page, `${this.addProductAddButton}[disabled]`, 1000);
   }
 
   /**
@@ -896,6 +963,15 @@ class Order extends BOBasePage {
   }
 
   // Methods for status tab
+  /**
+   * Get statuses number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getStatusesNumber(page) {
+    return this.getNumberFromText(page, this.historyTabContent);
+  }
+
   /**
    * Click on update status without select new status and get error message
    * @param page {Page} Browser tab
