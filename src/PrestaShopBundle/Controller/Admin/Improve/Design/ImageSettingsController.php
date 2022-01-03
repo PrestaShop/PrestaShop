@@ -165,7 +165,7 @@ class ImageSettingsController extends FrameworkBundleAdminController
             } else {
                 $this->addFlash(
                     'success',
-                    $this->trans('The thumbnails were successfully regenerated.','Admin.Notifications.Success')
+                    $this->trans('The thumbnails were successfully regenerated.', 'Admin.Notifications.Success')
                 );
             }
         }
