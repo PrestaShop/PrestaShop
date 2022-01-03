@@ -53,6 +53,7 @@ export default {
   featureValues: {
     collectionContainer: '.feature-values-collection',
     collectionRowsContainer: '.feature-values-collection > .col-sm',
+    collectionRow: 'div.product-feature',
     featureSelect: 'select.feature-selector',
     featureValueSelect: 'select.feature-value-selector',
     customValueInput: '.custom-values input',
