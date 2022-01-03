@@ -25,6 +25,6 @@
 
 export default {
   secondSelect: '.second-select',
-  format: (category) => `.format_${category}`,
+  format: (category: string): string => `.format_${category}`,
   thumbnailRegenerationImageCategory: '#thumbnail_regeneration_image_category',
 };
