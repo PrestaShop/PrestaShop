@@ -25,7 +25,7 @@ let page;
  * @param baseContext {string} String to identify the test
  */
 function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createOrderByCustomerTest') {
-  describe('PRE-TEST: Create order by default customer in FO', async () => {
+  describe('PRE-TEST: Create order by customer on FO', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +57,7 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
       await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
     });
 
-    it('should sign in with default customer', async function () {
+    it('should sign in with customer credentials', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await foLoginPage.customerLogin(page, orderData.customer);

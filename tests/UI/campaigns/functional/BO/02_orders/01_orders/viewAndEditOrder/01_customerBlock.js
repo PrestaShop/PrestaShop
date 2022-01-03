@@ -3,8 +3,11 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Common tests login BO
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createAccountTest, createAddressTest} = require('@commonTests/FO/createAccount');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
+const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -13,18 +16,6 @@ const viewOrderPage = require('@pages/BO/orders/view');
 const customersPage = require('@pages/BO/customers');
 const addressesPage = require('@pages/BO/customers/addresses');
 const viewCustomerPage = require('@pages/BO/customers/view');
-
-// Import FO pages
-const foHomePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
-const foCreateAccountPage = require('@pages/FO/myAccount/add');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foAddressesPage = require('@pages/FO/myAccount/addresses');
-const foAddAddressesPage = require('@pages/FO/myAccount/addAddress');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -53,6 +44,20 @@ const privateNote = 'Test private note';
 let customerID = 0;
 let addressID = 0;
 
+// New order by customer data
+const orderData = {
+  customer: customerData,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
+// Customer login data
+const customerLoginData = {
+  email: customerData.email,
+  password: customerData.password,
+};
+
 /*
 Pre-Conditions:
 - Create customer
@@ -71,6 +76,18 @@ Post-condition
 - Delete the created customer
 */
 describe('BO - Orders - View and edit order : Check and edit customer block', async () => {
+  // Pre-Condition: create customer
+  createAccountTest(customerData, baseContext);
+
+  // Pre-condition: Create first address
+  createAddressTest(customerLoginData, firstAddressData, baseContext);
+
+  // Pre-condition: Create second address
+  createAddressTest(customerLoginData, secondAddressData, baseContext);
+
+  // Pre-condition: Create order
+  createOrderByCustomerTest(orderData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -81,132 +98,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     await helper.closeBrowserContext(browserContext);
   });
 
-  it('should go to FO page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-    await foHomePage.goToFo(page);
-    await foHomePage.changeLanguage(page, 'en');
-
-    const isHomePage = await foHomePage.isHomePage(page);
-    await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-  });
-
-  // Pre-Condition - create customer
-  describe('Create new customer', async () => {
-    it('should go to create account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
-
-      await foHomePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
-
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
-    });
-
-    it('should create new account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
-
-      await foCreateAccountPage.createAccount(page, customerData);
-
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
-    });
-  });
-
-  // Pre-Condition - Create 2 addresses for the customer
-  describe('Create address', async () => {
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
-
-      await foHomePage.goToMyAccountPage(page);
-
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
-    });
-
-    it('should go to addresses page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFOAddressesPage', baseContext);
-
-      await foMyAccountPage.goToAddFirstAddressPage(page);
-
-      const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(foAddressesPage.addressPageTitle);
-    });
-
-    it('should create the first address', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
-
-      const textResult = await foAddAddressesPage.setAddress(page, firstAddressData);
-      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
-    });
-
-    it('should go to create address page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewAddressPage2', baseContext);
-
-      await foAddressesPage.openNewAddressForm(page);
-
-      const pageHeaderTitle = await foAddAddressesPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foAddAddressesPage.creationFormTitle);
-    });
-
-    it('should create the second address', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAddress2', baseContext);
-
-      const textResult = await foAddAddressesPage.setAddress(page, secondAddressData);
-      await expect(textResult).to.equal(foAddressesPage.addAddressSuccessfulMessage);
-    });
-  });
-
-  // Pre-condition - create order
-  describe(`Create order by '${customerData.firstName} ${customerData.lastName}' in FO`, async () => {
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      // Go to home page
-      await foLoginPage.goToHomePage(page);
-
-      // Go to the first product page
-      await foHomePage.goToProductPage(page, 1);
-
-      // Add the created product to the cart
-      await foProductPage.addProductToTheCart(page);
-
-      const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await foCartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-      const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-
-      // Check the confirmation message
-      await expect(cardTitle).to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
-    });
-  });
-
-  // Pre-condition - Get customer ID and address ID
+  // Pre-condition: Get customer ID and address ID
   describe('Get customer ID and second address ID', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -620,44 +512,6 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
   });
 
-  // Post-condition - Delete the created customer
-  describe(`Delete the created customer '${customerData.firstName} ${customerData.lastName}'`, async () => {
-    it('should go \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
-      );
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should filter list by email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
-
-      await customersPage.filterCustomers(page, 'input', 'email', customerData.email);
-
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textResult).to.contains(customerData.email);
-    });
-
-    it('should delete customer and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
-
-      const deleteTextResult = await customersPage.deleteCustomer(page, 1);
-      await expect(deleteTextResult).to.be.equal(customersPage.successfulDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
-
-      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.above(0);
-    });
-  });
+  // Post-condition: Delete the created customer
+  deleteCustomerTest(customerData, baseContext);
 });

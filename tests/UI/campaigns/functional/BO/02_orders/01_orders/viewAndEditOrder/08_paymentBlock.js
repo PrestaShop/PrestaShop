@@ -8,8 +8,9 @@ const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 const {getDateFormat} = require('@utils/date');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -18,14 +19,6 @@ const viewOrderPage = require('@pages/BO/orders/view');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const addCurrencyPage = require('@pages/BO/international/currencies/add');
-
-// Import FO pages
-const foLoginPage = require('@pages/FO/login');
-const foHomePage = require('@pages/FO/home');
-const foProductPage = require('@pages/FO/product');
-const foCartPage = require('@pages/FO/cart');
-const foCheckoutPage = require('@pages/FO/checkout');
-const foOrderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -44,6 +37,14 @@ const today = getDateFormat('yyyy-mm-dd');
 const todayToCheck = getDateFormat('mm/dd/yyyy');
 
 const totalOrder = 22.94;
+
+// New order by customer data
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
 
 const paymentDataAmountInfTotal = {
   date: today,
@@ -103,6 +104,12 @@ Post-condition
  */
 
 describe('BO - Orders - View and edit order : Check payment Block', async () => {
+  // Pre-condition: Create first order by default customer
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
+  // Pre-condition: Create second order by default customer
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -112,89 +119,6 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   after(async () => {
     await files.deleteFile(filePath);
     await helper.closeBrowserContext(browserContext);
-  });
-
-  // Pre-condition - Create order by default customer
-  describe('Create order by default customer in FO', async () => {
-    it('should view my shop', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      await foHomePage.goToFo(page);
-
-      // Change FO language
-      await foHomePage.changeLanguage(page, 'en');
-
-      const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
-
-      await foHomePage.goToHomePage(page);
-
-      await foHomePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    ['first', 'second'].forEach((arg, index) => {
-      it('should add product to cart and proceed to checkout', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `addProductToCart${index}`, baseContext);
-
-        await foHomePage.goToHomePage(page);
-
-        // Go to the first product page
-        await foHomePage.goToProductPage(page, 1);
-
-        // Add the product to the cart
-        await foProductPage.addProductToTheCart(page);
-
-        const notificationsNumber = await foCartPage.getCartNotificationsNumber(page);
-        await expect(notificationsNumber, 'Notifications number is not correct!').to.be.equal(1);
-      });
-
-      it('should go to delivery step', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToDeliveryStep${index}`, baseContext);
-
-        // Proceed to checkout the shopping cart
-        await foCartPage.clickOnProceedToCheckout(page);
-
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await foCheckoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-      });
-
-      it('should go to payment step', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToPaymentStep${index}`, baseContext);
-
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await foCheckoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-      });
-
-      it('should choose payment method and confirm the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `confirmOrder${index}`, baseContext);
-
-        // Payment step - Choose payment step
-        await foCheckoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-        // Check the confirmation message
-        const cardTitle = await foOrderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle, 'Error in confirmation message')
-          .to.contains(foOrderConfirmationPage.orderConfirmationCardTitle);
-      });
-    });
   });
 
   // 1 - Go to view order page
@@ -619,7 +543,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   });
 
   // Post-condition - Delete currency
-  describe('Delete created currency ', async () => {
+  describe('POST-TEST: Delete created currency ', async () => {
     it('should go to \'International > Localization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
 

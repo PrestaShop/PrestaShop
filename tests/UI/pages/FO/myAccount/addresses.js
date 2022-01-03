@@ -38,7 +38,9 @@ class Addresses extends FOBasePage {
    * @constructor
    */
   async openNewAddressForm(page) {
-    await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+    if (await this.elementVisible(page, this.createNewAddressLink, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+    }
   }
 
   /**
