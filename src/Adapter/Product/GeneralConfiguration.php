@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -92,7 +93,19 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
             $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
             $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
-            $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
+            try {
+                $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
+            } catch (SpecificPriceConstraintException $e) {
+                if ($e->getCode() !== SpecificPriceConstraintException::DUPLICATE_PRIORITY) {
+                    throw $e;
+                }
+
+                $errors[] = [
+                    'key' => 'Specific price priorities cannot duplicate',
+                    'domain' => 'Admin.Notifications.Error',
+                    'parameters' => [],
+                ];
+            }
         }
 
         return $errors;
