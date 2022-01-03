@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAsso
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -451,6 +452,12 @@ class ProductController extends FrameworkBundleAdminController
                 'The selected value belongs to another feature.',
                 'Admin.Notifications.Error'
             ),
+            SpecificPriceConstraintException::class => [
+                SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
+                    'Specific price priorities cannot duplicate',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 
