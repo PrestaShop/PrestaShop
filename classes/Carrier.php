@@ -321,7 +321,7 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price by total weight.
+     * Check delivery price by total weight.
      *
      * @param int $id_carrier Carrier ID
      * @param float $total_weight Total weight
@@ -426,7 +426,7 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price for a given order.
+     * Check delivery price for a given order.
      *
      * @param int $id_carrier Carrier ID
      * @param float $order_total Order total to pay
