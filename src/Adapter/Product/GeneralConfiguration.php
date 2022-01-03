@@ -58,6 +58,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
             'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
             'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
+            'specific_price_priorities' => explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES')),
         ];
     }
 
