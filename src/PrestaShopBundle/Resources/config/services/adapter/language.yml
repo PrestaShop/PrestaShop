@@ -62,6 +62,8 @@ services:
 
   prestashop.adapter.language.command_handler.bulk_delete_languages_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Language\CommandHandler\BulkDeleteLanguagesHandler'
+    arguments:
+      - '@prestashop.adapter.file.robots_text_file_generator'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Language\Command\BulkDeleteLanguagesCommand'
