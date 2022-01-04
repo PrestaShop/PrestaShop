@@ -40,6 +40,12 @@ $(document).ready(() => {
   });
 
   prestashop.on('updatedCart', () => {
+    window.shouldPreventModal = false;
+
+    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
+      preventCustomModalOpen(modalEvent);
+    });
+
     createSpin();
   });
 
@@ -125,12 +131,23 @@ $(document).ready(() => {
 
   const getTouchSpinInput = ($button) => $($button.parents(prestashop.themeSelectors.cart.touchspin).find('input'));
 
-  const handleCartAction = (event) => {
-    event.preventDefault();
+  const preventCustomModalOpen = (event) => {
+    if (window.shouldPreventModal) {
+      event.preventDefault();
 
-    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
-      modalEvent.preventDefault();
-    });
+      return false;
+    }
+
+    return true;
+  };
+
+  $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
+    preventCustomModalOpen(modalEvent);
+  });
+
+  const handleCartAction = (event) => {
+    window.shouldPreventModal = true;
+    event.preventDefault();
 
     const $target = $(event.currentTarget);
     const {dataset} = event.currentTarget;
@@ -181,10 +198,7 @@ $(document).ready(() => {
 
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
-
-    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (event) => {
-      event.preventDefault();
-    });
+    window.shouldPreventModal = true;
 
     return $.ajax({
       url: updateQuantityInCartUrl,
@@ -245,6 +259,7 @@ $(document).ready(() => {
     const targetValue = $target.val();
     /* eslint-disable */
     if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
+      window.shouldPreventModal = false;
       $target.val(baseValue);
       return;
     }
