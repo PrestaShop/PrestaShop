@@ -9,22 +9,46 @@ Feature: Set Specific Price priorities from Back Office (BO).
 
   Scenario: I set specific price priorities to single product
     Given default specific price priorities are set to following:
-      | id_shop | id_currency | id_country | id_group |
+      | priorities  |
+      | id_shop     |
+      | id_currency |
+      | id_country  |
+      | id_group    |
     And I add product "product1" with following information:
       | name[en-US] | pocket watch |
       | type        | standard     |
     And product "product1" should have following specific price priorities:
-      | id_shop | id_currency | id_country | id_group |
+      | priorities  |
+      | id_shop     |
+      | id_currency |
+      | id_country  |
+      | id_group    |
     When I set following specific price priorities for product "product1":
-      | id_country | id_currency | id_group | id_shop |
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
     Then product "product1" should have following specific price priorities:
-      | id_country | id_currency | id_group | id_shop |
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
 
   Scenario: Default specific price priorities should be applied for products that has no specific priorities set
     Given default specific price priorities are set to following:
-      | id_shop | id_currency | id_country | id_group |
+      | priorities  |
+      | id_shop     |
+      | id_currency |
+      | id_country  |
+      | id_group    |
     And product "product1" should have following specific price priorities:
-      | id_country | id_currency | id_group | id_shop |
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
     And I add product "product2" with following information:
       | name[en-US] | golden wrist watch |
       | type        | standard           |
@@ -32,20 +56,56 @@ Feature: Set Specific Price priorities from Back Office (BO).
       | name[en-US] | silver wrist watch |
       | type        | standard           |
     And product "product2" should have following specific price priorities:
-      | id_shop | id_currency | id_country | id_group |
+      | priorities  |
+      | id_shop     |
+      | id_currency |
+      | id_country  |
+      | id_group    |
     And product "product3" should have following specific price priorities:
-      | id_shop | id_currency | id_country | id_group |
+      | priorities  |
+      | id_shop     |
+      | id_currency |
+      | id_country  |
+      | id_group    |
     When I set following default specific price priorities:
-      | id_group | id_currency | id_country | id_shop |
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     Then default specific price priorities should be the following:
-      | id_group | id_currency | id_country | id_shop |
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     And product "product2" should have following specific price priorities:
-      | id_group | id_currency | id_country | id_shop |
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     And product "product3" should have following specific price priorities:
-      | id_group | id_currency | id_country | id_shop |
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |
     But product "product1" should have following specific price priorities:
-      | id_country | id_currency | id_group | id_shop |
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
     When I set following specific price priorities for product "product2":
-      | id_currency | id_group | id_country | id_shop |
+      | priorities  |
+      | id_currency |
+      | id_group    |
+      | id_country  |
+      | id_shop     |
     Then product "product2" should have following specific price priorities:
-      | id_currency | id_group | id_country | id_shop |
+      | priorities  |
+      | id_currency |
+      | id_group    |
+      | id_country  |
+      | id_shop     |

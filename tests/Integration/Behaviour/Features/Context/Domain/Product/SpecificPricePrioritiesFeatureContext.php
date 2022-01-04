@@ -54,19 +54,19 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     }
 
     /**
+     * @see transformPriorityList
+     *
      * @When I set following specific price priorities for product :productReference:
      *
      * @param string $productReference
-     * @param TableNode $prioritiesTable
+     * @param PriorityList $priorityList
      */
-    public function setPrioritiesForSingleProduct(string $productReference, TableNode $prioritiesTable): void
+    public function setPrioritiesForSingleProduct(string $productReference, PriorityList $priorityList): void
     {
-        $priorities = $prioritiesTable->getRow(0);
-
         try {
             $this->getCommandBus()->handle(new SetSpecificPricePriorityForProductCommand(
                 $this->getSharedStorage()->get($productReference),
-                $priorities
+                $priorityList->getPriorities()
             ));
         } catch (DomainException $e) {
             $this->setLastException($e);
@@ -74,20 +74,19 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     }
 
     /**
+     * @see transformPriorityList
+     *
      * @When I set following default specific price priorities:
      *
-     * @param TableNode $prioritiesTable
+     * @param PriorityList $priorityList
      */
-    public function setDefaultPriorities(TableNode $prioritiesTable): void
+    public function setDefaultPriorities(PriorityList $priorityList): void
     {
-        $priorities = $prioritiesTable->getRow(0);
-
         /** @var SpecificPricePriorityUpdater $priorityUpdater */
         $priorityUpdater = CommonFeatureContext::getContainer()
             ->get('prestashop.adapter.product.specific_price.update.specific_price_priority_updater')
         ;
 
-        $priorityList = new PriorityList($priorities);
         try {
             $priorityUpdater->updateDefaultPriorities($priorityList);
         } catch (DomainException $e) {
@@ -96,45 +95,65 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     }
 
     /**
+     * @see transformPriorityList
+     *
      * @Given default specific price priorities are set to following:
      * @Then default specific price priorities should be the following:
      *
-     * @param TableNode $prioritiesTable
+     * @param PriorityList $priorityList
      */
-    public function assertDefaultPriorities(TableNode $prioritiesTable): void
+    public function assertDefaultPriorities(PriorityList $priorityList): void
     {
-        $expectedPriorities = $prioritiesTable->getRow(0);
-        $actualPriorities = SpecificPrice::getPriority(0);
-
-        if ($actualPriorities[0] == 'id_customer') {
-            unset($actualPriorities[0]);
-        }
-
-        Assert::assertEquals(
-            $expectedPriorities,
-            array_values($actualPriorities),
-            sprintf('Unexpected default specific price priorities [%s]', var_export($actualPriorities, true))
-        );
+        $this->assertPriorities($priorityList, null);
     }
 
     /**
+     * @see transformPriorityList
+     *
      * @Then product :productReference should have following specific price priorities:
      *
      * @param string $productReference
-     * @param TableNode $prioritiesTable
+     * @param PriorityList $priorityList
      */
-    public function assertProductPriorities(string $productReference, TableNode $prioritiesTable): void
+    public function assertProductPriorities(string $productReference, PriorityList $priorityList): void
     {
-        $expectedPriorities = $prioritiesTable->getRow(0);
+        $this->assertPriorities($priorityList, $productReference);
+    }
+
+    /**
+     * @Transform table:priorities
+     *
+     * @param TableNode $tableNode
+     *
+     * @return PriorityList
+     */
+    public function transformPriorityList(TableNode $tableNode): PriorityList
+    {
+        $prioritiesTable = $tableNode->getColumnsHash();
+        $priorities = [];
+        foreach ($prioritiesTable as $value) {
+            $priorities[] = $value['priorities'];
+        }
+
+        return new PriorityList($priorities);
+    }
+
+    /**
+     * @param PriorityList $expectedPriorityList
+     * @param string|null $productReference when null it checks default priorities list
+     */
+    private function assertPriorities(PriorityList $expectedPriorityList, ?string $productReference)
+    {
         SpecificPrice::flushCache();
-        $actualPriorities = SpecificPrice::getPriority($this->getSharedStorage()->get($productReference));
+        $productId = $productReference ? $this->getSharedStorage()->get($productReference) : 0;
+        $actualPriorities = SpecificPrice::getPriority($productId);
 
         if ($actualPriorities[0] == 'id_customer') {
             unset($actualPriorities[0]);
         }
 
         Assert::assertEquals(
-            $expectedPriorities,
+            $expectedPriorityList->getPriorities(),
             array_values($actualPriorities),
             sprintf('Unexpected specific price priorities [%s]', var_export($actualPriorities, true))
         );
