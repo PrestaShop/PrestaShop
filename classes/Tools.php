@@ -4415,10 +4415,34 @@ exit;
 
         return false;
     }
+
+    /**
+     * @return bool
+     */
+    public static function isDetectCountryFromBrowserLanguageAvailable(): bool
+    {
+        $languages = null;
+
+        return Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+            && self::isValidAcceptLanguageAvailable($languages)
+            && Validate::isLanguageIsoCode($languages[0]);
+    }
+
+    /**
+     * @param array|null $languages
+     *
+     * @return bool
+     */
+    public static function isValidAcceptLanguageAvailable(?array &$languages = null): bool
+    {
+        return preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $languages);
+    }
 }
 
 /**
  * Compare 2 prices to sort products.
+ *
+ * @deprecated Since 8.0.0 and will be removed in the next major.
  *
  * @param array{"price_tmp": float} $a
  * @param array{"price_tmp": float} $b
@@ -4428,6 +4452,8 @@ exit;
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
+    @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 8.0.0', __FUNCTION__), E_USER_DEPRECATED);
+
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
         return -1;
     } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
@@ -4438,6 +4464,8 @@ function cmpPriceAsc($a, $b)
 }
 
 /**
+ * @deprecated Since 8.0.0 and will be removed in the next major.
+ *
  * @param array{"price_tmp": float} $a
  * @param array{"price_tmp": float} $b
  *
@@ -4445,6 +4473,8 @@ function cmpPriceAsc($a, $b)
  */
 function cmpPriceDesc($a, $b)
 {
+    @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 8.0.0', __FUNCTION__), E_USER_DEPRECATED);
+
     if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
         return 1;
     } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
