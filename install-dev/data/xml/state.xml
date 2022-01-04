@@ -177,7 +177,7 @@
     <state id="DC" id_country="US" id_zone="North_America" iso_code="DC" tax_behavior="0" active="1">
       <name>District of Columbia</name>
     </state>
-    <state id="AGS" id_country="MX" id_zone="North_America" iso_code="AGS" tax_behavior="0" active="1">
+    <state id="AGU" id_country="MX" id_zone="North_America" iso_code="AGU" tax_behavior="0" active="1">
       <name>Aguascalientes</name>
     </state>
     <state id="BCN" id_country="MX" id_zone="North_America" iso_code="BCN" tax_behavior="0" active="1">
@@ -195,14 +195,14 @@
     <state id="CHH" id_country="MX" id_zone="North_America" iso_code="CHH" tax_behavior="0" active="1">
       <name>Chihuahua</name>
     </state>
+    <state id="CMX" id_country="MX" id_zone="North_America" iso_code="CMX" tax_behavior="0" active="1">
+      <name>Ciudad de México</name>
+    </state>
     <state id="COA" id_country="MX" id_zone="North_America" iso_code="COA" tax_behavior="0" active="1">
       <name>Coahuila</name>
     </state>
     <state id="COL" id_country="MX" id_zone="North_America" iso_code="COL" tax_behavior="0" active="1">
       <name>Colima</name>
-    </state>
-    <state id="CMX" id_country="MX" id_zone="North_America" iso_code="CMX" tax_behavior="0" active="1">
-      <name>Ciudad de México</name>
     </state>
     <state id="DUR" id_country="MX" id_zone="North_America" iso_code="DUR" tax_behavior="0" active="1">
       <name>Durango</name>
