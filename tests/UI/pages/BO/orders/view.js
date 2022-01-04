@@ -609,6 +609,25 @@ class Order extends BOBasePage {
     ]);
   }
 
+  async modifyProductPriceForMultiInvoice(page, row, price) {
+    this.dialogListener(page);
+    await Promise.all([
+      page.click(this.editProductButton(row)),
+      this.waitForVisibleSelector(page, this.editProductPriceInput),
+    ]);
+    await this.setValue(page, this.editProductPriceInput, price);
+
+    await Promise.all([
+      page.click(this.UpdateProductButton),
+      this.waitForVisibleSelector(page, '#modal-confirm-new-price'),
+    ]);
+
+    await page.click('#modal-confirm-new-price button.btn.btn-primary.btn-lg.btn-confirm-submit');
+    await page.waitForTimeout(2000);
+
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
+  }
+
   /**
    * Delete product
    * @param page {Page} Browser tab
