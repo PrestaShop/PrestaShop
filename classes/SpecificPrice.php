@@ -583,7 +583,7 @@ class SpecificPriceCore extends ObjectModel
      * @deprecated since 8.0 and will be removed in next major version.
      * @see SpecificPriceRepository::updateDefaultPriorities()
      *
-     * @param $priorities
+     * @param array $priorities
      *
      * @return bool
      */
