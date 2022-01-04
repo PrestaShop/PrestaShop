@@ -61,6 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
@@ -439,6 +440,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData = $this->getDefaultOutputData();
+
         $productData = [
             'price_tax_excluded' => new DecimalNumber('42.00'),
             'price_tax_included' => new DecimalNumber('50.40'),
@@ -464,6 +466,23 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
         $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // dataset 2
+        $productData['priority_list'] = new PriorityList([
+            PriorityList::PRIORITY_CURRENCY,
+            PriorityList::PRIORITY_COUNTRY,
+            PriorityList::PRIORITY_GROUP,
+            PriorityList::PRIORITY_SHOP,
+        ]);
+        $expectedOutputData['pricing']['priority_management'] = [
+            'priority_type' => true,
+            'priorities' => ['id_currency', 'id_country', 'id_group', 'id_shop'],
+        ];
 
         $datasets[] = [
             $productData,
@@ -1284,7 +1303,8 @@ class ProductFormDataProviderTest extends TestCase
             $product['unit_price'] ?? new DecimalNumber('19.86'),
             $product['unit_price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['unity'] ?? '',
-            $product['unit_price_ratio'] ?? new DecimalNumber('1')
+            $product['unit_price_ratio'] ?? new DecimalNumber('1'),
+            $product['priority_list'] ?? null
         );
     }
 
@@ -1444,6 +1464,10 @@ class ProductFormDataProviderTest extends TestCase
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
                     'unity' => '',
+                ],
+                'priority_management' => [
+                    'priority_type' => false,
+                    'priorities' => [],
                 ],
             ],
             'seo' => [
