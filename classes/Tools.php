@@ -47,6 +47,8 @@ class ToolsCore
     public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
     public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
 
+    public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -276,7 +278,7 @@ class ToolsCore
     public static function getShopProtocol()
     {
         $protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
-            && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+                && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
 
         return $protocol;
     }
@@ -404,8 +406,8 @@ class ToolsCore
         }
 
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
-            || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.(1[6-9]|2\d|30|31)\..*/i', trim($_SERVER['REMOTE_ADDR']))
-            || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
+                || preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.(1[6-9]|2\d|30|31)\..*/i', trim($_SERVER['REMOTE_ADDR']))
+                || preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR'])))) {
             if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',')) {
                 $ips = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 
@@ -4207,7 +4209,7 @@ exit;
 					WHERE c.nleft <= ' . (int) $category['nleft'] . '
 						AND c.nright >= ' . (int) $category['nright'] . '
 						AND cl.id_lang = ' . (int) $context->language->id .
-                       ($home ? ' AND c.id_category=' . (int) $id_category : '') . '
+                    ($home ? ' AND c.id_category=' . (int) $id_category : '') . '
 						AND c.id_category != ' . (int) Category::getTopCategory()->id . '
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
@@ -4224,10 +4226,10 @@ exit;
                     $index_link = Context::getContext()->link->getAdminLink('AdminCategories', true, $link_params);
                     $edit = '<a href="' . Tools::safeOutput($edit_link) . '" title="' . ($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify') . '"><i class="icon-' . (($category['id_category'] == Category::getRootCategory()->id_category || $home) ? 'home' : 'pencil') . '"></i></a> ';
                     $full_path .= $edit .
-                                  ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
-                                  (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
-                                  ($n < $n_categories ? '</a>' : '') .
-                                  (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
+                        ($n < $n_categories ? '<a href="' . Tools::safeOutput($index_link) . '" title="' . htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8') . '">' : '') .
+                        (!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">' . htmlentities($highlight, ENT_NOQUOTES, 'UTF-8') . '</span>', $category['name']) : $category['name']) .
+                        ($n < $n_categories ? '</a>' : '') .
+                        (($n++ != $n_categories || !empty($path)) ? ' > ' : '');
                 }
 
                 return $full_path . $path;
@@ -4306,6 +4308,42 @@ exit;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCountryFromBrowserAvailable(): bool
+    {
+        $languageAvailable = self::getCountryIsoCodeFromHeader();
+
+        if ($languageAvailable === null) {
+            return false;
+        }
+
+        return Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+            && self::isCountryIsoCodeAvailableInHeader()
+            && Validate::isLanguageIsoCode($languageAvailable);
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCountryIsoCodeAvailableInHeader(): bool
+    {
+        return preg_match(self::LANGUAGE_EXTRACTOR_REGEXP, $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getCountryIsoCodeFromHeader(): ?string
+    {
+        if (!preg_match(self::LANGUAGE_EXTRACTOR_REGEXP, $_SERVER['HTTP_ACCEPT_LANGUAGE'], $languages)) {
+            return null;
+        }
+
+        return $languages[0];
     }
 }
 
