@@ -41,7 +41,13 @@ class AdminCartRulesControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->bulk_actions = ['delete' => ['text' => $this->trans('Delete selected', [], 'Admin.Actions'), 'icon' => 'icon-trash', 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning')]];
+        $this->bulk_actions = [
+            'delete' => [
+                'text' => $this->trans('Delete selected', [], 'Admin.Actions'),
+                'icon' => 'icon-trash',
+                'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
+            ],
+        ];
 
         $this->fields_list = [
             'id_cart_rule' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'class' => 'fixed-width-xs'],
@@ -761,5 +767,62 @@ class AdminCartRulesControllerCore extends AdminController
             $found = true;
         }
         echo json_encode(['found' => $found, 'vouchers' => $vouchers]);
+    }
+
+    /**
+     * For the listing, Override the method displayDeleteLink for the HelperList
+     * That allows to have links with all characters (like < & >)
+     *
+     * @param string $token
+     * @param string $id
+     * @param string|null $name
+     *
+     * @return string
+     */
+    public function displayDeleteLink(string $token, string $id, ?string $name = null): string
+    {
+        if (!$this->access('delete')) {
+            return '';
+        }
+
+        $tpl = $this->createTemplate('helpers/list/list_action_delete.tpl');
+
+        if (!array_key_exists('Delete', self::$cache_lang)) {
+            self::$cache_lang['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
+        }
+        if (!array_key_exists('DeleteItem', self::$cache_lang)) {
+            self::$cache_lang['DeleteItem'] = $this->trans('Delete selected item?', [], 'Admin.Notifications.Info');
+        }
+        if (!array_key_exists('Name', self::$cache_lang)) {
+            self::$cache_lang['Name'] = $this->trans('Name:', [], 'Admin.Shipping.Feature');
+        }
+
+        if (null !== $name) {
+            // \n\n is not between double quotes because in js/jquery/plugins/alerts/jquery.alerts.js, \n is replaced by <br>.
+            $name = '\n\n' . self::$cache_lang['Name'] . ' ' . $name;
+        }
+
+        $data = [
+            $this->identifier => $id,
+            'href' => $this->context->link->getAdminLink(
+                'AdminCartRules',
+                true, [],
+                [
+                    'id_cart_rule' => (int) $id,
+                    'deletecart_rule' => 1,
+                ]
+            ),
+            'action' => self::$cache_lang['Delete'],
+        ];
+
+        if ($this->specificConfirmDelete !== false) {
+            $data['confirm'] = null !== $this->specificConfirmDelete
+                ? '\r' . $this->specificConfirmDelete
+                : Tools::htmlentitiesDecodeUTF8(self::$cache_lang['DeleteItem'] . $name);
+        }
+
+        $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
+
+        return $tpl->fetch();
     }
 }
