@@ -95,7 +95,23 @@ class CustomerAddressFormCore extends AbstractForm
         // This form is very tricky: fields may change depending on which
         // country is being submitted!
         // So we first update the format if a new id_country was set.
-        if (isset($params['id_country'])
+        // If detect country from browser language is selected, default country will be overridden
+        if (Tools::isDetectCountryFromBrowserLanguageAvailable()) {
+            $languagesAvailable = Tools::languagesAvailable();
+            Tools::isValidAcceptLanguageAvailable();
+            if (isset($languagesAvailable[0])) {
+                $this->formatter->setCountry(new Country(
+                    (int) Country::getByIso($languagesAvailable[0], true),
+                    $languagesAvailable[0]
+                ));
+            } else {
+                $this->formatter->setCountry(
+                    new Country(
+                        Tools::getCountry()
+                    )
+                );
+            }
+        } elseif (isset($params['id_country'])
             && $params['id_country'] != $this->formatter->getCountry()->id
         ) {
             $this->formatter->setCountry(new Country(
