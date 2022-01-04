@@ -30,11 +30,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShopBundle\Install\DatabaseDump;
 use SpecificPrice;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
 {
@@ -72,19 +74,47 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     }
 
     /**
-     * @When I set following specific price priorities for all products:
+     * @When I set following default specific price priorities:
      *
      * @param TableNode $prioritiesTable
      */
-    public function setGlobalPriorities(TableNode $prioritiesTable): void
+    public function setDefaultPriorities(TableNode $prioritiesTable): void
     {
         $priorities = $prioritiesTable->getRow(0);
 
+        /** @var SpecificPricePriorityUpdater $priorityUpdater */
+        $priorityUpdater = CommonFeatureContext::getContainer()
+            ->get('prestashop.adapter.product.specific_price.update.specific_price_priority_updater')
+        ;
+
+        $priorityList = new PriorityList($priorities);
         try {
-            $this->getCommandBus()->handle(new SetGlobalSpecificPricePriorityCommand($priorities));
+            $priorityUpdater->updateDefaultPriorities($priorityList);
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @Given default specific price priorities are set to following:
+     * @Then default specific price priorities should be the following:
+     *
+     * @param TableNode $prioritiesTable
+     */
+    public function assertDefaultPriorities(TableNode $prioritiesTable): void
+    {
+        $expectedPriorities = $prioritiesTable->getRow(0);
+        $actualPriorities = SpecificPrice::getPriority(0);
+
+        if ($actualPriorities[0] == 'id_customer') {
+            unset($actualPriorities[0]);
+        }
+
+        Assert::assertEquals(
+            $expectedPriorities,
+            array_values($actualPriorities),
+            sprintf('Unexpected default specific price priorities [%s]', var_export($actualPriorities, true))
+        );
     }
 
     /**
