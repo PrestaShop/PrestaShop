@@ -98,17 +98,6 @@ class ApiClient
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
-    public function getServices()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('service')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->services) ? $responseArray->services : [];
-    }
-
     public function getCategories()
     {
         $response = $this->setMethod('listing')
