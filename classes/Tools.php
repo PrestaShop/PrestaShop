@@ -45,6 +45,8 @@ class ToolsCore
     public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
     public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
 
+    public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -4126,6 +4128,34 @@ exit;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCountryFromBrowserAvailable(): bool
+    {
+        $languageAvailable = static::getCountryIsoCodeFromHeader();
+        if ($languageAvailable === null) {
+            return false;
+        }
+
+        return Configuration::get('PS_DETECT_COUNTRY')
+            && Validate::isLanguageIsoCode($languageAvailable);
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getCountryIsoCodeFromHeader(): ?string
+    {
+        if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            return null;
+        }
+
+        preg_match(static::LANGUAGE_EXTRACTOR_REGEXP, $_SERVER['HTTP_ACCEPT_LANGUAGE'], $languages);
+
+        return $languages[0] ?? null;
     }
 
     /**
