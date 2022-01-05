@@ -195,6 +195,12 @@ services:
       - '@prestashop.core.command_bus'
       - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
 
+  prestashop.core.form.identifiable_object.data_handler.bulk_combination_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+
   prestashop.core.form.identifiable_object.data_handler.combination_item_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationItemFormDataHandler'
     arguments:
