@@ -1674,6 +1674,15 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.combination.bulk_combination_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@router'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination.combination_stock_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
     parent: 'form.type.translatable.aware'
