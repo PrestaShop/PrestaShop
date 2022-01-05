@@ -279,26 +279,25 @@ $product-page-padding-bottom: 80px !default;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      gap: 0.5rem;
       width: 100%;
       height: 100%;
+      padding: 0 0.5rem;
 
-      .product-footer-left,
-      .product-footer-right {
+      .footer-buttons-container {
         display: flex;
         flex-direction: row;
-        margin: 0 0.5rem;
-
-        > * {
-          margin: 0 0.5rem;
-        }
+        gap: 0.5rem;
       }
 
       .product-footer-left {
         justify-content: flex-start;
+        order: 1;
       }
 
       .product-footer-right {
         justify-content: flex-end;
+        order: 2;
       }
 
       .switch-widget {
