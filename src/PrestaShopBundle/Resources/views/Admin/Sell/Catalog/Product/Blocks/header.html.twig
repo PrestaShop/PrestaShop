@@ -23,48 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <div class="product-header-v2">
-  <div class="row">
-    <div class="col-md-6 product-header-form">
-      {% block product_header_form %}
-        {{ form_row(productForm.header) }}
-      {% endblock %}
-    </div>
-
-    <div class="toolbar col-sm-6 col-md-2 text-md-right">
-      {{ _self.displayReferences(productForm.specifications.references) }}
-
-    {% if null != statsLink %}
-      <a class="toolbar-button btn-sales" href="{{ statsLink }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
-        id="product_form_go_to_sales">
-        <i class="material-icons">assessment</i>
-        <span class="title">{{ 'Sales'|trans({}, 'Admin.Global') }}</span>
-      </a>
-    {% endif %}
-
-      <a
-        class="toolbar-button btn-quicknav btn-sidebar"
-        href="#"
-        title="{{ 'Quick navigation'|trans({}, 'Admin.Global') }}"
-        data-toggle="sidebar"
-        data-target="#right-sidebar"
-        data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
-        id="product_form_open_quicknav"
-      >
-        <i class="material-icons">list</i>
-        <span class="title">{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}</span>
-      </a>
-
-      <a class="toolbar-button btn-help btn-sidebar" href="#"
-        title="{{ 'Help'|trans({}, 'Admin.Global') }}"
-        data-toggle="sidebar"
-        data-target="#right-sidebar"
-        data-url="{{ helpLink }}"
-        id="product_form_open_help"
-      >
-        <i class="material-icons">help</i>
-        <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
-      </a>
-    </div>
+  <div class="product-header-cover">
+    {{ form_row(productForm.header.cover_thumbnail) }}
+  </div>
+  <div class="product-header-form">
+    {% block product_header_form %}
+      {{ form_row(productForm.header) }}
+    {% endblock %}
+  </div>
+  <div class="product-header-details">
+    {{ _self.displayReferences(productForm.specifications.references) }}
   </div>
 </div>
 

@@ -110,11 +110,34 @@ $product-page-padding-bottom: 80px !default;
 
   // Components
   .product-header-v2 {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
     padding: 0.625rem;
     margin-bottom: 1rem;
     background: $white;
     @include border-radius(0.375rem);
     box-shadow: $gray-dark 0 0 10px;
+
+    $product-cover-size: 110px;
+
+    .product-header-cover {
+      max-width: $product-cover-size;
+
+      .image_preview-widget {
+        width: $product-cover-size;
+        height: $product-cover-size;
+
+        img {
+          display: block;
+          width: auto;
+          max-width: $product-cover-size;
+          height: auto;
+          max-height: $product-cover-size;
+          margin: auto;
+        }
+      }
+    }
   }
 
   .product-header {
@@ -157,19 +180,6 @@ $product-page-padding-bottom: 80px !default;
         display: flex;
         flex-direction: row;
         margin: 0 -1rem;
-
-        .image_preview-widget {
-          width: 98px;
-
-          img {
-            display: block;
-            width: auto;
-            max-width: 98px;
-            height: auto;
-            max-height: 98px;
-            margin: 0 auto;
-          }
-        }
 
         .header-name {
           flex-grow: 1;
@@ -1067,6 +1077,16 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .product-page-v2 {
+  .tabs {
+    position: relative;
+
+    .toolbar {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+    }
+  }
+
   &.create-product-form {
     width: 100%;
     padding: 0 1rem 0.1rem;
