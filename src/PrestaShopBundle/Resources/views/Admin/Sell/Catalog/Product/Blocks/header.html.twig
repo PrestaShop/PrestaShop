@@ -33,17 +33,50 @@
     {% endblock %}
   </div>
   <div class="product-header-details">
-    {{ _self.displayReferences(productForm.specifications.references) }}
+    {% block header_summary %}
+      <div class="product-header-summary">
+        <div class="product-field-preview">
+          <div class="product-field-value">
+            {{ productForm.pricing.retail_price.price_tax_excluded.vars.value|price_format }}
+          </div>
+          <div class="product-field-label">
+            {{ 'tax excl.'|trans({}, 'Admin.Global') }}
+          </div>
+        </div>
+
+        <div class="product-field-preview">
+          <div class="product-field-value">
+            {{ productForm.pricing.retail_price.price_tax_included.vars.value|price_format }}
+          </div>
+          <div class="product-field-label">
+            {{ 'tax incl.'|trans({}, 'Admin.Global') }}
+          </div>
+        </div>
+
+        {% if productForm.stock is defined %}
+          {% set quantity = productForm.stock.quantities.quantity.quantity.vars.value %}
+          <div class="product-field-preview">
+            <div class="product-field-value">
+              {{ quantity }}
+            </div>
+            <div class="product-field-label">
+              {{ 'in stock'|trans({}, 'Admin.Global') }}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endblock %}
+
+    {% block header_references %}
+      {% set referencesForm = productForm.specifications.references %}
+      <div class="references-display">
+        {% for child in referencesForm.children %}
+          {% if child.vars.value is not empty %}
+            <label>{{ child.vars.label }}</label>
+            <span>{{ child.vars.value }}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endblock %}
   </div>
 </div>
-
-{% macro displayReferences(referencesForm) %}
-  <div class="references-display">
-    {% for child in referencesForm.children %}
-      {% if child.vars.value is not empty %}
-        <label>{{ child.vars.label }}</label>
-        <span>{{ child.vars.value }}</span>
-      {% endif %}
-    {% endfor %}
-  </div>
-{% endmacro %}
