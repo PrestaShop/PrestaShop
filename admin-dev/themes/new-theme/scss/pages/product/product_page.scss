@@ -109,6 +109,14 @@ $product-page-padding-bottom: 80px !default;
   }
 
   // Components
+  .product-header-v2 {
+    padding: 0.625rem;
+    margin-bottom: 1rem;
+    background: $white;
+    @include border-radius(0.375rem);
+    box-shadow: $gray-dark 0 0 10px;
+  }
+
   .product-header {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
