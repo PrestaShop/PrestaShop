@@ -54,7 +54,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     {
         $fixedPrice = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
             InitialPrice::INITIAL_PRICE_VALUE :
-            (string) $data['price']
+            (string) $data['fixed_price']
         ;
 
         $command = new AddProductSpecificPriceCommand(

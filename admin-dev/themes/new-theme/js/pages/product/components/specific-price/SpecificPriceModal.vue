@@ -118,6 +118,7 @@
     methods: {
       submitForm() {
         this.submittingForm = true;
+        this.loadingForm = true;
         const iframeBody = this.$refs.iframe.contentDocument.body;
         const form = iframeBody.querySelector(SpecificPriceMap.form);
         form.submit();
