@@ -54,9 +54,6 @@ class DeltaQuantityType extends TranslatorAwareType
                 'default_empty_data' => 0,
                 'label' => $this->trans('Add or subtract items', 'Admin.Global'),
                 'block_prefix' => 'delta_quantity_delta',
-                'row_attr' => [
-                    'class' => 'delta-quantity-delta-container',
-                ],
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                     new NotBlank(),

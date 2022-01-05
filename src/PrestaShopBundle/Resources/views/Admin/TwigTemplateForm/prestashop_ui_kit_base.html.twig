@@ -1266,7 +1266,22 @@
       <span class="new-quantity">{{ form.vars.value }}</span>
     </span>
   </div>
+{% endblock %}
 
+{% block delta_quantity_delta_row %}
+  <div class="form-group{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if row_attr.class is defined %} {{ row_attr.class }}{% endif %}">
+    <div class="delta-quantity-delta-container">
+      {{- form_label(form) -}}
+      {{- block('form_prepend_alert') -}}
+      {{- block('form_prepend_external_link') -}}
+
+      {{- form_widget(form) -}}
+
+      {{- block('form_append_alert') -}}
+      {{- block('form_append_external_link') -}}
+    </div>
+    {{- form_errors(form) -}}
+  </div>
 {% endblock %}
 
 {% block delta_quantity_delta_widget %}
