@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Twig\Extension;
 
 use DateTime;
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -44,13 +45,39 @@ class LocalizationExtension extends AbstractExtension
     private $dateFormatLight;
 
     /**
+     * @var string
+     */
+    private $contextLocale;
+
+    /**
+     * @var string
+     */
+    private $contextCurrencyIsoCode;
+
+    /**
+     * @var Repository
+     */
+    private $localeRepository;
+
+    /**
      * @param string $contextDateFormatFull
      * @param string $contextDateFormatLight
+     * @param string $contextLocale
+     * @param string $contextCurrencyIsoCode
+     * @param Repository $localeRepository
      */
-    public function __construct(string $contextDateFormatFull, string $contextDateFormatLight)
-    {
+    public function __construct(
+        string $contextDateFormatFull,
+        string $contextDateFormatLight,
+        string $contextLocale,
+        string $contextCurrencyIsoCode,
+        Repository $localeRepository
+    ) {
         $this->dateFormatFull = $contextDateFormatFull;
         $this->dateFormatLight = $contextDateFormatLight;
+        $this->contextLocale = $contextLocale;
+        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
+        $this->localeRepository = $localeRepository;
     }
 
     public function getFilters(): array
@@ -58,7 +85,22 @@ class LocalizationExtension extends AbstractExtension
         return [
             new TwigFilter('date_format_full', [$this, 'dateFormatFull']),
             new TwigFilter('date_format_lite', [$this, 'dateFormatLite']),
+            new TwigFilter('price_format', [$this, 'priceFormat']),
         ];
+    }
+
+    /**
+     * @param float $price
+     * @param string|null $currencyCode
+     * @param string|null $locale
+     *
+     * @return string
+     */
+    public function priceFormat(float $price, string $currencyCode = null, string $locale = null): string
+    {
+        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLocale);
+
+        return $locale->formatPrice($price, $currencyCode ?? $this->contextCurrencyIsoCode);
     }
 
     /**
