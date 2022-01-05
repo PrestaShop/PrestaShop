@@ -143,12 +143,39 @@ $product-page-padding-bottom: 80px !default;
       }
     }
 
-    .product-type-preview {
-      color: $medium-gray;
-      cursor: pointer;
+    .product-header-form {
+      .product-type-preview {
+        color: $medium-gray;
+        cursor: pointer;
 
-      &:hover {
-        color: $primary;
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .product-header-details {
+      .product-header-summary {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        .product-field-preview {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 29px;
+
+          .product-field-value {
+            padding: 0 0.75rem;
+            color: $white;
+            background-color: $medium-gray;
+            @include border-radius(24px);
+          }
+        }
       }
     }
   }
