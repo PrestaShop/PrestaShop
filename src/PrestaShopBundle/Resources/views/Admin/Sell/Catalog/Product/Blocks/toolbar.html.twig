@@ -27,21 +27,19 @@
     <a class="toolbar-button btn-sales" href="{{ statsLink }}" target="_blank" title="{{ 'Sales'|trans({}, 'Admin.Global') }}"
        id="product_form_go_to_sales">
       <i class="material-icons">assessment</i>
-      <span class="title">{{ 'Sales'|trans({}, 'Admin.Global') }}</span>
     </a>
   {% endif %}
 
   <a
     class="toolbar-button btn-quicknav btn-sidebar"
     href="#"
-    title="{{ 'Quick navigation'|trans({}, 'Admin.Global') }}"
+    title="{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}"
     data-toggle="sidebar"
     data-target="#right-sidebar"
     data-url="{{ path('admin_product_list', {limit: 'last', offset: 'last', view: 'quicknav'}) }}"
     id="product_form_open_quicknav"
   >
     <i class="material-icons">list</i>
-    <span class="title">{{ 'Product list'|trans({}, 'Admin.Catalog.Feature') }}</span>
   </a>
 
   <a class="toolbar-button btn-help btn-sidebar" href="#"
@@ -52,6 +50,5 @@
      id="product_form_open_help"
   >
     <i class="material-icons">help</i>
-    <span class="title">{{ 'Help'|trans({}, 'Admin.Global') }}</span>
   </a>
 </div>
