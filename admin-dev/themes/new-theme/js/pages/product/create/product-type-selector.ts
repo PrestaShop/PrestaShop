@@ -31,8 +31,8 @@ export default class ProductTypeSelector {
 
   private $descriptionContainer: JQuery;
 
-  constructor() {
-    this.$typeSelector = $(ProductTypeMap.select);
+  constructor(typeSelector: string) {
+    this.$typeSelector = $(typeSelector);
     this.$descriptionContainer = $(ProductTypeMap.typeDescription);
     this.init();
   }
