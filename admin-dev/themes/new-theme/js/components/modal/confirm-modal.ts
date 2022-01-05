@@ -119,7 +119,7 @@ export class ConfirmModal extends Modal implements ConfirmModalType {
   constructor(
     inputParams: InputConfirmModalParams,
     confirmCallback: (event: Event) => void,
-    cancelCallback = () => true,
+    cancelCallback?: () => void,
   ) {
     const params: ConfirmModalParams = {
       id: 'confirm-modal',
