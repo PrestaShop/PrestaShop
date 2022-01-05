@@ -1096,6 +1096,10 @@ $product-page-padding-bottom: 80px !default;
       position: absolute;
       top: 3px;
       right: 3px;
+
+      .toolbar-button {
+        margin: 0 0.156rem;
+      }
     }
   }
 
