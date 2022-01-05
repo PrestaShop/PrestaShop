@@ -50,6 +50,17 @@
           </div>
           <div class="product-field-label">
             {{ 'tax incl.'|trans({}, 'Admin.Global') }}
+
+            {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
+              {% if choice is selectedchoice(productForm.pricing.tax_rules_group_id.vars.value) %}
+                {% set taxRate = choice.attr['data-tax-rate'] %}
+                {% dump(choice) %}
+                {% dump(taxRate) %}
+                {% if taxRate %}
+                  {{ '(tax rule: %taxRate%%)'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
           </div>
         </div>
 
