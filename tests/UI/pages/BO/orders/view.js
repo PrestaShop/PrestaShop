@@ -662,12 +662,20 @@ class Order extends BOBasePage {
     await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
   }
 
+  async getInvoicesFromSelectOptions(page) {
+    return this.getTextContent(page, this.addProductInvoiceSelect);
+  }
+
   getNewInvoiceCarrierName(page) {
     return this.getTextContent(page, '#addProductNewInvoiceInfo div p');
   }
 
   isFreeShippingSelected(page) {
     return this.isChecked(page, '#add_product_row_free_shipping');
+  }
+
+  selectFreeShipping(page) {
+    return page.check('#add_product_row_free_shipping');
   }
 
   async selectFreeShippingCheckbox(page) {
