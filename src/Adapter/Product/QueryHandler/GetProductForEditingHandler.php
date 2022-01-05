@@ -479,9 +479,9 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     {
         $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));
         if ($coverImage) {
-            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }
 
-        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
     }
 }
