@@ -26,8 +26,10 @@
 
 namespace PrestaShopBundle\Twig\Extension;
 
+use Currency;
 use DateTime;
 use DateTimeInterface;
+use Language;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -45,39 +47,39 @@ class LocalizationExtension extends AbstractExtension
     private $dateFormatLight;
 
     /**
-     * @var string
-     */
-    private $contextLocale;
-
-    /**
-     * @var string
-     */
-    private $contextCurrencyIsoCode;
-
-    /**
      * @var Repository
      */
     private $localeRepository;
 
     /**
+     * @var Language|null
+     */
+    private $contextLanguage;
+
+    /**
+     * @var Currency|null
+     */
+    private $contextCurrency;
+
+    /**
      * @param string $contextDateFormatFull
      * @param string $contextDateFormatLight
-     * @param string $contextLocale
-     * @param string $contextCurrencyIsoCode
      * @param Repository $localeRepository
+     * @param Language|null $contextLanguage No strict type for this one because another Language class is used during install
+     * @param Currency|null $contextCurrency
      */
     public function __construct(
         string $contextDateFormatFull,
         string $contextDateFormatLight,
-        string $contextLocale,
-        string $contextCurrencyIsoCode,
-        Repository $localeRepository
+        Repository $localeRepository,
+        $contextLanguage,
+        ?Currency $contextCurrency
     ) {
         $this->dateFormatFull = $contextDateFormatFull;
         $this->dateFormatLight = $contextDateFormatLight;
-        $this->contextLocale = $contextLocale;
-        $this->contextCurrencyIsoCode = $contextCurrencyIsoCode;
         $this->localeRepository = $localeRepository;
+        $this->contextLanguage = $contextLanguage;
+        $this->contextCurrency = $contextCurrency;
     }
 
     public function getFilters(): array
@@ -98,9 +100,16 @@ class LocalizationExtension extends AbstractExtension
      */
     public function priceFormat(float $price, string $currencyCode = null, string $locale = null): string
     {
-        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLocale);
+        // If no locale is specified and the context language is not accessible we can't format so we return the input
+        // unchanged, same thing for the currency
+        if ((null === $locale && (null === $this->contextLanguage || empty($this->contextLanguage->locale))) ||
+            (null === $currencyCode && (null === $this->contextCurrency || empty($this->contextCurrency->iso_code)))) {
+            return (string) $price;
+        }
 
-        return $locale->formatPrice($price, $currencyCode ?? $this->contextCurrencyIsoCode);
+        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLanguage->locale);
+
+        return $locale->formatPrice($price, $currencyCode ?? $this->contextCurrency->iso_code);
     }
 
     /**
