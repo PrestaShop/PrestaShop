@@ -90,7 +90,6 @@
         </div>
       {/foreach}
     </div>
-
   {else}
     <div class="alert alert-info" role="alert" data-alert="info">{l s='You have no merchandise return authorizations.' d='Shop.Notifications.Error'}</div>
   {/if}
