@@ -38,6 +38,9 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Type;
 
+/**
+ * For combination update in bulk action
+ */
 class BulkCombinationType extends TranslatorAwareType
 {
     /**
