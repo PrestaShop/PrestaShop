@@ -450,3 +450,55 @@ Feature: Edit existing Specific Price from Back Office (BO).
       | group                 | visitor             |
       | customer              |                     |
       | product               | product2            |
+
+  Scenario: It is not allowed to set negative fixed price value except the value of initial price option (-1)
+    Given specific price price3 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              |                     |
+      | product               | product2            |
+    When I edit specific price "price3" with following details:
+      | fixed price | -1 |
+    Then specific price price3 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | -1                  |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              |                     |
+      | product               | product2            |
+    When I edit specific price "price3" with following details:
+      | fixed price | -50 |
+    Then I should get error that specific price "fixed price" is invalid
+    And specific price price3 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | -1                  |
+      | from quantity         | 1                   |
+      | from                  | 0000-00-00 00:00:00 |
+      | to                    | 0000-00-00 00:00:00 |
+      | shop                  | testShop            |
+      | currency              | usd                 |
+      | country               | UnitedStates        |
+      | group                 | visitor             |
+      | customer              |                     |
+      | product               | product2            |

@@ -243,7 +243,7 @@ Feature: Update product options from Back Office (BO)
     Then I should get error that specific price reduction or price must be set
     And product "product3" should have 0 specific prices
 
-  Scenario: I can define fixed price value when adding specific price
+  Scenario: It is not allowed to set negative fixed price value except the value of initial price option (-1)
     Given I add product "product4" with following information:
       | name[en-US] | Mugger mug |
       | type        | standard   |
