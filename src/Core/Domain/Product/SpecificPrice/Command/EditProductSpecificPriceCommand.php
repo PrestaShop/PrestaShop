@@ -105,6 +105,7 @@ class EditProductSpecificPriceCommand
      *
      * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
      *        but it requires some refactoring as it was already used in many places this primitive way
+     *        related reminder issue https://github.com/PrestaShop/PrestaShop/issues/27205
      */
     private $customerId;
 
