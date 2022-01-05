@@ -39,7 +39,7 @@
     {/foreach}
   {else}
     <div class="alert alert-info" role="alert" data-alert="info">
-      {l s='No addresses are available.' d='Shop.Notifications.Success'} <a href="{$urls.pages.address}" title="{l s='Add a new address.' d='Shop.Theme.Actions'}">{l s='Add a new address.' d='Shop.Theme.Actions'}</a>
+      {l s='No addresses are available.' d='Shop.Notifications.Success'} <a href="{$urls.pages.address}" title="{l s='Add a new address' d='Shop.Theme.Actions'}">{l s='Add a new address' d='Shop.Theme.Actions'}</a>
     </div>
   {/if}
   <div class="clearfix"></div>
