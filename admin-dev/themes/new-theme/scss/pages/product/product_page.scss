@@ -119,6 +119,10 @@ $product-page-padding-bottom: 80px !default;
     @include border-radius(0.375rem);
     box-shadow: $gray-dark 0 0 10px;
 
+    > * {
+      flex-grow: 1;
+    }
+
     $product-cover-size: 110px;
 
     .product-header-cover {
@@ -136,6 +140,15 @@ $product-page-padding-bottom: 80px !default;
           max-height: $product-cover-size;
           margin: auto;
         }
+      }
+    }
+
+    .product-type-preview {
+      color: $medium-gray;
+      cursor: pointer;
+
+      &:hover {
+        color: $primary;
       }
     }
   }
