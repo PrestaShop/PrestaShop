@@ -23,9 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ProductTypeSelector from '@pages/product/create/product-type-selector';
+import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
 $(() => {
-  new ProductTypeSelector();
+  new ProductTypeSelector(ProductMap.create.productTypeSelector.creationSelector);
 });
