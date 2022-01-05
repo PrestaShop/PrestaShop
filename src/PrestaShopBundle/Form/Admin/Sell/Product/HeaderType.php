@@ -51,7 +51,7 @@ class HeaderType extends TranslatorAwareType
                 'label' => false,
             ])
             ->add('name', TranslatableType::class, [
-                'label' => false,
+                'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
                 'constraints' => $nameConstraints,
                 'options' => [

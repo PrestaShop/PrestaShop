@@ -45,7 +45,7 @@
   </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page product-page-v2 justify-content-md-center', 'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-product-type': productType
   }}) }}
@@ -53,14 +53,11 @@
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
       'productForm': productForm,
-      'isMultiShopContext': isMultiShopContext,
       'helpLink': helpLink,
       'statsLink': statsLink
     })
     }}
   {% endblock %}
-
-  <div class="col-xxl-10">
 
   {{ block('session_alert') }}
 
@@ -139,7 +136,6 @@
         }) }}
       {% endblock %}
     </div>
-  </div>
 
   {% block product_footer %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {

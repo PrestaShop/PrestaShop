@@ -359,7 +359,6 @@ class ProductController extends FrameworkBundleAdminController
     private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
         $shopContext = $this->get('prestashop.adapter.shop.context');
-        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
@@ -368,7 +367,6 @@ class ProductController extends FrameworkBundleAdminController
             'productForm' => $productForm->createView(),
             'statsLink' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]),
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
     }
