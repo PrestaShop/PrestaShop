@@ -29,25 +29,25 @@ const {$} = window;
  * Shows/hides 'include_tax' field depending from 'reduction_type' field value
  */
 export default class IncludeTaxFieldToggle {
-  $sourceSelector: JQuery;
+  $reductionTypeSelector: JQuery;
 
-  $targetSelector: JQuery;
+  $taxInclusionInputs: JQuery;
 
-  constructor(sourceSelector: string, targetSelector: string) {
-    this.$sourceSelector = $(sourceSelector);
-    this.$targetSelector = $(targetSelector);
+  constructor(reductionTypeSelector: string, taxInclusionInputs: string) {
+    this.$reductionTypeSelector = $(reductionTypeSelector);
+    this.$taxInclusionInputs = $(taxInclusionInputs);
     this.handle();
-    this.$sourceSelector.on('change', () => this.handle());
+    this.$reductionTypeSelector.on('change', () => this.handle());
   }
 
   /**
    * When source value is 'percentage', target field is shown, else hidden
    */
   private handle(): void {
-    if (this.$sourceSelector.val() === 'percentage') {
-      this.$targetSelector.fadeOut();
+    if (this.$reductionTypeSelector.val() === 'percentage') {
+      this.$taxInclusionInputs.fadeOut();
     } else {
-      this.$targetSelector.fadeIn();
+      this.$taxInclusionInputs.fadeIn();
     }
   }
 }
