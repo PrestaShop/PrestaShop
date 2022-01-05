@@ -808,6 +808,7 @@ class HelperListCore extends Helper
             'name' => isset($name) ? $name : null,
             'name_id' => isset($name_id) ? $name_id : null,
             'row_hover' => $this->row_hover,
+            'js_dir' => _PS_JS_DIR_,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
         ], $this->tpl_vars));
 
