@@ -8,6 +8,7 @@
 
 .product-price {
   display: inline-block;
+  max-width: 100%;
   color: $brand-primary;
 }
 
@@ -243,10 +244,13 @@
   }
 }
 
-.product-unit-price {
+.product-unit-price,
+.has-discount .product-unit-price {
   margin-bottom: 0;
+  overflow: hidden;
   font-size: $font-size-xs;
-  color: $brand-primary;
+  color: $gray;
+  text-overflow: ellipsis;
 }
 
 .tabs {

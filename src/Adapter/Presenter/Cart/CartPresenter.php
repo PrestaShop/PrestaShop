@@ -154,13 +154,11 @@ class CartPresenter implements PresenterInterface
         if ($this->includeTaxes()) {
             $rawProduct['price_amount'] = $rawProduct['price_wt'];
             $rawProduct['price'] = $this->priceFormatter->format($rawProduct['price_wt']);
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_included'];
         } else {
             $rawProduct['price_amount'] = $rawProduct['price'];
             $rawProduct['price'] = $rawProduct['price_tax_exc'] = $this->priceFormatter->format($rawProduct['price']);
-        }
-
-        if ($rawProduct['price_amount'] && $rawProduct['unit_price_ratio'] > 0) {
-            $rawProduct['unit_price'] = $rawProduct['price_amount'] / $rawProduct['unit_price_ratio'];
+            $rawProduct['unit_price'] = $rawProduct['unit_price_tax_excluded'];
         }
 
         $rawProduct['total'] = $this->priceFormatter->format(

@@ -23,8 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import _ from 'lodash';
+import BigNumber from 'bignumber.js';
 import EventEmitter from '@components/event-emitter';
+import {transform as numberCommaTransform} from '@js/app/utils/number-comma-transformer';
 
 const {$} = window;
 
@@ -243,6 +244,17 @@ export default class FormObjectMapper {
   }
 
   /**
+   * Returns a model field by modelKey converted as a BigNumber instance, it also cleans
+   * any invalid comma to avoid conversion error (since some languages sue comma as a decimal
+   * separator).
+   *
+   * @param modelKey
+   */
+  getBigNumber(modelKey: string): BigNumber {
+    return new BigNumber(numberCommaTransform(this.getValue(modelKey)));
+  }
+
+  /**
    * Get a field from the object based on the model key,
    * you can even get a sub part of the whole model,
    * Get a field from the object based on the model key,
@@ -266,12 +278,14 @@ export default class FormObjectMapper {
    * @private
    */
   private watchUpdates(): void {
+    // Only watch change event, not keyup event, this reduces the number of computing while typing and it prevents a
+    // bug when using the NumberFormatter component which only applies on change event So both component must trigger
+    // on change event only if we want them to apply their modifications appropriately The second advantage is that
+    // debounce is not needed anymore which prevents any bug when form is submitted before un-focusing the input
     this.$form.on(
-      'keyup change dp.change',
+      'change dp.change',
       ':input',
-      _.debounce((event: JQueryEventObject) => this.inputUpdated(event), 350, {
-        maxWait: 1500,
-      }),
+      (event: JQueryEventObject) => this.inputUpdated(event),
     );
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
@@ -345,7 +359,7 @@ export default class FormObjectMapper {
     inputName: string,
     value: string | number | string[] | undefined,
   ): void {
-    const $input = $(`[name="${inputName}"]`, this.$form);
+    const $input: JQuery = $(`[name="${inputName}"]`, this.$form);
 
     if (!$input.length) {
       console.error(`Input with name ${inputName} is not present in form.`);
@@ -353,12 +367,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    // This check is important to avoid infinite loops,
-    // we don't use strict equality on purpose because it would result
-    // into a potential infinite loop if type don't match,
-    // which can easily happen with a number value and a text input.
-    // eslint-disable-next-line eqeqeq
-    if ($input.val() != value) {
+    if (!this.hasSameValue($input.val(), value)) {
       $input.val(<string>value);
 
       if ($input.data('toggle') === 'select2') {
@@ -367,6 +376,34 @@ export default class FormObjectMapper {
         $input.trigger('change');
       }
     }
+  }
+
+  /**
+   * Check if both values are equal regardless of their type.
+   *
+   * @param inputValue
+   * @param referenceValue
+   * @private
+   */
+  private hasSameValue(
+    inputValue: string | number | string[] | undefined,
+    referenceValue: string | number | string[] | undefined,
+  ): boolean {
+    /*
+     * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
+     * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
+     *
+     * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
+     * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
+     * as numbers can be written with comma separator depending on the language.
+     */
+    // eslint-disable-next-line eqeqeq
+    if (Number(numberCommaTransform(referenceValue)) == numberCommaTransform(inputValue)) {
+      return true;
+    }
+
+    // eslint-disable-next-line eqeqeq
+    return referenceValue == inputValue;
   }
 
   /**

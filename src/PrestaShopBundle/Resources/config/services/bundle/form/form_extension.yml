@@ -5,7 +5,7 @@ services:
   form.extension.comma_transformer:
     class: 'PrestaShopBundle\Form\Admin\Extension\CommaTransformerExtension'
     tags:
-      - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\NumberType }
+      - { name: form.type_extension }
 
   form.type.extension.money:
     class: 'PrestaShopBundle\Form\Admin\Type\CustomMoneyType'

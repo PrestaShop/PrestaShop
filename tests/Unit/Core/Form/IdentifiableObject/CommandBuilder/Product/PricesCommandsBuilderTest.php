@@ -31,7 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder;
 
-class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
+class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
      * @dataProvider getExpectedCommands
@@ -163,7 +163,7 @@ class PricesCommandBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'not_handled' => 0,
                     'unit_price' => [
-                        'price' => '45.56',
+                        'price_tax_excluded' => '45.56',
                     ],
                 ],
             ],
