@@ -47,7 +47,7 @@ export type ModalParams = {
   closable?: boolean;
   modalTitle?: string
   dialogStyle?: CssProps;
-  closeCallback?: () => boolean;
+  closeCallback?: () => void;
 }
 export type InputModalParams = Partial<ModalParams>;
 
@@ -82,7 +82,6 @@ export class ModalContainer implements ModalContainerType {
     const params: ModalParams = {
       id: 'confirm-modal',
       closable: false,
-      closeCallback: () => true,
       ...inputParams,
     };
 
