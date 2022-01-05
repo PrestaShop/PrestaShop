@@ -55,12 +55,25 @@
 
         {% if productForm.stock is defined %}
           {% set quantity = productForm.stock.quantities.quantity.quantity.vars.value %}
+          {% set lowStock = productForm.stock.options.low_stock_threshold.vars.value %}
+
+          {% if quantity < 0 %}
+            {% set stockClass = 'danger' %}
+            {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+          {% elseif quantity < lowStock %}
+            {% set stockClass = 'warning' %}
+            {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+          {% else %}
+            {% set stockClass = 'success' %}
+            {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+          {% endif %}
+
           <div class="product-field-preview">
-            <div class="product-field-value">
+            <div class="product-field-value {{ stockClass }}">
               {{ quantity }}
             </div>
             <div class="product-field-label">
-              {{ 'in stock'|trans({}, 'Admin.Global') }}
+              {{ stockLabel }}
             </div>
           </div>
         {% endif %}
