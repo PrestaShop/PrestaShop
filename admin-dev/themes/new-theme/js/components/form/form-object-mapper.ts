@@ -24,7 +24,6 @@
  */
 
 import BigNumber from 'bignumber.js';
-import _ from 'lodash';
 import EventEmitter from '@components/event-emitter';
 import {transform as numberCommaTransform} from '@js/app/utils/number-comma-transformer';
 
@@ -279,12 +278,14 @@ export default class FormObjectMapper {
    * @private
    */
   private watchUpdates(): void {
+    // Only watch change event, not keyup event, this reduces the number of computing while typing and it prevents a
+    // bug when using the NumberFormatter component which only applies on change event So both component must trigger
+    // on change event only if we want them to apply their modifications appropriately The second advantage is that
+    // debounce is not needed anymore which prevents any bug when form is submitted before un-focusing the input
     this.$form.on(
       'change dp.change',
       ':input',
-      _.debounce((event: JQueryEventObject) => this.inputUpdated(event), 350, {
-        maxWait: 1500,
-      }),
+      (event: JQueryEventObject) => this.inputUpdated(event),
     );
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
