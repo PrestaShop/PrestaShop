@@ -60,7 +60,7 @@ export default class FormSubmitButton {
       (event: JQueryEventObject) => {
         event.preventDefault();
 
-        const $btn = $(this);
+        const $btn = $(event.target);
 
         if (
           $btn.data('form-confirm-message')
