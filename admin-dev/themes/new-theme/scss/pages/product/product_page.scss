@@ -144,6 +144,8 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .product-header-form {
+      flex-grow: 2;
+
       .product-type-preview {
         color: $medium-gray;
         cursor: pointer;
@@ -160,6 +162,7 @@ $product-page-padding-bottom: 80px !default;
       .product-header-summary {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         justify-content: flex-end;
         gap: 1rem;
 
@@ -167,6 +170,7 @@ $product-page-padding-bottom: 80px !default;
           display: flex;
           flex-direction: row;
           gap: 0.5rem;
+          max-height: 29px;
           font-size: 1rem;
           font-weight: 600;
           line-height: 29px;
@@ -188,6 +192,23 @@ $product-page-padding-bottom: 80px !default;
             &.success {
               background-color: $success;
             }
+          }
+        }
+      }
+
+      .product-header-references {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin: 1.75rem 0 0;
+        gap: 1rem;
+        font-size: 0.875rem;
+        font-weight: 400;
+
+        label {
+          &::after {
+            content: ":";
           }
         }
       }
@@ -237,18 +258,6 @@ $product-page-padding-bottom: 80px !default;
 
         .header-name {
           flex-grow: 1;
-        }
-
-        .references-display {
-          margin: 1rem 0;
-
-          label {
-            font-weight: 600;
-
-            &::after {
-              content: ":";
-            }
-          }
         }
 
         > .form-group {
