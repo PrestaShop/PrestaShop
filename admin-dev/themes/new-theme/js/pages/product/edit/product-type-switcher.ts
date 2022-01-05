@@ -23,54 +23,84 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ConfirmModal from '@components/modal';
+import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
+import ProductTypeSelector from '@pages/product/create/product-type-selector';
 
 /**
  * This component watches for modification of the product type, when it happens it displays a modal warning
  * for the user with a warning about what is going to be deleted if he validates this change. If modification
  * is confirmed the form is submitted right away to validate the change and update the page.
  */
-export default class ProductTypeManager {
+export default class ProductTypeSwitcher {
+  private $typeSelector: JQuery;
+
+  private $productForm: JQuery;
+
+  private $modalContent: JQuery;
+
+  private $productTypePreview: JQuery;
+
+  private readonly productId: number;
+
+  private readonly initialType: string;
+
   /**
-   * @param {jQuery} $typeSelector Select element to choose the product type
-   * @param {jQuery} $productForm Product form that needs to be submitted
+   * @param {JQuery} $productForm Product form that needs to be submitted
    */
-  constructor($typeSelector, $productForm) {
-    this.$typeSelector = $typeSelector;
+  constructor($productForm: JQuery) {
     this.$productForm = $productForm;
+    this.$typeSelector = $(ProductMap.productTypeSelector);
+    this.$modalContent = $(ProductMap.productTypeSelectorModalContent);
+    this.$productTypePreview = $(ProductMap.productTypePreview);
+
     this.productId = parseInt($productForm.data('productId'), 10);
-    this.initialType = $typeSelector.val();
+    this.initialType = <string> this.$typeSelector.val();
 
-    this.$typeSelector.on('change', (event) => this.confirmTypeSubmit(event));
-
-    return {};
+    this.$productTypePreview.on('click', () => this.showSelectionModal());
   }
 
-  /**
-   * @private
-   */
-  confirmTypeSubmit() {
+  private showSelectionModal() {
+    const selectionModal = new ConfirmModal(
+      {
+        id: 'switch-product-type-modal',
+        confirmMessage: this.$modalContent.html(),
+        modalTitle: this.$typeSelector.data('switch-modal-title'),
+        confirmButtonLabel: this.$typeSelector.data('modal-apply'),
+        closeButtonLabel: this.$typeSelector.data('modal-cancel'),
+        closable: true,
+      },
+      () => {
+        // On selection confirm we display a confirmation modal with a warning message
+        const modalSelector = $(ProductMap.productTypeModalSelector);
+        this.confirmTypeSubmit(<string> modalSelector.val());
+      },
+    );
+
+    // We init the type selector component but we target the one which has been rendered inside the modal
+    new ProductTypeSelector(ProductMap.productTypeModalSelector);
+
+    selectionModal.show();
+  }
+
+  private confirmTypeSubmit(newType: string) {
     let confirmMessage = this.$typeSelector.data('confirm-message');
     let confirmWarning = '';
 
-    // If no productId we are in creation page so no need for extra warning
-    if (this.productId) {
-      switch (this.initialType) {
-        case ProductMap.productType.COMBINATIONS:
-          confirmWarning = this.$typeSelector.data('combinations-warning');
-          break;
-        case ProductMap.productType.PACK:
-          confirmWarning = this.$typeSelector.data('pack-warning');
-          break;
-        case ProductMap.productType.VIRTUAL:
-          confirmWarning = this.$typeSelector.data('virtual-warning');
-          break;
-        case ProductMap.productType.STANDARD:
-        default:
-          confirmWarning = '';
-          break;
-      }
+    switch (this.initialType) {
+      case ProductMap.productType.COMBINATIONS:
+        confirmWarning = this.$typeSelector.data('combinations-warning');
+        break;
+      case ProductMap.productType.PACK:
+        confirmWarning = this.$typeSelector.data('pack-warning');
+        break;
+      case ProductMap.productType.VIRTUAL:
+        confirmWarning = this.$typeSelector.data('virtual-warning');
+        break;
+      case ProductMap.productType.STANDARD:
+      default:
+        confirmWarning = '';
+        break;
     }
 
     if (confirmWarning) {
@@ -89,10 +119,8 @@ export default class ProductTypeManager {
       },
       () => {
         $(ProductMap.productFormSubmitButton).prop('disabled', true);
+        this.$typeSelector.val(newType);
         this.$productForm.submit();
-      },
-      () => {
-        this.$typeSelector.val(this.initialType);
       },
     );
     modal.show();

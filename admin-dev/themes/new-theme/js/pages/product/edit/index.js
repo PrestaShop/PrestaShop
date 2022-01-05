@@ -37,7 +37,7 @@ import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 import CreateProductModal from '@pages/product/components/create-product-modal';
@@ -78,7 +78,7 @@ $(() => {
   new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
-  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new ProductTypeSwitcher($productForm);
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
   new ProductModulesManager();

@@ -33,8 +33,10 @@
         <span class="product-type-preview-label">{{ choice.label }}</span>
       {% endif %}
     {% endfor %}
-    <div class="base-product-type-selector d-none">
-      {{ block('base_product_type_row') }}
+    <div id="product-type-selector-modal-content" class="d-none">
+      <div class="product-page-v2">
+        {{ block('base_product_type_row') }}
+      </div>
     </div>
   </div>
 {% endblock %}

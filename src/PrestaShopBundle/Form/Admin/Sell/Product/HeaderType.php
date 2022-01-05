@@ -63,6 +63,7 @@ class HeaderType extends TranslatorAwareType
             ])
             ->add('type', ProductTypeType::class, [
                 'attr' => [
+                    'data-switch-modal-title' => $this->trans('Change the product type', 'Admin.Catalog.Notification'),
                     'data-modal-title' => $this->trans('Are you sure you want to change the product type?', 'Admin.Catalog.Notification'),
                     'data-modal-apply' => $this->trans('Change product type', 'Admin.Catalog.Notification'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
@@ -70,6 +71,7 @@ class HeaderType extends TranslatorAwareType
                     'data-combinations-warning' => $this->trans('This will delete all combinations.', 'Admin.Catalog.Notification'),
                     'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
                     'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
+                    'class' => 'header-product-type-selector',
                 ],
             ])
         ;
