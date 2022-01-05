@@ -7090,16 +7090,13 @@ class ProductCore extends ObjectModel
      */
     public function getWsPositionInCategory()
     {
-        $result = Db::getInstance()->executeS(
+        $position = (int) Db::getInstance()->getValue(
             'SELECT `position`
             FROM `' . _DB_PREFIX_ . 'category_product`
             WHERE `id_category` = ' . (int) $this->id_category_default . '
             AND `id_product` = ' . (int) $this->id);
-        if (count($result) > 0) {
-            return $result[0]['position'];
-        }
 
-        return '';
+        return $position ?? '';
     }
 
     /**
