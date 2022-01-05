@@ -828,6 +828,7 @@ GitHub contributors:
 - Vladimir
 - vmamykin
 - Wayann
+- Web Helpers Pau
 - Web Premiere
 - web-plus
 - webbax

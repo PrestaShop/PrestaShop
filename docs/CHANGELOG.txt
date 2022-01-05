@@ -24,6 +24,56 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.3 - (2022-01-05)
+####################################
+- Back Office:
+  - Bug fix:
+    - #26514: Allow all characters for Cart Rule & Order Cart Rule names (by @Progi1984)
+    - #27114: Fix color picker bug when multiple colorpickers are present (by @Progi1984)
+    - #27011: Use reverse translation for Tabs with no wording and domain (by @eternoendless)
+    - #26839: [BC Break] Exclude directories when extracting module wordings (by @sowbiba)
+    - #26590: Fixed error message when the order language is different of the employee language (by @Progi1984)
+    - #26929: Bad display of label in Email theme page (by @okom3pom)
+    - #26613: Remove header calculation and set toolbar to sticky (by @NeOMakinG)
+    - #26714: Fix dropdown align on email theme page (by @NeOMakinG)
+    - #26481: Fixed Recalculate Shipping when the carrier of an order is changed (by @Progi1984)
+    - #26691: In BackOffice, fixed the header search box oversized height (by @mparvazi)
+    - #26607: Fix unnecessary scrollbar (by @Hlavtox)
+    - #27259: Fix left padding of header when sidebar menu is closed (by @NeOMakinG)
+- Front Office:
+  - Improvement:
+    - #26798: Replaces the new product flag in the product flags by new (by @WebHelpersPau)
+    - #26622: Fix manufacturer logo in Classic theme (by @SharakPL)
+  - Bug fix:
+    - #26998: Fix product width on featuredproducts (by @NeOMakinG)
+    - #26706: [BC Break] Fix menu and searchbar on tablet on classic (by @NeOMakinG)
+    - #26995: Add IE11 support to FO webpack (by @NeOMakinG)
+    - #26887: Fixed the Newsletter block overlap on Customer Reassurance block (by @hibatallahAouadni)
+    - #26703: Allow vertical scroll on product images (by @NeOMakinG)
+    - #25855: [BC Break] Allowing to set different image ratio on product miniature, minor code refacto (by @Oksydan)
+    - #26823: Fix listing classes when using facetedsearch (by @NeOMakinG)
+    - #26658: Remove lazy load for logo (by @iqit-commerce)
+- Core:
+  - Improvement:
+    - #27215: Bump modules (by @Progi1984)
+    - #27083: Add allow-plugins entry for composer 2.2.x (by @atomiix)
+    - #26630: Bump version to 1.7.8.3 (by @Progi1984)
+  - Bug fix:
+    - #27035: Let Symfony handle kernel reboot (by @atomiix)
+    - #26987: Fix label_attr check in form_rest macro (by @atomiix)
+    - #26699: Add missing parameter in RenderingHookEvent (by @atomiix)
+    - #GHSA-mrq4-7ch7-2465: Server Side Twig Template Injection (by @PierreRambaud)
+- Localization:
+  - Bug fix:
+    - #27193: Missing catalog (by @jolelievre)
+- Tests:
+  - Bug fix:
+    - #27071: Do not trust the new composer binary mode (cherry pick of #27067) (by @atomiix)
+  - Refactoring:
+    - #26942: Fix tests 'Open help bar' on stocks page (by @boubkerbribri)
+    - #26776: Use new commands on package.json and mochawesome-merge to push on nightly (by @boubkerbribri)
+
+####################################
 #   v1.7.8.2 - (2021-12-02)
 ####################################
 - Core:
@@ -34,7 +84,6 @@ Release Notes for PrestaShop 1.7
     - #26524: Fix webpack production build (by @NeOMakinG)
     - #GHSA-6xxj-gcjq-wgf4: Blind SQLi using Search filters (by @PierreRambaud)
 
---------------------------------
 ####################################
 #   v1.7.8.1 - (2021-11-04)
 ####################################
