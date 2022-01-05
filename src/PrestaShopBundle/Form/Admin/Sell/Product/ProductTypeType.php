@@ -28,48 +28,39 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateProductFormType extends TranslatorAwareType
+class ProductTypeType extends ChoiceType
 {
     /**
-     * {@inheritDoc}
+     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('type', ProductTypeType::class)
-            ->add('create', SubmitType::class, [
-                'label' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
-                'row_attr' => [
-                    'class' => 'text-right',
-                ],
-            ])
-        ;
-    }
+    private $formChoiceProvider;
 
     /**
-     * {@inheritDoc}
+     * @param FormChoiceProviderInterface|FormChoiceAttributeProviderInterface $formChoiceProvider
      */
+    public function __construct(
+        $formChoiceProvider
+    ) {
+        parent::__construct();
+        $this->formChoiceProvider = $formChoiceProvider;
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'required' => false,
+            'choices' => $this->formChoiceProvider->getChoices(),
+            'choice_attr' => $this->formChoiceProvider->getChoicesAttributes(),
+            'required' => true,
             'label' => false,
-            'attr' => [
-                'data-modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
-            ],
+            'empty_data' => ProductType::TYPE_STANDARD,
+            'block_prefix' => 'product_type',
         ]);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'product';
     }
 }
