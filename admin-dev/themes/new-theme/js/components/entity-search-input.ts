@@ -46,7 +46,7 @@ export interface EntitySearchInputOptions extends OptionsObject {
   filterSelected: boolean,
   filteredIdentities: Array<string>,
 
-  removeModal: ModalOptions | null,
+  removeModal: ModalOptions,
 
   searchInputSelector: string,
   entitiesContainerSelector: string,
@@ -243,12 +243,6 @@ export default class EntitySearchInput {
       }
 
       const $entity = $(event.target).closest(this.options.entityItemSelector);
-
-      if (!this.options.removeModal) {
-        $entity.remove();
-
-        return;
-      }
 
       const modal = new (ConfirmModal as any)(
         {

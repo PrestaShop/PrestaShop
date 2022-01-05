@@ -170,7 +170,6 @@ class SpecificPriceType extends TranslatorAwareType
                 'entry_options' => [
                     'block_prefix' => 'searched_customer',
                 ],
-                'remove_modal' => null,
                 'limit' => 1,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
