@@ -69,8 +69,6 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data): void
     {
-        //@todo: there are no bulk combination commands builders yet.
-        //  Do we need dedicated ones or should be possible to reuse existing?
         $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $data);
 
         foreach ($commands as $command) {
