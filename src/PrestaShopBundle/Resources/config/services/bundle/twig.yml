@@ -110,6 +110,9 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_lite'
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.locale'
+      - '@=service("prestashop.adapter.legacy.context").getContext().currency.iso_code'
+      - "@prestashop.core.localization.locale.repository"
     tags:
       - { name: twig.extension }
 
