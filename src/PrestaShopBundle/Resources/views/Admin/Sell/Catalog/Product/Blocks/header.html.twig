@@ -93,11 +93,13 @@
 
     {% block header_references %}
       {% set referencesForm = productForm.specifications.references %}
-      <div class="references-display">
+      <div class="product-header-references">
         {% for child in referencesForm.children %}
           {% if child.vars.value is not empty %}
-            <label>{{ child.vars.label }}</label>
-            <span>{{ child.vars.value }}</span>
+            <div class="product-reference">
+              <label>{{ child.vars.label }}</label>
+              <span>{{ child.vars.value }}</span>
+            </div>
           {% endif %}
         {% endfor %}
       </div>
