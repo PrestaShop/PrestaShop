@@ -85,10 +85,6 @@
     <access id="access_3_72"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_READ"/>
     <access id="access_3_73"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_UPDATE"/>
     <access id="access_3_74"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_DELETE"/>
-    <access id="access_3_83" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_CREATE"/>
-    <access id="access_3_84" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_READ"/>
-    <access id="access_3_85" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_UPDATE"/>
-    <access id="access_3_86" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_DELETE"/>
     <access id="access_3_87" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_CREATE"/>
     <access id="access_3_88" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_READ"/>
     <access id="access_3_89" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_UPDATE"/>
@@ -257,6 +253,5 @@
     <access id="access_5_84" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_READ"/>
     <access id="access_5_85" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_UPDATE"/>
     <access id="access_5_86" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_DELETE"/>
-
   </entities>
 </entity_access>
