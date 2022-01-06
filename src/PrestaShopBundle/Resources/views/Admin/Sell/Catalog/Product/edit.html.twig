@@ -36,6 +36,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
@@ -45,7 +46,7 @@
   </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page product-page-v2 justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page justify-content-md-center', 'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-product-type': productType
   }}) }}
@@ -157,6 +158,7 @@
   {% block category_tree_form %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
   {% endblock %}
+</div>
 {% endblock %}
 
 {% block javascripts %}
