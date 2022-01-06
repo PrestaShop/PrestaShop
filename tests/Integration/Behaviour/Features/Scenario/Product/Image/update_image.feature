@@ -142,4 +142,4 @@ Feature: Update product image from Back Office (BO)
       | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
       | image1          | true     |               | 6        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
