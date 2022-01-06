@@ -373,10 +373,6 @@
     <access id="access_1_386" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLIERS_READ"/>
     <access id="access_1_387" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLIERS_UPDATE"/>
     <access id="access_1_388" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLIERS_DELETE"/>
-    <access id="access_1_389" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLYORDERS_CREATE"/>
-    <access id="access_1_390" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLYORDERS_READ"/>
-    <access id="access_1_391" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLYORDERS_UPDATE"/>
-    <access id="access_1_392" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSUPPLYORDERS_DELETE"/>
     <access id="access_1_393" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTAGS_CREATE"/>
     <access id="access_1_394" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTAGS_READ"/>
     <access id="access_1_395" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINTAGS_UPDATE"/>
