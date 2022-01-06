@@ -23,41 +23,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div id="external-combination-tab" class="form-horizontal row justify-content-md-center d-none">
-  <div class="col">
-    <div class="tab-content">
-      <div class="form-contenttab container-fluid">
-        <h2>
-          {{ 'Manage product combinations'|trans({}, 'Admin.Catalog.Feature') }}
-        </h2>
+<div id="external-combination-tab" class="form-horizontal d-none">
+  <div class="tab-content">
+    <div class="form-contenttab container-fluid">
+      <h2>
+        {{ 'Manage product combinations'|trans({}, 'Admin.Catalog.Feature') }}
+      </h2>
 
-        {# Preloader for first page load #}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/loading_state.html.twig') }}
+      {# Preloader for first page load #}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/loading_state.html.twig') }}
 
-        {# Empty state when product has no combinations #}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_state.html.twig') }}
+      {# Empty state when product has no combinations #}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_state.html.twig') }}
 
-        {# Combination generator in a modal #}
-        <div id="product_combinations_generator"
-             data-translations="{{ {
-               'generator.open': 'Open combinations generator'|trans({}, 'Admin.Catalog.Feature'),
-               'generator.success': 'Successfully generated %combinationsNb% combinations.'|trans({}, 'Admin.Catalog.Feature'),
-               'generator.action': 'Generate combinations|Generate combination|Generate %combinationsNb% combinations'|trans({}, 'Admin.Catalog.Feature'),
-               'search.placeholder': 'Search for attributes...'|trans({}, 'Admin.Catalog.Feature'),
-               'modal.title': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
-               'modal.close': 'Cancel'|trans({}, 'Admin.Actions'),
-             }|json_encode }}"
-        ></div>
+      {# Combination generator in a modal #}
+      <div id="product_combinations_generator"
+           data-translations="{{ {
+             'generator.open': 'Open combinations generator'|trans({}, 'Admin.Catalog.Feature'),
+             'generator.success': 'Successfully generated %combinationsNb% combinations.'|trans({}, 'Admin.Catalog.Feature'),
+             'generator.action': 'Generate combinations|Generate combination|Generate %combinationsNb% combinations'|trans({}, 'Admin.Catalog.Feature'),
+             'search.placeholder': 'Search for attributes...'|trans({}, 'Admin.Catalog.Feature'),
+             'modal.title': 'Generate combinations'|trans({}, 'Admin.Catalog.Feature'),
+             'modal.close': 'Cancel'|trans({}, 'Admin.Actions'),
+           }|json_encode }}"
+      ></div>
 
-        {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
-          'productId': productId,
-        })) }}
+      {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+        'productId': productId,
+      })) }}
 
-        <div id="combinations-stock-availability">
-          {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
-            'featureTitle': 'Availability preferences'|trans({}, 'Admin.Catalog.Feature'),
-          }) }}
-        </div>
+      <div id="combinations-stock-availability">
+        {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
+          'featureTitle': 'Availability preferences'|trans({}, 'Admin.Catalog.Feature'),
+        }) }}
       </div>
     </div>
   </div>
