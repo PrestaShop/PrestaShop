@@ -366,15 +366,95 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       it('should select \'Free shipping\' checkbox', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'selectFreeShippingCheckbox', baseContext);
 
-        await viewOrderPage.selectFreeShipping(page);
+        await viewOrderPage.selectFreeShippingCheckbox(page);
+
+        const isSelected = await viewOrderPage.isFreeShippingSelected(page);
+        await expect(isSelected).to.be.true;
       });
 
       it(`should add the product '${secondProduct.name}' to the cart`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addSecondProductToCart', baseContext);
 
-        const textResult = await viewOrderPage.addProductToCart(page);
+        const textResult = await viewOrderPage.addProductToCart(page, 1, true);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
       });
+
+      it('should check that invoices number is equal to 3', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
+
+        await viewOrderPage.reloadPage(page);
+
+        const documentsNumber = await viewOrderPage.getDocumentsNumber(page);
+        await expect(documentsNumber).to.be.equal(3);
+      });
+
+      it('should check the existence of new discount table', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkNewDiscountTable', baseContext);
+
+        const isVisible = await viewOrderPage.isDiscountListTableVisible(page);
+        await expect(isVisible, 'Discount list table is not visible').to.be.true;
+      });
+
+      it('should check the discount \'[Generated] CartRule for Free Shipping\'', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountName', baseContext);
+
+        const discountName = await viewOrderPage.getTextColumnFromDiscountTable(page, 'name');
+        await expect(discountName).to.be.equal('[Generated] CartRule for Free Shipping');
+      });
+
+      it('should download the third invoice', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'downloadFirstInvoice', baseContext);
+
+        filePath = await viewOrderPage.downloadInvoice(page, 5);
+
+        const doesFileExist = await files.doesFileExist(filePath, 5000);
+        await expect(doesFileExist).to.be.true;
+      });
+
+      it('should check that the \'Product reference, Product name\' are correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkProductReference', baseContext);
+
+        const productReferenceExist = await files.isTextInPDF(
+          filePath,
+          `${secondProduct.reference}, ,  ${secondProduct.name}`,
+        );
+        await expect(productReferenceExist, 'Product name and reference are not correct!').to.be.true;
+      });
+
+      it('should check that the \'Unit Price, Quantity, Total (Tax excl.)\' '
+        + 'are correct', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkPrice', baseContext);
+
+        const priceVisible = await files.isTextInPDF(
+          filePath,
+          `${secondProduct.name}, ,  `
+          + `€${secondProduct.price.toFixed(2)}, ,  `
+          + '1, ,  '
+          + `€${secondProduct.price.toFixed(2)}`,
+        );
+        await expect(
+          priceVisible,
+          'Unit Price, Quantity, Total (Tax excl.) are not correct')
+          .to.be.true;
+      });
+
+      it('should check that \'Total Products, Shipping Costs, Total(Tax exc.), Total\' are correct',
+        async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkFreeShipping', baseContext);
+
+          // Total Products, Shipping Costs, Total (Tax excl.), Total
+          const isShippingCostVisible = await files.isTextInPDF(
+            filePath,
+            `Total Products, ,  €${secondProduct.price.toFixed(2)},  `
+            + 'Shipping Costs, ,  Free Shipping,,  '
+            + `Total (Tax excl.), ,  €${secondProduct.price.toFixed(2)},,  `
+            + `Total, ,  €${secondProduct.price.toFixed(2)}`,
+          );
+          await expect(
+            isShippingCostVisible,
+            'Total Products, Shipping Costs, Total(Tax exc.), Total are not correct!',
+          ).to.be.true;
+        });
     });
   });
 
