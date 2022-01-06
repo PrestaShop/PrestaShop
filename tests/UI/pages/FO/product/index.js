@@ -275,6 +275,7 @@ class Product extends FOBasePage {
     if (proceedToCheckout) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
+      await this.waitForPageTitleToLoad(page);
     } else {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await this.waitForHiddenSelector(page, this.continueShoppingButton);

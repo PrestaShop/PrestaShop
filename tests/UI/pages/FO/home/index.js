@@ -267,7 +267,7 @@ class Home extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
 
-    await this.waitForSelectorAndClick(page, this.productColorLink(id, color));
+    await this.clickAndWaitForNavigation(page, this.productColorLink(id, color));
   }
 
   // Block cart modal methods
