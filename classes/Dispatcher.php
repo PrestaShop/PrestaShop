@@ -119,7 +119,7 @@ class DispatcherCore
             'rule' => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}.html',
             'keywords' => [
                 'id' => ['regexp' => '[0-9]+', 'param' => 'id_product'],
-                'id_product_attribute' => ['regexp' => '[0-9]+', 'param' => 'id_product_attribute'],
+                'id_product_attribute' => ['regexp' => '[0-9]*+', 'param' => 'id_product_attribute'],
                 'rewrite' => ['regexp' => self::REWRITE_PATTERN, 'param' => 'rewrite'],
                 'ean13' => ['regexp' => '[0-9\pL]*'],
                 'category' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
