@@ -106,9 +106,8 @@
 </head>
 
 {if $display_header}
-{* todo fix this*}
-{*  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">*}
-  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if}">
+{* todo fix this `smarty.get.controller|escape|strtolower|default:''` by replace with variable and inject it*}
+  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower|default:''}">
   {* begin  HEADER *}
   <header id="header" class="bootstrap">
     <nav id="header_infos" role="navigation">
