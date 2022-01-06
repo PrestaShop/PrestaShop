@@ -93,6 +93,8 @@ class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
+    this.modalConfirmNewPrice = '#modal-confirm-new-price';
+    this.modalConfirmNewPriceSubmitButton = `${this.modalConfirmNewPrice} button.btn-confirm-submit`;
     this.orderTotalPriceSpan = '#orderTotal';
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
@@ -100,10 +102,14 @@ class Order extends BOBasePage {
     this.addProductButton = '#addProductBtn';
     this.addProductRowSearch = '#add_product_row_search';
     this.addProductRowQuantity = '#add_product_row_quantity';
+    this.addProductRowPrice = '#add_product_row_price_tax_included';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
     this.addProductTotalPrice = '#addProductTotalPrice';
     this.addProductInvoiceSelect = '#add_product_row_invoice';
+    this.addProductNewInvoiceCarrierName = '#addProductNewInvoiceInfo div p[data-role=\'carrier-name\']';
+    this.addProductNewInvoiceFreeShippingCheckbox = '#add_product_row_free_shipping';
+    this.addProductNewInvoiceFreeShippingDiv = '#addProductNewInvoiceInfo td div.md-checkbox';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
     this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
@@ -609,6 +615,13 @@ class Order extends BOBasePage {
     ]);
   }
 
+  /**
+   * Modify product price for multi invoice
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param price {number} Price to edit
+   * @returns {Promise<void>}
+   */
   async modifyProductPriceForMultiInvoice(page, row, price) {
     this.dialogListener(page);
     await Promise.all([
@@ -619,10 +632,10 @@ class Order extends BOBasePage {
 
     await Promise.all([
       page.click(this.UpdateProductButton),
-      this.waitForVisibleSelector(page, '#modal-confirm-new-price'),
+      this.waitForVisibleSelector(page, this.modalConfirmNewPrice),
     ]);
 
-    await page.click('#modal-confirm-new-price button.btn.btn-primary.btn-lg.btn-confirm-submit');
+    await page.click(this.modalConfirmNewPriceSubmitButton);
     await page.waitForTimeout(2000);
 
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
@@ -658,32 +671,69 @@ class Order extends BOBasePage {
     return this.getPriceFromText(page, this.orderTotalDiscountsSpan);
   }
 
+  /**
+   * Create new invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async createNewInvoice(page) {
     await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
   }
 
-  async getInvoicesFromSelectOptions(page) {
+  /**
+   * Get invoices list from select options
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getInvoicesFromSelectOptions(page) {
     return this.getTextContent(page, this.addProductInvoiceSelect);
   }
 
+  /**
+   * Get carrier name when creating new invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
   getNewInvoiceCarrierName(page) {
-    return this.getTextContent(page, '#addProductNewInvoiceInfo div p');
+    return this.getTextContent(page, this.addProductNewInvoiceCarrierName);
   }
 
+  /**
+   * Is free shipping selected
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
   isFreeShippingSelected(page) {
-    return this.isChecked(page, '#add_product_row_free_shipping');
+    return this.isChecked(page, this.addProductNewInvoiceFreeShippingCheckbox);
   }
 
-  selectFreeShipping(page) {
-    return page.check('#add_product_row_free_shipping');
-  }
-
+  /**
+   * Select free shipping checkbox
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
   async selectFreeShippingCheckbox(page) {
-    await this.setChecked(page, '#add_product_row_free_shipping');
+    await this.waitForSelectorAndClick(page, this.addProductNewInvoiceFreeShippingDiv);
   }
 
+  /**
+   * Update product price
+   * @param page {Page} Browser tab
+   * @param price {float} Value of price to update
+   * @returns {Promise<void>}
+   */
   async updateProductPrice(page, price) {
-    await this.setValue(page, '#add_product_row_price_tax_included', price);
+    await this.setValue(page, this.addProductRowPrice, price);
+  }
+
+  /**
+   * add product quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
+   * @returns {Promise<void>}
+   */
+  async addQuantity(page, quantity) {
+    await this.setValue(page, this.addProductRowQuantity, quantity);
   }
 
   /**
@@ -704,16 +754,6 @@ class Order extends BOBasePage {
       await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
     }
     return this.getGrowlMessageContent(page);
-  }
-
-  /**
-   * add product quantity
-   * @param page {Page} Browser tab
-   * @param quantity {number} Product quantity to add
-   * @returns {Promise<void>}
-   */
-  async addQuantity(page, quantity) {
-    await this.setValue(page, this.addProductRowQuantity, quantity);
   }
 
   /**
