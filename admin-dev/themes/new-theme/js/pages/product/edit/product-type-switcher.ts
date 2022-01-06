@@ -25,6 +25,7 @@
 
 import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
+import ProductConst from '@pages/product/product-const';
 import ProductTypeSelector from '@pages/product/create/product-type-selector';
 
 /**
@@ -50,9 +51,9 @@ export default class ProductTypeSwitcher {
    */
   constructor($productForm: JQuery) {
     this.$productForm = $productForm;
-    this.$typeSelector = $(ProductMap.productTypeSelector);
-    this.$modalContent = $(ProductMap.productTypeSelectorModalContent);
-    this.$productTypePreview = $(ProductMap.productTypePreview);
+    this.$typeSelector = $(ProductMap.productType.headerSelector);
+    this.$modalContent = $(ProductMap.productType.switchModalContent);
+    this.$productTypePreview = $(ProductMap.productType.headerPreviewButton);
 
     this.productId = parseInt($productForm.data('productId'), 10);
     this.initialType = <string> this.$typeSelector.val();
@@ -63,7 +64,7 @@ export default class ProductTypeSwitcher {
   private showSelectionModal() {
     const selectionModal = new ConfirmModal(
       {
-        id: 'switch-product-type-modal',
+        id: ProductMap.productType.switchModalId,
         confirmMessage: this.$modalContent.html(),
         modalTitle: this.$typeSelector.data('switch-modal-title'),
         confirmButtonLabel: this.$typeSelector.data('modal-apply'),
@@ -72,13 +73,13 @@ export default class ProductTypeSwitcher {
       },
       () => {
         // On selection confirm we display a confirmation modal with a warning message
-        const modalSelector = $(ProductMap.productTypeModalSelector);
+        const modalSelector = $(ProductMap.productType.switchModalSelector);
         this.confirmTypeSubmit(<string> modalSelector.val());
       },
     );
 
     // We init the type selector component but we target the one which has been rendered inside the modal
-    new ProductTypeSelector(ProductMap.productTypeModalSelector);
+    new ProductTypeSelector(ProductMap.productType.switchModalSelector);
 
     selectionModal.show();
   }
@@ -88,16 +89,16 @@ export default class ProductTypeSwitcher {
     let confirmWarning = '';
 
     switch (this.initialType) {
-      case ProductMap.productType.COMBINATIONS:
+      case ProductConst.PRODUCT_TYPE.COMBINATIONS:
         confirmWarning = this.$typeSelector.data('combinations-warning');
         break;
-      case ProductMap.productType.PACK:
+      case ProductConst.PRODUCT_TYPE.PACK:
         confirmWarning = this.$typeSelector.data('pack-warning');
         break;
-      case ProductMap.productType.VIRTUAL:
+      case ProductConst.PRODUCT_TYPE.VIRTUAL:
         confirmWarning = this.$typeSelector.data('virtual-warning');
         break;
-      case ProductMap.productType.STANDARD:
+      case ProductConst.PRODUCT_TYPE.STANDARD:
       default:
         confirmWarning = '';
         break;
