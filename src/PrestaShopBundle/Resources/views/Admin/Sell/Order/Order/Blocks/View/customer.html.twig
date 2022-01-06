@@ -44,9 +44,7 @@
 
               <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
             </h2>
-            {% if orderForViewing.customer.isGuest %}
-              <strong class="text-muted">Guest</strong>
-            {% endif %}
+
           </div>
           <div id="viewFullDetails" class="col-xxl-5 text-xxl-right">
             <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
@@ -59,6 +57,15 @@
           </div>
         {% endif %}
       </div>
+
+      {% if orderForViewing.customer.groups %}
+        <div class="customer-groups mt-2">
+          {% for group in orderForViewing.customer.groups %}
+            <span class="badge">{{ group }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
     </div>
     {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
       <div class="row mt-3">

@@ -36,6 +36,7 @@ use Currency;
 use Customer;
 use DateTimeImmutable;
 use Gender;
+use Group;
 use Module;
 use Order;
 use OrderInvoice;
@@ -253,6 +254,29 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
+        // Assign customer groups, if enabled
+        $groups = [];
+        if (Group::isFeatureActive()) {
+            // Get group data in employees language and extract ids and names
+            $groupNames = [];
+            foreach (Group::getGroups($this->contextLanguageId) as $group) {
+                $groupNames[$group['id_group']] = $group['name'];
+            }
+
+            // Get customer groups as IDs
+            $customerGroupIds = Customer::getGroupsStatic((int) $customer->id);
+
+            // Go through customer groups and assign a name
+            // If it's the default group of the customer and there is more than 1 group, we assign a suffix
+            foreach ($customerGroupIds as $id) {
+                if ($id == $customer->id_default_group && count($customerGroupIds) > 1) {
+                    $groups[] = $groupNames[$id] . ' (' . $this->translator->trans('default', [], 'Admin.Orderscustomers.Feature') . ')';
+                } else {
+                    $groups[] = $groupNames[$id];
+                }
+            }
+        }
+
         return new OrderCustomerForViewing(
             (int) $customer->id,
             $customer->firstname,
@@ -266,7 +290,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             (bool) $customer->is_guest,
             (int) $order->getAssociatedLanguage()->getId(),
             $isB2BEnabled ? ($customer->ape ?: '') : '',
-            $isB2BEnabled ? ($customer->siret ?: '') : ''
+            $isB2BEnabled ? ($customer->siret ?: '') : '',
+            $groups
         );
     }
 
