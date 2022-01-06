@@ -345,10 +345,6 @@
     <access id="access_1_359" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_READ"/>
     <access id="access_1_360" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_UPDATE"/>
     <access id="access_1_361" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCK_DELETE"/>
-    <access id="access_1_362" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_CREATE"/>
-    <access id="access_1_363" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_READ"/>
-    <access id="access_1_364" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_UPDATE"/>
-    <access id="access_1_365" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_DELETE"/>
     <access id="access_1_373" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_CREATE"/>
     <access id="access_1_374" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_READ"/>
     <access id="access_1_375" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_UPDATE"/>
