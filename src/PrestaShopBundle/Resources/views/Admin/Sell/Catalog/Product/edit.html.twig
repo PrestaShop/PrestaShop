@@ -52,12 +52,7 @@
   }}) }}
 
   {% block product_header %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
-      'productForm': productForm,
-      'helpLink': helpLink,
-      'statsLink': statsLink
-    })
-    }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
   {% endblock %}
 
   {{ block('session_alert') }}
