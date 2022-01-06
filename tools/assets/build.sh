@@ -30,16 +30,40 @@ function build {
   popd
 }
 
-echo ">>> Building admin default theme..."
-build "$ADMIN_DIR/themes/default"
+build_asset() {
+  case $1 in
+    default)
+      echo ">>> Building admin default theme..."
+      build "$ADMIN_DIR/themes/default"
+    ;;
+    new-theme)
+      echo ">>> Building admin new theme..."
+      build "$ADMIN_DIR/themes/new-theme"
+    ;;
+    core)
+      echo ">>> Building core theme assets..."
+      build "$PROJECT_PATH/themes"
+    ;;
+    classic)
+      echo ">>> Building classic theme assets..."
+      build "$PROJECT_PATH/themes/classic/_dev"
+    ;;
+    all)
+      build_asset default
+      build_asset new-theme
+      build_asset core
+      build_asset classic
+    ;;
+    *)
+      echo "Unknown asset to build $1"
+    ;;
+  esac
+}
 
-echo ">>> Building admin new theme..."
-build "$ADMIN_DIR/themes/new-theme"
-
-echo ">>> Building core theme assets..."
-build "$PROJECT_PATH/themes"
-
-echo ">>> Building classic theme assets..."
-build "$PROJECT_PATH/themes/classic/_dev"
+if test $# -gt 0; then
+  build_asset $1
+else
+  build_asset all
+fi
 
 echo "All done!"
