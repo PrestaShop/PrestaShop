@@ -289,30 +289,50 @@ describe('FO - product page : Product quick view', async () => {
 
   // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
-    it('should select color on hover on product list and check it on product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
+    let imageFirstColor;
+    let imageSecondColor;
+
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomeToSelectColor', baseContext);
 
       await cartPage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage).to.be.true;
+    });
+
+    it('should select color \'Ẁhite\' and be on product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectColor1', baseContext);
 
       await homePage.selectProductColor(page, 1, 'White');
 
-      let pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+    });
 
-      const imageFirstColor = await productPage.getProductImageUrls(page);
+    it('should get product image Url and go back to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getProductImage1', baseContext);
+
+      imageFirstColor = await productPage.getProductImageUrls(page);
 
       await productPage.goToHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should select color \'Black\' and be on product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectColor2', baseContext);
 
       await homePage.selectProductColor(page, 1, 'Black');
 
-      pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+    });
 
-      const imageSecondColor = await productPage.getProductImageUrls(page);
+    it('should product image be different from the ', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getProductImage2', baseContext);
 
+      imageSecondColor = await productPage.getProductImageUrls(page);
       await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
     });
   });

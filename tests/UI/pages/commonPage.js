@@ -466,6 +466,19 @@ class CommonPage {
 
     return download.path();
   }
+
+  /**
+   * Wait for title to be filled
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async waitForPageTitleToLoad(page) {
+    let isTitleEmpty = true;
+    for (let i = 0; i < 20 && isTitleEmpty; i++) {
+      isTitleEmpty = (await this.getPageTitle(page) === '');
+      await page.waitForTimeout(100);
+    }
+  }
 }
 
 module.exports = CommonPage;
