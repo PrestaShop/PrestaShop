@@ -476,7 +476,7 @@ class ImageManagerCore
     public static function isCorrectImageFileExt($filename, $authorizedExtensions = null)
     {
         // Filter on file extension
-        if ($authorizedExtensions === null) {
+        if ($authorizedExtensions === null || empty($authorizedExtensions)) {
             $authorizedExtensions = static::EXTENSIONS_SUPPORTED;
         }
         $nameExplode = explode('.', $filename);
