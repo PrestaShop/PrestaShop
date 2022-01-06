@@ -25,6 +25,7 @@
 
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
+import ProductConst from '@pages/product/product-const';
 
 import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories/categories-manager';
@@ -68,7 +69,7 @@ $(() => {
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
-  if (productType === ProductMap.productType.COMBINATIONS) {
+  if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
     new CombinationsManager(productId);
@@ -99,10 +100,10 @@ $(() => {
   new CustomizationsManager();
   new AttachmentsManager();
 
-  if (productType !== ProductMap.productType.COMBINATIONS) {
+  if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
   }
-  if (productType === ProductMap.productType.VIRTUAL) {
+  if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
 });

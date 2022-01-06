@@ -24,7 +24,7 @@
  */
 import ProductMap from '@pages/product/product-map';
 
-const ProductTypeMap = ProductMap.create.productTypeSelector;
+const ProductTypeMap = ProductMap.productType.productTypeSelector;
 
 export default class ProductTypeSelector {
   private $typeSelector: JQuery;
