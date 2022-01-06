@@ -358,14 +358,20 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
-        $shopContext = $this->get('prestashop.adapter.shop.context');
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
+
+        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+        $statsModule = $moduleDataProvider->findByName('statsproduct');
+        $statsLink = null;
+        if (!empty($statsModule['active'])) {
+            $statsLink = $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]);
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'statsLink' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]),
+            'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
         ]);
