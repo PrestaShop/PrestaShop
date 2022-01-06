@@ -3099,7 +3099,7 @@ class CartCore extends ObjectModel
 
         Hook::exec('actionFilterDeliveryOptionList',
             [
-                'delivery_option_list' => &$delivery_option_list
+                'delivery_option_list' => &$delivery_option_list,
             ]
         );
 
