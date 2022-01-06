@@ -126,25 +126,18 @@ $product-page-padding-bottom: 80px !default;
     $product-cover-size: 110px;
 
     .product-header-cover {
+      width: $product-cover-size;
       max-width: $product-cover-size;
-
-      .image_preview-widget {
-        width: $product-cover-size;
-        height: $product-cover-size;
-
-        img {
-          display: block;
-          width: auto;
-          max-width: $product-cover-size;
-          height: auto;
-          max-height: $product-cover-size;
-          margin: auto;
-        }
-      }
+      height: $product-cover-size;
+      max-height: $product-cover-size;
     }
 
     .product-header-form {
       flex-grow: 2;
+
+      > .form-group {
+        margin-bottom: 0;
+      }
 
       .product-type-preview {
         color: $medium-gray;
