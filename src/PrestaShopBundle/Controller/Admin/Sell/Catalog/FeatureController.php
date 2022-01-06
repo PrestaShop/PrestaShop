@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
+use Configuration;
 use Db;
 use DbQuery;
-use Configuration;
 use HelperList;
 use Language;
 use Media;
@@ -163,7 +163,7 @@ class FeatureController extends FrameworkBundleAdminController
         $this->controllerName = get_class($this);
         $this->php_self = $this->controllerName;
         $this->controllerNameLegacy = 'AdminFeatures';
-        $this->id = Tab::getIdFromClassName('AdminFeatures');
+        $this->id = Tab::getIdFromClassName($this->controllerNameLegacy);
 
         if (!Shop::isFeatureActive()) {
             $this->shopLinkType = '';
@@ -173,7 +173,6 @@ class FeatureController extends FrameworkBundleAdminController
             $this->_defaultOrderBy = $this->identifier;
         }
 
-        //To do merge this variable
         $this->folderTemplate = Tools::toUnderscoreCase(substr($this->controllerName, 5)) . '/';
 
         $this->setCurrentIndex();
@@ -187,23 +186,16 @@ class FeatureController extends FrameworkBundleAdminController
     public function indexAction(Request $request)
     {
         //Keep this and in futur version maybe delete this
-        //If I don't do this hook doesn't work
         $this->getContext()->controller = $this;
-        //configure
         $this->initBreadcrumbs();
         $this->initToken($request);
 
         //build list and page with action
         $this->setListFields();
-        $this->processFilter(); //En parler après
+        $this->processFilter();
         $this->buildActionList();
         $this->getList($this->getContextLangId());
 
-        //renderListSmarty
-
-        //generateList form HelperList needs something in the Context (Link)
-
-        //buildHelper();
         return $this->renderSmarty(
             $this->buildList(),
             []
@@ -234,9 +226,9 @@ class FeatureController extends FrameworkBundleAdminController
         $accesses = Profile::getProfileAccesses($this->getUser()->getData()->id_profile, 'class_name');
 
         $notificationsSettings = [
-            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1': false,
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'] ? '1': false,
-            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1': false,
+            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1' : false,
+            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'] ? '1' : false,
+            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1' : false,
         ];
         $this->getContext()->smarty->assign($notificationsSettings);
 
@@ -455,7 +447,7 @@ class FeatureController extends FrameworkBundleAdminController
 
             if ($this->_useFoundRows || isset($this->_filterHaving) || isset($this->_having)) {
                 //$this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
-                $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS '.
+                $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' .
                     $this->_listsql .
                     $fromClause .
                     $joinClause .
@@ -466,7 +458,7 @@ class FeatureController extends FrameworkBundleAdminController
                 $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $this->table . '`';
             } else {
                 //$this->_listsql = 'SELECT ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
-                $this->_listsql = 'SELECT '.
+                $this->_listsql = 'SELECT ' .
                     $this->_listsql .
                     $fromClause .
                     $joinClause .
@@ -579,21 +571,21 @@ class FeatureController extends FrameworkBundleAdminController
         $this->getContext()->smarty->assign([
             'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
             'collapse_menu' => isset($this->getContext()->cookie->collapse_menu) ? (int) $this->getContext()->cookie->collapse_menu : 0,
-    //        'current_shop_name' => $helperShop->getCurrentShopName(),
+            //'current_shop_name' => $helperShop->getCurrentShopName(),
             'default_tab_link' => $this->getContext()->link->getAdminLink(Tab::getClassNameById((int) $this->getUser()->getData()->default_tab)),
             'employee' => $this->getUser()->getData(),
-    //        'help_box' => Configuration::get('PS_HELPBOX'),
-    //        'is_multishop' => $is_multishop,
+            //'help_box' => Configuration::get('PS_HELPBOX'),
+            //'is_multishop' => $is_multishop,
             'login_link' => $this->getContext()->link->getAdminLink('AdminLogin'),
             'logout_link' => $this->getContext()->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]),
-    //        'multi_shop' => Shop::isFeatureActive(),
-    //        'multishop_context' => $this->multishop_context,
+            //'multi_shop' => Shop::isFeatureActive(),
+            //'multishop_context' => $this->multishop_context,
             'quick_access' => QuickAccess::getQuickAccessesWithToken($this->getContextLangId(), (int) $this->getUser()->getData()->id),
             'round_mode' => Configuration::get('PS_PRICE_ROUND_MODE'),
-    //        'search_type' => Tools::getValue('bo_search_type'),
-    //        'shop' => $this->context->shop,
-    //        'shop_group' => new ShopGroup((int) Shop::getContextShopGroupID()),
-    //        'shop_list' => $helperShop->getRenderedShopList(),
+            //'search_type' => Tools::getValue('bo_search_type'),
+            //'shop' => $this->context->shop,
+            //'shop_group' => new ShopGroup((int) Shop::getContextShopGroupID()),
+            //'shop_list' => $helperShop->getRenderedShopList(),
         ]);
         //} else {
         //    $this->getContext()->smarty->assign('default_tab_link', $this->getContext()->link->getAdminLink('AdminDashboard'));
@@ -629,7 +621,6 @@ class FeatureController extends FrameworkBundleAdminController
         ]);
     }
 
-
     public function initFooter()
     {
         //RTL Support
@@ -652,7 +643,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      //* @param HelperList|HelperView|HelperOptions $helper
      */
-    public function setHelperDisplay(\Helper $helper)
+    public function setHelperDisplay($helper)
     {
         //if (empty($this->breadcrumbs)) {
         //    $this->initBreadcrumbs();
@@ -825,6 +816,7 @@ class FeatureController extends FrameworkBundleAdminController
             //$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
             $whereShop = Shop::addSqlRestriction(false, 'a');
         }
+
         return ' WHERE 1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
             ($this->deleted ? 'AND a.`deleted` = 0 ' : '') .
             (isset($this->_filter) ? $this->_filter : '') . $whereShop . "\n" .
@@ -1060,12 +1052,12 @@ class FeatureController extends FrameworkBundleAdminController
             }
         }
 
-        if (!$this->ajax) {
+        //if (!$this->ajax) {
             $template = $this->createTemplate($this->template);
             $page = $template->fetch();
-        } else {
-            $page = $this->content;
-        }
+        //} else {
+        //    $page = $this->content;
+        //}
 
         //@Todo Handle later
         //if ($conf = Tools::getValue('conf')) {
@@ -1136,11 +1128,8 @@ class FeatureController extends FrameworkBundleAdminController
      * Renders controller templates and generates page content.
      *
      * @param array|string $templates Template file(s) to be rendered
-     *
-     * @throws Exception
-     * @throws SmartyException
      */
-    protected function smartyOutputContent($templates = self::LAYOUT)
+    protected function smartyOutputContent($templates = self::LAYOUT): string
     {
         $this->getContext()->cookie->write();
 
@@ -1175,7 +1164,7 @@ class FeatureController extends FrameworkBundleAdminController
 
         if ($this->getContext()->language->is_rtl) {
             $this->addJS(_PS_JS_DIR_ . 'rtl.js');
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . $this->getContext()->language->iso_code . '.css', 'all', false);
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . $this->getContext()->language->iso_code . '.css');
         }
 
         if ($isNewTheme) {
@@ -1379,7 +1368,7 @@ class FeatureController extends FrameworkBundleAdminController
 
         foreach ($component as $ui) {
             $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-            $this->addCSS($ui_path['css'], 'all', false);
+            $this->addCSS($ui_path['css'], 'all');
             $this->addJS($ui_path['js'], false);
         }
     }
@@ -1681,7 +1670,7 @@ class FeatureController extends FrameworkBundleAdminController
                     if (!is_array($val)) {
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
-                            $filter_value = ((bool)$val) ? $this->trans('yes', 'Admin.Actions') : $this->trans('no', 'Admin.Actions');
+                            $filter_value = ((bool) $val) ? $this->trans('yes', 'Admin.Actions') : $this->trans('no', 'Admin.Actions');
                         } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
                             $date = json_decode($val, true);
                             if (isset($date[0])) {
@@ -1864,9 +1853,10 @@ class FeatureController extends FrameworkBundleAdminController
                     $key = isset($tmp_tab[1]) ? $tmp_tab[0] . '.`' . $tmp_tab[1] . '`' : '`' . $tmp_tab[0] . '`';
 
                     // Assignment by reference
-                    if (array_key_exists('tmpTableFilter', $field)) {
-                        //$sql_filter = &$this->_tmpTableFilter;
-                    } elseif (array_key_exists('havingFilter', $field)) {
+                    //if (array_key_exists('tmpTableFilter', $field)) {
+                    //    //$sql_filter = &$this->_tmpTableFilter;
+                    //} elseif (array_key_exists('havingFilter', $field)) {
+                    if (array_key_exists('havingFilter', $field)) {
                         $sql_filter = &$this->_filterHaving;
                     } else {
                         $sql_filter = &$this->_filter;
@@ -1902,7 +1892,7 @@ class FeatureController extends FrameworkBundleAdminController
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = \'' . pSQL($value) . '\' ';
                         } elseif ($type == 'price') {
                             $value = (float) str_replace(',', '.', $value);
-                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . pSQL(trim($value)) . ' ';
+                            $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . $value . ' ';
                         } else {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' LIKE \'%' . pSQL(trim($value)) . '%\' ';
                         }
