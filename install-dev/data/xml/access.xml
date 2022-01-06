@@ -353,10 +353,6 @@
     <access id="access_1_374" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_READ"/>
     <access id="access_1_375" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_UPDATE"/>
     <access id="access_1_376" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMANAGEMENT_DELETE"/>
-    <access id="access_1_377" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMVT_CREATE"/>
-    <access id="access_1_378" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMVT_READ"/>
-    <access id="access_1_379" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMVT_UPDATE"/>
-    <access id="access_1_380" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTOCKMVT_DELETE"/>
     <access id="access_1_381" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTORES_CREATE"/>
     <access id="access_1_382" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTORES_READ"/>
     <access id="access_1_383" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSTORES_UPDATE"/>

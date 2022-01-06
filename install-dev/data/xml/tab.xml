@@ -215,11 +215,6 @@
                         <wording>Stock Management</wording>
                         <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
-                    <tab id="Stock_Movement" id_parent="Stock_Management" active="1" enabled="1" icon="">
-                        <class_name>AdminStockMvt</class_name>
-                        <wording>Stock Movement</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
 
                 <tab id="Configuration" id_parent="Advanced_stock_management" active="1" enabled="1" icon="">
                     <class_name>AdminStockConfiguration</class_name>
