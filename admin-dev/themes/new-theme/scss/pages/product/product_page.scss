@@ -1146,6 +1146,46 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  .product-tabs {
+    @include border-radius(6px);
+
+    > .form-contenttab {
+      @include border-radius(6px);
+      background-color: $white;
+    }
+
+    // First tab needs a straight top left corner when selected to avoid empty space under the tab button
+    > .form-contenttab.active:first-child {
+      @include border-top-left-radius(0);
+    }
+
+    > .external-tab-placeholder {
+      // So that the placeholder has size 0
+      padding: 0;
+    }
+  }
+
+  // External tab are rendered outside of the tab container so their bottom corners need to to be rounded
+  .external-tab {
+    h2 {
+      padding-top: 20px;
+    }
+
+    > .tab-content {
+      padding: 0;
+      @include border-radius(6px);
+
+      > .form-contenttab {
+        padding: {
+          top: $grid-gutter-width / 2;
+          bottom: $grid-gutter-width / 2;
+        }
+        @include border-radius(6px);
+        background-color: $white;
+      }
+    }
+  }
+
   &.create-product-form {
     width: 100%;
     padding: 0 1rem 0.1rem;
