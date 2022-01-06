@@ -225,11 +225,6 @@
                         <wording>Instant Stock Status</wording>
                         <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
-                    <tab id="Stock_Coverage" id_parent="Stock_Management" active="1" enabled="1" icon="">
-                        <class_name>AdminStockCover</class_name>
-                        <wording>Stock Coverage</wording>
-                        <wording_domain>Admin.Navigation.Menu</wording_domain>
-                    </tab>
 
                 <tab id="Configuration" id_parent="Advanced_stock_management" active="1" enabled="1" icon="">
                     <class_name>AdminStockConfiguration</class_name>
