@@ -24,7 +24,15 @@
  *#}
 {% block multistore_header %}
   {% if isMultistoreUsed and app.request is not null %}
-    <div class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}">
+    <div
+            class="js-header-multishop header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
+            data-translations="{{ {
+                'modal.confirm_leave.title': 'Switch context?'|trans({}, 'Admin.Notifications.Warning'),
+                'modal.confirm_leave.body': 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Notifications.Warning'),
+                'modal.confirm_leave.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
+                'modal.confirm_leave.confirm': 'Switch context anyway'|trans({}, 'Admin.Actions')
+            }|json_encode }}"
+    >
       <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
           {% if isShopContext %}
@@ -93,7 +101,7 @@
             {% endif %}
 
             <ul class="multishop-modal-group-list js-multishop-scrollbar">
-                <li class="multishop-modal-all multishop-modal-item">
+                <li class="multishop-modal-all multishop-modal-item js-multishop-modal-item">
                   {% if isAllShopContext %}
                     <i class="material-icons">check</i>
                   {% else %}
@@ -105,7 +113,7 @@
                 </li>
 
               {% for group in groupList|filter(group => group.shops is not empty) %}
-                <li class="multishop-modal-group-item multishop-modal-item">
+                <li class="multishop-modal-group-item multishop-modal-item js-multishop-modal-item">
                   <span class="multishop-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
                     <i class="material-icons">check</i>
                     <a class="multishop-modal-color"{% if group.color is not empty %} style="background-color: {{group.color}};"{% endif %} href="{{ getAdminLink('AdminShopGroup', true, {'id_shop_group' : group.id, 'updateshop_group' : true}) }}" data-toggle="popover" data-trigger="hover" data-placement="top" data-content="{{ "Edit color"|trans({}, 'Admin.Global') }}" data-original-title="" title=""></a>
@@ -114,7 +122,7 @@
                 </li>
 
                 {% for shop in group.shops %}
-                  <li class="multishop-modal-shop-item multishop-modal-item">
+                  <li class="multishop-modal-shop-item multishop-modal-item js-multishop-modal-item">
                     <div class="multishop-modal-item-left">
                     <span class="multishop-modal-color-container{% if isShopContext and currentContext.id == shop.id %} multishop-modal-color-check{% endif %}">
                       <i class="material-icons">check</i>
@@ -140,10 +148,3 @@
     <script src="{{ asset('themes/new-theme/public/multistore_form.bundle.js') }}"></script>
   {% endif %}
 {% endblock %}
-
-{% set js_translatable = {
-    'multistore.modal.confirm_leave.title': 'Switch context?'|trans({}, 'Admin.Notifications.Warning'),
-    'multistore.modal.confirm_leave.body': 'Switching context now will discard all unsaved changes.'|trans({}, 'Admin.Notifications.Warning'),
-    'multistore.modal.confirm_leave.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-    'multistore.modal.confirm_leave.confirm': 'Switch context anyway'|trans({}, 'Admin.Actions')
-}|merge(js_translatable) %}

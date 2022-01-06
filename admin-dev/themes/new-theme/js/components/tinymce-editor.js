@@ -132,10 +132,9 @@ class TinyMCEEditor {
       this.changeToMaterial();
     });
 
-    window.tinyMCE.init(cfg);
-    this.watchTabChanges(cfg);
-
-    window.prestashop.component.EventEmitter.emit('tinymceInitialized', {});
+    window.tinyMCE.init(cfg).then(() => {
+      this.watchTabChanges(cfg);
+    });
   }
 
   /**

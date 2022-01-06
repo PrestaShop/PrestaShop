@@ -33,6 +33,7 @@ const initMultistoreForm = () => {
   const MultistoreHeaderMap = ComponentsMap.multistoreHeader;
   const multistoreForm = $(MultistoreFormMap.formRow).closest('form');
   const $modalItem = $(MultistoreHeaderMap.modal);
+  const translations = $(MultistoreHeaderMap.header).data('translations');
 
   const generateFormValuesHash = () => {
     const formValues = multistoreForm.serializeArray().reduce((obj: any, item: any) => {
@@ -43,15 +44,7 @@ const initMultistoreForm = () => {
         return obj;
       }
       const fieldValues = obj;
-
-      if (formElement instanceof HTMLTextAreaElement) {
-        fieldValues[item.name] = item.value
-          .replace(/<[^>]*>?/gm, '') // remove html tags
-          .replace(/\r?\n|\r/g, '') //remove line breaks
-          .replace(/(\.\s)/g, '.'); //remove space after dots added by TinyMCE
-      } else {
-        fieldValues[item.name] = item.value;
-      }
+      fieldValues[item.name] = item.value;
 
       return fieldValues;
     });
@@ -65,10 +58,10 @@ const initMultistoreForm = () => {
   const showConfirmModal = (
     path: string,
   ) => {
-    const confirmTitle = window.translate_javascripts['multistore.modal.confirm_leave.title'];
-    const confirmMessage = window.translate_javascripts['multistore.modal.confirm_leave.body'];
-    const confirmButtonLabel = window.translate_javascripts['multistore.modal.confirm_leave.confirm'];
-    const closeButtonLabel = window.translate_javascripts['multistore.modal.confirm_leave.cancel'];
+    const confirmTitle = translations['modal.confirm_leave.title'];
+    const confirmMessage = translations['modal.confirm_leave.body'];
+    const confirmButtonLabel = translations['modal.confirm_leave.confirm'];
+    const closeButtonLabel = translations['modal.confirm_leave.cancel'];
     const confirmButtonClass = 'btn-primary';
 
     const modal = new ConfirmModal(
@@ -97,7 +90,10 @@ const initMultistoreForm = () => {
 
         if (originalFormValuesHash !== formValuesHash) {
           const targetUrl = $(itemLink).attr('href');
-          showConfirmModal(`${targetUrl}`);
+
+          if (targetUrl && typeof targetUrl === 'string') {
+            showConfirmModal(targetUrl);
+          }
 
           return false;
         }
@@ -109,7 +105,5 @@ const initMultistoreForm = () => {
 };
 
 $(() => {
-  window.prestashop.component.EventEmitter.on('tinymceInitialized', () => {
-    initMultistoreForm();
-  });
+  initMultistoreForm();
 });

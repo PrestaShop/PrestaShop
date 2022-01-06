@@ -157,11 +157,19 @@ class MultistoreCheckboxEnabler
      */
     private function updateCurrentField(FormInterface $form, FormInterface $childElement, array $data, array &$options, bool $isOverriddenInCurrentContext): void
     {
+        // The updateCurrentField is called multiple times in the form lifecycle,
+        // once during init on PRE_SET_DATA event and a second time when the form is submitted on PRE_SUBMIT event
+        // Both times the form content needs to be adapted and the rules are different for both cases,
+        // on form load, the field state depends on the configuration and the context
+        // on submit, the data from the requests overrides the initial data from the configuration
         $fieldName = $childElement->getName();
         $enablerFieldName = self::MULTISTORE_FIELD_PREFIX . $fieldName;
+        // When the checkbox has been manually disabled in the form data the input cannot be disabled
         if ($form->has($enablerFieldName) && !empty($data[$enablerFieldName])) {
             $isDisabled = false;
         } else {
+            // When the form is not submitted or no data is found in the request,
+            // the default state is defined by the configuration and the context
             $isDisabled = !$this->multiStoreContext->isAllShopContext() && !$isOverriddenInCurrentContext;
         }
 

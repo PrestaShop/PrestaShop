@@ -29,7 +29,7 @@ export default {
     scrollbar: '.js-multistore-scrollbar',
   },
   multistoreHeader: {
-    header: '.header-multishop',
+    header: '.js-header-multishop',
     modal: '.js-multishop-modal',
     modalDialog: '.js-multishop-modal-dialog',
     headerButton: '.js-header-multishop-open-modal',
@@ -37,7 +37,7 @@ export default {
     jsScrollbar: '.js-multishop-scrollbar',
     shopLinks: 'a.multishop-modal-shop-name',
     groupShopLinks: 'a.multishop-modal-group-name',
-    item: '.multishop-modal-item',
+    item: '.js-multishop-modal-item',
     setContextUrl: (
       location: string,
       urlLetter: string,

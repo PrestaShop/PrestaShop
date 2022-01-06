@@ -93,6 +93,8 @@ class TranslateType extends CommonAbstractType
                 unset($locale_options['constraints']);
             }
 
+            // This form type is a composition of other sub types, so the disabled option should be transmitted to children,
+            // especially when dealing with rich formatted text inputs
             if (isset($options['disabled'])) {
                 $locale_options['disabled'] = $options['disabled'];
             }

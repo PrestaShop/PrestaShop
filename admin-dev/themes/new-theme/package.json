@@ -17,6 +17,7 @@
   "author": "PrestaShop",
   "license": "OSL-3.0",
   "dependencies": {
+    "@types/tinymce": "^4.6.4",
     "bignumber.js": "^9.0.1",
     "bootstrap-colorpicker": "^3.2.0",
     "bootstrap-tokenfield": "^0.12.0",
