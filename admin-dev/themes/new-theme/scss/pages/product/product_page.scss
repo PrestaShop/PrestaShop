@@ -1131,6 +1131,8 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+// We use this class to scope the modifications that only target product page v2
+// Ideally the whole css should be cleaned when we remove the older page and this class won't be needed anymore
 .product-page-v2 {
   .tabs {
     position: relative;
@@ -1184,12 +1186,6 @@ $product-page-padding-bottom: 80px !default;
         background-color: $white;
       }
     }
-  }
-
-  &.create-product-form {
-    width: 100%;
-    padding: 0 1rem 0.1rem;
-    background-color: $white;
   }
 
   .maxLength {
@@ -1275,48 +1271,56 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+}
 
-  .product-type-selector {
+// Some of the following styles target product page v2 components, but since the are new and only used in the new
+// page there is no need to scope them inside the product-page-v2 class
+.create-product-form {
+  width: 100%;
+  padding: 0 1rem 0.1rem;
+  background-color: $white;
+}
+
+.product-type-selector {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  select {
+    display: none;
+  }
+
+  .product-type-choices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
+    padding-top: 1.5rem;
 
-    select {
-      display: none;
-    }
-
-    .product-type-choices {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .product-type-choice {
+      position: relative;
       width: 100%;
-      padding-top: 1.5rem;
-
-      .product-type-choice {
-        position: relative;
-        width: 100%;
-        max-width: 350px;
-        padding-right: 3rem;
-        margin: 0.25rem 0;
-        text-align: left;
-
-        .material-icons {
-          position: absolute;
-          top: 50%;
-          right: 0.75rem;
-          margin-top: -0.725rem;
-          font-size: 1.45rem;
-        }
-      }
-    }
-
-    .product-type-description {
-      width: 100%;
-      margin: 1.5rem 0;
-      text-align: center;
+      max-width: 350px;
+      padding-right: 3rem;
+      margin: 0.25rem 0;
+      text-align: left;
 
       .material-icons {
-        color: $brand-primary;
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        margin-top: -0.725rem;
+        font-size: 1.45rem;
       }
+    }
+  }
+
+  .product-type-description {
+    width: 100%;
+    margin: 1.5rem 0;
+    text-align: center;
+
+    .material-icons {
+      color: $brand-primary;
     }
   }
 }
