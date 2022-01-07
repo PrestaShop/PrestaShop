@@ -252,7 +252,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [
-                        'price' => '45.56',
+                        'price_tax_excluded' => '45.56',
                         'unity' => 'kg',
                     ],
                 ],
@@ -282,7 +282,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [
-                        'price' => '45.56',
+                        'price_tax_excluded' => '45.56',
                         'unity' => 'kg',
                     ],
                 ],
@@ -315,7 +315,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [
-                        'price' => '45.56',
+                        'price_tax_excluded' => '45.56',
                         'unity' => 'kg',
                     ],
                 ],
