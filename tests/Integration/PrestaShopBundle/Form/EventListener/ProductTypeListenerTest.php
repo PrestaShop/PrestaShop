@@ -89,11 +89,6 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
         yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
         yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
-
-        yield [ProductType::TYPE_STANDARD, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_PACK, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_VIRTUAL, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'shortcuts.stock', false];
     }
 
     /**
