@@ -153,16 +153,6 @@ class ProductFormDataProviderTest extends TestCase
             'footer' => [
                 'active' => false,
             ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
-            ],
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -226,16 +216,6 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'footer' => [
                 'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
             ],
         ];
 
@@ -461,10 +441,6 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['pricing']['unit_price']['price_tax_included'] = 7.9872;
         $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
 
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
-        $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
-
         $datasets[] = [
             $productData,
             $expectedOutputData,
@@ -544,8 +520,6 @@ class ProductFormDataProviderTest extends TestCase
                 'delta_quantity' => -15,
             ],
         ];
-
-        $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
 
         $datasets[] = [
             $productData,
@@ -1484,16 +1458,6 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'footer' => [
                 'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 19.86,
-                    'price_tax_included' => 23.832,
-                    'tax_rules_group_id' => 1,
-                ],
-                'stock' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
-                ],
             ],
         ];
     }
