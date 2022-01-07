@@ -470,7 +470,6 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       });
   });
 
-
   // Post-condition - Delete the first created products
   deleteProductTest(firstProduct, baseContext);
 

@@ -748,11 +748,11 @@ class Order extends BOBasePage {
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
-
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
     if (createNewInvoice) {
       await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
     }
+
     return this.getGrowlMessageContent(page);
   }
 
