@@ -77,6 +77,7 @@ class UnitPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_stores' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
