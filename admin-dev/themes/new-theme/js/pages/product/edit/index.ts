@@ -25,7 +25,7 @@
 
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
-import ProductConst from '@pages/product/product-const';
+import ProductConst from '@pages/product/constants';
 
 import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories/categories-manager';
