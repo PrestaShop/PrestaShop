@@ -85,7 +85,7 @@ class ShopCore extends ObjectModel
         ],
     ];
 
-    /** @var array List of shops cached */
+    /** @var array|null List of shops cached */
     protected static $shops;
 
     protected static $asso_tables = [];
@@ -996,6 +996,14 @@ class ShopCore extends ObjectModel
     public static function getContext()
     {
         return self::$context;
+    }
+
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        static::$shops = null;
+        static::$feature_active = null;
+        Cache::clean('Shop::*');
     }
 
     /**
