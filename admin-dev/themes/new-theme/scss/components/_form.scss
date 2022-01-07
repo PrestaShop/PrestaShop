@@ -113,6 +113,21 @@
   }
 }
 
+.form-group.inline-switch-widget {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  > * {
+    width: auto;
+  }
+
+  > .input-group {
+    min-width: 35px;
+    margin-top: -7px;
+  }
+}
+
 [class*="form-columns-"] {
   display: flex;
   flex-wrap: wrap;
