@@ -107,7 +107,7 @@ class UnitPriceType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Display retail price per unit', 'Admin.Catalog.Feature'),
             'label_help_box' => $this->trans('Indicate the price for a single unit of the product. For instance, if you\'re selling fabrics, it would be the price per meter.', 'Admin.Catalog.Help'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'required' => false,
             'columns_number' => 4,
         ]);

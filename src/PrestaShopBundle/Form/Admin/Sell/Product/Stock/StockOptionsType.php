@@ -110,7 +110,7 @@ class StockOptionsType extends TranslatorAwareType
         $resolver->setDefaults([
             'required' => false,
             'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
         ]);
     }
 }

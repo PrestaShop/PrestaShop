@@ -87,7 +87,7 @@ class CombinationFormType extends TranslatorAwareType
             ])
             ->add('images', ChoiceType::class, [
                 'label' => $this->trans('Images', 'Admin.Global'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
                 'choice_attr' => function ($choice, $key) {
                     return ['data-image-url' => $key];

@@ -129,7 +129,7 @@ class QuantityType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'required' => false,
                 'product_id' => null,
             ])

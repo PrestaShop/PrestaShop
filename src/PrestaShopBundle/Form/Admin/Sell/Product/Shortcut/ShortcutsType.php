@@ -43,12 +43,12 @@ class ShortcutsType extends TranslatorAwareType
         $builder
             ->add('reference', UnavailableType::class, [
                 'label' => $this->trans('Reference', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
             ])
             ->add('stock', StockShortcutType::class, [
                 'label' => $this->trans('Quantity', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('How many products should be available for sale?', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [
@@ -62,7 +62,7 @@ class ShortcutsType extends TranslatorAwareType
             ])
             ->add('retail_price', PriceShortcutType::class, [
                 'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.', 'Admin.Catalog.Help'),
                 'required' => false,
                 'external_link' => [

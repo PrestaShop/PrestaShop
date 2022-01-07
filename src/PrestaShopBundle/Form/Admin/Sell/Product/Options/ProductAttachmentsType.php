@@ -101,7 +101,7 @@ class ProductAttachmentsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Attached files', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_help_box' => $this->trans('Instructions, size guide, or any file you want to add to a product.', 'Admin.Catalog.Help'),
             'label_subtitle' => $this->trans('Customers can download these files on the product page.', 'Admin.Catalog.Help'),
             'external_link' => [

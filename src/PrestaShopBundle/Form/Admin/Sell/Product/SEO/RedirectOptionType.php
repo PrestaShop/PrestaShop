@@ -175,7 +175,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'product_id' => null,
                 'required' => false,
                 'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.', 'Admin.Catalog.Help'),
                 'columns_number' => 2,
                 'row_attr' => [
