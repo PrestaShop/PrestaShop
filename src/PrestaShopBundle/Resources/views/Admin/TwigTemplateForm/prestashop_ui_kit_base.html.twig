@@ -554,7 +554,7 @@
             {% if disabled %}disabled=""{% endif %}
             type="radio"
           >
-          <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
+          {% if show_choices %}<label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>{% endif %}
         {% endfor %}
         <span class="slide-button"></span>
     </span>
