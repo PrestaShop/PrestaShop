@@ -31,7 +31,6 @@ namespace Tests\Unit\PrestaShopBundle\Command;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShopBundle\Command\ConfigCommand;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -128,21 +127,11 @@ class ConfigCommandTest extends TestCase
     protected function getCommandTester(): CommandTester
     {
         $command = new ConfigCommand(
-            $this->mockLegacyContextLoader(),
             $this->mockConfiguration(),
             $this->mockLanguageDataProvider()
         );
 
         return new CommandTester($command);
-    }
-
-    protected function mockLegacyContextLoader(): LegacyContextLoader
-    {
-        $legacyContextLoaderMock = $this->getMockBuilder(LegacyContextLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $legacyContextLoaderMock;
     }
 
     protected function mockConfiguration(): Configuration

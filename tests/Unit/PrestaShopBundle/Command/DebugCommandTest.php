@@ -30,7 +30,6 @@ namespace Tests\Unit\PrestaShopBundle\Command;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
-use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShopBundle\Command\DebugCommand;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -41,8 +40,7 @@ class DebugCommandTest extends TestCase
     {
         $command = new DebugCommand(
             $this->mockCommandBus(),
-            $this->mockDebugMode(),
-            $this->mockLegacyContextLoader()
+            $this->mockDebugMode()
         );
         $commandTester = new CommandTester($command);
 
@@ -55,15 +53,6 @@ class DebugCommandTest extends TestCase
 
         $this->assertEquals(DebugCommand::STATUS_ERROR, $commandTester->execute(['value' => 'asdf']));
         $this->assertStringContainsString('Input cannot be determined', $commandTester->getDisplay());
-    }
-
-    protected function mockLegacyContextLoader(): LegacyContextLoader
-    {
-        $legacyContextLoaderMock = $this->getMockBuilder(LegacyContextLoader::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        return $legacyContextLoaderMock;
     }
 
     protected function mockDebugMode(): DebugMode
