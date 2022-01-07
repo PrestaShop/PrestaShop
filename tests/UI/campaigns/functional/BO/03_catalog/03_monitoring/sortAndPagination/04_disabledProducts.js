@@ -5,6 +5,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -158,7 +159,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
 
-          const expectedResult = await monitoringPage.sortArray(nonSortedTable, testSort.args.isFloat);
+          const expectedResult = await basicHelper.sortArray(nonSortedTable, testSort.args.isFloat);
 
           if (testSort.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);

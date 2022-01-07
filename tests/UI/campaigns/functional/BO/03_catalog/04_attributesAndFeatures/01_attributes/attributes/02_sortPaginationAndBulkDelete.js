@@ -1,7 +1,8 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
 const loginCommon = require('@commonTests/loginBO');
@@ -179,7 +180,7 @@ describe('Bo - Catalog - Attributes & Features : Sort, pagination and bulk delet
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await attributesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

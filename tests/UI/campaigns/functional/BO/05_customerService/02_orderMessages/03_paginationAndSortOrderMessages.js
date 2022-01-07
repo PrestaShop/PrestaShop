@@ -5,6 +5,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -159,7 +160,7 @@ describe('BO - Customer Service - Order Messages : Pagination and sort order mes
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await orderMessagesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
