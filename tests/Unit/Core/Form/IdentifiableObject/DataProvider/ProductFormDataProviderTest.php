@@ -1359,7 +1359,7 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param int|null $expectedShopId
+     * @param int $expectedShopId
      *
      * @return CommandBusInterface
      */
