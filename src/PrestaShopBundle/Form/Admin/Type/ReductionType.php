@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Currency;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,12 +45,23 @@ class ReductionType extends CommonAbstractType
     private $priceReductionTypeChoices;
 
     /**
-     * @param array $priceReductionTypeChoices
+     * @var Currency
      */
+    private $defaultCurrency;
+
+    /**
+     * @var EventSubscriberInterface
+     */
+    private $eventSubscriber;
+
     public function __construct(
-        array $priceReductionTypeChoices
+        array $priceReductionTypeChoices,
+        Currency $defaultCurrency,
+        EventSubscriberInterface $eventSubscriber
     ) {
         $this->priceReductionTypeChoices = $priceReductionTypeChoices;
+        $this->defaultCurrency = $defaultCurrency;
+        $this->eventSubscriber = $eventSubscriber;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -58,9 +72,15 @@ class ReductionType extends CommonAbstractType
                 'required' => false,
                 'choices' => $options['choices'],
             ])
-            ->add('value', NumberType::class, [
+            ->add('value', MoneyType::class, [
                 'scale' => $options['scale'],
+                'currency' => $this->defaultCurrency->iso_code,
+                'attr' => [
+                    'data-currency' => $this->defaultCurrency->symbol,
+                ],
             ]);
+
+        $builder->addEventSubscriber($this->eventSubscriber);
     }
 
     /**

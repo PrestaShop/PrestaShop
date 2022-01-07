@@ -1065,9 +1065,15 @@ services:
     parent: 'form.type.common_type'
     arguments:
       - '@=service("prestashop.core.form.choice_provider.price_reduction_type").getChoices()'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@form.event_listener.reduction'
     public: true
     tags:
       - { name: form.type }
+
+  form.event_listener.reduction:
+    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\ReductionListener'
+    public: true
 
   form.type.sell.customer.private_note:
     class: 'PrestaShopBundle\Form\Admin\Sell\Customer\PrivateNoteType'
