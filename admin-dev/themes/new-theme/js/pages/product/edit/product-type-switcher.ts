@@ -25,7 +25,7 @@
 
 import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
-import ProductConst from '@pages/product/product-const';
+import ProductConst from '@pages/product/constants';
 import ProductTypeSelector from '@pages/product/create/product-type-selector';
 
 /**
