@@ -1318,31 +1318,6 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.shortcut.shortcuts_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\ShortcutsType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    tags:
-      - { name: form.type }
-
-  form.type.sell.product.shortcut.price_shortcut_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\PriceShortcutType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    arguments:
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-    tags:
-      - { name: form.type }
-
-  form.type.sell.product.shortcut.stock_shortcut_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Shortcut\StockShortcutType'
-    parent: 'form.type.translatable.aware'
-    public: true
-    tags:
-      - { name: form.type }
-
   form.type.sell.product.category.categories_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
     parent: 'form.type.translatable.aware'
