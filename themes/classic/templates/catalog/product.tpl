@@ -47,7 +47,6 @@
 {/block}
 
 {block name='content'}
-
   <section id="main">
     <meta content="{$product.url}">
 
@@ -69,8 +68,8 @@
             {/block}
           </section>
         {/block}
-        </div>
-        <div class="col-md-6">
+      </div>
+      <div class="col-md-6">
           {block name='page_header_container'}
             {block name='page_header'}
               <h1 class="h1">{block name='page_title'}{$product.name}{/block}</h1>
@@ -137,8 +136,12 @@
             {block name='hook_display_reassurance'}
               {hook h='displayReassurance'}
             {/block}
-
-            {block name='product_tabs'}
+          </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+          {block name='product_tabs'}
               <div class="tabs">
                 <ul class="nav nav-tabs" role="tablist">
                   {if $product.description}
@@ -184,42 +187,42 @@
                 </ul>
 
                 <div class="tab-content" id="tab-content">
-                 <div class="tab-pane fade in{if $product.description} active js-product-tab-active{/if}" id="description" role="tabpanel">
-                   {block name='product_description'}
-                     <div class="product-description">{$product.description nofilter}</div>
-                   {/block}
-                 </div>
+                  <div class="tab-pane fade in{if $product.description} active js-product-tab-active{/if}" id="description" role="tabpanel">
+                    {block name='product_description'}
+                      <div class="product-description">{$product.description nofilter}</div>
+                    {/block}
+                  </div>
 
-                 {block name='product_details'}
-                   {include file='catalog/_partials/product-details.tpl'}
-                 {/block}
+                  {block name='product_details'}
+                    {include file='catalog/_partials/product-details.tpl'}
+                  {/block}
 
-                 {block name='product_attachments'}
-                   {if $product.attachments}
-                    <div class="tab-pane fade in" id="attachments" role="tabpanel">
-                       <section class="product-attachments">
-                         <p class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</p>
-                         {foreach from=$product.attachments item=attachment}
-                           <div class="attachment">
-                             <h4><a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">{$attachment.name}</a></h4>
-                             <p>{$attachment.description}</p>
-                             <a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">
-                               {l s='Download' d='Shop.Theme.Actions'} ({$attachment.file_size_formatted})
-                             </a>
-                           </div>
-                         {/foreach}
-                       </section>
-                     </div>
-                   {/if}
-                 {/block}
+                  {block name='product_attachments'}
+                    {if $product.attachments}
+                      <div class="tab-pane fade in" id="attachments" role="tabpanel">
+                        <section class="product-attachments">
+                          <p class="h5 text-uppercase">{l s='Download' d='Shop.Theme.Actions'}</p>
+                          {foreach from=$product.attachments item=attachment}
+                            <div class="attachment">
+                              <h4><a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">{$attachment.name}</a></h4>
+                              <p>{$attachment.description}</p>
+                              <a href="{url entity='attachment' params=['id_attachment' => $attachment.id_attachment]}">
+                                {l s='Download' d='Shop.Theme.Actions'} ({$attachment.file_size_formatted})
+                              </a>
+                            </div>
+                          {/foreach}
+                        </section>
+                      </div>
+                    {/if}
+                  {/block}
 
-                 {foreach from=$product.extraContent item=extra key=extraKey}
-                 <div class="tab-pane fade in {$extra.attr.class}" id="extra-{$extraKey}" role="tabpanel" {foreach $extra.attr as $key => $val} {$key}="{$val}"{/foreach}>
-                   {$extra.content nofilter}
-                 </div>
-                 {/foreach}
+                  {foreach from=$product.extraContent item=extra key=extraKey}
+                  <div class="tab-pane fade in {$extra.attr.class}" id="extra-{$extraKey}" role="tabpanel" {foreach $extra.attr as $key => $val} {$key}="{$val}"{/foreach}>
+                    {$extra.content nofilter}
+                  </div>
+                  {/foreach}
+                </div>
               </div>
-            </div>
           {/block}
         </div>
       </div>
@@ -256,5 +259,4 @@
       </footer>
     {/block}
   </section>
-
 {/block}
