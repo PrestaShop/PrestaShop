@@ -67,6 +67,13 @@ class SpecificationsType extends TranslatorAwareType
             ->add('references', ReferencesType::class)
             ->add('features', FeaturesType::class)
             ->add('attachments', ProductAttachmentsType::class)
+            ->add('show_condition', SwitchType::class, [
+                'required' => false,
+                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'show_choices' => false,
+                'inline_switch' => true,
+            ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),
                 'attr' => [
@@ -75,13 +82,8 @@ class SpecificationsType extends TranslatorAwareType
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
-                'label' => $this->trans('Condition', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label' => false,
                 'label_help_box' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
-            ])
-            ->add('show_condition', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Display condition on product page', 'Admin.Catalog.Feature'),
             ])
             ->add('customizations', CustomizationsType::class)
         ;
