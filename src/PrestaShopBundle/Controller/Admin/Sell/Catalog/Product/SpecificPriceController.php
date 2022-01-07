@@ -184,7 +184,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', 'Admin.Global'),
                 'price' => $this->formatPrice($specificPrice->getFixedPrice()),
                 'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
-                'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeFrom()),
+                'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeTo()),
                 'fromQuantity' => $specificPrice->getFromQuantity(),
             ];
         }
@@ -242,10 +242,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return [
             'from' => DateTimeUtil::isNull($from) ?
-                $this->trans('Unlimited', 'Admin.Global') :
+                $this->trans('Always', 'Admin.Global') :
                 $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
             'to' => DateTimeUtil::isNull($to) ?
-                $this->trans('Unlimited', 'Admin.Global') :
+                $this->trans('Always', 'Admin.Global') :
                 $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
         ];
     }
