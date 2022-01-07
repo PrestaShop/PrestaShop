@@ -78,10 +78,10 @@ Post-condition
  */
 
 describe('BO - Orders - View and edit order: Check multi invoice', async () => {
-  // PRE-condition: Create first product
+  // Pre-condition: Create first product
   createProductTest(firstProduct, baseContext);
 
-  // PRE-condition: Create second product
+  // Pre-condition: Create second product
   createProductTest(secondProduct, baseContext);
 
   // Pre-condition: Create order by default customer
