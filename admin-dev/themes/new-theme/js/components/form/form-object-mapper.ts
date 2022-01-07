@@ -418,8 +418,14 @@ export default class FormObjectMapper {
   ): boolean {
     /*
      * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
-     * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
-     *
+     * into a potential infinite loop if type doesn't match, which can easily happen when checking values with different
+     * type but same values in essence.
+     */
+    if (typeof inputValue === 'boolean' || typeof referenceValue === 'boolean') {
+      return <boolean>inputValue === <boolean>referenceValue;
+    }
+
+    /*
      * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
      * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
      * as numbers can be written with comma separator depending on the language.
