@@ -62,7 +62,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             'shop_url',
         ]);
         DatabaseDump::restoreMatchingTables('/.*_shop$/');
-        Shop::resetContext();
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Shop::resetStaticCache();
     }
 
     /**
