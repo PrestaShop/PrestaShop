@@ -49,6 +49,7 @@ class SwitchType extends AbstractType
                 'No' => false,
                 'Yes' => true,
             ],
+            'show_choices' => true,
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
@@ -69,6 +70,7 @@ class SwitchType extends AbstractType
         if (isset($options['attr']['class'])) {
             $view->vars['attr']['class'] .= ' ' . $options['attr']['class'];
         }
+        $view->vars['show_choices'] = $options['show_choices'];
     }
 
     /**
