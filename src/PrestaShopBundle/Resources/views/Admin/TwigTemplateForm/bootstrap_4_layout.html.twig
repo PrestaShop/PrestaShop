@@ -351,7 +351,9 @@
 {% block date_range_widget %}
   {% apply spaceless %}
     {{ form_widget(form.from) }}
+    {{ form_errors(form.from) }}
     {{ form_widget(form.to) }}
+    {{ form_errors(form.to) }}
   {% endapply %}
 {% endblock date_range_widget %}
 
