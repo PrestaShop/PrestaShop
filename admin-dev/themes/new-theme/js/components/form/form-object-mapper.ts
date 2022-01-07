@@ -279,7 +279,7 @@ export default class FormObjectMapper {
     this.$form.on(
       'change dp.change',
       ':input',
-      (event: JQueryEventObject) => this.inputUpdated(event),
+      (event: JQuery.TriggeredEvent) => this.inputUpdated(event),
     );
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
@@ -413,8 +413,8 @@ export default class FormObjectMapper {
    * @private
    */
   private hasSameValue(
-    inputValue: string | number | string[] | undefined,
-    referenceValue: string | number | string[] | undefined,
+    inputValue: string | number | boolean | string[] | undefined,
+    referenceValue: string | number | boolean | string[] | undefined,
   ): boolean {
     /*
      * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
