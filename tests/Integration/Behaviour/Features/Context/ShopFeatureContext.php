@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
+use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -45,6 +46,25 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @AfterFeature @restore-shops-after-feature
+     */
+    public static function restoreShopTablesAfterFeature(): void
+    {
+        static::restoreShopTables();
+    }
+
+    private static function restoreShopTables(): void
+    {
+        DatabaseDump::restoreTables([
+            'shop',
+            'shop_lang',
+            'shop_group',
+        ]);
+        DatabaseDump::restoreMatchingTables('/.*_shop$/');
+        Shop::resetContext();
+    }
+
     /**
      * @Given single shop :shopReference context is loaded
      *

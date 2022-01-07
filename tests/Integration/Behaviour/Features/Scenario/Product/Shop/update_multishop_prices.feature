@@ -1,5 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-prices
-@reset-database-before-feature
+@restore-products-before-feature
+@clear-cache-before-feature
+@restore-shops-after-feature
+@clear-cache-after-feature
 @product-multi-shop
 @update-multi-shop-prices
 Feature: Update product price fields from Back Office (BO) for multiple shops.
@@ -92,7 +95,6 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
-  @multi-price-sequence
   Scenario: I update some fields for single shop and right after for all shops
     Given product product1 should have following prices information for shops "shop1,shop2":
       | price              | 100.99          |
