@@ -33,7 +33,7 @@ use Tests\TestCase\SymfonyIntegrationTestCase;
 
 class LegacyUrlConverterTest extends SymfonyIntegrationTestCase
 {
-    /** @var Link */
+    /** @var Link|null */
     private $link;
 
     protected function setUp(): void

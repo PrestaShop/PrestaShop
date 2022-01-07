@@ -28,13 +28,13 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
 use Customer;
+use Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\AddCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\DeleteCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\EditCustomerCommand;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Command\TransformGuestToCustomerCommand;
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\DuplicateCustomerEmailException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
@@ -91,7 +91,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
 
         foreach ($mandatoryFields as $mandatoryField) {
             if (!array_key_exists($mandatoryField, $data)) {
-                throw new \Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
+                throw new Exception(sprintf('Mandatory property %s for customer has not been provided', $mandatoryField));
             }
         }
 
@@ -263,17 +263,19 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->assertCustomerReferenceExistsInRegistry($customerReference);
 
-        $queryBus = $this->getQueryBus();
-        /* @var EditableCustomer $result */
         try {
-            $result = $queryBus->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
-
-            throw new NoExceptionAlthoughExpectedException();
-        } catch (CustomerNotFoundException $e) {
-            return;
+            $this->getQueryBus()->handle(new GetCustomerForEditing($this->customerRegistry[$customerReference]));
+            $caughtException = null;
+        } catch (Exception $e) {
+            $caughtException = $e;
         }
 
-        throw new \Exception('Customer exists');
+        if ($caughtException === null) {
+            throw new Exception(sprintf(
+                'The customer "%s" exists.',
+                $this->customerRegistry[$customerReference]
+            ));
+        }
     }
 
     /**
@@ -306,11 +308,11 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     public function assertGotErrorMessage($message)
     {
         if (!$this->latestResult instanceof \Exception) {
-            throw new \Exception('Latest Command did not return an error');
+            throw new Exception('Latest Command did not return an error');
         }
 
         if ($this->latestResult->getMessage() !== $message) {
-            throw new \Exception(sprintf("Expected error message '%s', got '%s'", $message, $this->latestResult->getMessage()));
+            throw new Exception(sprintf("Expected error message '%s', got '%s'", $message, $this->latestResult->getMessage()));
         }
 
         $this->latestResult = null;
@@ -386,7 +388,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if (!$isValid) {
-            throw new \Exception(sprintf('groupId %s does not exist', $groupName));
+            throw new Exception(sprintf('groupId %s does not exist', $groupName));
         }
 
         return $groupId;
@@ -402,7 +404,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         $availableMethods = CustomerDeleteMethod::getAvailableMethods();
 
         if (!in_array($methodName, $availableMethods)) {
-            throw new \Exception(sprintf('Delete method %s does not exist', $methodName));
+            throw new Exception(sprintf('Delete method %s does not exist', $methodName));
         }
     }
 
@@ -429,7 +431,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         if (!$isValid) {
-            throw new \Exception(sprintf('genderId %s does not exist, available genders are %s', $genderName, implode(', ', array_keys($availableGenders))));
+            throw new Exception(sprintf('genderId %s does not exist, available genders are %s', $genderName, implode(', ', array_keys($availableGenders))));
         }
 
         return $genderId;
@@ -459,7 +461,7 @@ class CustomerManagerFeatureContext extends AbstractPrestaShopFeatureContext
     protected function assertCustomerReferenceExistsInRegistry($customerReference)
     {
         if (!array_key_exists($customerReference, $this->customerRegistry)) {
-            throw new \Exception(sprintf('Cannot find customer %s in registry', $customerReference));
+            throw new Exception(sprintf('Cannot find customer %s in registry', $customerReference));
         }
     }
 }

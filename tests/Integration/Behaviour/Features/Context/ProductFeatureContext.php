@@ -926,7 +926,6 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
                 break;
             default:
                 throw new \Exception('Unknown stock status: ' . $enoughStock);
-                break;
         }
         if ($result !== $expected) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $enoughStock, $result ? 'enough stock' : 'not enough stock'));

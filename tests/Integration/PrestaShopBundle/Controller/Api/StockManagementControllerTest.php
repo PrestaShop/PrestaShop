@@ -188,10 +188,6 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertResponseHasTotalPages(array $parameters, int $expectedTotalPages): void
     {
-        if (null === $expectedTotalPages) {
-            return;
-        }
-
         $QueryStockParamsCollection = new QueryStockParamsCollection();
         $pageSize = $QueryStockParamsCollection->getDefaultPageSize();
         if (array_key_exists('page_size', $parameters)) {

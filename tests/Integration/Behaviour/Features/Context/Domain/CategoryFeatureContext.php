@@ -660,9 +660,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
 
-        if ($parentCategoryId === null) {
-            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
-        }
         if (isset($testCaseData['Category cover image'])) {
             $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
         }
@@ -688,7 +685,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite,
             $groupAssociationIds,
             [0 => '1'],
-            $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
+            $parentCategoryId === 1,
             $coverImage,
             null,
             $menuThumbNailsImages,
@@ -701,7 +698,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getParentCategoryId(array $testCaseData)
+    private function getParentCategoryId(array $testCaseData): int
     {
         $parentCategoryId = null;
         if (isset($testCaseData['Parent category'])) {
