@@ -102,7 +102,7 @@ class AvailabilityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Availability preferences', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'required' => false,
             'columns_number' => 3,
         ]);
