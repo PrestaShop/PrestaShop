@@ -35,5 +35,9 @@ export default {
   'product.price.wholesalePrice': 'product[pricing][wholesale_price]',
   'product.price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
   'product.price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
+  'product.price.overrideAllUnitPriceTaxExcluded': [
+    'product[pricing][unit_price][modify_all_stores_price_tax_excluded]',
+    'product[pricing][unit_price][modify_all_stores_price_tax_included]',
+  ],
   'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
 };
