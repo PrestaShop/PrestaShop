@@ -1,5 +1,8 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-management
-@reset-database-before-feature
+@restore-products-before-feature
+@clear-cache-before-feature
+@restore-shops-after-feature
+@clear-cache-after-feature
 @product-multi-shop
 @update-multi-shop-management
 Feature: Copy product from shop to shop.
