@@ -58,8 +58,8 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     {
         DatabaseDump::restoreTables([
             'shop',
-            'shop_lang',
             'shop_group',
+            'shop_url',
         ]);
         DatabaseDump::restoreMatchingTables('/.*_shop$/');
         Shop::resetContext();
