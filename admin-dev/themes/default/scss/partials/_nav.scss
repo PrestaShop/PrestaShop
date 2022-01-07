@@ -90,7 +90,7 @@
 
     .employee_avatar {
       padding-top: 1rem;
-      padding-left: 1.5rem;
+      padding-left: 1rem;
       text-align: center;
       text-decoration: none;
 
@@ -226,7 +226,7 @@
 }
 
 .main-menu {
-  padding: 0 0 13.313rem;
+  padding: 0 0 8.313rem;
   margin: 0;
 
   &.sidebar-closed {
@@ -270,7 +270,7 @@
         a.link {
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
-          padding-left: 1.5rem;
+          padding-left: 1rem;
           font-size: 1rem;
           line-height: inherit;
 
@@ -448,24 +448,18 @@
 
 .category-title {
   display: block;
-  padding: 0.875rem 0 0.75rem;
-  margin: 1.813rem 0 0 0.938rem;
+  padding: 0.5rem 0 0.375rem;
+  margin: 0.875rem 0 0 0.938rem;
   font-size: 0.75rem;
   font-weight: 700;
-  border-top: 1px solid #bbcdd2;
 
   @include media-breakpoint-down(md) {
-    padding-bottom: 0.25rem;
-    margin-top: 1rem;
+    margin: 0.75rem 0 0 1rem;
     font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    border-top: none;
   }
 
   & > .title {
-    color: #fff;
-    background: $gray-dark-menu;
+    color: #6c868e;
   }
 }
 
