@@ -31,6 +31,8 @@
 
   .dropdown-menu {
     min-width: 25rem;
+    // stylelint-disable-next-line
+    height: auto !important;
     padding: 0;
     margin: 0;
     @include border-radius(0);
@@ -136,10 +138,6 @@
             bottom: 0;
             display: block;
             width: 100%;
-
-            .mobile & {
-              bottom: 3.125rem;
-            }
           }
 
           @include media-breakpoint-down("sm") {
@@ -211,7 +209,9 @@
     }
 
     .no-notification {
-      top: 7.75rem;
+      @include media-breakpoint-down("sm") {
+        top: 7.75rem;
+      }
     }
 
     &.show {
