@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
-class AllPermissions implements PermissionInterface
+class ControllerAllPermissions implements PermissionInterface
 {
+    public const ALL = 'all';
+
     public function getValue(): string
     {
-        return PermissionInterface::ALL;
+        return static::ALL;
     }
 }

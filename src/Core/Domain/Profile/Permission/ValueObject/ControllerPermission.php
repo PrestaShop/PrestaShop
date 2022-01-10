@@ -24,24 +24,56 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace Tests\Unit\Core\Domain\Customer\ValueObject;
+declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
+
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermissionValueException;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
 
-class PermissionTest extends TestCase
+class ControllerPermission implements PermissionInterface
 {
-    public function testExceptionIsThrownPermissionIsNotSupported()
-    {
-        $this->expectException(InvalidPermissionValueException::class);
+    public const VIEW = 'view';
+    public const ADD = 'add';
+    public const EDIT = 'edit';
+    public const DELETE = 'delete';
+    public const ALL = 'all';
 
-        new Permission('This is not a good permission!');
+    public const SUPPORTED_PERMISSIONS = [
+        self::VIEW,
+        self::ADD,
+        self::EDIT,
+        self::DELETE,
+    ];
+
+    /**
+     * @var string
+     */
+    private $permission;
+
+    /**
+     * @param string $permission
+     */
+    public function __construct(string $permission)
+    {
+        $this->assertPermissionIsSupported($permission);
+
+        $this->permission = $permission;
     }
 
-    public function testPermissionIsSupported()
+    /**
+     * @return string
+     */
+    public function getValue(): string
     {
-        $permission = new Permission('view');
-        $this->assertEquals('view', $permission->getValue());
+        return $this->permission;
+    }
+
+    protected function assertPermissionIsSupported(string $permission): void
+    {
+        if (!in_array($permission, static::SUPPORTED_PERMISSIONS)) {
+            throw new InvalidPermissionValueException(
+                sprintf('Invalid permission "%s" provided', $permission)
+            );
+        }
     }
 }

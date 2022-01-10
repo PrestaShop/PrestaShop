@@ -62,7 +62,7 @@ class TabId implements TabIdInterface
      */
     private function assertTabIdIsGreaterThanZero(int $tabId): void
     {
-        if (0 > $tabId) {
+        if (0 >= $tabId) {
             throw new InvalidTabValueIdException(
                 sprintf('Invalid tab id "%d" provided', $tabId)
             );

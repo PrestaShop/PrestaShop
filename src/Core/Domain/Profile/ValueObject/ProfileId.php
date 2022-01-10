@@ -38,11 +38,9 @@ class ProfileId
     private $profileId;
 
     /**
-     * @param int $profileId
-     *
      * @throws ProfileConstraintException
      */
-    public function __construct($profileId)
+    public function __construct(int $profileId)
     {
         $this->assertProfileIdIsGreaterThanZero($profileId);
 
@@ -58,13 +56,11 @@ class ProfileId
     }
 
     /**
-     * @param mixed $profileId
-     *
      * @throws ProfileConstraintException
      */
-    private function assertProfileIdIsGreaterThanZero($profileId)
+    private function assertProfileIdIsGreaterThanZero(int $profileId)
     {
-        if ((!is_int($profileId) && !ctype_digit($profileId)) || 0 > $profileId) {
+        if (0 >= $profileId) {
             throw new ProfileConstraintException(
                 sprintf('Invalid profile id %s provided', var_export($profileId, true))
             );

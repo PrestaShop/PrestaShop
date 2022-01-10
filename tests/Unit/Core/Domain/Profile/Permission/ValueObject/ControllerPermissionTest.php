@@ -24,43 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace Tests\Unit\Core\Domain\Customer\ValueObject;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
-
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermissionValueException;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
 
-class Permission implements PermissionInterface
+class PermissionTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private $permission;
-
-    /**
-     * @param string $permission
-     */
-    public function __construct(string $permission)
+    public function testExceptionIsThrownPermissionIsNotSupported()
     {
-        $this->assertPermissionIsSupported($permission);
+        $this->expectException(InvalidPermissionValueException::class);
 
-        $this->permission = $permission;
+        new ControllerPermission('This is not a good permission!');
     }
 
-    /**
-     * @return string
-     */
-    public function getValue(): string
+    public function testPermissionIsSupported()
     {
-        return $this->permission;
-    }
-
-    protected function assertPermissionIsSupported(string $permission): void
-    {
-        if (!in_array($permission, PermissionInterface::SUPPORTED_PERMISSIONS)) {
-            throw new InvalidPermissionValueException(
-                sprintf('Invalid permission "%s" provided', $permission)
-            );
-        }
+        $permission = new ControllerPermission('view');
+        $this->assertEquals('view', $permission->getValue());
     }
 }

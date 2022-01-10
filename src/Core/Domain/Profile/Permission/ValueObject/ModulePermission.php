@@ -32,11 +32,12 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Exception\InvalidPermis
 
 class ModulePermission implements PermissionInterface
 {
-    const CONFIGURE = 'configure';
-    const UNINSTALL = 'uninstall';
+    public const VIEW = 'view';
+    public const CONFIGURE = 'configure';
+    public const UNINSTALL = 'uninstall';
 
-    const SUPPORTED_MODULE_PERMISSIONS = [
-        PermissionInterface::VIEW,
+    public const SUPPORTED_PERMISSIONS = [
+        self::VIEW,
         self::CONFIGURE,
         self::UNINSTALL,
     ];
@@ -66,7 +67,7 @@ class ModulePermission implements PermissionInterface
 
     protected function assertPermissionIsSupported(string $permission): void
     {
-        if (!in_array($permission, static::SUPPORTED_MODULE_PERMISSIONS)) {
+        if (!in_array($permission, static::SUPPORTED_PERMISSIONS)) {
             throw new InvalidPermissionValueException(
                 sprintf('Invalid permission "%s" provided', $permission)
             );

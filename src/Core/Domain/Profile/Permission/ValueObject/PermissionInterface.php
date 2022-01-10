@@ -28,18 +28,5 @@ namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
 interface PermissionInterface
 {
-    public const VIEW = 'view';
-    public const ADD = 'add';
-    public const EDIT = 'edit';
-    public const DELETE = 'delete';
-    public const ALL = 'all';
-
-    public const SUPPORTED_PERMISSIONS = [
-        self::VIEW,
-        self::ADD,
-        self::EDIT,
-        self::DELETE,
-    ];
-
     public function getValue(): string;
 }

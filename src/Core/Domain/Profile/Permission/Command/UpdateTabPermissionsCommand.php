@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\AllPermissions;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\Permission;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerAllPermissions;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\PermissionInterface;
 use PrestaShop\PrestaShop\Core\Domain\Profile\ValueObject\ProfileId;
 use PrestaShop\PrestaShop\Core\Domain\Tab\ValueObject\AllTab;
@@ -52,7 +52,7 @@ class UpdateTabPermissionsCommand
     private $tabId;
 
     /**
-     * @var Permission
+     * @var PermissionInterface
      */
     private $permission;
 
@@ -71,7 +71,7 @@ class UpdateTabPermissionsCommand
     {
         $this->profileId = new ProfileId($profileId);
         $this->tabId = $tabId === AllTab::ALL_TAB_ID ? new AllTab() : new TabId($tabId);
-        $this->permission = $permission === PermissionInterface::ALL ? new AllPermissions() : new Permission($permission);
+        $this->permission = $permission === ControllerAllPermissions::ALL ? new ControllerAllPermissions() : new ControllerPermission($permission);
         $this->isActive = $isActive;
     }
 
