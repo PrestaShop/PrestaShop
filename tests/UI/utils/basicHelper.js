@@ -20,4 +20,14 @@ module.exports = {
 
     return arrayToSort.sort((a, b) => a.localeCompare(b));
   },
+
+  /**
+   * Calculate percentage
+   * @param num {number} Number to do the percentage
+   * @param percentage {number} Percentage value
+   * @returns {Promise<number>}
+   */
+  async percentage(num, percentage) {
+    return (num / 100) * percentage;
+  },
 };
