@@ -70,6 +70,7 @@ class SpecificPricePriorityType extends TranslatorAwareType
                 'external_link' => [
                     'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Global'),
                     'href' => $this->router->generate('admin_product_preferences'),
+                    'position' => 'prepend',
                 ],
             ])
             ->add('priorities', PriorityListType::class, [
