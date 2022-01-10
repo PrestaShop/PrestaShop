@@ -121,6 +121,19 @@ abstract class AbstractCategoryType extends TranslatorAwareType
                     ],
                 ],
             ])
+            ->add('additional_description', TranslateType::class, [
+                'type' => FormattedTextareaType::class,
+                'locales' => $this->locales,
+                'hideTabs' => false,
+                'required' => false,
+                'options' => [
+                    'constraints' => [
+                        new CleanHtml([
+                            'message' => $this->trans('This field is invalid', 'Admin.Notifications.Error'),
+                        ]),
+                    ],
+                ],
+            ])
             ->add('active', SwitchType::class, [
                 'required' => false,
             ])

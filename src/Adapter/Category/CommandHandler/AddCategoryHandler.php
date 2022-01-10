@@ -81,6 +81,10 @@ final class AddCategoryHandler extends AbstractObjectModelHandler implements Add
             $category->description = $command->getLocalizedDescriptions();
         }
 
+        if (null !== $command->getLocalizedAdditionalDescriptions()) {
+            $category->additional_description = $command->getLocalizedAdditionalDescriptions();
+        }
+
         if (null !== $command->getLocalizedMetaTitles()) {
             $category->meta_title = $command->getLocalizedMetaTitles();
         }

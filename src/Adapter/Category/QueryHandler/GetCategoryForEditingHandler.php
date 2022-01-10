@@ -107,7 +107,8 @@ final class GetCategoryForEditingHandler implements GetCategoryForEditingHandler
             $this->getCoverImage($query->getCategoryId()),
             $this->getThumbnailImage($query->getCategoryId()),
             $this->getMenuThumbnailImages($query->getCategoryId()),
-            $subcategories->fetchAll(PDO::FETCH_COLUMN)
+            $subcategories->fetchAll(PDO::FETCH_COLUMN),
+            $category->additional_description
         );
 
         return $editableCategory;

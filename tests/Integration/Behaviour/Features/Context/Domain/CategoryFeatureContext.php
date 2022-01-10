@@ -195,6 +195,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setLocalizedNames($editableCategoryTestData->getName());
         $command->setParentCategoryId($editableCategoryTestData->getParentId());
         $command->setLocalizedDescriptions($editableCategoryTestData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableCategoryTestData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableCategoryTestData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableCategoryTestData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableCategoryTestData->getMetaKeywords());
@@ -303,6 +304,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
         $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
         $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
@@ -329,6 +331,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $editableRootCategoryTestCaseData->isActive()
         );
         $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
@@ -644,22 +647,22 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($testCaseData['Description'])) {
             $description = [$this->defaultLanguageId => $testCaseData['Description']];
         }
-
+        $additional_description = [$this->defaultLanguageId => self::EMPTY_VALUE];
+        if (isset($testCaseData['Additional description'])) {
+            $additional_description = [$this->defaultLanguageId => $testCaseData['Additional description']];
+        }
         $metaTitle = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta title'])) {
             $metaTitle = [$this->defaultLanguageId => $testCaseData['Meta title']];
         }
-
         $metaDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta description'])) {
             $metaDescription = [$this->defaultLanguageId => $testCaseData['Meta description']];
         }
-
         $linkRewrite = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Friendly URL'])) {
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
-
         if (isset($testCaseData['Category cover image'])) {
             $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
         }
@@ -689,7 +692,8 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $coverImage,
             null,
             $menuThumbNailsImages,
-            $subcategories
+            $subcategories,
+            $additional_description
         );
     }
 

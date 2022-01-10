@@ -367,6 +367,7 @@ CREATE TABLE `PREFIX_category_lang` (
   `id_lang` int(10) unsigned NOT NULL,
   `name` varchar(128) NOT NULL,
   `description` text,
+  `additional_description` text,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
