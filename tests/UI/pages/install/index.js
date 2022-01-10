@@ -41,6 +41,7 @@ class Install extends CommonPage {
 
     // Selectors for step 4
     this.storeInformationStepPageTitle = '#infosShopBlock h2';
+    this.contentInformationStepPageTitle = '#contentInfosBlock h2'
     this.shopNameInput = '#infosShop';
     this.countryChosenSelect = '#infosCountry_chosen';
     this.countryChosenSearchInput = `${this.countryChosenSelect} .chosen-search input`;
@@ -100,6 +101,10 @@ class Install extends CommonPage {
 
       case 'Store information':
         selector = this.storeInformationStepPageTitle;
+        break;
+
+      case 'Content information':
+        selector = this.contentInformationStepPageTitle;
         break;
 
       case 'System configuration':

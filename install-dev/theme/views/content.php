@@ -25,7 +25,7 @@
    */
 ?>
 
-<div id="infosShopBlock">
+<div id="contentInfosBlock">
   <h2><?php echo $this->translator->trans('Configure content', [], 'Install'); ?></h2>
 
   <div class="field clearfix">

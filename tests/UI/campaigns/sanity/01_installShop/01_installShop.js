@@ -81,7 +81,18 @@ describe('Install Prestashop', async () => {
     await expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
   });
 
-  it('should fill shop Information form and go to step \'Database Configuration\'', async function () {
+  it('should click on next and go to step \'content Information\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToShopInformation', baseContext);
+
+    if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 500))) {
+      await installPage.nextStep(page);
+    }
+
+    const stepTitle = await installPage.getStepTitle(page, 'Content information');
+    await expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
+  });
+
+  it('should fill shop Information form and go to step \'Database Configuration\'', async function() {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseConfiguration', baseContext);
 
     await installPage.fillInformationForm(page);
