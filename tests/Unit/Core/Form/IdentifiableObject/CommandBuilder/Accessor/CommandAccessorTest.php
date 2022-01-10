@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\C
 
 class CommandAccessorTest extends TestCase
 {
-    private const MULTI_STORE_PREFIX = 'multi_store_';
+    private const MULTI_SHOP_PREFIX = 'multi_shop_';
     private const SHOP_ID = 1;
 
     /**
@@ -59,7 +59,7 @@ class CommandAccessorTest extends TestCase
 
     public function getSingleCommandParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
         $config
             ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
@@ -97,7 +97,7 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
-        // prefix is not mandatory especially when dealing with single store command
+        // prefix is not mandatory especially when dealing with single shop command
         $config = new CommandAccessorConfig();
         $config
             ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
@@ -141,7 +141,7 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
-        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
         $config
             ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
@@ -158,7 +158,7 @@ class CommandAccessorTest extends TestCase
             ->setCount(42)
         ;
 
-        // Same test but now some fields are multistore, since no multistore command is provided it shouldn't change the final result
+        // Same test but now some fields are multishop, since no multishop command is provided it shouldn't change the final result
         yield [
             $config,
             [
@@ -195,7 +195,7 @@ class CommandAccessorTest extends TestCase
 
     public function getMultiShopCommandsParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
         $config
             ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
@@ -255,10 +255,10 @@ class CommandAccessorTest extends TestCase
                     'isValid' => false,
                 ],
                 '_number' => 42,
-                self::MULTI_STORE_PREFIX . '_number' => true,
+                self::MULTI_SHOP_PREFIX . '_number' => true,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_STORE_PREFIX . 'children' => true,
+                    self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
             ],
             [$command, $allShopsCommand],
@@ -268,16 +268,16 @@ class CommandAccessorTest extends TestCase
             $config,
             [
                 '_number' => 42,
-                self::MULTI_STORE_PREFIX . '_number' => true,
+                self::MULTI_SHOP_PREFIX . '_number' => true,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_STORE_PREFIX . 'children' => true,
+                    self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
             ],
             [$allShopsCommand],
         ];
 
-        // More advanced use, multistore field is present but not always true, and url is not a multistore field
+        // More advanced use, multishop field is present but not always true, and url is not a multishop field
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
@@ -295,23 +295,23 @@ class CommandAccessorTest extends TestCase
             $config,
             [
                 'url' => 'http://localhost',
-                self::MULTI_STORE_PREFIX . 'url' => true,
+                self::MULTI_SHOP_PREFIX . 'url' => true,
                 'name' => 'toto',
                 'command' => [
                     'isValid' => false,
                 ],
                 '_number' => 42,
-                self::MULTI_STORE_PREFIX . '_number' => false,
+                self::MULTI_SHOP_PREFIX . '_number' => false,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_STORE_PREFIX . 'children' => true,
+                    self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
             ],
             [$command, $allShopsCommand],
         ];
 
-        // Same test but now url is a multistore field
-        $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
+        // Same test but now url is a multishop field
+        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
         $config
             ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
@@ -337,16 +337,16 @@ class CommandAccessorTest extends TestCase
             $config,
             [
                 'url' => 'http://localhost',
-                self::MULTI_STORE_PREFIX . 'url' => true,
+                self::MULTI_SHOP_PREFIX . 'url' => true,
                 'name' => 'toto',
                 'command' => [
                     'isValid' => false,
                 ],
                 '_number' => 42,
-                self::MULTI_STORE_PREFIX . '_number' => false,
+                self::MULTI_SHOP_PREFIX . '_number' => false,
                 'parent' => [
                     'children' => $children,
-                    self::MULTI_STORE_PREFIX . 'children' => true,
+                    self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
             ],
             [$command, $allShopsCommand],
