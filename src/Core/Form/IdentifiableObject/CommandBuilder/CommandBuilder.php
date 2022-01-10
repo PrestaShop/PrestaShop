@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
@@ -56,22 +56,22 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  *
  * You can do instead:
  *
- *     $config = new CommandAccessorConfig();
+ *     $config = new CommandBuilderConfig();
  *     $config
  *         ->addField('[number]', 'setNumber', CommandField::TYPE_INT)
  *         ->addField('[author][name]', 'setNumber', CommandField::TYPE_STRING)
  *     ;
- *     $accessor = new CommandAccessor($config);
+ *     $builder = new CommandBuilder($config);
  *
- *     return $accessor->prepareCommands($data, new CQRSCommand());
+ *     return $builder->buildCommands($data, new CQRSCommand());
  *
  * The code is cleaner, and you can focus on your data format instead of some trivial checking. When dealing with multi
  * shop commands it becomes even more interesting.
  */
-class CommandAccessor
+class CommandBuilder
 {
     /**
-     * @var CommandAccessorConfig
+     * @var CommandBuilderConfig
      */
     private $config;
 
@@ -81,10 +81,10 @@ class CommandAccessor
     private $propertyAccessor;
 
     /**
-     * @param CommandAccessorConfig $config contains all the configuration of the fields that need to be handled by the
-     *                                      accessor along with the multishop prefix, if needed
+     * @param CommandBuilderConfig $config contains all the configuration of the fields that need to be handled by the
+     *                                     builder along with the multishop prefix, if needed
      */
-    public function __construct(CommandAccessorConfig $config)
+    public function __construct(CommandBuilderConfig $config)
     {
         $this->config = $config;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -102,12 +102,12 @@ class CommandAccessor
      * It can be used for two use cases:
      *
      * - Fill a single command: this is the most common use case, in this case only the single shop command parameter
-     * is required, the accessor will search for matching values in the flattened array input data, and fill them using
+     * is required, the builder will search for matching values in the flattened array input data, and fill them using
      * the appropriate setters of the command. The command is fully filled and returned via an array (which will contain
      * only one command naturally), only when a modification has been detected though.
      *
      * - Fill a single command AND an all shops command: in this particular use case you need to specify two input
-     * commands as parameters. The accessor performs the same research of command fields in the input array. However, in
+     * commands as parameters. The builder performs the same research of command fields in the input array. However, in
      * this case it will check if the data was set to be modified for ALL the shops (not just a single one). To do this
      * it checks the data for a boolean value which key matches the command field:
      *
@@ -129,7 +129,7 @@ class CommandAccessor
      *
      * @return array Returns prepared commands (if no updated field was detected an empty array is returned)
      */
-    public function prepareCommands(
+    public function buildCommands(
         array $data,
         $singleShopCommand,
         $allShopsCommand = null

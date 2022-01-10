@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 

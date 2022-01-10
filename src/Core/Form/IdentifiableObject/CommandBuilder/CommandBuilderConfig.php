@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
 /**
- * Config that gives information to the CommandAccessor component to correctly check the data and prefill the command
+ * Config that gives information to the CommandBuilder component to correctly check the data and prefill the command
  * object, each data property is associated to a setter in the command and its appropriate type for casting. Example:
  *
- * $config = new CommandAccessorConfig('modify_all_');
+ * $config = new CommandBuilderConfig('modify_all_');
  * $config
  *     ->addField('[name]', 'setName', CommandField::TYPE_STRING)
  *     ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
@@ -40,7 +40,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Acce
  *     ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
  * ;
  */
-class CommandAccessorConfig
+class CommandBuilderConfig
 {
     /**
      * @var string

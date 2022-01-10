@@ -31,9 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessor;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessorConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
 /**
  * Builder used to build UpdateProductPricesCommand
@@ -63,7 +63,7 @@ class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
         }
 
         $priceData = $formData['pricing'];
-        $config = new CommandAccessorConfig($this->modifyAllNamePrefix);
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
             ->addMultiShopField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)
@@ -74,10 +74,10 @@ class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
             ->addMultiShopField('[unit_price][unity]', 'setUnity', CommandField::TYPE_STRING)
         ;
 
-        $commandAccessor = new CommandAccessor($config);
+        $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductPricesCommand($productId->getValue(), $singleShopConstraint);
         $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ShopConstraint::allShops());
 
-        return $commandAccessor->prepareCommands($priceData, $shopCommand, $allShopsCommand);
+        return $commandBuilder->buildCommands($priceData, $shopCommand, $allShopsCommand);
     }
 }
