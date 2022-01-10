@@ -236,45 +236,6 @@ class CookieCore
     }
 
     /**
-     * Check customer informations saved into cookie and return customer validity.
-     *
-     * @deprecated as of version 1.5 use Customer::isLogged() instead
-     *
-     * @return bool customer validity
-     */
-    public function isLogged($withGuest = false)
-    {
-        Tools::displayAsDeprecated('Use Customer::isLogged() instead');
-        if (!$withGuest && $this->is_guest == 1) {
-            return false;
-        }
-
-        /* Customer is valid only if it can be load and if cookie password is the same as database one */
-        if ($this->logged == true && $this->id_customer && Validate::isUnsignedId($this->id_customer) && Customer::checkPassword((int) ($this->id_customer), $this->passwd)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Check employee informations saved into cookie and return employee validity.
-     *
-     * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
-     *
-     * @return bool employee validity
-     */
-    public function isLoggedBack()
-    {
-        Tools::displayAsDeprecated('Use Employee::isLoggedBack() instead');
-        /* Employee is valid only if it can be load and if cookie password is the same as database one */
-        return $this->id_employee
-            && Validate::isUnsignedId($this->id_employee)
-            && Employee::checkPassword((int) $this->id_employee, $this->passwd)
-            && (!isset($this->_content['remote_addr']) || $this->_content['remote_addr'] == ip2long(Tools::getRemoteAddr()) || !Configuration::get('PS_COOKIE_CHECKIP'));
-    }
-
-    /**
      * Delete cookie
      * As of version 1.5 don't call this function, use Customer::logout() or Employee::logout() instead;.
      */
@@ -366,20 +327,6 @@ class CookieCore
             // set detect_language to force going through Tools::setCookieLanguage to figure out browser lang
             $this->detect_language = true;
         }
-    }
-
-    /**
-     * Encrypt and set the Cookie.
-     *
-     * @param string|null $cookie Cookie content
-     *
-     * @return bool Indicates whether the Cookie was successfully set
-     *
-     * @deprecated 1.7.0
-     */
-    protected function _setcookie($cookie = null)
-    {
-        return $this->encryptAndSetCookie($cookie);
     }
 
     /**
