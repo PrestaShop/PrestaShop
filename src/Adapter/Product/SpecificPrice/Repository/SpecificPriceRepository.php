@@ -39,8 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
 use SpecificPrice;
 
 /**
