@@ -67,7 +67,7 @@ class OrderPreviewProductDetail
     private $location;
 
     /**
-     * @var int|null
+     * @var int
      */
     private $id;
 
@@ -89,7 +89,7 @@ class OrderPreviewProductDetail
         string $unitPrice,
         string $totalPrice,
         string $totalTax,
-        ?int $id = null
+        int $id
     ) {
         $this->name = $name;
         $this->quantity = $quantity;
@@ -158,9 +158,9 @@ class OrderPreviewProductDetail
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
