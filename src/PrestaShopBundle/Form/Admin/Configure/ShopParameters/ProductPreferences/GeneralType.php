@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriorityListType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriorityChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -66,10 +66,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('force_friendly_url', SwitchType::class)
             ->add('default_status', SwitchType::class)
-            ->add('specific_price_priorities', PriorityListType::class, [
-                'required' => false,
-                'label' => false,
-            ])
+            ->add('specific_price_priorities', PriorityChoiceType::class)
         ;
     }
 

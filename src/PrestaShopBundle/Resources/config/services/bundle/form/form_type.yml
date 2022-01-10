@@ -1551,8 +1551,8 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.pricing.priority_list_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriorityListType'
+  form.type.sell.product.pricing.priority_choice_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriorityChoiceType'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'

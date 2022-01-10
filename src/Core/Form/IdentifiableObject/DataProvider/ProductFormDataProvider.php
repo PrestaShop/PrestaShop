@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
@@ -40,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -97,6 +99,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $contextShopId;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
@@ -105,6 +112,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
      * @param int $contextLangId
      * @param int $defaultShopId
      * @param int|null $contextShopId
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         CommandBusInterface $queryBus,
@@ -114,7 +122,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
         CategoryDataProvider $categoryDataProvider,
         int $contextLangId,
         int $defaultShopId,
-        ?int $contextShopId
+        ?int $contextShopId,
+        ConfigurationInterface $configuration
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
@@ -124,6 +133,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $this->categoryDataProvider = $categoryDataProvider;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -199,6 +209,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'unit_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
+                ],
+                'priority_management' => [
+                    'use_custom_priority' => false,
+                    'priorities' => $this->getDefaultPrioritiesData(),
                 ],
             ],
             'shipping' => [
@@ -487,7 +501,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         if (!$priorities) {
             return [
                 'use_custom_priority' => false,
-                'priorities' => [],
+                'priorities' => $this->getDefaultPrioritiesData(),
             ];
         }
 
@@ -694,5 +708,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $suppliersData;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultPrioritiesData(): array
+    {
+        if (!empty($this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'))) {
+            return explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'));
+        }
+
+        return array_values(PriorityList::AVAILABLE_PRIORITIES);
     }
 }
