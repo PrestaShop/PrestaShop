@@ -5,6 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const basicHelper = require('@utils/basicHelper');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
@@ -145,7 +146,7 @@ Post-condition
 - Disable EcoTax
 - Delete discount
 */
-describe('BO - Orders - View and edit order : Check invoice', async () => {
+describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Pre-condition - Create first order from FO
   createOrderByCustomerTest(firstOrderByCustomer, baseContext);
 
@@ -429,7 +430,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await expect(imageNumber, 'Logo is not visible!').to.be.equal(1);
 
             const isVisible = await files.isTextInPDF(filePath, `INVOICE,,${today},,#${fileName}`);
-            await expect(isVisible, 'File header is not correct!').to.be.true;
+            await expect(isVisible, 'File name header is not correct!').to.be.true;
           });
 
           it('should check that the \'Delivery address\' is correct', async function () {
@@ -543,7 +544,6 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               + '(tax excl.)\' are correct', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkProductCustomizedProduct', baseContext);
 
-              //  CUSTOMIZED PRODUCT, ,  €14.00, ,  1, ,  €14.00
               const productPriceExist = await files.isTextInPDF(
                 filePath,
                 `${test.args.product.name}, ,  `
@@ -553,7 +553,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               );
               await expect(
                 productPriceExist,
-                'Product Tax Rate, unit price (tax exl.), quantity and  Total price (tax excl.) are not correct!',
+                'Unit Price (tax excl.), quantity and Product Total price are not correct!',
               ).to.be.true;
             });
           }
@@ -571,7 +571,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               + 'are correct', async function () {
               await testContext.addContextItem(this, 'testIdentifier', 'checkBasePriceSpecificPrice', baseContext);
 
-              const discountValue = await viewOrderPage.percentage(
+              const discountValue = await basicHelper.percentage(
                 test.args.product.price,
                 test.args.product.specificPrice.discount,
               );
@@ -612,7 +612,8 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                   + `${test.args.productQuantity}, ,  `
                   + `€${test.args.product.price.toFixed(2)}`,
                 );
-                await expect(basePriceVisible, 'Base price is not correct in invoice!').to.be.true;
+                await expect(basePriceVisible, 'Unit price (Tax excl.), Ecotax, Quantity, '
+                  + 'Total (Tax excl.) are not correct in invoice!').to.be.true;
               });
           }
         });
@@ -636,7 +637,6 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               it('should check that \'Tax Detail, Tax Rate, Base price, Total tax\' are correct', async function () {
                 await testContext.addContextItem(this, 'testIdentifier', 'checkTaxesTableVirtualProduct', baseContext);
 
-                // Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  Products, ,  20.000 %, ,  €151.67, ,  €30.33
                 const taxDetailsVisible = await files.isTextInPDF(
                   filePath,
                   'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  '
@@ -658,7 +658,6 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 async function () {
                   await testContext.addContextItem(this, 'testIdentifier', 'checkEcotax', baseContext);
 
-                  // Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  Ecotax, ,  0.000 %, ,  €5.00, ,  €0.00
                   const taxDetailsVisible = await files.isTextInPDF(
                     filePath,
                     'Tax Detail, ,Tax Rate, ,Base price, ,Total Tax,,  '
@@ -768,7 +767,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 );
                 await expect(
                   isShippingCostVisible,
-                  'Total Products, Total(Tax exc.), Total Tax, Total are not correct!',
+                  'Total Products, Shipping Costs, Total(Tax exc.), Total are not correct!',
                 ).to.be.true;
               });
           }
@@ -779,7 +778,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
               async function () {
                 await testContext.addContextItem(this, 'testIdentifier', `checkTotal${index}`, baseContext);
 
-                const discount = await viewOrderPage.percentage(
+                const discount = await basicHelper.percentage(
                   test.args.product.price,
                   test.args.product.specificPrice.discount,
                 );
@@ -1050,7 +1049,10 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
                 + `Total (Tax excl.), ,  €${(totalPrice + 7.00).toFixed(2)},,  `
                 + `Total, ,  €${(totalPrice + 7.00).toFixed(2)}`,
               );
-              await expect(isDiscountVisible, 'Shipping cost is not correct in the invoice!').to.be.true;
+              await expect(
+                isDiscountVisible,
+                'Shipping cost, Total (Tax exl.), Total Tax and Total are not correct in the invoice!')
+                .to.be.true;
             });
         });
 
@@ -1076,9 +1078,8 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkDiscountsTable', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
-            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
+            const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
-            // Discounts,,  Discount, ,  - €14.30,
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
               'Discounts,,  Discount, ,  '
@@ -1091,7 +1092,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscount', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
-            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
+            const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
@@ -1108,7 +1109,7 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'deleteDiscount', baseContext);
 
             const validationMessage = await viewOrderPage.deleteDiscount(page);
-            await expect(validationMessage, 'Successful update alert is not correct')
+            await expect(validationMessage, 'Successful delete alert is not correct')
               .to.equal(viewOrderPage.successfulUpdateMessage);
           });
 
@@ -1125,14 +1126,14 @@ describe('BO - Orders - View and edit order : Check invoice', async () => {
             await testContext.addContextItem(this, 'testIdentifier', 'checkIsDiscountNotVisible', baseContext);
 
             const totalPrice = productWithEcoTax.price + customizedProduct.price;
-            const discount = await viewOrderPage.percentage(totalPrice, discountData.value);
+            const discount = await basicHelper.percentage(totalPrice, discountData.value);
 
             const isDiscountVisible = await files.isTextInPDF(
               filePath,
               ' Total Discounts,  '
               + `-€${(totalPrice - discount).toFixed(2)}`,
             );
-            await expect(isDiscountVisible, 'Total discount is not correct in the invoice!').to.be.false;
+            await expect(isDiscountVisible, 'Total discount is visible in the invoice!').to.be.false;
           });
         });
 
