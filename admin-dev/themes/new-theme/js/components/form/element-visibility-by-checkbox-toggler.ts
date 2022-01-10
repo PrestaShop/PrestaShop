@@ -26,7 +26,7 @@
 /**
  * Shows or hides specified element based on specified checkbox "checked" property.
  */
-export default class ElementVisibilityByCheckboxToggler {
+export default class VisibilityToggler {
   checkboxesSelector: string;
 
   elementToToggleSelector: string;
