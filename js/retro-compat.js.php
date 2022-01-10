@@ -98,8 +98,6 @@ $plugins = array(
     array('new_file' => 'admin/carrier_wizard.js', 'name' => 'carrier_wizard'),
     'admin_order.js' =>
     array('new_file' => 'admin/orders.js', 'name' => 'orders'),
-    'attributesBack.js' =>
-    array('new_file' => 'admin/attributes.js', 'name' => 'attributes'),
     'admin-dnd.js' =>
     array('new_file' => 'admin/dnd.js', 'name' => 'dnd'),
     'login.js' =>

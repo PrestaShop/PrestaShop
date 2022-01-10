@@ -1291,7 +1291,6 @@ class ProductCore extends ObjectModel
             !$this->deleteProductFeatures() ||
             !$this->deleteTags() ||
             !$this->deleteCartProducts() ||
-            !$this->deleteAttributesImpacts() ||
             !$this->deleteAttachments(false) ||
             !$this->deleteCustomization() ||
             !SpecificPrice::deleteByProductId((int) $this->id) ||
@@ -2460,19 +2459,6 @@ class ProductCore extends ObjectModel
         Tools::clearColorListCache($this->id);
 
         return $result;
-    }
-
-    /**
-     * Delete product attributes impacts.
-     *
-     * @return bool
-     */
-    public function deleteAttributesImpacts()
-    {
-        return Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'attribute_impact`
-            WHERE `id_product` = ' . (int) $this->id
-        );
     }
 
     /**
@@ -5042,48 +5028,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $impacts = self::getAttributesImpacts($id_product_old);
-
-        if (is_array($impacts) && count($impacts)) {
-            $impact_sql = 'INSERT INTO `' . _DB_PREFIX_ . 'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
-
-            foreach ($impacts as $id_attribute => $impact) {
-                $impact_sql .= '(' . (int) $id_product_new . ', ' . (int) $id_attribute . ', ' . (float) $impacts[$id_attribute]['weight'] . ', '
-                    . (float) $impacts[$id_attribute]['price'] . '),';
-            }
-
-            $impact_sql = substr_replace($impact_sql, '', -1);
-            $impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
-
-            Db::getInstance()->execute($impact_sql);
-        }
-
         return !$return ? false : $combination_images;
-    }
-
-    /**
-     * @param int $id_product Product identifier
-     *
-     * @return array
-     */
-    public static function getAttributesImpacts($id_product)
-    {
-        $return = [];
-        $result = Db::getInstance()->executeS(
-            'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
-            FROM `' . _DB_PREFIX_ . 'attribute_impact` ai
-            WHERE ai.`id_product` = ' . (int) $id_product
-        );
-
-        if (!$result) {
-            return [];
-        }
-        foreach ($result as $impact) {
-            $return[$impact['id_attribute']]['price'] = (float) $impact['price'];
-            $return[$impact['id_attribute']]['weight'] = (float) $impact['weight'];
-        }
-
-        return $return;
     }
 
     /**
