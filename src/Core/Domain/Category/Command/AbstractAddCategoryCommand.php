@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintExcep
 /**
  * Class AddRootCategoryCommand adds new root category.
  */
-class AbstractAddCategoryCommand
+abstract class AbstractAddCategoryCommand
 {
     /**
      * @var string[]
@@ -179,8 +179,6 @@ class AbstractAddCategoryCommand
      * @param bool $isActive
      *
      * @return $this
-     *
-     * @throws CategoryConstraintException
      */
     public function setIsActive(bool $isActive): self
     {
