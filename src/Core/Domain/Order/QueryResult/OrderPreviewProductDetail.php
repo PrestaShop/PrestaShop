@@ -79,7 +79,7 @@ class OrderPreviewProductDetail
      * @param string $unitPrice
      * @param string $totalPrice
      * @param string $totalTax
-     * @param int|null $id
+     * @param int $id
      */
     public function __construct(
         string $name,
