@@ -91,7 +91,7 @@
         {{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}
       </th>
       <th scope="col">
-        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'stock_quantity') }}
+        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'quantity') }}
       </th>
       <th scope="col">
         {{ ps.sortable_column_header('Default combination'|trans({}, 'Admin.Catalog.Feature'), 'default_on') }}
@@ -106,4 +106,3 @@
     </tbody>
   </table>
 {%- endblock -%}
-

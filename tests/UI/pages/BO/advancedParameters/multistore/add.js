@@ -46,7 +46,7 @@ class AddShopGroup extends BOBasePage {
     );
     await this.setChecked(page, this.statusToggleLabel(shopGroupData.status ? 'on' : 'off'));
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForNavigation(page, this.saveButton, 'networkidle', 60000);
     return this.getAlertSuccessBlockContent(page);
   }
 }

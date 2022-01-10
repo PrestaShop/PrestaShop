@@ -22,6 +22,7 @@ parameters:
     - pdf
     - src
     # - tests
+    - tests-legacy
     - themes
     - tools
     - translations
@@ -51,20 +52,3 @@ parameters:
     - Order
     - OrderInvoice
     - Product
-
-
-services:
-  strictTypesForNewClassesRuleConfigurationFileLoader:
-    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
-    arguments:
-      - .github/workflows/phpstan/strict-types-for-new-classes-rule-exclusion-list.php
-
-  returnTypesForNewMethodsRuleConfigurationFileLoader:
-    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
-    arguments:
-      - .github/workflows/phpstan/return-types-for-new-class-methods-rule-exclusion-list.php
-
-  typeHintsForNewMethodsRuleConfigurationFileLoader:
-    class: PHPStanForPrestaShop\PHPConfigurationLoader\PHPConfigurationFileLoader
-    arguments:
-      - .github/workflows/phpstan/type-hint-for-new-class-methods-rule-exclusion-list.php

@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -196,7 +197,7 @@ describe('BO - Shop Parameters - Order Settings - Statuses : Filter, sort and '
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await statusesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

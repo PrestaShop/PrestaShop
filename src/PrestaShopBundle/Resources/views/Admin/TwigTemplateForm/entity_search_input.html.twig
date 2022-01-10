@@ -35,7 +35,8 @@
     'data-remote-url': remote_url,
     'data-data-limit': limit,
     'data-min-length': min_length,
-    'data-allow-delete': form.vars.allow_delete ? 1 : 0
+    'data-allow-delete': form.vars.allow_delete ? 1 : 0,
+    'data-suggestion-field': form.vars.suggestion_field
   }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-search-widget')|trim }) -%}
 

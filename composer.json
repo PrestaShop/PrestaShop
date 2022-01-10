@@ -142,6 +142,11 @@
         "symfony/phpunit-bridge": "^3.4"
     },
     "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "composer/package-versions-deprecated": true,
+            "ergebnis/composer-normalize": true
+        },
         "platform": {
             "php": "7.2.5"
         },
@@ -194,15 +199,15 @@
         "git-hook-install": "@php .github/contrib/install.php",
         "git-hook-uninstall": "@php .github/contrib/uninstall.php",
         "integration-behaviour-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml  --format progress --no-snippets --strict"
+            "@php -d date.timezone=UTC ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml --format progress --no-snippets --strict"
         ],
         "integration-tests": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Integration/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml"
         ],
         "phpunit-endpoints": [
             "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests-legacy/phpunit-endpoints.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
@@ -216,7 +221,7 @@
             "@composer integration-behaviour-tests"
         ],
         "unit-tests": [
-            "@php -d date.timezone=UTC ./vendor/bin/phpunit -c tests/Unit/phpunit.xml"
+            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml"
         ]
     },
     "scripts-descriptions": {

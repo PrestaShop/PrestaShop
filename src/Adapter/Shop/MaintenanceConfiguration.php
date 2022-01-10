@@ -77,8 +77,8 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
         $resolver = new OptionsResolver();
         $resolver->setDefined(self::CONFIGURATION_FIELDS);
         $resolver->setAllowedTypes('enable_shop', 'bool');
-        $resolver->setAllowedTypes('maintenance_ip', 'string');
-        $resolver->setAllowedTypes('maintenance_text', 'array');
+        $resolver->setAllowedTypes('maintenance_ip', ['string', 'null']);
+        $resolver->setAllowedTypes('maintenance_text', ['array', 'null']);
 
         return $resolver;
     }

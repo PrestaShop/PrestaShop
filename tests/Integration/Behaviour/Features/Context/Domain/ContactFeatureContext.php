@@ -62,7 +62,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     public function addNewContactWithTheFollowingDetails(TableNode $table, string $reference)
     {
         $data = $table->getRowsHash();
-        /** @var EditableContact $editablContact */
+        /** @var EditableContact $editableContact */
         $editableContact = $this->mapToEditableContact(self::DUMMY_CONTACT_ID, $data);
 
         $addContactCommand = new AddContactCommand(

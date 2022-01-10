@@ -56,12 +56,13 @@ class ProductCombinationFactory
             $combination = new Combination();
             $combination->reference = $combinationName;
             $combination->id_product = $productId;
-            $combination->quantity = $combinationDetails->getQuantity();
             if ($combinationDetails->getPrice()) {
                 $combination->price = $combinationDetails->getPrice();
             }
             $combination->add();
-            StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
+
+            StockAvailable::setQuantity($productId, $combination->id, (int) $combinationDetails->getQuantity());
+
             $combinations[] = $combination;
             $combinationAttributesIds = [];
             foreach ($combinationDetails->getAttributes() as $combinationAttribute) {

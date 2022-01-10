@@ -137,8 +137,8 @@ class HelperModule
     /**
      * Recursivly copy a directory
      *
-     * @var the source path (eg. /home/dir/to/copy)
-     * @var the destination path (eg. /home/)
+     * @var string the source path (eg. /home/dir/to/copy)
+     * @var string the destination path (eg. /home/)
      */
     private static function recurseCopy(string $src, string $dst): void
     {
@@ -161,7 +161,7 @@ class HelperModule
     /**
      * Recursivly delete a directory
      *
-     * @var the directory to delete path (eg. /home/dir/to/delete)
+     * @var string the directory to delete path (eg. /home/dir/to/delete)
      */
     private static function recurseDelete(string $dir): void
     {

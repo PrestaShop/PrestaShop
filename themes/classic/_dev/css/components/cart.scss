@@ -19,6 +19,7 @@
 
     .btn-primary {
       width: 100%;
+      white-space: normal;
     }
   }
 
@@ -297,10 +298,12 @@
       color: $brand-success;
     }
 
-    > .unit-price-cart {
-      padding-left: 0.3125rem;
+    .unit-price-cart {
+      overflow: hidden;
       font-size: 0.875rem;
+      font-weight: 500;
       color: $gray;
+      text-overflow: ellipsis;
     }
   }
 }

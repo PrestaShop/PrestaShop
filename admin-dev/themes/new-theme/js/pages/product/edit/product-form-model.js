@@ -109,6 +109,8 @@ export default class ProductFormModel {
       'product.price.priceTaxIncluded',
       'product.price.priceTaxExcluded',
       'product.price.taxRulesGroupId',
+      'product.price.unitPriceTaxIncluded',
+      'product.price.unitPriceTaxExcluded',
     ];
 
     if (!pricesFields.includes(event.modelKey)) {
@@ -130,20 +132,57 @@ export default class ProductFormModel {
 
     const taxRatio = taxRate.dividedBy(100).plus(1);
 
+    // eslint-disable-next-line default-case
     switch (event.modelKey) {
       case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = new BigNumber(this.getProduct().price.priceTaxIncluded);
-        this.mapper.set(
-          'product.price.priceTaxExcluded',
-          priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision),
-        );
+        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
+        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
         break;
       }
-      default: {
-        const priceTaxExcluded = new BigNumber(this.getProduct().price.priceTaxExcluded);
-        this.mapper.set('product.price.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
+      case 'product.price.priceTaxExcluded': {
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
+        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
+        break;
+      }
+
+      case 'product.price.unitPriceTaxIncluded': {
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
+        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
+        break;
+      }
+      case 'product.price.unitPriceTaxExcluded': {
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
+        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+        break;
+      }
+
+      case 'product.price.taxRulesGroupId': {
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
+        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
+        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
         break;
       }
     }
+  }
+
+  /**
+   * @param {BigNumber} price
+   * @param {BigNumber} taxRatio
+   *
+   * @returns {string}
+   */
+  removeTax(price, taxRatio) {
+    return price.dividedBy(taxRatio).toFixed(this.precision);
+  }
+
+  /**
+   * @param {BigNumber} price
+   * @param {BigNumber} taxRatio
+   *
+   * @returns {string}
+   */
+  addTax(price, taxRatio) {
+    return price.times(taxRatio).toFixed(this.precision);
   }
 }

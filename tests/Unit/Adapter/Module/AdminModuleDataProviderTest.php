@@ -129,8 +129,8 @@ class AdminModuleDataProviderTest extends TestCase
         $this->categoriesProvider = $this->createMock(CategoriesProvider::class);
         $this->moduleProvider = $this->createMock(ModuleDataProvider::class);
         $this->cacheProvider = $this->createMock(CacheProvider::class);
-        $this->cacheProvider->method('contains')->withAnyParameters('_addons_modules')->willReturn(true);
-        $this->cacheProvider->method('fetch')->withAnyParameters('_addons_modules')->willReturn($fakeModules);
+        $this->cacheProvider->method('contains')->willReturn(true);
+        $this->cacheProvider->method('fetch')->willReturn($fakeModules);
 
         $this->adminModuleDataProvider = new AdminModuleDataProvider(
             $this->translator,

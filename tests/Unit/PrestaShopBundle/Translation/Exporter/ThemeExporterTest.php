@@ -83,11 +83,6 @@ class ThemeExporterTest extends TestCase
      */
     private $filesystemMock;
 
-    /**
-     * @var Finder
-     */
-    private $finderMock;
-
     protected function setUp(): void
     {
         $this->mockThemeExtractor();
@@ -115,7 +110,6 @@ class ThemeExporterTest extends TestCase
             new Filesystem()
         );
 
-        $this->themeExporter->finder = $this->finderMock;
         $cacheDir = dirname(__DIR__, 5) . '/var/cache/test';
         $this->themeExporter->exportDir = $cacheDir . '/export';
         $this->themeExporter->cacheDir = $cacheDir;
@@ -193,17 +187,17 @@ class ThemeExporterTest extends TestCase
 
     protected function mockFinder(): void
     {
-        $this->finderMock = $this->getMockBuilder(Finder::class)
+        $finderMock = $this->getMockBuilder(Finder::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->finderMock->method('in')
-            ->willReturn($this->finderMock);
+        $finderMock->method('in')
+            ->willReturn($finderMock);
 
-        $this->finderMock->method('files')
+        $finderMock->method('files')
             ->willReturn([]);
 
-        Flattenizer::$finder = $this->finderMock;
+        Flattenizer::$finder = $finderMock;
     }
 
     protected function mockThemeProvider(): void

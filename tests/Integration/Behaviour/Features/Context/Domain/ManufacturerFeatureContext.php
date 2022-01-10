@@ -87,7 +87,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new manufacturer :reference with following properties:
      */
-    public function createManufacturerWithDefaultLang($reference, TableNode $node)
+    public function createManufacturerWithDefaultLang(string $reference, TableNode $node): void
     {
         $data = $node->getRowsHash();
 
@@ -97,7 +97,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I edit manufacturer :reference with following properties:
      */
-    public function editManufacturerWithDefaultLang($reference, TableNode $node)
+    public function editManufacturerWithDefaultLang(string $reference, TableNode $node): void
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
@@ -136,7 +136,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I delete manufacturer :manufacturerReference
      */
-    public function deleteManufacturer($manufacturerReference)
+    public function deleteManufacturer(string $manufacturerReference): void
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -147,7 +147,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I delete manufacturers: :manufacturerReferences using bulk action
      */
-    public function bulkDeleteManufacturers($manufacturerReferences)
+    public function bulkDeleteManufacturers(string $manufacturerReferences): void
     {
         $manufacturerIds = [];
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
@@ -160,7 +160,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturers: :manufacturerReferences should be deleted
      */
-    public function assertManufacturersAreDeleted($manufacturerReferences)
+    public function assertManufacturersAreDeleted(string $manufacturerReferences): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
             $this->assertManufacturerIsDeleted($manufacturerReference);
@@ -170,7 +170,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference name should be :name
      */
-    public function assertManufacturerName($reference, $name)
+    public function assertManufacturerName(string $reference, string $name): void
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
@@ -182,7 +182,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference :field in default language should be :value
      */
-    public function assertFieldValue($reference, $field, $value)
+    public function assertFieldValue(string $reference, $field, $value)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($reference);
@@ -195,7 +195,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :reference :field field in default language should be empty
      */
-    public function assertFieldIsEmpty($reference, $field)
+    public function assertFieldIsEmpty(string $reference, $field)
     {
         $manufacturer = SharedStorage::getStorage()->get($reference);
 
@@ -207,7 +207,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable)? manufacturer "(.*)"$/
      */
-    public function toggleStatus($action, $reference)
+    public function toggleStatus(string $action, string $reference)
     {
         $expectedStatus = 'enable' === $action;
 
@@ -223,7 +223,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When /^I (enable|disable) multiple manufacturers: "(.+)" using bulk action$/
      */
-    public function bulkToggleStatus($action, $manufacturerReferences)
+    public function bulkToggleStatus(string $action, string $manufacturerReferences)
     {
         $expectedStatus = 'enable' === $action;
         $manufacturerIdsByReference = [];
@@ -246,7 +246,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given /^manufacturers: "(.+)" should be (enabled|disabled)$/
      */
-    public function assertMultipleManufacturersStatus($manufacturerReferences, $expectedStatus)
+    public function assertMultipleManufacturersStatus(string $manufacturerReferences, string $expectedStatus)
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($manufacturerReferences) as $manufacturerReference) {
             $this->assertStatus($manufacturerReference, $expectedStatus);
@@ -257,7 +257,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
      * @Given /^manufacturer "(.*)" is (enabled|disabled)?$/
      * @Then /^manufacturer "(.*)" should be (enabled|disabled)?$/
      */
-    public function assertStatus($manufacturerReference, $expectedStatus)
+    public function assertStatus(string $manufacturerReference, string $expectedStatus)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -273,7 +273,7 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then manufacturer :manufacturerReference should be deleted
      */
-    public function assertManufacturerIsDeleted($manufacturerReference)
+    public function assertManufacturerIsDeleted(string $manufacturerReference)
     {
         /** @var Manufacturer $manufacturer */
         $manufacturer = SharedStorage::getStorage()->get($manufacturerReference);
@@ -314,10 +314,10 @@ class ManufacturerFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param $reference
+     * @param string $reference
      * @param array $data
      */
-    private function createManufacturerUsingCommand($reference, array $data)
+    private function createManufacturerUsingCommand(string $reference, array $data): void
     {
         $command = new AddManufacturerCommand(
             $data['name'],

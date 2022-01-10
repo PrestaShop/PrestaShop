@@ -17,8 +17,8 @@
     "check:links": "./node_modules/mocha/bin/mocha tools/linkchecker.js",
 
     "// Specific test": "Script to run a specific test/folder",
-    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js $TEST_PATH",
-    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file utils/setup.js $TEST_PATH",
+    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
 
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
@@ -50,7 +50,7 @@
     "test:regression": "TEST_PATH='regression/*' npm run test:specific",
 
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js functional/* sanity/* regression/*"
+    "test:all": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",

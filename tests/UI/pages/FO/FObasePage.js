@@ -247,7 +247,7 @@ class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCategory(page, categoryID) {
-    await this.waitForSelectorAndClick(page, this.categoryMenu(categoryID));
+    await this.clickAndWaitForNavigation(page, this.categoryMenu(categoryID));
   }
 
   /**

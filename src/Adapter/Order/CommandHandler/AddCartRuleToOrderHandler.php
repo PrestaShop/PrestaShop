@@ -31,6 +31,7 @@ use CartRule;
 use Configuration;
 use Currency;
 use Customer;
+use Language;
 use Order;
 use OrderInvoice;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
@@ -80,6 +81,7 @@ final class AddCartRuleToOrderHandler extends AbstractOrderHandler implements Ad
         $this->contextStateManager
             ->setCurrency(new Currency($order->id_currency))
             ->setCustomer(new Customer($order->id_customer))
+            ->setLanguage((new Language($order->id_lang)))
             ->setShop(new Shop($order->id_shop))
         ;
 

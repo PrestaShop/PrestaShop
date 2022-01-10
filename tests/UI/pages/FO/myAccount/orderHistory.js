@@ -16,6 +16,9 @@ class OrderHistory extends FOBasePage {
 
     this.pageTitle = 'Order history';
 
+    // Text message
+    this.messageSuccessSent = 'Message successfully sent';
+
     // Selectors
     this.ordersTable = '#content table';
     this.ordersTableRows = `${this.ordersTable} tbody tr`;
@@ -23,6 +26,14 @@ class OrderHistory extends FOBasePage {
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
     this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
     this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
+    // Messages block
+    this.boxMessagesSection = '.box.messages';
+    this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
+    // Add message block
+    this.orderMessageForm = '.order-message-form';
+    this.productSelect = `${this.orderMessageForm} select[data-role='product']`;
+    this.messageTextarea = `${this.orderMessageForm} textarea[data-role='msg-text']`;
+    this.sendMessageButton = `${this.orderMessageForm} button.form-control-submit`;
   }
 
   /*
@@ -77,6 +88,54 @@ class OrderHistory extends FOBasePage {
    */
   async goToDetailsPage(page, orderRow = 1) {
     await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
+  }
+
+  // Methods for box messages
+  /**
+   * Is box messages section visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isBoxMessagesSectionVisible(page) {
+    return this.elementVisible(page, this.boxMessagesSection, 1000);
+  }
+
+  /**
+   * Is message visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table messages (2 is the first row)
+   * @returns {Promise<boolean>}
+   */
+  isMessageRowVisible(page, row = 1) {
+    return this.elementVisible(page, this.messageRow(row + 1), 1000);
+  }
+
+  /**
+   * Get message row
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table messages (2 is the first row)
+   * @returns {Promise<string>}
+   */
+  getMessageRow(page, row = 1) {
+    return this.getTextContent(page, this.messageRow(row + 1));
+  }
+
+  // Methods for Add message form
+  /**
+   * Send message
+   * @param page {Page} Browser tab
+   * @param messageText {{product: string, message:string}} Data to set on Add message form
+   * @returns {Promise<string>}
+   */
+  async sendMessage(page, messageText) {
+    if (messageText.product !== '') {
+      await this.selectByVisibleText(page, this.productSelect, messageText.product);
+    }
+
+    await this.setValue(page, this.messageTextarea, messageText.message);
+    await this.clickAndWaitForNavigation(page, this.sendMessageButton);
+
+    return this.getTextContent(page, this.alertSuccessBlock);
   }
 }
 

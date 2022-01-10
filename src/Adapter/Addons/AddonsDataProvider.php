@@ -103,19 +103,6 @@ class AddonsDataProvider implements AddonsInterface
     }
 
     /**
-     * @return bool
-     *
-     * @todo Does this function should be in a User related class ?
-     */
-    public function isAddonsAuthenticated(): bool
-    {
-        $request = Request::createFromGlobals();
-
-        return $request->cookies->get('username_addons', false)
-            && $request->cookies->get('password_addons', false);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function request($action, $params = [])
@@ -124,31 +111,12 @@ class AddonsDataProvider implements AddonsInterface
             throw new Exception('Previous call failed and disabled client.');
         }
 
-        // We merge the addons credentials
-        if ($this->isAddonsAuthenticated()) {
-            $params = array_merge($this->getAddonsCredentials(), $params);
-        }
-
         $this->marketplaceClient->reset();
 
         try {
             switch ($action) {
-                case 'service':
-                    return $this->marketplaceClient->getServices();
-                case 'customer_themes':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCustomerThemes();
-                case 'check_customer':
-                    return $this->marketplaceClient
-                        ->setUserMail($params['username_addons'])
-                        ->setPassword($params['password_addons'])
-                        ->getCheckCustomer();
                 case 'module':
                     return $this->marketplaceClient->getModule($params['id_module']);
-                case 'install-modules':
-                    return $this->marketplaceClient->getPreInstalledModules();
                 case 'categories':
                     return $this->marketplaceClient->getCategories();
             }
@@ -157,34 +125,6 @@ class AddonsDataProvider implements AddonsInterface
 
             throw $e;
         }
-    }
-
-    /**
-     * @return array
-     *
-     * @throws Exception
-     */
-    protected function getAddonsCredentials()
-    {
-        $request = Request::createFromGlobals();
-        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
-        $password = $this->encryption->decrypt($request->cookies->get('password_addons'));
-
-        return [
-            'username_addons' => $username,
-            'password_addons' => $password,
-        ];
-    }
-
-    /** Does this function should be in a User related class ? **/
-    public function getAddonsEmail()
-    {
-        $request = Request::createFromGlobals();
-        $username = $this->encryption->decrypt($request->cookies->get('username_addons'));
-
-        return [
-            'username_addons' => $username,
-        ];
     }
 
     /**

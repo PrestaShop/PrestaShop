@@ -188,7 +188,7 @@ abstract class ControllerCore
         );
 
         /* @phpstan-ignore-next-line */
-        if (_PS_MODE_DEV_ && $this->controller_type == 'admin') {
+        if (_PS_MODE_DEV_ && $this->controller_type == 'admin' && !($this instanceof AdminLegacyLayoutControllerCore)) {
             set_error_handler([__CLASS__, 'myErrorHandler']);
         }
 
@@ -372,7 +372,7 @@ abstract class ControllerCore
     }
 
     /**
-     * Sets page header display.
+     * Sets page footer display.
      *
      * @param bool $display
      */

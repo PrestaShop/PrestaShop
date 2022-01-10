@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Backwards compatibility break introduced in 1.7.8.0 due to extension of TranslationAwareType instead of using translator as dependency.
@@ -46,6 +47,11 @@ final class CreditSlipOptionsType extends TranslatorAwareType
         $builder->add('slip_prefix', TranslatableType::class, [
             'label' => $this->trans('Credit slip prefix', 'Admin.Orderscustomers.Feature'),
             'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
+            'options' => [
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ],
             'required' => false,
             'error_bubbling' => true,
             'type' => TextType::class,

@@ -92,26 +92,6 @@ class ProductSupplierCore extends ObjectModel
     ];
 
     /**
-     * @see ObjectModel::delete()
-     */
-    public function delete()
-    {
-        $res = parent::delete();
-
-        if ($res && $this->id_product_attribute == 0) {
-            $items = ProductSupplier::getSupplierCollection($this->id_product, false);
-            foreach ($items as $item) {
-                /** @var ProductSupplier $item */
-                if ($item->id_product_attribute > 0) {
-                    $item->delete();
-                }
-            }
-        }
-
-        return $res;
-    }
-
-    /**
      * For a given product and supplier, gets the product supplier reference.
      *
      * @param int $idProduct Product ID

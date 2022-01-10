@@ -34,7 +34,7 @@ use PrestaShopBundle\Twig\Locator\ModuleTemplateLoader;
 class ModuleTemplateLoaderTest extends TestCase
 {
     /**
-     * @var ModuleTemplateLoader
+     * @var ModuleTemplateLoader|null
      */
     private $loader;
 
@@ -116,9 +116,6 @@ class ModuleTemplateLoaderTest extends TestCase
         $this->assertEquals([], $loader->getPaths());
     }
 
-    /**
-     * @throws \Twig_Error_Loader
-     */
     public function testGetNamespaces(): void
     {
         $loader = new ModuleTemplateLoader([]);

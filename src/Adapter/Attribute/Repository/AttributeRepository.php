@@ -33,6 +33,8 @@ use Doctrine\DBAL\FetchMode;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception\AttributeNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
@@ -107,10 +109,10 @@ class AttributeRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param int[] $combinationIds
+     * @param CombinationId[] $combinationIds
      * @param LanguageId $langId
      *
-     * @return array<int, array<int, mixed>>
+     * @return array<int, CombinationAttributeInformation[]>
      */
     public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
     {
@@ -126,19 +128,32 @@ class AttributeRepository extends AbstractObjectModelRepository
         foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
             $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
             $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId][] = $attributesInfoByAttributeId[$attributeId];
+            $attributesInfoByCombinationId[$combinationId][] = new CombinationAttributeInformation(
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute_group'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_group_name'],
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_name']
+            );
         }
 
         return $attributesInfoByCombinationId;
     }
 
     /**
-     * @param int[] $combinationIds
+     * @param CombinationId[] $combinationIds
      *
      * @return array<int, array<string, mixed>>
      */
     private function getAttributeCombinationAssociations(array $combinationIds): array
     {
+        if (empty($combinationIds)) {
+            return [];
+        }
+
+        $combinationIds = array_map(function (CombinationId $id): int {
+            return $id->getValue();
+        }, $combinationIds);
+
         $qb = $this->connection->createQueryBuilder();
         $qb->select('pac.id_attribute')
             ->addSelect('pac.id_product_attribute')
@@ -154,7 +169,7 @@ class AttributeRepository extends AbstractObjectModelRepository
      * @param int[] $attributeIds
      * @param int $langId
      *
-     * @return array<int, array<int, mixed>>
+     * @return array<int, array<string, mixed>>
      */
     private function getAttributesInformation(array $attributeIds, int $langId): array
     {

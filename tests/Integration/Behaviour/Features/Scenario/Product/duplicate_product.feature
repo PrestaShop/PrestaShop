@@ -117,7 +117,7 @@ Feature: Duplicate product from Back Office (BO).
       | redirect_type   | 301-product |
       | redirect_target | product2    |
     When I add a specific price specific_price1 to product product1 with following details:
-      | price           | 0.00   |
+      | fixed price     | 0.00   |
       | reduction type  | amount |
       | reduction value | 5.00   |
       | includes tax    | true   |
@@ -175,10 +175,11 @@ Feature: Duplicate product from Back Office (BO).
       | tax rules group  | US-AL Rate (4%) |
       | on_sale          | true            |
       # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
-      | wholesale_price  | 10              |
-      | unit_price       | 500             |
-      | unity            | bag of ten      |
-      | unit_price_ratio | 0.2             |
+      | wholesale_price         | 10              |
+      | unit_price              | 500             |
+      | unit_price_tax_included | 520             |
+      | unit_price_ratio        | 0.2             |
+      | unity                   | bag of ten      |
     And product "copy_of_product1" localized "meta_title" should be:
       | locale | value                 |
       | en-US  | SUNGLASSES meta title |
@@ -225,18 +226,18 @@ Feature: Duplicate product from Back Office (BO).
     And I generate combinations for product product_with_combinations using following attributes:
       | Color | [Red,Blue] |
     Then product "product_with_combinations" should have following combinations:
-      | id reference                   | combination name | reference | attributes    | impact on price | quantity | is default |
-      | product_with_combinationsRed   | Color - Red      |           | [Color:Red]   | 0               | 0        | true       |
-      | product_with_combinationsBlue  | Color - Blue     |           | [Color:Blue]  | 0               | 0        | false      |
+      | id reference                  | combination name | reference | attributes   | impact on price | quantity | is default |
+      | product_with_combinationsRed  | Color - Red      |           | [Color:Red]  | 0               | 0        | true       |
+      | product_with_combinationsBlue | Color - Blue     |           | [Color:Blue] | 0               | 0        | false      |
     When I add a specific price specific_price1 to product product_with_combinations with following details:
-      | price           | 123.00                       |
+      | fixed price     | 123.00                       |
       | combination     | product_with_combinationsRed |
       | reduction type  | amount                       |
       | reduction value | 0.00                         |
       | includes tax    | true                         |
       | from quantity   | 1                            |
     And I add a specific price specific_price2 to product product_with_combinations with following details:
-      | price           | 0.00   |
+      | fixed price     | 0.00   |
       | reduction type  | amount |
       | reduction value | 5.00   |
       | includes tax    | true   |

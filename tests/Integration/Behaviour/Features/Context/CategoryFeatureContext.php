@@ -63,19 +63,19 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $categoryName
+     * @param string $categoryName
      */
-    public function checkCategoryWithNameExists($categoryName)
+    public function checkCategoryWithNameExists(string $categoryName): void
     {
         $this->checkFixtureExists($this->categories, 'Category', $categoryName);
     }
 
     /**
-     * @param $categoryName
+     * @param string $categoryName
      *
      * @return Category
      */
-    public function getCategoryWithName($categoryName)
+    public function getCategoryWithName($categoryName): Category
     {
         return $this->categories[$categoryName];
     }

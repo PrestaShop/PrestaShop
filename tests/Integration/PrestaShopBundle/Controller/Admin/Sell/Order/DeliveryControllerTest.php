@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -159,6 +160,7 @@ class DeliveryControllerTest extends WebTestCase
                 ],
             ]
         );
+        /** @var RedirectResponse $response */
         $response = $this->client->getResponse();
         $this->assertEquals(
             Response::HTTP_FOUND,
@@ -185,6 +187,7 @@ class DeliveryControllerTest extends WebTestCase
                 ],
             ]
         );
+        /** @var RedirectResponse $response */
         $response = $this->client->getResponse();
         $this->assertEquals(
             Response::HTTP_FOUND,

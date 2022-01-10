@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 class YamlParserTest extends TestCase
 {
     /**
-     * @param $yamlFiles
+     * @param string $yamlFiles
      *
      * @return string
      */

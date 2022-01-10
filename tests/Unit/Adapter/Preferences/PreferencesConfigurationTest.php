@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Preferences;
 
 use Cookie;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
@@ -41,7 +42,7 @@ class PreferencesConfigurationTest extends TestCase
     private $object;
 
     /**
-     * @var Configuration
+     * @var Configuration|MockObject
      */
     private $mockConfiguration;
 

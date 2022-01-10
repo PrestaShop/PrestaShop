@@ -96,6 +96,11 @@ class OrderCustomerForViewing
     private $languageId;
 
     /**
+     * @var array
+     */
+    private $groups;
+
+    /**
      * @param int $id
      * @param string $firstName
      * @param string $lastName
@@ -109,6 +114,7 @@ class OrderCustomerForViewing
      * @param int $languageId
      * @param string $ape
      * @param string $siret
+     * @param array $groups
      */
     public function __construct(
         int $id,
@@ -123,7 +129,8 @@ class OrderCustomerForViewing
         bool $isGuest,
         int $languageId,
         string $ape = '',
-        string $siret = ''
+        string $siret = '',
+        array $groups = []
     ) {
         $this->id = $id;
         $this->firstName = $firstName;
@@ -138,6 +145,7 @@ class OrderCustomerForViewing
         $this->languageId = $languageId;
         $this->ape = $ape;
         $this->siret = $siret;
+        $this->groups = $groups;
     }
 
     /**
@@ -242,5 +250,13 @@ class OrderCustomerForViewing
     public function getLanguageId(): int
     {
         return $this->languageId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroups(): array
+    {
+        return $this->groups;
     }
 }

@@ -34,7 +34,7 @@ use TemplateFinder;
 class TemplateFinderTest extends TestCase
 {
     /**
-     * @var TemplateFinder
+     * @var TemplateFinder|null
      */
     protected $templateFinder;
 

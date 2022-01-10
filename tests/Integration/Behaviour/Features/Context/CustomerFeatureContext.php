@@ -165,19 +165,19 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $customerName
+     * @param string $customerName
      */
-    public function checkCustomerWithNameExists($customerName)
+    public function checkCustomerWithNameExists(string $customerName): void
     {
         $this->checkFixtureExists($this->customers, 'Customer', $customerName);
     }
 
     /**
-     * @param $customerName
+     * @param string $customerName
      *
      * @return Customer
      */
-    public function getCustomerWithName($customerName)
+    public function getCustomerWithName(string $customerName): Customer
     {
         return $this->customers[$customerName];
     }

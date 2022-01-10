@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Cart;
 use Context;
-use Tests\Integration\Utility\CartOld;
 
 /**
  * aims to provide access to cart through contexts
@@ -35,7 +35,7 @@ use Tests\Integration\Utility\CartOld;
 trait CartAwareTrait
 {
     /**
-     * @return CartOld
+     * @return Cart|null
      */
     public function getCurrentCart()
     {

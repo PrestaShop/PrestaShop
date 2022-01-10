@@ -34,11 +34,6 @@ namespace PrestaShopBundle\Service\DataProvider\Admin;
 interface AddonsInterface
 {
     /**
-     * @return bool
-     */
-    public function isAddonsAuthenticated(): bool;
-
-    /**
      * Check if a request has already failed.
      *
      * @return bool

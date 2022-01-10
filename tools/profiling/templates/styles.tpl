@@ -145,6 +145,33 @@
     }
   }
 
+  #profiling-links {
+    display: flex;
+    width: fit-content;
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: translateX(calc(100% - 38px));
+    padding: 10px;
+    background: #EEE;
+    z-index: 10000;
+    transition: transform ease-in-out .2s;
+  }
+
+  #profiling-links:hover {
+    left: unset;
+    transform: translateX(0);
+  }
+
+  #profiling-links span {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+
+  #profiling-links ol {
+    padding-left: 25px;
+  }
+
   .success {
     color: green;
   }

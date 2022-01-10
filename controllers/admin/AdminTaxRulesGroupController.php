@@ -511,6 +511,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
+    protected function displayAjaxUpdateTaxRule()
+    {
+        if ($this->access('view')) {
+            $id_tax_rule = Tools::getValue('id_tax_rule');
+            $tax_rules = new TaxRule((int) $id_tax_rule);
+            $output = [];
+            foreach (get_object_vars($tax_rules) as $key => $result) {
+                $output[$key] = $result;
+            }
+            die(json_encode($output));
+        }
+    }
+
     protected function deleteTaxRule(array $id_tax_rule_list)
     {
         $result = true;

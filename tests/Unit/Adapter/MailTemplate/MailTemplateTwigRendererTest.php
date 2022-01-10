@@ -74,7 +74,6 @@ class MailTemplateTwigRendererTest extends TestCase
         $expectedVariables = ['locale' => null, 'url' => 'http://test.com'];
         $expectedLanguage = $this->createLanguageMock();
         $mailLayout = $this->createMailLayoutMock($templatePaths);
-        /** @var Environment $engineMock */
         $engineMock = $this->getMockBuilder(Environment::class)
             ->disableOriginalConstructor()
             ->getMock()
@@ -90,6 +89,7 @@ class MailTemplateTwigRendererTest extends TestCase
             ->getMock()
         ;
 
+        /** @var Environment $engineMock */
         $generator = new MailTemplateTwigRenderer(
             $engineMock,
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
@@ -100,7 +100,7 @@ class MailTemplateTwigRendererTest extends TestCase
         $generator->renderHtml($mailLayout, $expectedLanguage);
     }
 
-    public function testRenderHtml()
+    public function testRenderHtml(): void
     {
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => '@Resources/mails/templates/account.html.twig',
@@ -121,7 +121,7 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertEquals($expectedTemplate, $generatedTemplate);
     }
 
-    public function testRenderHtmlWithFallback()
+    public function testRenderHtmlWithFallback(): void
     {
         $templatePaths = [
             MailTemplateInterface::HTML_TYPE => '',
@@ -143,7 +143,7 @@ class MailTemplateTwigRendererTest extends TestCase
         $this->assertEquals($expectedTemplate, $generatedTemplate);
     }
 
-    public function testRenderTxt()
+    public function testRenderTxt(): void
     {
         $templatePaths = [
             MailTemplateInterface::TXT_TYPE => '@Resources/mails/templates/account.html.twig',

@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s shop
 @restore-all-tables-before-feature
+@reset-img-after-feature
 @shop
 Feature: Shop Management
   In order to personalize the shop

@@ -192,6 +192,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             'ecotax',
             'wholesale_price',
             'unit_price',
+            'unit_price_tax_included',
             'unit_price_ratio',
         ];
 

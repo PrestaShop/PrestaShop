@@ -376,8 +376,10 @@ class CurrencyCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
+        parent::resetStaticCache();
         static::$currencies = [];
         static::$countActiveCurrencies = [];
+        Cache::clean('Currency::*');
     }
 
     /**

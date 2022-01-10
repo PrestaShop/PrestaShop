@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Core\Stock;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Product\PackItemsManager;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
@@ -41,7 +42,7 @@ use StockAvailable;
 class StockManagerTest extends TestCase
 {
     /**
-     * @var ConfigurationInterface
+     * @var ConfigurationInterface|MockObject
      */
     private $configuration;
     /**
@@ -387,9 +388,14 @@ class FakeProduct4759 extends Product
         $this->stock_available = new FakeStockAvailable4759($stock_available);
     }
 
-    public function hasAttributes(): bool
+    /**
+     * Check if product has attributes combinations.
+     *
+     * @return int Attributes combinations number
+     */
+    public function hasAttributes()
     {
-        return false;
+        return 0;
     }
 }
 

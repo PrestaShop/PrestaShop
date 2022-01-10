@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Localization\Currency\DataLayer;
 
 use Currency;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShop\PrestaShop\Core\Localization\Currency\CurrencyData;
@@ -53,7 +54,7 @@ class CurrencyDatabaseTest extends TestCase
     protected $fakeFrEuro;
 
     /**
-     * @var CurrencyDataProvider
+     * @var CurrencyDataProvider|MockObject
      */
     protected $fakeDataProvider;
 

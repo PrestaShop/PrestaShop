@@ -36,13 +36,14 @@ use Customer;
 use CustomerAddressForm;
 use Language;
 use Link;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CheckoutAddressesStepTest extends TestCase
 {
     /**
-     * @var CheckoutSession
+     * @var CheckoutSession|MockObject
      */
     private $session;
     /**

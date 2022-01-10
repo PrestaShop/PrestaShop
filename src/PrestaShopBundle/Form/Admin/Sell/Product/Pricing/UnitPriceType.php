@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
 class UnitPriceType extends TranslatorAwareType
@@ -65,15 +66,27 @@ class UnitPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('price', MoneyType::class, [
+            ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Indicate the price for a single unit of the product. For instance, if you\'re selling fabrics, it would be the price per meter.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
+                ],
+                'default_empty_data' => 0.0,
+            ])
+            ->add('price_tax_included', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Retail price per unit (tax incl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
@@ -92,7 +105,9 @@ class UnitPriceType extends TranslatorAwareType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'label' => false,
+            'label' => $this->trans('Display retail price per unit', 'Admin.Catalog.Feature'),
+            'label_help_box' => $this->trans('Indicate the price for a single unit of the product. For instance, if you\'re selling fabrics, it would be the price per meter.', 'Admin.Catalog.Help'),
+            'label_tag_name' => 'h2',
             'required' => false,
             'columns_number' => 4,
         ]);

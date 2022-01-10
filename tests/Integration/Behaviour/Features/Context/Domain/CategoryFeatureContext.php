@@ -86,7 +86,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->container = $this->getContainer();
-        $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
 
@@ -186,10 +186,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $testCaseData = $table->getRowsHash();
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
 
-        /** @var EditableCategory $expectedEditableCategory */
+        /** @var EditableCategory $editableCategoryTestData */
         $editableCategoryTestData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
-        /** @var EditCategoryCommand $command */
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($editableCategoryTestData->isActive());
         $command->setLocalizedLinkRewrites($editableCategoryTestData->getLinkRewrite());
@@ -413,18 +412,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        ASSERT::assertCount(0, $menuThumbnailImages);
+        Assert::assertCount(0, $menuThumbnailImages);
     }
 
     /**
      * @Given category :categoryReference is disabled
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
-    public function categoryIsDisabled(string $categoryReference)
+    public function categoryIsDisabled(string $categoryReference): void
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertFalse($categoryIsEnabled);
+        Assert::assertFalse($categoryIsEnabled);
     }
 
     /**
@@ -444,7 +443,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I disable category :categoryReference
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
     public function disableCategory(string $categoryReference)
     {
@@ -463,7 +462,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryIsEnabled(string $categoryReference)
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertTrue($categoryIsEnabled);
+        Assert::assertTrue($categoryIsEnabled);
     }
 
     /**
@@ -661,9 +660,6 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
         }
 
-        if ($parentCategoryId === null) {
-            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
-        }
         if (isset($testCaseData['Category cover image'])) {
             $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
         }
@@ -689,7 +685,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $linkRewrite,
             $groupAssociationIds,
             [0 => '1'],
-            $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
+            $parentCategoryId === 1,
             $coverImage,
             null,
             $menuThumbNailsImages,
@@ -702,7 +698,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getParentCategoryId(array $testCaseData)
+    private function getParentCategoryId(array $testCaseData): int
     {
         $parentCategoryId = null;
         if (isset($testCaseData['Parent category'])) {

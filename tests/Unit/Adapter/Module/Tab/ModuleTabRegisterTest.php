@@ -328,7 +328,7 @@ class ModuleTabRegisterTest extends TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object Instantiated object that we will run method on
+     * @param object $object Instantiated object that we will run method on
      * @param string $methodName Method name to call
      * @param array $parameters array of parameters to pass into method
      *
@@ -336,7 +336,7 @@ class ModuleTabRegisterTest extends TestCase
      *
      * @see https://jtreminio.com/2013/03/unit-testing-tutorial-part-3-testing-protected-private-methods-coverage-reports-and-crap/
      */
-    protected function invokeMethod(&$object, string $methodName, array $parameters = [])
+    protected function invokeMethod(object $object, string $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);

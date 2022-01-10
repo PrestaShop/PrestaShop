@@ -459,7 +459,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $command->setDescription($data['description'] ?? '');
         $command->setCode($data['code'] ?? '');
 
-        /** @var $cartRule CartRuleId */
+        /** @var CartRuleId $cartRule */
         $cartRule = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($cartRuleReference, new CartRule($cartRule->getValue()));
@@ -574,7 +574,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var $cartRule EditableCartRule */
+        /** @var EditableCartRule $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === true) {
             throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
@@ -592,7 +592,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var $cartRule EditableCartRule */
+        /** @var EditableCartRule $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === false) {
             throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
@@ -602,7 +602,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then Cart rule with reference :cartRuleReference does not exist
      *
-     * @param $cartRuleReference
+     * @param string $cartRuleReference
      *
      * @throws CartRuleConstraintException
      * @throws NoExceptionAlthoughExpectedException
@@ -710,7 +710,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param int $totalQuantity
      * @param int $quantityPerUser
      * @param CartRuleActionInterface $cartRuleAction
-     * @param float|null $minimumAmount
+     * @param float $minimumAmount
      * @param int $minimumAmountCurrencyId
      * @param bool $minimumAmountTaxIncluded
      * @param bool $minimumAmountShippingIncluded

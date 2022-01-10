@@ -179,6 +179,17 @@
     .badge-dark {
       font-size: 100%;
     }
+
+    .customer-groups .badge {
+      padding: 0.45rem 0.6rem;
+      margin: 0.1rem 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #6c868e;
+      white-space: normal;
+      background: #fff;
+      @include border-radius(1000px);
+    }
   }
 
   .order {

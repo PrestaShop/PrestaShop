@@ -43,6 +43,7 @@ import RelatedProductsManager from '@pages/product/edit/related-products-manager
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
+import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 
 const {$} = window;
 
@@ -98,6 +99,7 @@ $(() => {
   new FeatureValuesManager(eventEmitter);
   new CustomizationsManager();
   new AttachmentsManager();
+  new SpecificPricesManager(productId);
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\SetGl
 /**
  * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
  */
-final class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
+class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
 {
     /**
      * @var SpecificPricePriorityUpdater

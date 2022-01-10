@@ -117,7 +117,6 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" should have no stock movements
     When I update product "product1" stock with following information:
       | delta_quantity | 51 |
-    Then I should get no error
     And product "product1" should have following stock information:
       | quantity | 51 |
     And product "product1" last employees stock movements should be:
@@ -126,7 +125,6 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | delta_quantity | -9 |
-    Then I should get no error
     And product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last employees stock movements should be:

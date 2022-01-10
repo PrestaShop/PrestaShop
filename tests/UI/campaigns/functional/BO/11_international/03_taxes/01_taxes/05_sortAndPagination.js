@@ -2,7 +2,9 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -108,7 +110,7 @@ describe('BO - International - Taxes : Sort and pagination', async () => {
         }
 
         // Sort Array with javascript
-        const expectedResult = await taxesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);

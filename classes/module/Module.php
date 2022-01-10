@@ -1320,7 +1320,7 @@ abstract class ModuleCore implements ModuleInterface
      *
      * @return array<\stdClass> Modules
      */
-    public static function getModulesOnDisk($use_config = false, $logged_on_addons = false, $id_employee = false)
+    public static function getModulesOnDisk($use_config = false, $id_employee = false)
     {
         global $_MODULES;
 
@@ -2182,6 +2182,7 @@ abstract class ModuleCore implements ModuleInterface
             $this->smarty->assign([
                 'module_dir' => __PS_BASE_URI__ . 'modules/' . basename($file, '.php') . '/',
                 'module_template_dir' => ($overloaded ? _THEME_DIR_ : __PS_BASE_URI__) . 'modules/' . basename($file, '.php') . '/',
+                'allow_push' => false, // required by dashboard modules
             ]);
 
             if ($cache_id !== null) {
@@ -2431,9 +2432,7 @@ abstract class ModuleCore implements ModuleInterface
             return Hook::isDisplayHookName($hook_name);
         }
 
-        $retro_hook_name = Hook::getRetroHookName($hook_name);
-
-        return is_callable([$this, 'hook' . ucfirst($hook_name)]) || is_callable([$this, 'hook' . ucfirst($retro_hook_name)]);
+        return is_callable([$this, 'hook' . ucfirst($hook_name)]);
     }
 
     /**

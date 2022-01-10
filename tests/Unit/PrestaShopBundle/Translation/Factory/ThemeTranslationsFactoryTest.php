@@ -26,9 +26,9 @@
 
 namespace Tests\Unit\PrestaShopBundle\Translation\Factory;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Translation\Factory\ThemeTranslationsFactory;
-use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use PrestaShopBundle\Translation\Provider\FrontOfficeProvider;
 use PrestaShopBundle\Translation\Provider\ThemeProvider;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -45,7 +45,7 @@ class ThemeTranslationsFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @var ThemeProvider
+     * @var ThemeProvider|MockObject
      */
     private $themeProviderMock;
 
@@ -201,7 +201,7 @@ class ThemeTranslationsFactoryTest extends TestCase
         return $this->mockProvider(FrontOfficeProvider::class, 'front', self::TEST_LOCALE);
     }
 
-    private function mockProvider(string $providerPath, string $providerIdentifier, string $locale): AbstractProvider
+    private function mockProvider(string $providerPath, string $providerIdentifier, string $locale)
     {
         $providerMock = $this->getMockBuilder($providerPath)
             ->disableOriginalConstructor()

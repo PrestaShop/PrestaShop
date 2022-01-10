@@ -64,7 +64,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I add new tax :taxReference with following properties:
      */
-    public function createTax($taxReference, TableNode $table)
+    public function createTax(string $taxReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
 
@@ -242,10 +242,10 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @param $taxReference
+     * @param string $taxReference
      * @param array $data
      */
-    private function createTaxUsingCommand($taxReference, array $data)
+    private function createTaxUsingCommand(string $taxReference, array $data): void
     {
         $command = new AddTaxCommand(
             [$this->defaultLangId => $data['name']],
@@ -268,7 +268,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
 
         $taxRulesGroup = new TaxRulesGroup();
         $taxRulesGroup->name = $data['name'];
-        $taxRulesGroup->active = 1;
+        $taxRulesGroup->active = true;
         $taxRulesGroup->deleted = false;
         $taxRulesGroup->save();
         SharedStorage::getStorage()->set($taxGroupReference, $taxRulesGroup->id);

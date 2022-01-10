@@ -130,7 +130,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  //  1 - Get cart rules number
+  // 1 - Get cart rules number
   describe('Get cart rules number', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);

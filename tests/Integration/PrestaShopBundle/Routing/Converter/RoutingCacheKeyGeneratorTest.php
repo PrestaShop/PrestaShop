@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Routing\Converter;
 
-use Module;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Routing\Route;
 use Tools;

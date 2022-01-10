@@ -174,7 +174,6 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         return LegacyModule::getModulesOnDisk(
             true,
-            $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
     }

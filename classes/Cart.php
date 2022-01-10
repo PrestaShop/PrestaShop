@@ -683,7 +683,7 @@ class CartCore extends ObjectModel
         $sql->select('cp.`id_product_attribute`, cp.`id_product`, cp.`quantity` AS cart_quantity, cp.id_shop, cp.`id_customization`, pl.`name`, p.`is_virtual`,
                         pl.`description_short`, pl.`available_now`, pl.`available_later`, product_shop.`id_category_default`, p.`id_supplier`,
                         p.`id_manufacturer`, m.`name` AS manufacturer_name, product_shop.`on_sale`, product_shop.`ecotax`, product_shop.`additional_shipping_cost`,
-                        product_shop.`available_for_order`, product_shop.`show_price`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price_ratio`,
+                        product_shop.`available_for_order`, product_shop.`show_price`, product_shop.`price`, product_shop.`active`, product_shop.`unity`, product_shop.`unit_price`,
                         stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
                         p.`available_date`, p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
                         CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0), IFNULL(cp.`id_customization`, 0)) AS unique_id, cp.id_address_delivery,
@@ -764,6 +764,7 @@ class CartCore extends ObjectModel
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
         $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
+        /** @var array<string, mixed> $result */
         $result = Db::getInstance()->executeS($sql);
 
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
@@ -838,6 +839,9 @@ class CartCore extends ObjectModel
                 $row['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
                 $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
                 $row['specific_prices'] = $additionalRow['specific_prices'];
+                $row['unit_price_ratio'] = $additionalRow['unit_price_ratio'];
+                $row['unit_price'] = $row['unit_price_tax_excluded'] = $additionalRow['unit_price_tax_excluded'];
+                $row['unit_price_tax_included'] = $additionalRow['unit_price_tax_included'];
                 unset($additionalRow);
 
                 $givenAwayQuantity = 0;
@@ -965,6 +969,10 @@ class CartCore extends ObjectModel
 
                 break;
         }
+
+        // Update unit price in case cart reductions happened
+        $row['unit_price'] = $row['unit_price_tax_excluded'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction_without_tax'] / $row['unit_price_ratio'] : 0.0;
+        $row['unit_price_tax_included'] = $row['unit_price_ratio'] != 0 ? $row['price_with_reduction'] / $row['unit_price_ratio'] : 0.0;
 
         $row['price_wt'] = $row['price_with_reduction'];
         $row['description_short'] = Tools::nl2br($row['description_short']);

@@ -62,10 +62,21 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         }
 
         // We still restore lang table to reset increment ID
-        DatabaseDump::restoreTables(['lang']);
+        DatabaseDump::restoreTables(['lang', 'lang_shop']);
+
+        // Reset default language
+        Configuration::updateValue('PS_LANG_DEFAULT', 1);
 
         // Restore static cache
         Language::resetStaticCache();
+    }
+
+    /**
+     *  @Given I restore languages tables
+     */
+    public function restoreLanguageTablesOnDemand(): void
+    {
+        static::restoreLanguagesTables();
     }
 
     /**

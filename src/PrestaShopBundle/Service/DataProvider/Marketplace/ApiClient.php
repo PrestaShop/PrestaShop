@@ -98,40 +98,6 @@ class ApiClient
         $this->queryParameters = $this->defaultQueryParameters;
     }
 
-    /**
-     * Check Addons client account credentials.
-     *
-     * @return object
-     */
-    public function getCheckCustomer()
-    {
-        $response = $this->setMethod('check_customer')
-            ->getResponse();
-
-        return json_decode($response);
-    }
-
-    public function getPreInstalledModules()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('install-modules')
-            ->getResponse();
-        $responseDecoded = json_decode($response);
-
-        return isset($responseDecoded->modules) ? $responseDecoded->modules : [];
-    }
-
-    public function getServices()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('service')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->services) ? $responseArray->services : [];
-    }
-
     public function getCategories()
     {
         $response = $this->setMethod('listing')
@@ -171,26 +137,6 @@ class ApiClient
             ->setModuleId($moduleId)
             ->setModuleChannel($moduleChannel)
             ->getPostResponse();
-    }
-
-    /**
-     * Get list of themes bought by customer.
-     *
-     * @return object
-     */
-    public function getCustomerThemes()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('customer-themes')
-            ->getPostResponse();
-
-        $responseDecoded = json_decode($response);
-
-        if (!empty($responseDecoded->themes)) {
-            return $responseDecoded->themes;
-        }
-
-        return new \stdClass();
     }
 
     public function getResponse()

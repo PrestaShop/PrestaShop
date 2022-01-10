@@ -30,6 +30,7 @@ namespace Tests\Integration\Core\Configuration;
 
 use Configuration as LegacyConfiguration;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -103,7 +104,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
      */
     public function testUndefinedOptionsException(ShopConstraint $shopConstraint): void
     {
@@ -124,7 +124,6 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
-     * @param bool $isAllShopContext
      */
     public function testInvalidOptionsException(ShopConstraint $shopConstraint): void
     {
@@ -206,9 +205,29 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
-     * @return ShopContext
+     * Tests that overriding an all shop config with the same value for a single shop context does work
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException
      */
-    protected function createShopContextMock(): Context
+    public function testCanUpdateWithSameValueAsParent(): void
+    {
+        // set a value for test_conf_2 in all shop
+        $testedObject = $this->getDummyMultistoreConfiguration(ShopConstraint::allShops());
+        $testedObject->updateConfiguration(['test_conf_1' => true, 'test_conf_2' => 'all_shop_value']);
+
+        // set the same value for test_conf_2 in single shop
+        $shopId = 1;
+        $testedObject = $this->getDummyMultistoreConfiguration(ShopConstraint::shop($shopId));
+        $testedObject->updateConfiguration(['test_conf_1' => true, 'test_conf_2' => 'all_shop_value', 'multistore_test_conf_2' => true]);
+
+        // the configuration must have a specific entry for TEST_CONF_2 in shop 1 context
+        $this->assertTrue(LegacyConfiguration::hasKey('TEST_CONF_2', null, null, $shopId));
+    }
+
+    /**
+     * @return MockObject|Context
+     */
+    protected function createShopContextMock()
     {
         return $this->getMockBuilder(Context::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])

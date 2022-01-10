@@ -46,7 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
-class LanguageFeatureContext extends CommonDomainFeatureContext
+class LanguageFeatureContext extends AbstractDomainFeatureContext
 {
     /**
      * @Given I add a new language with the following details:
@@ -67,8 +67,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
         );
 
         try {
-            $this->cleanLastException();
-
             /** @var LanguageId $languageId */
             $languageId = $this->getCommandBus()->handle(new AddLanguageCommand(
                 $data['name'],
@@ -128,7 +126,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
         }
 
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle($editableLanguage);
         } catch (LanguageException $e) {
             $this->setLastException($e);
@@ -145,7 +142,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
         $languageId = SharedStorage::getStorage()->get($isoCode);
 
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle(new DeleteLanguageCommand($languageId));
             SharedStorage::getStorage()->clear($languageId);
 
@@ -170,7 +166,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
         }
 
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle(new BulkDeleteLanguagesCommand($languageIds));
 
             // Important to clean this cache or Language::getIdByIso still returns stored value for next adding
@@ -193,7 +188,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
     public function setStatusLanguage(string $statusVerb, string $isoCode): void
     {
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle(
                 new ToggleLanguageStatusCommand(
                     SharedStorage::getStorage()->get($isoCode),
@@ -220,7 +214,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
         }
 
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle(
                 new BulkToggleLanguagesStatusCommand($languageIds, $statusVerb === 'enable')
             );
@@ -325,8 +318,6 @@ class LanguageFeatureContext extends CommonDomainFeatureContext
     private function getLanguage(string $isoCode): ?EditableLanguage
     {
         try {
-            $this->cleanLastException();
-
             return $this->getQueryBus()->handle(
                 new GetLanguageForEditing(SharedStorage::getStorage()->get($isoCode))
             );

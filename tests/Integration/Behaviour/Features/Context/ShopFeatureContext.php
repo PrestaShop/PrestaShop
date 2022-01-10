@@ -202,7 +202,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     public function checkShopCount(int $expectedCount, string $shopGroupName): void
     {
         $shopGroupId = ShopGroup::getIdByName($shopGroupName);
-        if (false === $shopGroupId) {
+        if (empty($shopGroupId)) {
             throw new RuntimeException(sprintf('Shop Group with name "%s" does not exist', $shopGroupName));
         }
 
@@ -257,7 +257,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Transform table:name,group_name,color,group_color,is_shop_group
      *
-     * @param TableNode $tableNode
+     * @param TableNode $shopsTable
      *
      * @return array
      */

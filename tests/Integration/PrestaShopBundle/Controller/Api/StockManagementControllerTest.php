@@ -104,27 +104,27 @@ class StockManagementControllerTest extends ApiTestCase
         return [
             [
                 [],
-                $expectedTotalPages = 1,
+                1,
             ],
             [
                 ['page_index' => 1, 'page_size' => 2],
-                $expectedTotalPages = 24,
+                24,
             ],
             [
                 ['supplier_id' => 1, 'page_index' => 2, 'page_size' => 2],
-                $expectedTotalPages = 0,
+                0,
             ],
             [
                 ['supplier_id' => [1, 2], 'page_index' => 2, 'page_size' => 2],
-                $expectedTotalPages = 0,
+                0,
             ],
             [
                 ['category_id' => 5, 'page_index' => 1, 'page_size' => 1],
-                $expectedTotalPages = 4,
+                4,
             ],
             [
                 ['category_id' => [4, 5], 'page_index' => 1, 'page_size' => 1],
-                $expectedTotalPages = 12,
+                12,
             ],
         ];
     }
@@ -132,8 +132,8 @@ class StockManagementControllerTest extends ApiTestCase
     /**
      * @dataProvider getProductsCombinationsParams
      *
-     * @param $params
-     * @param $expectedTotalPages
+     * @param array $params
+     * @param int $expectedTotalPages
      */
     public function testItShouldReturnOkResponseWhenRequestingProductsCombinationsStock(array $params, int $expectedTotalPages): void
     {
@@ -148,15 +148,15 @@ class StockManagementControllerTest extends ApiTestCase
         return [
             [
                 ['productId' => 1],
-                $expectedTotalPages = 1,
+                1,
             ],
             [
                 ['productId' => 7, 'page_index' => 1, 'page_size' => 2],
-                $expectedTotalPages = 1,
+                1,
             ],
             [
                 ['productId' => 1, 'category_id' => [4, 5], 'page_index' => 1, 'page_size' => 1],
-                $expectedTotalPages = 8,
+                8,
             ],
         ];
     }
@@ -188,10 +188,6 @@ class StockManagementControllerTest extends ApiTestCase
      */
     private function assertResponseHasTotalPages(array $parameters, int $expectedTotalPages): void
     {
-        if (null === $expectedTotalPages) {
-            return;
-        }
-
         $QueryStockParamsCollection = new QueryStockParamsCollection();
         $pageSize = $QueryStockParamsCollection->getDefaultPageSize();
         if (array_key_exists('page_size', $parameters)) {
@@ -485,15 +481,15 @@ class StockManagementControllerTest extends ApiTestCase
             // @TODO when entity manager can save movements in db
             //            array(
             //                array(),
-            //                $expectedTotalPages = 1
+            //                1
             //            ),
             //            array(
             //                array('page_index' => 1, 'page_size' => 5),
-            //                $expectedTotalPages = 2
+            //                2
             //            )
             [
                 ['page_index' => 1],
-                $expectedTotalPages = 0,
+                0,
             ],
         ];
     }

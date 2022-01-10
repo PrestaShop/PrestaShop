@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import common tests
@@ -193,7 +194,7 @@ describe('BO - Shop Parameters - Search : Filter, sort and pagination tag in BO'
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await tagsPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

@@ -284,15 +284,11 @@ class CartOld extends Cart
                 // If the cart rule is a free gift, then add the free gift value only if the gift is in this package
                 if (!$this->shouldExcludeGiftsDiscount && (int) $cartRule->gift_product) {
                     $in_order = false;
-                    if (null === $products) {
-                        $in_order = true;
-                    } else {
-                        foreach ($products as $product) {
-                            if ($cartRule->gift_product == $product['id_product']
-                                && $cartRule->gift_product_attribute
-                                == $product['id_product_attribute']) {
-                                $in_order = true;
-                            }
+                    foreach ($products as $product) {
+                        if ($cartRule->gift_product == $product['id_product']
+                            && $cartRule->gift_product_attribute
+                            == $product['id_product_attribute']) {
+                            $in_order = true;
                         }
                     }
 

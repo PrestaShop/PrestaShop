@@ -57,7 +57,7 @@ class FileUploaderTest extends TestCase
     protected $filesystem;
 
     /**
-     * @var UploadedFile
+     * @var FileUploader
      */
     protected $object;
 

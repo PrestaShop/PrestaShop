@@ -514,6 +514,11 @@ class ProductCore extends ObjectModel
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true],
             'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
+            'unit_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
+            /*
+             * Only the DB field is deprecated because unit_price is the new reference, we need to keep the class field though
+             * @deprecated in 8.0 this DB column will be removed in a future version
+             */
             'unit_price_ratio' => ['type' => self::TYPE_FLOAT, 'shop' => true],
             'additional_shipping_cost' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'customizable' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
@@ -716,13 +721,6 @@ class ProductCore extends ObjectModel
     {
         parent::__construct($id_product, $id_lang, $id_shop);
 
-        $unitPriceRatio = new DecimalNumber((string) ($this->unit_price_ratio ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
-
-        if ($unitPriceRatio->isGreaterThanZero()) {
-            $this->unit_price = (float) (string) $price->dividedBy($unitPriceRatio);
-        }
-
         if ($full && $this->id) {
             if (!$context) {
                 $context = Context::getContext();
@@ -745,10 +743,15 @@ class ProductCore extends ObjectModel
             $this->base_price = $this->price;
 
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
-            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
             $this->tags = Tag::getProductTags((int) $this->id);
 
             $this->loadStockData();
+        }
+
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
+        if ($unitPrice->isGreaterThanZero()) {
+            $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
         }
 
         if ($this->id_category_default) {
@@ -764,11 +767,6 @@ class ProductCore extends ObjectModel
     public function getFieldsShop()
     {
         $fields = parent::getFieldsShop();
-        if (null === $this->update_fields || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price']))) {
-            if ($this->unit_price !== null) {
-                $fields['unit_price_ratio'] = (float) $this->unit_price > 0 ? $this->price / $this->unit_price : 0;
-            }
-        }
         $fields['unity'] = pSQL($this->unity);
 
         return $fields;
@@ -803,6 +801,8 @@ class ProductCore extends ObjectModel
         }
 
         $this->setGroupReduction();
+        $this->updateUnitRatio();
+
         Hook::exec('actionProductSave', ['id_product' => (int) $this->id, 'product' => $this]);
 
         return true;
@@ -819,6 +819,7 @@ class ProductCore extends ObjectModel
 
         $return = parent::update($null_values);
         $this->setGroupReduction();
+        $this->updateUnitRatio();
 
         // Sync stock Reference, EAN13, MPN and UPC
         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id)) {
@@ -838,6 +839,32 @@ class ProductCore extends ObjectModel
         }
 
         return $return;
+    }
+
+    /**
+     * Unit price ratio is not edited anymore, the reference is handled via the unit_price field which is now saved
+     * in the DB we kept unit_price_ratio in the DB for backward compatibility but shouldn't be written anymore so
+     * it is automatically updated when product is saved
+     */
+    private function updateUnitRatio(): void
+    {
+        // Update instance field
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
+        if ($unitPrice->isGreaterThanZero()) {
+            $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
+        }
+
+        Db::getInstance()->execute(sprintf(
+            'UPDATE %sproduct SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+            _DB_PREFIX_,
+            $this->id
+        ));
+        Db::getInstance()->execute(sprintf(
+            'UPDATE %sproduct_shop SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+            _DB_PREFIX_,
+            $this->id
+        ));
     }
 
     /**
@@ -2232,7 +2259,6 @@ class ProductCore extends ObjectModel
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
@@ -2332,11 +2358,9 @@ class ProductCore extends ObjectModel
         $combination->id_product = (int) $this->id;
         $combination->price = (float) $price;
         $combination->ecotax = (float) $ecotax;
-        $combination->quantity = (int) $quantity;
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit_impact;
         $combination->reference = pSQL($reference);
-        $combination->location = pSQL($location);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
@@ -2780,18 +2804,19 @@ class ProductCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name,
-                    a.`id_attribute`
-                FROM `' . _DB_PREFIX_ . 'product_attribute` pa
-                ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
-                LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
-                WHERE pa.`id_product` = ' . (int) $this->id . '
-                GROUP BY pa.`id_product_attribute`' . ($groupByIdAttributeGroup ? ',ag.`id_attribute_group`' : '') . '
-                ORDER BY pa.`id_product_attribute`';
+        $sql = 'SELECT pa.*, product_attribute_shop.*, ag.`id_attribute_group`, ag.`is_color_group`, agl.`name` AS group_name, al.`name` AS attribute_name, ' .
+             'a.`id_attribute`, stock.location ' .
+             'FROM `' . _DB_PREFIX_ . 'product_attribute` pa ' .
+             Shop::addSqlAssociation('product_attribute', 'pa') . ' ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON a.`id_attribute` = pac.`id_attribute` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group` ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ') ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ') ' .
+             'LEFT JOIN `' . _DB_PREFIX_ . 'stock_available` stock ON (stock.id_product = pa.id_product AND stock.id_product_attribute = IFNULL(pa.`id_product_attribute`, 0)) ' .
+             'WHERE pa.`id_product` = ' . (int) $this->id . ' ' .
+             'GROUP BY pa.`id_product_attribute`' . ($groupByIdAttributeGroup ? ', ag.`id_attribute_group` ' : '') .
+             'ORDER BY pa.`id_product_attribute`';
 
         $res = Db::getInstance()->executeS($sql);
 
@@ -5173,7 +5198,7 @@ class ProductCore extends ObjectModel
     public static function duplicatePrices($id_product_old, $id_product_new)
     {
         $query = new DbQuery();
-        $query->select('price, unit_price_ratio, id_shop');
+        $query->select('price, unit_price, id_shop');
         $query->from('product_shop');
         $query->where('`id_product` = ' . (int) $id_product_old);
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query->build());
@@ -5181,7 +5206,7 @@ class ProductCore extends ObjectModel
             foreach ($results as $result) {
                 if (!Db::getInstance()->update(
                     'product_shop',
-                    ['price' => pSQL($result['price']), 'unit_price_ratio' => pSQL($result['unit_price_ratio'])],
+                    ['price' => pSQL($result['price']), 'unit_price' => pSQL($result['unit_price'])],
                     'id_product=' . (int) $id_product_new . ' AND id_shop = ' . (int) $result['id_shop']
                 )) {
                     return false;
@@ -5645,7 +5670,8 @@ class ProductCore extends ObjectModel
             $quantity = (int) $row['minimal_quantity'];
         }
 
-        $row['price_tax_exc'] = Product::getPriceStatic(
+        // We save value in $priceTaxExcluded and $priceTaxIncluded before they may be rounded
+        $row['price_tax_exc'] = $priceTaxExcluded = Product::getPriceStatic(
             (int) $row['id_product'],
             false,
             $id_product_attribute,
@@ -5657,8 +5683,8 @@ class ProductCore extends ObjectModel
         );
 
         if (self::$_taxCalculationMethod == PS_TAX_EXC) {
-            $row['price_tax_exc'] = Tools::ps_round($row['price_tax_exc'], Context::getContext()->getComputingPrecision());
-            $row['price'] = Product::getPriceStatic(
+            $row['price_tax_exc'] = Tools::ps_round($priceTaxExcluded, Context::getContext()->getComputingPrecision());
+            $row['price'] = $priceTaxIncluded = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
                 $id_product_attribute,
@@ -5680,19 +5706,17 @@ class ProductCore extends ObjectModel
                 $quantity
             );
         } else {
-            $row['price'] = Tools::ps_round(
-                Product::getPriceStatic(
-                    (int) $row['id_product'],
-                    true,
-                    $id_product_attribute,
-                    6,
-                    null,
-                    false,
-                    true,
-                    $quantity
-                ),
-                Context::getContext()->getComputingPrecision()
+            $priceTaxIncluded = Product::getPriceStatic(
+                (int) $row['id_product'],
+                true,
+                $id_product_attribute,
+                6,
+                null,
+                false,
+                true,
+                $quantity
             );
+            $row['price'] = Tools::ps_round($priceTaxIncluded, Context::getContext()->getComputingPrecision());
             $row['price_without_reduction'] = Product::getPriceStatic(
                 (int) $row['id_product'],
                 true,
@@ -5816,18 +5840,11 @@ class ProductCore extends ObjectModel
             'context' => $context,
         ]);
 
-        $combination = new Combination($id_product_attribute);
-
-        if (0 != $combination->unit_price_impact && 0 != $row['unit_price_ratio']) {
-            $unitPrice = ($row['price_tax_exc'] / $row['unit_price_ratio']) + $combination->unit_price_impact;
-            $row['unit_price_ratio'] = $row['price_tax_exc'] / $unitPrice;
-        }
-
-        if (isset($row['unit_price_ratio'])) {
-            $row['unit_price'] = ($row['unit_price_ratio'] != 0 ? $row['price'] / $row['unit_price_ratio'] : 0);
-        } else {
-            $row['unit_price'] = 0.0;
-        }
+        // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
+        $unitPriceRatio = static::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
+        $row['unit_price_ratio'] = $unitPriceRatio;
+        $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
+        $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
             'id_lang' => $id_lang,
@@ -5838,6 +5855,67 @@ class ProductCore extends ObjectModel
         self::$productPropertiesCache[$cache_key] = $row;
 
         return self::$productPropertiesCache[$cache_key];
+    }
+
+    /**
+     * Compute unit price ratio based on the saved unit price, we make sure that quantities, currency rates and
+     * combination impact are taken into account.
+     *
+     * @param array $productRow
+     * @param int $combinationId
+     * @param int $quantity
+     * @param Context $context
+     *
+     * @return float
+     */
+    private static function computeUnitPriceRatio(array $productRow, int $combinationId, int $quantity, Context $context): float
+    {
+        $baseUnitPrice = 0.0;
+        if (isset($productRow['unit_price'])) {
+            // Unit price is supposed to be in DB and accessible in the row
+            $baseUnitPrice = (float) $productRow['unit_price'];
+        }
+
+        // Then if combination has an impact we apply it on unit price
+        if ($combinationId) {
+            $combination = new Combination($combinationId);
+            if (0 != $combination->unit_price_impact && 0 != $baseUnitPrice) {
+                $baseUnitPrice = $baseUnitPrice + $combination->unit_price_impact;
+            }
+        }
+
+        // Finally, we apply the currency rate
+        $defaultCurrencyId = (int) Configuration::get('PS_CURRENCY_DEFAULT');
+        $currencyId = Validate::isLoadedObject($context->currency) ? (int) $context->currency->id : $defaultCurrencyId;
+        if ($currencyId !== $defaultCurrencyId) {
+            $baseUnitPrice = Tools::convertPrice($baseUnitPrice, $currencyId);
+        }
+
+        if ($baseUnitPrice == 0) {
+            return 0;
+        }
+
+        // Compute price ratio based on initial product price and initial unit price (without taxes, group discount, cart rules)
+        $noSpecificPrice = null;
+        $baseProductPrice = Product::getPriceStatic(
+            (int) $productRow['id_product'],
+            false,
+            $combinationId,
+            6,
+            null,
+            false,
+            false,
+            $quantity,
+            false,
+            null,
+            null,
+            null,
+            $noSpecificPrice,
+            true,
+            false
+        );
+
+        return $baseProductPrice / $baseUnitPrice;
     }
 
     /**
@@ -7645,8 +7723,8 @@ class ProductCore extends ObjectModel
             $this->price = Product::getPriceStatic((int) $this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
         }
 
-        if (null === $this->unit_price) {
-            $this->unit_price = ($this->unit_price_ratio != 0 ? $this->price / $this->unit_price_ratio : 0);
+        if (null === $this->unit_price_ratio) {
+            $this->unit_price_ratio = ($this->unit_price != 0 ? $this->price / $this->unit_price : 0);
         }
 
         $success = parent::update($null_values);

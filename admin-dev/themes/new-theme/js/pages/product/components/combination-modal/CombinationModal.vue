@@ -68,7 +68,7 @@
             previousCombinationId === null || submittingCombinationForm
           "
         >
-          <i class="material-icons">keyboard_arrow_left</i>
+          <i class="material-icons rtl-flip">keyboard_arrow_left</i>
           {{ $t('modal.previous') }}
         </button>
         <button
@@ -79,7 +79,7 @@
           :disabled="nextCombinationId === null || submittingCombinationForm"
         >
           {{ $t('modal.next') }}
-          <i class="material-icons">keyboard_arrow_right</i>
+          <i class="material-icons rtl-flip">keyboard_arrow_right</i>
         </button>
         <button
           type="button"

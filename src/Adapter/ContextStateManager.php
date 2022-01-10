@@ -138,6 +138,9 @@ final class ContextStateManager
     {
         $this->saveContextField('language');
         $this->getContext()->language = $language;
+        if ($language) {
+            $this->getContext()->getTranslator()->setLocale($language->locale);
+        }
 
         return $this;
     }
@@ -241,11 +244,13 @@ final class ContextStateManager
         $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
-            if ('shop' === $fieldName) {
-                $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
-                $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
-            } else {
-                $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
+            switch ($fieldName) {
+                case 'shop':
+                    $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
+                    $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
+                    break;
+                default:
+                    $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
             }
         }
     }
@@ -262,6 +267,9 @@ final class ContextStateManager
         if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             if ('shop' === $fieldName) {
                 $this->restoreShopContext($currentStashIndex);
+            }
+            if ('language' === $fieldName && $this->contextFieldsStack[$currentStashIndex][$fieldName] instanceof Language) {
+                $this->getContext()->getTranslator()->setLocale($this->contextFieldsStack[$currentStashIndex][$fieldName]->locale);
             }
             $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
             unset($this->contextFieldsStack[$currentStashIndex][$fieldName]);

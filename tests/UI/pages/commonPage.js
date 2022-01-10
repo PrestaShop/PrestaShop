@@ -290,12 +290,13 @@ class CommonPage {
    * Go to Page and wait for navigation
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element
-   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
+   * @param waitUntil {'load'|'domcontentloaded'|'networkidle'|'commit'} The event to wait after click
+   * @param timeout {number} Time to wait for navigation
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle') {
+  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle', timeout = 30000) {
     await Promise.all([
-      page.waitForNavigation({waitUntil}),
+      page.waitForNavigation({waitUntil, timeout}),
       page.click(selector),
     ]);
   }
@@ -357,25 +358,6 @@ class CommonPage {
       // The selector is not visible, that why '+ i' is required here
       await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
-  }
-
-  /**
-   * Sort array of strings or numbers
-   * @param arrayToSort {Array<string|number>} Array to sort
-   * @param isFloat {boolean} True if array values type are float
-   * @param isDate {boolean} True if array values type are date
-   * @return {Promise<Array<string|number>>}
-   */
-  async sortArray(arrayToSort, isFloat = false, isDate = false) {
-    if (isFloat) {
-      return arrayToSort.sort((a, b) => a - b);
-    }
-
-    if (isDate) {
-      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
-    }
-
-    return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
 
   /**
@@ -464,6 +446,19 @@ class CommonPage {
     ]);
 
     return download.path();
+  }
+
+  /**
+   * Wait for title to be filled
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async waitForPageTitleToLoad(page) {
+    let isTitleEmpty = true;
+    for (let i = 0; i < 20 && isTitleEmpty; i++) {
+      isTitleEmpty = (await this.getPageTitle(page) === '');
+      await page.waitForTimeout(100);
+    }
   }
 }
 

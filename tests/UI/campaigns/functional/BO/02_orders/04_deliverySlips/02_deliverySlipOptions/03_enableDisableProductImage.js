@@ -65,8 +65,8 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
   });
 
   const tests = [
-    {args: {action: 'Enable', enable: true, imageNumber: 2}},
-    {args: {action: 'Disable', enable: false, imageNumber: 1}},
+    {args: {action: 'Enable', enable: true, imageNumber: global.URLHasPort ? 1 : 2}},
+    {args: {action: 'Disable', enable: false, imageNumber: global.URLHasPort ? 0 : 1}},
   ];
 
   tests.forEach((test, index) => {

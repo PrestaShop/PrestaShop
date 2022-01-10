@@ -38,6 +38,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Form type containing price fields for Pricing tab
@@ -127,8 +130,13 @@ class PricingType extends TranslatorAwareType
                 'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
+                ],
             ])
-            ->add('specific_prices', UnavailableType::class, [
+            ->add('specific_prices', SpecificPricesType::class, [
                 'label' => $this->trans('Specific prices', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),

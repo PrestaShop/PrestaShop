@@ -42,7 +42,7 @@ class ThemeExtractorTest extends KernelTestCase
      */
     private $filesystem;
     /**
-     * @var ThemeExtractor
+     * @var ThemeExtractor|null
      */
     private $themeExtractor;
 

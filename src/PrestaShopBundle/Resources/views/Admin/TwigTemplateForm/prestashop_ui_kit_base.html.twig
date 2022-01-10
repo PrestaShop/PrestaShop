@@ -54,6 +54,14 @@
 
 {# Widgets #}
 
+{% block form_start %}
+  {% set attr = attr|merge({'data-alerts-success': form.vars.alerts.success|default([])|length()}) %}
+  {% set attr = attr|merge({'data-alerts-info': form.vars.alerts.info|default([])|length()}) %}
+  {% set attr = attr|merge({'data-alerts-warning': form.vars.alerts.warning|default([])|length()}) %}
+  {% set attr = attr|merge({'data-alerts-error': form.vars.alerts.error|default([])|length()}) %}
+  {{ parent() }}
+{% endblock form_start %}
+
 {%- block form_widget -%}
   {% if columns_number is defined %}
     {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-columns-' ~ columns_number)|trim}) %}
@@ -509,7 +517,9 @@
 {% block date_range_widget %}
   {% apply spaceless %}
     {{ form_widget(form.from) }}
+    {{ form_errors(form.from) }}
     {{ form_widget(form.to) }}
+    {{ form_errors(form.to) }}
   {% endapply %}
 {% endblock date_range_widget %}
 

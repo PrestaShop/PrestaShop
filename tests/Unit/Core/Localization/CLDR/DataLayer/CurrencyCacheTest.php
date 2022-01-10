@@ -58,6 +58,7 @@ class CurrencyCacheTest extends TestCase
     public function testReadWrite()
     {
         $data = new CldrCurrencyData();
+        /* @phpstan-ignore-next-line */
         $data->foo = ['bar', 'baz'];
 
         /* @noinspection PhpUnhandledExceptionInspection */

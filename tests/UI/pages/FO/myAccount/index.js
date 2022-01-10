@@ -44,7 +44,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToHistoryAndDetailsPage(page) {
-    await this.waitForSelectorAndClick(page, this.accountHistoryLink);
+    await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
   }
 
   /**
@@ -53,16 +53,11 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddressesPage(page) {
-    await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
-  }
-
-  /**
-   * Go to add first address page
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async goToAddFirstAddressPage(page) {
-    await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+    if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
+    }
   }
 
   /**

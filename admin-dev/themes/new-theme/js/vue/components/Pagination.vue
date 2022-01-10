@@ -30,7 +30,7 @@
           @click="goToPage(currentPage - 1)"
           :disabled="currentPage === 1"
         >
-          <i class="material-icons">chevron_left</i>
+          <i class="material-icons rtl-flip">chevron_left</i>
         </button>
       </li>
       <li
@@ -47,7 +47,7 @@
           @click="goToPage(currentPage + 1)"
           :disabled="currentPage === paginatedDatas.length"
         >
-          <i class="material-icons">chevron_right</i>
+          <i class="material-icons rtl-flip">chevron_right</i>
         </button>
       </li>
     </ul>

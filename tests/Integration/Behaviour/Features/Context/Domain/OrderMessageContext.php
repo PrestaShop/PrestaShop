@@ -66,7 +66,6 @@ class OrderMessageContext extends AbstractDomainFeatureContext
 
         /* @var OrderMessageId $orderMessageId */
         try {
-            $this->cleanLastException();
             $orderMessageId = $this->getCommandBus()->handle(
                 new AddOrderMessageCommand(
                     $properties['name'],
@@ -93,7 +92,6 @@ class OrderMessageContext extends AbstractDomainFeatureContext
         $orderMessage = $this->getSharedStorage()->get($reference);
 
         try {
-            $this->cleanLastException();
             $this->getCommandBus()->handle(
                 new EditOrderMessageCommand(
                     (int) $orderMessage->id,

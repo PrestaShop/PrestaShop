@@ -8,6 +8,7 @@ Feature: Webservice key management
 
   Background:
     Given shop "shop1" with name "test_shop" exists
+    And I restore tables "webservice_account,webservice_account_shop,webservice_permission"
     And shop configuration for "PS_WEBSERVICE" is set to 1
     And I add a new webservice key with specified properties:
       | key              | DISABLEDDISABLEDDISABLEDDISABLED |
@@ -72,6 +73,13 @@ Feature: Webservice key management
     Then I should get 5 items of type "address"
 
   Scenario: Manipulate data
+    # I need permission before I can add the address
+    Given I edit webservice key "ENABLEDENABLEDENABLEDENABLEDENAB" with specified properties:
+      | description      | Enabled key with Permissions        |
+      | permission_GET   | addresses                           |
+      | permission_POST  | addresses                           |
+      | permission_PUT   | addresses                           |
+      | permission_DELETE| addresses                           |
     ## Add an address
     And I use Webservice with key "ENABLEDENABLEDENABLEDENABLEDENAB" to add "addresses" for reference "address_6"
       | key             | value          |

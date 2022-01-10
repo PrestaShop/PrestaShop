@@ -31,6 +31,12 @@ class ReferrerCore extends ObjectModel
 {
     public $id_shop;
     public $name;
+
+    /**
+     * @var string
+     *
+     * @deprecated since 8.0.0
+     */
     public $passwd;
 
     public $http_referer_regexp;

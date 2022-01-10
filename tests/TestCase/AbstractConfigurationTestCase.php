@@ -26,6 +26,7 @@
 
 namespace Tests\TestCase;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
@@ -37,12 +38,12 @@ use Tests\Resources\DummyMultistoreConfiguration;
 abstract class AbstractConfigurationTestCase extends KernelTestCase
 {
     /**
-     * @var Configuration
+     * @var Configuration|MockObject
      */
     protected $mockConfiguration;
 
     /**
-     * @var ShopContext
+     * @var ShopContext|MockObject
      */
     protected $mockShopConfiguration;
 
@@ -85,9 +86,9 @@ abstract class AbstractConfigurationTestCase extends KernelTestCase
     }
 
     /**
-     * @return ShopContext
+     * @return MockObject|ShopContext
      */
-    protected function createShopContextMock(): ShopContext
+    protected function createShopContextMock()
     {
         return $this->getMockBuilder(ShopContext::class)
             ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext', 'getShopConstraint'])

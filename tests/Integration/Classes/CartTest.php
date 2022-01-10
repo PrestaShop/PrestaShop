@@ -145,7 +145,7 @@ class CartTest extends TestCase
     /**
      * This is cached by $rate.
      */
-    private static function getIdTaxRulesGroup(int $rate): string
+    private static function getIdTaxRulesGroup(int $rate): int
     {
         static $groups = [];
 
@@ -167,13 +167,13 @@ class CartTest extends TestCase
             $groups[$name] = $taxRulesGroup->id;
         }
 
-        return $groups[$name];
+        return (int) $groups[$name];
     }
 
     /**
      * This is cached by $name.
      */
-    private static function makeProduct(string $name, float $price, string $id_tax_rules_group): Product
+    private static function makeProduct(string $name, float $price, int $id_tax_rules_group): Product
     {
         $product = new Product(null, false, Configuration::get('PS_LANG_DEFAULT'));
         $product->id_tax_rules_group = $id_tax_rules_group;
@@ -188,7 +188,7 @@ class CartTest extends TestCase
     private static function makeAddress(): Address
     {
         $address = new Address();
-        $address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+        $address->id_country = (int) Configuration::get('PS_COUNTRY_DEFAULT');
         $address->firstname = 'Unit';
         $address->lastname = 'Tester';
         $address->address1 = '55 rue Raspail';
@@ -202,7 +202,7 @@ class CartTest extends TestCase
     private static function makeCart(): Cart
     {
         $cart = new Cart(null, Configuration::get('PS_LANG_DEFAULT'));
-        $cart->id_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+        $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $cart->id_address_invoice = self::$id_address;
         self::assertTrue($cart->save());
         Context::getContext()->cart = $cart;
@@ -214,7 +214,7 @@ class CartTest extends TestCase
      * null $shippingCost is interpreted as free shipping
      * Carriers are cached by $name.
      */
-    private static function getIdCarrier(string $name, int $shippingCost = null, string $id_tax_rules_group = null): string
+    private static function getIdCarrier(string $name, int $shippingCost = null, int $id_tax_rules_group = null): string
     {
         static $carriers = [];
 
@@ -285,7 +285,6 @@ class CartTest extends TestCase
         $cartRule->date_to = $date_to->format('Y-m-d H:i:s');
 
         $cartRule->quantity = 1;
-        $cartRule->quantity_per_user;
 
         if ($type === 'before tax') {
             $cartRule->reduction_amount = $amount;
@@ -399,7 +398,7 @@ class CartTest extends TestCase
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
-        self::makeCartRule(5, 'before tax')->id;
+        self::makeCartRule(5, 'before tax');
         $cart = self::makeCart();
 
         $cart->updateQty(1, $product->id);

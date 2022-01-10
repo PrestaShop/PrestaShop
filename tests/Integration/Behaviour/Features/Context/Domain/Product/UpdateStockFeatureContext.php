@@ -59,7 +59,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $this->cleanLastException();
         try {
             $command = new UpdateProductStockInformationCommand($productId);
             $unhandledData = $this->setUpdateStockCommandData($data, $command);
@@ -81,7 +80,6 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
-        $this->cleanLastException();
         $command = new UpdateProductStockInformationCommand($this->getSharedStorage()->get($productReference));
         $command->setLocation(PrimitiveUtils::generateRandomString($length));
 
