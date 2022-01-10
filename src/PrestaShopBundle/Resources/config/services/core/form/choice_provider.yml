@@ -283,7 +283,6 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
-
   prestashop.core.form.choice_provider.product_type_choice_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
     arguments:
