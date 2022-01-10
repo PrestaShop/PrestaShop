@@ -28,7 +28,7 @@ import MultiShopModifyAllMap from './component-map';
 const {$} = window;
 
 /**
- * Enables multi store modify all checkboxes on the page. The checkboxes are hidden by default,
+ * Enables multi shop modify all checkboxes on the page. The checkboxes are hidden by default,
  * they appear on input focus and stay visible when the value changed.
  */
 export default class ModifyAllShopsCheckbox {
@@ -58,15 +58,15 @@ export default class ModifyAllShopsCheckbox {
           widget.classList.add(MultiShopModifyAllMap.updatedClass);
         }
 
-        const multiStoreFieldId: string = widgetCheckbox.id.replace(this.modifyAllNamePrefix, '');
-        const multiStoreField: HTMLInputElement = <HTMLInputElement>document.getElementById(multiStoreFieldId);
+        const multiShopFieldId: string = widgetCheckbox.id.replace(this.modifyAllNamePrefix, '');
+        const multiShopField: HTMLInputElement = <HTMLInputElement>document.getElementById(multiShopFieldId);
 
-        if (multiStoreField) {
+        if (multiShopField) {
           // Toggle element when field is focused/unfocused
-          multiStoreField.addEventListener('focus', () => {
+          multiShopField.addEventListener('focus', () => {
             widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
           });
-          multiStoreField.addEventListener('blur', () => {
+          multiShopField.addEventListener('blur', () => {
             widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
           });
 
@@ -79,12 +79,12 @@ export default class ModifyAllShopsCheckbox {
           });
 
           // Once the field (or the checkbox) has changed the checkbox is permanently visible
-          multiStoreField.addEventListener('change', () => {
+          multiShopField.addEventListener('change', () => {
             widget.classList.add(MultiShopModifyAllMap.updatedClass);
           });
           // We check the event via JQuery as well because some components use internal JQuery event instead of native
           // ones (like select2)
-          $(multiStoreField).on('change', () => {
+          $(multiShopField).on('change', () => {
             widget.classList.add(MultiShopModifyAllMap.updatedClass);
           });
           // Check for checkbox change also, in case it is modified programmatically
