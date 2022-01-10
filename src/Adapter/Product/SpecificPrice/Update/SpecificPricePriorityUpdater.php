@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
@@ -40,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
  *
  * @todo: could we remove this service as it has no logic and just reuses repository?
  */
-class SpecificPricePriorityUpdater extends AbstractObjectModelRepository
+class SpecificPricePriorityUpdater
 {
     /**
      * @var SpecificPriceRepository
