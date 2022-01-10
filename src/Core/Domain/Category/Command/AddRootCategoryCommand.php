@@ -179,7 +179,7 @@ class AddRootCategoryCommand
     }
 
     /**
-     * @param string[] $localizedDescriptions
+     * @param string[] $localizedBottomDescriptions
      *
      * @return $this
      */

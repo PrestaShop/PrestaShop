@@ -212,7 +212,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @param string[] $localizedDescriptions
+     * @param string[] $localizedBottomDescriptions
      *
      * @return $this
      */

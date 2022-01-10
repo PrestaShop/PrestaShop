@@ -186,7 +186,7 @@ class EditRootCategoryCommand
     }
 
     /**
-     * @param string[] $localizedDescriptions
+     * @param string[] $localizedBottomDescriptions
      *
      * @return $this
      */

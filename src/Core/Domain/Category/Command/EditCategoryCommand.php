@@ -221,7 +221,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @param string[] $localizedDescriptions
+     * @param string[] $localizedBottomDescriptions
      *
      * @return $this
      */
