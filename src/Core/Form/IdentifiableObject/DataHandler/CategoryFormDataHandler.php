@@ -30,9 +30,12 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryComman
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
  * Creates/updates category from data submitted in category form
+ *
+ * @internal
  */
 final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
@@ -42,6 +45,8 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      * @param array $data
      *
      * @return AddCategoryCommand
+     *
+     * @throws CategoryConstraintException
      */
     protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand
     {
@@ -73,6 +78,8 @@ final class CategoryFormDataHandler extends AbstractCategoryFormDataHandler
      * @param array $data
      *
      * @return EditCategoryCommand
+     *
+     * @throws CategoryConstraintException
      */
     protected function createEditCategoryCommand(int $categoryId, array $data): AbstractEditCategoryCommand
     {

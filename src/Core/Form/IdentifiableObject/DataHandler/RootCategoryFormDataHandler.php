@@ -30,9 +30,12 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractAddCategoryComman
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AbstractEditCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\AddRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryConstraintException;
 
 /**
- * Creates/updates root category from data submited in category form
+ * Creates/updates root category from data submitted in category form
+ *
+ * @internal
  */
 final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
 {
@@ -42,6 +45,8 @@ final class RootCategoryFormDataHandler extends AbstractCategoryFormDataHandler
      * @param array $data
      *
      * @return AddRootCategoryCommand
+     *
+     * @throws CategoryConstraintException
      */
     protected function createAddCategoryCommand(array $data): AbstractAddCategoryCommand
     {

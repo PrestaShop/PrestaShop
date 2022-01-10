@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 /**
  * Class EditRootCategoryCommand edits given root category.
  */
-class AbstractEditCategoryCommand
+abstract class AbstractEditCategoryCommand
 {
     /**
      * @var CategoryId
@@ -186,8 +186,6 @@ class AbstractEditCategoryCommand
      * @param bool $isActive
      *
      * @return $this
-     *
-     * @throws CategoryConstraintException
      */
     public function setIsActive(bool $isActive): self
     {
