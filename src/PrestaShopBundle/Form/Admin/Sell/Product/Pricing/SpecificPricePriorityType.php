@@ -58,7 +58,7 @@ class SpecificPricePriorityType extends TranslatorAwareType
         $builder
             ->add('use_custom_priority', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Use default priority settings', 'Admin.Catalog.Feature') => false,
+                    $this->trans('Use default order', 'Admin.Catalog.Feature') => false,
                     $this->trans('Set a specific order for this product', 'Admin.Catalog.Feature') => true,
                 ],
                 'default_empty_data' => false,
