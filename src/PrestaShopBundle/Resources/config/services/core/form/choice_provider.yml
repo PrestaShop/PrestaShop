@@ -293,8 +293,3 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider'
     arguments:
       - '@translator'
-
-  prestashop.core.form.choice_provider.specific_price_priority_type_choice_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityTypeChoiceProvider'
-    arguments:
-      - '@translator'
