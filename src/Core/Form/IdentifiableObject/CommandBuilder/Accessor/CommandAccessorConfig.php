@@ -90,7 +90,7 @@ class CommandAccessorConfig
      *
      * @throws InvalidCommandFieldTypeException
      */
-    public function addMultiStoreField(string $propertyPath, string $commandSetter, string $propertyType): self
+    public function addMultiShopField(string $propertyPath, string $commandSetter, string $propertyType): self
     {
         $this->fields[] = new CommandField(
             $propertyPath,
