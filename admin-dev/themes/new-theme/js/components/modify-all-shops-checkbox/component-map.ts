@@ -24,7 +24,7 @@
  */
 
 /**
- * Encapsulates selectors for multi store modify all component
+ * Encapsulates selectors for multi shop modify all component
  */
 export default {
   modifyAllWidgets: '.modify-all-stores',
