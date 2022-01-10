@@ -106,7 +106,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     {
         $shopGroupId = ShopGroup::getIdByName($shopName);
 
-        if (false === $shopGroupId) {
+        if (empty($shopGroupId)) {
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
