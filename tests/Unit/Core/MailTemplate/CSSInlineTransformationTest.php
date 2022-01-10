@@ -26,7 +26,7 @@
 
 namespace Tests\Unit\Core\MailTemplate;
 
-use DOMElement;
+use DOMNode;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation;
@@ -159,21 +159,21 @@ HTML;
     }
 
     /**
-     * @param DOMElement $node
+     * @param DOMNode $node
      * @param array $expectedStyle
      */
-    private function assertStyle(DOMElement $node, array $expectedStyle)
+    private function assertStyle(DOMNode $node, array $expectedStyle)
     {
         $nodeStyle = $this->getNodeStyle($node);
         $this->assertEquals($expectedStyle, $nodeStyle);
     }
 
     /**
-     * @param DOMElement $node
+     * @param DOMNode $node
      *
      * @return array
      */
-    private function getNodeStyle(DOMElement $node)
+    private function getNodeStyle(DOMNode $node)
     {
         if (!($styleAttr = $node->attributes->getNamedItem('style'))) {
             return [];

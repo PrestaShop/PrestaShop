@@ -53,7 +53,7 @@ class JavascriptManagerCore extends AbstractAssetManager
      * @param string $position
      * @param int $priority
      * @param bool $inline
-     * @param string $attribute
+     * @param string|null $attribute
      * @param string $server
      * @param string|null $version
      */

@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Util\DateTime;
 
+use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -71,7 +72,11 @@ class NullDateTime extends DateTimeImmutable
     }
 
     /**
-     * {@inheritdoc}
+     * Adds an amount of days, months, years, hours, minutes and seconds
+     *
+     * @param string|DateInterval $interval
+     *
+     * @return static
      */
     public function add($interval)
     {
@@ -151,7 +156,11 @@ class NullDateTime extends DateTimeImmutable
     }
 
     /**
-     * {@inheritdoc}
+     * Subtracts an amount of days, months, years, hours, minutes and seconds
+     *
+     * @param string|DateInterval $interval
+     *
+     * @return static
      */
     public function sub($interval)
     {

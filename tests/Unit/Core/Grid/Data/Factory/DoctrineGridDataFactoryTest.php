@@ -30,7 +30,6 @@ namespace Tests\Unit\Core\Grid\Data\Factory;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PDOStatement;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Grid\Data\Factory\DoctrineGridDataFactory;
 use PrestaShop\PrestaShop\Core\Grid\Data\GridDataInterface;
@@ -45,8 +44,6 @@ class DoctrineGridDataFactoryTest extends TestCase
     public function testItProvidesGridData()
     {
         $hookDispatcher = $this->createHookDispatcherMock();
-        $hookDispatcher->expects($this->once())
-            ->method('dispatchWithParameters');
 
         $queryParser = $this->createQueryParserMock();
 
@@ -70,9 +67,9 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return DoctrineQueryBuilderInterface
      */
-    private function createDoctrineQueryBuilderMock()
+    private function createDoctrineQueryBuilderMock(): DoctrineQueryBuilderInterface
     {
         $statement = $this->createMock(PDOStatement::class);
         $statement->method('fetchAll')
@@ -109,21 +106,23 @@ class DoctrineGridDataFactoryTest extends TestCase
     }
 
     /**
-     * @return MockObject
+     * @return HookDispatcherInterface
      */
-    private function createHookDispatcherMock()
+    private function createHookDispatcherMock(): HookDispatcherInterface
     {
         $hookDispatcher = $this->createMock(HookDispatcherInterface::class);
         $hookDispatcher->method('dispatchWithParameters')
             ->willReturn(null);
+        $hookDispatcher->expects($this->once())
+            ->method('dispatchWithParameters');
 
         return $hookDispatcher;
     }
 
     /**
-     * @return MockObject
+     * @return QueryParserInterface
      */
-    private function createQueryParserMock()
+    private function createQueryParserMock(): QueryParserInterface
     {
         $queryParser = $this->getMockBuilder(QueryParserInterface::class)
             ->setMethods(['parse'])

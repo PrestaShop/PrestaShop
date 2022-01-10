@@ -164,7 +164,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 'Incorrect feature associated to %s, expected %d but got %d',
                 $featureReference,
                 $featureId,
-                $editableFeatureValue->getFeatureId()
+                $editableFeatureValue->getFeatureId()->getValue()
             ));
         }
     }

@@ -69,6 +69,7 @@ class UserTranslatedCatalogueFinderTest extends TestCase
     public function testItFailsWhenTranslationDomainsAreNotStrings()
     {
         $this->expectException(InvalidArgumentException::class);
+        /* @phpstan-ignore-next-line */
         new UserTranslatedCatalogueFinder($this->databaseTranslationLoader, ['domain', 1]);
     }
 

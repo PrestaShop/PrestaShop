@@ -52,7 +52,7 @@ class CurrencyTest extends TestCase
     {
         $currencyData = new CurrencyData();
         $currencyData->setIsoCode('PCE');
-        $currencyData->setNumericIsoCode(333);
+        $currencyData->setNumericIsoCode('333');
         $currencyData->setDecimalDigits(2);
         $currencyData->setDisplayNames(['default' => 'PrestaShop Peace', 'one' => 'peace', 'other' => 'peaces']);
         $currencyData->setSymbols([CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮', CurrencyInterface::SYMBOL_TYPE_NARROW => '☮']);
@@ -81,7 +81,7 @@ class CurrencyTest extends TestCase
     public function testGetNumericIsoCode()
     {
         $this->assertSame(
-            333,
+            '333',
             $this->cldrCurrency->getNumericIsoCode()
         );
     }

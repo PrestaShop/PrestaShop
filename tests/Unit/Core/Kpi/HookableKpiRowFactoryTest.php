@@ -63,10 +63,13 @@ class HookableKpiRowFactoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Kpi must be an instance of KpiInterface, got `string`.');
 
+        /** @var KpiInterface $kpiMock1 */
         $kpiMock1 = $this->createMock(KpiInterface::class);
+        /** @var KpiInterface $kpiMock2 */
         $kpiMock2 = $this->createMock(KpiInterface::class);
 
         $factory = new HookableKpiRowFactory(
+            /* @phpstan-ignore-next-line */
             [
                 $kpiMock1,
                 $kpiMock2,
@@ -84,7 +87,9 @@ class HookableKpiRowFactoryTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Identifier must be a string, got `boolean`.');
 
+        /** @var KpiInterface $kpiMock1 */
         $kpiMock1 = $this->createMock(KpiInterface::class);
+        /** @var KpiInterface $kpiMock2 */
         $kpiMock2 = $this->createMock(KpiInterface::class);
 
         $factory = new HookableKpiRowFactory(
@@ -93,6 +98,7 @@ class HookableKpiRowFactoryTest extends TestCase
                 $kpiMock2,
             ],
             $this->createMock(HookDispatcherInterface::class),
+            /* @phpstan-ignore-next-line */
             false
         );
 

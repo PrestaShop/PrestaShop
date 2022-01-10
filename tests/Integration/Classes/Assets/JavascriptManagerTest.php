@@ -46,14 +46,14 @@ class JavascriptManagerTest extends TestCase
             [$testsPath, 'css'],
             new Configuration()
         );
-        $javascriptManager->register('corejs-ok-1', '/core.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-fail-1', '/coree.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-ok-2', 'core.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-fail-2', 'coree.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-ok-3', '/js/core.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-fail-3', '/js/coree.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-ok-4', 'js/core.js', 'bottom', 10, false, false);
-        $javascriptManager->register('corejs-fail-4', 'js/coree.js', 'bottom', 10, false, false);
+        $javascriptManager->register('corejs-ok-1', '/core.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-fail-1', '/coree.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-ok-2', 'core.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-fail-2', 'coree.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-ok-3', '/js/core.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-fail-3', '/js/coree.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-ok-4', 'js/core.js', 'bottom', 10, false, '');
+        $javascriptManager->register('corejs-fail-4', 'js/coree.js', 'bottom', 10, false, '');
 
         foreach ($javascriptManager->getList()['bottom']['external'] as $asset) {
             if ($asset['id'] === $id) {

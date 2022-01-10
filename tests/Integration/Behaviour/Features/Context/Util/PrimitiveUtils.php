@@ -250,6 +250,6 @@ class PrimitiveUtils
      */
     public static function generateRandomString(int $length): string
     {
-        return bin2hex(random_bytes(round($length / 2)));
+        return bin2hex(random_bytes((int) round($length / 2)));
     }
 }

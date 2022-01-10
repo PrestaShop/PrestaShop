@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleData;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\NumberSymbolsData;
 use PrestaShop\PrestaShop\Core\Localization\Currency;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Factory as FactorySpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 
 class FactoryTest extends TestCase
 {
@@ -153,20 +154,20 @@ class FactoryTest extends TestCase
                 ...$data
             ),
             new Currency(
-                null,
-                null,
+                true,
+                1,
                 'EUR',
-                '978',
+                978,
                 [
                     $data[0] => '€',
                 ],
-                '2',
+                2,
                 [
                     $data[0] => 'Euro',
                 ]
             ),
-            3,
-            true
+            true,
+            Price::CURRENCY_DISPLAY_CODE
         );
         $this->assertEquals(
             $expected,
@@ -193,20 +194,20 @@ class FactoryTest extends TestCase
                 ...$data
             ),
             new Currency(
-                null,
-                null,
+                true,
+                1,
                 'EUR',
-                '978',
+                978,
                 [
                     $data[0] => '€',
                 ],
-                '2',
+                2,
                 [
                     $data[0] => 'Euro',
                 ]
             ),
-            3,
             true,
+            Price::CURRENCY_DISPLAY_CODE,
             $maxFractionDigits
         );
         $expected['maxFractionDigits'] = $maxFractionDigits;
@@ -238,10 +239,10 @@ class FactoryTest extends TestCase
                 ...$data
             ),
             new Currency(
-                null,
-                null,
+                true,
+                1,
                 'EUR',
-                '978',
+                978,
                 [
                     $data[0] => '€',
                 ],
@@ -250,8 +251,8 @@ class FactoryTest extends TestCase
                     $data[0] => 'Euro',
                 ]
             ),
-            3,
             true,
+            Price::CURRENCY_DISPLAY_CODE,
             $maxFractionDigits
         );
         $expected['maxFractionDigits'] = $maxFractionDigits;

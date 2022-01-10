@@ -101,6 +101,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        /* @phpstan-ignore-next-line */
         $command->setCarrierReferences(['1', '2', '3']);
         yield [
             [

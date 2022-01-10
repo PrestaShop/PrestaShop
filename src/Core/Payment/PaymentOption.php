@@ -90,7 +90,7 @@ class PaymentOption implements HookContentClassInterface
      * The HTML MUST NOT contain a submit button, as
      * the Core will submit the form.
      *
-     * @var string
+     * @var string|null
      */
     private $form;
 
@@ -251,7 +251,7 @@ class PaymentOption implements HookContentClassInterface
     /**
      * Set payment option form.
      *
-     * @param string $form
+     * @param string|null $form
      *
      * @return $this
      */

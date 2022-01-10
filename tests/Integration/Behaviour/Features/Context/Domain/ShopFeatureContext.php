@@ -66,7 +66,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         global $shopFeatureLogoPath;
         $shopFeatureLogoPath = __DIR__ . '/../../../../../../' . $path;
         $uploadCommand = new UploadLogosCommand();
-        $uploadCommand->setUploadedHeaderLogo(new UploadedFile($shopFeatureLogoPath, 'logo.jpg', null, null, null, true));
+        $uploadCommand->setUploadedHeaderLogo(new UploadedFile($shopFeatureLogoPath, 'logo.jpg', null, null, true));
         $this->getCommandBus()->handle($uploadCommand);
     }
 

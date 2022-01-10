@@ -45,7 +45,7 @@ class CurrencyTransformContext implements Context
      */
     public function transformIsoToCurrency(string $currencyIso)
     {
-        $currency = new Currency(Currency::getIdByIsoCode($currencyIso, Configuration::get('PS_SHOP_DEFAULT')));
+        $currency = new Currency(Currency::getIdByIsoCode($currencyIso, (int) Configuration::get('PS_SHOP_DEFAULT')));
 
         if (!$currency->id) {
             throw new InvalidArgumentException(sprintf('Currency not found by iso code "%s"', $currencyIso));

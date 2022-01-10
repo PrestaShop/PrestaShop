@@ -86,6 +86,7 @@ class DefaultCatalogueFinderTest extends TestCase
     public function testItFailsWhenFiltersAreNotStrings()
     {
         $this->expectException(InvalidArgumentException::class);
+        /* @phpstan-ignore-next-line */
         new DefaultCatalogueFinder('/tmp', ['filter', 1]);
     }
 
