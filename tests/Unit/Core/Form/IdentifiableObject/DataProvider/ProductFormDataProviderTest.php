@@ -38,6 +38,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
@@ -79,6 +80,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -92,6 +94,12 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_QUANTITY = 12;
     private const DEFAULT_SHOP_ID = 99;
     private const COVER_URL = 'http://localhost/cover.jpg';
+    private const DEFAULT_PRIORITY_LIST = [
+        'id_country',
+        'id_group',
+        'id_currency',
+        'id_shop',
+    ];
 
     public function testGetDefaultData(): void
     {
@@ -139,6 +147,10 @@ class ProductFormDataProviderTest extends TestCase
                 'unit_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
+                ],
+                'priority_management' => [
+                    'use_custom_priority' => false,
+                    'priorities' => self::DEFAULT_PRIORITY_LIST,
                 ],
             ],
             'shipping' => [
@@ -208,6 +220,10 @@ class ProductFormDataProviderTest extends TestCase
                 'unit_price' => [
                     'price_tax_excluded' => 0,
                     'price_tax_included' => 0,
+                ],
+                'priority_management' => [
+                    'use_custom_priority' => false,
+                    'priorities' => self::DEFAULT_PRIORITY_LIST,
                 ],
             ],
             'shipping' => [
@@ -1524,7 +1540,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'priority_management' => [
                     'use_custom_priority' => false,
-                    'priorities' => [],
+                    'priorities' => self::DEFAULT_PRIORITY_LIST,
                 ],
             ],
             'seo' => [
@@ -1575,6 +1591,14 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
     {
+        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
+        $urlGeneratorMock->method('generate')->willReturnArgument(0);
+
+        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)->getMock();
+        $configurationMock->method('get')->willReturnMap([
+            ['PS_SPECIFIC_PRICE_PRIORITIES', implode(';', self::DEFAULT_PRIORITY_LIST)],
+        ]);
+
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
@@ -1583,7 +1607,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $configurationMock
         );
     }
 

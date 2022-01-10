@@ -73,7 +73,7 @@ class SpecificPricePriorityType extends TranslatorAwareType
                     'position' => 'prepend',
                 ],
             ])
-            ->add('priorities', PriorityListType::class, [
+            ->add('priorities', PriorityChoiceType::class, [
                 'label' => false,
                 'row_attr' => [
                     // hide by default. Javascript handles visibility based on priority type choice
