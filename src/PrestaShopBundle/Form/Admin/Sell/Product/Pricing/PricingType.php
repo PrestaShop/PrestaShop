@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -144,7 +143,7 @@ class PricingType extends TranslatorAwareType
             ->add('priority_management', SpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Define which condition should apply first when a customer is eligible for multiple specific prices.', 'Admin.Catalog.Help'),
             ])
         ;
     }

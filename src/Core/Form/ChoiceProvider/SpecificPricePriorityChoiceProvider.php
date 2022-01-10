@@ -53,7 +53,7 @@ class SpecificPricePriorityChoiceProvider implements FormChoiceProviderInterface
     public function getChoices(): array
     {
         return [
-            $this->translator->trans('Shop', [], 'Admin.Global') => PriorityList::PRIORITY_SHOP,
+            $this->translator->trans('Store', [], 'Admin.Global') => PriorityList::PRIORITY_SHOP,
             $this->translator->trans('Currency', [], 'Admin.Global') => PriorityList::PRIORITY_CURRENCY,
             $this->translator->trans('Country', [], 'Admin.Global') => PriorityList::PRIORITY_COUNTRY,
             $this->translator->trans('Group', [], 'Admin.Global') => PriorityList::PRIORITY_GROUP,
