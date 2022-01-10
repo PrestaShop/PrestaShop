@@ -29,7 +29,7 @@
   <h2><?php echo $this->translator->trans('Configure content', [], 'Install'); ?></h2>
 
   <div class="field clearfix">
-    <label class="aligned"><?php echo $this->translator->trans('Select theme', [], 'Install'); ?></label>
+    <label class="aligned"><?php echo $this->translator->trans('Installation of theme', [], 'Install'); ?></label>
     <div class="contentinput">
       <div class="themes-container">
         <?php foreach ($this->themes as $theme): ?>
@@ -54,7 +54,7 @@
   </div>
 
   <div class="field clearfix">
-    <label class="aligned"><?php echo $this->translator->trans('Install demonstration data', [], 'Install'); ?></label>
+    <label class="aligned"><?php echo $this->translator->trans('Installation of demo products', [], 'Install'); ?></label>
     <div class="contentinput">
       <label>
         <input value="1" type="radio" name="install-fixtures" style="vertical-align: middle;" <?php if ($this->session->content_install_fixtures): ?>checked="checked"<?php endif; ?> autocomplete="off" />
@@ -69,7 +69,7 @@
   </div>
 
   <div class="field clearfix">
-    <label class="aligned"><?php echo $this->translator->trans('Install modules', [], 'Install'); ?></label>
+    <label class="aligned"><?php echo $this->translator->trans('Installation of modules', [], 'Install'); ?></label>
     <div class="contentinput">
       <ul class="modules-select-type">
         <li>
@@ -81,13 +81,13 @@
         <li>
           <label>
             <input value="<?php echo static::MODULES_SELECTED; ?>" name="module-action" type="radio" autocomplete="off" <?php if ($this->moduleAction === static::MODULES_SELECTED): ?> checked="checked"<?php endif; ?>/>
-            <?php echo $this->translator->trans('Select modules to install', [], 'Install') ?>
+            <?php echo $this->translator->trans('Select the modules to install', [], 'Install') ?>
           </label>
         </li>
       </ul>
     </div>
 
-    <p class="userInfos aligned"><?php echo $this->translator->trans('If you use PrestaShop for the first time, you should install all modules now and uninstall those you don\'t need later', [], 'Install'); ?></p>
+    <p class="userInfos aligned"><?php echo $this->translator->trans('If you are using PrestaShop for the first time, you should install all modules now and uninstall the ones you don\'t need later.', [], 'Install'); ?></p>
 
     <div id="modules-container">
       <div>
