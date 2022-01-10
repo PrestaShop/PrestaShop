@@ -299,7 +299,7 @@ class ApiNode
      *
      * @param array $field
      * @param string $schemaToDisplay
-     * 
+     *
      * @return self
      */
     public function addField(array $field, string $schemaToDisplay = ''): self

@@ -51,7 +51,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
             $rootXml = $xml->addChild($apiNode->getName(), $apiNode->getValue());
         } else {
             $rootXml = $xml;
-    }
+        }
 
         $this->injectAttributes($rootXml, $apiNode);
         $this->injectChildren($rootXml, $apiNode);
@@ -76,11 +76,11 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
         foreach ($node->getAttributes() as $name => $value) {
             if (strpos($name, 'xlink:') === 0) {    //when name begins on xlink, inject it underneath proper namespace
                 $xml->addAttribute($name, $value, self::XLINK_NS);
-        } else {
+            } else {
                 $xml->addAttribute($name, $value);
-                }
             }
-            }
+        }
+    }
 
     /**
      * Inject children node
@@ -94,13 +94,13 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     {
         if (empty($apiNode->getNodes())) {
             return;
-                }
+        }
 
         foreach ($apiNode->getNodes() as $node) {
             /* @var $node ApiNode */
             $childXml = $node->getType() == ApiNode::TYPE_VALUE ? $parentXml->addChildCData($node->getName(), $node->getValue()) : $parentXml->addChild($node->getName(), $node->getValue());
             $this->injectAttributes($childXml, $node);
             $this->injectChildren($childXml, $node);
-    }
         }
     }
+}
