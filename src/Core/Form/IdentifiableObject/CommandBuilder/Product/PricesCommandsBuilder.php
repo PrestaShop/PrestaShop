@@ -65,13 +65,13 @@ class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
         $priceData = $formData['pricing'];
         $config = new CommandAccessorConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiStoreField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[tax_rules_group_id]', 'setTaxRulesGroupId', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[on_sale]', 'setOnSale', CommandField::TYPE_BOOL)
-            ->addMultiStoreField('[wholesale_price]', 'setWholesalePrice', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[unit_price][price_tax_excluded]', 'setUnitPrice', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[unit_price][unity]', 'setUnity', CommandField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)
+            ->addMultiShopField('[tax_rules_group_id]', 'setTaxRulesGroupId', CommandField::TYPE_STRING)
+            ->addMultiShopField('[on_sale]', 'setOnSale', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', CommandField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', CommandField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][unity]', 'setUnity', CommandField::TYPE_STRING)
         ;
 
         $commandAccessor = new CommandAccessor($config);

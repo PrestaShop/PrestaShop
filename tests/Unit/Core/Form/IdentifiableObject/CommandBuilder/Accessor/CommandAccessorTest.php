@@ -143,9 +143,9 @@ class CommandAccessorTest extends TestCase
 
         $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
-            ->addMultiStoreField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
@@ -198,10 +198,10 @@ class CommandAccessorTest extends TestCase
         $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
             ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addMultiStoreField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiStoreField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
@@ -313,11 +313,11 @@ class CommandAccessorTest extends TestCase
         // Same test but now url is a multistore field
         $config = new CommandAccessorConfig(self::MULTI_STORE_PREFIX);
         $config
-            ->addMultiStoreField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiStoreField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addMultiStoreField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiStoreField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
 
         $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));

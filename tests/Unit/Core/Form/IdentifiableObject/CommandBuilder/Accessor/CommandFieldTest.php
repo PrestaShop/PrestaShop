@@ -50,7 +50,7 @@ class CommandFieldTest extends TestCase
         $this->assertEquals($dataPath, $field->getDataPath());
         $this->assertEquals($commandSetter, $field->getCommandSetter());
         $this->assertEquals($type, $field->getType());
-        $this->assertEquals($isMultistoreField, $field->isMultistoreField());
+        $this->assertEquals($isMultistoreField, $field->isMultiShopField());
     }
 
     public function getValidParameters(): iterable
