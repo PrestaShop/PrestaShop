@@ -142,14 +142,14 @@
   }
 }
 
-.modify-all-stores {
+.modify-all-shops {
   display: none;
   margin-top: 5px;
   margin-left: 10px;
 
-  &.multi-store-field-focused,
-  &.multi-store-focused,
-  &.multi-store-updated {
+  &.multi-shop-field-focused,
+  &.multi-shop-focused,
+  &.multi-shop-updated {
     display: block;
   }
 }

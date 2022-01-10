@@ -111,7 +111,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
                     [
                         'label' => $label,
                         'attr' => [
-                            'container_class' => 'modify-all-stores',
+                            'container_class' => 'modify-all-shops',
                             'data-value-type' => 'boolean',
                         ],
                     ]
