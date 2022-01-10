@@ -5,6 +5,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Common tests login BO
@@ -74,7 +75,7 @@ describe('BO - Shipping - Carriers : Change carrier position', async () => {
       nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
       sortedTable = await sortedTable.map(text => parseFloat(text));
 
-      const expectedResult = await carriersPage.sortArray(nonSortedTable, true);
+      const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
 
       await expect(sortedTable).to.deep.equal(expectedResult);
     });

@@ -5,6 +5,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -70,7 +71,7 @@ describe('BO - Catalog - Categories : Change category position', async () => {
 
     sortedTable = await sortedTable.map(text => parseFloat(text));
 
-    const expectedResult = await categoriesPage.sortArray(nonSortedTable, true);
+    const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
     await expect(sortedTable).to.deep.equal(expectedResult);
   });
 

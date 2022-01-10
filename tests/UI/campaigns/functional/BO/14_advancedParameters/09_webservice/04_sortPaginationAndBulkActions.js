@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -145,7 +146,7 @@ describe('BO - Advanced Parameters - Webservice : Sort, pagination and bulk acti
         await webservicePage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
         const sortedTable = await webservicePage.getAllRowsColumnContent(page, test.args.sortBy);
-        const expectedResult = await webservicePage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
