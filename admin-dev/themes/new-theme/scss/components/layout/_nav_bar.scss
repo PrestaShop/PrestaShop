@@ -497,7 +497,7 @@
   }
 
   & > .title {
-    color: #6c868e;
+    color: $gray-medium;
 
     @at-root .sidebar-closed & {
       display: none;
