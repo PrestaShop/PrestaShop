@@ -42,13 +42,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * This extension adds a new modify_all_stores option for form fields, then when the
+ * This extension adds a new modify_all_shops option for form fields, then when the
  * form is built a checkbox is automatically added which matches the configured field.
  * This checkbox can then be used to apply the modification from the field to all shops.
  */
-class ModifyAllStoresExtension extends AbstractTypeExtension
+class ModifyAllShopsExtension extends AbstractTypeExtension
 {
-    public const MODIFY_ALL_STORES_PREFIX = 'modify_all_stores_';
+    public const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
 
     /**
      * @var MultistoreContextCheckerInterface
@@ -100,13 +100,13 @@ class ModifyAllStoresExtension extends AbstractTypeExtension
             return;
         }
 
-        $isOverridden = $builder->getOption('modify_all_stores');
+        $isOverridden = $builder->getOption('modify_all_shops');
         if ($isOverridden) {
             $label = $this->getCheckboxLabel();
             $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($label) {
                 $form = $event->getForm();
                 $parent = $form->getParent();
-                $parent->add(self::MODIFY_ALL_STORES_PREFIX . $form->getName(),
+                $parent->add(self::MODIFY_ALL_SHOPS_PREFIX . $form->getName(),
                     CheckboxType::class,
                     [
                         'label' => $label,
@@ -132,7 +132,7 @@ class ModifyAllStoresExtension extends AbstractTypeExtension
         }
 
         $view->vars = array_replace($view->vars, [
-            'modify_all_stores' => $options['modify_all_stores'],
+            'modify_all_shops' => $options['modify_all_shops'],
         ]);
     }
 
@@ -142,7 +142,7 @@ class ModifyAllStoresExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'modify_all_stores' => false,
+            'modify_all_shops' => false,
         ]);
     }
 
