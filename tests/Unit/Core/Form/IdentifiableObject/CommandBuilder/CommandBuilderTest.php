@@ -61,11 +61,11 @@ class CommandBuilderTest extends TestCase
     {
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
+            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
@@ -98,13 +98,13 @@ class CommandBuilderTest extends TestCase
         ];
 
         // prefix is not mandatory especially when dealing with single shop command
-        $config = new \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig();
+        $config = new CommandBuilderConfig();
         $config
-            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
 
         yield [
@@ -143,10 +143,10 @@ class CommandBuilderTest extends TestCase
 
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_INT)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
 
@@ -177,7 +177,7 @@ class CommandBuilderTest extends TestCase
     /**
      * @dataProvider getMultiShopCommandsParameters
      *
-     * @param \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig $config
+     * @param CommandBuilderConfig $config
      * @param array $data
      * @param array $expectedCommands
      */
@@ -195,13 +195,13 @@ class CommandBuilderTest extends TestCase
 
     public function getMultiShopCommandsParameters(): iterable
     {
-        $config = new \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
             ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
@@ -313,11 +313,11 @@ class CommandBuilderTest extends TestCase
         // Same test but now url is a multishop field
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
+            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
 
         $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
