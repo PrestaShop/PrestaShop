@@ -80,17 +80,6 @@ CREATE TABLE `PREFIX_product_attachment` (
   PRIMARY KEY (`id_product`, `id_attachment`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
-/* Describe the impact on weight / price of an attribute */
-CREATE TABLE `PREFIX_attribute_impact` (
-  `id_attribute_impact` int(10) unsigned NOT NULL auto_increment,
-  `id_product` int(11) unsigned NOT NULL,
-  `id_attribute` int(11) unsigned NOT NULL,
-  `weight` DECIMAL(20, 6) NOT NULL,
-  `price` DECIMAL(20, 6) NOT NULL,
-  PRIMARY KEY (`id_attribute_impact`),
-  UNIQUE KEY `id_product` (`id_product`, `id_attribute`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
-
 /* Describe the carrier informations */
 CREATE TABLE `PREFIX_carrier` (
   `id_carrier` int(10) unsigned NOT NULL AUTO_INCREMENT,
