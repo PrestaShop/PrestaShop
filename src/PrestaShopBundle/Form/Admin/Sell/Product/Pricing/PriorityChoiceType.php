@@ -28,11 +28,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class PriorityListType extends AbstractType
+class PriorityChoiceType extends CollectionType
 {
     /**
      * @var FormChoiceProviderInterface
@@ -48,23 +48,18 @@ class PriorityListType extends AbstractType
         $this->priorityChoiceProvider = $priorityChoiceProvider;
     }
 
-    /**
-     * @param FormBuilderInterface $builder
-     * @param array<string, mixed> $options
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $choices = $this->priorityChoiceProvider->getChoices();
+        parent::configureOptions($resolver);
 
-        $priority = 0;
-        foreach ($choices as $choice) {
-            $builder->add((string) $priority, ChoiceType::class, [
-                'choices' => $choices,
-                'label' => false,
+        $resolver->setDefaults([
+            'entry_type' => ChoiceType::class,
+            'entry_options' => [
+                'choices' => $this->priorityChoiceProvider->getChoices(),
+                'required' => false,
                 'placeholder' => false,
-                'default_empty_data' => $choice,
-            ]);
-            ++$priority;
-        }
+                'label' => false,
+            ],
+        ]);
     }
 }
