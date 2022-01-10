@@ -22,6 +22,7 @@ parameters:
     - pdf
     - src
     # - tests
+    - tests-legacy
     - themes
     - tools
     - translations
