@@ -126,10 +126,12 @@ $product-page-padding-bottom: 80px !default;
     $product-cover-size: 110px;
 
     .product-header-cover {
-      width: $product-cover-size;
+      flex-grow: 0;
       max-width: $product-cover-size;
-      height: $product-cover-size;
-      max-height: $product-cover-size;
+
+      .form-group {
+        margin-bottom: 0;
+      }
     }
 
     .product-header-form {
