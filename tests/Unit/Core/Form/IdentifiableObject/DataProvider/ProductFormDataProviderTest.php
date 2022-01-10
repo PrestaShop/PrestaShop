@@ -497,7 +497,7 @@ class ProductFormDataProviderTest extends TestCase
             PriorityList::PRIORITY_SHOP,
         ]);
         $expectedOutputData['pricing']['priority_management'] = [
-            'priority_type' => true,
+            'use_custom_priority' => true,
             'priorities' => ['id_currency', 'id_country', 'id_group', 'id_shop'],
         ];
 
@@ -1516,7 +1516,7 @@ class ProductFormDataProviderTest extends TestCase
                     'unity' => '',
                 ],
                 'priority_management' => [
-                    'priority_type' => false,
+                    'use_custom_priority' => false,
                     'priorities' => [],
                 ],
             ],
