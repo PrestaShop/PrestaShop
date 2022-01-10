@@ -146,8 +146,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
             $this->session->database_password,
             $this->session->database_name,
             $this->session->database_prefix,
-            $this->session->database_engine,
-            $this->session->use_env_variables
+            $this->session->database_engine
         );
 
         if (!$success) {

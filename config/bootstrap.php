@@ -90,8 +90,12 @@ if ($lastParametersModificationTime) {
         $param = str_replace('%%', '%', $param);
     });
 
-    $configurationVariablesLoader = new ConfigurationVariablesLoader();
-    $config = $configurationVariablesLoader->loadEnvVariables($config);
+    $envFilePath = _PS_ROOT_DIR_ . '/.env';
+
+    if (file_exists($envFilePath)) {
+        $configurationVariablesLoader = new ConfigurationVariablesLoader($envFilePath);
+        $config = $configurationVariablesLoader->loadEnvVariables($config);
+    }
 
     $database_host = $config['parameters']['database_host'];
 
