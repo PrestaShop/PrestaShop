@@ -492,13 +492,13 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
         if (!$priorities) {
             return [
-                'priority_type' => false,
+                'use_custom_priority' => false,
                 'priorities' => [],
             ];
         }
 
         return [
-            'priority_type' => true,
+            'use_custom_priority' => true,
             'priorities' => $priorities->getPriorities(),
         ];
     }
