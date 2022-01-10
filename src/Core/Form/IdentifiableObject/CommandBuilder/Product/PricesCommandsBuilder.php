@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\C
 /**
  * Builder used to build UpdateProductPricesCommand
  */
-class PricesCommandsBuilder implements MultistoreProductCommandsBuilderInterface
+class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
     /**
      * @var string

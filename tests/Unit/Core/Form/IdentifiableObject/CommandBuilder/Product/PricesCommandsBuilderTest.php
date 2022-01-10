@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Pr
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
-    private const MULTI_SHOP_PREFIX = 'prices_multishop';
+    private const MULTI_SHOP_PREFIX = 'prices_multi_shop';
 
     /**
      * @dataProvider getExpectedCommands
@@ -188,19 +188,19 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     }
 
     /**
-     * @dataProvider getExpectedCommandsMultistore
+     * @dataProvider getExpectedCommandsMultiShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommandMultistore(array $formData, array $expectedCommands): void
+    public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
         $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommandsMultistore(): iterable
+    public function getExpectedCommandsMultiShop(): iterable
     {
         $command = $this->getSingleShopCommand();
         $command->setPrice('45.56');
