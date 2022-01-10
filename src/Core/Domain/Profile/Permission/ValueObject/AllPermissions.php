@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
-class AllPermission implements PermissionInterface
+class AllPermissions implements PermissionInterface
 {
     public function getValue(): string
     {
