@@ -1,6 +1,6 @@
 <?php
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
@@ -581,7 +581,7 @@ class SpecificPriceCore extends ObjectModel
 
     /**
      * @deprecated since 8.0 and will be removed in next major version.
-     * @see SpecificPriceRepository::updateDefaultPriorities()
+     * @see SpecificPricePriorityUpdater::updateDefaultPriorities()
      *
      * @param array $priorities
      *
@@ -593,7 +593,7 @@ class SpecificPriceCore extends ObjectModel
             sprintf(
                 '%s is deprecated since version 8.0. Use %s instead.',
                 __METHOD__,
-                SpecificPriceRepository::class . '::updateDefaultPriorities()'
+                SpecificPricePriorityUpdater::class . '::updateDefaultPriorities()'
             ),
             E_USER_DEPRECATED
         );

@@ -56,7 +56,9 @@ services:
   prestashop.adapter.product.specific_price.update.specific_price_priority_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater
     arguments:
-      - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
+      - '@doctrine.dbal.connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.specific_price.validate.specific_price_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator

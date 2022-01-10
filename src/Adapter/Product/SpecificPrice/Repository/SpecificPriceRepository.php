@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
+use PrestaShopException;
+use SpecificPrice;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
@@ -42,8 +44,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Specific
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShopException;
-use SpecificPrice;
 
 /**
  * Methods to access data storage for SpecificPrice

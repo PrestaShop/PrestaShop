@@ -28,31 +28,48 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use Doctrine\DBAL\Connection;
+use Exception;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopException;
+use SpecificPrice;
 
 /**
  * Responsible for updates related to specific price priorities
- *
- * @todo: could we remove this service as it has no logic and just reuses repository?
  */
 class SpecificPricePriorityUpdater
 {
     /**
-     * @var SpecificPriceRepository
+     * @var Connection
      */
-    private $specificPriceRepository;
+    private $connection;
 
     /**
-     * @param SpecificPriceRepository $specificPriceRepository
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
-        SpecificPriceRepository $specificPriceRepository
+        Connection $connection,
+        string $dbPrefix,
+        ConfigurationInterface $configuration
     ) {
-        $this->specificPriceRepository = $specificPriceRepository;
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -64,7 +81,13 @@ class SpecificPricePriorityUpdater
      */
     public function setPrioritiesForProduct(ProductId $productId, PriorityList $priorityList): void
     {
-        $this->specificPriceRepository->setPrioritiesForProduct($productId, $priorityList);
+        try {
+            if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
+                throw $this->buildExceptionForProductPriorityError($productId);
+            }
+        } catch (PrestaShopException $e) {
+            throw $this->buildExceptionForProductPriorityError($productId);
+        }
     }
 
     /**
@@ -72,7 +95,14 @@ class SpecificPricePriorityUpdater
      */
     public function updateDefaultPriorities(PriorityList $priorityList): void
     {
-        $this->specificPriceRepository->updateDefaultPriorities($priorityList);
+        try {
+            $this->configuration->set(
+                'PS_SPECIFIC_PRICE_PRIORITIES',
+                implode(';', $priorityList->getPriorities())
+            );
+        } catch (CannotUpdateSpecificPriceException $e) {
+            throw new CoreException('Error occurred when trying to update specific price priorities');
+        }
     }
 
     /**
@@ -80,6 +110,29 @@ class SpecificPricePriorityUpdater
      */
     public function removePrioritiesForProduct(ProductId $productId): void
     {
-        $this->specificPriceRepository->removePrioritiesForProduct($productId);
+        try {
+            $this->connection->delete(
+                $this->dbPrefix . 'specific_price_priority',
+                ['id_product' => $productId->getValue()]
+            );
+        } catch (Exception $e) {
+            throw new CannotUpdateSpecificPriceException(sprintf(
+                'Error occurred when trying to remove specific price priorities for product #%d',
+                $productId->getValue()
+            ));
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return CoreException
+     */
+    private function buildExceptionForProductPriorityError(ProductId $productId): CoreException
+    {
+        return new CoreException(sprintf(
+            'Error occurred when trying to set specific price priorities for product #%d',
+            $productId->getValue()
+        ));
     }
 }
