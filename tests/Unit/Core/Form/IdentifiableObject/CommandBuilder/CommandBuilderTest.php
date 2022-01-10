@@ -26,15 +26,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessor;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandAccessorConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
-class CommandAccessorTest extends TestCase
+class CommandBuilderTest extends TestCase
 {
     private const MULTI_SHOP_PREFIX = 'multi_shop_';
     private const SHOP_ID = 1;
@@ -42,37 +42,37 @@ class CommandAccessorTest extends TestCase
     /**
      * @dataProvider getSingleCommandParameters
      *
-     * @param CommandAccessorConfig $config
+     * @param CommandBuilderConfig $config
      * @param array $data
      * @param array $expectedCommands
      */
     public function testBuildSingleCommand(
-        CommandAccessorConfig $config,
+        CommandBuilderConfig $config,
         array $data,
         array $expectedCommands
     ): void {
-        $accessor = new CommandAccessor($config);
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $commands = $accessor->prepareCommands($data, $command);
+        $builder = new CommandBuilder($config);
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $commands = $builder->buildCommands($data, $command);
         $this->assertEquals($expectedCommands, $commands);
     }
 
     public function getSingleCommandParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
             'steve',
         ];
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
             ->setName('toto')
@@ -98,13 +98,13 @@ class CommandAccessorTest extends TestCase
         ];
 
         // prefix is not mandatory especially when dealing with single shop command
-        $config = new CommandAccessorConfig();
+        $config = new \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig();
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
         ;
 
         yield [
@@ -123,7 +123,7 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setName('toto')
             ->setIsValid(false)
@@ -141,16 +141,16 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
+            ->addMultiShopField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
             ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
         ;
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
             ->setName('toto')
@@ -177,38 +177,38 @@ class CommandAccessorTest extends TestCase
     /**
      * @dataProvider getMultiShopCommandsParameters
      *
-     * @param CommandAccessorConfig $config
+     * @param \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig $config
      * @param array $data
      * @param array $expectedCommands
      */
     public function testBuildMultiShopCommands(
-        CommandAccessorConfig $config,
+        CommandBuilderConfig $config,
         array $data,
         array $expectedCommands
     ): void {
-        $accessor = new CommandAccessor($config);
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
-        $commands = $accessor->prepareCommands($data, $command, $allShopsCommand);
+        $builder = new CommandBuilder($config);
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
+        $commands = $builder->buildCommands($data, $command, $allShopsCommand);
         $this->assertEquals($expectedCommands, $commands);
     }
 
     public function getMultiShopCommandsParameters(): iterable
     {
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
+            ->addField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
             ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
         ;
         $children = [
             'bob',
             'steve',
         ];
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
             ->setName('toto')
@@ -233,14 +233,14 @@ class CommandAccessorTest extends TestCase
             [$command],
         ];
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(false)
         ;
 
-        $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
+        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
         $allShopsCommand
             ->setCount(42)
             ->setChildren($children)
@@ -278,7 +278,7 @@ class CommandAccessorTest extends TestCase
         ];
 
         // More advanced use, multishop field is present but not always true, and url is not a multishop field
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setUrl('http://localhost')
             ->setName('toto')
@@ -286,7 +286,7 @@ class CommandAccessorTest extends TestCase
             ->setIsValid(false)
         ;
 
-        $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
+        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
         $allShopsCommand
             ->setChildren($children)
         ;
@@ -311,23 +311,23 @@ class CommandAccessorTest extends TestCase
         ];
 
         // Same test but now url is a multishop field
-        $config = new CommandAccessorConfig(self::MULTI_SHOP_PREFIX);
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[url]', 'setUrl', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[parent][children]', 'setChildren', \PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField::TYPE_ARRAY)
         ;
 
-        $command = new CommandAccessorTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
         ;
 
-        $allShopsCommand = new CommandAccessorTestCommand(ShopConstraint::allShops());
+        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
         $allShopsCommand
             ->setUrl('http://localhost')
             ->setChildren($children)
@@ -351,154 +351,5 @@ class CommandAccessorTest extends TestCase
             ],
             [$command, $allShopsCommand],
         ];
-    }
-}
-
-class CommandAccessorTestCommand
-{
-    /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var bool
-     */
-    private $isValid;
-
-    /**
-     * @var int
-     */
-    private $count;
-
-    /**
-     * @var array
-     */
-    private $children;
-
-    /**
-     * @var ShopConstraint
-     */
-    private $shopConstraint;
-
-    /**
-     * @param ShopConstraint $shopConstraint
-     */
-    public function __construct(ShopConstraint $shopConstraint)
-    {
-        $this->shopConstraint = $shopConstraint;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return static
-     */
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl(): string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return static
-     */
-    public function setUrl(string $url): self
-    {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isValid(): bool
-    {
-        return $this->isValid;
-    }
-
-    /**
-     * @param bool $isValid
-     *
-     * @return static
-     */
-    public function setIsValid(bool $isValid): self
-    {
-        $this->isValid = $isValid;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCount(): int
-    {
-        return $this->count;
-    }
-
-    /**
-     * @param int $count
-     *
-     * @return static
-     */
-    public function setCount(int $count): self
-    {
-        $this->count = $count;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getChildren(): array
-    {
-        return $this->children;
-    }
-
-    /**
-     * @param array $children
-     *
-     * @return static
-     */
-    public function setChildren(array $children): self
-    {
-        $this->children = $children;
-
-        return $this;
-    }
-
-    /**
-     * @return ShopConstraint
-     */
-    public function getShopConstraint(): ShopConstraint
-    {
-        return $this->shopConstraint;
     }
 }

@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandField;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\InvalidCommandFieldTypeException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\InvalidCommandFieldTypeException;
 use Symfony\Component\PropertyAccess\Exception\InvalidPropertyPathException;
 
 class CommandFieldTest extends TestCase
