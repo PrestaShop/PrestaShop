@@ -77,7 +77,7 @@ class UnitPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
-                'modify_all_stores' => true,
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -90,12 +90,12 @@ class UnitPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
-                'modify_all_stores' => true,
+                'modify_all_shops' => true,
             ])
             ->add('unity', TextType::class, [
                 'required' => false,
                 'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
-                'modify_all_stores' => true,
+                'modify_all_shops' => true,
             ])
         ;
     }

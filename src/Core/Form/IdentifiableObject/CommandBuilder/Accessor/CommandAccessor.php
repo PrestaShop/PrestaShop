@@ -125,14 +125,14 @@ class CommandAccessor
      *
      * @param array $data
      * @param mixed $singleStoreCommand
-     * @param mixed|null $allStoresCommand
+     * @param mixed|null $allShopsCommand
      *
      * @return array Returns prepared commands (if no updated field was detected an empty array is returned)
      */
     public function prepareCommands(
         array $data,
         $singleStoreCommand,
-        $allStoresCommand = null
+        $allShopsCommand = null
     ): array {
         $modifiedCommands = [];
         foreach ($this->config->getFields() as $commandField) {
@@ -140,7 +140,7 @@ class CommandAccessor
                 $value = $this->propertyAccessor->getValue($data, $commandField->getDataPath());
                 $castedValue = $this->castValue($value, $commandField->getType());
 
-                $command = $this->getAppropriateCommand($data, $commandField, $singleStoreCommand, $allStoresCommand);
+                $command = $this->getAppropriateCommand($data, $commandField, $singleStoreCommand, $allShopsCommand);
                 $this->propertyAccessor->setValue($command, $commandField->getCommandSetter(), $castedValue);
                 if (!in_array($command, $modifiedCommands)) {
                     $modifiedCommands[] = $command;
@@ -155,20 +155,20 @@ class CommandAccessor
         if (in_array($singleStoreCommand, $modifiedCommands)) {
             $commands[] = $singleStoreCommand;
         }
-        if (in_array($allStoresCommand, $modifiedCommands)) {
-            $commands[] = $allStoresCommand;
+        if (in_array($allShopsCommand, $modifiedCommands)) {
+            $commands[] = $allShopsCommand;
         }
 
         return $commands;
     }
 
     /**
-     * Check if the data has a mapping checkbox to modify all stores for the tested field, if so use the allStoresCommand
+     * Check if the data has a mapping checkbox to modify all stores for the tested field, if so use the allShopsCommand
      *
      * @param array $data
      * @param CommandField $commandField
      * @param mixed $singleStoreCommand
-     * @param mixed|null $allStoresCommand
+     * @param mixed|null $allShopsCommand
      *
      * @return mixed
      */
@@ -176,9 +176,9 @@ class CommandAccessor
         array $data,
         CommandField $commandField,
         $singleStoreCommand,
-        $allStoresCommand
+        $allShopsCommand
     ) {
-        if (null === $allStoresCommand || !$commandField->isMultistoreField()) {
+        if (null === $allShopsCommand || !$commandField->isMultistoreField()) {
             return $singleStoreCommand;
         }
 
@@ -195,7 +195,7 @@ class CommandAccessor
         try {
             $modifyAll = $this->propertyAccessor->getValue($data, $stringPath);
 
-            return $modifyAll ? $allStoresCommand : $singleStoreCommand;
+            return $modifyAll ? $allShopsCommand : $singleStoreCommand;
         } catch (NoSuchIndexException | NoSuchPropertyException $e) {
             // The checkbox parameter for all stores is not even detected, regardless of its value only the single store
             // command can be used

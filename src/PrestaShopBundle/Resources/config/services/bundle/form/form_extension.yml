@@ -94,8 +94,8 @@ services:
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
-  form.extension.modify_all_stores_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllStoresExtension'
+  form.extension.modify_all_shops_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
     arguments:
       - '@prestashop.adapter.shop.context'
       - '@form.form_builder_modifier'

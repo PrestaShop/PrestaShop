@@ -60,7 +60,7 @@ import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-ac
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
-import ModifyAllStoresCheckbox from '@components/modify-all-stores-checkbox';
+import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
 
 const GridExtensions = {
   AsyncToggleColumnExtension,
@@ -142,7 +142,7 @@ const initPrestashopComponents = () => {
     Router,
     ColorPicker,
     DeltaQuantityInput,
-    ModifyAllStoresCheckbox,
+    ModifyAllShopsCheckbox,
   };
 };
 export default initPrestashopComponents;
