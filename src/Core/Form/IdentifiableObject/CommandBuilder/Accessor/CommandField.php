@@ -62,7 +62,7 @@ class CommandField
     /**
      * @var bool
      */
-    private $multistoreField;
+    private $multiShopField;
 
     /**
      * @param string $dataPath
@@ -75,7 +75,7 @@ class CommandField
         string $dataPath,
         string $commandSetter,
         string $type,
-        bool $multistoreField
+        bool $multiShopField
     ) {
         if (!in_array($type, self::ACCEPTED_TYPES)) {
             throw new InvalidCommandFieldTypeException(sprintf(
@@ -88,7 +88,7 @@ class CommandField
         $this->dataPath = new PropertyPath($dataPath);
         $this->commandSetter = $commandSetter;
         $this->type = $type;
-        $this->multistoreField = $multistoreField;
+        $this->multiShopField = $multiShopField;
     }
 
     /**
@@ -118,8 +118,8 @@ class CommandField
     /**
      * @return bool
      */
-    public function isMultistoreField(): bool
+    public function isMultiShopField(): bool
     {
-        return $this->multistoreField;
+        return $this->multiShopField;
     }
 }
