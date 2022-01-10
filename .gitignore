@@ -109,8 +109,6 @@ tests-legacy/resources/modules/ps_reminder
 tests/Resources/img/*
 tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
-tests/Resources/img/m/*
-!tests/Resources/img/m/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
 tests/Unit/.phpunit.result.cache
