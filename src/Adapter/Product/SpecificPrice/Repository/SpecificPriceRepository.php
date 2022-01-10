@@ -28,13 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
-use PrestaShopException;
-use SpecificPrice;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
@@ -44,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Specific
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShopException;
+use SpecificPrice;
 
 /**
  * Methods to access data storage for SpecificPrice
@@ -238,7 +238,6 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 'Something went wrong when trying to find existing specific price',
                 0,
                 $e->getPrevious()
-
             );
         }
 
