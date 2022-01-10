@@ -24,19 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject;
 
 interface PermissionInterface
 {
-    const VIEW = 'view';
-    const ADD = 'add';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
-    const ALL = 'all';
+    public const VIEW = 'view';
+    public const ADD = 'add';
+    public const EDIT = 'edit';
+    public const DELETE = 'delete';
+    public const ALL = 'all';
 
-    const SUPPORTED_PERMISSIONS = [
+    public const SUPPORTED_PERMISSIONS = [
         self::VIEW,
         self::ADD,
         self::EDIT,
