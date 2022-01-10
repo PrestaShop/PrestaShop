@@ -56,4 +56,7 @@ export default {
     tagRemoved: 'tagRemoved',
     categoriesUpdated: 'categoriesUpdated',
   },
+  specificPrice: {
+    specificPriceUpdated: 'specificPriceUpdated',
+  },
 };

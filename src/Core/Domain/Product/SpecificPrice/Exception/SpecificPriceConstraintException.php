@@ -74,9 +74,9 @@ class SpecificPriceConstraintException extends SpecificPriceException
     public const INVALID_REDUCTION_AMOUNT = 8;
 
     /**
-     * When specific price explicit value is not valid
+     * When specific price fixed price value is not valid
      */
-    public const INVALID_PRICE = 9;
+    public const INVALID_FIXED_PRICE = 9;
 
     /**
      * When specific price lower validity limit is not valid
@@ -97,4 +97,14 @@ class SpecificPriceConstraintException extends SpecificPriceException
      * When specific price relation ID is not valid
      */
     public const INVALID_RELATION_ID = 13;
+
+    /**
+     * When exactly same specific price already exists for product
+     */
+    public const NOT_UNIQUE_PER_PRODUCT = 14;
+
+    /**
+     * When neither price nor reduction value is set
+     */
+    public const REDUCTION_OR_PRICE_MUST_BE_SET = 15;
 }

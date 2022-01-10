@@ -96,7 +96,6 @@ export default class FormObjectMapper {
 
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
-  /* eslint-disable */
   /**
    * @param {jQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names

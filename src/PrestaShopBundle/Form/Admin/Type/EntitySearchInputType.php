@@ -119,6 +119,9 @@ class EntitySearchInputType extends CollectionType
 
             // Empty state wording
             'empty_state' => null,
+
+            // field name in record dataset which should be used to show suggestion in search dropdown
+            'suggestion_field' => 'name',
         ]);
 
         $resolver->setAllowedTypes('allow_search', ['bool']);
@@ -137,14 +140,13 @@ class EntitySearchInputType extends CollectionType
 
         $resolver->setAllowedTypes('remove_modal', ['array', 'null']);
         $resolver->setNormalizer('remove_modal', function (Options $options, $value) {
-            $resolver = $this->getRemoveModalResolver();
-
-            return $resolver->resolve($value ?? []);
+            return $this->getRemoveModalResolver()->resolve($value ?? []);
         });
 
         $resolver->setAllowedTypes('layout', ['string']);
         $resolver->setAllowedValues('layout', [static::LIST_LAYOUT, static::TABLE_LAYOUT]);
         $resolver->setAllowedTypes('empty_state', ['string', 'null']);
+        $resolver->setAllowedTypes('suggestion_field', ['string', 'null']);
     }
 
     /**
@@ -188,6 +190,7 @@ class EntitySearchInputType extends CollectionType
             'empty_state' => $options['empty_state'],
             'identifier_field' => $options['identifier_field'],
             'filtered_identities' => $options['filtered_identities'],
+            'suggestion_field' => $options['suggestion_field'],
         ]);
     }
 

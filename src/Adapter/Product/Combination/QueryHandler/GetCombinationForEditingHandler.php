@@ -48,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
@@ -55,12 +56,17 @@ use Product;
 /**
  * Handles @see GetCombinationForEditing query using legacy object model
  */
-final class GetCombinationForEditingHandler implements GetCombinationForEditingHandlerInterface
+class GetCombinationForEditingHandler implements GetCombinationForEditingHandlerInterface
 {
     /**
      * @var CombinationRepository
      */
     private $combinationRepository;
+
+    /**
+     * @var CombinationNameBuilderInterface
+     */
+    private $combinationNameBuilder;
 
     /**
      * @var StockAvailableRepository
@@ -104,6 +110,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
 
     /**
      * @param CombinationRepository $combinationRepository
+     * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableRepository $stockAvailableRepository
      * @param AttributeRepository $attributeRepository
      * @param ProductRepository $productRepository
@@ -115,6 +122,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
      */
     public function __construct(
         CombinationRepository $combinationRepository,
+        CombinationNameBuilderInterface $combinationNameBuilder,
         StockAvailableRepository $stockAvailableRepository,
         AttributeRepository $attributeRepository,
         ProductRepository $productRepository,
@@ -125,6 +133,7 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
         int $countryId
     ) {
         $this->combinationRepository = $combinationRepository;
+        $this->combinationNameBuilder = $combinationNameBuilder;
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->attributeRepository = $attributeRepository;
         $this->productRepository = $productRepository;
@@ -163,18 +172,11 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
     private function getCombinationName(CombinationId $combinationId): string
     {
         $attributesInformation = $this->attributeRepository->getAttributesInfoByCombinationIds(
-            [$combinationId->getValue()],
+            [$combinationId],
             new LanguageId($this->contextLanguageId)
         );
-        $attributes = $attributesInformation[$combinationId->getValue()];
 
-        return implode(', ', array_map(function ($attribute) {
-            return sprintf(
-                '%s - %s',
-                $attribute['attribute_group_name'],
-                $attribute['attribute_name']
-            );
-        }, $attributes));
+        return $this->combinationNameBuilder->buildName($attributesInformation[$combinationId->getValue()]);
     }
 
     /**
@@ -244,14 +246,16 @@ final class GetCombinationForEditingHandler implements GetCombinationForEditingH
      */
     private function getImages(Combination $combination): array
     {
-        $combinationId = (int) $combination->id;
+        $combinationIdValue = (int) $combination->id;
+        $combinationId = new CombinationId($combinationIdValue);
         $combinationImageIds = $this->productImageRepository->getImagesIdsForCombinations([$combinationId]);
-        if (empty($combinationImageIds[$combinationId])) {
+
+        if (empty($combinationImageIds[$combinationIdValue])) {
             return [];
         }
 
         return array_map(function (ImageId $imageId) {
             return $imageId->getValue();
-        }, $combinationImageIds[$combinationId]);
+        }, $combinationImageIds[$combinationIdValue]);
     }
 }

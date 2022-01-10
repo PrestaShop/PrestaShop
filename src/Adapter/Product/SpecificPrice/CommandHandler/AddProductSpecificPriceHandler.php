@@ -40,7 +40,7 @@ use SpecificPrice;
 /**
  * Handles AddProductSpecificPriceCommand using legacy object model
  */
-final class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerInterface
+class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -81,16 +81,16 @@ final class AddProductSpecificPriceHandler implements AddProductSpecificPriceHan
 
         $specificPrice->id_product = $command->getProductId()->getValue();
         $specificPrice->reduction_type = $command->getReduction()->getType();
-        $specificPrice->reduction = $command->getReduction()->getValue();
+        $specificPrice->reduction = (string) $command->getReduction()->getValue();
         $specificPrice->reduction_tax = $command->includesTax();
-        $specificPrice->price = $command->getPrice();
+        $specificPrice->price = (string) $command->getFixedPrice()->getValue();
         $specificPrice->from_quantity = $command->getFromQuantity();
-        $specificPrice->id_shop = $command->getShopId() ?? 0;
-        $specificPrice->id_product_attribute = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
-        $specificPrice->id_currency = $command->getCurrencyId() ?? 0;
-        $specificPrice->id_country = $command->getCountryId() ?? 0;
-        $specificPrice->id_group = $command->getGroupId() ?? 0;
-        $specificPrice->id_customer = $command->getCustomerId() ?? 0;
+        $specificPrice->id_shop = $command->getShopId()->getValue();
+        $specificPrice->id_product_attribute = $command->getCombinationId()->getValue();
+        $specificPrice->id_currency = $command->getCurrencyId()->getValue();
+        $specificPrice->id_country = $command->getCountryId();
+        $specificPrice->id_group = $command->getGroupId()->getValue();
+        $specificPrice->id_customer = $command->getCustomerId();
         $specificPrice->from = $command->getDateTimeFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
         $specificPrice->to = $command->getDateTimeTo()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);
 

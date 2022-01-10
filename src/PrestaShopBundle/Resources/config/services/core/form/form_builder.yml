@@ -241,3 +241,10 @@ services:
     arguments:
       - 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryTreeSelectorType'
       - '@prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider'
+
+  prestashop.core.form.identifiable_object.builder.specific_price_form_builder:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
+    factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
+    arguments:
+      - 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType'
+      - '@prestashop.core.form.identifiable_object.data_provider.specific_price_form_data_provider'

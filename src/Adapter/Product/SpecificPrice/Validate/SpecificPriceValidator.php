@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate;
 
 use DateTime;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
@@ -53,6 +54,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use SpecificPrice;
 
 /**
@@ -101,6 +103,11 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
     private $productRepository;
 
     /**
+     * @var NumberExtractor
+     */
+    private $numberExtractor;
+
+    /**
      * @param ShopGroupRepository $shopGroupRepository
      * @param ShopRepository $shopRepository
      * @param CombinationRepository $combinationRepository
@@ -109,6 +116,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      * @param GroupRepository $groupRepository
      * @param CustomerRepository $customerRepository
      * @param ProductRepository $productRepository
+     * @param NumberExtractor $numberExtractor
      */
     public function __construct(
         ShopGroupRepository $shopGroupRepository,
@@ -118,7 +126,8 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         CountryRepository $countryRepository,
         GroupRepository $groupRepository,
         CustomerRepository $customerRepository,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        NumberExtractor $numberExtractor
     ) {
         $this->shopGroupRepository = $shopGroupRepository;
         $this->shopRepository = $shopRepository;
@@ -128,6 +137,7 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $this->groupRepository = $groupRepository;
         $this->customerRepository = $customerRepository;
         $this->productRepository = $productRepository;
+        $this->numberExtractor = $numberExtractor;
     }
 
     /**
@@ -138,13 +148,14 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
      */
     public function validate(SpecificPrice $specificPrice): void
     {
-        $this->validateSpecificPriceProperty($specificPrice, 'price', SpecificPriceConstraintException::INVALID_PRICE);
+        $this->validateSpecificPriceProperty($specificPrice, 'price', SpecificPriceConstraintException::INVALID_FIXED_PRICE);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction', SpecificPriceConstraintException::INVALID_REDUCTION_AMOUNT);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction_tax', SpecificPriceConstraintException::INVALID_FROM_QUANTITY);
         $this->validateSpecificPriceProperty($specificPrice, 'reduction_type', SpecificPriceConstraintException::INVALID_REDUCTION_TYPE);
         $this->validateSpecificPriceProperty($specificPrice, 'from_quantity', SpecificPriceConstraintException::INVALID_FROM_QUANTITY);
         $this->validateSpecificPriceProperty($specificPrice, 'from', SpecificPriceConstraintException::INVALID_FROM_DATETIME);
         $this->validateSpecificPriceProperty($specificPrice, 'to', SpecificPriceConstraintException::INVALID_TO_DATETIME);
+        $this->assertReductionOrFixedPriceIsProvided($specificPrice);
         $this->assertDateRangeIsNotInverse($specificPrice);
 
         $this->validateSpecificPriceProperty($specificPrice, 'id_cart', SpecificPriceConstraintException::INVALID_RELATION_ID);
@@ -194,6 +205,31 @@ class SpecificPriceValidator extends AbstractObjectModelValidator
         $to = new DateTime($specificPrice->to);
         if ($from->diff($to)->invert) {
             throw new SpecificPriceConstraintException('The date time for specific price cannot be inverse', SpecificPriceConstraintException::INVALID_DATE_RANGE);
+        }
+    }
+
+    /**
+     * @param SpecificPrice $specificPrice
+     *
+     * @throws SpecificPriceConstraintException
+     */
+    private function assertReductionOrFixedPriceIsProvided(SpecificPrice $specificPrice): void
+    {
+        $reduction = new DecimalNumber('0');
+        $price = new DecimalNumber('0');
+
+        if (null !== $specificPrice->reduction) {
+            $reduction = $this->numberExtractor->extract($specificPrice, 'reduction');
+        }
+        if (null !== $specificPrice->price) {
+            $price = $this->numberExtractor->extract($specificPrice, 'price');
+        }
+
+        if ($reduction->equalsZero() && $price->equalsZero()) {
+            throw new SpecificPriceConstraintException(
+                'Specific price reduction or price must be set',
+                SpecificPriceConstraintException::REDUCTION_OR_PRICE_MUST_BE_SET
+            );
         }
     }
 
