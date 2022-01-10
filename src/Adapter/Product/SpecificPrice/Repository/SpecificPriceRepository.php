@@ -238,6 +238,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 'Something went wrong when trying to find existing specific price',
                 0,
                 $e->getPrevious()
+
             );
         }
 
