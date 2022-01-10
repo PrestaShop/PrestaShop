@@ -87,6 +87,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'active' => $editableCategory->isActive(),
             'id_parent' => $editableCategory->getParentId(),
             'description' => $editableCategory->getDescription(),
+            'description_bottom' => $editableCategory->getBottomDescription(),
             'meta_title' => $editableCategory->getMetaTitle(),
             'meta_description' => $editableCategory->getMetaDescription(),
             'meta_keyword' => $editableCategory->getMetaKeywords(),

@@ -73,6 +73,11 @@
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
+      {{ ps.form_group_row(categoryForm.description_bottom, {}, {
+        'label': 'Bottom escription'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
       <div class="form-group row">
         <label class="form-control-label">
           {{ 'Category cover image'|trans({}, 'Admin.Catalog.Feature') }}

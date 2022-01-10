@@ -88,6 +88,10 @@ final class AddRootCategoryHandler extends AbstractObjectModelHandler implements
             $category->description = $command->getLocalizedDescriptions();
         }
 
+        if (null !== $command->getLocalizedBottomDescriptions()) {
+            $category->description_bottom = $command->getLocalizedBottomDescriptions();
+        }
+
         if (null !== $command->getLocalizedMetaTitles()) {
             $category->meta_title = $command->getLocalizedMetaTitles();
         }

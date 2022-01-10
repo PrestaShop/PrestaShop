@@ -55,6 +55,11 @@ class EditRootCategoryCommand
     private $localizedDescriptions;
 
     /**
+     * @var string[]
+     */
+    private $localizedBottomDescriptions;
+
+    /**
      * @var bool
      */
     private $isActive;
@@ -168,6 +173,26 @@ class EditRootCategoryCommand
     public function setLocalizedDescriptions(array $localizedDescriptions)
     {
         $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLocalizedBottomDescriptions()
+    {
+        return $this->localizedBottomDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedBottomDescriptions(array $localizedBottomDescriptions)
+    {
+        $this->localizedBottomDescriptions = $localizedBottomDescriptions;
 
         return $this;
     }
