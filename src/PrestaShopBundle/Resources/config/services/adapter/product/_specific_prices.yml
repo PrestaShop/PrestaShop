@@ -56,7 +56,7 @@ services:
   prestashop.adapter.product.specific_price.update.specific_price_priority_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater
     arguments:
-      - '@doctrine.dbal.connection'
+      - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.legacy.configuration'
 
