@@ -37,11 +37,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class SpecificPricePriorityType extends TranslatorAwareType
 {
     /**
-     * @var FormChoiceProviderInterface
-     */
-    private $priorityTypeChoiceProvider;
-
-    /**
      * @var RouterInterface
      */
     private $router;
@@ -49,12 +44,9 @@ class SpecificPricePriorityType extends TranslatorAwareType
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $priorityTypeChoiceProvider,
         RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
-        $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
-        $this->priorityTypeChoiceProvider = $priorityTypeChoiceProvider;
         $this->router = $router;
     }
 
@@ -65,8 +57,11 @@ class SpecificPricePriorityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('priority_type', ChoiceType::class, [
-                'choices' => $this->priorityTypeChoiceProvider->getChoices(),
+            ->add('use_custom_priority', ChoiceType::class, [
+                'choices' => [
+                    $this->trans('Use default priority settings', 'Admin.Catalog.Feature') => false,
+                    $this->trans('Set a specific order for this product', 'Admin.Catalog.Feature') => true,
+                ],
                 'default_empty_data' => false,
                 'placeholder' => false,
                 'expanded' => true,
