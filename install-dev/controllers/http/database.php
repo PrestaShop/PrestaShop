@@ -195,10 +195,8 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
                 $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml.dist'));
             }
 
-            $envFilePath = _PS_ROOT_DIR_ . '/.env';
-
-            if (file_exists($envFilePath)) {
-                $configurationVariablesLoader = new ConfigurationVariablesLoader($envFilePath);
+            if (defined('_PS_ENV_VARS_FILE_')) {
+                $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
                 $parameters = $configurationVariablesLoader->loadEnvVariables($parameters);
             }
 
