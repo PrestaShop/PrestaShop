@@ -3669,8 +3669,8 @@ class CartCore extends ObjectModel
                     $check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $order_total, (int) $id_zone, (int) $this->id_currency);
 
                     // Get only carriers that have a range compatible with cart
-                    if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
-                        || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price)) {
+                    if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $check_delivery_price_by_weight === false)
+                        || ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $check_delivery_price_by_price === false)) {
                         unset($result[$k]);
 
                         continue;
@@ -3770,9 +3770,9 @@ class CartCore extends ObjectModel
 
         // Get shipping cost using correct method
         if ($carrier->range_behavior) {
-            if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone))
+            if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int) $id_zone) === false)
                 || (
-                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency)
+                    $shipping_method == Carrier::SHIPPING_METHOD_PRICE && Carrier::checkDeliveryPriceByPrice($carrier->id, $order_total, $id_zone, (int) $this->id_currency) === false
                 )) {
                 $shipping_cost += 0;
             } else {
@@ -4979,7 +4979,7 @@ class CartCore extends ObjectModel
             $this->getTotalWeight(),
             $id_zone
         );
-        if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $check_delivery_price_by_weight) {
+        if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $check_delivery_price_by_weight !== false) {
             return true;
         }
 
@@ -4992,7 +4992,7 @@ class CartCore extends ObjectModel
             $id_zone,
             (int) $this->id_currency
         );
-        if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $check_delivery_price_by_price) {
+        if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $check_delivery_price_by_price !== false) {
             return true;
         }
 
