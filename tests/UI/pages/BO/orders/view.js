@@ -75,6 +75,7 @@ class Order extends BOBasePage {
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
     this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
+    this.orderProductsLoading = '#orderProductsLoading';
 
     // Pagination selectors
     this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
@@ -636,7 +637,9 @@ class Order extends BOBasePage {
     ]);
 
     await page.click(this.modalConfirmNewPriceSubmitButton);
-    await page.waitForTimeout(2000);
+
+    await this.waitForVisibleSelector(page, this.orderProductsLoading);
+    await this.waitForHiddenSelector(page, this.orderProductsLoading);
 
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
   }
@@ -674,10 +677,11 @@ class Order extends BOBasePage {
   /**
    * Create new invoice
    * @param page {Page} Browser tab
+   * @param invoice {string} The invoice to select from dropdown list
    * @returns {Promise<void>}
    */
-  async createNewInvoice(page) {
-    await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
+  async selectInvoice(page, invoice = 'Create a new invoice') {
+    await this.selectByVisibleText(page, this.addProductInvoiceSelect, invoice);
   }
 
   /**

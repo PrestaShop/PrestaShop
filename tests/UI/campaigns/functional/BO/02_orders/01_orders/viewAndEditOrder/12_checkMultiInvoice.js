@@ -175,7 +175,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should create a new invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewInvoice1', baseContext);
 
-      await viewOrderPage.createNewInvoice(page);
+      await viewOrderPage.selectInvoice(page);
 
       const carrierName = await viewOrderPage.getNewInvoiceCarrierName(page);
       await expect(carrierName).to.contains(`Carrier : ${Carriers.default.name}`);
@@ -364,7 +364,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
     it('should create a new invoice', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createNewInvoice2', baseContext);
 
-      await viewOrderPage.createNewInvoice(page);
+      await viewOrderPage.selectInvoice(page);
 
       const carrierName = await viewOrderPage.getNewInvoiceCarrierName(page);
       await expect(carrierName).to.contains(`Carrier : ${Carriers.myCarrier.name}`);
