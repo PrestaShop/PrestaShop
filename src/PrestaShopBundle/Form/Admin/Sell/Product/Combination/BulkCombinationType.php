@@ -27,16 +27,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * For combination update in bulk action
@@ -68,7 +63,7 @@ class BulkCombinationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('quantities', QuantityType::class)
+            ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('reference', TextType::class, [
                 'required' => false,
@@ -76,42 +71,10 @@ class BulkCombinationType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
                 'empty_data' => '',
             ])
-            ->add('available_date', DatePickerType::class, [
-                'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'YYYY-MM-DD',
-                ],
-            ])
-            ->add('low_stock_threshold', NumberType::class, [
-                'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
-                'constraints' => [
-                    new Type(['type' => 'numeric']),
-                ],
-                'required' => false,
-                'default_empty_data' => 0,
-                // Using null here allows to keep the field empty in the page instead of 0
-                'empty_view_data' => null,
-            ])
-            ->add('low_stock_alert', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans(
-                    'Send me an email when the quantity is below or equals this level',
-                    'Admin.Catalog.Feature'
-                ),
-                'label_help_box' => $this->trans(
-                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
-                    'Admin.Catalog.Help',
-                    [
-                        '[1]' => sprintf(
-                            '<a target="_blank" href="%s">',
-                            $this->router->generate('admin_employees_index')
-                        ),
-                        '[/1]' => '</a>',
-                    ]
-                ),
-            ])
         ;
+
+        $builder->get('stock')->get('options')->remove('stock_location');
+        $builder->get('stock')->get('quantities')->remove('stock_movements');
+        $builder->get('price_impact')->remove('unit_price');
     }
 }
