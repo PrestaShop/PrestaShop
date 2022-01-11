@@ -154,6 +154,21 @@ class DescriptionType extends TranslatorAwareType
                 'filtered_identities' => $productId > 0 ? [$productId] : [],
                 'placeholder' => $this->trans('Search product', 'Admin.Catalog.Help'),
             ])
+            ->add('combination_products', EntitySearchInputType::class, [
+                'label' => $this->trans('Combination Products', 'Admin.Catalog.Combination'),
+                'label_tag_name' => 'h2',
+                'entry_type' => CombinationProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'combination',
+                ],
+                'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'min_length' => 3,
+                'filtered_identities' => $productId > 0 ? [$productId] : [],
+                'placeholder' => $this->trans('Search combination', 'Admin.Catalog.Help'),
+            ])
         ;
     }
 
