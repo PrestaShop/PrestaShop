@@ -56,7 +56,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     /**
      * @see transformPriorityList
      *
-     * @When I set following specific price priorities for product :productReference:
+     * @When I set following custom specific price priorities for product :productReference:
      *
      * @param string $productReference
      * @param PriorityList $priorityList
@@ -104,20 +104,63 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      */
     public function assertDefaultPriorities(PriorityList $priorityList): void
     {
-        $this->assertPriorities($priorityList, null);
+        $this->assertPriorities($priorityList, $this->getUsablePriorities(null));
     }
 
     /**
      * @see transformPriorityList
      *
-     * @Then product :productReference should have following specific price priorities:
+     * @Then product :productReference should have following custom specific price priorities:
      *
      * @param string $productReference
      * @param PriorityList $priorityList
      */
     public function assertProductPriorities(string $productReference, PriorityList $priorityList): void
     {
-        $this->assertPriorities($priorityList, $productReference);
+        $actualPriorities = $this->getProductForEditing($productReference)
+            ->getPricesInformation()
+            ->getSpecificPricePriorities();
+
+        $this->assertPriorities($priorityList, $actualPriorities);
+    }
+
+    /**
+     * @see transformPriorityList
+     *
+     * @Then following specific price priorities should be used for product ":productReference":
+     *
+     * @param string $productReference
+     * @param PriorityList $priorityList
+     */
+    public function assertUsablePriorities(string $productReference, PriorityList $priorityList): void
+    {
+        $this->assertPriorities($priorityList, $this->getUsablePriorities($productReference));
+    }
+
+    /**
+     * @Then default specific price priorities should be used for product ":productReference"
+     *
+     * @param string $productReference
+     */
+    public function assertDefaultPrioritiesAreUsed(string $productReference): void
+    {
+        $this->assertPriorities(
+            $this->getUsablePriorities(null),
+            $this->getUsablePriorities($productReference)
+        );
+    }
+
+    /**
+     * @Then product ":productReference" should not have custom specific price priorities
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCustomPriorities(string $productReference): void
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+        $priorities = $productForEditing->getPricesInformation()->getSpecificPricePriorities();
+
+        Assert::assertNull($priorities);
     }
 
     /**
@@ -139,10 +182,26 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     }
 
     /**
-     * @param PriorityList $expectedPriorityList
-     * @param string|null $productReference when null it checks default priorities list
+     * @param PriorityList $expectedPriorities
+     * @param PriorityList $actualPriorities
      */
-    private function assertPriorities(PriorityList $expectedPriorityList, ?string $productReference)
+    private function assertPriorities(PriorityList $expectedPriorities, PriorityList $actualPriorities)
+    {
+        Assert::assertEquals(
+            $expectedPriorities,
+            $actualPriorities,
+            sprintf('Unexpected specific price priorities [%s]', var_export($actualPriorities, true))
+        );
+    }
+
+    /**
+     * Retrieves priority list using object model method which is actually used when prioritizing in FO.
+     *
+     * @param string|null $productReference gets default priority list if $productReference is null
+     *
+     * @return PriorityList
+     */
+    private function getUsablePriorities(?string $productReference): PriorityList
     {
         SpecificPrice::flushCache();
         $productId = $productReference ? $this->getSharedStorage()->get($productReference) : 0;
@@ -152,10 +211,6 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
             unset($actualPriorities[0]);
         }
 
-        Assert::assertEquals(
-            $expectedPriorityList->getPriorities(),
-            array_values($actualPriorities),
-            sprintf('Unexpected specific price priorities [%s]', var_export($actualPriorities, true))
-        );
+        return new PriorityList(array_values($actualPriorities));
     }
 }
