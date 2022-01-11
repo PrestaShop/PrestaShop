@@ -73,10 +73,10 @@ class ConfigurationVariablesLoaderTest extends TestCase
 
     public function testLoadEnvVariablesReplacedAllowedParameters(): void
     {
-        $envFile = $this->createEnvFile('PS_DATABASE_PORT=3306
-PS_DATABASE_NAME=test_db
-PS_DATABASE_PASSWORD=db_password
-PS_DATABASE_PREFIX=ps
+        $envFile = $this->createEnvFile('PS_DATABASE_PORT=33123
+PS_DATABASE_NAME=test_database
+PS_DATABASE_PASSWORD=random_pwd
+PS_DATABASE_PREFIX=test
 PS_SOMETHING_NOT_ALLOWED=fake_value
 ');
 
@@ -86,11 +86,11 @@ PS_SOMETHING_NOT_ALLOWED=fake_value
             [
                 'parameters' => [
                     'database_host' => '192.168.1.1',
-                    'database_port' => '3306',
+                    'database_port' => '33123',
                     'database_user' => 'superadmin',
-                    'database_password' => 'db_password',
-                    'database_name' => 'test_db',
-                    'database_prefix' => 'ps',
+                    'database_password' => 'random_pwd',
+                    'database_name' => 'test_database',
+                    'database_prefix' => 'test',
                 ],
             ],
             $configurationVariablesLoader->loadEnvVariables(
