@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
 use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
+use PrestaShopException;
 use PrestashopInstallerException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
