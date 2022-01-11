@@ -30,6 +30,10 @@ $(document).ready(function() {
   const $searchInput = $('#search-for-module');
 
   $('input[name="module-action"]').on('change', function() {
+    if ($(this).prop('checked') === false) {
+      return;
+    }
+
     if (parseInt($(this).val(), 10) === 1) {
       $modulesContainer.fadeIn();
     } else {
