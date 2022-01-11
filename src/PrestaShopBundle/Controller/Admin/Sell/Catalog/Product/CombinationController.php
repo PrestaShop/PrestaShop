@@ -38,9 +38,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -102,6 +105,77 @@ class CombinationController extends FrameworkBundleAdminController
         ]);
     }
 
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchCombinationProductsAction(Request $request, string $languageCode): JsonResponse
+    {
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $lang = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+        if (null === $lang) {
+            return $this->json([
+                'message' => sprintf(
+                    'Invalid language code %s was used which matches no existing language in this shop.',
+                    $languageCode
+                ),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var ProductForAssociation[] $combinationProducts */
+            $combinationProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+                $request->get('query', ''),
+                $lang->getId(),
+                (int) $shopId,
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($combinationProducts)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
+    }
+
+    /**
+     * @param ProductForAssociation[] $productsForAssociation
+     *
+     * @return array
+     */
+    private function formatCombinationProductsForAssociation(array $productsForAssociation): array
+    {
+        $productsData = [];
+        foreach ($productsForAssociation as $productForAssociation) {
+            $productName = $productForAssociation->getName();
+            if (!empty($productForAssociation->getReference())) {
+                $productName .= sprintf(' (ref: %s)', $productForAssociation->getReference());
+            }
+
+            $productsData[] = [
+                'id' => $productForAssociation->getProductId(),
+                'name' => $productName,
+                'image' => $productForAssociation->getImageUrl(),
+            ];
+        }
+
+        return $productsData;
+    }
     /**
      * @AdminSecurity("is_granted('read', 'AdminProducts')")
      *
