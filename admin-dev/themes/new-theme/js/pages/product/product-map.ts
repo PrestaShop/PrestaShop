@@ -266,4 +266,7 @@ export default {
       priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
     },
   },
+  packedProducts: {
+    searchInput: '#product_description_packed_products',
+  },
 };
