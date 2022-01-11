@@ -25,17 +25,21 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-
-class BulkCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
+class BulkCombinationFormDataFormatter
 {
     /**
-     * {@inheritDoc}
+     * @param array<string, mixed> $formData
+     * @return array<string, mixed>
      */
-    public function buildCommands(CombinationId $combinationId, array $formData): array
+    public function format(array $formData): array
     {
-        //@todo: build all commands?
+        //@todo: need to make sure that default value of every field is NULL.
+        //  This way those values should be skipped in commands builder
+        $formData['references']['reference'] = $formData['reference'];
+        unset($formData['reference']);
+
+        return $formData;
     }
 }
