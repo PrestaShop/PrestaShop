@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
 
 class BulkCombinationFormDataHandler implements FormDataHandlerInterface
 {
@@ -44,15 +45,23 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
     private $commandsBuilder;
 
     /**
+     * @var BulkCombinationFormDataFormatter
+     */
+    private $bulkCombinationFormDataFormatter;
+
+    /**
      * @param CommandBusInterface $commandBus
+     * @param BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter
      * @param CombinationCommandsBuilderInterface $commandsBuilder
      */
     public function __construct(
         CommandBusInterface $commandBus,
+        BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter,
         CombinationCommandsBuilderInterface $commandsBuilder
     ) {
         $this->commandBus = $commandBus;
         $this->commandsBuilder = $commandsBuilder;
+        $this->bulkCombinationFormDataFormatter = $bulkCombinationFormDataFormatter;
     }
 
     /**
@@ -69,6 +78,7 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data): void
     {
+        $data = $this->bulkCombinationFormDataFormatter->format($data);
         $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $data);
 
         foreach ($commands as $command) {
