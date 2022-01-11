@@ -53,8 +53,8 @@ class ConfigurationVariablesLoader
             $parameters['parameters'] = [];
         }
 
-        foreach (self::PARAMETERS_WITH_ENV_VARS as $parameterKey => $envVarKey) {
-            if (isset($_ENV[$envVarKey])) {
+        foreach (static::PARAMETERS_WITH_ENV_VARS as $parameterKey => $envVarKey) {
+            if (array_key_exists($envVarKey, $_ENV)) {
                 $parameters['parameters'][$parameterKey] = $_ENV[$envVarKey];
             }
         }
