@@ -1465,6 +1465,44 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+.product_packed_products {
+  .search-with-icon {
+    max-width: 377px;
+  }
+
+  .entities-list-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: -0.5em;
+    margin-left: -0.5em;
+  }
+
+  .packed-product {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 180px;
+    margin: 0.5rem;
+
+    &-image {
+      margin-bottom: 0.5rem;
+    }
+
+    &-legend,
+    &-quantity {
+      max-width: 100%;
+
+      .text-preview {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
 // page there is no need to scope them inside the product-page-v2 class
 .create-product-form {
