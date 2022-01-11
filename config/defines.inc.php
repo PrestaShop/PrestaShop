@@ -91,6 +91,15 @@ if ((defined('_PS_IN_TEST_') && _PS_IN_TEST_)
     define('_PS_ENV_', _PS_MODE_DEV_ ? 'dev': 'prod');
 }
 
+/* ENV variables config file - depending on app env */
+if (!defined('_PS_ENV_VARS_FILE_')) {
+    if (file_exists(_PS_ROOT_DIR_ . '/env.' . _PS_ENV_)) {
+        define('_PS_ENV_VARS_FILE_', _PS_ROOT_DIR_ . '/env.' . _PS_ENV_);
+    } elseif (file_exists(_PS_ROOT_DIR_ . '/env')) {
+        define('_PS_ENV_VARS_FILE_', _PS_ROOT_DIR_ . '/env');
+    }
+}
+
 if (!defined('_PS_CACHE_DIR_')) {
     define('_PS_CACHE_DIR_', _PS_ROOT_DIR_.'/var/cache/' . _PS_ENV_ . DIRECTORY_SEPARATOR);
 }

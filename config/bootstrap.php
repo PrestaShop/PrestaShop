@@ -90,10 +90,8 @@ if ($lastParametersModificationTime) {
         $param = str_replace('%%', '%', $param);
     });
 
-    $envFilePath = _PS_ROOT_DIR_ . '/.env';
-
-    if (file_exists($envFilePath)) {
-        $configurationVariablesLoader = new ConfigurationVariablesLoader($envFilePath);
+    if (defined('_PS_ENV_VARS_FILE_')) {
+        $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
         $config = $configurationVariablesLoader->loadEnvVariables($config);
     }
 
