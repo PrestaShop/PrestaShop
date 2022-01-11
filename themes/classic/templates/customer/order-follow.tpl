@@ -29,11 +29,9 @@
 {/block}
 
 {block name='page_content'}
+  <h6>{l s='Here is a list of pending merchandise returns' d='Shop.Theme.Customeraccount'}</h6>
 
   {if $ordersReturn && count($ordersReturn)}
-
-    <h6>{l s='Here is a list of pending merchandise returns' d='Shop.Theme.Customeraccount'}</h6>
-
     <table class="table table-striped table-bordered hidden-sm-down">
       <thead class="thead-default">
         <tr>
@@ -92,7 +90,7 @@
         </div>
       {/foreach}
     </div>
-
+  {else}
+    <div class="alert alert-info" role="alert" data-alert="info">{l s='You have no merchandise return authorizations.' d='Shop.Notifications.Error'}</div>
   {/if}
-
 {/block}

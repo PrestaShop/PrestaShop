@@ -52,14 +52,8 @@ class HistoryControllerCore extends FrontController
             $this->warning[] = $this->trans('If you have just placed an order, it may take a few minutes for it to be validated. Please refresh this page if your order is missing.', [], 'Shop.Notifications.Warning');
         }
 
-        $orders = $this->getTemplateVarOrders();
-
-        if (count($orders) <= 0) {
-            $this->warning[] = $this->trans('You have not placed any orders.', [], 'Shop.Notifications.Warning');
-        }
-
         $this->context->smarty->assign([
-            'orders' => $orders,
+            'orders' => $this->getTemplateVarOrders(),
         ]);
 
         parent::initContent();

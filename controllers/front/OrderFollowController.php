@@ -102,16 +102,7 @@ class OrderFollowControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $ordersReturn = $this->getTemplateVarOrdersReturns();
-        if (count($ordersReturn) <= 0) {
-            $this->warning[] = $this->trans(
-                'You have no merchandise return authorizations.',
-                [],
-                'Shop.Notifications.Error'
-            );
-        }
-
-        $this->context->smarty->assign('ordersReturn', $ordersReturn);
+        $this->context->smarty->assign('ordersReturn', $this->getTemplateVarOrdersReturns());
 
         parent::initContent();
         $this->setTemplate('customer/order-follow');

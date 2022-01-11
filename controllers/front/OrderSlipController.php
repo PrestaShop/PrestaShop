@@ -41,14 +41,8 @@ class OrderSlipControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $credit_slips = $this->getTemplateVarCreditSlips();
-
-        if (count($credit_slips) <= 0) {
-            $this->warning[] = $this->trans('You have not received any credit slips.', [], 'Shop.Notifications.Warning');
-        }
-
         $this->context->smarty->assign([
-            'credit_slips' => $credit_slips,
+            'credit_slips' => $this->getTemplateVarCreditSlips(),
         ]);
 
         parent::initContent();

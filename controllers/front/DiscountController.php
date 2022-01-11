@@ -41,14 +41,8 @@ class DiscountControllerCore extends FrontController
             Tools::redirect('index.php');
         }
 
-        $cart_rules = $this->getTemplateVarCartRules();
-
-        if (count($cart_rules) <= 0) {
-            $this->warning[] = $this->trans('You do not have any vouchers.', [], 'Shop.Notifications.Warning');
-        }
-
         $this->context->smarty->assign([
-            'cart_rules' => $cart_rules,
+            'cart_rules' => $this->getTemplateVarCartRules(),
         ]);
 
         parent::initContent();
