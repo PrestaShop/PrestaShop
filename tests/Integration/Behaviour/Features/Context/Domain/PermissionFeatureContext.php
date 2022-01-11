@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateModulePer
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Command\UpdateTabPermissionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\Query\GetPermissionsForConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\QueryResult\ConfigurablePermissions;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ControllerPermission;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\ModulePermission;
-use PrestaShop\PrestaShop\Core\Domain\Profile\Permission\ValueObject\PermissionInterface;
 use Tab;
 
 class PermissionFeatureContext extends AbstractDomainFeatureContext
@@ -171,10 +171,10 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
     private function getPermissionsFromTabArray(array $tab): array
     {
         return [
-            PermissionInterface::VIEW => (bool) $tab[PermissionInterface::VIEW],
-            PermissionInterface::ADD => (bool) $tab[PermissionInterface::ADD],
-            PermissionInterface::EDIT => (bool) $tab[PermissionInterface::EDIT],
-            PermissionInterface::DELETE => (bool) $tab[PermissionInterface::DELETE],
+            ControllerPermission::VIEW => (bool) $tab[ControllerPermission::VIEW],
+            ControllerPermission::ADD => (bool) $tab[ControllerPermission::ADD],
+            ControllerPermission::EDIT => (bool) $tab[ControllerPermission::EDIT],
+            ControllerPermission::DELETE => (bool) $tab[ControllerPermission::DELETE],
         ];
     }
 
@@ -193,10 +193,10 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
         $permissions = explode(',', $serializedTabPermissions);
 
         return [
-            PermissionInterface::VIEW => in_array(PermissionInterface::VIEW, $permissions),
-            PermissionInterface::ADD => in_array(PermissionInterface::ADD, $permissions),
-            PermissionInterface::EDIT => in_array(PermissionInterface::EDIT, $permissions),
-            PermissionInterface::DELETE => in_array(PermissionInterface::DELETE, $permissions),
+            ControllerPermission::VIEW => in_array(ControllerPermission::VIEW, $permissions),
+            ControllerPermission::ADD => in_array(ControllerPermission::ADD, $permissions),
+            ControllerPermission::EDIT => in_array(ControllerPermission::EDIT, $permissions),
+            ControllerPermission::DELETE => in_array(ControllerPermission::DELETE, $permissions),
         ];
     }
 
@@ -215,7 +215,7 @@ class PermissionFeatureContext extends AbstractDomainFeatureContext
         $permissions = explode(',', $serializedTabPermissions);
 
         return [
-            ModulePermission::VIEW => in_array(PermissionInterface::VIEW, $permissions),
+            ModulePermission::VIEW => in_array(ModulePermission::VIEW, $permissions),
             ModulePermission::CONFIGURE => in_array(ModulePermission::CONFIGURE, $permissions),
             ModulePermission::UNINSTALL => in_array(ModulePermission::UNINSTALL, $permissions),
         ];
