@@ -24,7 +24,7 @@
     margin: -($grid-gutter-width / 2);
     margin-top: -1rem;
     margin-bottom: 1rem;
-    border-bottom: 0.0625rem solid #dfdfdf;
+    border-bottom: 0.0625rem solid $color-separator;
 
     @at-root .multishop-enabled & {
       top: 4.95rem;
