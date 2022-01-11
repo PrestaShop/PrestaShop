@@ -164,6 +164,9 @@ services:
     arguments:
       - '@prestashop.core.query_bus'
 
+  prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\BulkCombinationFormDataProvider'
+
   prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\EmptyFormDataProvider'
 
