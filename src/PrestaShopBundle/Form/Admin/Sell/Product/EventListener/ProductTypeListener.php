@@ -68,6 +68,7 @@ class ProductTypeListener implements EventSubscriberInterface
                 $stock = $form->get('stock');
                 if (ProductType::TYPE_PACK !== $productType) {
                     $stock->remove('pack_stock_type');
+                    $stock->remove('packed_products');
                 }
                 if (ProductType::TYPE_VIRTUAL !== $productType) {
                     $stock->remove('virtual_product_file');

@@ -164,7 +164,7 @@ class ProductController extends FrameworkBundleAdminController
 
         try {
             $productForm->handleRequest($request);
-
+dump($productForm);
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
             if ($result->isSubmitted()) {
