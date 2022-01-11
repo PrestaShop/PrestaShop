@@ -1149,6 +1149,54 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  #product_description_packed_products {
+    .search-with-icon {
+      max-width: 377px;
+    }
+
+    .entities-list-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 0.5rem -0.5rem;
+    }
+
+    .packed-product {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 180px;
+      margin: 0.5rem;
+
+      &-image {
+        margin-bottom: 0.5rem;
+      }
+
+      &-legend {
+        max-width: 100%;
+
+        .text-preview {
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      &-quantity {
+        max-width: 100%;
+
+        .text-preview {
+          text-align: left;
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+
   .product-type-selector {
     width: 100%;
     margin-bottom: 1rem;
@@ -1474,6 +1522,8 @@ $product-page-padding-bottom: 80px !default;
 }
 
 #related-product,
+#combination-product,
+#packed-product,
 #id-product-redirected,
 .redirect-option-widget {
   // list of added related products
