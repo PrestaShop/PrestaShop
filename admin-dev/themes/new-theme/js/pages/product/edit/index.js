@@ -40,6 +40,7 @@ import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manag
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
+import CombinationProductsManager from '@pages/product/edit/combination-products-manager';
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
@@ -83,6 +84,7 @@ $(() => {
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
+  new CombinationProductsManager(eventEmitter);
   new CreateProductModal();
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);

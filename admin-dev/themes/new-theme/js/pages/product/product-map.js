@@ -225,4 +225,7 @@ export default {
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
+  combinationProducts: {
+    searchInput: '#product_description_combination_products',
+  },
 };
