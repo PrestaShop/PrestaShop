@@ -17,56 +17,52 @@ Feature: Set Specific Price priorities from Back Office (BO).
     And I add product "product1" with following information:
       | name[en-US] | pocket watch |
       | type        | standard     |
-    And product "product1" should have following specific price priorities:
-      | priorities  |
-      | id_shop     |
-      | id_currency |
-      | id_country  |
-      | id_group    |
-    When I set following specific price priorities for product "product1":
+    And product "product1" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product1"
+    When I set following custom specific price priorities for product "product1":
       | priorities  |
       | id_country  |
       | id_currency |
       | id_group    |
       | id_shop     |
-    Then product "product1" should have following specific price priorities:
+#   Checks ProductForEditing priorities
+    Then product "product1" should have following custom specific price priorities:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
+#   Checks legacy priorities which are actually responsible for prioritizing in FO
+    And following specific price priorities should be used for product "product1":
       | priorities  |
       | id_country  |
       | id_currency |
       | id_group    |
       | id_shop     |
 
-  Scenario: Default specific price priorities should be applied for products that has no specific priorities set
+  Scenario: Default specific price priorities should be applied for products that has no custom priorities set
     Given default specific price priorities are set to following:
       | priorities  |
       | id_shop     |
       | id_currency |
       | id_country  |
       | id_group    |
-    And product "product1" should have following specific price priorities:
-      | priorities  |
-      | id_country  |
-      | id_currency |
-      | id_group    |
-      | id_shop     |
     And I add product "product2" with following information:
       | name[en-US] | golden wrist watch |
       | type        | standard           |
     And I add product "product3" with following information:
       | name[en-US] | silver wrist watch |
       | type        | standard           |
-    And product "product2" should have following specific price priorities:
+    And product "product2" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product2"
+    And product "product3" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product3"
+    And product "product1" should have following custom specific price priorities:
       | priorities  |
-      | id_shop     |
-      | id_currency |
       | id_country  |
-      | id_group    |
-    And product "product3" should have following specific price priorities:
-      | priorities  |
-      | id_shop     |
       | id_currency |
-      | id_country  |
       | id_group    |
+      | id_shop     |
     When I set following default specific price priorities:
       | priorities  |
       | id_group    |
@@ -79,33 +75,13 @@ Feature: Set Specific Price priorities from Back Office (BO).
       | id_currency |
       | id_country  |
       | id_shop     |
-    And product "product2" should have following specific price priorities:
-      | priorities  |
-      | id_group    |
-      | id_currency |
-      | id_country  |
-      | id_shop     |
-    And product "product3" should have following specific price priorities:
-      | priorities  |
-      | id_group    |
-      | id_currency |
-      | id_country  |
-      | id_shop     |
-    But product "product1" should have following specific price priorities:
+    And product "product2" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product2"
+    And product "product3" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product3"
+    But following specific price priorities should be used for product "product1":
       | priorities  |
       | id_country  |
       | id_currency |
       | id_group    |
-      | id_shop     |
-    When I set following specific price priorities for product "product2":
-      | priorities  |
-      | id_currency |
-      | id_group    |
-      | id_country  |
-      | id_shop     |
-    Then product "product2" should have following specific price priorities:
-      | priorities  |
-      | id_currency |
-      | id_group    |
-      | id_country  |
       | id_shop     |
