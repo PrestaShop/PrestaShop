@@ -47,8 +47,6 @@ class ProfileIdTest extends TestCase
         return [
             [1],
             [42],
-            ['1'],
-            ['51'],
         ];
     }
 
@@ -64,10 +62,8 @@ class ProfileIdTest extends TestCase
     public function exceptionThrownWithInvalidValuesData()
     {
         return [
-            ['-1'],
-            ['1.1'],
-            ['a'],
-            ['+'],
+            [-1],
+            [0],
         ];
     }
 }
