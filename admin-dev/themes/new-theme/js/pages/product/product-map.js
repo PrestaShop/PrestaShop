@@ -253,4 +253,7 @@ export default {
       deleteBtn: '.js-delete-specific-price-btn',
     },
   },
+  packedProducts: {
+    searchInput: '#product_description_packed_products',
+  },
 };
