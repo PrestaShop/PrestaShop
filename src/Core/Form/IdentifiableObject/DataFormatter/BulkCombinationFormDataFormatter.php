@@ -31,12 +31,11 @@ class BulkCombinationFormDataFormatter
 {
     /**
      * @param array<string, mixed> $formData
+     *
      * @return array<string, mixed>
      */
     public function format(array $formData): array
     {
-        //@todo: need to make sure that default value of every field is NULL.
-        //  This way those values should be skipped in commands builder
         $formData['references']['reference'] = $formData['reference'];
         unset($formData['reference']);
 

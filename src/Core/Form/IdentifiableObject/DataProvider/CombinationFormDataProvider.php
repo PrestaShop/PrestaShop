@@ -117,6 +117,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
             'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPriceTaxIncluded(),
+//          @todo: what is ecotax? it doesn't seem to exist in form
             'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
             'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
             'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),

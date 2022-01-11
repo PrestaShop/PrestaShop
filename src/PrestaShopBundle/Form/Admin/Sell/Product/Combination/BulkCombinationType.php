@@ -69,7 +69,6 @@ class BulkCombinationType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
-                'empty_data' => '',
             ])
         ;
 
