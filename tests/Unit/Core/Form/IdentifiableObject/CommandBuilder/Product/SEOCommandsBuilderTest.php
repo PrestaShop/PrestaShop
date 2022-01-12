@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
@@ -169,6 +170,54 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 ],
             ],
             [$command],
+        ];
+
+        $localizedTagsData = [
+            1 => 'coton,bonbon',
+            2 => 'cotton,candy',
+        ];
+        $localizedTags = [
+            1 => ['coton', 'bonbon'],
+            2 => ['cotton', 'candy'],
+        ];
+        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
+        yield [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => [
+                            'id' => 51,
+                        ],
+                    ],
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$command, $tagCommands],
+        ];
+
+        $localizedTagsData = [
+            1 => 'coton,bonbon',
+            2 => null,
+        ];
+        $localizedTags = [
+            1 => ['coton', 'bonbon'],
+            2 => [],
+        ];
+        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
+        yield [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => [
+                            'id' => 51,
+                        ],
+                    ],
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$command, $tagCommands],
         ];
     }
 }
