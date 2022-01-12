@@ -26,6 +26,10 @@ _contacts:
   resource: "contacts.yml"
   prefix: /contacts/
 
+_stores:
+  resource: "stores.yml"
+  prefix: /stores/
+
 _order_states:
   resource: "order_states.yml"
   prefix: /order-states/
@@ -37,3 +41,5 @@ _order_return_states:
 _search_engines:
   resource: "search_engines.yml"
   prefix: /search-engines/
+  
+  

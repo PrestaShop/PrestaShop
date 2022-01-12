@@ -1,0 +1,81 @@
+admin_stores_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::indexAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores
+
+admin_stores_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.stores
+    redirectRoute: admin_stores_index
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:submitFilterstore
+
+admin_stores_create:
+  path: /new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::createAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:addstore
+
+admin_stores_edit:
+  path: /{storeId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::editAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:updatestore
+  requirements:
+    storeId: \d+
+
+admin_stores_delete:
+  path: /{storeId}/delete
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::deleteAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminStores:deletestore
+  requirements:
+    storeId: \d+
+    
+admin_stores_bulk_delete:
+  path: /bulk-delete
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDeleteAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminSearchEngines:submitBulkdeletestore
+    
+admin_stores_bulk_enable_status:
+  path: /bulk-enable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkEnableStatusAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminSearchEngines:submitBulkenablestatusstore
+    
+admin_stores_bulk_disable_status:
+  path: /bulk-disable-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDisableStatusAction'
+    _legacy_controller: AdminStores
+    _legacy_link: AdminSearchEngines:submitBulkenablestatusstore
+
+admin_store_toggle_status:
+  path: /{storeId}/toggle-status
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::toggleStatusAction'
+    _legacy_controller: AdminStores
+    #     _legacy_link: AdminCarriers:statuscarrier
+    _legacy_parameters:
+      id_store: storeId
+  requirements:
+    storeId: \d+

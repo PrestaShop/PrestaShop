@@ -375,3 +375,11 @@ services:
       - '@prestashop.adapter.product.grid.data.factory.product_grid_data_factory_decorator'
       - '@prestashop.core.grid.filter.form_factory'
       - '@prestashop.core.hook.dispatcher'
+      
+  prestashop.core.grid.factory.store:
+    class: 'PrestaShop\PrestaShop\Core\Grid\GridFactory'
+    arguments:
+      - '@prestashop.core.grid.definition.factory.store'
+      - '@prestashop.core.grid.data.factory.store_decorator'
+      - '@prestashop.core.grid.filter.form_factory'
+      - '@prestashop.core.hook.dispatcher'
