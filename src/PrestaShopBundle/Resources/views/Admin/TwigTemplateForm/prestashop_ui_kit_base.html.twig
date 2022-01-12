@@ -105,6 +105,7 @@
     {{- block('form_prepend_alert') -}}
     {{- block('form_prepend_external_link') -}}
 
+    {{- block('form_disabling_toggle') -}}
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
     {{- block('form_modify_all_shops') -}}
@@ -124,6 +125,14 @@
 #}
 {% block form_modify_all_shops %}
   {% set overrideCheckboxName = modify_all_shops_prefix ~ form.vars.name %}
+  {% if attribute(form.parent, overrideCheckboxName) is defined %}
+    {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
+    {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
+  {% endif %}
+{% endblock %}
+
+{% block form_disabling_toggle %}
+  {% set overrideCheckboxName = disabling_toggle_prefix ~ form.vars.name %}
   {% if attribute(form.parent, overrideCheckboxName) is defined %}
     {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
     {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
