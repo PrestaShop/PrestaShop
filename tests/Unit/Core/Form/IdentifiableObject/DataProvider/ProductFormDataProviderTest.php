@@ -95,10 +95,10 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_SHOP_ID = 99;
     private const COVER_URL = 'http://localhost/cover.jpg';
     private const DEFAULT_PRIORITY_LIST = [
-        'id_country',
-        'id_group',
-        'id_currency',
-        'id_shop',
+        PriorityList::PRIORITY_COUNTRY,
+        PriorityList::PRIORITY_GROUP,
+        PriorityList::PRIORITY_CURRENCY,
+        PriorityList::PRIORITY_SHOP,
     ];
 
     public function testGetDefaultData(): void
@@ -506,15 +506,16 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         // dataset 2
-        $productData['priority_list'] = new PriorityList([
+        $priorities = [
             PriorityList::PRIORITY_CURRENCY,
             PriorityList::PRIORITY_COUNTRY,
             PriorityList::PRIORITY_GROUP,
             PriorityList::PRIORITY_SHOP,
-        ]);
+        ];
+        $productData['priority_list'] = new PriorityList($priorities);
         $expectedOutputData['pricing']['priority_management'] = [
             'use_custom_priority' => true,
-            'priorities' => ['id_currency', 'id_country', 'id_group', 'id_shop'],
+            'priorities' => $priorities,
         ];
 
         $datasets[] = [

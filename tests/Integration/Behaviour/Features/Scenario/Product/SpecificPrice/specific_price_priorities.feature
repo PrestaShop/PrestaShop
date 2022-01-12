@@ -85,3 +85,18 @@ Feature: Set Specific Price priorities from Back Office (BO).
       | id_currency |
       | id_group    |
       | id_shop     |
+    And product "product1" should have following custom specific price priorities:
+      | priorities  |
+      | id_country  |
+      | id_currency |
+      | id_group    |
+      | id_shop     |
+    When I remove custom specific price priorities for product "product1"
+    Then product "product1" should not have custom specific price priorities
+    And default specific price priorities should be used for product "product1"
+    And following specific price priorities should be used for product "product1":
+      | priorities  |
+      | id_group    |
+      | id_currency |
+      | id_country  |
+      | id_shop     |

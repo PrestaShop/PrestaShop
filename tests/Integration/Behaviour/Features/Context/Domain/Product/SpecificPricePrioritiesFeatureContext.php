@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShopBundle\Install\DatabaseDump;
@@ -61,7 +62,7 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      * @param string $productReference
      * @param PriorityList $priorityList
      */
-    public function setPrioritiesForSingleProduct(string $productReference, PriorityList $priorityList): void
+    public function setPrioritiesForProduct(string $productReference, PriorityList $priorityList): void
     {
         try {
             $this->getCommandBus()->handle(new SetSpecificPricePriorityForProductCommand(
@@ -71,6 +72,18 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I remove custom specific price priorities for product ":productReference"
+     *
+     * @param string $productReference
+     */
+    public function removePrioritiesForProduct(string $productReference): void
+    {
+        $this->getCommandBus()->handle(new RemoveSpecificPricePriorityForProductCommand(
+            $this->getSharedStorage()->get($productReference)
+        ));
     }
 
     /**
