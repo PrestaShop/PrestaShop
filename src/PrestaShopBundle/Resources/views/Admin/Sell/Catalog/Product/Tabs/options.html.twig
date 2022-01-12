@@ -22,8 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% if productForm.options.suppliers is defined %}
-  {% form_theme productForm.options.suppliers '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/suppliers.html.twig' %}
+{% if productForm.options.product_suppliers is defined %}
+  {% dump(productForm.options.product_suppliers) %}
+  {% form_theme productForm.options.product_suppliers '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_suppliers.html.twig' %}
 {% endif %}
 
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="options-tab">
