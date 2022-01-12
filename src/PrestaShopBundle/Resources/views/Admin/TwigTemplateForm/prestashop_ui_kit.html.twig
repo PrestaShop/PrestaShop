@@ -85,6 +85,12 @@
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
       {% endif %}
 
+      {% set disablingToggleName = disabling_toggle_prefix ~ form.vars.name %}
+      {% if attribute(form.parent, disablingToggleName) is defined %}
+        {{ form_errors(attribute(form.parent, disablingToggleName)) }}
+        {{ form_widget(attribute(form.parent, disablingToggleName)) }}
+      {% endif %}
+
       {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
