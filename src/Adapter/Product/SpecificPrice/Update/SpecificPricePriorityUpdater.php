@@ -83,10 +83,16 @@ class SpecificPricePriorityUpdater
     {
         try {
             if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
-                throw $this->buildExceptionForProductPriorityError($productId);
+                throw new CannotUpdateSpecificPriceException(sprintf(
+                    'Failed updating specific price priorities for product #%d',
+                    $productId->getValue()
+                ));
             }
-        } catch (PrestaShopException $e) {
-            throw $this->buildExceptionForProductPriorityError($productId);
+        } catch (Exception $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when trying to set specific price priorities for product #%d',
+                $productId->getValue()
+            ));
         }
     }
 
@@ -100,8 +106,8 @@ class SpecificPricePriorityUpdater
                 'PS_SPECIFIC_PRICE_PRIORITIES',
                 implode(';', $priorityList->getPriorities())
             );
-        } catch (CannotUpdateSpecificPriceException $e) {
-            throw new CoreException('Error occurred when trying to update specific price priorities');
+        } catch (Exception $e) {
+            throw new CoreException('Error occurred when trying to update default specific price priorities');
         }
     }
 
@@ -116,23 +122,10 @@ class SpecificPricePriorityUpdater
                 ['id_product' => $productId->getValue()]
             );
         } catch (Exception $e) {
-            throw new CannotUpdateSpecificPriceException(sprintf(
+            throw new CoreException(sprintf(
                 'Error occurred when trying to remove specific price priorities for product #%d',
                 $productId->getValue()
             ));
         }
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return CoreException
-     */
-    private function buildExceptionForProductPriorityError(ProductId $productId): CoreException
-    {
-        return new CoreException(sprintf(
-            'Error occurred when trying to set specific price priorities for product #%d',
-            $productId->getValue()
-        ));
     }
 }
