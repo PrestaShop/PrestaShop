@@ -28,32 +28,48 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
+type ProductSupplier = {
+  supplierId: string,
+  productSupplierId: string,
+  supplierName: string,
+  reference: string,
+  price: number,
+  currencyId: string,
+  removed: boolean,
+}
+type BasicProductSupplier = {
+  supplierId: string,
+  supplierName: string,
+}
+type DefaultProductSupplier = Omit<ProductSupplier, 'supplierId' | 'supplierName'>;
+
+
 export default class ProductSuppliersManager {
-  forceUpdateDefault: boolean;
+  private readonly productFormModel: ProductFormModel;
 
-  suppliersMap: Record<string, any>;
+  private readonly forceUpdateDefault: boolean;
 
-  $productSuppliersCollection: JQuery;
+  private suppliersMap: Record<string, any>;
 
-  $defaultSupplierGroup: JQuery;
+  private $productSuppliersCollection: JQuery;
 
-  $supplierIdsGroup: JQuery;
+  private $supplierIdsGroup: JQuery;
 
-  $productsTable: JQuery;
+  private $defaultSupplierGroup: JQuery;
 
-  $productsTableBody: JQuery;
+  private $productsTable: JQuery;
 
-  suppliers: Array<Record<string, any>>;
+  private $productsTableBody: JQuery;
 
-  prototypeTemplate: string;
+  private readonly suppliers: Record<string, ProductSupplier>;
 
-  prototypeName: string;
+  private readonly prototypeTemplate: string;
 
-  defaultDataForSupplier: Record<string, any>;
+  private readonly prototypeName: string;
 
-  $initialDefault!: JQuery;
+  private readonly defaultDataForSupplier: DefaultProductSupplier;
 
-  productFormModel!: ProductFormModel | null | undefined;
+  private $initialDefault!: JQuery;
 
   /**
    *
@@ -67,7 +83,7 @@ export default class ProductSuppliersManager {
    *        It is now also initialized for combinations as temporary fix to, but should be fixed in other PR.
    *        Dedicated issue- https://github.com/PrestaShop/PrestaShop/issues/26906
    */
-  constructor(suppliersFormId: string, forceUpdateDefault: boolean, productFormModel: ProductFormModel | null = null) {
+  constructor(suppliersFormId: string, forceUpdateDefault: boolean, productFormModel: ProductFormModel) {
     this.productFormModel = productFormModel;
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
@@ -77,7 +93,7 @@ export default class ProductSuppliersManager {
     this.$productsTable = $(this.suppliersMap.productSuppliersTable);
     this.$productsTableBody = $(this.suppliersMap.productsSuppliersTableBody);
 
-    this.suppliers = [];
+    this.suppliers = {};
     this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');
     this.prototypeName = this.$productSuppliersCollection.data('prototypeName');
     this.defaultDataForSupplier = this.getDefaultDataForSupplier();
@@ -130,11 +146,6 @@ export default class ProductSuppliersManager {
     }
   }
 
-  /**
-   * @param {string} newPrice
-   *
-   * @private
-   */
   private updateDefaultProductSupplierPrice(newPrice: number): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
@@ -142,7 +153,7 @@ export default class ProductSuppliersManager {
       // Update default price value and trigger change so that memorizeCurrentSuppliers is triggered (along with other
       // potential listeners)
       const rowMap = this.suppliersMap.productSupplierRow;
-      $(rowMap.priceInput(defaultProductSupplierId)).val(newPrice).trigger('change');
+      $(rowMap.priceInput(<string> defaultProductSupplierId)).val(newPrice).trigger('change');
     }
   }
 
@@ -163,12 +174,7 @@ export default class ProductSuppliersManager {
     }
   }
 
-  /**
-   * @returns {null|int}
-   *
-   * @private
-   */
-  private getDefaultProductSupplierId(): string | number | string[] | undefined | null {
+  getDefaultProductSupplierId(): string | null {
     if (this.getSelectedSuppliers().length === 0) {
       return null;
     }
@@ -179,7 +185,7 @@ export default class ProductSuppliersManager {
       return null;
     }
 
-    return defaultSupplier.first().val();
+    return <string> defaultSupplier.first().val();
   }
 
   private toggleTableVisibility(): void {
@@ -192,33 +198,21 @@ export default class ProductSuppliersManager {
     this.showTable();
   }
 
-  /**
-   * @param {Object} supplier
-   *
-   * @private
-   */
-  private addSupplier(supplier: Record<string, any>): void {
-    if (this.productFormModel) {
-      const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
+  private addSupplier(supplier: BasicProductSupplier): void {
+    const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
 
-      if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
-        const newSupplier = Object.create(this.defaultDataForSupplier);
-        newSupplier.supplierId = supplier.supplierId;
-        newSupplier.supplierName = supplier.supplierName;
-        newSupplier.price = wholeSalePrice;
+    if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
+      const newSupplier = Object.create(this.defaultDataForSupplier);
+      newSupplier.supplierId = supplier.supplierId;
+      newSupplier.supplierName = supplier.supplierName;
+      newSupplier.price = wholeSalePrice;
 
-        this.suppliers[supplier.supplierId] = newSupplier;
-      } else {
-        this.suppliers[supplier.supplierId].removed = false;
-      }
+      this.suppliers[supplier.supplierId] = newSupplier;
+    } else {
+      this.suppliers[supplier.supplierId].removed = false;
     }
   }
 
-  /**
-   * @param {int} supplierId
-   *
-   * @private
-   */
   private removeSupplier(supplierId: number): void {
     this.suppliers[supplierId].removed = true;
   }
@@ -236,7 +230,7 @@ export default class ProductSuppliersManager {
 
       const productSupplierRow = this.prototypeTemplate.replace(
         new RegExp(this.prototypeName, 'g'),
-        supplier.supplierId,
+        <string> supplier.supplierId,
       );
 
       this.$productsTableBody.append(productSupplierRow);
@@ -252,14 +246,13 @@ export default class ProductSuppliersManager {
     });
   }
 
-  private getSelectedSuppliers(): Array<Record<string, any>> {
-    const selectedSuppliers: Array<Record<string, any>> = [];
-    this.$supplierIdsGroup.find('input:checked').each((index, input) => {
-      const inputElement = <HTMLInputElement> input;
-
+  private getSelectedSuppliers(): Array<BasicProductSupplier> {
+    const selectedSuppliers: BasicProductSupplier[] = [];
+    // @ts-ignore
+    this.$supplierIdsGroup.find('input:checked').each((index: number, input: HTMLInputElement) => {
       selectedSuppliers.push({
-        supplierName: inputElement.dataset.label,
-        supplierId: inputElement.value,
+        supplierName: <string> input.dataset.label,
+        supplierId: input.value,
       });
     });
 
@@ -281,14 +274,15 @@ export default class ProductSuppliersManager {
     this.showDefaultSuppliers();
     const selectedSupplierIds = suppliers.map((supplier) => supplier.supplierId);
 
-    this.$defaultSupplierGroup.find('input').each((key, input) => {
-      const inputElement = <HTMLInputElement> input;
+    this.$defaultSupplierGroup.find('input').each((key: number, input: HTMLInputElement) => {
       const isValid = selectedSupplierIds.includes(input.value);
 
       if (this.forceUpdateDefault && !isValid) {
-        inputElement.checked = false;
+        // eslint-disable-next-line no-param-reassign
+        input.checked = false;
       }
-      inputElement.disabled = !isValid;
+      // eslint-disable-next-line no-param-reassign
+      input.disabled = !isValid;
     });
 
     if (this.$defaultSupplierGroup.find('input:checked').length === 0 && this.forceUpdateDefault) {
@@ -304,12 +298,7 @@ export default class ProductSuppliersManager {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
-  /**
-   * @param {int[]} selectedSupplierIds
-   *
-   * @private
-   */
-  private checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<number>): void {
+  private checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<string>): void {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
@@ -325,18 +314,16 @@ export default class ProductSuppliersManager {
   /**
    * Memorize suppliers to be able to re-render them later.
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
-   *
-   * @private
    */
   private memorizeCurrentSuppliers(): void {
     this.getSelectedSuppliers().forEach((supplier) => {
       this.suppliers[supplier.supplierId] = {
         supplierId: supplier.supplierId,
-        productSupplierId: $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplier.supplierId)).val(),
-        supplierName: $(this.suppliersMap.productSupplierRow.supplierNameInput(supplier.supplierId)).val(),
-        reference: $(this.suppliersMap.productSupplierRow.referenceInput(supplier.supplierId)).val(),
-        price: $(this.suppliersMap.productSupplierRow.priceInput(supplier.supplierId)).val(),
-        currencyId: $(this.suppliersMap.productSupplierRow.currencyIdInput(supplier.supplierId)).val(),
+        productSupplierId: <string> $(this.suppliersMap.productSupplierRow.productSupplierIdInput(supplier.supplierId)).val(),
+        supplierName: <string> $(this.suppliersMap.productSupplierRow.supplierNameInput(supplier.supplierId)).val(),
+        reference: <string> $(this.suppliersMap.productSupplierRow.referenceInput(supplier.supplierId)).val(),
+        price: <number> $(this.suppliersMap.productSupplierRow.priceInput(supplier.supplierId)).val(),
+        currencyId: <string> $(this.suppliersMap.productSupplierRow.currencyIdInput(supplier.supplierId)).val(),
         removed: false,
       };
     });
@@ -347,12 +334,8 @@ export default class ProductSuppliersManager {
   /**
    * Create a "shadow" prototype just to parse default values set inside the input fields,
    * this allow to build an object with default values set in the FormType
-   *
-   * @private
-   *
-   * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  private getDefaultDataForSupplier(): Record<string, any> {
+  private getDefaultDataForSupplier(): DefaultProductSupplier {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -360,22 +343,16 @@ export default class ProductSuppliersManager {
 
     return {
       removed: false,
-      productSupplierId: this.getDataFromRow(this.suppliersMap.productSupplierRow.productSupplierIdInput, rowPrototype),
-      reference: this.getDataFromRow(this.suppliersMap.productSupplierRow.referenceInput, rowPrototype),
-      price: this.getDataFromRow(this.suppliersMap.productSupplierRow.priceInput, rowPrototype),
-      currencyId: this.getDataFromRow(this.suppliersMap.productSupplierRow.currencyIdInput, rowPrototype),
+      productSupplierId: <string> this.getDataFromRow(this.suppliersMap.productSupplierRow.productSupplierIdInput, rowPrototype),
+      reference: <string> this.getDataFromRow(this.suppliersMap.productSupplierRow.referenceInput, rowPrototype),
+      price: <number> this.getDataFromRow(this.suppliersMap.productSupplierRow.priceInput, rowPrototype),
+      currencyId: <string> this.getDataFromRow(this.suppliersMap.productSupplierRow.currencyIdInput, rowPrototype),
     };
   }
 
-  /**
-   * @param selectorGenerator {function}
-   * @param rowPrototype {Document}
-   *
-   * @private
-   *
-   * @returns {*}
-   */
-  private getDataFromRow(selectorGenerator: (name: string) => string, rowPrototype: Document): any {
-    return (<HTMLInputElement> rowPrototype?.querySelector(selectorGenerator(this.prototypeName)))?.value;
+  private getDataFromRow(selectorGenerator: (supplierIndex: string) => string, rowPrototype: Document): number | string | null {
+    const rowField: HTMLInputElement | null = rowPrototype.querySelector(selectorGenerator(this.prototypeName));
+
+    return rowField ? rowField.value : null;
   }
 }
