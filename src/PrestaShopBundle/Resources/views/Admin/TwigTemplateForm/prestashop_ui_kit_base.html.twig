@@ -105,6 +105,7 @@
     {{- block('form_prepend_alert') -}}
     {{- block('form_prepend_external_link') -}}
 
+    {{- block('form_disabling_toggle') -}}
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
 
@@ -116,6 +117,14 @@
   <div class="form-group form-column-breaker"></div>
   {% endif %}
 {%- endblock form_row %}
+
+{% block form_disabling_toggle %}
+  {% set overrideCheckboxName = disabling_toggle_prefix ~ form.vars.name %}
+  {% if attribute(form.parent, overrideCheckboxName) is defined %}
+    {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
+    {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
+  {% endif %}
+{% endblock %}
 
 {% block widget_type_class %}
 {% if not compound and form.vars.block_prefixes|length > 2 %}

@@ -93,3 +93,11 @@ services:
       - '@session.flash_bag'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+  form.extension.disabling_togle_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\DisablingToggleExtension'
+    arguments:
+      - '@form.form_builder_modifier'
+      - '@translator'
+    tags:
+      - { name: form.type_extension }
