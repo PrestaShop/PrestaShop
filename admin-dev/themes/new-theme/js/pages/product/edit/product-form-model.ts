@@ -31,13 +31,13 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {NumberFormatter} from '@app/cldr';
 
 export default class ProductFormModel {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  mapper: FormObjectMapper;
+  private mapper: ObjectFormMapper;
 
-  precision: number;
+  private precision: number;
 
-  numberFormatter: NumberFormatter;
+  private numberFormatter: NumberFormatter;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -63,15 +63,10 @@ export default class ProductFormModel {
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
-    this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
+    this.eventEmitter.on(ProductEventMap.updatedProductField, (event: FormUpdateEvent) => this.productFieldUpdated(event));
   }
 
-  /**
-   * @returns {Object}
-   *
-   * @private
-   */
-  getProduct(): Record<string, any> {
+  getProduct(): any {
     return this.mapper.getModel().product;
   }
 
@@ -79,12 +74,6 @@ export default class ProductFormModel {
     return this.mapper.getBigNumber(`product.${productModelKey}`);
   }
 
-  /**
-   * @param {string | string[]} productModelKeys
-   * @param {function} callback
-   *
-   * @private
-   */
   watch(productModelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
     const watchedKeys: string[] = Array.isArray(productModelKeys) ? productModelKeys : [productModelKeys];
     const modelKeys: string[] = watchedKeys.map((productModelKey: string) => `product.${productModelKey}`);
@@ -92,11 +81,7 @@ export default class ProductFormModel {
     this.mapper.watch(modelKeys, callback);
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {*} value
-   */
-  set(productModelKey: string, value: any): void {
+  set(productModelKey: string, value: string | number | string[] | undefined): void {
     this.mapper.set(`product.${productModelKey}`, value);
   }
 
@@ -135,11 +120,6 @@ export default class ProductFormModel {
     return this.numberFormatter.format(price.toNumber());
   }
 
-  /**
-   * @param {BigNumber} price
-   *
-   * @returns {string}
-   */
   removeTax(price: BigNumber): string {
     const taxRatio = this.getTaxRatio();
 
@@ -150,11 +130,6 @@ export default class ProductFormModel {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
-  /**
-   * @param {BigNumber} price
-   *
-   * @returns {string}
-   */
   addTax(price: BigNumber): string {
     const taxRatio = this.getTaxRatio();
 
@@ -167,10 +142,6 @@ export default class ProductFormModel {
 
   /**
    * Handles modifications that have happened in the product
-   *
-   * @param {Object} event
-   *
-   * @private
    */
   private productFieldUpdated(event: FormUpdateEvent): void {
     this.updateProductPrices(event);
@@ -178,11 +149,8 @@ export default class ProductFormModel {
 
   /**
    * Specific handler for modifications related to the product price
-   *
-   * @param {Object} event
-   * @private
    */
-  private updateProductPrices(event: FormUpdateEvent) {
+  private updateProductPrices(event: FormUpdateEvent): void {
     const pricesFields = [
       'product.price.priceTaxIncluded',
       'product.price.priceTaxExcluded',
