@@ -26,6 +26,7 @@ import Serp from '@app/utils/serp';
 import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
+import TaggableField from '@components/taggable-field';
 
 const {$} = window;
 
@@ -74,5 +75,12 @@ export default class ProductSEOManager {
       },
       previewUrl,
     );
+
+    new TaggableField({
+      tokenFieldSelector: ProductMap.seo.tagFields,
+      options: {
+        createTokensOnBlur: true,
+      },
+    });
   }
 }
