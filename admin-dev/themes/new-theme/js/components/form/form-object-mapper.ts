@@ -181,7 +181,12 @@ export default class FormObjectMapper {
       return undefined;
     }
 
-    const inputNames = this.fullModelMapping[modelKey];
+    let inputNames = this.fullModelMapping[modelKey];
+
+    // Turn single identifier into array to limit duplicated code in the following code
+    if (!Array.isArray(inputNames)) {
+      inputNames = [inputNames];
+    }
 
     // We must loop manually to keep the order in configuration,
     // if we use jQuery multiple selectors the collection
