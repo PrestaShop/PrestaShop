@@ -467,16 +467,16 @@ services:
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'search_engines'
       
-  prestashop.core.grid.data.factory.store:
+  prestashop.core.grid.data.factory.stores:
     class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
     arguments:
-      - '@prestashop.core.grid.query_builder.store'
+      - '@prestashop.core.grid.query_builder.stores'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'store'
 
-  prestashop.core.grid.data.factory.store_decorator:
+  prestashop.core.grid.data.factory.stores_decorator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\StoreGridDataFactory'
     arguments:
-      - '@prestashop.core.grid.data.factory.store'
+      - '@prestashop.core.grid.data.factory.stores'
       - '@prestashop.adapter.legacy.configuration'

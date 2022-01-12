@@ -56,7 +56,7 @@ class StoresController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, StoreFilters $filters)
     {
-        $storeGridFactory = $this->get('prestashop.core.grid.factory.store');
+        $storeGridFactory = $this->get('prestashop.core.grid.factory.stores');
         $storeGrid = $storeGridFactory->getGrid($filters);
 
         return $this->render(
@@ -90,7 +90,7 @@ class StoresController extends FrameworkBundleAdminController
      */
     public function searchAction(Request $request)
     {
-        $gridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.store');
+        $gridDefinitionFactory = $this->get('prestashop.core.grid.definition.factory.stores');
         $storesGridDefinition = $gridDefinitionFactory->getDefinition();
 
         $gridFilterFormFactory = $this->get('prestashop.core.grid.filter.form_factory');
@@ -121,12 +121,12 @@ class StoresController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request)
     {
-        $storeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.store_form_builder');
+        $storeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.stores_form_builder');
         $storeForm = $storeFormBuilder->getForm();
         $storeForm->handleRequest($request);
 
         try {
-            $storeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.store_form_handler');
+            $storeFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.stores_form_handler');
             $result = $storeFormHandler->handle($storeForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
@@ -167,7 +167,7 @@ class StoresController extends FrameworkBundleAdminController
      */
     public function editAction($storeId, Request $request)
     {
-        $storeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.store_form_builder');
+        $storeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.stores_form_builder');
         $storeForm = $storeFormBuilder->getFormFor((int) $storeId);
 
         $storeForm->handleRequest($request);
@@ -212,7 +212,7 @@ class StoresController extends FrameworkBundleAdminController
      */
     public function deleteAction($storeId)
     {
-        $storeDeleter = $this->get('prestashop.adapter.store.deleter');
+        $storeDeleter = $this->get('prestashop.adapter.stores.deleter');
 
         if ($errors = $storeDeleter->delete([$storeId])) {
             $this->flashErrors($errors);
@@ -244,7 +244,7 @@ class StoresController extends FrameworkBundleAdminController
     public function deleteBulkAction(Request $request)
     {
         $storeIds = $request->request->get('store_bulk');
-        $storeDeleter = $this->get('prestashop.adapter.store.deleter');
+        $storeDeleter = $this->get('prestashop.adapter.stores.deleter');
 
         if ($errors = $storeDeleter->delete($storeIds)) {
             $this->flashErrors($errors);
@@ -276,13 +276,13 @@ class StoresController extends FrameworkBundleAdminController
     public function toggleStatusAction(int $storeId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new ToggleStoreStatusCommand($carrierId));
+            $this->getCommandBus()->handle(new ToggleStoreStatusCommand($storeId));
     
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (CarrierException $e) {
+        } catch (StoreException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
     

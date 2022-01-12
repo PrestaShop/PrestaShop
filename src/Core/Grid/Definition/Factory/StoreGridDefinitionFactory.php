@@ -95,9 +95,16 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('address1'))
-                    ->setName($this->trans('Address', [], 'Admin.Stores.Feature'))
+                    ->setName($this->trans('Address 1', [], 'Admin.Stores.Feature'))
                     ->setOptions([
                         'field' => 'address1',
+                    ])
+            )
+            ->add(
+                (new DataColumn('address2'))
+                    ->setName($this->trans('Address 2', [], 'Admin.Stores.Feature'))
+                    ->setOptions([
+                        'field' => 'address2',
                     ])
             )
             ->add(
@@ -193,7 +200,17 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('address1')
                     ->setTypeOptions([
                         'attr' => [
-                            'placeholder' => $this->trans('Search address', [], 'Admin.Stores.Feature'),
+                            'placeholder' => $this->trans('Search address 1', [], 'Admin.Stores.Feature'),
+                        ],
+                        'required' => false,
+                    ])
+            )
+            ->add(
+                (new Filter('address2', TextType::class))
+                    ->setAssociatedColumn('address2')
+                    ->setTypeOptions([
+                        'attr' => [
+                            'placeholder' => $this->trans('Search address 2', [], 'Admin.Stores.Feature'),
                         ],
                         'required' => false,
                     ])

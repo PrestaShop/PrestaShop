@@ -26,12 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
 /**
  * Thrown when cannot toggle carrier status
  */
-class CannotToggleCarrierStatusException extends CarrierException
+class CannotToggleStoreStatusException extends StoreException
 {
     /**
      * Thrown when cannot toggle single carrier status.

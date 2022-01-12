@@ -29,25 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store;
 
 use Store;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShopException;
+use Validate;
 
 abstract class AbstractStoreHandler
 {
 	protected function getStore(StoreId $storeId)
 	{
-		try {
-			$store = new Store($storeId->getValue());
-		} catch (PrestaShopException $exception) {
-			throw new StoreException('Failed to create new store', 0, $exception);
-		}
-
-		if ($store->id !== $storeId->getValue()) {
-			throw new StoreNotFoundException(sprintf('Store with id "%s" was not found', $storeId->getValue()));
-		}
-
+        $store = new Store((int)$storeId->getValue());
+        if (!Validate::isLoadedObject($store)) {
+            throw new StoreNotFoundException(sprintf('Store with id "%s" was not found', $storeId->getValue()));
+        }
 		return $store;
 	}
 }

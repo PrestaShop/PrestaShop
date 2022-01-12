@@ -41,6 +41,7 @@ final class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
         'id_store',
         'name',
         'address1',
+        'address2',
         'city',
         'postcode',
         'id_state',
@@ -92,7 +93,7 @@ final class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $qb = $this->getStoreQueryBuilder($searchCriteria)
-            ->select('s.id_store, sl.name, sl.address1, s.city, s.phone, s.fax, s.active, s.postcode')
+            ->select('s.id_store, sl.name, sl.address1, sl.address2, s.city, s.phone, s.fax, s.active, s.postcode')
             ->addSelect('cl.`name` as country_name')
             ->addSelect('st.`name` as state_name')
             ->groupBy('s.id_store');
@@ -137,26 +138,17 @@ final class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
             if (!in_array($filterName, self::ALLOWED_FILTERS)) {
                 continue;
             }
-
-            if ($filterName === 'name') {
-                $qb->andWhere('s.name LIKE :name');
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-
-                continue;
-            }
-
-            if ($filterName === 'address1') {
-                $qb->andWhere('sl.address1 LIKE :address1');
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
             
-                continue;
+            if (in_array($filterName, ['address1', 'address2'])) {
+                 $qb->andWhere('sl.'.$filterName.' LIKE :'.$filterName);
+                 $qb->setParameter($filterName, '%' . $filterValue . '%');
+                 continue;
             }
             
-            if ($filterName === 'city') {
-                $qb->andWhere('s.city LIKE :city');
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-            
-                continue;
+            if (in_array($filterName, ['name', 'city', 'phone', 'fax'])) {
+                 $qb->andWhere('s.'.$filterName.' LIKE :'.$filterName);
+                 $qb->setParameter($filterName, '%' . $filterValue . '%');
+                 continue;
             }
             
             if ($filterName === 'id_state') {
@@ -168,20 +160,6 @@ final class StoreQueryBuilder extends AbstractDoctrineQueryBuilder
             
             if ($filterName === 'id_country') {
                 $qb->andWhere('cl.id_country = :'.$filterName);
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-            
-                continue;
-            }
-            
-            if ($filterName === 'phone') {
-                $qb->andWhere('s.phone LIKE :phone');
-                $qb->setParameter($filterName, '%' . $filterValue . '%');
-            
-                continue;
-            }
-            
-            if ($filterName === 'fax') {
-                $qb->andWhere('s.fax LIKE :fax');
                 $qb->setParameter($filterName, '%' . $filterValue . '%');
             
                 continue;

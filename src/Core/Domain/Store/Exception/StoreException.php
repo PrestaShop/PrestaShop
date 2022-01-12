@@ -30,6 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-class CarrierException extends DomainException
+class StoreException extends DomainException
 {
 }
