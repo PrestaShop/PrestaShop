@@ -53,7 +53,10 @@
           </div>
         </form>
       </div>
-      <Filters @applyFilter="applyFilter" />
+      <Filters
+        ref="filters"
+        @applyFilter="applyFilter"
+      />
     </div>
     <div class="col-md-4 alert-box">
       <transition name="fade">
@@ -77,9 +80,9 @@
   import PSButton from '@app/widgets/ps-button.vue';
   import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters.vue';
+  import Filters, {FiltersInstanceType} from './filters.vue';
 
-  export default Vue.extend({
+  const Search = Vue.extend({
     components: {
       Filters,
       PSTags,
@@ -87,6 +90,9 @@
       PSAlert,
     },
     computed: {
+      filtersRef(): FiltersInstanceType {
+        return <FiltersInstanceType>(this.$refs.filters);
+      },
       error(): boolean {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
@@ -130,4 +136,8 @@
       };
     },
   });
+
+  export type SearchInstanceType = InstanceType<typeof Search> | undefined;
+
+  export default Search;
 </script>
