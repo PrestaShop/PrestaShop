@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -75,11 +76,24 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
             ])
         ;
         $commandBuilder = new CommandBuilder($config);
-
-        return $commandBuilder->buildCommands(
+        $commands = $commandBuilder->buildCommands(
             $formData,
             new UpdateProductSeoCommand($productId->getValue(), $singleShopConstraint),
             new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
         );
+
+        if (!empty($seoData['tags'])) {
+            $parsedTags = [];
+            foreach ($seoData['tags'] as $langId => $rawTags) {
+                $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+            }
+
+            $commands[] = new SetProductTagsCommand(
+                $productId->getValue(),
+                $parsedTags
+            );
+        }
+
+        return $commands;
     }
 }
