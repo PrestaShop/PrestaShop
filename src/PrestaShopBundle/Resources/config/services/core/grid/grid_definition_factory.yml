@@ -306,3 +306,8 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     public: true
+    
+  prestashop.core.grid.definition.factory.store:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StoreGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    public: true

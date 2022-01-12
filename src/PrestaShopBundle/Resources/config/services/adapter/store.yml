@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.store.repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\StoreRepository'
+
+  prestashop.adapter.store.deleter:
+    class: 'PrestaShop\PrestaShop\Adapter\Support\StoreDeleter'
+
+  prestashop.adapter.store.query_handler.get_store_for_editing:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreForEditingHandler'
+    arguments:
+      - '@prestashop.bundle.form.data_transformer.string_array_to_integer_array'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing' }
+
+  prestashop.adapter.store.command_handler.edit_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\EditStoreHandler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Command\EditStoreCommand' }
+
+  prestashop.adapter.store.command_handler.add_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
+    arguments:
+      - '@validator'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand' }
