@@ -27,59 +27,39 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SpecificPricePriorityType extends TranslatorAwareType
+class SpecificPricePriorityType extends CollectionType
 {
     /**
-     * @var RouterInterface
+     * @var FormChoiceProviderInterface
      */
-    private $router;
-
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-    }
+    private $priorityChoiceProvider;
 
     /**
-     * @param FormBuilderInterface $builder
-     * @param array<string, mixed> $options
+     * @param FormChoiceProviderInterface $priorityChoiceProvider
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function __construct(
+        FormChoiceProviderInterface $priorityChoiceProvider
+    ) {
+        $this->priorityChoiceProvider = $priorityChoiceProvider;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('use_custom_priority', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Use default order', 'Admin.Catalog.Feature') => false,
-                    $this->trans('Set a specific order for this product', 'Admin.Catalog.Feature') => true,
-                ],
-                'default_empty_data' => false,
-                'placeholder' => false,
-                'expanded' => true,
-                'multiple' => false,
+        parent::configureOptions($resolver);
+
+        $resolver->setDefaults([
+            'entry_type' => ChoiceType::class,
+            'entry_options' => [
+                'choices' => $this->priorityChoiceProvider->getChoices(),
                 'required' => false,
+                'placeholder' => false,
                 'label' => false,
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Global'),
-                    'href' => $this->router->generate('admin_product_preferences'),
-                    'position' => 'prepend',
-                ],
-            ])
-            ->add('priorities', PriorityChoiceType::class, [
-                'label' => false,
-                'row_attr' => [
-                    // hide by default. Javascript handles visibility based on priority type choice
-                    'class' => 'specific-price-priority-list d-none',
-                ],
-            ])
-        ;
+            ],
+        ]);
     }
 }

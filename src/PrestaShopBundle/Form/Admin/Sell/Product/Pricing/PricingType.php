@@ -143,7 +143,7 @@ class PricingType extends TranslatorAwareType
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
             ])
-            ->add('priority_management', SpecificPricePriorityType::class, [
+            ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'label_help_box' => $this->trans('Define which condition should apply first when a customer is eligible for multiple specific prices.', 'Admin.Catalog.Help'),
