@@ -25,6 +25,8 @@
 
 /**
  * Shows or hides specified element based on specified checkbox "checked" property.
+ *
+ * @todo: could be made more generic and merged with the include-tax-field-toggle.ts component in other PR.
  */
 export default class VisibilityToggler {
   checkboxesSelector: string;
