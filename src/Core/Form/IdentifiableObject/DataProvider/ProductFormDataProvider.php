@@ -553,8 +553,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractOptionsData(ProductForEditing $productForEditing): array
     {
         $options = $productForEditing->getOptions();
+        $suppliersData = $this->extractSuppliersData($productForEditing);
 
-        return [
+        return array_merge([
             'visibility' => [
                 'visibility' => $options->getVisibility(),
                 'available_for_order' => $options->isAvailableForOrder(),
@@ -563,8 +564,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'show_condition' => $options->showCondition(),
             'condition' => $options->getCondition(),
-            'suppliers' => $this->extractSuppliersData($productForEditing),
-        ];
+        ], $suppliersData);
     }
 
     /**
@@ -639,36 +639,42 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|array<int, int|array<string, string|int>>>
+     * @return array<string, array<int|string, array<int|string, int|string|null>|int>>
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
     {
+        $suppliersData = [
+            'suppliers' => [
+                'default_supplier_id' => 0,
+                'supplier_ids' => [],
+            ],
+            'product_suppliers' => [],
+        ];
+
         /** @var ProductSupplierOptions $productSupplierOptions */
         $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
 
         if (empty($productSupplierOptions->getSuppliersInfo())) {
-            return [];
+            return $suppliersData;
         }
 
-        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
-        $suppliersData = [
-            'default_supplier_id' => $defaultSupplierId,
-        ];
-
+        $suppliersData['suppliers']['default_supplier_id'] = $productSupplierOptions->getDefaultSupplierId();
         foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
             $supplierForEditing = $supplierOption->getProductSupplierForEditing();
             $supplierId = $supplierOption->getSupplierId();
 
-            $suppliersData['supplier_ids'][] = $supplierId;
-            $suppliersData['product_suppliers'][$supplierId] = [
-                'supplier_id' => $supplierId,
-                'supplier_name' => $supplierOption->getSupplierName(),
-                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
-                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
-                'reference' => $supplierForEditing->getReference(),
-                'currency_id' => $supplierForEditing->getCurrencyId(),
-                'combination_id' => $supplierForEditing->getCombinationId(),
-            ];
+            $suppliersData['suppliers']['supplier_ids'][] = $supplierId;
+            if ($productForEditing->getType() !== ProductType::TYPE_COMBINATIONS) {
+                $suppliersData['product_suppliers'][$supplierId] = [
+                    'supplier_id' => $supplierId,
+                    'supplier_name' => $supplierOption->getSupplierName(),
+                    'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                    'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                    'reference' => $supplierForEditing->getReference(),
+                    'currency_id' => $supplierForEditing->getCurrencyId(),
+                    'combination_id' => $supplierForEditing->getCombinationId(),
+                ];
+            }
         }
 
         return $suppliersData;
