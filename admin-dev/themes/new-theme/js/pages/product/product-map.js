@@ -157,6 +157,7 @@ export default {
     defaultDescription: '.serp-default-description',
     watchedDescription: '.serp-watched-description',
     watchedMetaUrl: '.serp-watched-url:input',
+    tagFields: 'input.js-taggable-field',
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
       targetInput: '#product_seo_redirect_option_target',
