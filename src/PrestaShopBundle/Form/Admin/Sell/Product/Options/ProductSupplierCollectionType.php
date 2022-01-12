@@ -23,42 +23,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareTypeTrait;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * This form class is responsible to generate the product options form.
- */
-class OptionsType extends TranslatorAwareType
+class ProductSupplierCollectionType extends CollectionType
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    use TranslatorAwareTypeTrait;
+
+    public function __construct(TranslatorInterface $translator, array $locales)
     {
-        $builder
-            ->add('visibility', VisibilityType::class)
-            ->add('suppliers', SuppliersType::class)
-            ->add('product_suppliers', ProductSupplierCollectionType::class)
-        ;
+        $this->translator = $translator;
+        $this->locales = $locales;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'required' => false,
-            'label' => false,
-            // Suppliers can be removed so there might be extra data in the request during type switching
-            'allow_extra_fields' => true,
+            'label' => $this->trans('Supplier reference(s)', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h4',
+            'entry_type' => ProductSupplierType::class,
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
+            'attr' => [
+                'class' => 'product-suppliers-collection',
+            ],
+            'alert_message' => $this->trans(
+                'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.',
+                'Admin.Catalog.Help',
+                [
+                    '%save_label%' => $this->trans('Save', 'Admin.Actions'),
+                ]
+            ),
+            'alert_position' => 'prepend',
         ]);
     }
 }
