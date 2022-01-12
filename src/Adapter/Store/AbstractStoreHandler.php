@@ -36,7 +36,7 @@ use Validate;
 
 abstract class AbstractStoreHandler
 {
-	protected function getStore(StoreId $storeId)
+	protected function getStore(StoreId $storeId): Store
 	{
         $store = new Store((int)$storeId->getValue());
         if (!Validate::isLoadedObject($store)) {
