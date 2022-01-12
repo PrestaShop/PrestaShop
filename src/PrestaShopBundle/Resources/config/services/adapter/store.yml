@@ -33,3 +33,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand }
+      
+  prestashop.adapter.store.command_handler.bulk_toggle_store_status:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkToggleStoreStatusHandler'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand }

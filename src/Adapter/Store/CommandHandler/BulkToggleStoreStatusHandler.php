@@ -29,30 +29,33 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Store\AbstractStoreHandler;
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\ToggleStoreStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkToggleStoreStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShopException;
 
 /**
- * Handles command that toggle store status
+ * Bulk toggles store status
  */
-class ToggleStoreStatusHandler extends AbstractStoreHandler implements ToggleStoreStatusHandlerInterface
+class BulkToggleStoreStatusHandler extends AbstractStoreHandler implements BulkToggleStoreStatusHandlerInterface
 {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function handle(ToggleStoreStatusCommand $command): void
+	public function handle(BulkToggleStoreStatusCommand $command): void
 	{
-		$store = $this->getStore($command->getStoreId());
+		foreach ($command->getStoreIds() as $storeId) {
+			$store = $this->getStore($storeId);
+			$store->active = $command->getExpectedStatus();
 
-		try {
-			if (false === $store->toggleStatus()) {
-				throw new CannotToggleStoreStatusException(sprintf('Unable to toggle status of store with id "%d"', $command->getStoreId()->getValue()), CannotToggleStoreStatusException::SINGLE_TOGGLE);
+			try {
+				if (!$store->save()) {
+					throw new CannotToggleStoreStatusException(sprintf('Cannot toggle status of store with id "%d"', $storeId->getValue()), CannotToggleStoreStatusException::BULK_TOGGLE);
+				}
+			} catch (PrestaShopException $e) {
+				throw new StoreException(sprintf('An error occurred when updating status of store with id "%d"', $storeId->getValue()));
 			}
-		} catch (PrestaShopException $e) {
-			throw new StoreException(sprintf('An error occurred when toggling status of store with id "%d"', $command->getStoreId()->getValue()), 0, $e);
 		}
 	}
 }

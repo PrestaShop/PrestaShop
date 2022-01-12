@@ -32,12 +32,14 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\StoreFilters;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject;
 
 
@@ -274,13 +276,46 @@ class StoresController extends FrameworkBundleAdminController
      *
      * @param int $storeId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function toggleStatusAction(int $storeId): RedirectResponse
+    public function toggleStatusAction(int $storeId): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new ToggleStoreStatusCommand($storeId));
     
+            $response = [
+                'status' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+            ];
+        } catch (StoreException $e) {
+            $response = [
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ];
+        }
+    
+        return $this->json($response);
+    }
+    
+    /**
+     * Enables store status on bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_stores_index",
+     * )
+     * @DemoRestricted(redirectRoute="admin_stores_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableStatusAction(Request $request): RedirectResponse
+    {
+        $storeIds = $this->getStoreIdsFromRequest($request);
+    
+        try {
+            $this->getCommandBus()->handle(new BulkToggleStoreStatusCommand($storeIds, true));
             $this->addFlash(
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
@@ -290,6 +325,58 @@ class StoresController extends FrameworkBundleAdminController
         }
     
         return $this->redirectToRoute('admin_stores_index');
+    }
+    
+    /**
+     * Disables store status on bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_stores_index",
+     * )
+     * @DemoRestricted(redirectRoute="admin_stores_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDisableStatusAction(Request $request): RedirectResponse
+    {
+        $storeIds = $this->getStoreIdsFromRequest($request);
+    
+        try {
+            $this->getCommandBus()->handle(new BulkToggleStoreStatusCommand($storeIds, false));
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (StoreException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+    
+        return $this->redirectToRoute('admin_stores_index');
+    }
+    
+    /**
+     * Get store IDs from request for bulk actions.
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getStoreIdsFromRequest(Request $request): array
+    {
+        $storeIds = $request->request->get('store_bulk');
+    
+        if (!is_array($storeIds)) {
+            return [];
+        }
+    
+        foreach ($storeIds as $i => $storeId) {
+            $storeIds[$i] = (int) $storeId;
+        }
+    
+        return $storeIds;
     }
 
     /**
