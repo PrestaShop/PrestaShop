@@ -722,7 +722,7 @@ class ProductFormDataProviderTest extends TestCase
             0 => 1,
             1 => 2,
         ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['options']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -731,7 +731,7 @@ class ProductFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => 0,
         ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['options']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -1428,7 +1428,11 @@ class ProductFormDataProviderTest extends TestCase
                     'show_price' => true,
                     'online_only' => false,
                 ],
-                'suppliers' => [],
+                'suppliers' => [
+                    'default_supplier_id' => 0,
+                    'supplier_ids' => [],
+                ],
+                'product_suppliers' => [],
             ],
             'footer' => [
                 'active' => true,
