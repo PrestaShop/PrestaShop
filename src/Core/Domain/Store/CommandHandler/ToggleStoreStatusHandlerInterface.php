@@ -38,5 +38,5 @@ interface ToggleStoreStatusHandlerInterface
     /**
      * @param ToggleStoreStatusCommand $command
      */
-    public function handle(ToggleStoreStatusCommand $command);
+    public function handle(ToggleStoreStatusCommand $command): void;
 }
