@@ -64,6 +64,7 @@ class ProductSupplierCollectionType extends CollectionType
                 ]
             ),
             'alert_position' => 'prepend',
+            'block_prefix' => 'product_supplier_collection',
         ]);
     }
 }
