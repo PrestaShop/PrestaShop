@@ -103,7 +103,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
         $isOverridden = $builder->getOption('modify_all_shops');
         if ($isOverridden) {
             $label = $this->getCheckboxLabel();
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) use ($label) {
+            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($label) {
                 $form = $event->getForm();
                 $parent = $form->getParent();
                 $parent->add(self::MODIFY_ALL_SHOPS_PREFIX . $form->getName(),
