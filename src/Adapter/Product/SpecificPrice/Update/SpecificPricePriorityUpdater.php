@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpda
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopException;
 use SpecificPrice;
 
 /**
