@@ -39,12 +39,21 @@ class SpecificPricePriorityCommandsBuilder implements ProductCommandsBuilderInte
             return [];
         }
 
-        if (!$formData['pricing']['priority_management']['use_custom_priority']) {
+        $prioritiesData = $formData['pricing']['priority_management'];
+
+        if (empty($prioritiesData['use_custom_priority'])) {
             return [new RemoveSpecificPricePriorityForProductCommand($productId->getValue())];
         }
 
-        $priorityValues = $formData['pricing']['priority_management']['priorities'];
+        if (!empty($prioritiesData['priorities'])) {
+            return [
+                new SetSpecificPricePriorityForProductCommand(
+                    $productId->getValue(),
+                    $prioritiesData['priorities']
+                ),
+            ];
+        }
 
-        return [new SetSpecificPricePriorityForProductCommand($productId->getValue(), $priorityValues)];
+        return [];
     }
 }
