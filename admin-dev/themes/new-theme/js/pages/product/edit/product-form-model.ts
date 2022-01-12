@@ -30,11 +30,11 @@ import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 
 export default class ProductFormModel {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  mapper: FormObjectMapper;
+  private mapper: ObjectFormMapper;
 
-  precision: number;
+  private precision: number;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -58,42 +58,23 @@ export default class ProductFormModel {
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
-    this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
+    this.eventEmitter.on(ProductEventMap.updatedProductField, (event: FormUpdateEvent) => this.productFieldUpdated(event));
   }
 
-  /**
-   * @returns {Object}
-   *
-   * @private
-   */
-  getProduct(): Record<string, any> {
+  getProduct(): any {
     return this.mapper.getModel().product;
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {function} callback
-   *
-   * @private
-   */
   watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {*} value
-   */
-  set(productModelKey: string, value: any): void {
+  set(productModelKey: string, value: string | number | string[] | undefined): void {
     this.mapper.set(`product.${productModelKey}`, value);
   }
 
   /**
    * Handles modifications that have happened in the product
-   *
-   * @param {Object} event
-   *
-   * @private
    */
   private productFieldUpdated(event: FormUpdateEvent): void {
     this.updateProductPrices(event);
@@ -101,11 +82,8 @@ export default class ProductFormModel {
 
   /**
    * Specific handler for modifications related to the product price
-   *
-   * @param {Object} event
-   * @private
    */
-  private updateProductPrices(event: Record<string, any>) {
+  private updateProductPrices(event: FormUpdateEvent): void {
     const pricesFields = [
       'product.price.priceTaxIncluded',
       'product.price.priceTaxExcluded',
@@ -121,7 +99,7 @@ export default class ProductFormModel {
     const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
-    let taxRate;
+    let taxRate: BigNumber;
     try {
       taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
     } catch (error) {
@@ -167,27 +145,11 @@ export default class ProductFormModel {
     }
   }
 
-  /**
-   * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
-   *
-   * @returns {string}
-   */
   private removeTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
-  /**
-   * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
-   *
-   * @returns {string}
-   */
-  private addTax(price: BigNumber, taxRatio: BigNumber): string {
+  private addTax(price: BigNumber, taxRatio: BigNumber) {
     return price.times(taxRatio).toFixed(this.precision);
   }
 }
