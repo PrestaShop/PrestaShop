@@ -38,7 +38,7 @@ use PrestaShopException;
 /**
  * Handles command that toggle store status
  */
-class ToggleCarrierStatusHandler extends AbstractStoreHandler implements ToggleStoreStatusHandlerInterface
+class ToggleStoreStatusHandler extends AbstractStoreHandler implements ToggleStoreStatusHandlerInterface
 {
 	/**
 	 * {@inheritdoc}

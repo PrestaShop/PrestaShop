@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\storeId;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject;
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
 /**
  * Toggles store status

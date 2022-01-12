@@ -35,6 +35,7 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import TranslatableInput from '@components/translatable-input';
 import ChoiceTree from '@components/form/choice-tree';
+import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
 
 /**
  * Responsible for actions in Stores listing page.
@@ -52,6 +53,7 @@ export default class StoresPage {
     storeGrid.addExtension(new SubmitBulkExtension());
     storeGrid.addExtension(new BulkActionCheckboxExtension());
     storeGrid.addExtension(new SubmitRowActionExtension());
+    storeGrid.addExtension(new AsyncToggleColumnExtension());
 
     new TranslatableInput();
 

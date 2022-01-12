@@ -33,7 +33,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-
+  alert(1);
   <script src="{{ asset('themes/new-theme/public/stores.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
 {% endblock %}

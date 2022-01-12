@@ -43,7 +43,7 @@ module.exports = {
     attribute_group: './js/pages/attribute-group',
     backup: './js/pages/backup',
     carrier: './js/pages/carrier',
-    carrier: './js/pages/stores',
+    stores: './js/pages/stores',
     cart_rule: './js/pages/cart-rule',
     catalog: './js/app/pages/catalog',
     catalog_price_rule: './js/pages/catalog-price-rule',

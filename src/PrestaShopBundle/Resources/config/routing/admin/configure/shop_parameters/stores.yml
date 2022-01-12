@@ -48,7 +48,7 @@ admin_stores_bulk_delete:
   path: /bulk-delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDeleteAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::bulkDeleteAction'
     _legacy_controller: AdminStores
     _legacy_link: AdminSearchEngines:submitBulkdeletestore
     
@@ -56,7 +56,7 @@ admin_stores_bulk_enable_status:
   path: /bulk-enable-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkEnableStatusAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::bulkEnableStatusAction'
     _legacy_controller: AdminStores
     _legacy_link: AdminSearchEngines:submitBulkenablestatusstore
     
@@ -64,15 +64,15 @@ admin_stores_bulk_disable_status:
   path: /bulk-disable-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::bulkDisableStatusAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::bulkDisableStatusAction'
     _legacy_controller: AdminStores
     _legacy_link: AdminSearchEngines:submitBulkenablestatusstore
 
-admin_store_toggle_status:
+admin_stores_toggle_status:
   path: /{storeId}/toggle-status
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoreController::toggleStatusAction'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\StoresController::toggleStatusAction'
     _legacy_controller: AdminStores
     #     _legacy_link: AdminCarriers:statuscarrier
     _legacy_parameters:

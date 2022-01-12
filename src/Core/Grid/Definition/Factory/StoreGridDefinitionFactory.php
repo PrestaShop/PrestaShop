@@ -155,7 +155,7 @@ class StoreGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_store',
-                        'route' => 'admin_store_toggle_status',
+                        'route' => 'admin_stores_toggle_status',
                         'route_param_name' => 'storeId',
                         'sortable' => false,
                     ])
