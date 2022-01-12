@@ -158,6 +158,7 @@ services:
       - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_HOME_CATEGORY")'
       - '@prestashop.adapter.data_provider.category'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@prestashop.adapter.product.image.product_image_url_factory'
 
   prestashop.core.form.identifiable_object.data_provider.combination_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider'

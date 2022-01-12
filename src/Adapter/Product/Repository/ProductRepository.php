@@ -238,6 +238,35 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return array<array<string, string>>
+     *                             e.g [
+     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                             ]
+     *
+     * @throws CoreException
+     */
+    public function getPackedProducts(ProductId $productId, LanguageId $languageId): array
+    {
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $combinations = Product::getPackedComponents($languageId->getValue(), $productIdValue);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when fetching related products for product #%d',
+                $productIdValue
+            ));
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param ProductId $productId
      *
      * @return Product
      *

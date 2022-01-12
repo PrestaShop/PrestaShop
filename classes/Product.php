@@ -4622,6 +4622,30 @@ class ProductCore extends ObjectModel
     }
 
     /**
+     * Get product packed components (only names).
+     *
+     * @param int $id_lang Language identifier
+     * @param int $id_product Product identifier
+     *
+     * @return array Product packed
+     */
+    public static function getPackedComponents($id_lang, $id_product)
+    {
+        return Db::getInstance()->executeS(
+            '
+            SELECT pack.`id_product`, pack.`id_attribute`, pack.`quantity`
+            FROM `' . _DB_PREFIX_ . 'pack`
+            LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON (p.`id_product`= `id_product_pack`)
+            ' . Shop::addSqlAssociation('product', 'p') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_lang` pl ON (
+                p.`id_product` = pl.`id_product`
+                AND pl.`id_lang` = ' . (int) $id_lang . Shop::addSqlRestrictionOnLang('pl') . '
+            )
+            WHERE p.`id_product` = ' . (int) $id_product
+        );
+    }
+
+    /**
      * Get product accessories.
      *
      * @param int $id_lang Language identifier

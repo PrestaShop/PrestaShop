@@ -29,12 +29,20 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
@@ -86,12 +94,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     private $contextLangId;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImagePathFactory;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param bool $defaultProductActivation
      * @param int $mostUsedTaxRulesGroupId
      * @param int $defaultCategoryId
      * @param CategoryDataProvider $categoryDataProvider
      * @param int $contextLangId
+     * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
         CommandBusInterface $queryBus,
@@ -99,7 +113,8 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         int $mostUsedTaxRulesGroupId,
         int $defaultCategoryId,
         CategoryDataProvider $categoryDataProvider,
-        int $contextLangId
+        int $contextLangId,
+        ProductImagePathFactory $productImagePathFactory
     ) {
         $this->queryBus = $queryBus;
         $this->defaultProductActivation = $defaultProductActivation;
@@ -107,6 +122,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
         $this->categoryDataProvider = $categoryDataProvider;
+        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -263,6 +279,69 @@ final class ProductFormDataProvider implements FormDataProviderInterface
     }
 
     /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    private function extractPackedProducts(int $productId): array
+    {
+        /** @var PackedProductDetails[] $packedProductsDetails
+         */
+        $packedProductsDetails = $this->queryBus->handle(new GetPackedProductsDetails($productId));
+        $packedProductsData = [];
+        foreach ($packedProductsDetails as $packedProductDetails) {
+            $productName = $packedProductDetails->getProductName();
+            if (!empty($packedProductDetails->getReference())) {
+                $productName .= sprintf(
+                    ' (ref: %s)',
+                    $packedProductDetails->getReference()
+                );
+            }
+
+            if ($packedProductDetails->getImageUrl() === null) {
+                $packedProductDetails->setImageUrl($this->getImageFromPackedProductDetails($packedProductDetails));
+            }
+
+            $packedProductsData[] = [
+                'id' => $packedProductDetails->getProductId(),
+                'name' => $productName,
+                'combinationId' => $packedProductDetails->getCombinationId(),
+                'image' => $packedProductDetails->getImageUrl(),
+                'quantity' => $packedProductDetails->getQuantity(),
+            ];
+        }
+
+        return $packedProductsData;
+    }
+
+    private function getImageFromPackedProductDetails(PackedProductDetails $packedProductDetails): string
+    {
+        if ($packedProductDetails->getCombinationId() > 0) {
+            /** @var CombinationForEditing $combinationProduct
+             */
+            $combinationProduct = $this->queryBus->handle(new GetCombinationForEditing($packedProductDetails->getCombinationId()));
+            if (count($combinationProduct->getImageIds()) > 0) {
+                $images = $combinationProduct->getImageIds();
+                /** @var ProductImage $productImage
+                 */
+                $productImage = $this->queryBus->handle(new GetProductImage($images[0]));
+                if ($productImage !== null) {
+                    return $productImage->getImageUrl();
+                }
+            }
+        } else {
+            /** @var ProductImage[] $productImages
+             */
+            $productImages = $this->queryBus->handle(new GetProductImages($packedProductDetails->getProductId()));
+            if (count($productImages) > 0) {
+                return $productImages[0]->getImageUrl();
+            }
+        }
+
+        return $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+    }
+
+    /**
      * @param ProductForEditing $productForEditing
      *
      * @return array<string, mixed>
@@ -317,6 +396,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'related_products' => $this->extractRelatedProducts($productForEditing->getProductId()),
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
         ];
     }
 
