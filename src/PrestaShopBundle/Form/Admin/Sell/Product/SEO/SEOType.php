@@ -91,6 +91,8 @@ class SEOType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $invalidCharsText = sprintf('%s <>={}', $this->trans('Invalid characters:', 'Admin.Notifications.Info'));
+
         $builder
             ->add('serp', SerpType::class)
             ->add('meta_title', TranslatableType::class, [
@@ -172,7 +174,11 @@ class SEOType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'help' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
+                    $invalidCharsText
+                ),
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
