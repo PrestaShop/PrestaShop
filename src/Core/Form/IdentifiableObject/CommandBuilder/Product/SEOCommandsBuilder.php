@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
@@ -45,6 +46,7 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
         $seoData = $formData['seo'] ?? [];
         $redirectionData = $formData['seo']['redirect_option'] ?? [];
         $command = new UpdateProductSeoCommand($productId->getValue());
+        $commands = [$command];
 
         if (isset($seoData['meta_title'])) {
             $command->setLocalizedMetaTitles($seoData['meta_title']);
@@ -61,6 +63,18 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
             $command->setRedirectOption($redirectionData['type'], $targetId);
         }
 
-        return [$command];
+        if (!empty($seoData['tags'])) {
+            $parsedTags = [];
+            foreach ($seoData['tags'] as $langId => $rawTags) {
+                $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+            }
+
+            $commands[] = new SetProductTagsCommand(
+                $productId->getValue(),
+                $parsedTags
+            );
+        }
+
+        return $commands;
     }
 }
