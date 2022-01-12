@@ -66,6 +66,8 @@ class BulkCombinationType extends TranslatorAwareType
             ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('reference', TextType::class, [
+                //@todo: disabling toggle should be added to all fields so we can identify which input was intended to be updated and which not.
+                'disabling_toggle' => true,
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
