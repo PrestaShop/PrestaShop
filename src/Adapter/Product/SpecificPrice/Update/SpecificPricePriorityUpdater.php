@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update;
 use Doctrine\DBAL\Connection;
 use Exception;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -75,14 +73,13 @@ class SpecificPricePriorityUpdater
      * @param ProductId $productId
      * @param PriorityList $priorityList
      *
-     * @throws CannotSetSpecificPricePrioritiesException
      * @throws CoreException
      */
     public function setPrioritiesForProduct(ProductId $productId, PriorityList $priorityList): void
     {
         try {
             if (!SpecificPrice::setSpecificPriority($productId->getValue(), $priorityList->getPriorities())) {
-                throw new CannotUpdateSpecificPriceException(sprintf(
+                throw new CoreException(sprintf(
                     'Failed updating specific price priorities for product #%d',
                     $productId->getValue()
                 ));
