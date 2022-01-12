@@ -1560,8 +1560,8 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.pricing.specific_priority_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType'
+  form.type.sell.product.pricing.product_specific_priority_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ProductSpecificPricePriorityType'
     parent: 'form.type.translatable.aware'
     arguments:
       - '@router'
@@ -1569,8 +1569,8 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.pricing.priority_choice_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriorityChoiceType'
+  form.type.sell.product.pricing.specific_price_priority_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
