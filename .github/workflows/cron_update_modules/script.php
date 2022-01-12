@@ -112,17 +112,17 @@ if (empty($pullRequestBodyBumpModules)) {
     exit();
 }
 
-$pullRequestBody =
+file_put_contents(
+    'cron_php_update_modules.txt',
     '| Questions         | Answers' . PHP_EOL
-    . '| ----------------- | -----------------' . PHP_EOL
-    . '| Branch?           | develop' . PHP_EOL
-    . '| Description?      | ' . $pullRequestBodyBumpModules . PHP_EOL
-    . '| Type?             | improvement' . PHP_EOL
-    . '| Category?         | CO' . PHP_EOL
-    . '| BC breaks?        | no' . PHP_EOL
-    . '| Deprecations?     | no' . PHP_EOL
-    . '| Fixed ticket?     | N/A' . PHP_EOL
-    . '| How to test?      | N/A' . PHP_EOL
-    . '| Possible impacts? | N/A' . PHP_EOL
-;
-echo $pullRequestBody;
+        . '| ----------------- | -----------------' . PHP_EOL
+        . '| Branch?           | develop' . PHP_EOL
+        . '| Description?      | ' . $pullRequestBodyBumpModules . PHP_EOL
+        . '| Type?             | improvement' . PHP_EOL
+        . '| Category?         | CO' . PHP_EOL
+        . '| BC breaks?        | no' . PHP_EOL
+        . '| Deprecations?     | no' . PHP_EOL
+        . '| Fixed ticket?     | N/A' . PHP_EOL
+        . '| How to test?      | N/A' . PHP_EOL
+        . '| Possible impacts? | N/A' . PHP_EOL
+);
