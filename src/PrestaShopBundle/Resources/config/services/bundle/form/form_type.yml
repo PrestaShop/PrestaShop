@@ -689,6 +689,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.submittable_delta_quantity_type:
+    class: 'PrestaShopBundle\Form\Admin\Type\SubmittableDeltaQuantityType'
+    parent: 'form.type.delta_quantity_type'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.team.employee.employee_options:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee\EmployeeOptionsType'
     parent: 'form.type.translatable.aware'

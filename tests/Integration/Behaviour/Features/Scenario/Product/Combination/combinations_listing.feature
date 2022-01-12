@@ -91,19 +91,19 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1SBlue | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0        | false      |
       | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
-      | criteria          | value    |
-      | attributes[Size]  | [M]      |
-      | attributes[Color] | [Blue]   |
+      | criteria          | value  |
+      | attributes[Size]  | [M]    |
+      | attributes[Color] | [Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
-      | criteria          | value    |
-      | attributes[Size]  | [M]      |
-      | attributes[Color] | [Blue]   |
+      | criteria          | value  |
+      | attributes[Size]  | [M]    |
+      | attributes[Color] | [Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria          | value        |
       | attributes[Size]  | [M]          |
@@ -136,15 +136,15 @@ Feature: Generate attribute combinations for product in Back Office (BO)
     Given product "product1" combinations list search criteria is set to defaults
     And I update combination "product1SWhite" from list with following values:
       | impact on price | -1  |
-      | quantity        | 10  |
+      | delta quantity  | 10  |
       | reference       | AAA |
     And I update combination "product1SBlue" from list with following values:
       | impact on price | 1   |
-      | quantity        | 100 |
+      | delta quantity  | 100 |
       | reference       | BBB |
     And I update combination "product1SBlack" from list with following values:
       | impact on price | 10  |
-      | quantity        | 50  |
+      | delta quantity  | 50  |
       | reference       | CCC |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value           |

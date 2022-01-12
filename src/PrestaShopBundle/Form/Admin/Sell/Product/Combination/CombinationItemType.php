@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
+use PrestaShopBundle\Form\Admin\Type\SubmittableDeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\SubmittableInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -83,11 +84,7 @@ class CombinationItemType extends TranslatorAwareType
                 ],
             ])
             ->add('final_price_te', HiddenType::class)
-            ->add('quantity', SubmittableInputType::class, [
-                'attr' => [
-                    'class' => 'combination-quantity',
-                ],
-            ])
+            ->add('delta_quantity', SubmittableDeltaQuantityType::class)
             ->add('is_default', RadioType::class, [
                 'label' => false,
                 'attr' => [

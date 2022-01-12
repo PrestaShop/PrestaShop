@@ -31,10 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
@@ -161,8 +161,8 @@ class ProductStockUpdater
             $product->pack_stock_type = $properties->getPackStockType()->getValue();
             $updatableProperties[] = 'pack_stock_type';
         }
-        if (null !== $properties->getDeltaQuantity()) {
-            $product->quantity = $stockAvailable->quantity + $properties->getDeltaQuantity();
+        if (null !== $properties->getStockModification()) {
+            $product->quantity = $stockAvailable->quantity + $properties->getStockModification()->getDeltaQuantity();
             $updatableProperties[] = 'quantity';
         }
         if (null !== $properties->getAvailableDate()) {
@@ -190,40 +190,37 @@ class ProductStockUpdater
             $stockUpdateRequired = true;
         }
 
-        if (null !== $properties->getDeltaQuantity()) {
-            $this->updateQuantity($stockAvailable, $properties->getDeltaQuantity());
+        if ($properties->getStockModification()) {
+            $stockAvailable->quantity += $properties->getStockModification()->getDeltaQuantity();
             $stockUpdateRequired = true;
         }
 
-        if ($stockUpdateRequired) {
-            $this->stockAvailableRepository->update($stockAvailable);
+        if (!$stockUpdateRequired) {
+            return;
+        }
+
+        $this->stockAvailableRepository->update($stockAvailable);
+
+        if ($properties->getStockModification()) {
+            //Save movement only after stock has been updated
+            $this->saveMovement($stockAvailable, $properties->getStockModification());
         }
     }
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param int $deltaQuantity
+     * @param StockModification $stockModification
      */
-    private function updateQuantity(StockAvailable $stockAvailable, int $deltaQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, StockModification $stockModification): void
     {
-        $stockAvailable->quantity += $deltaQuantity;
-
-        if (0 !== $deltaQuantity) {
-            if ($deltaQuantity > 0) {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_INC_EMPLOYEE_EDITION');
-            } else {
-                $movementReasonId = $this->configuration->getInt('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION');
-            }
-
-            $this->stockManager->saveMovement(
-                $stockAvailable->id_product,
-                $stockAvailable->id_product_attribute,
-                $deltaQuantity,
-                [
-                    'id_stock_mvt_reason' => $movementReasonId,
-                ]
-            );
-        }
+        $this->stockManager->saveMovement(
+            $stockAvailable->id_product,
+            $stockAvailable->id_product_attribute,
+            $stockModification->getDeltaQuantity(),
+            [
+                'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+            ]
+        );
     }
 
     /**

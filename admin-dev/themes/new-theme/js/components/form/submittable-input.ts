@@ -24,8 +24,18 @@
  */
 
 import {showGrowl} from '@app/utils/growl';
+import ComponentsMap from '@components/components-map';
+
+import ClickEvent = JQuery.ClickEvent;
 
 const {$} = window;
+
+export type SubmittableInputConfig = {
+  wrapperSelector: string;
+  submitCallback: (input: Element) => any;
+  afterSuccess?: ((input: HTMLInputElement, response: AjaxResponse) => any);
+  afterFailure?: ((input: HTMLInputElement, error: AjaxError) => any);
+}
 
 /**
  * Activates, deactivates, shows, hides submit button inside an input
@@ -33,81 +43,81 @@ const {$} = window;
  * After button is clicked, component fires the callback function which was provided to constructor.
  */
 export default class SubmittableInput {
+  config: SubmittableInputConfig;
+
   inputSelector: string;
 
-  callback: (input: Element) => any;
-
-  wrapperSelector: string;
+  inputsInContainerSelector: string;
 
   buttonSelector: string;
 
-  /**
-   * @param {String} wrapperSelector
-   * @param {Function} callback
-   *
-   * @returns {{}}
-   */
-  constructor(wrapperSelector: string, callback: () => any) {
-    this.inputSelector = '.submittable-input';
-    this.callback = callback;
-    this.wrapperSelector = wrapperSelector;
-    this.buttonSelector = '.check-button';
+  loading: boolean;
+
+  constructor(config: SubmittableInputConfig) {
+    this.config = config;
+    this.inputSelector = ComponentsMap.submittableInput.inputSelector;
+    this.buttonSelector = ComponentsMap.submittableInput.buttonSelector;
+    this.inputsInContainerSelector = `${this.config.wrapperSelector} ${this.inputSelector}`;
+    this.loading = false;
 
     this.init();
   }
 
-  /**
-   * @private
-   */
-  private init(): void {
-    const inputs = `${this.wrapperSelector} ${this.inputSelector}`;
-    const that = this;
+  public reset(input: HTMLInputElement, value: string|number): void {
+    $(input).val(value);
+    $(input).data('initialValue', value);
+  }
 
-    $(document).on('focus', inputs, (e) => {
+  private init(): void {
+    $(document).on('focus mouseenter', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget, true);
     });
-    $(document).on('input blur', inputs, (e) => {
+    $(document).on('input blur mouseleave', this.inputsInContainerSelector, (e) => {
       this.refreshButtonState(e.currentTarget);
     });
-    $(document).on(
-      'click',
-      `${this.wrapperSelector} ${this.buttonSelector}`,
-      function () {
-        that.submitInput(this);
-      },
-    );
-    $(document).on('keyup', inputs, (e: JQueryEventObject) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        const button = this.findButton(e.target);
-
-        this.submitInput(button);
+    $(document).on('click', `${this.config.wrapperSelector} ${this.buttonSelector}`, (e: ClickEvent) => {
+      e.stopImmediatePropagation();
+      this.submitInput(this.findInput(e.currentTarget));
+    });
+    $(document).on('keyup', this.inputsInContainerSelector, (e: JQueryEventObject) => {
+      // only on ENTER
+      if (e.keyCode !== 13) {
+        return;
       }
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      this.submitInput(e.target as HTMLInputElement);
     });
   }
 
-  /**
-   * @private
-   */
-  private submitInput(button: Element): void {
-    const input: HTMLInputElement = this.findInput(button);
+  private submitInput(input: HTMLInputElement): void {
+    if (this.loading || !this.inputValueChanged(input)) {
+      return;
+    }
 
-    this.toggleLoading(button, true);
+    this.toggleLoading(input, true);
+    const button = this.findButton(input);
 
-    this.callback(input)
+    this.config.submitCallback(input)
       .then((response: AjaxResponse) => {
-        $(input).data('initial-value', input.value);
+        $(input).data('initialValue', input.value);
         this.toggleButtonVisibility(button, false);
+        this.toggleLoading(input, false);
 
         if (response.message) {
           showGrowl('success', response.message);
         }
-        this.toggleLoading(button, false);
+
+        if (this.config.afterSuccess) {
+          this.config.afterSuccess(input, response);
+        }
       })
       .catch((error: AjaxError) => {
         this.toggleError(button, true);
         this.toggleButtonVisibility(button, false);
-        this.toggleLoading(button, false);
+        this.toggleLoading(input, false);
+
         if (typeof error.responseJSON.errors === 'undefined') {
           return;
         }
@@ -116,15 +126,12 @@ export default class SubmittableInput {
         Object.keys(messages).forEach((key) => {
           showGrowl('error', messages[key]);
         });
+        if (this.config.afterFailure) {
+          this.config.afterFailure(input, error);
+        }
       });
   }
 
-  /**
-   * @param {HTMLElement} input
-   * @param {Boolean|null} visible
-   *
-   * @private
-   */
   private refreshButtonState(
     input: HTMLElement,
     visible: boolean | null = null,
@@ -140,22 +147,10 @@ export default class SubmittableInput {
     }
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} active
-   *
-   * @private
-   */
   private toggleButtonActivity(button: HTMLElement, active: boolean): void {
     $(button).toggleClass('active', active);
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
   private toggleButtonVisibility(
     button: Element,
     visible: boolean,
@@ -164,65 +159,38 @@ export default class SubmittableInput {
     $button.toggleClass('d-none', !visible);
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
-  private toggleLoading(button: Element, loading: boolean): void {
-    if (loading) {
+  private toggleLoading(input: HTMLInputElement, loading: boolean): void {
+    this.loading = loading;
+    const button = this.findButton(input);
+    // eslint-disable-next-line no-param-reassign
+    input.disabled = this.loading;
+    button.disabled = this.loading;
+
+    if (this.loading) {
       $(button).html('<span class="spinner-border spinner-border-sm"></span>');
     } else {
       $(button).html('<i class="material-icons">check</i>');
     }
   }
 
-  /**
-   * @param {HTMLElement} button
-   * @param {Boolean} visible
-   *
-   * @private
-   */
-  private toggleError(button: Element, error: boolean): void {
+  private toggleError(button: HTMLButtonElement, error: boolean): void {
     const input = this.findInput(button);
 
     $(input).toggleClass('is-invalid', error);
   }
 
-  /**
-   * @param {HTMLElement} input
-   *
-   * @returns {HTMLElement}
-   *
-   * @private
-   */
   private findButton(input: Element): HTMLButtonElement {
     return <HTMLButtonElement>$(input)
-      .closest(this.wrapperSelector)
+      .closest(this.config.wrapperSelector)
       .find(this.buttonSelector)[0];
   }
 
-  /**
-   * @param {HTMLElement} domElement
-   *
-   * @returns {HTMLElement}
-   *
-   * @private
-   */
-  private findInput(button: Element): HTMLInputElement {
+  private findInput(button: HTMLButtonElement): HTMLInputElement {
     return <HTMLInputElement>$(button)
-      .closest(this.wrapperSelector)
+      .closest(this.config.wrapperSelector)
       .find(this.inputSelector)[0];
   }
 
-  /**
-   * @param {HTMLElement} input
-   *
-   * @returns {Boolean}
-   *
-   * @private
-   */
   private inputValueChanged(input: HTMLElement): boolean {
     const initialValue = $(input).data('initial-value');
     let newValue = $(input).val();

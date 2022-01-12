@@ -33,6 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -46,10 +47,14 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function updateCombinationFromListing(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationFromListingCommand($this->getSharedStorage()->get($combinationReference));
-        $this->fillCommand($command, $tableNode->getRowsHash());
+        try {
+            $command = new UpdateCombinationFromListingCommand($this->getSharedStorage()->get($combinationReference));
+            $this->fillCommand($command, $tableNode->getRowsHash());
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductStockConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -61,8 +66,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
         if (isset($dataRows['impact on price'])) {
             $command->setImpactOnPrice($dataRows['impact on price']);
         }
-        if (isset($dataRows['quantity'])) {
-            $command->setQuantity((int) $dataRows['quantity']);
+        if (isset($dataRows['delta quantity'])) {
+            $command->setDeltaQuantity((int) $dataRows['delta quantity']);
         }
         if (isset($dataRows['is default'])) {
             $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));

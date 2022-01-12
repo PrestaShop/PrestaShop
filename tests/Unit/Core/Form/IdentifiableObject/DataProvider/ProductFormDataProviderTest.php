@@ -117,7 +117,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'delta_quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -181,7 +184,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'delta_quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -497,7 +503,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
             ],
         ];
-        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
@@ -1385,7 +1391,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
+                    'delta_quantity' => [
+                        'quantity' => static::DEFAULT_QUANTITY,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],

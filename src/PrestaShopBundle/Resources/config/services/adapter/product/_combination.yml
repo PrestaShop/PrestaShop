@@ -30,6 +30,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockHandler
     arguments:
       - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
@@ -122,6 +123,7 @@ services:
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
       - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand

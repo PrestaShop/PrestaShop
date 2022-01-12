@@ -33,6 +33,7 @@ use DateTime;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -46,10 +47,14 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      */
     public function updateStock(string $combinationReference, TableNode $tableNode): void
     {
-        $command = new UpdateCombinationStockCommand($this->getSharedStorage()->get($combinationReference));
-        $this->fillCommand($command, $tableNode->getRowsHash());
+        try {
+            $command = new UpdateCombinationStockCommand($this->getSharedStorage()->get($combinationReference));
+            $this->fillCommand($command, $tableNode->getRowsHash());
 
-        $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductStockConstraintException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**
@@ -133,8 +138,8 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
      */
     private function fillCommand(UpdateCombinationStockCommand $command, array $dataRows): void
     {
-        if (isset($dataRows['quantity'])) {
-            $command->setQuantity((int) $dataRows['quantity']);
+        if (isset($dataRows['delta quantity'])) {
+            $command->setDeltaQuantity((int) $dataRows['delta quantity']);
         }
         if (isset($dataRows['minimal quantity'])) {
             $command->setMinimalQuantity((int) $dataRows['minimal quantity']);

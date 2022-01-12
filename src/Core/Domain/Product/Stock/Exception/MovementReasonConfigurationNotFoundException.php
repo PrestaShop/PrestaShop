@@ -23,43 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
 /**
- * Thrown when product stock constraints are violated
+ * Thrown when configuration is missing for movement reason
  */
-class ProductStockConstraintException extends ProductStockException
+class MovementReasonConfigurationNotFoundException extends ProductStockException
 {
-    /**
-     * Code is sent when invalid out of stock type is used
-     */
-    public const INVALID_OUT_OF_STOCK_TYPE = 10;
-
-    /**
-     * When quantity is invalid
-     */
-    public const INVALID_QUANTITY = 20;
-
-    /**
-     * When location is invalid
-     */
-    public const INVALID_LOCATION = 30;
-
-    /**
-     * When out_of_stock is invalid
-     */
-    public const INVALID_OUT_OF_STOCK = 40;
-
-    /**
-     * When id is invalid
-     */
-    public const INVALID_ID = 50;
-
-    /**
-     * When delta quantity is invalid
-     */
-    public const INVALID_DELTA_QUANTITY = 60;
 }
