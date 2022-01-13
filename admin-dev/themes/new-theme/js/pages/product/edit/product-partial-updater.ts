@@ -50,8 +50,8 @@ export default class ProductPartialUpdater {
 
   /**
    * @param eventEmitter {EventEmitter}
-   * @param $productForm {jQuery}
-   * @param $productFormSubmitButton {jQuery}
+   * @param $productForm {JQuery}
+   * @param $productFormSubmitButton {JQuery}
    */
   constructor(eventEmitter: EventEmitter, $productForm: JQuery, $productFormSubmitButton: JQuery) {
     this.eventEmitter = eventEmitter;
