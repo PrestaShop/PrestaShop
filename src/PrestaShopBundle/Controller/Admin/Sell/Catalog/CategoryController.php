@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Category;
+use Dispatcher;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
@@ -306,6 +307,11 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
+
+        // If we don't create the dispatcher instance with the current request,
+        // a new instance will be created later using `SymfonyRequest::createFromGlobals()`
+        // but as we may have already uploaded files, this can throw an exception
+        Dispatcher::getInstance($request);
 
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
