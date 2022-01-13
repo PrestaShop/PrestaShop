@@ -173,7 +173,7 @@ export default class ProductFormModel {
    *
    * @returns {string}
    */
-  removeTax(price, taxRatio) {
+  removeTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
@@ -183,7 +183,7 @@ export default class ProductFormModel {
    *
    * @returns {string}
    */
-  addTax(price, taxRatio) {
+  addTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.times(taxRatio).toFixed(this.precision);
   }
 }

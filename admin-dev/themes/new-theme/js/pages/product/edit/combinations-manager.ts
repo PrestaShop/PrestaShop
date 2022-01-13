@@ -50,8 +50,6 @@ export default class CombinationsManager {
 
   $combinationsContainer: JQuery;
 
-  combinationIdInputsSelector: string;
-
   $externalCombinationTab: JQuery;
 
   $preloader: JQuery;
