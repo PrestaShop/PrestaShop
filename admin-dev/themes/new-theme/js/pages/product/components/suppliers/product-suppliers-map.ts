@@ -23,18 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default (suppliersFormId: string): Record<string, any> => {
-  const productSuppliersId = `${suppliersFormId}_product_suppliers`;
+export default (productSuppliersId: string): Record<string, any> => {
   // eslint-disable-next-line max-len
   const productSupplierInputId = (supplierIndex: string, inputName: string): string => `${productSuppliersId}_${supplierIndex}_${inputName}`;
 
   return {
     productSuppliersCollection: `${productSuppliersId}`,
-    supplierIdsInput: `${suppliersFormId}_supplier_ids`,
-    defaultSupplierInput: `${suppliersFormId}_default_supplier_id`,
     productSuppliersTable: `${productSuppliersId} table`,
     productsSuppliersTableBody: `${productSuppliersId} table tbody`,
-    defaultSupplierClass: 'default-supplier',
+    productsSuppliersRows: `${productSuppliersId} table tbody .product_supplier_row`,
     productSupplierRow: {
       supplierIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_id'),
       supplierNameInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_name'),
@@ -44,6 +41,5 @@ export default (suppliersFormId: string): Record<string, any> => {
       currencyIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'currency_id'),
       supplierNamePreview: (supplierIndex: string): string => `#product_supplier_row_${supplierIndex} .supplier_name .preview`,
     },
-    checkboxContainer: '.form-check',
   };
 };
