@@ -1257,9 +1257,11 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Check if Addresses in the Cart are still valid and update with the next valid Address ID found.
+     * @TODO Check if this method can be removed now Address::delete is properly fixed
      *
-     * @return bool Whether the Addresses have been succesfully checked and upated
+     * Check if Addresses in the Cart are still valid and update to 0 if this is not the case.
+     *
+     * @return bool Whether the Addresses have been succesfully checked and updated
      */
     public function checkAndUpdateAddresses()
     {
@@ -1270,6 +1272,11 @@ class CartCore extends ObjectModel
                 && !Address::isValid($this->{$addr})) {
                 $this->{$addr} = 0;
                 $needUpdate = true;
+                if ($type == 'delivery' && $this->id) {
+                    $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product SET id_address_delivery = 0
+                            WHERE id_cart=' . (int)$this->id . ' AND id_address_delivery = '. (int)$this->{$addr};
+                    Db::getInstance()->execute($sql);
+                }
             }
         }
 

@@ -229,9 +229,8 @@ class AddressCore extends ObjectModel
             Customer::resetAddressCache($this->id_customer, $this->id);
         }
 
+        $this->deleteCartAddress();
         if (!$this->isUsed()) {
-            $this->deleteCartAddress();
-
             return parent::delete();
         } else {
             $this->deleted = true;
@@ -245,14 +244,24 @@ class AddressCore extends ObjectModel
      */
     protected function deleteCartAddress()
     {
+        $skipOrderSql = ' AND NOT EXISTS (SELECT 1 FROM ' . _DB_PREFIX_ . 'orders o WHERE o.`id_cart` = c.`id_cart`)';
+
         // keep pending carts, but unlink it from current address
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
                     SET id_address_delivery = 0
-                    WHERE id_address_delivery = ' . $this->id;
+                    WHERE id_address_delivery = ' . $this->id . $skipOrderSql;
         Db::getInstance()->execute($sql);
-        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart c
                     SET id_address_invoice = 0
-                    WHERE id_address_invoice = ' . $this->id;
+                    WHERE id_address_invoice = ' . $this->id . $skipOrderSql;
+        Db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product c
+                    SET id_address_delivery = 0
+                    WHERE id_address_delivery = ' . $this->id . $skipOrderSql;
+        Db::getInstance()->execute($sql);
+        $sql = 'UPDATE ' . _DB_PREFIX_ . 'customization c
+                    SET id_address_delivery = 0
+                    WHERE id_address_delivery = ' . $this->id . $skipOrderSql;
         Db::getInstance()->execute($sql);
     }
 
