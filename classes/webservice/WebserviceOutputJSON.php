@@ -35,11 +35,10 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
      * Main function used to render node in desired format
      *
      * @param ApiNode $apiNode
-     * @param int $type_of_view Use constants WebserviceOutputBuilderCore::VIEW_DETAILS / WebserviceOutputBuilderCore::VIEW_LIST
      *
      * @return string json-encoded string
      */
-    public function renderNode($apiNode)
+    public function renderNode(ApiNode $apiNode): string
     {
         if ($apiNode->getType() == ApiNode::TYPE_LIST) {
             $jsonArray = [$apiNode->getName() => $this->toJsonArray($apiNode)];
@@ -47,7 +46,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
             $jsonArray = $this->toJsonArray($apiNode);
         }
 
-        return json_encode($jsonArray, JSON_UNESCAPED_UNICODE);
+        return \json_encode($jsonArray, JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -60,7 +59,7 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
      *                      Node type ApiNode::TYPE_PARENT returns recursive array of underlying nodes in the form of [Name => [... subnodes ...]]
      *                      Node type ApiNode::TYPE_LIST returns recursive array of underlying nodes in the form of [[... subnodes ...]]
      */
-    private function toJsonArray($apiNode)
+    private function toJsonArray(ApiNode $apiNode)
     {
         switch ($apiNode->getType()) {
             case ApiNode::TYPE_VALUE:
@@ -89,6 +88,8 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
                 }
 
                 return $out;
+            default:    //unreachable
+                return '';
         }
     }
 }
