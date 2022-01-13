@@ -75,12 +75,15 @@ class MultistoreController extends FrameworkBundleAdminController
 
         $isAllShopContext = $this->multistoreContext->isAllShopContext();
         $isShopContext = $this->multistoreContext->isShopContext();
+        $colorConfigLink = false;
 
         if ($isShopContext) {
             $currentContext = $this->entityManager->getRepository(Shop::class)->findOneBy(['id' => $this->multistoreContext->getContextShopID()]);
+            $colorConfigLink = $this->getAdminLink('AdminShop', ['shop_id' => $currentContext->getId(), 'updateshop' => true]);
         } elseif (!$isAllShopContext) {
             $shopGroupLegacy = $this->multistoreContext->getContextShopGroup();
             $currentContext = $this->entityManager->getRepository(ShopGroup::class)->findOneBy(['id' => $shopGroupLegacy->id]);
+            $colorConfigLink = $this->getAdminLink('AdminShopGroup', ['id_shop_group' => $currentContext->getId(), 'updateshop_group' => true]);
         } else {
             // use ShopGroup object as a the container for "all shops" context so that it can be used transparently in twig
             $currentContext = new ShopGroup();
@@ -105,6 +108,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'isAllShopContext' => $isAllShopContext,
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => $lockedToAllShopContext,
+            'colorConfigLink' => !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false,
         ]);
     }
 
