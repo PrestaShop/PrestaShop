@@ -37,12 +37,11 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
      * Iterate over ApiNode tree and returns XML formatted output.
      * If requested schema is DETAIL instead of node, parent resource is not being printed out (i.e. <strong>&lt;products/&gt;</strong> tag)
      *
-     * @param Apinode $apiNode
-     * @param int $type_of_view Use constants WebserviceOutputBuilderCore::VIEW_DETAILS / WebserviceOutputBuilderCore::VIEW_LIST
+     * @param ApiNode $apiNode
      *
      * @return string Properly XML formatted string
      */
-    public function renderNode($apiNode)
+    public function renderNode(ApiNode $apiNode): string
     {
         $xml = new SuperXMLElement("<?xml version='1.0' encoding='UTF-8'?><prestashop xmlns:xlink='" . self::XLINK_NS . "'/>");
 
@@ -62,7 +61,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     /**
      * Iterates over all attributes specified in ApiNode and injects them into $xml
      *
-     * @param \SuperXMLElement $xml
+     * @param SuperXMLElement $xml
      * @param ApiNode $node
      *
      * @return void
@@ -85,7 +84,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
     /**
      * Inject children node
      *
-     * @param \SuperXMLElement $parentXml
+     * @param SuperXMLElement $parentXml
      * @param ApiNode $apiNode
      *
      * @return void

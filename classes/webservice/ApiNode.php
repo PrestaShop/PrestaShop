@@ -26,7 +26,6 @@
  */
 class ApiNode
 {
-
     public const TYPE_VALUE = 'value';
     public const TYPE_LANGUAGE = 'language';
     public const TYPE_PARENT = 'parent';
@@ -245,7 +244,7 @@ class ApiNode
      * Create new ApiNode of type "value" and appends it as child to current ApiNode
      *
      * @param string $name
-     * @param mixed $value
+     * @param string|null $value
      *
      * @return ApiNode Created child node
      */
@@ -261,7 +260,6 @@ class ApiNode
      * Create new ApiNode of type "lang" and appends it as child to current ApiNode
      *
      * @param string $name
-     * @param array $values
      *
      * @return ApiNode Created child node
      */

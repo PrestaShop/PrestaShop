@@ -128,7 +128,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      */
     public function getContent()
     {
-        if ($this->output instanceof ApiNode) {
+        if (!empty($this->output)) {
             return $this->objOutput->getObjectRender()->renderNode($this->output);
         } elseif ($this->imgToDisplay) {
             // display image content if needed
@@ -296,8 +296,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // general images management : like header's logo, invoice logo, etc...
             case 'general':
                 return $this->manageGeneralImages();
-
-                break;
             // normal images management : like the most entity images (categories, manufacturers..)...
             case 'categories':
                 return $this->manageDeclinatedImages(_PS_CAT_IMG_DIR_);
@@ -414,8 +412,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 $this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
 
                 return true;
-
-                break;
             case 'PUT':
                 if ($this->writePostedImageOnDisk($path, null, null)) {
                     if ($this->wsObject->urlSegment[2] == 'header') {
@@ -430,8 +426,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('Error while copying image to the directory', [54, 400]);
                 }
-
-                break;
         }
     }
 
@@ -505,7 +499,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     if ($this->imageType != 'products') {
                         preg_match('/^(\d+)\.jpg*$/Ui', $node, $matches);
                         if (isset($matches[1])) {
-                            $imagesNode->addNode('image', $image)->setAttributes(['id' => $matches[1], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $id]);
+                            $imagesNode->addNode('image')->setAttributes(['id' => $matches[1], 'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $matches[1]]);
                         }
                     }
                 }
@@ -585,7 +579,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         }
 
         // in case of declinated images list of a product is get
-        if ($this->output instanceof ApiNode) {
+        if (!empty($this->output)) {
             return true;
         } elseif (isset($image_size) && $image_size != '' && isset($image_id)) {
             // If a size was given try to display it
@@ -623,7 +617,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
      *
      * @return bool
      */
-    protected function manageDeclinatedImages($directory)
+    protected function manageDeclinatedImages(string $directory): bool
     {
         // Get available image sizes for the current image type
         $normal_image_sizes = ImageType::getImagesTypes($this->imageType);
@@ -631,14 +625,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             // Match the default images
             case 'default':
                 return $this->manageDefaultDeclinatedImages($directory, $normal_image_sizes);
-                break;
             // Display the list of images
             case '':
-                $this->manageListDeclinatedImages($directory, $normal_image_sizes);
-                break;
+                return $this->manageListDeclinatedImages($directory, $normal_image_sizes);
             default:
                 return $this->manageEntityDeclinatedImages($directory, $normal_image_sizes);
-                break;
         }
     }
 
@@ -803,9 +794,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('This image does not exist on disk', [63, 500]);
                 }
-
-                break;
             // Delete the image
+            // no break
             case 'DELETE':
                 // Delete products image in DB
                 if ($this->imageType == 'products') {
@@ -824,9 +814,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 } else {
                     throw new WebserviceException('This image does not exist on disk', [64, 500]);
                 }
-
-                break;
             // Add the image
+            // no break
             case 'POST':
                 if ($filename_exists) {
                     throw new WebserviceException('This image already exists. To modify it, please use the PUT method', [65, 400]);
@@ -837,8 +826,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         throw new WebserviceException('Unable to save this image', [66, 500]);
                     }
                 }
-
-                break;
+                // no break
             default:
                 throw new WebserviceException('This method is not allowed', [67, 405]);
         }
@@ -1197,7 +1185,5 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         }
 
         throw new WebserviceException('Method ' . $this->wsObject->method . ' is not allowed for an image resource', [77, 405]);
-
-        return false;
     }
 }

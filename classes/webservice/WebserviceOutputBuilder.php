@@ -446,7 +446,7 @@ class WebserviceOutputBuilderCore
         }
         if (isset($ws_params['associations']) && count($ws_params['associations']) > 0) {
             $this->fieldsToDisplay = 'full';
-            $this->renderAssociations($parentNode, $object, 0, $ws_params['associations'], $ws_params);
+            $this->renderAssociations($parentNode, $object, $ws_params['associations'], $ws_params);
         }
     }
 
@@ -508,14 +508,14 @@ class WebserviceOutputBuilderCore
      * @param string $field_name
      * @param array $field
      *
-     * @return string
+     * @return void
      */
-    protected function renderField(ApiNode &$parentNode, ObjectModel $object, array $ws_params, string $field_name, array $field)
+    protected function renderField(ApiNode &$parentNode, ObjectModel $object, array $ws_params, string $field_name, array $field): void
     {
         $show_field = true;
 
         if (isset($ws_params['hidden_fields']) && in_array($field_name, $ws_params['hidden_fields'])) {
-            return '';
+            return;
         }
 
         if ($this->schemaToDisplay === 'synopsis') {
@@ -567,14 +567,16 @@ class WebserviceOutputBuilderCore
     }
 
     /**
-     * @param ApiNode $parentNode parent underneath which to create field nodes
-     * @param $object
-     * @param $associations
-     * @param $ws_params
+     * Add associations nodes underneath parent node
      *
-     * @return string
+     * @param ApiNode $parentNode parent underneath which to create field nodes
+     * @param ObjectModel $object
+     * @param array $associations
+     * @param array $ws_params
+     *
+     * @return void
      */
-    protected function renderAssociations(&$parentNode, $object, $associations, $ws_params)
+    protected function renderAssociations(ApiNode &$parentNode, ObjectModel $object, array $associations, array $ws_params): void
     {
         $associationsWrapperNode = $parentNode->addParentNode('associations');
 
@@ -610,7 +612,7 @@ class WebserviceOutputBuilderCore
                     $class_name = $this->wsResource[$assoc_name]['class'];
                 }
 
-                $this->injectAssociation($associationsWrapperNode, $object, $assoc_name, $association, $ws_params, $class_name, $objects_assoc, $fields_assoc);
+                $this->injectAssociation($associationsWrapperNode, $object, $assoc_name, $association, $ws_params, $objects_assoc, $fields_assoc);
             }
         }
     }
@@ -619,12 +621,16 @@ class WebserviceOutputBuilderCore
      * Inject one association section into parent node
      *
      * @param ApiNode $parentNode
+     * @param ObjectModel $object
      * @param string $assoc_name
+     * @param array $association
      * @param array $params
+     * @param array $objects_assoc
+     * @param array|null $fields_assoc
      *
      * @return void
      */
-    private function injectAssociation(&$parentNode, $object, $assoc_name, $association, $params, $class_name, $objects_assoc, $fields_assoc)
+    private function injectAssociation(ApiNode &$parentNode, ObjectModel $object, string $assoc_name, array $association, array $params, array $objects_assoc, ?array $fields_assoc = null): void
     {
         //1) add assocatiation node with attributes
         $associationNode = $parentNode->addListNode($assoc_name);
@@ -666,16 +672,14 @@ class WebserviceOutputBuilderCore
 
     /**
      * @param ApiNode $parentNode
-     * @param type $object
+     * @param ObjectModel $object
      * @param string $assoc_name
      * @param string $resource_name
      * @param array $fields_assoc
      * @param array $object_assoc
      * @param array $parent_details
-     *
-     * @return void
      */
-    protected function injectFlatAssociation(&$parentNode, $object, $assoc_name, $resource_name, $fields_assoc, $object_assoc, $parent_details)
+    protected function injectFlatAssociation(ApiNode &$parentNode, ObjectModel $object, string $assoc_name, string $resource_name, array $fields_assoc, array $object_assoc, array $parent_details)
     {
         $more_attr = [];
         if (isset($this->wsResource[$assoc_name]) && null === $this->schemaToDisplay) {
