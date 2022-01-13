@@ -23,10 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
 import ImageSelector from '@pages/product/combination/image-selector';
 import ProductMap from '@pages/product/product-map';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
 
 const {$} = window;
 
@@ -40,11 +40,17 @@ $(() => {
     'DeltaQuantityInput',
   ]);
 
-  const $productForm = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
+  const $productForm: JQuery = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
   const {eventEmitter} = window.prestashop.instance;
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
+  const productSuppliers: ProductSuppliersCollection = new ProductSuppliersCollection(
+    ProductMap.suppliers.combinationSuppliersParent,
+    productFormModel,
+  );
+  productFormModel.watch('price.wholesalePrice', (event) => {
+    productSuppliers.updateDefaultProductSupplierPrice(event.value);
+  });
   new ImageSelector();
 });
