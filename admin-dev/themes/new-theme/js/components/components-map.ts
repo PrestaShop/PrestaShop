@@ -96,4 +96,8 @@ export default {
     selector: '.autoload_rte',
     selectorClass: 'autoload_rte',
   },
+  contextualNotification: {
+    close: '.contextual-notification .close',
+    messageBox: 'content-message-box',
+  },
 };
