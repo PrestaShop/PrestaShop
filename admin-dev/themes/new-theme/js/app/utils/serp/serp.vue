@@ -26,7 +26,8 @@
   <div id="serp">
     <div class="serp-preview">
       <div class="serp-url">
-        <span class="serp-base-url">{{ displayedBaseURL }}</span>{{ displayedRelativePath }}<i class="material-icons serp-url-more">more_vert</i>
+        <span class="serp-base-url">{{ displayedBaseURL }}</span>{{ displayedRelativePath }}
+        <i class="material-icons serp-url-more">more_vert</i>
       </div>
       <div class="serp-title">
         {{ displayedTitle }}
@@ -58,7 +59,7 @@
     computed: {
       displayedBaseURL() {
         const parseUrl = new URL(this.url);
-        const baseUrl = parseUrl.protocol + '//' + parseUrl.hostname;
+        const baseUrl = `${parseUrl.protocol}//${parseUrl.hostname}`;
 
         return baseUrl;
       },
