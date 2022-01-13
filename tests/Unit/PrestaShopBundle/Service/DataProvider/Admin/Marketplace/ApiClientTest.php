@@ -35,7 +35,6 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
-use Tools;
 
 class ApiClientTest extends TestCase
 {
@@ -57,7 +56,7 @@ class ApiClientTest extends TestCase
             $client,
             'en',
             'en',
-            new Tools(),
+            null,
             '',
             AppKernel::VERSION
         );

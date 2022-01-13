@@ -131,7 +131,7 @@ class CartTest extends TestCase
         $name = $rate . '% TAX';
 
         if (!array_key_exists($name, $taxes)) {
-            $tax = new Tax(null, Configuration::get('PS_LANG_DEFAULT'));
+            $tax = new Tax(null, (int) Configuration::get('PS_LANG_DEFAULT'));
             $tax->name = $name;
             $tax->rate = $rate;
             $tax->active = true;
@@ -152,12 +152,12 @@ class CartTest extends TestCase
         $name = $rate . '% TRG';
 
         if (!array_key_exists($name, $groups)) {
-            $taxRulesGroup = new TaxRulesGroup(null, Configuration::get('PS_LANG_DEFAULT'));
+            $taxRulesGroup = new TaxRulesGroup(null, (int) Configuration::get('PS_LANG_DEFAULT'));
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
             self::assertTrue((bool) $taxRulesGroup->save());
 
-            $taxRule = new TaxRule(null, Configuration::get('PS_LANG_DEFAULT'));
+            $taxRule = new TaxRule(null, (int) Configuration::get('PS_LANG_DEFAULT'));
             $taxRule->id_tax = self::getIdTax($rate);
             $taxRule->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
             $taxRule->id_tax_rules_group = $taxRulesGroup->id;
@@ -175,7 +175,7 @@ class CartTest extends TestCase
      */
     private static function makeProduct(string $name, float $price, int $id_tax_rules_group): Product
     {
-        $product = new Product(null, false, Configuration::get('PS_LANG_DEFAULT'));
+        $product = new Product(null, false, (int) Configuration::get('PS_LANG_DEFAULT'));
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
         $product->price = $price;
@@ -201,7 +201,7 @@ class CartTest extends TestCase
 
     private static function makeCart(): Cart
     {
-        $cart = new Cart(null, Configuration::get('PS_LANG_DEFAULT'));
+        $cart = new Cart(null, (int) Configuration::get('PS_LANG_DEFAULT'));
         $cart->id_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
         $cart->id_address_invoice = self::$id_address;
         self::assertTrue($cart->save());
@@ -214,12 +214,12 @@ class CartTest extends TestCase
      * null $shippingCost is interpreted as free shipping
      * Carriers are cached by $name.
      */
-    private static function getIdCarrier(string $name, int $shippingCost = null, int $id_tax_rules_group = null): string
+    private static function getIdCarrier(string $name, int $shippingCost = null, int $id_tax_rules_group = null): int
     {
         static $carriers = [];
 
         if (!array_key_exists($name, $carriers)) {
-            $carrier = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
+            $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
 
             $carrier->name = $name;
             $carrier->delay = '28 days later';
@@ -263,7 +263,7 @@ class CartTest extends TestCase
                 );
             }
 
-            $carriers[$name] = $carrier->id;
+            $carriers[$name] = (int) $carrier->id;
         }
 
         return $carriers[$name];
@@ -271,7 +271,7 @@ class CartTest extends TestCase
 
     private static function makeCartRule(int $amount, string $type): CartRule
     {
-        $cartRule = new CartRule(null, Configuration::get('PS_LANG_DEFAULT'));
+        $cartRule = new CartRule(null, (int) Configuration::get('PS_LANG_DEFAULT'));
 
         $cartRule->name = $amount . ' ' . $type . ' Cart Rule';
 
@@ -311,7 +311,7 @@ class CartTest extends TestCase
         parent::setUp();
 
         // Context needs a currency but doesn't set it by itself, use default one.
-        Context::getContext()->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        Context::getContext()->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
         Group::clearCachedValues();
         self::setRoundingType('line');

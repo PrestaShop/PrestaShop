@@ -222,7 +222,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      */
     private function getCountryIdByName(string $name): int
     {
-        return Country::getIdByName(Configuration::get('PS_LANG_DEFAULT'), $name);
+        return Country::getIdByName((int) Configuration::get('PS_LANG_DEFAULT'), $name);
     }
 
     /**

@@ -684,7 +684,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLanguageId => self::EMPTY_VALUE],
             $linkRewrite,
             $groupAssociationIds,
-            [0 => '1'],
+            [0 => 1],
             $parentCategoryId === 1,
             $coverImage,
             null,

@@ -89,6 +89,7 @@ class CurrencyDatabaseTest extends TestCase
     {
         /** @var CurrencyData $currencyData */
         /** @noinspection PhpUnhandledExceptionInspection */
+        /** @phpstan-ignore-next-line */
         $currencyData = $this->layer->read(new LocalizedCurrencyId('EUR', 'fr-FR'));
         /* @noinspection end */
 
@@ -109,6 +110,7 @@ class CurrencyDatabaseTest extends TestCase
 
         // FOO is unknown
         /* @noinspection PhpUnhandledExceptionInspection */
+        /* @phpstan-ignore-next-line */
         $this->assertNull($this->layer->read(new LocalizedCurrencyId('FOO', 'fr-FR')));
         /* @noinspection end */
     }

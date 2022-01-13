@@ -327,7 +327,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
      * @param bool $generateCreditSlip
      * @param bool $generateVoucher
      * @param int $voucherRefundType
-     * @param float|null $voucherRefundAmount
+     * @param string|null $voucherRefundAmount
      *
      * @return IssuePartialRefundCommand
      *
@@ -341,7 +341,7 @@ class OrderRefundFeatureContext extends AbstractDomainFeatureContext
         bool $generateCreditSlip,
         bool $generateVoucher,
         int $voucherRefundType = VoucherRefundType::PRODUCT_PRICES_EXCLUDING_VOUCHER_REFUND,
-        ?float $voucherRefundAmount = null
+        ?string $voucherRefundAmount = null
     ): IssuePartialRefundCommand {
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing((int) $orderId));

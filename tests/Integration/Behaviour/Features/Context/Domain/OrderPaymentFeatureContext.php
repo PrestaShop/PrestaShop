@@ -198,7 +198,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             $data['payment_method'],
             $data['transaction_id'],
             $data['amount'],
-            isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
+            isset($data['id_invoice']) ? (string) $data['id_invoice'] : null,
             '',
             '',
             '',

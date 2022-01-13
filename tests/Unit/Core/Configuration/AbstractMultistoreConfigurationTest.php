@@ -136,9 +136,9 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
      * @param int $shopGroupId
      * @param int $shopId
      *
-     * @return MockObject
+     * @return ShopContext
      */
-    private function createMultistoreContextMock(bool $isAllShopContext, int $shopGroupId, int $shopId): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext, int $shopGroupId, int $shopId): ShopContext
     {
         $stub = $this->createMock(ShopContext::class);
         $stub->method('isAllShopContext')->willReturn($isAllShopContext);
@@ -151,9 +151,9 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @param string|null $expectedMethodCalled
      *
-     * @return MockObject
+     * @return ShopConfiguration
      */
-    private function createShopConfigurationMock(?string $expectedMethodCalled): MockObject
+    private function createShopConfigurationMock(?string $expectedMethodCalled): ShopConfiguration
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
@@ -192,9 +192,9 @@ class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @param bool $isUsed
      *
-     * @return MockObject
+     * @return FeatureInterface
      */
-    private function getMultistoreFeatureMock(bool $isUsed = true): MockObject
+    private function getMultistoreFeatureMock(bool $isUsed = true): FeatureInterface
     {
         $stub = $this->createMock(FeatureInterface::class);
         $stub->method('isUsed')->willReturn($isUsed);

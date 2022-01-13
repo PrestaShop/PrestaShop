@@ -111,14 +111,14 @@ class NullDateTimeTest extends TestCase
     {
         $this->expectUnusableMethodException('setDate');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->setDate('1990', 1, 1);
+        $nullDateTime->setDate(1990, 1, 1);
     }
 
     public function testMethodSetISODateShouldThrowException(): void
     {
         $this->expectUnusableMethodException('setISODate');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->setISODate('1990', 1);
+        $nullDateTime->setISODate(1990, 1);
     }
 
     public function testMethodSetTimeShouldThrowException(): void

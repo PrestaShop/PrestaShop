@@ -107,6 +107,7 @@ class ToolsTest extends TestCase
 
         $this->assertFalse(Tools::getValue('', true));
         $this->assertTrue(Tools::getValue(' '));
+        /* @phpstan-ignore-next-line : null for first parameter is there for testing the return value */
         $this->assertFalse(Tools::getValue(null, true));
     }
 

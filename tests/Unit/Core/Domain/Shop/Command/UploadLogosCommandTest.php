@@ -84,7 +84,7 @@ class UploadLogosCommandTest extends TestCase
         $this->expectExceptionMessage('The file "logo.jpg" could not be written on disk.');
 
         $uploadLogosCommand = new UploadLogosCommand();
-        $uploadedFile = new UploadedFile($this->validImagePath, basename($this->validImagePath), null, null, UPLOAD_ERR_CANT_WRITE);
+        $uploadedFile = new UploadedFile($this->validImagePath, basename($this->validImagePath), null, UPLOAD_ERR_CANT_WRITE);
         $uploadLogosCommand->setUploadedHeaderLogo($uploadedFile);
     }
 

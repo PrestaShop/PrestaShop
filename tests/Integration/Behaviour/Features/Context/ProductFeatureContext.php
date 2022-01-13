@@ -179,12 +179,12 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     public function quantityOfProductNamedInMyCartShouldBe($productQuantity, $productName, $packItemsIncluded = null)
     {
         if ($packItemsIncluded != 'including') {
-            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, null);
+            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, 0, 0);
             if ($productQuantity != $nbProduct['quantity']) {
                 throw new RuntimeException(sprintf('Expects %s, got %s instead (excluding items in pack)', $productQuantity, $nbProduct['quantity']));
             }
         } else {
-            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, null);
+            $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, 0, 0);
             if ($productQuantity != $nbProduct['deep_quantity']) {
                 throw new RuntimeException(sprintf('Expects %s, got %s instead (including items in pack)', $productQuantity, $nbProduct['deep_quantity']));
             }
@@ -731,7 +731,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCombinationWithNameExists($productName, $combinationName);
-        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id, null);
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, $this->combinations[$productName][$combinationName]->id, 0);
         if ($combinationQuantity != $nbProduct['quantity']) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $combinationQuantity, $nbProduct['quantity']));
         }
@@ -830,7 +830,7 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkProductWithNameExists($productName);
         $this->checkCustomizationWithNameExists($productName, $customizationFieldName);
-        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, null, $this->customizationsInCart[$productName]->id);
+        $nbProduct = $this->getCurrentCart()->getProductQuantity($this->getProductWithName($productName)->id, 0, $this->customizationsInCart[$productName]->id);
         if ($customizationFieldQuantity != $nbProduct['quantity']) {
             throw new RuntimeException(sprintf('Expects %s, got %s instead', $customizationFieldQuantity, $nbProduct['quantity']));
         }

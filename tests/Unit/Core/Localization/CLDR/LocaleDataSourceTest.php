@@ -115,7 +115,7 @@ class LocaleDataSourceTest extends TestCase
 
         $stubCurrencyData = new CurrencyData();
         $stubCurrencyData->setIsoCode('PCE');
-        $stubCurrencyData->setNumericIsoCode(333);
+        $stubCurrencyData->setNumericIsoCode('333');
         $stubCurrencyData->setDecimalDigits(2);
 
         // Locale-specific data
