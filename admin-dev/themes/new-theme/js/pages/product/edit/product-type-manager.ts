@@ -41,8 +41,8 @@ export default class ProductTypeManager {
   initialType: string;
 
   /**
-   * @param {jQuery} $typeSelector Select element to choose the product type
-   * @param {jQuery} $productForm Product form that needs to be submitted
+   * @param {JQuery} $typeSelector Select element to choose the product type
+   * @param {JQuery} $productForm Product form that needs to be submitted
    */
   constructor($typeSelector: JQuery, $productForm: JQuery) {
     this.$typeSelector = $typeSelector;
