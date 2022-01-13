@@ -24,7 +24,7 @@
  *#}
 
 {%- block product_supplier_row -%}
-  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}">
+  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}" data-supplier-index="{{ form.vars.name }}">
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType != 'hidden' %}
