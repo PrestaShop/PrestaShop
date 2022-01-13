@@ -1264,12 +1264,16 @@ class CartCore extends ObjectModel
      */
     public function checkAndUpdateAddresses()
     {
+        if (!Validate::isLoadedObject($this)) {
+            return true;
+        }
+
         $needUpdate = false;
         foreach (['invoice', 'delivery'] as $type) {
             $addr = 'id_address_' . $type;
             if ($this->{$addr} != 0
                 && !Address::isValid($this->{$addr})) {
-                if ($type == 'delivery' && $this->id) {
+                if ($type == 'delivery') {
                     $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product SET id_address_delivery = 0
                             WHERE id_cart=' . (int) $this->id . ' AND id_address_delivery = ' . (int) $this->{$addr};
                     Db::getInstance()->execute($sql);
@@ -1279,7 +1283,7 @@ class CartCore extends ObjectModel
             }
         }
 
-        if ($needUpdate && $this->id) {
+        if ($needUpdate) {
             return $this->update();
         }
 
