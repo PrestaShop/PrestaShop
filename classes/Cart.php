@@ -1271,7 +1271,7 @@ class CartCore extends ObjectModel
                 && !Address::isValid($this->{$addr})) {
                 if ($type == 'delivery' && $this->id) {
                     $sql = 'UPDATE ' . _DB_PREFIX_ . 'cart_product SET id_address_delivery = 0
-                            WHERE id_cart=' . (int)$this->id . ' AND id_address_delivery = '. (int)$this->{$addr};
+                            WHERE id_cart=' . (int) $this->id . ' AND id_address_delivery = ' . (int) $this->{$addr};
                     Db::getInstance()->execute($sql);
                 }
                 $this->{$addr} = 0;
