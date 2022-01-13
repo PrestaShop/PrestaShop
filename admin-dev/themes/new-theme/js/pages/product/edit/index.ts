@@ -37,12 +37,14 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
+import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
+import {Supplier} from '@pages/product/components/suppliers/supplier-types';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 
@@ -104,9 +106,29 @@ $(() => {
   new AttachmentsManager();
   new SpecificPricesManager(productId);
 
+  let productSuppliers: ProductSuppliersCollection;
+
   if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
-    new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
+    productSuppliers = new ProductSuppliersCollection(ProductMap.suppliers.productSuppliers, productFormModel);
+    productFormModel.watch('price.wholesalePrice', (event) => {
+      productSuppliers.updateDefaultProductSupplierPrice(event.value);
+    });
   }
+
+  new SuppliersSelector(
+    ProductMap.suppliers.productSuppliers,
+    (defaultSupplier: Supplier) => {
+      if (defaultSupplier.price) {
+        productFormModel.set('price.wholesalePrice', defaultSupplier.price);
+      }
+    },
+    (suppliers: Supplier[]) => {
+      if (productSuppliers) {
+        productSuppliers.setSelectedSuppliers(suppliers);
+      }
+    },
+  );
+
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
