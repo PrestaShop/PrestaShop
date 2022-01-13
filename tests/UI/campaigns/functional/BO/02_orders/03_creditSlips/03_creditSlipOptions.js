@@ -155,7 +155,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
       // Get document name
-      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      const documentType = await viewOrderPage.getDocumentType(page, 2);
       await expect(documentType).to.be.equal('Credit slip');
     });
 
@@ -163,7 +163,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedPrefixOnFileName', baseContext);
 
       // Get file name
-      fileName = await viewOrderPage.getFileName(page, 4);
+      fileName = await viewOrderPage.getFileName(page, 2);
       expect(fileName).to.contains(prefixToEdit);
     });
   });
@@ -219,7 +219,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedPrefix', baseContext);
 
       fileName = await viewOrderPage.getFileName(page, 4);
-      expect(fileName).to.not.contains(prefixToEdit);
+      expect(fileName, 'Credit slip file name is not changed to default!').to.not.contains(prefixToEdit);
     });
   });
 
