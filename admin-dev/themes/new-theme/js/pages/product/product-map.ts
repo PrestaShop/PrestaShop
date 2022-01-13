@@ -150,8 +150,11 @@ export default {
     windowFileManager: '.dropzone-window-filemanager',
   },
   suppliers: {
-    productSuppliers: '#product_options_suppliers',
-    combinationSuppliers: '#combination_form_suppliers',
+    productSuppliers: '#product_options_product_suppliers',
+    supplierIdsInput: '#product_options_suppliers_supplier_ids',
+    defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
+    combinationSuppliersParent: '#combination_form',
+    supplierPriceInput: (supplierId) => `#product_options_product_suppliers_${supplierId}_price_tax_excluded`,
   },
   seo: {
     container: '#product_seo_serp',
