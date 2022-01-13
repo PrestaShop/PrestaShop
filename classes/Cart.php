@@ -3105,6 +3105,12 @@ class CartCore extends ObjectModel
             uasort($array, ['Cart', 'sortDeliveryOptionList']);
         }
 
+        Hook::exec('actionFilterDeliveryOptionList',
+            [
+                'delivery_option_list' => &$delivery_option_list,
+            ]
+        );
+
         static::$cacheDeliveryOptionList[$this->id] = $delivery_option_list;
 
         return static::$cacheDeliveryOptionList[$this->id];
