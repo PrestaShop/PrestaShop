@@ -18,7 +18,8 @@ $(document).ready(function () {
   });
 });
 
-const rightSidebar = (function () {
+// eslint-disable-next-line
+window.rightSidebar = (function () {
   return {
     init() {
       $('.btn-sidebar').on('click', function initLoadQuickNav() {
