@@ -328,7 +328,7 @@ class ApiNode
         }
 
         // display i18n fields
-        if (isset($field['i18n']) && $field['i18n']) {
+        if (!empty($field['i18n'])) {
             foreach (self::$languages as $language) {
                 $langAttributes = ['id' => $language];
 
