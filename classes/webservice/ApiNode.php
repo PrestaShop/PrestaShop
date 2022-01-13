@@ -26,17 +26,28 @@
  */
 class ApiNode
 {
+
     public const TYPE_VALUE = 'value';
     public const TYPE_LANGUAGE = 'language';
     public const TYPE_PARENT = 'parent';
     public const TYPE_LIST = 'list';
 
     public static $languages;
-    private string $type;
-    private ?string $name = null;
-    private ?string $value = null;
-    private array $attributes = [];
-    private array $nodes = [];
+
+    /** @var string */
+    private $type;
+
+    /** @var string|null */
+    private $name = null;
+
+    /** @var string|null */
+    private $value = null;
+
+    /** @var array */
+    private $attributes = [];
+
+    /** @var array */
+    private $nodes = [];
 
     private function __construct(string $type, ?string $name = null, ?string $value = null, array $attributes = [], array $nodes = [])
     {
