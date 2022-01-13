@@ -24,12 +24,14 @@
  */
 
 import ComponentsMap from '@components/components-map';
+import ContextualNotification from '@components/contextual-notification';
 
 const {$} = window;
 
 export default class MultistoreConfigField {
   constructor() {
     this.updateMultistoreFieldOnChange();
+    this.initContextualNotification();
   }
 
   updateMultistoreFieldOnChange(): void {
@@ -48,5 +50,34 @@ export default class MultistoreConfigField {
       labelContainer.toggleClass('disabled', !isChecked);
       input.prop('disabled', !isChecked);
     });
+  }
+
+  initContextualNotification(): void {
+    const configKeyShopPrefix = 'multistore-checkbox-shop-';
+    const configKeyGroupPrefix = 'multistore-checkbox-group-';
+    const multistoreHeader = document.querySelector('.header-multishop');
+
+    if (multistoreHeader === null || !(multistoreHeader instanceof HTMLElement) || !multistoreHeader.dataset.checkboxNotification) {
+      return;
+    }
+
+    const contextualNotification = new ContextualNotification();
+    let notificationKey = configKeyGroupPrefix + multistoreHeader.dataset.groupId;
+
+    if (multistoreHeader.hasAttribute('data-shop-id')) {
+      notificationKey = configKeyShopPrefix + multistoreHeader.dataset.shopId;
+    }
+
+    // check if key exists, if yes: display or not depending on given value
+    const configValue = contextualNotification.getItem(notificationKey);
+
+    if (configValue === true || configValue === null) {
+      contextualNotification.displayNotification(multistoreHeader.dataset.checkboxNotification, notificationKey);
+    }
+
+    // if the config doesn't exist, we set it to true
+    if (configValue === null) {
+      contextualNotification.setItem(notificationKey, true);
+    }
   }
 }

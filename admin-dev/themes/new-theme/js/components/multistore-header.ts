@@ -29,6 +29,7 @@ import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
 import ComponentsMap from '@components/components-map';
+import ContextualNotification from '@components/contextual-notification';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const {$} = window;
@@ -79,6 +80,43 @@ const initMultistoreHeader = () => {
   }
 };
 
+const initContextualNotification = () => {
+  const configKeyShopPrefix = 'missing-color-shop-';
+  const configKeyGroupPrefix = 'missing-color-group-';
+  const multistoreHeader = document.querySelector('.header-multishop');
+
+  if (multistoreHeader === null || !(multistoreHeader instanceof HTMLElement) || !multistoreHeader.dataset.headerColorNotification) {
+    return;
+  }
+
+  const notificationMessage = multistoreHeader.dataset.headerColorNotification;
+
+  if (notificationMessage.length <= 0) {
+    return;
+  }
+
+  // make localstorage key for this context
+  const contextualNotification = new ContextualNotification();
+  let notificationKey = configKeyGroupPrefix + multistoreHeader.dataset.groupId;
+
+  if (multistoreHeader.hasAttribute('data-shop-id')) {
+    notificationKey = configKeyShopPrefix + multistoreHeader.dataset.shopId;
+  }
+
+  // check if key exists, if yes: display or not depending on given value
+  const configValue = contextualNotification.getItem(notificationKey);
+
+  if (configValue === true || configValue === null) {
+    contextualNotification.displayNotification(multistoreHeader.dataset.headerColorNotification, notificationKey);
+  }
+
+  // if the config doesn't exist, we set it to true
+  if (configValue === null) {
+    contextualNotification.setItem(notificationKey, true);
+  }
+};
+
 $(() => {
   initMultistoreHeader();
+  initContextualNotification();
 });
