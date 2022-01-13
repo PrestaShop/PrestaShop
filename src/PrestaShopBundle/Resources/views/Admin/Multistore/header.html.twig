@@ -24,7 +24,12 @@
  *#}
 {% block multistore_header %}
   {% if isMultistoreUsed and app.request is not null %}
-    <div class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}">
+    <div
+        class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
+        {% if isShopContext %}data-shop-id="{{ currentContext.id }}" {% elseif isGroupContext %}data-group-id="{{ currentContext.id }}" {% else %}data-allcontext="1" {% endif %}
+        {% if shouldDisplayColorNotification and colorConfigLink %}data-header-color-notification="{{ "Customize your multistore header, [1]pick a color[/1] for this shop context."|trans({'[1]': '<a href="' ~ colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
+        data-checkbox-notification="{{ "To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save."|trans({}, 'Admin.Navigation.Header') ~ ' '}}"
+    >
       <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
           {% if isShopContext %}
@@ -67,7 +72,7 @@
           {% endif %}
 
           <h2 class="header-multishop-title">
-          {% if isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ currentContext.name }}
+            {% if isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ currentContext.name }}
           </h2>
 
           <button class="header-multishop-button">
