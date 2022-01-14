@@ -348,11 +348,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @When I add :quantity items of combination :combinationName of the product :productName to the cart :cartReference
-     *
-     * @param int $quantity
-     * @param string $combinationName
-     * @param string $productName
-     * @param string $cartReference
      */
     public function addProductsCombinationsToCart(
         int $quantity,
@@ -360,22 +355,29 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         string $productName,
         string $cartReference
     ) {
-        $this->productFeatureContext->checkProductWithNameExists($productName);
-        $this->productFeatureContext->checkCombinationWithNameExists($productName, $combinationName);
-        $productId = (int) $this->productFeatureContext->getProductWithName($productName)->id;
-        $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
-        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
-
+        // Use product reference from shared storage if available, or from legacy context otherwise
+        if ($this->getSharedStorage()->exists($productName)) {
+            $productId = (int) $this->getSharedStorage()->get($productName);
+        } else {
+            $this->productFeatureContext->checkProductWithNameExists($productName);
+            $productId = (int) $this->productFeatureContext->getProductWithName($productName)->id;
+        }
+        // Use combination reference from shared storage if available, or from legacy context otherwise
+        if ($this->getSharedStorage()->exists($combinationName)) {
+            $combinationId = $this->getSharedStorage()->get($combinationName);
+        } else {
+            $this->productFeatureContext->checkCombinationWithNameExists($productName, $combinationName);
+            $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
+        }
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
-                    $cartId,
+                    (int) SharedStorage::getStorage()->get($cartReference),
                     $productId,
                     $quantity,
                     $combinationId
                 )
             );
-
             // Clear cart static cache or it will have no products in next calls
             Cart::resetStaticCache();
         } catch (MinimalQuantityException $e) {

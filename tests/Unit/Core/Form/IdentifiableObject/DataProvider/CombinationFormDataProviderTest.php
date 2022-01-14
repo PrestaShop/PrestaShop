@@ -40,12 +40,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationFormDataProviderTest extends TestCase
 {
@@ -53,13 +56,14 @@ class CombinationFormDataProviderTest extends TestCase
     private const COMBINATION_ID = 42;
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
+    private const DEFAULT_SHOP_ID = 99;
 
     public function testGetDefaultData(): void
     {
-        $queryBusMock = $this->createMock(CommandBusInterface::class);
-        $provider = new CombinationFormDataProvider($queryBusMock);
-
-        $this->assertEquals([], $provider->getDefaultData());
+        $formDataProvider = $this->createFormDataProvider(
+            $this->createMock(CommandBusInterface::class)
+        );
+        $this->assertSame([], $formDataProvider->getDefaultData());
     }
 
     /**
@@ -70,12 +74,11 @@ class CombinationFormDataProviderTest extends TestCase
      */
     public function testGetData(array $combinationData, array $expectedData): void
     {
-        $queryBusMock = $this->createQueryBusMock($combinationData);
-        $provider = new CombinationFormDataProvider($queryBusMock);
-
-        $formData = $provider->getData(self::COMBINATION_ID);
+        $formDataProvider = $this->createFormDataProvider(
+            $this->createQueryBusMock($combinationData)
+        );
         // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedData, $formData);
+        $this->assertSame($expectedData, $formDataProvider->getData(self::COMBINATION_ID));
     }
 
     public function getExpectedData(): Generator
@@ -118,6 +121,60 @@ class CombinationFormDataProviderTest extends TestCase
             'low_stock_alert' => true,
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
+            'stock_movement_history' => [
+                [
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2022-01-13 18:20:58',
+                    'to_date' => '2021-05-24 15:24:32',
+                    'stock_movement_ids' => [321, 322, 323, 324, 325],
+                    'stock_ids' => [42],
+                    'order_ids' => [311, 312, 313, 314, 315],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -19,
+                ],
+                [
+                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'date_add' => '2021-05-24 15:24:32',
+                    'stock_movement_id' => 320,
+                    'stock_id' => 42,
+                    'order_id' => 310,
+                    'employee_id' => 12,
+                    'employee_firstname' => 'Paul',
+                    'employee_lastname' => 'Atreide',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2021-05-24 15:24:32',
+                    'to_date' => '2021-05-22 16:35:48',
+                    'stock_movement_ids' => [221, 222, 223, 224, 225],
+                    'stock_ids' => [42],
+                    'order_ids' => [211, 212, 213, 214, 215],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -23,
+                ],
+                [
+                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'date_add' => '2021-05-22 16:35:48',
+                    'stock_movement_id' => 220,
+                    'stock_id' => 42,
+                    'order_id' => 210,
+                    'employee_id' => 11,
+                    'employee_firstname' => 'Frodo',
+                    'employee_lastname' => 'Baggins',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2021-05-22 16:35:48',
+                    'to_date' => '2021-01-24 15:24:32',
+                    'stock_movement_ids' => [121, 122, 123, 124, 125],
+                    'stock_ids' => [42],
+                    'order_ids' => [111, 112, 113, 114, 115],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -17,
+                ],
+            ],
         ];
         $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
@@ -125,6 +182,38 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['options']['low_stock_alert'] = true;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
+        $expectedOutputData['stock']['quantities']['stock_movement_history'] = [
+            [
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -19,
+            ],
+            [
+                'type' => 'single',
+                'date' => '2021-05-24 15:24:32',
+                'employee_name' => '%firstname% %lastname%',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -23,
+            ],
+            [
+                'type' => 'single',
+                'date' => '2021-05-22 16:35:48',
+                'employee_name' => '%firstname% %lastname%',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -17,
+            ],
+        ];
 
         $datasets[] = [
             $combinationData,
@@ -314,7 +403,8 @@ class CombinationFormDataProviderTest extends TestCase
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetCombinationForEditing::class),
                 $this->isInstanceOf(GetProductSupplierOptions::class),
-                $this->isInstanceOf(GetCombinationSuppliers::class)
+                $this->isInstanceOf(GetCombinationSuppliers::class),
+                $this->isInstanceOf(GetCombinationStockMovementHistory::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -328,20 +418,20 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|ProductSupplierOptions|ProductSupplierInfo[]
+     * @return CombinationForEditing|ProductSupplierOptions|ProductSupplierInfo[]|StockMovementHistory[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
-        $queryClass = get_class($query);
-        switch ($queryClass) {
+        switch ($queryClass = get_class($query)) {
             case GetCombinationForEditing::class:
                 return $this->createCombinationForEditing($combinationData);
             case GetProductSupplierOptions::class:
                 return $this->createProductSupplierOptions($combinationData);
             case GetCombinationSuppliers::class:
                 return $this->createCombinationSupplierInfos($combinationData);
+            case GetCombinationStockMovementHistory::class:
+                return $this->createStockMovementHistories($combinationData);
         }
-
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
     }
 
@@ -458,6 +548,46 @@ class CombinationFormDataProviderTest extends TestCase
     }
 
     /**
+     * @param array $combinationData
+     *
+     * @return StockMovementHistory[]
+     */
+    private function createStockMovementHistories(array $combinationData): array
+    {
+        return array_map(
+            static function (array $historyData): StockMovementHistory {
+                if (StockMovementHistory::SINGLE_TYPE === $historyData['type']) {
+                    return StockMovementHistory::createSingleHistory(
+                        $historyData['date_add'],
+                        $historyData['stock_movement_id'],
+                        $historyData['stock_id'],
+                        $historyData['order_id'],
+                        $historyData['employee_id'],
+                        $historyData['employee_firstname'],
+                        $historyData['employee_lastname'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                if (StockMovementHistory::GROUP_TYPE === $historyData['type']) {
+                    return StockMovementHistory::createGroupHistory(
+                        $historyData['from_date'],
+                        $historyData['to_date'],
+                        $historyData['stock_movement_ids'],
+                        $historyData['stock_ids'],
+                        $historyData['order_ids'],
+                        $historyData['employee_ids'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                throw new RuntimeException(
+                    sprintf('Unsupported stock movement history type "%s"', $historyData['type'])
+                );
+            },
+            $combinationData['stock_movement_history'] ?? []
+        );
+    }
+
+    /**
      * @return array
      */
     private function getDefaultOutputData(): array
@@ -472,6 +602,7 @@ class CombinationFormDataProviderTest extends TestCase
                         'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
+                    'stock_movement_history' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
@@ -499,5 +630,23 @@ class CombinationFormDataProviderTest extends TestCase
             'suppliers' => [],
             'images' => [],
         ];
+    }
+
+    private function createFormDataProvider(
+        CommandBusInterface $queryBusMock,
+        ?int $contextShopId = null
+    ): CombinationFormDataProvider {
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        return new CombinationFormDataProvider(
+            $queryBusMock,
+            self::DEFAULT_SHOP_ID,
+            $contextShopId,
+            $translatorMock
+        );
     }
 }

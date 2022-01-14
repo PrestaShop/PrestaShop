@@ -33,7 +33,12 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
+  {{ form_start(combinationForm, {
+    'attr': {
+      'class': 'form-horizontal combination-page product-page-v2',
+      'novalidate': 'novalidate',
+    },
+  }) }}
   <div class="card">
     <div class="card-header">
       {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }}
