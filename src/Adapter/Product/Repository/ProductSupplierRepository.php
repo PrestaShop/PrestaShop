@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDelet
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -163,9 +164,41 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      * @param ProductId $productId
      * @param SupplierId $supplierId
      *
+     * @return ProductSupplierAssociation[]
+     */
+    public function getAssociations(ProductId $productId, SupplierId $supplierId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('ps.id_product_attribute')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->andWhere('ps.id_product = :productId')
+            ->andWhere('ps.id_supplier = :supplierId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('supplierId', $supplierId->getValue())
+        ;
+
+        $results = $qb->execute()->fetchAllNumeric();
+
+        if (empty($results)) {
+            return [];
+        }
+
+        return array_map(function (int $combinationId) use ($productId, $supplierId) {
+            return new ProductSupplierAssociation(
+                $productId->getValue(),
+                $combinationId,
+                $supplierId->getValue()
+            );
+        }, $results);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param SupplierId $supplierId
+     *
      * @return ProductSupplierId[]
      */
-    public function getAssociatedProductSuppliers(ProductId $productId, SupplierId $supplierId): array
+    public function getAssociatedProductSupplierIds(ProductId $productId, SupplierId $supplierId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('ps.id_product_supplier AS product_supplier_id')
@@ -281,5 +314,39 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         }
 
         return $qb->execute()->fetchAll();
+    }
+
+    /**
+     * Returns the list of ProductSupplierId which don't match the expected suppliers.
+     *
+     * @param ProductId $productId
+     * @param array $expectedSuppliersId
+     *
+     * @return ProductSupplierId[]
+     */
+    public function getUselessProductSupplierIds(ProductId $productId, array $expectedSuppliersId): array
+    {
+        $supplierIds = array_map(function (SupplierId $supplierId) {
+            return (string) $supplierId->getValue();
+        }, $expectedSuppliersId);
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ps.id_product_supplier')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->where($qb->expr()->and(
+                $qb->expr()->eq('product_id', $productId->getValue()),
+                $qb->expr()->notIn('supplier_id', $supplierIds)
+            ))
+        ;
+
+        $uselessProductSupplierIds = $qb->execute()->fetchAllNumeric();
+        if (empty($uselessProductSupplierIds)) {
+            return [];
+        }
+
+        return array_map(function (int $productSupplierId) {
+            return new ProductSupplierId($productSupplierId);
+        }, $uselessProductSupplierIds);
     }
 }
