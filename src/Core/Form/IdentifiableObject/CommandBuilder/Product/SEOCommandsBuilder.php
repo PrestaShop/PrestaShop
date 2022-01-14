@@ -65,8 +65,10 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
 
         if (!empty($seoData['tags'])) {
             $parsedTags = [];
-            foreach ($seoData['tags'] as $langId => $rawTags) {
-                $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+            if (is_array($seoData['tags'])) {
+                foreach ($seoData['tags'] as $langId => $rawTags) {
+                    $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+                }
             }
 
             $commands[] = new SetProductTagsCommand(
