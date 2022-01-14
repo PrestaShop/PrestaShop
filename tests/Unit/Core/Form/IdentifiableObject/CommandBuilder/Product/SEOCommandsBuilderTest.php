@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
 class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -246,6 +247,18 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command, $tagCommands],
         ];
+    }
+
+    public function testInvalidTags(): void
+    {
+        $builder = new SEOCommandsBuilder();
+
+        $this->expectException(InvalidArgumentException::class);
+        $builder->buildCommands($this->getProductId(), [
+            'seo' => [
+                'tags' => 'cotton, candy',
+            ],
+        ]);
     }
 
     /**
