@@ -263,3 +263,33 @@ Feature: Address
     And customer "testFirstName" should have 4 deleted addresses
     And cart "test-delivery-cart" should have "test-invoice-cart-address" as a invoice address
     And cart "test-delivery-cart" should have "test-customer-france-address" as a delivery address
+
+  Scenario: delete address with pending existing cart using it
+    Given I create customer "testFirstName" with following details:
+      | firstName        | testFirstName                      |
+      | lastName         | testLastName                       |
+      | email            | test.davidsonas.new@invertus.eu        |
+      | password         | secret                             |
+    Given I add new address to customer "testFirstName" with following details:
+      | Address alias    | test-customer-address-to-delete    |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Given address "test-customer-address-to-delete" is assigned to a cart "test-pending-cart" for "testFirstName"
+    Given address "test-customer-address-to-delete" is assigned to an order "test-customer-order" for "testFirstName"
+    Given I add new address to customer "testFirstName" with following details:
+      | Address alias    | new-test-customer-address          |
+      | First name       | testFirstName                      |
+      | Last name        | testLastName                       |
+      | Address          | Work address st. 1234567890        |
+      | City             | Birmingham                         |
+      | Country          | United States                      |
+      | State            | Alabama                            |
+      | Postal code      | 12345                              |
+    Given address "new-test-customer-address" is assigned to a cart "test-new-cart" for "testFirstName"
+    When I delete address "test-customer-address-to-delete"
+    Then cart "test-pending-cart" should not have any address

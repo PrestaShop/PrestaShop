@@ -366,6 +366,34 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then cart :cartReference should not have any address
+     */
+    public function checkCartNoAddress(string $cartReference)
+    {
+        $cartId = SharedStorage::getStorage()->get($cartReference);
+        $cart = new Cart($cartId);
+        Assert::assertEquals(
+            0,
+            $cart->id_address_delivery,
+            sprintf('Invalid cart address, expected %d but found %d', 0, $cart->id_address_delivery)
+        );
+
+        $query = new DbQuery();
+        $query->select('COUNT(*)');
+        $query->from('cart_product', 'c');
+        $query->where('id_cart = ' . $cartId);
+        $query->where('id_address_delivery != 0');
+
+        $databaseCount = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
+
+        Assert::assertEquals(
+            0,
+            $databaseCount,
+            sprintf('Invalid cart_product address count, expected %d but found %d', 0, $databaseCount)
+        );
+    }
+
+    /**
      * @Then cart :cartReference should have :addressReference as a :addressType address
      */
     public function checkCartAddress(string $cartReference, string $addressReference, string $addressType)
