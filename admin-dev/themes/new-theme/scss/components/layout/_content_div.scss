@@ -61,11 +61,7 @@
 
 .light_display_layout {
   #main-div {
-    padding-top: 0;
-
-    @include media-breakpoint-down(md) {
-      padding-top: 0;
-    }
+    padding-top: 0.625rem;
   }
 }
 
