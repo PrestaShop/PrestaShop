@@ -31,6 +31,14 @@ Feature: Duplicate product from Back Office (BO).
       | name[en-US] | Reading glasses |
       | name[fr-FR] | lunettes        |
       | type        | standard        |
+    Given I add product "product3" with following information:
+      | name[en-US] | packed product   |
+      | name[fr-FR] | produit packagé |
+      | type        | pack           |
+    And I set following packed products to product product3:
+      | product  | quantity |
+      | product1 | 2        |
+      | product2 | 3        |
     And I update product "product1" basic information with following values:
       | description[en-US]       | nice sunglasses            |
       | description[fr-FR]       | belles lunettes            |
@@ -125,7 +133,7 @@ Feature: Duplicate product from Back Office (BO).
     Then product "product1" should have 1 specific prices
 
   Scenario: I duplicate product
-#todo: add specific prices & priorities, test combinations, packs
+#todo: add specific prices & priorities, test combinations
     When I duplicate product product1 to a copy_of_product1
     And product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
@@ -246,3 +254,20 @@ Feature: Duplicate product from Back Office (BO).
     When I duplicate product product_with_combinations to a copy_of_product_with_combinations
     Then product "copy_of_product_with_combinations" should have 2 specific prices
     # TODO: all sorts of other checks
+
+  Scenario: I duplicate packed product
+    When I duplicate product product3 to a copy_of_product3
+    And product "copy_of_product3" should be disabled
+    And product "copy_of_product3" type should be pack
+    And product "copy_of_product3" localized "name" should be:
+      | locale | value                       |
+      | en-US  | copy of packed product    |
+      | fr-FR  | copie de produit packagé |
+    And product copy_of_product3 should have following packed products:
+      | product  | productName      | quantity |
+      | product1 | smart sunglasses |        2 |
+      | product2 | Reading glasses  |        3 |
+
+
+
+
