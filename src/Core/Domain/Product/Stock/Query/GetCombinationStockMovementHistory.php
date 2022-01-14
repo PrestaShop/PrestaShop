@@ -24,59 +24,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject;
+declare(strict_types=1);
 
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
+
+use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
-/**
- *  Holds product combination identification data
- */
-class CombinationId implements CombinationIdInterface
+class GetCombinationStockMovementHistory extends AbstractGetStockMovementHistory
 {
     /**
-     * Indicates that no combination is provided/selected
-     *
-     * @deprecated since 8.0.0 and will be removed in next major version.
-     * @see NoCombinationId instead
-     */
-    public const NO_COMBINATION = 0;
-
-    /**
-     * @var int
+     * @var CombinationId
      */
     private $combinationId;
 
     /**
-     * @param int $combinationId
-     *
      * @throws CombinationConstraintException
+     * @throws ShopException
+     * @throws LogicException
      */
-    public function __construct(int $combinationId)
-    {
-        $this->assertValueIsPositive($combinationId);
-        $this->combinationId = $combinationId;
+    public function __construct(
+        int $combinationId,
+        int $shopId,
+        int $offset = 0,
+        int $limit = self::DEFAULT_LIMIT
+    ) {
+        parent::__construct(
+            $shopId,
+            $offset,
+            $limit
+        );
+        $this->combinationId = new CombinationId($combinationId);
     }
 
-    /**
-     * @return int
-     */
-    public function getValue(): int
+    public function getCombinationId(): CombinationId
     {
         return $this->combinationId;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CombinationConstraintException
-     */
-    private function assertValueIsPositive(int $value)
-    {
-        if (0 >= $value) {
-            throw new CombinationConstraintException(
-                sprintf('Combination id must be positive integer. "%s" given', $value),
-                CombinationConstraintException::INVALID_ID
-            );
-        }
     }
 }

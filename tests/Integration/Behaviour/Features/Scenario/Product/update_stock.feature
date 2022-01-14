@@ -119,7 +119,7 @@ Feature: Update product stock from Back Office (BO)
       | delta_quantity | 51 |
     And product "product1" should have following stock information:
       | quantity | 51 |
-    And product "product1" last employees stock movements should be:
+    And product "product1" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 51             |
     And product "product1" last stock movement increased by 51
@@ -127,17 +127,17 @@ Feature: Update product stock from Back Office (BO)
       | delta_quantity | -9 |
     And product "product1" should have following stock information:
       | quantity | 42 |
-    And product "product1" last employees stock movements should be:
+    And product "product1" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -9             |
       | Puff       | Daddy     | 51             |
     And product "product1" last stock movement decreased by 9
-#   Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
+    # Next assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update product "product1" stock with following information:
       | delta_quantity | 0 |
     Then product "product1" should have following stock information:
       | quantity | 42 |
-    And product "product1" last employees stock movements should be:
+    And product "product1" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -9             |
       | Puff       | Daddy     | 51             |

@@ -104,7 +104,7 @@ final class UpdateCombinationFromListingHandler implements UpdateCombinationFrom
 
         $stockModification = new StockModification(
             $command->getDeltaQuantity(),
-            $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+            $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
         );
         $this->combinationStockUpdater->update($command->getCombinationId(), new CombinationStockProperties($stockModification));
     }

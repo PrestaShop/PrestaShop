@@ -47,7 +47,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | delta quantity  | 10     |
       | is default      | true   |
       | reference       | test_1 |
-    Then combination "product1SBlue" last employees stock movements should be:
+    Then combination "product1SBlue" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 10             |
     And combination "product1SBlue" last stock movement increased by 10
@@ -56,19 +56,19 @@ Feature: Update product combination from listing in Back Office (BO)
       | delta quantity  | 9      |
       | is default      | false  |
       | reference       | test 2 |
-    Then combination "product1MWhite" last employees stock movements should be:
+    Then combination "product1MWhite" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 9              |
     And combination "product1MWhite" last stock movement increased by 9
     And I update combination "product1MBlack" from list with following values:
       | delta quantity | -50 |
-    Then combination "product1MBlack" last employees stock movements should be:
+    Then combination "product1MBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -50            |
     And combination "product1MBlack" last stock movement decreased by 50
     When I update combination "product1MBlack" from list with following values:
       | delta quantity | -60 |
-    Then combination "product1MBlack" last employees stock movements should be:
+    Then combination "product1MBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -60            |
       | Puff       | Daddy     | -50            |
@@ -84,7 +84,7 @@ Feature: Update product combination from listing in Back Office (BO)
     And product product1 default combination should be "product1SBlue"
 
   Scenario: Combination quantity is not updated and stock does not move when 0 is given as delta quantity
-    Given combination "product1MBlack" last employees stock movements should be:
+    Given combination "product1MBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -60            |
       | Puff       | Daddy     | -50            |
@@ -98,7 +98,7 @@ Feature: Update product combination from listing in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     When I update combination "product1SWhite" from list with following values:
       | delta quantity | 0 |
-    Then combination "product1MBlack" last employees stock movements should be:
+    Then combination "product1MBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -60            |
       | Puff       | Daddy     | -50            |

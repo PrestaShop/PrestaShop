@@ -44,11 +44,14 @@
     {{ multistoreHeader() }}
   </div>
 
-  {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
-    'data-product-id': productId,
-    'data-product-type': productType
-  }}) }}
+  {{ form_start(productForm, {
+    'attr': {
+      'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center',
+      'novalidate': 'novalidate',
+      'data-product-id': productId,
+      'data-product-type': productType
+    }
+  }) }}
 
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
