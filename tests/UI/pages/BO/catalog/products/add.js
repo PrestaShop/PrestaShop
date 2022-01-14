@@ -23,75 +23,135 @@ class AddProduct extends BOBasePage {
     this.errorMessageWhenSummaryTooLong = number => 'This value is too long.'
       + ` It should have ${number} characters or less.`;
 
-    // Selectors
+    // Header selectors
     this.productNameInput = '#form_step1_name_1';
-    this.productImageDropZoneDiv = '#product-images-dropzone';
     this.productTypeSelect = '#form_step1_type_product';
+
+    // Selectors of form nav list
+    this.formNavList = '#form-nav';
+    this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
+
+    // Selectors of tab: Basic settings
+    this.productImageDropZoneDiv = '#product-images-dropzone';
     this.openFileManagerDiv = `${this.productImageDropZoneDiv} .disabled.openfilemanager.dz-clickable`;
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} > div.dz-complete.dz-image-preview`;
-    this.productWithCombinationsInput = '#show_variations_selector div:nth-of-type(2) input';
+
+    this.productShortDescriptionIframe = '#form_step1_description_short';
+    this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
+    this.productDescriptionIframe = '#form_step1_description';
+
+    this.productWithCombinationRadioButton = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
     this.productQuantityInput = '#form_step1_qty_0_shortcut';
-    this.productPriceAtiInput = '#form_step1_price_ttc_shortcut';
-    this.saveProductButton = 'input#submit[value=\'Save\']';
-    this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
-    this.addNewProductButton = '#product_form_save_new_btn';
-    this.previewProductLink = 'a#product_form_preview_btn';
-    this.productOnlineSwitch = '.product-footer div.switch-input';
-    this.productOnlineTitle = 'h2.for-switch.online-title';
-    this.productShortDescriptionIframe = '#form_step1_description_short';
-    this.productDescriptionIframe = '#form_step1_description';
+    this.productPriceTTCInput = '#form_step1_price_ttc_shortcut';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
-    this.productDeleteLink = '.product-footer a.delete';
-    this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
+
+    // Selectors for pack of products
     this.packItemsInput = '#form_step1_inputPackItems';
     this.packsearchResult = '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)';
     this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
     this.addProductToPackButton = '#form_step1_inputPackItems-curPackItemAdd';
 
-    // Form nav
-    this.formNavList = '#form-nav';
-    this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
-
-    // Selectors of Step 2 : Pricing
+    // Selectors of tab: Pricing
+    // Retail price
     this.ecoTaxInput = '#form_step2_ecotax';
+    // Specific prices
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
     this.specificPriceForm = '#specific_price_form';
-    this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
-    this.startingAtInput = '#form_step2_specific_price_sp_from_quantity';
-    this.applyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
-    this.reductionType = '#form_step2_specific_price_sp_reduction_type';
-    this.applyButton = '#form_step2_specific_price_save';
+    this.specificPriceCombinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
+    this.specificPriceStartingAtInput = '#form_step2_specific_price_sp_from_quantity';
+    this.specificPriceApplyDiscountOfInput = '#form_step2_specific_price_sp_reduction';
+    this.specificPriceReductionType = '#form_step2_specific_price_sp_reduction_type';
+    this.specificPriceApplyButton = '#form_step2_specific_price_save';
 
-    // Selector of Step 3 : Combinations
-    this.addCombinationsInput = '#form_step3_attributes-tokenfield';
+    // Selectors of tab: Combinations
+    this.combinationsInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
-    this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
-    this.applyOnCombinationsButton = '#apply-on-combinations';
-    this.productCombinationTableRow = id => `#accordion_combinations tr:nth-of-type(${id})`;
-    this.deleteCombinationsButton = '#delete-combinations';
+    this.productCombinationTableRow = row => `#accordion_combinations tr:nth-of-type(${row})`;
+    // Bulk actions form
     this.productCombinationsBulkForm = '#combinations-bulk-form';
     this.productCombinationsBulkFormTitle = `${this.productCombinationsBulkForm} p[aria-controls]`;
-    this.bulkCombinationsContainer = '#bulk-combinations-container';
+    this.productCombinationBulkQuantityInput = '#product_combination_bulk_quantity';
+    this.applyOnCombinationsButton = '#apply-on-combinations';
+    this.deleteCombinationsButton = '#delete-combinations';
 
-    // Selector of step 3 : Quantities
+    // Selectors of tab: Quantities
+    // Quantities
     this.quantityInput = '#form_step3_qty_0';
     this.minimumQuantityInput = '#form_step3_minimal_quantity';
+    // Stocks
     this.stockLocationInput = '#form_step3_location';
     this.lowStockLevelInput = '#form_step3_low_stock_threshold';
+    // Availability preferences
     this.behaviourOutOfStockInput = id => `#form_step3_out_of_stock_${id}`;
     this.labelWhenInStockInput = '#form_step3_available_now_1';
     this.labelWhenOutOfStock = '#form_step3_available_later_1';
 
-    // Selector of Step 5 : SEO
-    this.resetUrlButton = '#seo-url-regenerate';
+    // Selectors of tab: SEO
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
+    this.resetUrlButton = '#seo-url-regenerate';
+
+    // Footer selectors
+    this.productDeleteLink = '.product-footer a.delete';
+    this.productOnlineTitle = 'h2.for-switch.online-title';
+    this.productOnlineSwitch = '.product-footer div.switch-input';
+    this.previewProductLink = 'a#product_form_preview_btn';
+    this.saveProductButton = 'input#submit[value=\'Save\']';
+    this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
+    this.addNewProductButton = '#product_form_save_new_btn';
   }
 
   /*
   Methods
    */
+  /**
+   * Set Name, type of product, Reference, price ATI, description and short description
+   * @param page {Page} Browser tab
+   * @param productData {ProductData} Data to set on basic settings form
+   * @return {Promise<void>}
+   */
+  async setBasicSettings(page, productData) {
+    await this.setValue(page, this.productNameInput, productData.name);
+    // Select type
+    await this.selectByVisibleText(page, this.productTypeSelect, productData.type, true);
+    // Set product images
+    await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
+    // Set description and summary
+    await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
+    await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
+    // Set reference and quantity
+    await this.setValue(page, this.productReferenceInput, productData.reference);
+    if (await this.elementVisible(page, this.productQuantityInput, 500)) {
+      await this.setValue(page, this.productQuantityInput, productData.quantity);
+    }
+    // Select tax rule
+    await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
+    // Set price
+    await this.setValue(page, this.productPriceTTCInput, productData.price);
+  }
+
+  /**
+   * Set product
+   * @param page {Page} Browser tab
+   * @param productData {ProductData} Data to set on on add/edit product form
+   * @returns {Promise<string>}
+   */
+  async setProduct(page, productData) {
+    await this.setBasicSettings(page, productData);
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
+    if (productData.productHasCombinations) {
+      await this.setCombinationsInProduct(page, productData);
+    }
+    if (!productData.productHasCombinations) {
+      await this.setQuantitiesSettings(page, productData);
+    }
+    await this.setProductStatus(page, productData.status);
+
+    return this.saveProduct(page);
+  }
 
   /**
    * Set value on tinyMce textarea
@@ -141,28 +201,7 @@ class AddProduct extends BOBasePage {
     }
   }
 
-  /**
-   * Set Name, type of product, Reference, price ATI, description and short description
-   * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on basic settings form
-   * @return {Promise<void>}
-   */
-  async setBasicSetting(page, productData) {
-    await this.setValue(page, this.productNameInput, productData.name);
 
-    // Set product images
-    await this.addProductImages(page, [productData.coverImage, productData.thumbImage]);
-
-    await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
-    await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
-    await this.selectByVisibleText(page, this.productTypeSelect, productData.type, true);
-    await this.setValue(page, this.productReferenceInput, productData.reference);
-    if (await this.elementVisible(page, this.productQuantityInput, 500)) {
-      await this.setValue(page, this.productQuantityInput, productData.quantity);
-    }
-    await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
-    await this.setValue(page, this.productPriceAtiInput, productData.price);
-  }
 
   /**
    * Set product online or offline
@@ -199,7 +238,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async createEditBasicProduct(page, productData) {
-    await this.setBasicSetting(page, productData);
+    await this.setBasicSettings(page, productData);
 
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
@@ -216,7 +255,7 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCombinationsInProduct(page, productData) {
-    await page.click(this.productWithCombinationsInput);
+    await page.click(this.productWithCombinationRadioButton);
     // GOTO Combination tab : id = 3
     await this.goToFormStep(page, 3);
     // Delete All combinations if exists
@@ -257,7 +296,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async addCombination(page, combination) {
-    await page.type(this.addCombinationsInput, combination);
+    await page.type(this.combinationsInput, combination);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
@@ -407,7 +446,7 @@ class AddProduct extends BOBasePage {
    * Add specific prices
    * @param page {Page} Browser tab
    * @param specificPriceData {Object|{combinations: ?string, discount: ?number, startingAt: ?number,
-   * reductionType: ?string}} Data to set on specific price form
+   * specificPriceReductionType: ?string}} Data to set on specific price form
    * @return {Promise<string>}
    */
   async addSpecificPrices(page, specificPriceData) {
@@ -422,17 +461,17 @@ class AddProduct extends BOBasePage {
 
     // Choose combinations if exist
     if (specificPriceData.combinations) {
-      await this.waitForVisibleSelector(page, this.combinationSelect);
-      await this.scrollTo(page, this.combinationSelect);
-      await this.selectByVisibleText(page, this.combinationSelect, specificPriceData.combinations);
+      await this.waitForVisibleSelector(page, this.specificPriceCombinationSelect);
+      await this.scrollTo(page, this.specificPriceCombinationSelect);
+      await this.selectByVisibleText(page, this.specificPriceCombinationSelect, specificPriceData.combinations);
     }
-    await this.setValue(page, this.startingAtInput, specificPriceData.startingAt);
-    await this.setValue(page, this.applyDiscountOfInput, specificPriceData.discount);
-    await this.selectByVisibleText(page, this.reductionType, specificPriceData.reductionType);
+    await this.setValue(page, this.specificPriceStartingAtInput, specificPriceData.startingAt);
+    await this.setValue(page, this.specificPriceApplyDiscountOfInput, specificPriceData.discount);
+    await this.selectByVisibleText(page, this.specificPriceReductionType, specificPriceData.specificPriceReductionType);
 
     // Apply specific price
-    await this.scrollTo(page, this.applyButton);
-    await page.click(this.applyButton);
+    await this.scrollTo(page, this.specificPriceApplyButton);
+    await page.click(this.specificPriceApplyButton);
 
     // Get growl message
     const growlMessageText = await this.getGrowlMessageContent(page, 30000);
@@ -557,27 +596,6 @@ class AddProduct extends BOBasePage {
     await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, productData.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, productData.LabelWhenOutOfStock);
-  }
-
-  /**
-   * Set product
-   * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on on add/edit product form
-   * @returns {Promise<string>}
-   */
-  async setProduct(page, productData) {
-    await this.setBasicSetting(page, productData);
-    if (productData.type === 'Pack of products') {
-      await this.addPackOfProducts(page, productData.pack);
-    }
-    if (productData.productHasCombinations) {
-      await this.setCombinationsInProduct(page, productData);
-    }
-    await this.setProductStatus(page, productData.status);
-    if (!productData.productHasCombinations) {
-      await this.setQuantitiesSettings(page, productData);
-    }
-    return this.saveProduct(page);
   }
 
   /**
