@@ -291,5 +291,11 @@ Feature: Address
       | State            | Alabama                            |
       | Postal code      | 12345                              |
     Given address "new-test-customer-address" is assigned to a cart "test-new-cart" for "testFirstName"
+    Given I add product "product-cart" with following information:
+      | name[en-US]       | Shirt - Dom & Jquery |
+      | type              | standard             |
+    Given I update product "product-cart" stock with following information:
+      | out_of_stock_type             | available |
+    Given product "product-cart" is added to a cart "test-pending-cart" for "testFirstName"
     When I delete address "test-customer-address-to-delete"
     Then cart "test-pending-cart" should not have any address

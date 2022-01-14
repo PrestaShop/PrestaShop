@@ -28,6 +28,9 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
 use Cart;
+use Context;
+use Customer;
+use Product;
 use Db;
 use DbQuery;
 use Order;
@@ -339,6 +342,27 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $cartAddressId,
             sprintf('Invalid cart %s address, expected %s but found %s', $addressType, $expectedAddressId, $cartAddressId)
         );
+    }
+
+    /**
+     * @Then product :productReference is added to a cart :cartReference for :customerReference
+     *
+     * @param string $productReference
+     * @param string $cartReference
+     * @param string $customerReference
+     */
+    public function assignProductToCart(string $productReference, string $cartReference, string $customerReference)
+    {
+        $productId = (int) SharedStorage::getStorage()->get($productReference);
+        $cartId = (int) SharedStorage::getStorage()->get($cartReference);
+        $customerId = (int) SharedStorage::getStorage()->get($customerReference);
+
+        $customer = new Customer($customerId);
+        Context::getContext()->customer = $customer;
+        $cart = new Cart($cartId);
+        $product = new Product($productId);
+
+        $cart->updateQty(1, $product->id, 0, 0, 'up', $cart->id_address_delivery);
     }
 
     /**
