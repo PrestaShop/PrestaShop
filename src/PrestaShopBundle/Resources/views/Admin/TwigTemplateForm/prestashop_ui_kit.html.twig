@@ -60,7 +60,7 @@
 {%- endblock form_label %}
 
 {% block form_label_class -%}
-  form-control-label
+  form-control-label{% if form.vars.attr.disabled is defined and form.vars.attr.disabled %} disabled{% endif %}
 {%- endblock form_label_class %}
 
 {# Rows #}
