@@ -40,8 +40,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
@@ -417,14 +417,18 @@ final class ProductFormDataProvider implements FormDataProviderInterface
      */
     private function getStockMovements(int $productId): array
     {
-        /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId));
+        /** @var StockMovement[] $stockMovements */
+        $stockMovements = $this->queryBus->handle(new GetEmployeeStockMovements($productId));
 
         $movementData = [];
         foreach ($stockMovements as $stockMovement) {
+            $employeeNameParts = array_filter([
+                $stockMovement->getEmployeeFirstName(),
+                $stockMovement->getEmployeeLastName(),
+            ]);
             $movementData[] = [
                 'date_add' => $stockMovement->getDateAdd()->format(DateTime::DEFAULT_DATETIME_FORMAT),
-                'employee' => $stockMovement->getFirstName() . ' ' . $stockMovement->getLastName(),
+                'employee' => implode(' ', $employeeNameParts),
                 'delta_quantity' => $stockMovement->getDeltaQuantity(),
             ];
         }

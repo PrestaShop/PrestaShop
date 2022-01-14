@@ -38,8 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -146,38 +145,38 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
         /** @var StockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeeStockMovements(
             $productId
         ));
         Assert::assertEmpty($stockMovements, 'Expected to find no stock movements');
     }
 
     /**
-     * @Then product :productReference last employees stock movements should be:
+     * @Then product :productReference last employee stock movements should be:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertLastEmployeesStockMovementForProduct(string $productReference, TableNode $table): void
+    public function assertLastStockMovementForProduct(string $productReference, TableNode $table): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
-        /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+        /** @var StockMovement[] $stockMovements */
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeeStockMovements(
             $productId
         ));
         $this->assertStockMovements($stockMovements, $table);
     }
 
     /**
-     * @Then combination :combinationReference last employees stock movements should be:
+     * @Then combination :combinationReference last employee stock movements should be:
      *
      * @param string $combinationReference
      * @param TableNode $table
      */
-    public function assertLastEmployeesStockMovementForCombination(string $combinationReference, TableNode $table): void
+    public function assertLastEmployeeStockMovementForCombination(string $combinationReference, TableNode $table): void
     {
-        $stockMovements = $this->getLastEmployeesStockMovementsForCombination($combinationReference);
+        $stockMovements = $this->getLastEmployeeStockMovementsForCombination($combinationReference);
 
         $this->assertStockMovements($stockMovements, $table);
     }
@@ -193,8 +192,8 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
-        /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
+        /** @var StockMovement[] $stockMovements */
+        $stockMovements = $this->getQueryBus()->handle(new GetEmployeeStockMovements(
             $productId
         ));
         $this->assertLastStockMovement($stockMovements[0], $movementType, $movementQuantity);
@@ -209,7 +208,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     public function assertCombinationLastStockMovement(string $combinationReference, string $movementType, int $movementQuantity): void
     {
-        $stockMovements = $this->getLastEmployeesStockMovementsForCombination($combinationReference);
+        $stockMovements = $this->getLastEmployeeStockMovementsForCombination($combinationReference);
         $this->assertLastStockMovement($stockMovements[0], $movementType, $movementQuantity);
     }
 
@@ -353,7 +352,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param EmployeeStockMovement[] $stockMovements
+     * @param StockMovement[] $stockMovements
      * @param TableNode $table
      */
     private function assertStockMovements(array $stockMovements, TableNode $table): void
@@ -366,20 +365,20 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             $stockMovement = $stockMovements[$index];
             Assert::assertEquals(
                 $movementDatum['first_name'],
-                $stockMovement->getFirstName(),
+                $stockMovement->getEmployeeFirstName(),
                 sprintf(
                     'Invalid stock movement first name, expected %s instead of %s',
                     $movementDatum['first_name'],
-                    $stockMovement->getFirstName()
+                    $stockMovement->getEmployeeFirstName()
                 )
             );
             Assert::assertEquals(
                 $movementDatum['last_name'],
-                $stockMovement->getLastName(),
+                $stockMovement->getEmployeeLastName(),
                 sprintf(
                     'Invalid stock movement last name, expected %s instead of %s',
                     $movementDatum['last_name'],
-                    $stockMovement->getLastName()
+                    $stockMovement->getEmployeeLastName()
                 )
             );
             Assert::assertEquals(
@@ -432,9 +431,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $combinationReference
      *
-     * @return EmployeeStockMovement[]
+     * @return StockMovement[]
      */
-    private function getLastEmployeesStockMovementsForCombination(string $combinationReference): array
+    private function getLastEmployeeStockMovementsForCombination(string $combinationReference): array
     {
         $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
         $stockMovementRepository = $this->getContainer()->get('prestashop.adapter.product.stock.repository.stock_movement_repository');
@@ -446,14 +445,14 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
 
         $movements = [];
         foreach ($movementsData as $movementDatum) {
-            $movements[] = new EmployeeStockMovement(
+            $movements[] = new StockMovement(
                 (int) $movementDatum['id_stock_mvt'],
                 (int) $movementDatum['id_stock'],
                 (int) $movementDatum['id_stock_mvt_reason'],
-                (int) $movementDatum['physical_quantity'] * (int) $movementDatum['sign'],
                 (int) $movementDatum['id_employee'],
                 $movementDatum['employee_firstname'],
                 $movementDatum['employee_lastname'],
+                (int) $movementDatum['physical_quantity'] * (int) $movementDatum['sign'],
                 new DateTime($movementDatum['date_add'])
             );
         }

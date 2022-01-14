@@ -50,6 +50,21 @@ class StockMovement
     /**
      * @var int
      */
+    protected $employeeId;
+
+    /**
+     * @var string|null
+     */
+    protected $employeeFirstName;
+
+    /**
+     * @var string|null
+     */
+    protected $employeeLastName;
+
+    /**
+     * @var int
+     */
     protected $deltaQuantity;
 
     /**
@@ -57,61 +72,61 @@ class StockMovement
      */
     protected $dateAdd;
 
-    /**
-     * @param int $stockMovementId
-     * @param int $stockId
-     * @param int $stockMovementReasonId
-     * @param int $deltaQuantity
-     */
     public function __construct(
         int $stockMovementId,
         int $stockId,
         int $stockMovementReasonId,
+        int $employeeId,
+        ?string $employeeFirstName,
+        ?string $employeeLastName,
         int $deltaQuantity,
         DateTime $dateAdd
     ) {
         $this->stockMovementId = $stockMovementId;
         $this->stockId = $stockId;
         $this->stockMovementReasonId = $stockMovementReasonId;
+        $this->employeeId = $employeeId;
+        $this->employeeFirstName = $employeeFirstName;
+        $this->employeeLastName = $employeeLastName;
         $this->deltaQuantity = $deltaQuantity;
         $this->dateAdd = $dateAdd;
     }
 
-    /**
-     * @return int
-     */
     public function getStockMovementId(): int
     {
         return $this->stockMovementId;
     }
 
-    /**
-     * @return int
-     */
     public function getStockId(): int
     {
         return $this->stockId;
     }
 
-    /**
-     * @return int
-     */
     public function getStockMovementReasonId(): int
     {
         return $this->stockMovementReasonId;
     }
 
-    /**
-     * @return int
-     */
+    public function getEmployeeId(): int
+    {
+        return $this->employeeId;
+    }
+
+    public function getEmployeeFirstName(): ?string
+    {
+        return $this->employeeFirstName;
+    }
+
+    public function getEmployeeLastName(): ?string
+    {
+        return $this->employeeLastName;
+    }
+
     public function getDeltaQuantity(): int
     {
         return $this->deltaQuantity;
     }
 
-    /**
-     * @return DateTime
-     */
     public function getDateAdd(): DateTime
     {
         return $this->dateAdd;

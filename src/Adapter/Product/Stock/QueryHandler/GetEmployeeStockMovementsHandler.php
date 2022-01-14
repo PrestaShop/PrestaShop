@@ -31,11 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetEmployeesStockMovementsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetEmployeeStockMovementsHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 
-class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHandlerInterface
+class GetEmployeeStockMovementsHandler implements GetEmployeeStockMovementsHandlerInterface
 {
     /**
      * @var StockAvailableRepository
@@ -58,7 +58,7 @@ class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHan
     /**
      * {@inheritDoc}
      */
-    public function handle(GetEmployeesStockMovements $query): array
+    public function handle(GetEmployeeStockMovements $query): array
     {
         $stockId = $this->stockAvailableRepository->getStockIdByProduct($query->getProductId());
         $movementsData = $this->stockMovementRepository->getLastEmployeeStockMovements(
@@ -69,14 +69,14 @@ class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHan
 
         $movements = [];
         foreach ($movementsData as $movementDatum) {
-            $movements[] = new EmployeeStockMovement(
+            $movements[] = new StockMovement(
                 (int) $movementDatum['id_stock_mvt'],
                 (int) $movementDatum['id_stock'],
                 (int) $movementDatum['id_stock_mvt_reason'],
-                (int) $movementDatum['physical_quantity'] * (int) $movementDatum['sign'],
                 (int) $movementDatum['id_employee'],
                 $movementDatum['employee_firstname'],
                 $movementDatum['employee_lastname'],
+                (int) $movementDatum['physical_quantity'] * (int) $movementDatum['sign'],
                 new DateTime($movementDatum['date_add'])
             );
         }

@@ -61,8 +61,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -1110,7 +1109,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return EmployeeStockMovement[]
+     * @return StockMovement[]
      */
     private function createProductStockMovements(array $productData): array
     {
@@ -1120,14 +1119,14 @@ class ProductFormDataProviderTest extends TestCase
 
         $stockMovements = [];
         foreach ($productData['stock_movements'] as $stockMovement) {
-            $stockMovements[] = new EmployeeStockMovement(
+            $stockMovements[] = new StockMovement(
                 $stockMovement['id_stock_mvt'],
                 42,
                 11,
-                $stockMovement['delta_quantity'],
                 42,
                 $stockMovement['employee_firstname'],
                 $stockMovement['employee_lastname'],
+                $stockMovement['delta_quantity'],
                 new DateTime($stockMovement['date_add'])
             );
         }
@@ -1319,7 +1318,7 @@ class ProductFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
                 $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeesStockMovements::class),
+                $this->isInstanceOf(GetEmployeeStockMovements::class),
                 $this->isInstanceOf(GetRelatedProducts::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
@@ -1343,7 +1342,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
             GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
-            GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
+            GetEmployeeStockMovements::class => $this->createProductStockMovements($productData),
             GetRelatedProducts::class => $this->createRelatedProducts($productData),
         ];
 

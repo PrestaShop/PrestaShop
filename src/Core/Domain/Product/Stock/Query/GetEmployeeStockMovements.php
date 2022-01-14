@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-class GetEmployeesStockMovements
+class GetEmployeeStockMovements
 {
     public const DEFAULT_LIMIT = 5;
 
