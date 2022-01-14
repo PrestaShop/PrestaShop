@@ -26,7 +26,8 @@
   <div id="serp">
     <div class="serp-preview">
       <div class="serp-url">
-        <span class="serp-base-url">{{ displayedBaseURL }}</span>{{ displayedRelativePath }}
+        <span class="serp-base-url">{{ displayedBaseURL }}</span>
+        {{ displayedRelativePath }}
         <i class="material-icons serp-url-more">more_vert</i>
       </div>
       <div class="serp-title">
@@ -92,63 +93,66 @@
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-.serp-preview {
-  direction: ltr;
-  max-width: 43.75rem;
-  padding: 1.5rem 1.875rem;
-  margin: 0.938rem 0;
-  background-color: #fff;
-  border: solid 1px #e7e7e7;
-  border-radius: 0.25rem;
-  box-shadow: 0 0 0.375rem 0 rgba(0, 0, 0, 0.1);
+  @import "~@scss/config/bootstrap.scss";
+  @import "~@scss/config/settings.scss";
 
-  .serp-url {
-    font-family: arial, sans-serif;
-    font-size: 0.875rem;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.5rem;
-    color: #5f6368;
-    text-align: left;
-    cursor: pointer;
-    visibility: visible;
-  }
+  .serp-preview {
+    max-width: 43.75rem;
+    padding: 1.5rem 1.875rem;
+    margin: 0.938rem 0;
+    background-color: $white;
+    border: solid 1px $widget-border-color;
+    @include border-radius(0.25rem);
+    @include box-shadow(0 0 0.375rem 0 rgba($black, 0.1));
 
-  .serp-base-url {
-    color: #202124;
-  }
+    .serp-url {
+      font-family: arial, sans-serif;
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1.5rem;
+      color: $serp-url-light-color;
+      text-align: left;
+      direction: ltr;
+      cursor: pointer;
+      visibility: visible;
+    }
 
-  .serp-url-more {
-    margin: -0.25rem 0 0 0.875rem;
-    font-size: 1.125rem;
-    color: #5f6368;
-    cursor: pointer;
-  }
+    .serp-base-url {
+      color: $serp-url-dark-color;
+    }
 
-  .serp-title {
-    font-family: arial, sans-serif;
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: #1a0dab;
-    text-align: left;
-    text-decoration: none;
-    white-space: nowrap;
-    cursor: pointer;
-    visibility: visible;
-  }
+    .serp-url-more {
+      margin: -0.25rem 0 0 0.875rem;
+      font-size: 1.125rem;
+      color: $serp-url-light-color;
+      cursor: pointer;
+    }
 
-  .serp-title:hover {
-    text-decoration: underline;
-  }
+    .serp-title {
+      font-family: arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: $serp-title-color;
+      text-align: left;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      visibility: visible;
+    }
 
-  .serp-description {
-    font-family: arial, sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #4d5156;
-    text-align: left;
-    word-wrap: break-word;
-    visibility: visible;
+    .serp-title:hover {
+      text-decoration: underline;
+    }
+
+    .serp-description {
+      font-family: arial, sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: $serp-description-color;
+      text-align: left;
+      word-wrap: break-word;
+      visibility: visible;
+    }
   }
-}
 </style>
