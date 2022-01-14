@@ -33,9 +33,11 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
@@ -83,6 +85,54 @@ class ProductSupplierUpdater
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->combinationRepository = $combinationRepository;
+    }
+
+    /**
+     * Apply associations between a product and provided suppliers. If association that don't match the provided suppliers
+     * exist they are removed. If some associations are missing they are created with empty values. Existing and valid
+     * association are not modified. If the product has combination the association is created for all of them.
+     *
+     * @param ProductId $productId
+     * @param SupplierId[] $supplierIds
+     */
+    public function associateSuppliers(ProductId $productId, array $supplierIds): void
+    {
+        // We get useless IDs and perform a bulk delete, we don't clean via a direct query even if we could because we
+        // need hook executed on each deleted ProductSupplier instance
+        $uselessProductSupplierIds = $this->productSupplierRepository->getUselessProductSupplierIds($productId, $supplierIds);
+        $this->productSupplierRepository->bulkDelete($uselessProductSupplierIds);
+
+        // Now we search for each associated supplier if some associations are missing
+        foreach ($supplierIds as $supplierId) {
+            $supplierAssociations = $this->productSupplierRepository->getAssociations($productId, $supplierId);
+            $combinationIds = $this->combinationRepository->getCombinationIdsByProductId($productId);
+            if (empty($combinationIds)) {
+                $combinationIds = [new NoCombinationId()];
+            }
+
+            // Loop through all combinations to check if they have a matching association if not it will need to be created
+            foreach ($combinationIds as $combinationId) {
+                // Search matching association by combination, if none is found the association is missing
+                $matchingAssociations = array_filter($supplierAssociations, function (ProductSupplierAssociation $association) use ($combinationId) {
+                    return $association->getCombinationId()->getValue() === $combinationId->getValue();
+                });
+
+                if (empty($matchingAssociations)) {
+                    $productSupplier = new ProductSupplier();
+                    $productSupplier->id_product = $productId->getValue();
+                    $productSupplier->id_product_attribute = $combinationId->getValue();
+                    $productSupplier->id_supplier = $supplierId->getValue();
+                    $productSupplier->add();
+                }
+            }
+        }
+
+        // Check if product has a default supplier if not use the first one
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
+        if (null === $defaultSupplierId) {
+            $defaultSupplierId = reset($supplierIds);
+            $this->updateDefaultSupplier($productId, $defaultSupplierId);
+        }
     }
 
     /**
@@ -182,7 +232,7 @@ class ProductSupplierUpdater
      */
     public function updateProductDefaultSupplier(ProductId $productId, SupplierId $supplierId): void
     {
-        $this->updateDefaultSupplier($productId, $supplierId, null);
+        $this->updateDefaultSupplier($productId, $supplierId);
     }
 
     /**
@@ -192,29 +242,23 @@ class ProductSupplierUpdater
      */
     public function updateCombinationDefaultSupplier(ProductId $productId, SupplierId $supplierId, CombinationId $combinationId): void
     {
-        $this->updateDefaultSupplier($productId, $supplierId, $combinationId);
+        $this->updateDefaultSupplier($productId, $supplierId);
     }
 
     /**
      * @param ProductId $productId
      * @param SupplierId $supplierId
-     * @param CombinationId|null $combinationId
      */
-    private function updateDefaultSupplier(ProductId $productId, SupplierId $supplierId, ?CombinationId $combinationId): void
+    private function updateDefaultSupplier(ProductId $productId, SupplierId $supplierId): void
     {
         $product = $this->productRepository->get($productId);
         $supplierIdValue = $supplierId->getValue();
-        $productIdValue = (int) $product->id;
 
         $this->supplierRepository->assertSupplierExists($supplierId);
-        if (null === $combinationId && $product->hasCombinations()) {
-            $this->throwInvalidTypeException($productId);
-        }
-
-        $productSuppliers = $this->productSupplierRepository->getAssociatedProductSuppliers($productId, $supplierId);
+        $productSuppliers = $this->productSupplierRepository->getAssociatedProductSupplierIds($productId, $supplierId);
         if (empty($productSuppliers)) {
             throw new ProductSupplierNotAssociatedException(sprintf(
-                'Supplier #%d is not associated with product #%d', $supplierIdValue, $productIdValue
+                'Supplier #%d is not associated with product #%d', $supplierIdValue, $productId->getValue()
             ));
         }
 
@@ -256,7 +300,7 @@ class ProductSupplierUpdater
             $defaultSupplier = reset($productSuppliers);
             $defaultSupplierId = new SupplierId((int) $defaultSupplier->id_supplier);
         }
-        $this->updateDefaultSupplier($productId, $defaultSupplierId, $combinationId);
+        $this->updateDefaultSupplier($productId, $defaultSupplierId);
     }
 
     /**
