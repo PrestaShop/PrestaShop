@@ -484,28 +484,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Send request to get module details on the marketplace, then merge the data received in Module instance.
-     *
-     * @param int $moduleId
-     *
-     * @return Module
-     */
-    public function getModuleById($moduleId)
-    {
-        $moduleAttributes = $this->adminModuleProvider->getModuleAttributesById($moduleId);
-
-        $module = $this->getModule($moduleAttributes['name']);
-
-        foreach ($moduleAttributes as $name => $value) {
-            if (!$module->attributes->has($name)) {
-                $module->attributes->set($name, $value);
-            }
-        }
-
-        return $module;
-    }
-
-    /**
      * Instanciate every module present in the modules folder.
      *
      * @param bool $skip_main_class_attributes

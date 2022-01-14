@@ -174,35 +174,6 @@ class ModuleController extends ModuleAbstractController
     }
 
     /**
-     * @AdminSecurity("is_granted('read', 'ADMINMODULESSF_')")
-     *
-     * @param int $moduleId
-     *
-     * @return Response
-     */
-    public function getModuleCartAction($moduleId)
-    {
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $module = $moduleRepository->getModuleById($moduleId);
-
-        $addOnsAdminDataProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $addOnsAdminDataProvider->generateAddonsUrls(
-            AddonsCollection::createFrom([$module])
-        );
-
-        $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $moduleToPresent = $modulePresenter->present($module);
-
-        return $this->render(
-            '@PrestaShop/Admin/Module/Includes/modal_read_more_content.html.twig',
-            [
-                'module' => $moduleToPresent,
-                'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
-            ]
-        );
-    }
-
-    /**
      * @param Request $request
      *
      * @return JsonResponse
