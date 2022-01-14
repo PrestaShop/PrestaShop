@@ -30,7 +30,6 @@ use Behat\Gherkin\Node\TableNode;
 use Cart;
 use Context;
 use Customer;
-use Product;
 use Db;
 use DbQuery;
 use Order;
@@ -56,6 +55,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider;
+use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
