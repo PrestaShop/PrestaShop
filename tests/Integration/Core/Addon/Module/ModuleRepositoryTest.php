@@ -29,17 +29,13 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
-use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\Translator;
 
@@ -63,34 +59,12 @@ class ModuleRepositoryTest extends TestCase
 
         $logger = $this->createMock(LoggerInterface::class);
 
-        $addonsDataProvider = $this->getMockBuilder(AddonsDataProvider::class)->disableOriginalConstructor()->getMock();
-
-        $categoriesProvider = $this->getMockBuilder(CategoriesProvider::class)->disableOriginalConstructor()->getMock();
-
         $translator = $this->getMockBuilder(Translator::class)->disableOriginalConstructor()->getMock();
         $translator->method('trans')->willReturnArgument(0);
 
-        $adminModuleDataProvider = $this->getMockBuilder(AdminModuleDataProvider::class)
-            ->setConstructorArgs([$translator, $logger, $addonsDataProvider, $categoriesProvider, $moduleDataProvider])
-            ->setMethods(['getCatalogModulesNames'])
-            ->getMock();
-
-        $adminModuleDataProvider->method('getCatalogModulesNames')->willReturn([]);
-
         $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->setConstructorArgs([
-                $adminModuleDataProvider,
                 $moduleDataProvider,
-                new ModuleDataUpdater(
-                    $addonsDataProvider,
-                    new AdminModuleDataProvider(
-                        $translator,
-                        $logger,
-                        $addonsDataProvider,
-                        $categoriesProvider,
-                        $moduleDataProvider
-                    )
-                ),
                 $logger,
                 $translator,
                 dirname(__DIR__, 4) . '/Resources/modules/',

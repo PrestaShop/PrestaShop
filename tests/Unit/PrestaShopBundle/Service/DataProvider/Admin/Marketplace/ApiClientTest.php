@@ -62,37 +62,6 @@ class ApiClientTest extends TestCase
         );
     }
 
-    public function testGetModuleZip(): void
-    {
-        self::assertEquals($this->apiClient->getQueryParameters(), $this->getDefaultQueryParameters());
-
-        $this->apiClient->getModuleZip(123456789);
-        self::assertEquals(
-            $this->apiClient->getQueryParameters(),
-            array_merge(
-                $this->getDefaultQueryParameters(),
-                [
-                    'method' => 'module',
-                    'id_module' => 123456789,
-                    'channel' => 'stable',
-                ]
-            )
-        );
-
-        $this->apiClient->getModuleZip(987654321, 'moduleChannel');
-        self::assertEquals(
-            $this->apiClient->getQueryParameters(),
-            array_merge(
-                $this->getDefaultQueryParameters(),
-                [
-                    'method' => 'module',
-                    'id_module' => 987654321,
-                    'channel' => 'moduleChannel',
-                ]
-            )
-        );
-    }
-
     public function testModuleChannel(): void
     {
         self::assertEquals($this->apiClient->getQueryParameters(), $this->getDefaultQueryParameters());
