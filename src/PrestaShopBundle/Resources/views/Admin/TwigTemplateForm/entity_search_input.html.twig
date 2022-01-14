@@ -132,7 +132,10 @@
 {% endblock %}
 
 {%- block entity_item_table_row -%}
-  <tr class="entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({
+    class: ('entity-item ' ~ form.vars.attr.class ?? '')|trim
+  }) %}
+  <tr {{ block('widget_container_attributes') }}>
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType == 'hidden'%}

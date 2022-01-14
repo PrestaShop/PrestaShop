@@ -60,7 +60,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 100
@@ -77,7 +77,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
@@ -97,7 +97,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 1              |
       | Puff       | Daddy     | -101           |
@@ -114,7 +114,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 1              |
       | Puff       | Daddy     | -101           |
