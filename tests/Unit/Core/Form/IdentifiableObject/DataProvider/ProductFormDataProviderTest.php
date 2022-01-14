@@ -63,9 +63,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -79,6 +78,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -419,20 +419,58 @@ class ProductFormDataProviderTest extends TestCase
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
-            'stock_movements' => [
+            'stock_movement_history' => [
                 [
-                    'id_stock_mvt' => 10,
-                    'delta_quantity' => +42,
-                    'employee_firstname' => 'Paul',
-                    'employee_lastname' => 'Atreide',
-                    'date_add' => '2021-05-24 15:24:32',
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2022-01-13 18:20:58',
+                    'to_date' => '2021-05-24 15:24:32',
+                    'stock_movement_ids' => [321, 322, 323, 324, 325],
+                    'stock_ids' => [42],
+                    'order_ids' => [311, 312, 313, 314, 315],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -19,
                 ],
                 [
-                    'id_stock_mvt' => 11,
-                    'delta_quantity' => -15,
+                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'date_add' => '2021-05-24 15:24:32',
+                    'stock_movement_id' => 320,
+                    'stock_id' => 42,
+                    'order_id' => 310,
+                    'employee_id' => 12,
+                    'employee_firstname' => 'Paul',
+                    'employee_lastname' => 'Atreide',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2021-05-24 15:24:32',
+                    'to_date' => '2021-05-22 16:35:48',
+                    'stock_movement_ids' => [221, 222, 223, 224, 225],
+                    'stock_ids' => [42],
+                    'order_ids' => [211, 212, 213, 214, 215],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -23,
+                ],
+                [
+                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'date_add' => '2021-05-22 16:35:48',
+                    'stock_movement_id' => 220,
+                    'stock_id' => 42,
+                    'order_id' => 210,
+                    'employee_id' => 11,
                     'employee_firstname' => 'Frodo',
                     'employee_lastname' => 'Baggins',
-                    'date_add' => '2021-05-22 16:35:48',
+                    'delta_quantity' => +20,
+                ],
+                [
+                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'from_date' => '2021-05-22 16:35:48',
+                    'to_date' => '2021-01-24 15:24:32',
+                    'stock_movement_ids' => [121, 122, 123, 124, 125],
+                    'stock_ids' => [42],
+                    'order_ids' => [111, 112, 113, 114, 115],
+                    'employee_ids' => [11, 12, 13, 14, 15],
+                    'delta_quantity' => -17,
                 ],
             ],
         ];
@@ -446,17 +484,36 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
-
-        $expectedOutputData['stock']['quantities']['stock_movements'] = [
+        $expectedOutputData['stock']['quantities']['stock_movement_history'] = [
             [
-                'date_add' => '2021-05-24 15:24:32',
-                'employee' => 'Paul Atreide',
-                'delta_quantity' => 42,
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -19,
             ],
             [
-                'date_add' => '2021-05-22 16:35:48',
-                'employee' => 'Frodo Baggins',
-                'delta_quantity' => -15,
+                'type' => 'single',
+                'date' => '2021-05-24 15:24:32',
+                'employee_name' => '%firstname% %lastname%',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -23,
+            ],
+            [
+                'type' => 'single',
+                'date' => '2021-05-22 16:35:48',
+                'employee_name' => '%firstname% %lastname%',
+                'delta_quantity' => +20,
+            ],
+            [
+                'type' => 'group',
+                'date' => 'Shipped products',
+                'employee_name' => null,
+                'delta_quantity' => -17,
             ],
         ];
 
@@ -1193,29 +1250,41 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return EmployeeStockMovement[]
+     * @return StockMovementHistory[]
      */
-    private function createProductStockMovements(array $productData): array
+    private function createStockMovementHistories(array $productData): array
     {
-        if (!isset($productData['stock_movements'])) {
-            return [];
-        }
-
-        $stockMovements = [];
-        foreach ($productData['stock_movements'] as $stockMovement) {
-            $stockMovements[] = new EmployeeStockMovement(
-                $stockMovement['id_stock_mvt'],
-                42,
-                11,
-                $stockMovement['delta_quantity'],
-                42,
-                $stockMovement['employee_firstname'],
-                $stockMovement['employee_lastname'],
-                new DateTime($stockMovement['date_add'])
-            );
-        }
-
-        return $stockMovements;
+        return array_map(
+            static function (array $historyData): StockMovementHistory {
+                if (StockMovementHistory::SINGLE_TYPE === $historyData['type']) {
+                    return StockMovementHistory::createSingleHistory(
+                        $historyData['date_add'],
+                        $historyData['stock_movement_id'],
+                        $historyData['stock_id'],
+                        $historyData['order_id'],
+                        $historyData['employee_id'],
+                        $historyData['employee_firstname'],
+                        $historyData['employee_lastname'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                if (StockMovementHistory::GROUP_TYPE === $historyData['type']) {
+                    return StockMovementHistory::createGroupHistory(
+                        $historyData['from_date'],
+                        $historyData['to_date'],
+                        $historyData['stock_movement_ids'],
+                        $historyData['stock_ids'],
+                        $historyData['order_ids'],
+                        $historyData['employee_ids'],
+                        $historyData['delta_quantity']
+                    );
+                }
+                throw new RuntimeException(
+                    sprintf('Unsupported stock movement history type "%s"', $historyData['type'])
+                );
+            },
+            $productData['stock_movement_history'] ?? []
+        );
     }
 
     /**
@@ -1442,7 +1511,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->isInstanceOf(GetProductSupplierOptions::class),
             $this->isInstanceOf(GetProductFeatureValues::class),
             $this->isInstanceOf(GetProductCustomizationFields::class),
-            $this->isInstanceOf(GetEmployeesStockMovements::class),
+            $this->isInstanceOf(GetProductStockMovementHistory::class),
             $this->isInstanceOf(GetRelatedProducts::class),
             $this->isInstanceOf(GetPackedProducts::class)
         );
@@ -1452,23 +1521,25 @@ class ProductFormDataProviderTest extends TestCase
      * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]|RelatedProduct[]
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovementHistory[]|RelatedProduct[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
-        $queryResultMap = [
-            GetProductForEditing::class => $this->createProductForEditing($productData),
-            GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
-            GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
-            GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
-            GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
-            GetRelatedProducts::class => $this->createRelatedProducts($productData),
-            GetPackedProducts::class => $this->createPackedProductsDetails($productData),
-        ];
-
-        $queryClass = get_class($query);
-        if (array_key_exists($queryClass, $queryResultMap)) {
-            return $queryResultMap[$queryClass];
+        switch ($queryClass = get_class($query)) {
+            case GetProductForEditing::class:
+                return $this->createProductForEditing($productData);
+            case GetProductSupplierOptions::class:
+                return $this->createProductSupplierOptions($productData);
+            case GetProductFeatureValues::class:
+                return $this->createProductFeatureValueOptions($productData);
+            case GetProductCustomizationFields::class:
+                return $this->createProductCustomizationFields($productData);
+            case GetProductStockMovementHistory::class:
+                return $this->createStockMovementHistories($productData);
+            case GetRelatedProducts::class:
+                return $this->createRelatedProducts($productData);
+            case GetPackedProducts::class:
+                return $this->createPackedProductsDetails($productData);
         }
 
         throw new RuntimeException(sprintf('Query "%s" was not expected in query bus mock', $queryClass));
@@ -1518,7 +1589,7 @@ class ProductFormDataProviderTest extends TestCase
                         'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
-                    'stock_movements' => [],
+                    'stock_movement_history' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
@@ -1606,12 +1677,18 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock): ProductFormDataProvider
     {
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
         return new ProductFormDataProvider(
             $queryBusMock,
             $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            $translatorMock
         );
     }
 
