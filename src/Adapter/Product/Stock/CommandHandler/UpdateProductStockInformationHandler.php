@@ -71,7 +71,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
         if ($command->getDeltaQuantity()) {
             $stockModification = new StockModification(
                 $command->getDeltaQuantity(),
-                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+                $this->movementReasonRepository->getEmployeeEditionReasonId($command->getDeltaQuantity() > 0)
             );
         }
 

@@ -33,10 +33,14 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides the data that is used to prefill the Combination form
@@ -54,15 +58,23 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $shopContext;
 
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @param CommandBusInterface $queryBus
      * @param Context $shopContext
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        Context $shopContext
+        Context $shopContext,
+        TranslatorInterface $translator
     ) {
         $this->queryBus = $queryBus;
         $this->shopContext = $shopContext;
+        $this->translator = $translator;
     }
 
     /**
@@ -71,10 +83,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id): array
     {
         $combinationId = (int) $id;
+        $shopConstraint = $this->shopContext->getShopConstraint();
         /** @var CombinationForEditing $combinationForEditing */
         $combinationForEditing = $this->queryBus->handle(new GetCombinationForEditing(
             $combinationId,
-            $this->shopContext->getShopConstraint()
+            $shopConstraint
         ));
 
         $suppliersData = $this->extractSuppliersData($combinationForEditing);
@@ -87,7 +100,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                 'name' => $combinationForEditing->getName(),
                 'is_default' => $combinationForEditing->isDefault(),
             ],
-            'stock' => $this->extractStockData($combinationForEditing),
+            'stock' => $this->extractStockData($combinationForEditing, $shopConstraint),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
         ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
@@ -95,10 +108,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CombinationForEditing $combinationForEditing
+     * @param ShopConstraint $shopConstraint
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    private function extractStockData(CombinationForEditing $combinationForEditing): array
+    private function extractStockData(CombinationForEditing $combinationForEditing, ShopConstraint $shopConstraint): array
     {
         $stockInformation = $combinationForEditing->getStock();
         $availableDate = $stockInformation->getAvailableDate();
@@ -109,6 +123,10 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
+                'stock_movement_history' => $this->getStockMovementHistories(
+                    $combinationForEditing->getCombinationId(),
+                    $shopConstraint
+                ),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -118,6 +136,50 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             ],
             'available_date' => DateTime::isNull($availableDate) ? '' : $availableDate->format(DateTime::DEFAULT_DATE_FORMAT),
         ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function getStockMovementHistories(int $combinationId, ShopConstraint $shopConstraint): array
+    {
+        return array_map(
+            function (StockMovementHistory $history): array {
+                if ($history->isSingle()) {
+                    $date = $history
+                        ->getDate('add')
+                        ->format(DateTime::DEFAULT_DATETIME_FORMAT)
+                    ;
+                    $employeeName = $this->translator->trans(
+                        '%firstname% %lastname%',
+                        [
+                            '%firstname%' => $history->getEmployeeFirstname(),
+                            '%lastname%' => $history->getEmployeeLastname(),
+                        ],
+                        'Modules.Customersignin.Admin'
+                    );
+                } elseif ($history->getDeltaQuantity() < 0) {
+                    $date = $this->translator->trans('Shipped products');
+                    $employeeName = null;
+                } else {
+                    $date = $this->translator->trans('Returned products');
+                    $employeeName = null;
+                }
+
+                return [
+                    'type' => $history->getType(),
+                    'date' => $date,
+                    'employee_name' => $employeeName,
+                    'delta_quantity' => $history->getDeltaQuantity(),
+                ];
+            },
+            $this->queryBus->handle(
+                new GetCombinationStockMovementHistory(
+                    $combinationId,
+                    $shopConstraint->getShopId()->getValue()
+                )
+            )
+        );
     }
 
     /**

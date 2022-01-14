@@ -142,6 +142,44 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
 
     /**
      * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return StockId
+     *
+     * @throws CoreException
+     * @throws StockAvailableNotFoundException
+     */
+    public function getStockIdByCombination(CombinationId $combinationId, ShopId $shopId): StockId
+    {
+        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
+        $row = $this
+            ->connection
+            ->createQueryBuilder()
+            ->select('id_stock_available')
+            ->from($this->dbPrefix . 'stock_available')
+            ->where(
+                'id_product_attribute = :combinationId',
+                'id_shop = :shopId'
+            )
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->execute()
+            ->fetch()
+        ;
+        if (empty($row)) {
+            throw new StockAvailableNotFoundException(
+                sprintf(
+                    'Cannot find StockAvailable for combination #%d',
+                    $combinationId->getValue()
+                )
+            );
+        }
+
+        return new StockId((int) $row['id_stock_available']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
      *
      * @return StockAvailable
      *
@@ -150,27 +188,9 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
      */
     public function getForCombination(CombinationId $combinationId, ShopId $shopId): StockAvailable
     {
-        //@todo: add shop conditions based on shop group sharing stock or not. like in ProductCombinationQueryBuilder
-        $qb = $this->connection->createQueryBuilder();
-        $qb->select('id_stock_available')
-            ->from($this->dbPrefix . 'stock_available')
-            ->where('id_product_attribute = :combinationId')
-            ->andWhere('id_shop = :shopId')
-            ->setParameter('combinationId', $combinationId->getValue())
-            ->setParameter('shopId', $shopId->getValue())
-        ;
+        $stockId = $this->getStockIdByCombination($combinationId, $shopId);
 
-        $result = $qb->execute()->fetch();
-
-        if (!$result) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for combination #%d',
-                    $combinationId->getValue()
-                )
-            );
-        }
-
-        return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
+        return $this->getStockAvailable($stockId);
     }
 
     /**
