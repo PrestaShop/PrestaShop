@@ -32,7 +32,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
@@ -44,7 +44,7 @@ const CombinationsMap = ProductMap.combinations;
 export default class CombinationsManager {
   productId: number;
 
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   $productForm: JQuery;
 
@@ -58,11 +58,11 @@ export default class CombinationsManager {
 
   $emptyState: JQuery;
 
-  paginator!: DynamicPaginator;
+  paginator?: DynamicPaginator;
 
-  combinationsRenderer!: CombinationsGridRenderer;
+  combinationsRenderer?: CombinationsGridRenderer;
 
-  filtersApp!: Record<string, any>;
+  filtersApp?: Record<string, any>;
 
   combinationModalApp: Record<string, any> | null;
 
@@ -98,9 +98,6 @@ export default class CombinationsManager {
     this.init();
   }
 
-  /**
-   * @private
-   */
   private init(): void {
     // Paginate to first page when tab is shown
     this.$productForm

@@ -23,14 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Serp from '@app/utils/serp';
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
 export default class ProductSEOManager {
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   $previewButton: JQuery;
 
@@ -39,7 +39,7 @@ export default class ProductSEOManager {
    *
    * @returns {{}}
    */
-  constructor(eventEmitter: typeof EventEmitter) {
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.$previewButton = $(ProductMap.footer.previewUrlButton);
 

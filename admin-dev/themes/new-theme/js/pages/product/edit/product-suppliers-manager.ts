@@ -124,7 +124,7 @@ export default class ProductSuppliersManager {
     });
 
     if (this.productFormModel) {
-      this.productFormModel.watchProductModel('price.wholesalePrice', (event) => {
+      this.productFormModel.watch('price.wholesalePrice', (event) => {
         this.updateDefaultProductSupplierPrice(event.value);
       });
     }
@@ -132,8 +132,10 @@ export default class ProductSuppliersManager {
 
   /**
    * @param {string} newPrice
+   *
+   * @private
    */
-  updateDefaultProductSupplierPrice(newPrice: number): void {
+  private updateDefaultProductSupplierPrice(newPrice: number): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -144,7 +146,7 @@ export default class ProductSuppliersManager {
     }
   }
 
-  updateProductWholesalePrice(): void {
+  private updateProductWholesalePrice(): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -156,15 +158,17 @@ export default class ProductSuppliersManager {
       const newDefaultPrice = $defaultPriceInput.val();
 
       if (this.productFormModel) {
-        this.productFormModel.setProductValue('price.wholesalePrice', newDefaultPrice);
+        this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
       }
     }
   }
 
   /**
    * @returns {null|int}
+   *
+   * @private
    */
-  getDefaultProductSupplierId(): string | number | string[] | undefined | null {
+  private getDefaultProductSupplierId(): string | number | string[] | undefined | null {
     if (this.getSelectedSuppliers().length === 0) {
       return null;
     }

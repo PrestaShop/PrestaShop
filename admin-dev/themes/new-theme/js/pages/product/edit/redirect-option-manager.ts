@@ -24,7 +24,7 @@
  */
 
 import EntitySearchInput from '@components/entity-search-input';
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -41,7 +41,7 @@ const {$} = window;
  * and values of the target.
  */
 export default class RedirectOptionManager {
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   $redirectTypeInput: JQuery;
 
@@ -62,7 +62,7 @@ export default class RedirectOptionManager {
   /**
    * @param {EventEmitter} eventEmitter
    */
-  constructor(eventEmitter: typeof EventEmitter) {
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.$redirectTypeInput = $(ProductMap.seo.redirectOption.typeInput);
     this.$redirectTargetInput = $(ProductMap.seo.redirectOption.targetInput);

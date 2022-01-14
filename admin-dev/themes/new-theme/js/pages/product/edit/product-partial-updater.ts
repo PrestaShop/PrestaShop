@@ -25,7 +25,7 @@
 
 import _ from 'lodash';
 import ProductEventMap from '@pages/product/product-event-map';
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 
 const {$} = window;
 
@@ -40,7 +40,7 @@ const {$} = window;
  * modified by the user.
  */
 export default class ProductPartialUpdater {
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   $productForm: JQuery;
 
@@ -53,7 +53,7 @@ export default class ProductPartialUpdater {
    * @param $productForm {jQuery}
    * @param $productFormSubmitButton {jQuery}
    */
-  constructor(eventEmitter: typeof EventEmitter, $productForm: JQuery, $productFormSubmitButton: JQuery) {
+  constructor(eventEmitter: EventEmitter, $productForm: JQuery, $productFormSubmitButton: JQuery) {
     this.eventEmitter = eventEmitter;
     this.$productForm = $productForm;
     this.$productFormSubmitButton = $productFormSubmitButton;

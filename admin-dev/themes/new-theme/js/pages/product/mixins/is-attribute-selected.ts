@@ -37,7 +37,7 @@ export default Vue.extend({
      *
      * @returns {boolean}
      */
-    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: AttributeGroup): boolean {
+    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: Record<string, AttributeGroup>): boolean {
       if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
         return false;
       }

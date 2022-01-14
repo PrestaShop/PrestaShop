@@ -56,7 +56,7 @@ export default class FeatureValuesManager {
     this.watchAddButton();
   }
 
-  watchAddButton(): void {
+  private watchAddButton(): void {
     $(ProductMap.featureValues.addFeatureValue).on('click', () => {
       const prototype = this.$collectionContainer.data('prototype');
       const prototypeName = this.$collectionContainer.data('prototypeName');
@@ -68,7 +68,7 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchDeleteButtons(): void {
+  private watchDeleteButtons(): void {
     $(this.$collectionContainer).on('click', ProductMap.featureValues.deleteFeatureValue, (event) => {
       const $deleteButton = $(event.currentTarget);
       const $collectionRow = $deleteButton.closest(ProductMap.featureValues.collectionRow);
@@ -91,7 +91,7 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchCustomInputs(): void {
+  private watchCustomInputs(): void {
     $(this.$collectionContainer).on('keyup change', ProductMap.featureValues.customValueInput, (event) => {
       const $changedInput = $(event.target);
       const $collectionRow = $changedInput.closest(ProductMap.featureValues.collectionRow);
@@ -114,7 +114,7 @@ export default class FeatureValuesManager {
     });
   }
 
-  watchFeatureSelectors(): void {
+  private watchFeatureSelectors(): void {
     $(this.$collectionContainer).on('change', ProductMap.featureValues.featureSelect, (event) => {
       const $selector = $(event.target);
       const idFeature = $selector.val();

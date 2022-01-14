@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import ConfirmModal from '@components/modal';
@@ -35,7 +35,7 @@ export default class CustomizationsManager {
 
   $customizationFieldsList: JQuery;
 
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   prototypeTemplate: string;
 
@@ -51,7 +51,7 @@ export default class CustomizationsManager {
     this.init();
   }
 
-  init(): void {
+  private init(): void {
     this.$customizationsContainer.on('click', ProductMap.customizations.addCustomizationBtn, () => {
       this.addCustomizationField();
     });
@@ -60,7 +60,7 @@ export default class CustomizationsManager {
     });
   }
 
-  addCustomizationField(): void {
+  private addCustomizationField(): void {
     const index = this.getIndex();
     const newItem = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), this.getIndex());
 
@@ -71,7 +71,7 @@ export default class CustomizationsManager {
     this.eventEmitter.emit(ProductEventMap.customizations.rowAdded, {index});
   }
 
-  removeCustomizationField(event: JQuery.ClickEvent): void {
+  private removeCustomizationField(event: JQuery.ClickEvent): void {
     const $deleteButton = $(<HTMLElement>event.currentTarget);
     const modal = new (ConfirmModal as any)(
       {
@@ -93,7 +93,7 @@ export default class CustomizationsManager {
     modal.show();
   }
 
-  getIndex(): string {
+  private getIndex(): string {
     return this.$customizationFieldsList.find(ProductMap.customizations.customizationFieldRow).length.toString();
   }
 }
