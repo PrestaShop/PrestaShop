@@ -303,20 +303,16 @@ abstract class ModuleCore implements ModuleInterface
             $this->ps_versions_compliancy['max'] = _PS_VERSION_;
         }
 
-        if (strlen($this->ps_versions_compliancy['min']) == 3) {
-            $this->ps_versions_compliancy['min'] .= '.0.0';
-        }
+        $minParts = explode('.', $this->ps_versions_compliancy['min']);
+        $maxParts = explode('.', $this->ps_versions_compliancy['max']);
 
-        if (strlen($this->ps_versions_compliancy['min']) == 5) {
-            $this->ps_versions_compliancy['min'] .= '.0';
+        // Since v8, we don't pad versions
+        if ((int) current($minParts) < 8) {
+            $this->ps_versions_compliancy['min'] = str_pad($this->ps_versions_compliancy['min'], 7, '.0');
         }
-
-        if (strlen($this->ps_versions_compliancy['max']) == 5) {
-            $this->ps_versions_compliancy['max'] .= '.999';
-        }
-
-        if (strlen($this->ps_versions_compliancy['max']) == 3) {
-            $this->ps_versions_compliancy['max'] .= '.999.999';
+        if ((int) current($maxParts) < 8) {
+            $padLength = strlen($this->ps_versions_compliancy['max']) + (4 - count($maxParts)) * 4;
+            $this->ps_versions_compliancy['max'] = str_pad($this->ps_versions_compliancy['max'], $padLength, '.999');
         }
 
         // Load context and smarty
