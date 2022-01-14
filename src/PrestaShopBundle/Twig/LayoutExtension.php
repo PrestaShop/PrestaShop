@@ -218,26 +218,25 @@ EOF;
             throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
         }
 
-        $content = str_replace(
-            [
-                '{$content}',
-                'var currentIndex = \'index.php\';',
-                '</head>',
-                '</body>',
-            ],
-            [
-                '{% block content_header %}{% endblock %}
-                 {% block content %}{% endblock %}
-                 {% block content_footer %}{% endblock %}
-                 {% block sidebar_right %}{% endblock %}',
-                'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';',
-                '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>',
-                '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>',
-            ],
-            $layout
-        );
+        $explodedLayout = explode('{$content}', $layout);
+        $header = explode('</head>', $explodedLayout[0]);
+        $footer = explode('</body>', $explodedLayout[1]);
 
-        return $content;
+        return $this->escapeSmarty(str_replace('var currentIndex = \'index.php\';', 'var currentIndex = \'' . $this->context->getAdminLink($controllerName) . '\';', $header[0]))
+            . '{% block stylesheets %}{% endblock %}{% block extra_stylesheets %}{% endblock %}</head>'
+            . $this->escapeSmarty($header[1])
+            . '{% block content_header %}{% endblock %}'
+            . '{% block content %}{% endblock %}'
+            . '{% block content_footer %}{% endblock %}'
+            . '{% block sidebar_right %}{% endblock %}'
+            . $this->escapeSmarty($footer[0])
+            . '{% block javascripts %}{% endblock %}{% block extra_javascripts %}{% endblock %}{% block translate_javascripts %}{% endblock %}</body>'
+            . $this->escapeSmarty($footer[1]);
+    }
+
+    private function escapeSmarty(string $template): string
+    {
+        return '{{ \'' . addslashes($template) . '\' | raw }}';
     }
 
     /**
