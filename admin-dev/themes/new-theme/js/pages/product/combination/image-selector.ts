@@ -35,7 +35,7 @@ export default class ImageSelector {
     this.init();
   }
 
-  init(): void {
+  private init(): void {
     $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
     this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
       const $imageChoice = $(event.currentTarget);

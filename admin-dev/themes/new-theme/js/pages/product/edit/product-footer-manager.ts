@@ -34,7 +34,7 @@ export default class ProductFooterManager {
     this.$deleteProductButton.click(() => this.deleteProduct());
   }
 
-  deleteProduct(): void {
+  private deleteProduct(): void {
     const modal = new (ConfirmModal as any)(
       {
         id: 'modal-confirm-delete-product',

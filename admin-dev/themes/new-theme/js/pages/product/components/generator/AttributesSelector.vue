@@ -142,7 +142,6 @@
   }
 
   export interface AttributeGroup {
-    [key: string]: any;
     id: number;
     name: string;
     publicName: string;
@@ -167,8 +166,8 @@
         default: () => [],
       },
       selectedAttributeGroups: {
-        type: Object as PropType<AttributeGroup>,
-        default: () => {},
+        type: Object as PropType<Record<string, AttributeGroup>>,
+        default: () => ({}),
       },
     },
     data(): AttributesSelectorStates {
@@ -243,7 +242,7 @@
               this.isSelected(
                 attribute,
                 attributeGroup,
-                <AttributeGroup> this.selectedAttributeGroups,
+                this.selectedAttributeGroups,
               )
             ) {
               return;
@@ -267,7 +266,7 @@
         return this.isSelected(
           attribute,
           attributeGroup,
-          <AttributeGroup> this.selectedAttributeGroups,
+          this.selectedAttributeGroups,
         )
           ? 'selected'
           : 'unselected';
@@ -314,9 +313,9 @@
       },
       updateCheckboxes(attributeGroup: AttributeGroup): void {
         if (
-          (<AttributeGroup> this.selectedAttributeGroups)[attributeGroup.id]
+          this.selectedAttributeGroups[attributeGroup.id]
           && !this.checkboxList.includes(attributeGroup)
-          && (<AttributeGroup> this.selectedAttributeGroups)[attributeGroup.id].attributes.length
+          && this.selectedAttributeGroups[attributeGroup.id].attributes.length
             === attributeGroup.attributes.length
         ) {
           this.checkboxList.push(attributeGroup);

@@ -24,19 +24,19 @@
  */
 
 import BigNumber from 'bignumber.js';
-import EventEmitter from '@components/event-emitter';
+import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 
 export default class ProductFormModel {
-  eventEmitter: typeof EventEmitter;
+  eventEmitter: EventEmitter;
 
   mapper: FormObjectMapper;
 
   precision: number;
 
-  constructor($form: JQuery, eventEmitter: typeof EventEmitter) {
+  constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
 
     // Init form mapper
@@ -76,7 +76,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  watchProductModel(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
+  watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
@@ -84,7 +84,7 @@ export default class ProductFormModel {
    * @param {string} productModelKey
    * @param {*} value
    */
-  setProductValue(productModelKey: string, value: any): void {
+  set(productModelKey: string, value: any): void {
     this.mapper.set(`product.${productModelKey}`, value);
   }
 
@@ -171,9 +171,11 @@ export default class ProductFormModel {
    * @param {BigNumber} price
    * @param {BigNumber} taxRatio
    *
+   * @private
+   *
    * @returns {string}
    */
-  removeTax(price: BigNumber, taxRatio: BigNumber): string {
+  private removeTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
@@ -181,9 +183,11 @@ export default class ProductFormModel {
    * @param {BigNumber} price
    * @param {BigNumber} taxRatio
    *
+   * @private
+   *
    * @returns {string}
    */
-  addTax(price: BigNumber, taxRatio: BigNumber): string {
+  private addTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.times(taxRatio).toFixed(this.precision);
   }
 }

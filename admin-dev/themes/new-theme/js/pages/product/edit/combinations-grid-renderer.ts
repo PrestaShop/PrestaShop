@@ -72,7 +72,7 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  renderCombinations(combinations: Array<Record<string, any>>): void {
+  private renderCombinations(combinations: Array<Record<string, any>>): void {
     this.$combinationsTableBody.empty();
 
     let rowIndex = 0;

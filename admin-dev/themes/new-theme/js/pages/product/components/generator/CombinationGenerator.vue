@@ -92,7 +92,7 @@
 
   interface CombinationGeneratorStates {
     attributeGroups: Array<AttributeGroup>,
-    selectedAttributeGroups: AttributeGroup,
+    selectedAttributeGroups: Record<string, AttributeGroup>,
     combinationsService: CombinationsService,
     isModalShown: boolean,
     preLoading: boolean,
@@ -105,7 +105,7 @@
     data(): CombinationGeneratorStates {
       return {
         attributeGroups: [],
-        selectedAttributeGroups: <AttributeGroup>{},
+        selectedAttributeGroups: {},
         combinationsService: new CombinationsService(this.productId),
         isModalShown: false,
         preLoading: true,
@@ -177,7 +177,7 @@
         }
         document.querySelector('body')?.classList.add('overflow-hidden');
         this.hasGeneratedCombinations = false;
-        this.selectedAttributeGroups = <AttributeGroup>{};
+        this.selectedAttributeGroups = {};
         this.isModalShown = true;
       },
       /**
@@ -216,7 +216,7 @@
               '%combinationsNb%': response.combination_ids.length,
             }),
           });
-          this.selectedAttributeGroups = <AttributeGroup>{};
+          this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
         } catch (error) {
           if (error.responseJSON && error.responseJSON.error) {
