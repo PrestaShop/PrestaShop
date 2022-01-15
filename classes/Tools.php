@@ -4208,35 +4208,14 @@ exit;
      *
      * @param array $base the array in which elements are replaced
      * @param array $replacements the array from which elements will be extracted
+     *
+     * @deprecated since version 8.0.0, to be removed.
      */
     public static function arrayReplaceRecursive($base, $replacements)
     {
-        if (function_exists('array_replace_recursive')) {
-            return array_replace_recursive($base, $replacements);
-        }
+        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
 
-        foreach (array_slice(func_get_args(), 1) as $replacements) {
-            $bref_stack = [&$base];
-            $head_stack = [$replacements];
-
-            do {
-                end($bref_stack);
-
-                $bref = &$bref_stack[key($bref_stack)];
-                $head = array_pop($head_stack);
-                unset($bref_stack[key($bref_stack)]);
-                foreach (array_keys($head) as $key) {
-                    if (is_array($bref[$key]) && is_array($head[$key])) {
-                        $bref_stack[] = &$bref[$key];
-                        $head_stack[] = $head[$key];
-                    } else {
-                        $bref[$key] = $head[$key];
-                    }
-                }
-            } while (count($head_stack));
-        }
-
-        return $base;
+        return array_replace_recursive($base, $replacements);
     }
 
     /**
