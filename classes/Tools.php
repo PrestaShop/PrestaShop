@@ -1451,11 +1451,6 @@ class ToolsCore
     {
         static $array_str = [];
         static $allow_accented_chars = null;
-        static $has_mb_strtolower = null;
-
-        if ($has_mb_strtolower === null) {
-            $has_mb_strtolower = function_exists('mb_strtolower');
-        }
 
         if (!is_string($str)) {
             return false;
@@ -1474,10 +1469,8 @@ class ToolsCore
         }
 
         $return_str = trim($str);
+        $return_str = mb_strtolower($return_str, 'UTF-8');
 
-        if ($has_mb_strtolower) {
-            $return_str = mb_strtolower($return_str, 'utf-8');
-        }
         if (!$allow_accented_chars) {
             $return_str = Tools::replaceAccentedChars($return_str);
         }
@@ -1491,12 +1484,6 @@ class ToolsCore
 
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
         $return_str = str_replace([' ', '/'], '-', $return_str);
-
-        // If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
-        // This way we lose fewer special chars.
-        if (!$has_mb_strtolower) {
-            $return_str = Tools::strtolower($return_str);
-        }
 
         $array_str[$str] = $return_str;
 
@@ -1815,11 +1802,8 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtolower')) {
-            return mb_strtolower($str, 'utf-8');
-        }
 
-        return strtolower($str);
+        return mb_strtolower($str, 'UTF-8');
     }
 
     public static function strlen($str, $encoding = 'UTF-8')
@@ -1827,12 +1811,10 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
-        if (function_exists('mb_strlen')) {
-            return mb_strlen($str, $encoding);
-        }
 
-        return strlen($str);
+        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
+
+        return mb_strlen($str, $encoding);
     }
 
     /**
@@ -1854,41 +1836,27 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtoupper')) {
-            return mb_strtoupper($str, 'utf-8');
-        }
 
-        return strtoupper($str);
+        return mb_strtoupper($str, 'utf-8');
     }
 
-    public static function substr($str, $start, $length = false, $encoding = 'utf-8')
+    public static function substr($str, $start, $length = false, $encoding = 'UTF-8')
     {
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_substr')) {
-            return mb_substr($str, (int) $start, ($length === false ? Tools::strlen($str) : (int) $length), $encoding);
-        }
 
-        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
+        return mb_substr($str, (int) $start, ($length === false ? null : (int) $length), $encoding);
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strpos')) {
-            return mb_strpos($str, $find, $offset, $encoding);
-        }
-
-        return strpos($str, $find, $offset);
+        return mb_strpos($str, $find, $offset, $encoding);
     }
 
-    public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
+    public static function strrpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strrpos')) {
-            return mb_strrpos($str, $find, $offset, $encoding);
-        }
-
-        return strrpos($str, $find, $offset);
+        return mb_strrpos($str, $find, $offset, $encoding);
     }
 
     public static function ucfirst($str)
@@ -1898,11 +1866,7 @@ class ToolsCore
 
     public static function ucwords($str)
     {
-        if (function_exists('mb_convert_case')) {
-            return mb_convert_case($str, MB_CASE_TITLE);
-        }
-
-        return ucwords(Tools::strtolower($str));
+        return mb_convert_case($str, MB_CASE_TITLE);
     }
 
     public static function orderbyPrice(&$array, $order_way)
