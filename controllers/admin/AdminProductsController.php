@@ -231,7 +231,7 @@ class AdminProductsControllerCore extends AdminController
 
                 // convert price with the currency from context
                 $this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-                $this->_list[$i]['price_tmp'] = Product::getPriceStatic(
+                $this->_list[$i]['price_tmp'] = (float) Product::getPriceStatic(
                     $this->_list[$i]['id_product'],
                     true,
                     null,

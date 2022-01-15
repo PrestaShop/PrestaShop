@@ -571,4 +571,42 @@ class ToolsTest extends TestCase
             [null, 'http://'],
         ];
     }
+
+    /**
+     * @param int $expectedReturn
+     * @param array{"price_tmp": float} $a
+     * @param array{"price_tmp": float} $b
+     *
+     * @dataProvider providerCmpPriceAsc
+     */
+    public function testCmpPriceAsc(int $expectedReturn, $a, $b): void
+    {
+        $this->assertSame($expectedReturn, cmpPriceAsc($a, $b));
+    }
+
+    public function providerCmpPriceAsc(): iterable
+    {
+        yield [-1, ['price_tmp' => -0.001], ['price_tmp' => 0]];
+        yield [0, ['price_tmp' => 0], ['price_tmp' => 0]];
+        yield [1, ['price_tmp' => 0.001], ['price_tmp' => 0]];
+    }
+
+    /**
+     * @param int $expectedReturn
+     * @param array{"price_tmp": float} $a
+     * @param array{"price_tmp": float} $b
+     *
+     * @dataProvider providerCmpPriceDesc
+     */
+    public function testCmpPriceDesc(int $expectedReturn, $a, $b): void
+    {
+        $this->assertSame($expectedReturn, cmpPriceDesc($a, $b));
+    }
+
+    public function providerCmpPriceDesc(): iterable
+    {
+        yield [1, ['price_tmp' => -0.001], ['price_tmp' => 0]];
+        yield [0, ['price_tmp' => 0], ['price_tmp' => 0]];
+        yield [-1, ['price_tmp' => 0.001], ['price_tmp' => 0]];
+    }
 }
