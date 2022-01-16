@@ -58,11 +58,12 @@ class EmailLister
 
         $mail_list = [];
         foreach ($mail_directory as $mail) {
-            if ($mail->getExtension() !== 'html') {
+            $ext = $mail->getExtension();
+            if (strtolower($ext) !== 'html') {
                 continue;
             }
 
-            $name = $mail->getBasename('.html');
+            $name = $mail->getBasename('.' . $ext);
 
             // Do not include hidden files (.html, .name.html, ...)
             if (substr($name, 0, 1) === '.') {
@@ -85,6 +86,6 @@ class EmailLister
         $tmp = explode('.', $mail_name);
         $mail_name = $tmp[0];
 
-        return ucfirst(str_replace(['_', '-'], ' ', $mail_name));
+        return ucfirst(trim(str_replace(['_', '-'], ' ', $mail_name)));
     }
 }
