@@ -212,12 +212,12 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
   prestashop.adapter.product.supplier.command_handler.associate_product_suppliers_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\AssociateProductSuppliersHandler
+    class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetSuppliersHandler
     arguments:
       - '@prestashop.adapter.product.update.product_supplier_updater'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\AssociateProductSuppliersCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand
 
   prestashop.adapter.product.supplier.command_handler.set_product_default_supplier_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetProductDefaultSupplierHandler
@@ -356,6 +356,7 @@ services:
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.adapter.supplier.repository.supplier_repository'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_CURRENCY_DEFAULT')"
 
   prestashop.adapter.product.update.related_products_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\RelatedProductsUpdater
