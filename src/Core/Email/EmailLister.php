@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Email;
 
+use PrestaShop\PrestaShop\Core\Foundation\Filesystem\Exception;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 
 class EmailLister
@@ -49,31 +50,29 @@ class EmailLister
      */
     public function getAvailableMails($dir)
     {
-        if (!is_dir($dir)) {
+        try {
+            $mail_directory = $this->filesystem->listFilesRecursively($dir);
+        } catch (Exception $e) {
             return null;
         }
 
-        $mail_directory = $this->filesystem->listEntriesRecursively($dir);
         $mail_list = [];
-
-        // Remove unwanted .html / .txt / .tpl / .php / . / ..
         foreach ($mail_directory as $mail) {
-            if (strpos($mail->getFilename(), '.') !== false) {
-                $tmp = explode('.', $mail->getFilename());
-
-                // Check for filename existence (left part) and if extension is html (right part)
-                if (!isset($tmp[0]) || (isset($tmp[1]) && $tmp[1] !== 'html')) {
-                    continue;
-                }
-
-                $mail_name_no_ext = $tmp[0];
-                if (!in_array($mail_name_no_ext, $mail_list)) {
-                    $mail_list[] = $mail_name_no_ext;
-                }
+            if ($mail->getExtension() !== 'html') {
+                continue;
             }
+
+            $name = $mail->getBasename('.html');
+
+            // Do not include hidden files (.html, .name.html, ...)
+            if (substr($name, 0, 1) === '.') {
+                continue;
+            }
+
+            $mail_list[$name] = $name;
         }
 
-        return $mail_list;
+        return array_values($mail_list);
     }
 
     /**
@@ -83,15 +82,8 @@ class EmailLister
      */
     public function getCleanedMailName($mail_name)
     {
-        if (strpos($mail_name, '.') !== false) {
-            $tmp = explode('.', $mail_name);
-
-            if (!isset($tmp[0])) {
-                return $mail_name;
-            }
-
-            $mail_name = $tmp[0];
-        }
+        $tmp = explode('.', $mail_name);
+        $mail_name = $tmp[0];
 
         return ucfirst(str_replace(['_', '-'], ' ', $mail_name));
     }
