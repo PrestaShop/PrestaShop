@@ -70,21 +70,29 @@ class ProductSupplierUpdater
     private $productSupplierRepository;
 
     /**
+     * @var int
+     */
+    private $defaultCurrencyId;
+
+    /**
      * @param ProductRepository $productRepository
      * @param CombinationRepository $combinationRepository
      * @param SupplierRepository $supplierRepository
      * @param ProductSupplierRepository $productSupplierRepository
+     * @param int $defaultCurrencyId
      */
     public function __construct(
         ProductRepository $productRepository,
         CombinationRepository $combinationRepository,
         SupplierRepository $supplierRepository,
-        ProductSupplierRepository $productSupplierRepository
+        ProductSupplierRepository $productSupplierRepository,
+        int $defaultCurrencyId
     ) {
         $this->productRepository = $productRepository;
         $this->supplierRepository = $supplierRepository;
         $this->productSupplierRepository = $productSupplierRepository;
         $this->combinationRepository = $combinationRepository;
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -122,6 +130,7 @@ class ProductSupplierUpdater
                     $productSupplier->id_product = $productId->getValue();
                     $productSupplier->id_product_attribute = $combinationId->getValue();
                     $productSupplier->id_supplier = $supplierId->getValue();
+                    $productSupplier->id_currency = $this->defaultCurrencyId;
                     $productSupplier->add();
                 }
             }
@@ -300,6 +309,8 @@ class ProductSupplierUpdater
             $defaultSupplier = reset($productSuppliers);
             $defaultSupplierId = new SupplierId((int) $defaultSupplier->id_supplier);
         }
+
+        // Always update default supplier since we also update product's default values that may have changed
         $this->updateDefaultSupplier($productId, $defaultSupplierId);
     }
 
