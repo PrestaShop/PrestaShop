@@ -307,11 +307,11 @@ class ApiNode
      * Transform $field array into ApiNode and appends it as child to current node
      *
      * @param array $field
-     * @param string $schemaToDisplay
+     * @param string|null $schemaToDisplay
      *
      * @return self
      */
-    public function addField(array $field, string $schemaToDisplay = ''): self
+    public function addField(array $field, ?string $schemaToDisplay = null): self
     {
         $newNode = self::value($field['sqlId']);
 
