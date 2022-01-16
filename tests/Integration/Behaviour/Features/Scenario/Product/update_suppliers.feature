@@ -234,3 +234,45 @@ Feature: Update product suppliers from Back Office (BO)
       | product supplier reference      | currency | price tax excluded |
       | my first supplier for product4  | USD      | 20                 |
       | my second supplier for product4 | EUR      | 30                 |
+
+    Scenario: Associate suppliers without data
+      Given I add product "product5" with following information:
+        | name[en-US] | magic staff |
+        | type        | standard    |
+      And product product5 type should be standard
+      And product product5 should not have any suppliers assigned
+      When I associate suppliers to product "product5"
+        | supplier2 |
+        | supplier1 |
+      Then product product5 should have following suppliers:
+        | product supplier reference | currency | price tax excluded | supplier  |
+        |                            | USD      | 0                  | supplier1 |
+        |                            | USD      | 0                  | supplier2 |
+      # Default supplier is the first one
+      And product product5 should have following supplier values:
+        | default supplier           | supplier2  |
+        | default supplier reference |            |
+      # We associate again, the default supplier should not change even if it's in second place since it is already defined
+      When I associate suppliers to product "product5"
+        | supplier1 |
+        | supplier2 |
+      Then product product5 should have following suppliers:
+        | product supplier reference | currency | price tax excluded | supplier  |
+        |                            | USD      | 0                  | supplier1 |
+        |                            | USD      | 0                  | supplier2 |
+      # Default supplier is the first one
+      And product product5 should have following supplier values:
+        | default supplier           | supplier2  |
+        | default supplier reference |            |
+      # I associate new suppliers without default one, a new default supplier is hosen
+      When I associate suppliers to product "product5"
+        | supplier1 |
+        | supplier3 |
+      Then product product5 should have following suppliers:
+        | product supplier reference | currency | price tax excluded | supplier  |
+        |                            | USD      | 0                  | supplier1 |
+        |                            | USD      | 0                  | supplier3 |
+      # Default supplier is the first one
+      And product product5 should have following supplier values:
+        | default supplier           | supplier1  |
+        | default supplier reference |            |
