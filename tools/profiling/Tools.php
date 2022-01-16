@@ -35,7 +35,7 @@ class Tools extends ToolsCore
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
+            if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = static::strReplaceFirst('&', '?', $url);
