@@ -98,7 +98,8 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * Returns the ID of the Supplier set as default for this product.
+     * Returns the ID of the Supplier set as default for this product, data comes from product table
+     * but is only returned if the association is present in product_supplier relation table.
      *
      * @param ProductId $productId
      *
@@ -108,18 +109,19 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('p.id_supplier AS default_supplier_id')
-            ->from($this->dbPrefix . 'product_supplier', 'ps')
-            ->innerJoin(
-                'ps',
-                $this->dbPrefix . 'product',
+            ->from($this->dbPrefix . 'product', 'p')
+            // Right join association matching the default supplier, it must be present since it is a right join
+            ->rightJoin(
                 'p',
-                'ps.id_supplier = p.id_supplier'
+                $this->dbPrefix . 'product_supplier',
+                'ps',
+                'ps.id_product = p.id_product AND ps.id_supplier = p.id_supplier'
             )
-            ->where('ps.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->where('p.id_product = :productId')
         ;
 
-        $result = $qb->execute()->fetch();
+        $result = $qb->execute()->fetchAssociative();
 
         if (!$result) {
             return null;
@@ -177,16 +179,16 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->setParameter('supplierId', $supplierId->getValue())
         ;
 
-        $results = $qb->execute()->fetchAllNumeric();
+        $results = $qb->execute()->fetchAllAssociative();
 
         if (empty($results)) {
             return [];
         }
 
-        return array_map(function (int $combinationId) use ($productId, $supplierId) {
+        return array_map(function (array $row) use ($productId, $supplierId) {
             return new ProductSupplierAssociation(
                 $productId->getValue(),
-                $combinationId,
+                (int) $row['id_product_attribute'],
                 $supplierId->getValue()
             );
         }, $results);
@@ -335,18 +337,18 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             ->select('ps.id_product_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->where($qb->expr()->and(
-                $qb->expr()->eq('product_id', $productId->getValue()),
-                $qb->expr()->notIn('supplier_id', $supplierIds)
+                $qb->expr()->eq('id_product', $productId->getValue()),
+                $qb->expr()->notIn('id_supplier', $supplierIds)
             ))
         ;
 
-        $uselessProductSupplierIds = $qb->execute()->fetchAllNumeric();
+        $uselessProductSupplierIds = $qb->execute()->fetchAllAssociative();
         if (empty($uselessProductSupplierIds)) {
             return [];
         }
 
-        return array_map(function (int $productSupplierId) {
-            return new ProductSupplierId($productSupplierId);
+        return array_map(function (array $row) {
+            return new ProductSupplierId((int) $row['id_product_supplier']);
         }, $uselessProductSupplierIds);
     }
 }
