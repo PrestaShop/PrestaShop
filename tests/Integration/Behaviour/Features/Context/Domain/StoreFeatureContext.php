@@ -57,7 +57,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 	 *
 	 * @param string $reference
 	 */
-	public function isStoreToggleWithReference(string $reference)
+	public function isStoreToggleWithReference(string $reference): void
 	{
 		$status = SharedStorage::getStorage()->get($reference);
 		$storeQuery = new GetStore(self::DUMMY_STORE_ID);
