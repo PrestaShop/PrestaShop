@@ -177,7 +177,7 @@ class ProductSupplierUpdater
      *
      * @return array<int, ProductSupplierId>
      */
-    public function setCombinationSuppliers(
+    public function updateCombinationSuppliers(
         ProductId $productId,
         CombinationId $combinationId,
         array $productSuppliers
