@@ -39,11 +39,6 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 {
 	private const DUMMY_STORE_ID = 1;
 
-	public function __construct()
-	{
-		$configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-	}
-
 	/**
 	 * @When I toggle :reference
 	 *
