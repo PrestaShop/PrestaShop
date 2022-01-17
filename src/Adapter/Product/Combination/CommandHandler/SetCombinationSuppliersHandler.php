@@ -73,7 +73,7 @@ final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandle
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO, $combinationId);
+            $productSuppliers[] = $this->loadEntityFromDTO($productSupplierDTO);
         }
 
         return $this->productSupplierUpdater->setCombinationSuppliers(
