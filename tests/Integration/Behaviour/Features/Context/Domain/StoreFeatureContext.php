@@ -29,34 +29,44 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
+use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\StoreId;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Store;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
-    private const DUMMY_STORE_ID = 1;
+	private const DUMMY_STORE_ID = 1;
 
-    /**
-     * @When I toggle :reference
-     *
-     * @param string $reference
-     */
-    public function disableStoreWithReference(string $reference): void
-    {
-        $toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
-        $this->getCommandBus()->handle($toggleStatusCommand);
-    }
+	public function __construct()
+	{
+		$configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+	}
 
-    /**
-     * @Then /^the store "(.*)" should have status (enabled|disabled)$/
-     *
-     * @param string $reference
-     * @param string $status
-     */
-    public function isStoreToggledWithReference(string $reference, string $status): void
-    {
-        $isEnabled = $status === 'enabled';
-        $storeQuery = new GetStore(self::DUMMY_STORE_ID);
-        $storeUpdated = $this->getQueryBus()->handle($storeQuery);
-        Assert::assertEquals((bool) $storeUpdated->active, $isEnabled);
-    }
+	/**
+	 * @When I toggle :reference
+	 *
+	 * @param string $reference
+	 */
+	public function disableStoreWithReference(string $reference)
+	{
+		$toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
+		$store = new Store(self::DUMMY_STORE_ID);
+		$this->getCommandBus()->handle($toggleStatusCommand);
+		SharedStorage::getStorage()->set($reference, $store->active);
+	}
+	
+	/**
+	 * @Then the store :reference is toggled
+	 *
+	 * @param string $reference
+	 */
+	public function isStoreToggleWithReference(string $reference)
+	{
+		$status = SharedStorage::getStorage()->get($reference);
+		$storeQuery = new GetStore(self::DUMMY_STORE_ID);
+		$storeUpdated = $this->getQueryBus()->handle($storeQuery);
+		Assert::assertEquals((bool)$storeUpdated->active,!(bool)$status);
+	}
 }
