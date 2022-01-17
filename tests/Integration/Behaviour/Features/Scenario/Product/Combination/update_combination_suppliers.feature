@@ -114,7 +114,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | default supplier           | supplier2 |
       | default supplier reference | sup S2    |
 
-  Scenario: Set suppliers for standard product while it has combinations
+  Scenario: Use standard product commands on a combination product is forbidden
     Given product product1 type should be combinations
     And product product1 should not have any suppliers assigned
     And combination "product1SWhite" should have following suppliers:
@@ -133,11 +133,6 @@ Feature: Update product combination suppliers in Back Office (BO)
       | new sup white shirt S 1        | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
       | sup S3                         | USD      | 5.5                |
-    When I set product product1 default supplier to supplier2
-    Then I should get error that this action is allowed for single product only
-    And product product1 should have following supplier values:
-      | default supplier           | supplier2 |
-      | default supplier reference | sup S2    |
 
   Scenario: Remove one of combination suppliers
     Given combination "product1SWhite" should have following suppliers:
