@@ -29,7 +29,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductSuppliersCommandsBuilder;
 
 class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -83,7 +83,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
             [new RemoveAllAssociatedProductSuppliersCommand($this->getProductId()->getValue())],
         ];
 
-        $suppliersCommand = new SetProductSuppliersCommand(
+        $suppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),
             [
                 [
@@ -138,7 +138,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
             [$suppliersCommand, $defaultSupplierCommand],
         ];
 
-        $suppliersCommand = new SetProductSuppliersCommand(
+        $suppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),
             [
                 [
@@ -173,7 +173,7 @@ class ProductSuppliersCommandsBuilderTest extends AbstractProductCommandBuilderT
             [$suppliersCommand],
         ];
 
-        $suppliersCommand = new SetProductSuppliersCommand(
+        $suppliersCommand = new UpdateProductSuppliersCommand(
             $this->getProductId()->getValue(),
             [
                 [

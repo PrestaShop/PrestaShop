@@ -26,18 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 
 /**
- * Defines contract to handle @see SetProductSuppliersCommand
+ * Defines contract to handle @see UpdateProductSuppliersCommand
  */
-interface SetProductSuppliersHandlerInterface
+interface UpdateProductSuppliersHandlerInterface
 {
     /**
-     * @param SetProductSuppliersCommand $command
+     * @param UpdateProductSuppliersCommand $command
      *
      * @return ProductSupplierId[] new product suppliers ids list
      */
-    public function handle(SetProductSuppliersCommand $command): array;
+    public function handle(UpdateProductSuppliersCommand $command): array;
 }
