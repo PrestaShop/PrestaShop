@@ -33,8 +33,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
  */
 class StoreConstraintException extends StoreException
 {
-	/**
-	 * Thrown when provided store id is not valid
-	 */
-	public const INVALID_ID = 10;
+    /**
+     * Thrown when provided store id is not valid
+     */
+    public const INVALID_ID = 10;
 }

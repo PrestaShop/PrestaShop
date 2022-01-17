@@ -23,27 +23,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- 
+
 declare(strict_types=1);
+
 namespace Tests\Unit\Core\Domain\Store\ValueObject;
- 
+
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
- 
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
+
 class StoreIdTest extends TestCase
 {
-	public function testItThrowsExceptionWhenStoreIdIsLowerThanZero():void
-	{
-		$this->expectException(StoreConstraintException::class);
-		$storeId = new StoreId(-3);
-	}
-	
-	public function testItThrowsExceptionWhenStoreIdEqualsZero():void
-	{
-		$this->expectException(StoreConstraintException::class);
-		$storeId = new StoreId(0);
-	}
- 
+    public function testItThrowsExceptionWhenStoreIdIsLowerThanZero(): void
+    {
+        $this->expectException(StoreConstraintException::class);
+        $storeId = new StoreId(-3);
+    }
+
+    public function testItThrowsExceptionWhenStoreIdEqualsZero(): void
+    {
+        $this->expectException(StoreConstraintException::class);
+        $storeId = new StoreId(0);
+    }
 }
- 
