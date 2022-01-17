@@ -196,15 +196,16 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      *
      * @return ProductSupplierAssociation[]
      */
-    public function getAssociations(ProductId $productId, SupplierId $supplierId): array
+    public function getAssociationsForSupplier(ProductId $productId, SupplierId $supplierId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('ps.id_product_attribute')
+        $qb->select('ps.id_product_attribute, ps.id_product_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->andWhere('ps.id_product = :productId')
             ->andWhere('ps.id_supplier = :supplierId')
             ->setParameter('productId', $productId->getValue())
             ->setParameter('supplierId', $supplierId->getValue())
+            ->addOrderBy('ps.id_product_supplier', 'ASC')
         ;
 
         $results = $qb->execute()->fetchAllAssociative();
@@ -217,36 +218,35 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             return new ProductSupplierAssociation(
                 $productId->getValue(),
                 (int) $row['id_product_attribute'],
-                $supplierId->getValue()
+                $supplierId->getValue(),
+                !empty($row['id_product_supplier']) ? (int) $row['id_product_supplier'] : null
             );
         }, $results);
     }
 
     /**
      * @param ProductId $productId
-     * @param SupplierId $supplierId
      *
-     * @return ProductSupplierId[]
+     * @return SupplierId[]
      */
-    public function getAssociatedProductSupplierIds(ProductId $productId, SupplierId $supplierId): array
+    public function getAssociatedSupplierIds(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('ps.id_product_supplier AS product_supplier_id')
+        $qb->select('ps.id_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
             ->andWhere('ps.id_product = :productId')
-            ->andWhere('ps.id_supplier = :supplierId')
             ->setParameter('productId', $productId->getValue())
-            ->setParameter('supplierId', $supplierId->getValue())
+            ->groupBy('ps.id_supplier')
         ;
 
-        $results = $qb->execute()->fetchAll();
+        $results = $qb->execute()->fetchAllAssociative();
 
         if (empty($results)) {
             return [];
         }
 
-        return array_map(function (array $result) {
-            return new ProductSupplierId((int) $result['product_supplier_id']);
+        return array_map(function (array $row) {
+            return new SupplierId((int) $row['id_supplier']);
         }, $results);
     }
 

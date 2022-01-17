@@ -121,7 +121,7 @@ class ProductSupplierUpdater
 
         // Now we search for each associated supplier if some associations are missing
         foreach ($supplierIds as $supplierId) {
-            $supplierAssociations = $this->productSupplierRepository->getAssociations($productId, $supplierId);
+            $supplierAssociations = $this->productSupplierRepository->getAssociationsForSupplier($productId, $supplierId);
 
             // Loop through all combinations to check if they have a matching association if not it will need to be created
             foreach ($combinationIds as $combinationId) {
@@ -269,16 +269,17 @@ class ProductSupplierUpdater
         $supplierIdValue = $supplierId->getValue();
 
         $this->supplierRepository->assertSupplierExists($supplierId);
-        $productSuppliers = $this->productSupplierRepository->getAssociatedProductSupplierIds($productId, $supplierId);
+        $productSuppliers = $this->productSupplierRepository->getAssociationsForSupplier($productId, $supplierId);
         if (empty($productSuppliers)) {
             throw new ProductSupplierNotAssociatedException(sprintf(
                 'Supplier #%d is not associated with product #%d', $supplierIdValue, $productId->getValue()
             ));
         }
 
-        $defaultSupplier = $this->productSupplierRepository->get(reset($productSuppliers));
-        $product->supplier_reference = $defaultSupplier->product_supplier_reference;
-        $product->wholesale_price = (float) (string) $defaultSupplier->product_supplier_price_te;
+        $firstAssociation = reset($productSuppliers);
+        $defaultProductSupplier = $this->productSupplierRepository->get($firstAssociation->getProductSupplierId());
+        $product->supplier_reference = $defaultProductSupplier->product_supplier_reference;
+        $product->wholesale_price = (float) (string) $defaultProductSupplier->product_supplier_price_te;
         $product->id_supplier = $supplierIdValue;
 
         $this->productRepository->partialUpdate(
