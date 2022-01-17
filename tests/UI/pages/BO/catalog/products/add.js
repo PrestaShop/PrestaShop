@@ -31,7 +31,7 @@ class AddProduct extends BOBasePage {
     this.formNavList = '#form-nav';
     this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
 
-    // Selectors of tab: Basic settings
+    // 1 - Selectors of tab: Basic settings
     this.productImageDropZoneDiv = '#product-images-dropzone';
     this.openFileManagerDiv = `${this.productImageDropZoneDiv} .disabled.openfilemanager.dz-clickable`;
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} > div.dz-complete.dz-image-preview`;
@@ -46,13 +46,13 @@ class AddProduct extends BOBasePage {
     this.productPriceTTCInput = '#form_step1_price_ttc_shortcut';
     this.productTaxRuleSelect = '#step2_id_tax_rules_group_rendered';
 
-    // Selectors for pack of products
+    // Selectors for pack of products form
     this.packItemsInput = '#form_step1_inputPackItems';
     this.packsearchResult = '#js_form_step1_inputPackItems .tt-selectable tr:nth-child(1) td:nth-child(1)';
     this.packQuantityInput = '#form_step1_inputPackItems-curPackItemQty';
     this.addProductToPackButton = '#form_step1_inputPackItems-curPackItemAdd';
 
-    // Selectors of tab: Pricing
+    // 2 - Selectors of tab: Pricing
     // Retail price
     this.ecoTaxInput = '#form_step2_ecotax';
     // Specific prices
@@ -64,7 +64,7 @@ class AddProduct extends BOBasePage {
     this.specificPriceReductionType = '#form_step2_specific_price_sp_reduction_type';
     this.specificPriceApplyButton = '#form_step2_specific_price_save';
 
-    // Selectors of tab: Combinations
+    // 3 - Selectors of tab: Combinations
     this.combinationsInput = '#form_step3_attributes-tokenfield';
     this.generateCombinationsButton = '#create-combinations';
     this.productCombinationSelectAllCheckbox = 'input#toggle-all-combinations';
@@ -76,7 +76,7 @@ class AddProduct extends BOBasePage {
     this.applyOnCombinationsButton = '#apply-on-combinations';
     this.deleteCombinationsButton = '#delete-combinations';
 
-    // Selectors of tab: Quantities
+    // 4 - Selectors of tab: Quantities
     // Quantities
     this.quantityInput = '#form_step3_qty_0';
     this.minimumQuantityInput = '#form_step3_minimal_quantity';
@@ -88,7 +88,7 @@ class AddProduct extends BOBasePage {
     this.labelWhenInStockInput = '#form_step3_available_now_1';
     this.labelWhenOutOfStock = '#form_step3_available_later_1';
 
-    // Selectors of tab: SEO
+    // 5 - Selectors of tab: SEO
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
     this.resetUrlButton = '#seo-url-regenerate';
 
@@ -105,6 +105,20 @@ class AddProduct extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Navigate between forms in add product
+   * @param page {Page} Browser tab
+   * @param id {number} Value of form id to go
+   * @return {Promise<void>}
+   */
+  async goToFormStep(page, id = 1) {
+    const selector = this.forNavListItemLink(id);
+    await Promise.all([
+      this.waitForVisibleSelector(page, `${selector}[aria-selected='true']`),
+      this.waitForSelectorAndClick(page, selector),
+    ]);
+  }
+
   /**
    * Set Name, type of product, Reference, price ATI, description and short description
    * @param page {Page} Browser tab
@@ -132,6 +146,23 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Create basic product
+   * @param page {Page} Browser tab
+   * @param productData {ProductData} Data to set on new/edit product form
+   * @returns {Promise<string>}
+   */
+  async createEditBasicProduct(page, productData) {
+    await this.setBasicSettings(page, productData);
+
+    if (productData.type === 'Pack of products') {
+      await this.addPackOfProducts(page, productData.pack);
+    }
+
+    await this.setProductStatus(page, productData.status);
+    return this.saveProduct(page);
+  }
+
+  /**
    * Set product
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set on on add/edit product form
@@ -147,6 +178,12 @@ class AddProduct extends BOBasePage {
     }
     if (!productData.productHasCombinations) {
       await this.setQuantitiesSettings(page, productData);
+    }
+    if (productData.productWithSpecificPrice) {
+      await this.addSpecificPrice(page, productData.specificPrice);
+    }
+    if (productData.productWithEcoTax) {
+      await this.addEcoTax(page, productData.ecoTax);
     }
     await this.setProductStatus(page, productData.status);
 
@@ -201,8 +238,6 @@ class AddProduct extends BOBasePage {
     }
   }
 
-
-
   /**
    * Set product online or offline
    * @param page {Page} Browser tab
@@ -232,42 +267,25 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Create basic product
+   * Return true if combinations table is displayed
    * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on new/edit product form
-   * @returns {Promise<string>}
+   * @return {Promise<boolean>}
    */
-  async createEditBasicProduct(page, productData) {
-    await this.setBasicSettings(page, productData);
-
-    if (productData.type === 'Pack of products') {
-      await this.addPackOfProducts(page, productData.pack);
-    }
-
-    await this.setProductStatus(page, productData.status);
-    return this.saveProduct(page);
+  isCombinationsTableVisible(page) {
+    return this.elementVisible(page, this.productCombinationTableRow(1), 2000);
   }
 
-  /**
-   * Set Combinations for product
-   * @param page {Page} Browser tab
-   * @param productData {ProductData} Data to set on combination form
-   * @returns {Promise<string>}
-   */
-  async setCombinationsInProduct(page, productData) {
-    await page.click(this.productWithCombinationRadioButton);
-    // GOTO Combination tab : id = 3
-    await this.goToFormStep(page, 3);
-    // Delete All combinations if exists
-    await this.deleteAllCombinations(page);
-    // Add combinations
-    await this.addCombinations(page, productData.combinations);
-    // Set quantity
-    await this.setCombinationsQuantity(page, productData.quantity);
-    // GOTO Basic settings Tab : id = 1
-    await this.goToFormStep(page, 1);
 
-    return this.saveProduct(page);
+  /**
+   * Add one combination
+   * @param page {Page} Browser tab
+   * @param combination {string} Data to set on combination form
+   * @return {Promise<void>}
+   */
+  async addCombination(page, combination) {
+    await page.type(this.combinationsInput, combination);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
   }
 
   /**
@@ -287,18 +305,6 @@ class AddProduct extends BOBasePage {
     /* eslint-enable */
     await page.$eval(this.generateCombinationsButton, el => el.click());
     await this.closeGrowlMessage(page);
-  }
-
-  /**
-   * Add one combination
-   * @param page {Page} Browser tab
-   * @param combination {string} Data to set on combination form
-   * @return {Promise<void>}
-   */
-  async addCombination(page, combination) {
-    await page.type(this.combinationsInput, combination);
-    await page.keyboard.press('ArrowDown');
-    await page.keyboard.press('Enter');
   }
 
   /**
@@ -324,6 +330,28 @@ class AddProduct extends BOBasePage {
 
     // Close growl message
     await this.closeGrowlMessage(page);
+  }
+
+  /**
+   * Set Combinations for product
+   * @param page {Page} Browser tab
+   * @param productData {ProductData} Data to set on combination form
+   * @returns {Promise<string>}
+   */
+  async setCombinationsInProduct(page, productData) {
+    await page.click(this.productWithCombinationRadioButton);
+    // Go to Combination tab : id = 3
+    await this.goToFormStep(page, 3);
+    // Delete All combinations if exists
+    await this.deleteAllCombinations(page);
+    // Add combinations
+    await this.addCombinations(page, productData.combinations);
+    // Set quantity
+    await this.setCombinationsQuantity(page, productData.quantity);
+    // Go to Basic settings Tab : id = 1
+    await this.goToFormStep(page, 1);
+
+    return this.saveProduct(page);
   }
 
   /**
@@ -356,28 +384,6 @@ class AddProduct extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
-  /**
-   * Navigate between forms in add product
-   * @param page {Page} Browser tab
-   * @param id {number} Value of form id to go
-   * @return {Promise<void>}
-   */
-  async goToFormStep(page, id = 1) {
-    const selector = this.forNavListItemLink(id);
-    await Promise.all([
-      this.waitForVisibleSelector(page, `${selector}[aria-selected='true']`),
-      this.waitForSelectorAndClick(page, selector),
-    ]);
-  }
-
-  /**
-   * Return true if combinations table is displayed
-   * @param page {Page} Browser tab
-   * @return {Promise<boolean>}
-   */
-  hasCombinations(page) {
-    return this.elementVisible(page, this.productCombinationTableRow(1), 2000);
-  }
 
   /**
    * Delete all combinations
@@ -385,7 +391,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<void>}
    */
   async deleteAllCombinations(page) {
-    if (await this.hasCombinations(page)) {
+    if (await this.isCombinationsTableVisible(page)) {
       // Select all combinations
       await this.setChecked(page, this.productCombinationSelectAllCheckbox);
 
@@ -409,11 +415,23 @@ class AddProduct extends BOBasePage {
   }
 
   /**
+   * Get friendly URL
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getFriendlyURL(page) {
+    await this.reloadPage(page);
+    await this.goToFormStep(page, 5);
+
+    return this.getAttributeContent(page, this.friendlyUrlInput, 'value');
+  }
+
+  /**
    * Reset friendly URL
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async resetURL(page) {
+  async resetFriendlyURL(page) {
     await this.goToFormStep(page, 5);
     await this.waitForVisibleSelector(page, this.resetUrlButton);
     await this.scrollTo(page, this.resetUrlButton);
@@ -431,25 +449,13 @@ class AddProduct extends BOBasePage {
   }
 
   /**
-   * Get friendly URL
-   * @param page {Page} Browser tab
-   * @returns {Promise<string>}
-   */
-  async getFriendlyURL(page) {
-    await this.reloadPage(page);
-    await this.goToFormStep(page, 5);
-
-    return this.getAttributeContent(page, this.friendlyUrlInput, 'value');
-  }
-
-  /**
-   * Add specific prices
+   * Add specific price
    * @param page {Page} Browser tab
    * @param specificPriceData {Object|{combinations: ?string, discount: ?number, startingAt: ?number,
    * specificPriceReductionType: ?string}} Data to set on specific price form
    * @return {Promise<string>}
    */
-  async addSpecificPrices(page, specificPriceData) {
+  async addSpecificPrice(page, specificPriceData) {
     await this.reloadPage(page);
 
     // Go to pricing tab : id = 2

@@ -110,6 +110,7 @@ const productWithSpecificPrice = new ProductFaker({
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
+  productWithSpecificPrice: true,
   specificPrice: {
     discount: 50,
     startingAt: 2,
@@ -123,6 +124,7 @@ const productWithEcoTax = new ProductFaker({
   taxRule: 'No tax',
   quantity: 20,
   minimumQuantity: 1,
+  productWithEcoTax: true,
   ecoTax: 10,
 });
 
@@ -268,18 +270,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         it('should create Product', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-          let createProductMessage = '';
-          if (product === virtualProduct || product === productWithSpecificPrice) {
-            createProductMessage = await addProductPage.createEditBasicProduct(page, product);
-          } else {
-            createProductMessage = await addProductPage.setProduct(page, product);
-          }
-          if (product === productWithSpecificPrice) {
-            await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);
-          }
-          if (product === productWithEcoTax) {
-            await addProductPage.addEcoTax(page, productWithEcoTax.ecoTax);
-          }
+          const createProductMessage = await addProductPage.setProduct(page, product);
           await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
         });
       });

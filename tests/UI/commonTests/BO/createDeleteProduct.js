@@ -70,7 +70,7 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
     it('should create Product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+      const createProductMessage = await addProductPage.setProduct(page, productData);
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
     });
   });

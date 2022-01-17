@@ -126,7 +126,7 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
       productWithCombinations,
     );
 
-    await addProductPage.addSpecificPrices(page, productWithCombinations.specificPrice);
+    await addProductPage.addSpecificPrice(page, productWithCombinations.specificPrice);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

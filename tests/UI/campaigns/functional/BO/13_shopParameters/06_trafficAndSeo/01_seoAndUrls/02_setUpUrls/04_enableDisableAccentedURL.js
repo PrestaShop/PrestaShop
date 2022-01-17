@@ -131,7 +131,7 @@ describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', a
 
       const pageTitle = await addProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProductPage.pageTitle);
-      await addProductPage.resetURL(page);
+      await addProductPage.resetFriendlyURL(page);
     });
 
     it('should check the product URL', async function () {

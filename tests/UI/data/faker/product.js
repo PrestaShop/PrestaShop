@@ -12,8 +12,12 @@ class ProductData {
    * @param productToCreate {Object} Could be used to force the value of some members
    */
   constructor(productToCreate) {
+    // Basic settings form
     /** @type {string} Name of the product */
     this.name = (productToCreate.name || faker.commerce.productName()).toUpperCase();
+
+    /** @type {string} Type of the product */
+    this.type = productToCreate.type;
 
     /** @type {?string} Cover image path for the product */
     this.coverImage = productToCreate.coverImage || null;
@@ -21,8 +25,11 @@ class ProductData {
     /** @type {?string} Thumb image path for the product */
     this.thumbImage = productToCreate.thumbImage || null;
 
-    /** @type {string} Type of the product */
-    this.type = productToCreate.type;
+    /** @type {Object} Pack of products to add to the product */
+    this.pack = productToCreate.pack || {
+      demo_1: faker.random.number({min: 10, max: 100}),
+      demo_2: faker.random.number({min: 10, max: 100}),
+    };
 
     /** @type {boolean} Status of the product */
     this.status = productToCreate.status === undefined ? true : productToCreate.status;
@@ -32,6 +39,9 @@ class ProductData {
 
     /** @type {string} Description of the product */
     this.description = productToCreate.description === undefined ? faker.lorem.sentence() : productToCreate.description;
+
+    /** @type {boolean} True to create product with combination */
+    this.productHasCombinations = productToCreate.productHasCombinations || false;
 
     /** @type {string} Reference of the product */
     this.reference = productToCreate.reference || faker.random.alphaNumeric(7);
@@ -44,29 +54,25 @@ class ProductData {
     /** @type {string} Price tax included of the product */
     this.price = productToCreate.price === undefined ? faker.random.number({min: 10, max: 20}) : productToCreate.price;
 
-    /** @type {boolean} True to create product with combination */
-    this.productHasCombinations = productToCreate.productHasCombinations || false;
+    /** @type {string} Tac rule to apply the product */
+    this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
 
+    // Combinations form
     /** @type {Object|{color: Array<string>, size: Array<string>}} Combinations of the product */
     this.combinations = productToCreate.combinations || {
       color: ['White', 'Black'],
       size: ['S', 'M'],
     };
 
-    /** @type {Object} Pack of products to add to the product */
-    this.pack = productToCreate.pack || {
-      demo_1: faker.random.number({min: 10, max: 100}),
-      demo_2: faker.random.number({min: 10, max: 100}),
-    };
-
-    /** @type {string} Tac rule to apply the product */
-    this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
+    // Pricing form
+    this.productWithEcoTax = productToCreate.productWithEcoTax || false;
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
       ? faker.random.number({min: 10, max: 20})
       : productToCreate.ecoTax;
 
+    this.productWithSpecificPrice = productToCreate.productWithSpecificPrice || false;
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
@@ -74,6 +80,7 @@ class ProductData {
       startingAt: faker.random.number({min: 2, max: 5}),
     };
 
+    // Quantities form
     /** @type {number} Minimum quantity to buy for the product */
     this.minimumQuantity = productToCreate.minimumQuantity === undefined
       ? faker.random.number({min: 1, max: 9})
