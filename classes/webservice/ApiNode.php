@@ -307,7 +307,29 @@ class ApiNode
      * Transform $field array into ApiNode and appends it as child to current node
      *
      * @param array $field
-     * @param string|null $schemaToDisplay
+     * <pre>
+     * $field = [
+     *  'sqlId' => (string) DB field name. Required.
+     *  'encode'    => (string) Field encoding. May contain 'base64' for displaying image content. Optional.
+     *  'synopsis_details'  => [
+     *      'required'  => (string) 'true' / 'false'. Added as an attribute.
+     *      'maxSize'   => (int) Maximum field size. Length for strings, digits for integers. Added as an attribute.
+     *      'format'    => (string) Field specific format. Added as an attribute.
+     *      'readOnly'  => (string) 'true' / 'false'. Added as an attribute.
+     *  ] (Optional)
+     *  'i18n'  => (bool) If this is international field. If set, this field is rendered with <strong>language</strong> sub-nodes. (Optional)
+     *  'value' => (mixed) Field value. Required.
+     *  'xlink_resource'    => (string) Url resource. If set to string, this field is rendered with <strong>xlink:href</strong> attribute, containing this url, prepended with language base url.
+     *  'xlink_resource'    => [
+     *      'resourceName'  => (string) Resource name, to url scheme: <i>'wsUrl/<strong>resourceName</strong>/<strong>subResourceName</strong>/<strong>object_id</strong>/<strong>value</strong>'</i>
+     *      'subResourceName'  => (string) Sub-Resource name, used to compose output url.
+     *  ]
+     *  'object_id' => (string|int) Sub resource id. Used to compose output url and only if xlink_resource contains subResourceName.
+     *  'getter'    => (string) Name of getter. If set, adds attribute <strong>notFilterable = true</strong>.
+     *  'setter'    => (bool) Name of setter. If set to <i>false</i> and <strong>$schemaToDisplay</strong> is set to synopsis, adds attribute <strong>read_only = true</strong>.
+     *]
+     * </pre>
+     * @param string|null $schemaToDisplay 'blank' / 'synopsis'. Optional
      *
      * @return self
      */
