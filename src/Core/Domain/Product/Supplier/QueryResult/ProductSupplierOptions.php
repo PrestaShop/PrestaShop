@@ -39,6 +39,11 @@ class ProductSupplierOptions
     private $defaultSupplierId;
 
     /**
+     * @var int[]
+     */
+    private $supplierIds;
+
+    /**
      * @var ProductSupplierInfo[]
      */
     private $suppliersInfo;
@@ -49,9 +54,11 @@ class ProductSupplierOptions
      */
     public function __construct(
         int $defaultSupplierId,
+        array $supplierIds,
         array $suppliersInfo
     ) {
         $this->defaultSupplierId = $defaultSupplierId;
+        $this->supplierIds = $supplierIds;
         $this->suppliersInfo = $suppliersInfo;
     }
 
@@ -61,6 +68,14 @@ class ProductSupplierOptions
     public function getDefaultSupplierId(): int
     {
         return $this->defaultSupplierId;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getSupplierIds(): array
+    {
+        return $this->supplierIds;
     }
 
     /**
