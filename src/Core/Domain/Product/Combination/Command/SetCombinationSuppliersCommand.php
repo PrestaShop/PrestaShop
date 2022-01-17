@@ -29,7 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\CombinationSupplierAssociation;
 use RuntimeException;
 
 /**
@@ -45,7 +46,7 @@ class SetCombinationSuppliersCommand
     private $combinationId;
 
     /**
-     * @var array<int, ProductSupplier>
+     * @var array<int, ProductSupplierUpdate>
      */
     private $combinationSuppliers;
 
@@ -58,7 +59,7 @@ class SetCombinationSuppliersCommand
         array $combinationSuppliers
     ) {
         $this->combinationId = new CombinationId($combinationId);
-        $this->setCombinationSuppliers($combinationSuppliers);
+        $this->setCombinationSuppliers($combinationSuppliers, $combinationId);
     }
 
     /**
@@ -70,7 +71,7 @@ class SetCombinationSuppliersCommand
     }
 
     /**
-     * @return array<int, ProductSupplier>
+     * @return array<int, ProductSupplierUpdate>
      */
     public function getCombinationSuppliers(): array
     {
@@ -80,7 +81,7 @@ class SetCombinationSuppliersCommand
     /**
      * @param array<int, array<string, string|int|null>> $productSuppliers
      */
-    private function setCombinationSuppliers(array $productSuppliers): void
+    private function setCombinationSuppliers(array $productSuppliers, int $combinationId): void
     {
         if (empty($productSuppliers)) {
             throw new RuntimeException(sprintf(
@@ -91,12 +92,15 @@ class SetCombinationSuppliersCommand
         }
 
         foreach ($productSuppliers as $productSupplier) {
-            $this->combinationSuppliers[] = new ProductSupplier(
-                $productSupplier['supplier_id'],
+            $this->combinationSuppliers[] = new ProductSupplierUpdate(
+                new CombinationSupplierAssociation(
+                    $combinationId,
+                    $productSupplier['supplier_id'],
+                    $productSupplier['product_supplier_id'] ?? null
+                ),
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
-                $productSupplier['price_tax_excluded'],
-                $productSupplier['product_supplier_id'] ?? null
+                $productSupplier['price_tax_excluded']
             );
         }
     }

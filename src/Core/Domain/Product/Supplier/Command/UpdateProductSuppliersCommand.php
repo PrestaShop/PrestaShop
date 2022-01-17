@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
@@ -92,13 +93,15 @@ class UpdateProductSuppliersCommand
 
         foreach ($productSuppliers as $productSupplier) {
             $this->productSuppliers[] = new ProductSupplierUpdate(
-                $productId,
-                NoCombinationId::NO_COMBINATION_ID,
-                $productSupplier['supplier_id'],
+                new ProductSupplierAssociation(
+                    $productId,
+                    NoCombinationId::NO_COMBINATION_ID,
+                    $productSupplier['supplier_id'],
+                    $productSupplier['product_supplier_id'] ?? null
+                ),
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
-                $productSupplier['price_tax_excluded'],
-                $productSupplier['product_supplier_id'] ?? null
+                $productSupplier['price_tax_excluded']
             );
         }
     }
