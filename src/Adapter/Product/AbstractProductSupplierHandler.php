@@ -100,18 +100,14 @@ abstract class AbstractProductSupplierHandler
         $associatedProductSupplierId = $this->productSupplierRepository->getIdByAssociation($productSupplierUpdate->getAssociation());
         if (null === $associatedProductSupplierId) {
             throw new ProductSupplierNotFoundException(sprintf(
-                'Could not find a ProductSupplier matching this association: [productId: %d, combinationId: %d, supplierId: %d]',
-                $productSupplierUpdate->getAssociation()->getProductId()->getValue(),
-                $productSupplierUpdate->getAssociation()->getCombinationId()->getValue(),
-                $productSupplierUpdate->getAssociation()->getSupplierId()->getValue()
+                'Could not find a ProductSupplier matching this association: %s',
+                (string) $productSupplierUpdate->getAssociation()
             ));
         } elseif ($productSupplierUpdate->getAssociation()->getProductSupplierId() !== null &&
                 $associatedProductSupplierId->getValue() !== $productSupplierUpdate->getAssociation()->getProductSupplierId()->getValue()) {
             throw new InvalidProductSupplierAssociationException(sprintf(
-                'Invalid ProductSupplier ID in association: [productId: %d, combinationId: %d, supplierId: %d] Expected %d but used %d instead.',
-                $productSupplierUpdate->getAssociation()->getProductId()->getValue(),
-                $productSupplierUpdate->getAssociation()->getCombinationId()->getValue(),
-                $productSupplierUpdate->getAssociation()->getSupplierId()->getValue(),
+                'Invalid ProductSupplier ID in association: %s Expected %d but used %d instead.',
+                (string) $productSupplierUpdate->getAssociation(),
                 $associatedProductSupplierId->getValue(),
                 $productSupplierUpdate->getAssociation()->getProductSupplierId()->getValue()
             ));
