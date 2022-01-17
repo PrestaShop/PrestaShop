@@ -124,6 +124,7 @@ export default {
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
+    bulkCombinationFormBtn: '#combination-bulk-form-btn',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
