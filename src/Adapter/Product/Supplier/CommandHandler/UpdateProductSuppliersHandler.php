@@ -31,13 +31,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetProductSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\UpdateProductSuppliersHandlerInterface;
 
 /**
- * Handles @see SetProductSuppliersCommand using legacy object model
+ * Handles @see UpdateProductSuppliersCommand using legacy object model
  */
-final class SetProductSuppliersHandler extends AbstractProductSupplierHandler implements SetProductSuppliersHandlerInterface
+final class UpdateProductSuppliersHandler extends AbstractProductSupplierHandler implements UpdateProductSuppliersHandlerInterface
 {
     /**
      * @var ProductSupplierUpdater
@@ -59,7 +59,7 @@ final class SetProductSuppliersHandler extends AbstractProductSupplierHandler im
     /**
      * {@inheritdoc}
      */
-    public function handle(SetProductSuppliersCommand $command): array
+    public function handle(UpdateProductSuppliersCommand $command): array
     {
         $productId = $command->getProductId();
         $productSuppliers = [];
