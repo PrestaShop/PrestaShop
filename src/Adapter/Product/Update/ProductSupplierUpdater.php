@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplier
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use Product;
 use ProductSupplier;
@@ -156,8 +157,8 @@ class ProductSupplierUpdater
     ): array {
         $product = $this->productRepository->get($productId);
 
-        if ($product->hasCombinations()) {
-            $this->throwInvalidTypeException($productId);
+        if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
+            $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
         }
 
         $this->persistProductSuppliers($productId, $productSuppliers);
@@ -195,8 +196,8 @@ class ProductSupplierUpdater
     {
         $product = $this->productRepository->get($productId);
 
-        if ($product->hasCombinations()) {
-            $this->throwInvalidTypeException($productId);
+        if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
+            $this->throwInvalidTypeException($productId, 'removeAllForCombination');
         }
 
         $productSupplierIds = $this->getProductSupplierIds($productId);
@@ -362,7 +363,7 @@ class ProductSupplierUpdater
      *
      * @throws InvalidProductTypeException
      */
-    private function throwInvalidTypeException(ProductId $productId): void
+    private function throwInvalidTypeException(ProductId $productId, string $appropriateMethod): void
     {
         throw new InvalidProductTypeException(
             InvalidProductTypeException::EXPECTED_NO_COMBINATIONS_TYPE,
@@ -370,7 +371,7 @@ class ProductSupplierUpdater
                 'Product #%d has combinations. Use %s::%s to set product suppliers for specified combination',
                 $productId->getValue(),
                 self::class,
-                'setCombinationSuppliers()'
+                $appropriateMethod
             ));
     }
 }
