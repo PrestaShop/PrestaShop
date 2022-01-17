@@ -10,7 +10,6 @@ $gray-dark-hover: #282b30;
 $background-grey: #eaebec;
 $gray-dark-text-hover: $white;
 $gray-dark-divider: #eee;
-$gray-medium: #6c868e;
 $color-separator: #dfdfdf;
 $background-info: #dcf4f9;
 $purple: #34219e;
@@ -33,3 +32,12 @@ $size-header-height: 2.5rem;
 $size-header-toolbar-height: 5.313rem;
 $header-mobile-padding-y: 0.525rem;
 $module-logo-size: 45px;
+
+// Sidebar Menu
+$sidebar-active-background-color: #22252a;
+$sidebar-active-icon-color: $primary;
+$sidebar-background-color: $dark-gray;
+$sidebar-primary-link-color: $white;
+$sidebar-secondary-link-color: #b6c3c7;
+$sidebar-title-color: #98aab0;
+$sidebar-logout-color: #ff7a7a;
