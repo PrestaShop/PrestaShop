@@ -24,24 +24,34 @@
  */
 
 import ConfirmModal from '@components/modal';
-
 import ProductMap from '@pages/product/product-map';
 
 const CombinationMap = ProductMap.combinations;
 
 export default class BulkFormHandler {
   constructor() {
+    //@todo: add container
     this.init();
   }
 
-  init() {
-    const content = document.querySelector('#bulk-combination-form').innerHTML;
-    const modal = new ConfirmModal({
-      id: 'bulk-combination-modal',
-      confirmMessage: content,
-    });
+  private init() {
+    const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
+    const content = template.innerHTML;
+    const modal = new ConfirmModal(
+      {
+        id: 'bulk-combination-modal',
+        confirmMessage: content,
+      },
+      () => this.submitForm(),
+    );
 
     //@todo: probably this should be wrapped into some public method reachable from outside
-    document.querySelector(CombinationMap.bulkCombinationFormBtn).addEventListener('click', () => modal.show());
+    const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    btn.addEventListener('click', () => modal.show());
+  }
+
+  private submitForm() {
+    const form = document.querySelector(CombinationMap.bulkCombinationForm);
+    //@todo add service to submit form via ajax.
   }
 }

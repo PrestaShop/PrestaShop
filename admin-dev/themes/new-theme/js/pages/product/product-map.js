@@ -125,6 +125,8 @@ export default {
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkCombinationFormTemplate: '#bulk-combination-form-template',
+    bulkCombinationForm: '#bulk_combination',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
