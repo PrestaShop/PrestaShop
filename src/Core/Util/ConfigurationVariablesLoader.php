@@ -40,6 +40,17 @@ class ConfigurationVariablesLoader
         'database_engine' => 'PS_DATABASE_ENGINE',
         'cookie_key' => 'PS_COOKIE_KEY',
         'cookie_iv' => 'PS_COOKIE_IV',
+        'new_cookie_key' => 'PS_NEW_COOKIE_KEY',
+        'mailer_transport' => 'PS_MAILER_TRANSPORT',
+        'mailer_host' => 'PS_MAILER_HOST',
+        'mailer_user' => 'PS_MAILER_USER',
+        'mailer_password' => 'PS_MAILER_PASSWORD',
+        'locale' => 'PS_LOCALE',
+        'secret' => 'PS_SECRET',
+        'ps_caching' => 'PS_CACHING',
+        'ps_cache_enable' => 'PS_CACHE_ENABLE',
+        'ps_creation_date' => 'PS_CREATION_DATE',
+        'use_debug_toolbar' => 'PS_USE_DEBUG_TOOLBAR',
     ];
 
     public function __construct(string $envFilePath)
