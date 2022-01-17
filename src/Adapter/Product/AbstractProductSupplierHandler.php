@@ -29,7 +29,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier as ProductSupplierDTO;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -89,26 +91,36 @@ abstract class AbstractProductSupplierHandler
     /**
      * Loads ProductSupplier object model with data from DTO.
      *
-     * @param ProductId $productId
-     * @param ProductSupplierDTO $productSupplierDTO
-     * @param CombinationId|null $combinationId
+     * @param ProductSupplierUpdate $productSupplierUpdate
      *
      * @return ProductSupplier
      */
-    protected function loadEntityFromDTO(ProductId $productId, ProductSupplierDTO $productSupplierDTO, ?CombinationId $combinationId = null): ProductSupplier
+    protected function loadEntityFromDTO(ProductSupplierUpdate $productSupplierUpdate): ProductSupplier
     {
-        if ($productSupplierDTO->getProductSupplierId()) {
-            $productSupplier = $this->productSupplierRepository->get($productSupplierDTO->getProductSupplierId());
-        } else {
-            $productSupplier = new ProductSupplier();
+        $associatedProductSupplierId = $this->productSupplierRepository->getIdByAssociation($productSupplierUpdate->getAssociation());
+        if (null === $associatedProductSupplierId) {
+            throw new ProductSupplierNotFoundException(sprintf(
+                'Could not find a ProductSupplier matching this association: [productId: %d, combinationId: %d, supplierId: %d]',
+                $productSupplierUpdate->getAssociation()->getProductId()->getValue(),
+                $productSupplierUpdate->getAssociation()->getCombinationId()->getValue(),
+                $productSupplierUpdate->getAssociation()->getSupplierId()->getValue()
+            ));
+        } elseif ($productSupplierUpdate->getAssociation()->getProductSupplierId() !== null &&
+                $associatedProductSupplierId->getValue() !== $productSupplierUpdate->getAssociation()->getProductSupplierId()->getValue()) {
+            throw new InvalidProductSupplierAssociationException(sprintf(
+                'Invalid ProductSupplier ID in association: [productId: %d, combinationId: %d, supplierId: %d] Expected %d but used %d instead.',
+                $productSupplierUpdate->getAssociation()->getProductId()->getValue(),
+                $productSupplierUpdate->getAssociation()->getCombinationId()->getValue(),
+                $productSupplierUpdate->getAssociation()->getSupplierId()->getValue(),
+                $associatedProductSupplierId->getValue(),
+                $productSupplierUpdate->getAssociation()->getProductSupplierId()->getValue()
+            ));
         }
 
-        $productSupplier->id_product = $productId->getValue();
-        $productSupplier->id_product_attribute = $combinationId ? $combinationId->getValue() : CombinationId::NO_COMBINATION;
-        $productSupplier->id_supplier = $productSupplierDTO->getSupplierId()->getValue();
-        $productSupplier->id_currency = $productSupplierDTO->getCurrencyId()->getValue();
-        $productSupplier->product_supplier_reference = $productSupplierDTO->getReference();
-        $productSupplier->product_supplier_price_te = (float) $productSupplierDTO->getPriceTaxExcluded();
+        $productSupplier = $this->productSupplierRepository->get($associatedProductSupplierId);
+        $productSupplier->id_currency = $productSupplierUpdate->getCurrencyId()->getValue();
+        $productSupplier->product_supplier_reference = $productSupplierUpdate->getReference();
+        $productSupplier->product_supplier_price_te = (float) $productSupplierUpdate->getPriceTaxExcluded();
 
         return $productSupplier;
     }
