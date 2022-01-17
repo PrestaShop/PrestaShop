@@ -365,7 +365,7 @@ class ApiNode
             }
         } else {
             // display not i18n fields value
-            if (array_key_exists('xlink_resource', $field) && $schemaToDisplay != 'blank') {
+            if (array_key_exists('xlink_resource', $field) && $schemaToDisplay != 'blank' && isset($field['value'])) {
                 if (!is_array($field['xlink_resource'])) {
                     $xlink = WebserviceOutputBuilderCore::$wsUrl . $field['xlink_resource'] . '/' . $field['value'];
                 } else {
