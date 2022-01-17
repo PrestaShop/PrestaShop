@@ -24,38 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\ValueObject;
+use Store;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreHandlerInterface;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
+use PrestaShopException;
 
-/**
- * Contains store ID with it's constraints
- */
-class StoreId
+final class GetStoreHandler implements GetStoreHandlerInterface
 {
-    /**
-     * @var int
-     */
-    private $storeId;
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @throws StoreException
+	 */
+	public function handle(GetStore $query):Store
+	{
+		try {
+			$store = new Store($query->getStoreId()->getValue());
 
-    /**
-     * @param int $storeId
-     */
-    public function __construct(int $storeId)
-    {
-        if (0 >= $storeId) {
-            throw new StoreConstraintException(sprintf('Invalid store id "%d"', $storeId), StoreConstraintException::INVALID_ID);
-        }
-        $this->storeId = $storeId;
-    }
+			if (0 >= $store->id) {
+				throw new StoreNotFoundException(sprintf('Store object with id %s was not found', var_export($query->getStoreId()->getValue(), true)));
+			}
+		} catch (PrestaShopException $e) {
+			throw new ContactException(sprintf('An unexpected error occurred when retrieving store with id %s', var_export($query->getStoreId()->getValue(), true)), 0, $e);
+		}
 
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->storeId;
-    }
+		return $store;
+	}
 }

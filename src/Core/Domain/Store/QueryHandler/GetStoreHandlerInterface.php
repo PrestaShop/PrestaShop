@@ -24,38 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\ValueObject;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
+use Store;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreConstraintException;
-
-/**
- * Contains store ID with it's constraints
- */
-class StoreId
+interface GetStoreHandlerInterface
 {
-    /**
-     * @var int
-     */
-    private $storeId;
-
-    /**
-     * @param int $storeId
-     */
-    public function __construct(int $storeId)
-    {
-        if (0 >= $storeId) {
-            throw new StoreConstraintException(sprintf('Invalid store id "%d"', $storeId), StoreConstraintException::INVALID_ID);
-        }
-        $this->storeId = $storeId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getValue(): int
-    {
-        return $this->storeId;
-    }
+	/**
+	 * @param GetStore $query
+	 *
+	 * @return Store
+	 */
+	public function handle(GetStore $query):Store;
 }
