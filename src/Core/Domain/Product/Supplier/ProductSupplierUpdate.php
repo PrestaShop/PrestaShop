@@ -29,18 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 /**
  * Transfers data of product supplier
  */
-class ProductSupplier
+class ProductSupplierUpdate
 {
     /**
-     * @var SupplierId
+     * @var ProductSupplierAssociation
      */
-    private $supplierId;
+    private $association;
 
     /**
      * @var CurrencyId
@@ -58,37 +57,40 @@ class ProductSupplier
     private $priceTaxExcluded;
 
     /**
-     * @var ProductSupplierId|null
-     */
-    private $productSupplierId;
-
-    /**
+     * @param int $productId
+     * @param int $combinationId
      * @param int $supplierId
      * @param int $currencyId
      * @param string $reference
      * @param string $priceTaxExcluded
-     * @param int|null $productSupplierId Provide value to update existing resource. Null means this is new resource
+     * @param int|null $productSupplierId
      */
     public function __construct(
+        int $productId,
+        int $combinationId,
         int $supplierId,
         int $currencyId,
         string $reference,
         string $priceTaxExcluded,
-        ?int $productSupplierId = null
+        ?int $productSupplierId
     ) {
-        $this->supplierId = new SupplierId($supplierId);
+        $this->association = new ProductSupplierAssociation(
+            $productId,
+            $combinationId,
+            $supplierId,
+            $productSupplierId
+        );
         $this->currencyId = new CurrencyId($currencyId);
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
-        $this->productSupplierId = $productSupplierId ? new ProductSupplierId($productSupplierId) : null;
     }
 
     /**
-     * @return SupplierId
+     * @return ProductSupplierAssociation
      */
-    public function getSupplierId(): SupplierId
+    public function getAssociation(): ProductSupplierAssociation
     {
-        return $this->supplierId;
+        return $this->association;
     }
 
     /**
@@ -113,13 +115,5 @@ class ProductSupplier
     public function getPriceTaxExcluded(): string
     {
         return $this->priceTaxExcluded;
-    }
-
-    /**
-     * @return ProductSupplierId|null
-     */
-    public function getProductSupplierId(): ?ProductSupplierId
-    {
-        return $this->productSupplierId;
     }
 }
