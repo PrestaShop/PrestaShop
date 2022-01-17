@@ -45,7 +45,7 @@ class StoreIdTest extends TestCase
         $this->expectException(StoreConstraintException::class);
         $storeId = new StoreId(0);
     }
-    
+
     public function testItAffectsGoodValueIFStoreIdIsPositive(): void
     {
         $valueInitialized = 2;
