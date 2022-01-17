@@ -30,7 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder;
 
 class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
@@ -73,7 +73,7 @@ class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommand
             [new RemoveAllAssociatedCombinationSuppliersCommand($this->getCombinationId()->getValue())],
         ];
 
-        $suppliersCommand = new SetCombinationSuppliersCommand(
+        $suppliersCommand = new UpdateCombinationSuppliersCommand(
             $this->getCombinationId()->getValue(),
             [
                 [
@@ -122,7 +122,7 @@ class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommand
             [$suppliersCommand, $defaultSupplierCommand],
         ];
 
-        $suppliersCommand = new SetCombinationSuppliersCommand(
+        $suppliersCommand = new UpdateCombinationSuppliersCommand(
             $this->getCombinationId()->getValue(),
             [
                 [

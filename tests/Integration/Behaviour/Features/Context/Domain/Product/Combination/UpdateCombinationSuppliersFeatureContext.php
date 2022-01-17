@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -65,12 +65,12 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     }
 
     /**
-     * @When I set following suppliers for combination ":combinationReference":
+     * @When I update following suppliers for combination ":combinationReference":
      *
      * @param string $combinationReference
      * @param TableNode $table
      */
-    public function setCombinationSuppliers(string $combinationReference, TableNode $table): void
+    public function updateCombinationSuppliers(string $combinationReference, TableNode $table): void
     {
         $references = [];
         $productSuppliers = [];
@@ -91,7 +91,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
             ];
         }
 
-        $command = new SetCombinationSuppliersCommand(
+        $command = new UpdateCombinationSuppliersCommand(
             $this->getSharedStorage()->get($combinationReference),
             $productSuppliers
         );
