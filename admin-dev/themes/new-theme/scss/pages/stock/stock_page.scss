@@ -5,11 +5,12 @@
 @import "@scss/config/_bootstrap";
 /* stylelint-enable */
 
-.stock-app {
+.adminstockmanagement .stock-app {
   padding: 0;
 
   .header-toolbar {
     z-index: 989;
+    padding-right: 0;
     padding-left: 0;
     margin: -($grid-gutter-width / 2);
     margin-bottom: 1rem;
