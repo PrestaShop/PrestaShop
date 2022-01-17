@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInterface
@@ -60,7 +60,7 @@ final class ProductSuppliersCommandsBuilder implements ProductCommandsBuilderInt
         }
 
         $commands = [
-            new SetProductSuppliersCommand(
+            new UpdateProductSuppliersCommand(
                 $productId->getValue(),
                 $productSuppliers
             ),
