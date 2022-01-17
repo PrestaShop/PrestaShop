@@ -52,15 +52,22 @@ class ProductSupplierAssociation
     private $supplierId;
 
     /**
+     * @var ProductSupplierId|null
+     */
+    private $productSupplierId;
+
+    /**
      * @param int $productId
      * @param int $combinationId
      * @param int $supplierId
+     * @param int|null $productSupplierId
      */
-    public function __construct(int $productId, int $combinationId, int $supplierId)
+    public function __construct(int $productId, int $combinationId, int $supplierId, ?int $productSupplierId = null)
     {
         $this->productId = new ProductId($productId);
         $this->combinationId = $combinationId ? new CombinationId($combinationId) : new NoCombinationId();
         $this->supplierId = new SupplierId($supplierId);
+        $this->productSupplierId = null !== $productSupplierId ? new ProductSupplierId($productSupplierId) : null;
     }
 
     /**
@@ -85,5 +92,13 @@ class ProductSupplierAssociation
     public function getSupplierId(): SupplierId
     {
         return $this->supplierId;
+    }
+
+    /**
+     * @return ProductSupplierId|null
+     */
+    public function getProductSupplierId(): ?ProductSupplierId
+    {
+        return $this->productSupplierId;
     }
 }
