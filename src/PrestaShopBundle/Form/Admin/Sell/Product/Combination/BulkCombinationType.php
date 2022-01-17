@@ -28,8 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
+use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -66,7 +70,6 @@ class BulkCombinationType extends TranslatorAwareType
             ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('reference', TextType::class, [
-                //@todo: disabling toggle should be added to all fields so we can identify which input was intended to be updated and which not.
                 'disabling_toggle' => true,
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
@@ -74,8 +77,50 @@ class BulkCombinationType extends TranslatorAwareType
             ])
         ;
 
-        $builder->get('stock')->get('options')->remove('stock_location');
-        $builder->get('stock')->get('quantities')->remove('stock_movements');
-        $builder->get('price_impact')->remove('unit_price');
+        $this->modifyForm($builder);
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     */
+    private function modifyForm(FormBuilderInterface $builder): void
+    {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) {
+            $form = $event->getForm();
+
+            $stockType = $form->get('stock');
+            $stockQuantitiesType = $stockType->get('quantities');
+            $stockOptionsType = $stockType->get('options');
+            $priceImpactType = $form->get('price_impact');
+
+            $stockQuantitiesType->remove('stock_movements');
+            $stockOptionsType->remove('stock_location');
+            $priceImpactType->remove('unit_price');
+
+            $this->addDisablingToggle([
+                $stockQuantitiesType,
+                $stockOptionsType,
+                $priceImpactType,
+            ]);
+        });
+    }
+
+    /**
+     * @param FormInterface[] $forms
+     */
+    private function addDisablingToggle(array $forms): void
+    {
+        $formCloner = new FormCloner();
+        /* @var FormInterface $childForm */
+        foreach ($forms as $form) {
+            foreach ($form->all() as $childForm) {
+                $newForm = $formCloner->cloneForm(
+                    $childForm,
+                    array_merge($childForm->getConfig()->getOptions(), ['disabling_toggle' => true])
+                );
+
+                $form->add($newForm);
+            }
+        }
     }
 }
