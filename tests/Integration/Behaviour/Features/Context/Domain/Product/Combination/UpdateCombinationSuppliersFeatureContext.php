@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombination
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -95,17 +96,21 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
             $productSuppliers
         );
 
-        $productSupplierIds = $this->getCommandBus()->handle($command);
+        try {
+            $productSupplierIds = $this->getCommandBus()->handle($command);
 
-        Assert::assertSameSize(
-            $references,
-            $productSupplierIds,
-            'Cannot set references in shared storage. References and actual combination suppliers doesn\'t match.'
-        );
+            Assert::assertSameSize(
+                $references,
+                $productSupplierIds,
+                'Cannot set references in shared storage. References and actual combination suppliers doesn\'t match.'
+            );
 
-        /** @var ProductSupplierId $productSupplierId */
-        foreach ($productSupplierIds as $key => $productSupplierId) {
-            $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            /** @var ProductSupplierId $productSupplierId */
+            foreach ($productSupplierIds as $key => $productSupplierId) {
+                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            }
+        } catch (InvalidProductSupplierAssociationException $e) {
+            $this->setLastException($e);
         }
     }
 
