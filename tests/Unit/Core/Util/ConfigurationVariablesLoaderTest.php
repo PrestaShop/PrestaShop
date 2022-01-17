@@ -47,6 +47,20 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'database_password' => 'db_password',
                     'database_name' => 'test_db',
                     'database_prefix' => 'ps',
+                    'database_engine' => 'mysql',
+                    'cookie_key' => 'myCookie',
+                    'cookie_iv' => 'myCookieIV',
+                    'new_cookie_key' => 'myNewCookieKey',
+                    'mailer_transport' => 'smtp',
+                    'mailer_host' => 'smtp.gmail.com',
+                    'mailer_user' => 'myuser@gmail.com',
+                    'mailer_password' => 'thisismymailerpassword',
+                    'locale' => 'ar-AR',
+                    'secret' => 'this1s4paSspHraS3',
+                    'ps_caching' => 'CacheMemcache',
+                    'ps_cache_enable' => 'true',
+                    'ps_creation_date' => '2021-01-17',
+                    'use_debug_toolbar' => 'true',
                 ],
             ],
             $configurationVariablesLoader->loadEnvVariables([]));
@@ -67,6 +81,20 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'database_password' => 'db_password',
                     'database_name' => 'test_db',
                     'database_prefix' => 'ps',
+                    'database_engine' => 'mysql',
+                    'cookie_key' => 'myCookie',
+                    'cookie_iv' => 'myCookieIV',
+                    'new_cookie_key' => 'myNewCookieKey',
+                    'mailer_transport' => 'smtp',
+                    'mailer_host' => 'smtp.gmail.com',
+                    'mailer_user' => 'myuser@gmail.com',
+                    'mailer_password' => 'thisismymailerpassword',
+                    'locale' => 'ar-AR',
+                    'secret' => 'this1s4paSspHraS3',
+                    'ps_caching' => 'CacheMemcache',
+                    'ps_cache_enable' => 'true',
+                    'ps_creation_date' => '2021-01-17',
+                    'use_debug_toolbar' => 'true',
                 ],
             ], $configurationVariablesLoader->loadEnvVariables(['parameters' => []]));
     }
@@ -77,7 +105,14 @@ class ConfigurationVariablesLoaderTest extends TestCase
 PS_DATABASE_NAME=test_database
 PS_DATABASE_PASSWORD=random_pwd
 PS_DATABASE_PREFIX=test
+PS_DATABASE_ENGINE=postgresql
 PS_SOMETHING_NOT_ALLOWED=fake_value
+PS_MAILER_TRANSPORT=sendmail
+PS_MAILER_HOST=127.0.0.1
+PS_MAILER_USER=toto
+PS_LOCALE=fr-FR
+PS_CACHE_ENABLE=false
+PS_CREATION_DATE=2021-01-01
 ');
 
         $configurationVariablesLoader = new ConfigurationVariablesLoader($envFile);
@@ -88,9 +123,16 @@ PS_SOMETHING_NOT_ALLOWED=fake_value
                     'database_host' => '192.168.1.1',
                     'database_port' => '33123',
                     'database_user' => 'superadmin',
+                    'locale' => 'fr-FR',
                     'database_password' => 'random_pwd',
                     'database_name' => 'test_database',
                     'database_prefix' => 'test',
+                    'database_engine' => 'postgresql',
+                    'mailer_transport' => 'sendmail',
+                    'mailer_host' => '127.0.0.1',
+                    'mailer_user' => 'toto',
+                    'ps_cache_enable' => 'false',
+                    'ps_creation_date' => '2021-01-01',
                 ],
             ],
             $configurationVariablesLoader->loadEnvVariables(
@@ -99,6 +141,7 @@ PS_SOMETHING_NOT_ALLOWED=fake_value
                         'database_host' => '192.168.1.1',
                         'database_port' => '32768',
                         'database_user' => 'superadmin',
+                        'locale' => 'en-US',
                     ],
                 ]
             )
@@ -113,6 +156,20 @@ PS_DATABASE_NAME=test_db
 PS_DATABASE_USER=db_user
 PS_DATABASE_PASSWORD=db_password
 PS_DATABASE_PREFIX=ps
+PS_DATABASE_ENGINE=mysql
+PS_COOKIE_KEY=myCookie
+PS_COOKIE_IV=myCookieIV
+PS_NEW_COOKIE_KEY=myNewCookieKey
+PS_MAILER_TRANSPORT=smtp
+PS_MAILER_HOST=smtp.gmail.com
+PS_MAILER_USER=myuser@gmail.com
+PS_MAILER_PASSWORD=thisismymailerpassword
+PS_LOCALE=ar-AR
+PS_SECRET=this1s4paSspHraS3
+PS_CACHING=CacheMemcache
+PS_CACHE_ENABLE=true
+PS_CREATION_DATE=2021-01-17
+PS_USE_DEBUG_TOOLBAR=true
 ');
     }
 
