@@ -112,9 +112,9 @@ $product-page-padding-bottom: 80px !default;
   .product-header {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
-    margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     background: $white;
+    border-bottom: 1px solid $color-separator;
 
     &::before {
       position: fixed;
