@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use RuntimeException;
 
@@ -43,7 +44,7 @@ class UpdateProductSuppliersCommand
     private $productId;
 
     /**
-     * @var ProductSupplier[]
+     * @var ProductSupplierUpdate[]
      */
     private $productSuppliers;
 
@@ -55,7 +56,7 @@ class UpdateProductSuppliersCommand
      */
     public function __construct(int $productId, array $productSuppliers)
     {
-        $this->setProductSuppliers($productSuppliers);
+        $this->setProductSuppliers($productSuppliers, $productId);
         $this->productId = new ProductId($productId);
     }
 
@@ -68,7 +69,7 @@ class UpdateProductSuppliersCommand
     }
 
     /**
-     * @return ProductSupplier[]
+     * @return ProductSupplierUpdate[]
      */
     public function getProductSuppliers(): array
     {
@@ -77,8 +78,9 @@ class UpdateProductSuppliersCommand
 
     /**
      * @param array<int, array<string, mixed>> $productSuppliers
+     * @param int $productId
      */
-    private function setProductSuppliers(array $productSuppliers): void
+    private function setProductSuppliers(array $productSuppliers, int $productId): void
     {
         if (empty($productSuppliers)) {
             throw new RuntimeException(sprintf(
@@ -89,7 +91,9 @@ class UpdateProductSuppliersCommand
         }
 
         foreach ($productSuppliers as $productSupplier) {
-            $this->productSuppliers[] = new ProductSupplier(
+            $this->productSuppliers[] = new ProductSupplierUpdate(
+                $productId,
+                NoCombinationId::NO_COMBINATION_ID,
                 $productSupplier['supplier_id'],
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
