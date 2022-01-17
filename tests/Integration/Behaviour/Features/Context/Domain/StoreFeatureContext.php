@@ -44,7 +44,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 	 *
 	 * @param string $reference
 	 */
-	public function disableStoreWithReference(string $reference)
+	public function disableStoreWithReference(string $reference): void
 	{
 		$toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
 		$store = new Store(self::DUMMY_STORE_ID);
