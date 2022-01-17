@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
@@ -99,7 +98,7 @@ abstract class AbstractProductSupplierHandler
     {
         $associatedProductSupplierId = $this->productSupplierRepository->getIdByAssociation($productSupplierUpdate->getAssociation());
         if (null === $associatedProductSupplierId) {
-            throw new ProductSupplierNotFoundException(sprintf(
+            throw new InvalidProductSupplierAssociationException(sprintf(
                 'Could not find a ProductSupplier matching this association: %s',
                 (string) $productSupplierUpdate->getAssociation()
             ));
