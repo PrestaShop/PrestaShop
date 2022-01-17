@@ -103,7 +103,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I set product :productReference suppliers:
+     * @When I update product :productReference suppliers:
      *
      * @param string $productReference
      * @param TableNode $tableNode
