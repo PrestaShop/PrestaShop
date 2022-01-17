@@ -97,6 +97,28 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         return $productSupplier;
     }
 
+    public function getIdByAssociation(ProductSupplierAssociation $association): ?ProductSupplierId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('ps.id_product_supplier')
+            ->from($this->dbPrefix . 'product_supplier', 'ps')
+            ->where('ps.id_product = :productId')
+            ->andWhere('ps.id_product_attribute = :combinationId')
+            ->andWhere('ps.id_supplier = :supplierId')
+            ->setParameter('productId', $association->getProductId()->getValue())
+            ->setParameter('combinationId', $association->getCombinationId()->getValue())
+            ->setParameter('supplierId', $association->getSupplierId()->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result)) {
+            return null;
+        }
+
+        return new ProductSupplierId((int) $result['id_product_supplier']);
+    }
+
     /**
      * Returns the ID of the Supplier set as default for this product, data comes from product table
      * but is only returned if the association is present in product_supplier relation table.
