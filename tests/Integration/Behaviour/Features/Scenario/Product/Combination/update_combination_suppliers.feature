@@ -78,7 +78,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     # Association and update are performed by two distinct commands, all combinations are associated
     When I associate suppliers to product "product1"
       | supplier1 |
-    And I set following suppliers for combination "product1SWhite":
+    And I update following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
     Then product product1 should have the following suppliers assigned:
@@ -105,7 +105,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |
       | supplier2 |
       | supplier3 |
-    And I set following suppliers for combination "product1SWhite":
+    And I update following suppliers for combination "product1SWhite":
       | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1 | supplier1          | new sup white shirt S 1        | USD      | 10                 |
       | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
@@ -153,7 +153,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     When I associate suppliers to product "product1"
       | supplier3 |
       | supplier1 |
-    And I set following suppliers for combination "product1SWhite":
+    And I update following suppliers for combination "product1SWhite":
       | reference                  | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1    | supplier1          | sup white shirt S 1            | USD      | 10                 |
       | product1SWhiteSupplier3bis | supplier3          | sup S3                         | USD      | 5.5                |
@@ -180,7 +180,7 @@ Feature: Update product combination suppliers in Back Office (BO)
     When I associate suppliers to product "product1"
       | supplier1 |
       | supplier2 |
-    When I set following suppliers for combination "product1SWhite":
+    When I update following suppliers for combination "product1SWhite":
       | reference                  | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1    | supplier1          | new sup white shirt S 1        | USD      | 10                 |
       | product1SWhiteSupplier2Bis | supplier2          | sup S2                         | USD      | 0                  |
@@ -192,7 +192,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | new sup white shirt S 1        | USD      | 10                 |
       | sup S2                         | USD      | 0                  |
     # Now we try updating a removed product supplier
-    When I set following suppliers for combination "product1SWhite":
+    When I update following suppliers for combination "product1SWhite":
       | reference                  | supplier reference | combination supplier reference | currency | price tax excluded |
       | product1SWhiteSupplier1    | supplier1          | new sup white shirt S 1        | USD      | 10                 |
       | newProduct1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |

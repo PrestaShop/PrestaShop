@@ -31,11 +31,11 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements SetCombinationSuppliersHandlerInterface
+class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -65,7 +65,7 @@ final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandle
     /**
      * {@inheritdoc}
      */
-    public function handle(SetCombinationSuppliersCommand $command): array
+    public function handle(UpdateCombinationSuppliersCommand $command): array
     {
         $combinationId = $command->getCombinationId();
         $combination = $this->combinationRepository->get($combinationId);
@@ -76,7 +76,7 @@ final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandle
             $productSuppliers[] = $this->loadEntityFromDTO($productSupplierDTO);
         }
 
-        return $this->productSupplierUpdater->setCombinationSuppliers(
+        return $this->productSupplierUpdater->updateCombinationSuppliers(
             $productId,
             $combinationId,
             $productSuppliers

@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\CombinationSupplierAssociation;
@@ -36,9 +36,9 @@ use RuntimeException;
 /**
  * Associates supplier with product combination
  *
- * @see SetCombinationSuppliersHandlerInterface
+ * @see UpdateCombinationSuppliersHandlerInterface
  */
-class SetCombinationSuppliersCommand
+class UpdateCombinationSuppliersCommand
 {
     /**
      * @var CombinationId
