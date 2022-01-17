@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductSupplierValidator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdatePro
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\SupplierAssociationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -97,19 +98,24 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         return $productSupplier;
     }
 
-    public function getIdByAssociation(ProductSupplierAssociation $association): ?ProductSupplierId
+    public function getIdByAssociation(SupplierAssociationInterface $association): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('ps.id_product_supplier')
             ->from($this->dbPrefix . 'product_supplier', 'ps')
-            ->where('ps.id_product = :productId')
             ->andWhere('ps.id_product_attribute = :combinationId')
             ->andWhere('ps.id_supplier = :supplierId')
-            ->setParameter('productId', $association->getProductId()->getValue())
             ->setParameter('combinationId', $association->getCombinationId()->getValue())
             ->setParameter('supplierId', $association->getSupplierId()->getValue())
         ;
+
+        if (null !== $association->getProductId()) {
+            $qb
+                ->andWhere('ps.id_product = :productId')
+                ->setParameter('productId', $association->getProductId()->getValue())
+            ;
+        }
 
         $result = $qb->execute()->fetchAssociative();
         if (empty($result)) {
@@ -309,11 +315,11 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param CombinationId|null $combinationId
+     * @param CombinationIdInterface|null $combinationId
      *
      * @return array
      */
-    public function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
+    public function getProductSuppliersInfo(ProductId $productId, ?CombinationIdInterface $combinationId = null): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb->select('*')
@@ -333,8 +339,6 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             $qb->andWhere('ps.id_product_attribute = :combinationId')
                 ->setParameter('combinationId', $combinationId->getValue())
             ;
-        } else {
-            $qb->andWhere('ps.id_product_attribute = 0');
         }
 
         return $qb->execute()->fetchAll();
