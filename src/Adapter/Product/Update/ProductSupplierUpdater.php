@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Supplier\Repository\SupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
@@ -112,13 +113,15 @@ class ProductSupplierUpdater
         $uselessProductSupplierIds = $this->productSupplierRepository->getUselessProductSupplierIds($productId, $supplierIds);
         $this->productSupplierRepository->bulkDelete($uselessProductSupplierIds);
 
+        // Get list of combinations for product, or NoCombination for products without association
+        $combinationIds = $this->combinationRepository->getCombinationIdsByProductId($productId);
+        if (empty($combinationIds)) {
+            $combinationIds = [new NoCombinationId()];
+        }
+
         // Now we search for each associated supplier if some associations are missing
         foreach ($supplierIds as $supplierId) {
             $supplierAssociations = $this->productSupplierRepository->getAssociations($productId, $supplierId);
-            $combinationIds = $this->combinationRepository->getCombinationIdsByProductId($productId);
-            if (empty($combinationIds)) {
-                $combinationIds = [new NoCombinationId()];
-            }
 
             // Loop through all combinations to check if they have a matching association if not it will need to be created
             foreach ($combinationIds as $combinationId) {
@@ -133,7 +136,7 @@ class ProductSupplierUpdater
                     $productSupplier->id_product_attribute = $combinationId->getValue();
                     $productSupplier->id_supplier = $supplierId->getValue();
                     $productSupplier->id_currency = $this->defaultCurrencyId;
-                    $productSupplier->add();
+                    $this->productSupplierRepository->add($productSupplier);
                 }
             }
         }
@@ -179,8 +182,8 @@ class ProductSupplierUpdater
         CombinationId $combinationId,
         array $productSuppliers
     ): array {
-        // Make sure all non-combination suppliers are deleted
-        $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId);
+        // Only pick association that match no combination to clean them (in case some are present because of inconsistent DB)
+        $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId, new NoCombinationId());
         $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
 
         $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
@@ -315,41 +318,11 @@ class ProductSupplierUpdater
 
     /**
      * @param ProductId $productId
-     * @param array<int, ProductSupplier> $providedProductSuppliers
-     * @param CombinationId|null $combinationId
+     * @param CombinationIdInterface|null $combinationId
      *
      * @return array<int, ProductSupplierId>
      */
-    private function getDeletableProductSupplierIds(
-        ProductId $productId,
-        array $providedProductSuppliers,
-        ?CombinationId $combinationId
-    ): array {
-        $existingIds = $this->getProductSupplierIds($productId, $combinationId);
-        $idsForDeletion = [];
-
-        foreach ($existingIds as $productSupplierId) {
-            $idsForDeletion[$productSupplierId->getValue()] = $productSupplierId;
-        }
-
-        foreach ($providedProductSuppliers as $productSupplier) {
-            $productSupplierId = (int) $productSupplier->id;
-
-            if (isset($idsForDeletion[$productSupplierId])) {
-                unset($idsForDeletion[$productSupplierId]);
-            }
-        }
-
-        return $idsForDeletion;
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param CombinationId|null $combinationId
-     *
-     * @return array<int, ProductSupplierId>
-     */
-    private function getProductSupplierIds(ProductId $productId, ?CombinationId $combinationId = null): array
+    private function getProductSupplierIds(ProductId $productId, ?CombinationIdInterface $combinationId = null): array
     {
         return array_map(function (array $currentSupplier): ProductSupplierId {
             return new ProductSupplierId((int) $currentSupplier['id_product_supplier']);
