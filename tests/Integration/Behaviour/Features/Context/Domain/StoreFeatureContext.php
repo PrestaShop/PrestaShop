@@ -37,31 +37,31 @@ use Store;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
-	private const DUMMY_STORE_ID = 1;
+    private const DUMMY_STORE_ID = 1;
 
-	/**
-	 * @When I toggle :reference
-	 *
-	 * @param string $reference
-	 */
-	public function disableStoreWithReference(string $reference): void
-	{
-		$toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
-		$store = new Store(self::DUMMY_STORE_ID);
-		$this->getCommandBus()->handle($toggleStatusCommand);
-		SharedStorage::getStorage()->set($reference, $store->active);
-	}
-	
-	/**
-	 * @Then the store :reference is toggled
-	 *
-	 * @param string $reference
-	 */
-	public function isStoreToggleWithReference(string $reference): void
-	{
-		$status = SharedStorage::getStorage()->get($reference);
-		$storeQuery = new GetStore(self::DUMMY_STORE_ID);
-		$storeUpdated = $this->getQueryBus()->handle($storeQuery);
-		Assert::assertEquals((bool)$storeUpdated->active,!(bool)$status);
-	}
+    /**
+     * @When I toggle :reference
+     *
+     * @param string $reference
+     */
+    public function disableStoreWithReference(string $reference): void
+    {
+        $toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
+        $store = new Store(self::DUMMY_STORE_ID);
+        $this->getCommandBus()->handle($toggleStatusCommand);
+        SharedStorage::getStorage()->set($reference, $store->active);
+    }
+
+    /**
+     * @Then the store :reference is toggled
+     *
+     * @param string $reference
+     */
+    public function isStoreToggleWithReference(string $reference): void
+    {
+        $status = SharedStorage::getStorage()->get($reference);
+        $storeQuery = new GetStore(self::DUMMY_STORE_ID);
+        $storeUpdated = $this->getQueryBus()->handle($storeQuery);
+        Assert::assertEquals((bool)$storeUpdated->active, !(bool)$status);
+    }
 }
