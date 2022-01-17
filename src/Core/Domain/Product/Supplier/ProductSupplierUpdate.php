@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier;
 
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\SupplierAssociationInterface;
 
 /**
  * Transfers data of product supplier
@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 class ProductSupplierUpdate
 {
     /**
-     * @var ProductSupplierAssociation
+     * @var SupplierAssociationInterface
      */
     private $association;
 
@@ -57,38 +57,27 @@ class ProductSupplierUpdate
     private $priceTaxExcluded;
 
     /**
-     * @param int $productId
-     * @param int $combinationId
-     * @param int $supplierId
+     * @param SupplierAssociationInterface $association
      * @param int $currencyId
      * @param string $reference
      * @param string $priceTaxExcluded
-     * @param int|null $productSupplierId
      */
     public function __construct(
-        int $productId,
-        int $combinationId,
-        int $supplierId,
+        SupplierAssociationInterface $association,
         int $currencyId,
         string $reference,
-        string $priceTaxExcluded,
-        ?int $productSupplierId
+        string $priceTaxExcluded
     ) {
-        $this->association = new ProductSupplierAssociation(
-            $productId,
-            $combinationId,
-            $supplierId,
-            $productSupplierId
-        );
+        $this->association = $association;
         $this->currencyId = new CurrencyId($currencyId);
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
     }
 
     /**
-     * @return ProductSupplierAssociation
+     * @return SupplierAssociationInterface
      */
-    public function getAssociation(): ProductSupplierAssociation
+    public function getAssociation(): SupplierAssociationInterface
     {
         return $this->association;
     }
