@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderInterface
@@ -60,7 +60,7 @@ class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderI
         }
 
         $commands = [
-            new SetCombinationSuppliersCommand(
+            new UpdateCombinationSuppliersCommand(
                 $combinationId->getValue(),
                 $productSuppliers
             ),
