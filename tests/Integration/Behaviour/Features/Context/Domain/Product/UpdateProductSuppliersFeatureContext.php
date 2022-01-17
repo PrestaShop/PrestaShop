@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociat
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
@@ -223,8 +224,46 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoSuppliers(string $productReference): void
     {
         Assert::assertEmpty(
+            $this->getProductSupplierOptions($productReference)->getSupplierIds(),
+            sprintf('Expected product %s to have no suppliers assigned', $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should not have suppliers infos
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoSuppliersInfo(string $productReference): void
+    {
+        Assert::assertEmpty(
             $this->getProductSupplierOptions($productReference)->getSuppliersInfo(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
+        );
+    }
+
+    /**
+     * @Then product :productReference should have the following suppliers assigned:
+     *
+     * @param string $productReference
+     */
+    public function assertAssignedSuppliers(string $productReference, TableNode $tableNode): void
+    {
+        $supplierIds = $this->getProductSupplierOptions($productReference)->getSupplierIds();
+        $expectedSupplierIds = [];
+        foreach ($tableNode->getRows() as $row) {
+            $expectedSupplierIds[] = $this->getSharedStorage()->get($row[0]);
+        }
+
+        Assert::assertEquals(
+            $expectedSupplierIds,
+            $supplierIds,
+            sprintf(
+                'Expected product %s to have no suppliers %s but got %s instead',
+                $productReference,
+                implode(',', $expectedSupplierIds),
+                implode(',', $supplierIds)
+            )
         );
     }
 
@@ -234,6 +273,14 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertFailedUpdateDefaultSupplierWhichIsNotAssigned(): void
     {
         $this->assertLastErrorIs(ProductSupplierNotAssociatedException::class);
+    }
+
+    /**
+     * @Then I should get error that an invalid association has been used
+     */
+    public function assertInvalidProductSupplierAssociation(): void
+    {
+        $this->assertLastErrorIs(InvalidProductSupplierAssociationException::class);
     }
 
     /**
