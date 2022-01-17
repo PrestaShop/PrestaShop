@@ -36,6 +36,7 @@ import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
+import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -94,6 +95,7 @@ export default class CombinationsManager {
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.productId);
     this.productAttributeGroups = [];
+    this.bulkCombinationFormHandler = new BulkFormHandler();
 
     this.init();
   }

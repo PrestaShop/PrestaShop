@@ -159,6 +159,7 @@ class CombinationController extends FrameworkBundleAdminController
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
+            'bulkCombinationForm' => $this->createForm(BulkCombinationType::class)->createView(),
             'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
         ]);
     }

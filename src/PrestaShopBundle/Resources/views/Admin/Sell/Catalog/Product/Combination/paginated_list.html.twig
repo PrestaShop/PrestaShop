@@ -26,30 +26,9 @@
 
 {% block combinations_paginated_list %}
   <div id="combinations-paginated-list" class="d-none">
-    {# Combination filters for paginated list #}
-    <div id="combinations_filters"
-         data-translations="{{ {
-           'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
-           'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
-         }|json_encode }}"
-    ></div>
 
-    <div id="combination-edit-modal"
-         data-empty-image="{{ asset('themes/new-theme/img/empty_state/combinations_history.png') }}"
-         data-translations="{{ {
-          'modal.save': 'Save'|trans({}, 'Admin.Actions'),
-          'modal.close': 'Close'|trans({}, 'Admin.Actions'),
-          'modal.previous': 'Previous combination'|trans({}, 'Admin.Catalog.Feature'),
-          'modal.next': 'Next combination'|trans({}, 'Admin.Catalog.Feature'),
-          'modal.history.editedCombination': 'Edited combinations (%editedNb%)'|trans({}, 'Admin.Catalog.Feature'),
-          'modal.history.confirmTitle': 'Discard changes?'|trans({}, 'Admin.Catalog.Notification'),
-          'modal.history.confirmBody': 'All unsaved modifications made on the combination [1]%combinationName%[/1] will be lost.'|trans({'[1]': '<span class="font-weight-bold">', '[/1]': '</span>'}, 'Admin.Catalog.Notification'),
-          'modal.cancel': 'Cancel'|trans({}, 'Admin.Actions'),
-          'modal.confirm': 'Discard'|trans({}, 'Admin.Actions'),
-          'modal.history.empty': 'Here, you can have a look at the combinations you have edited. The list will reset when you close the editing window.'|trans({}, 'Admin.Catalog.Feature'),
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig') }}
 
-         }|json_encode }}"
-    ></div>
     <div class="justify-content-center" id="combinations-list">
       <div class="spinner-product-combinations-container" id="productCombinationsLoading">
         <div class="spinner spinner-primary"></div>
@@ -71,5 +50,11 @@
         {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
       </button>
     </div>
+
+    <script id="bulk-combination-form" type="text/html">
+      {{ form_start(bulkCombinationForm) }}
+      {{ form_widget(bulkCombinationForm) }}
+      {{ form_end(bulkCombinationForm) }}
+    </script>
   </div>
 {% endblock %}
