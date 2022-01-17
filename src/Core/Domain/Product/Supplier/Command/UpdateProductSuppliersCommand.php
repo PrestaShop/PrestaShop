@@ -35,7 +35,7 @@ use RuntimeException;
 /**
  * Updates product suppliers
  */
-class SetProductSuppliersCommand
+class UpdateProductSuppliersCommand
 {
     /**
      * @var ProductId
@@ -51,7 +51,7 @@ class SetProductSuppliersCommand
      * @param int $productId
      * @param array<int, array<string, mixed>> $productSuppliers
      *
-     * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
+     * @see UpdateProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
      */
     public function __construct(int $productId, array $productSuppliers)
     {
