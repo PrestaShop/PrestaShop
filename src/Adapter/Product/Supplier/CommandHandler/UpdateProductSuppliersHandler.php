@@ -65,10 +65,10 @@ final class UpdateProductSuppliersHandler extends AbstractProductSupplierHandler
         $productSuppliers = [];
 
         foreach ($command->getProductSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO);
+            $productSuppliers[] = $this->loadEntityFromDTO($productSupplierDTO);
         }
 
-        return $this->productSupplierUpdater->setProductSuppliers(
+        return $this->productSupplierUpdater->updateSuppliersForProduct(
             $productId,
             $productSuppliers
         );

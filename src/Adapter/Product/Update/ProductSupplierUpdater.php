@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -151,7 +152,7 @@ class ProductSupplierUpdater
      *
      * @return array<int, ProductSupplierId>
      */
-    public function setProductSuppliers(
+    public function updateSuppliersForProduct(
         ProductId $productId,
         array $productSuppliers
     ): array {
@@ -161,7 +162,7 @@ class ProductSupplierUpdater
             $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
         }
 
-        $this->persistProductSuppliers($productId, $productSuppliers);
+        $this->updateProductSuppliers($productId, $productSuppliers);
 
         return $this->getProductSupplierIds($productId);
     }
@@ -182,7 +183,7 @@ class ProductSupplierUpdater
         $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
 
-        $this->persistProductSuppliers($productId, $productSuppliers, $combinationId);
+        $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
 
         return $this->getProductSupplierIds($productId, $combinationId);
     }
@@ -289,30 +290,27 @@ class ProductSupplierUpdater
      * @param array<int, ProductSupplier> $productSuppliers
      * @param CombinationId|null $combinationId
      */
-    private function persistProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    private function updateProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
     {
-        // Delete before updating to avoid potential duplicate entry (if updated entry has same value as a deleted one)
-        $deletableProductSupplierIds = $this->getDeletableProductSupplierIds($productId, $productSuppliers, $combinationId);
-        $this->productSupplierRepository->bulkDelete($deletableProductSupplierIds);
-
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
+        $updateDefaultValues = false;
         foreach ($productSuppliers as $productSupplier) {
-            if ($productSupplier->id) {
-                $this->productSupplierRepository->update($productSupplier);
-            } else {
-                $this->productSupplierRepository->add($productSupplier);
+            if (!$productSupplier->id) {
+                throw new ProductSupplierNotFoundException(sprintf(
+                    'Trying to update a nonexistent ProductSupplier for product #%d', $productId->getValue()
+                ));
+            }
+
+            $this->productSupplierRepository->update($productSupplier);
+            if ($defaultSupplierId->getValue() === (int) $productSupplier->id_supplier) {
+                $updateDefaultValues = true;
             }
         }
 
-        // Check if product has a default supplier if not use the first one
-        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
-        if (null === $defaultSupplierId) {
-            /** @var ProductSupplier $defaultSupplier */
-            $defaultSupplier = reset($productSuppliers);
-            $defaultSupplierId = new SupplierId((int) $defaultSupplier->id_supplier);
+        // If product supplier associated to default supplier was updated we need to update the product's default supplier related data
+        if ($updateDefaultValues) {
+            $this->updateDefaultSupplier($productId, $defaultSupplierId);
         }
-
-        // Always update default supplier since we also update product's default values that may have changed
-        $this->updateDefaultSupplier($productId, $defaultSupplierId);
     }
 
     /**
