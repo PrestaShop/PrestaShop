@@ -40,19 +40,19 @@ use PrestaShopException;
  */
 class ToggleStoreStatusHandler extends AbstractStoreHandler implements ToggleStoreStatusHandlerInterface
 {
-	/**
-	 * {@inheritdoc}
-	 */
-	public function handle(ToggleStoreStatusCommand $command): void
-	{
-		$store = $this->getStore($command->getStoreId());
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(ToggleStoreStatusCommand $command): void
+    {
+        $store = $this->getStore($command->getStoreId());
 
-		try {
-			if (false === $store->toggleStatus()) {
-				throw new CannotToggleStoreStatusException(sprintf('Unable to toggle status of store with id "%d"', $command->getStoreId()->getValue()), CannotToggleStoreStatusException::SINGLE_TOGGLE);
-			}
-		} catch (PrestaShopException $e) {
-			throw new StoreException(sprintf('An error occurred when toggling status of store with id "%d"', $command->getStoreId()->getValue()), 0, $e);
-		}
-	}
+        try {
+            if (false === $store->toggleStatus()) {
+                throw new CannotToggleStoreStatusException(sprintf('Unable to toggle status of store with id "%d"', $command->getStoreId()->getValue()), CannotToggleStoreStatusException::SINGLE_TOGGLE);
+            }
+        } catch (PrestaShopException $e) {
+            throw new StoreException(sprintf('An error occurred when toggling status of store with id "%d"', $command->getStoreId()->getValue()), 0, $e);
+        }
+    }
 }
