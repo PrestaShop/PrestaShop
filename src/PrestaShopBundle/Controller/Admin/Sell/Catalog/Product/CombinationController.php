@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAtt
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
@@ -47,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -100,6 +102,42 @@ class CombinationController extends FrameworkBundleAdminController
             'lightDisplay' => $liteDisplaying,
             'combinationForm' => $combinationForm->createView(),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $combinationId
+     *
+     * @return JsonResponse
+     */
+    public function bulkEditAction(Request $request, int $combinationId): JsonResponse
+    {
+        try {
+            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId);
+        } catch (CombinationNotFoundException $e) {
+            return $this->returnErrorJsonResponse(
+                [$this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        try {
+            $bulkCombinationForm->handleRequest($request);
+            $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                return $this->json([]);
+            }
+        } catch (CombinationException $e) {
+            return $this->returnErrorJsonResponse(
+                [$this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return $this->json($this->getFormErrorsForJS($bulkCombinationForm));
     }
 
     /**
@@ -388,6 +426,22 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return FormHandlerInterface
+     */
+    private function getBulkCombinationFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.bulk_combination_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getBulkCombinationFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.bulk_combination_form_builder');
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     private function getCombinationItemFormBuilder(): FormBuilderInterface
@@ -439,6 +493,10 @@ class CombinationController extends FrameworkBundleAdminController
                     [sprintf('"%s"', $this->trans('Stock location', 'Admin.Catalog.Feature'))]
                 ),
             ],
+            CombinationNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }
