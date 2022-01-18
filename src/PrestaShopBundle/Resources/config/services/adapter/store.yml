@@ -1,7 +1,6 @@
 services:
   _defaults:
     public: true
-      
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     tags:
