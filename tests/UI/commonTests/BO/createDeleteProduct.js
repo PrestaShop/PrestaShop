@@ -25,7 +25,7 @@ let page;
  * @param baseContext {string} String to identify the test
  */
 function createProductTest(productData, baseContext = 'commonTests-createProductTest') {
-  describe('PRE-TEST: Create product', async () => {
+  describe(`PRE-TEST: Create product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -82,7 +82,7 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
  * @param baseContext {string} String to identify the test
  */
 function deleteProductTest(productData, baseContext = 'commonTests-deleteProductTest') {
-  describe('POST-TEST: Delete product', async () => {
+  describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
