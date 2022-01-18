@@ -78,6 +78,7 @@ class ProductData {
       combinations: 'Size - S, Color - White',
       discount: faker.random.number({min: 10, max: 100}),
       startingAt: faker.random.number({min: 2, max: 5}),
+      reductionType: '%',
     };
 
     // Quantities form

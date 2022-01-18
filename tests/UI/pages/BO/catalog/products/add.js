@@ -36,9 +36,9 @@ class AddProduct extends BOBasePage {
     this.openFileManagerDiv = `${this.productImageDropZoneDiv} .disabled.openfilemanager.dz-clickable`;
     this.imagePreviewBlock = `${this.productImageDropZoneDiv} > div.dz-complete.dz-image-preview`;
 
-    this.productShortDescriptionIframe = '#form_step1_description_short';
+    this.productShortDescriptionIframe = '#form_step1_description_short_1_ifr';
     this.dangerMessageShortDescription = '#form_step1_description_short .has-danger li';
-    this.productDescriptionIframe = '#form_step1_description';
+    this.productDescriptionIframe = '#form_step1_description_1_ifr';
 
     this.productWithCombinationRadioButton = '#show_variations_selector div:nth-of-type(2) input';
     this.productReferenceInput = '#form_step6_reference';
@@ -169,43 +169,31 @@ class AddProduct extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setProduct(page, productData) {
+    // Set basic settings form
     await this.setBasicSettings(page, productData);
     if (productData.type === 'Pack of products') {
       await this.addPackOfProducts(page, productData.pack);
     }
+    // Set combinations form
     if (productData.productHasCombinations) {
       await this.setCombinationsInProduct(page, productData);
     }
+    // Set quantities/virtual form
     if (!productData.productHasCombinations) {
       await this.setQuantitiesSettings(page, productData);
     }
+    // Set pricing form
     if (productData.productWithSpecificPrice) {
       await this.addSpecificPrice(page, productData.specificPrice);
     }
     if (productData.productWithEcoTax) {
       await this.addEcoTax(page, productData.ecoTax);
     }
+    // Set status
     await this.setProductStatus(page, productData.status);
 
+    // Save product
     return this.saveProduct(page);
-  }
-
-  /**
-   * Set value on tinyMce textarea
-   * @param page {Page} Browser tab
-   * @param selector {string} Value of selector to use
-   * @param value {string} Text to set on tinymce input
-   * @returns {Promise<void>}
-   */
-  async setValueOnTinymceInput(page, selector, value) {
-    // Select all
-    await page.click(`${selector} .mce-edit-area`, {clickCount: 3});
-
-    // Delete all text
-    await page.keyboard.press('Backspace');
-
-    // Fill the text
-    await page.keyboard.type(value);
   }
 
   /**
@@ -473,7 +461,7 @@ class AddProduct extends BOBasePage {
     }
     await this.setValue(page, this.specificPriceStartingAtInput, specificPriceData.startingAt);
     await this.setValue(page, this.specificPriceApplyDiscountOfInput, specificPriceData.discount);
-    await this.selectByVisibleText(page, this.specificPriceReductionType, specificPriceData.specificPriceReductionType);
+    await this.selectByVisibleText(page, this.specificPriceReductionType, specificPriceData.reductionType);
 
     // Apply specific price
     await this.scrollTo(page, this.specificPriceApplyButton);
@@ -602,6 +590,8 @@ class AddProduct extends BOBasePage {
     await this.scrollTo(page, this.labelWhenInStockInput);
     await this.setValue(page, this.labelWhenInStockInput, productData.labelWhenInStock);
     await this.setValue(page, this.labelWhenOutOfStock, productData.LabelWhenOutOfStock);
+
+    return this.saveProduct(page);
   }
 
   /**
