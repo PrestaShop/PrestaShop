@@ -121,6 +121,21 @@ export default class CombinationsService implements ServiceType {
   }
 
   /**
+   * @param {number} combinationId
+   * @param {FormData} data
+   *
+   * @returns {Promise}
+   */
+  bulkUpdate(combinationId, data) {
+    return $.ajax({
+      url: this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}),
+      data,
+      method: 'POST',
+      processData: false,
+    });
+  }
+
+  /**
    * @returns {Promise}
    */
   getCombinationIds(): JQuery.jqXHR<any> {
