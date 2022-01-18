@@ -42,7 +42,7 @@ services:
           'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/optimiser-boutique/personnaliser-apparence-boutique/pages-gerer-contenu-statique'
           'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/optimizar-tienda/personalizar-diseno-tienda/paginas-gestionar-contenido-estatico'
           'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/migliorare-negozio/personalizzare-design-negozio/pagine-gestione-contenuti-statici'
-          '_fallback': 'hhttps://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/customizing-store-design/pages-managing-static-content'
+          '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/customizing-store-design/pages-managing-static-content'
         'debug_mode':
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/configuring-shop/advanced-parameters/performance#performance-debugmode'
           'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/configurer-boutique/parametres-avances/performance#parametresdeperformances-modedebug'
