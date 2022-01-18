@@ -75,7 +75,7 @@ services:
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-orders/credit-slips'
         'carrier':
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/managing-shipping/carriers'
-          'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/optimiser-boutique/gerer-livraisons'
+          'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/optimiser-boutique/gerer-livraisons/gerer-transporteurs'
           'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/optimizar-tienda/gestionar-transporte/gestionar-transportistas'
           'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/migliorare-negozio/gestire-spedizioni/corrieri'
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/managing-shipping/carriers'
