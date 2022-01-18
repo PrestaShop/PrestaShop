@@ -31,6 +31,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints as PrestaShopAssert;
 use PrestaShopBundle\Entity\Repository\StoreRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table()
@@ -92,7 +93,7 @@ class Store
     private $fax;
 
     /**
-     * @PrestaShopAssert\Email
+     * @Assert\Email
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $email;
