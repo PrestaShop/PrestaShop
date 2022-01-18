@@ -105,8 +105,10 @@ class ProductSupplierUpdater
      *
      * @param ProductId $productId
      * @param SupplierId[] $supplierIds
+     *
+     * @return ProductSupplierAssociation[]
      */
-    public function associateSuppliers(ProductId $productId, array $supplierIds): void
+    public function associateSuppliers(ProductId $productId, array $supplierIds): array
     {
         // We get useless IDs and perform a bulk delete, we don't clean via a direct query even if we could because we
         // need hook executed on each deleted ProductSupplier instance
@@ -120,6 +122,7 @@ class ProductSupplierUpdater
         }
 
         // Now we search for each associated supplier if some associations are missing
+        $productAssociations = [];
         foreach ($supplierIds as $supplierId) {
             $supplierAssociations = $this->productSupplierRepository->getAssociationsForSupplier($productId, $supplierId);
 
@@ -137,6 +140,15 @@ class ProductSupplierUpdater
                     $productSupplier->id_supplier = $supplierId->getValue();
                     $productSupplier->id_currency = $this->defaultCurrencyId;
                     $this->productSupplierRepository->add($productSupplier);
+
+                    $productAssociations[] = new ProductSupplierAssociation(
+                        $productId->getValue(),
+                        $combinationId->getValue(),
+                        $supplierId->getValue(),
+                        (int) $productSupplier->id
+                    );
+                } else {
+                    $productAssociations[] = reset($matchingAssociations);
                 }
             }
         }
@@ -147,6 +159,8 @@ class ProductSupplierUpdater
             $defaultSupplierId = reset($supplierIds);
             $this->updateDefaultSupplier($productId, $defaultSupplierId);
         }
+
+        return $productAssociations;
     }
 
     /**
