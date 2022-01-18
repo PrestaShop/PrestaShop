@@ -31,6 +31,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
@@ -321,6 +322,23 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
     }
 
+    public function testItSucceedsForCoordinateTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('-48.86622', new TypedRegex('coordinate'));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForIsbn
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForCoordinateTypeWhenInvalidCharacterGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex('coordinate'), $invalidChar);
+    }
+
     /**
      * @return string[][]
      */
@@ -599,6 +617,40 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForCoordinate(): Generator
+    {
+        yield ['abcdef'];
+        yield ['what'];
+        yield ['!'];
+        yield ['@'];
+        yield ['$'];
+        yield ['%s'];
+        yield ['^'];
+        yield ['&'];
+        yield ['*'];
+        yield ['('];
+        yield [')'];
+        yield ['+'];
+        yield ['='];
+        yield ['{'];
+        yield ['}'];
+        yield ['['];
+        yield ['['];
+        yield ['<'];
+        yield ['>'];
+        yield ['?'];
+        yield ['/'];
+        yield ['\\'];
+        yield ['\''];
+        yield [';'];
+        yield [':'];
+        yield ['.'];
+        yield [','];
+    }
+
+    /**
      * @return TypedRegexValidator
      */
     protected function createValidator(): TypedRegexValidator
@@ -622,10 +674,10 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
-     * @param TypedRegex $constraint
+     * @param Constraint $constraint
      * @param string $invalidChar
      */
-    private function assertViolationIsRaised(TypedRegex $constraint, string $invalidChar): void
+    private function assertViolationIsRaised(Constraint $constraint, string $invalidChar): void
     {
         $this->validator->validate($invalidChar, $constraint);
 
