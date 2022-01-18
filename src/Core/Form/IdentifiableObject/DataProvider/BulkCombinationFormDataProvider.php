@@ -61,6 +61,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        // form is common for all combinations, so this method is not used
+        //@todo: form is common for all combinations, so data is not needed for single combination right?
+        return [];
     }
 }
