@@ -153,7 +153,7 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return array<int, ProductSupplierId>
+     * @return array<int, ProductSupplierAssociation>
      */
     public function updateSuppliersForProduct(
         ProductId $productId,
@@ -165,9 +165,7 @@ class ProductSupplierUpdater
             $this->throwInvalidTypeException($productId, 'setCombinationSuppliers');
         }
 
-        $this->updateProductSuppliers($productId, $productSuppliers);
-
-        return $this->getProductSupplierIds($productId);
+        return $this->updateProductSuppliers($productId, $productSuppliers, new NoCombinationId());
     }
 
     /**
@@ -175,7 +173,7 @@ class ProductSupplierUpdater
      * @param CombinationId $combinationId
      * @param array<int, ProductSupplier> $productSuppliers
      *
-     * @return array<int, ProductSupplierId>
+     * @return array<int, ProductSupplierAssociation>
      */
     public function updateCombinationSuppliers(
         ProductId $productId,
@@ -186,9 +184,7 @@ class ProductSupplierUpdater
         $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId, new NoCombinationId());
         $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
 
-        $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
-
-        return $this->getProductSupplierIds($productId, $combinationId);
+        return $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
     }
 
     /**
@@ -292,10 +288,13 @@ class ProductSupplierUpdater
     /**
      * @param ProductId $productId
      * @param array<int, ProductSupplier> $productSuppliers
-     * @param CombinationId|null $combinationId
+     * @param CombinationIdInterface $combinationId
+     *
+     * @return ProductSupplierAssociation[]
      */
-    private function updateProductSuppliers(ProductId $productId, array $productSuppliers, ?CombinationId $combinationId = null): void
+    private function updateProductSuppliers(ProductId $productId, array $productSuppliers, CombinationIdInterface $combinationId): array
     {
+        $updatedAssociations = [];
         $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
         $updateDefaultValues = false;
         foreach ($productSuppliers as $productSupplier) {
@@ -309,12 +308,20 @@ class ProductSupplierUpdater
             if ($defaultSupplierId->getValue() === (int) $productSupplier->id_supplier) {
                 $updateDefaultValues = true;
             }
+            $updatedAssociations[] = new ProductSupplierAssociation(
+                $productId->getValue(),
+                $combinationId->getValue(),
+                (int) $productSupplier->id_supplier,
+                (int) $productSupplier->id
+            );
         }
 
         // If product supplier associated to default supplier was updated we need to update the product's default supplier related data
         if ($updateDefaultValues) {
             $this->updateDefaultSupplier($productId, $defaultSupplierId);
         }
+
+        return $updatedAssociations;
     }
 
     /**
