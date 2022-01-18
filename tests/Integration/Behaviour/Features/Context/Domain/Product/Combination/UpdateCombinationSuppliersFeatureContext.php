@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -97,17 +97,17 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         );
 
         try {
-            $productSupplierIds = $this->getCommandBus()->handle($command);
+            $productSupplierAssociations = $this->getCommandBus()->handle($command);
 
             Assert::assertSameSize(
                 $references,
-                $productSupplierIds,
+                $productSupplierAssociations,
                 'Cannot set references in shared storage. References and actual combination suppliers doesn\'t match.'
             );
 
-            /** @var ProductSupplierId $productSupplierId */
-            foreach ($productSupplierIds as $key => $productSupplierId) {
-                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            /** @var ProductSupplierAssociation $productSupplierAssociation */
+            foreach ($productSupplierAssociations as $key => $productSupplierAssociation) {
+                $this->getSharedStorage()->set($references[$key], $productSupplierAssociation->getProductSupplierId()->getValue());
             }
         } catch (InvalidProductSupplierAssociationException $e) {
             $this->setLastException($e);
@@ -141,20 +141,29 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         $expectedCombinationSuppliers = $table->getColumnsHash();
         $actualCombinationSuppliersInfo = $this->getCombinationSuppliers($combinationReference);
 
+        $checkSuppliers = false;
         foreach ($expectedCombinationSuppliers as &$expectedCombinationSupplier) {
             $expectedCombinationSupplier['combination'] = $this->getSharedStorage()->get($combinationReference);
             $expectedCombinationSupplier['price tax excluded'] = new DecimalNumber($expectedCombinationSupplier['price tax excluded']);
+            if (isset($expectedCombinationSupplier['supplier'])) {
+                $checkSuppliers = true;
+                $expectedCombinationSupplier['supplier'] = $this->getSharedStorage()->get($expectedCombinationSupplier['supplier']);
+            }
         }
 
         $actualCombinationSuppliers = [];
         foreach ($actualCombinationSuppliersInfo as $productSupplierInfo) {
             $productSupplierForEditing = $productSupplierInfo->getProductSupplierForEditing();
-            $actualCombinationSuppliers[] = [
+            $combinationSupplierData = [
                 'combination supplier reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
                 'price tax excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
             ];
+            if ($checkSuppliers) {
+                $combinationSupplierData['supplier'] = $productSupplierForEditing->getSupplierId();
+            }
+            $actualCombinationSuppliers[] = $combinationSupplierData;
         }
 
         Assert::assertEquals(
