@@ -303,7 +303,7 @@ class Store
         return $this->shops;
     }
 
-    public function addStoreLang(StoreLang $storeLang)
+    public function addStoreLang(StoreLang $storeLang): self
     {
         $this->storeLangs[] = $storeLang;
 
@@ -312,9 +312,11 @@ class Store
         return $this;
     }
 
-    public function removeStoreLang(StoreLang $storeLang)
+    public function removeStoreLang(StoreLang $storeLang): self
     {
         $this->storeLangs->removeElement($storeLang);
+
+        return $this;
     }
 
     public function getStoreLangs()
