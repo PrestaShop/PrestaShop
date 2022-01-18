@@ -92,15 +92,31 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function associateSupplier(string $productReference, TableNode $tableNode): void
     {
+        $data = $tableNode->getColumnsHash();
         $supplierIds = [];
-        foreach ($tableNode->getRows() as $row) {
-            $supplierIds[] = $this->getSharedStorage()->get($row[0]);
+        foreach ($data as $row) {
+            $supplierIds[] = $this->getSharedStorage()->get($row['supplier']);
         }
 
-        $this->getCommandBus()->handle(new SetSuppliersCommand(
+        $productSupplierAssociations = $this->getCommandBus()->handle(new SetSuppliersCommand(
             $this->getSharedStorage()->get($productReference),
             $supplierIds
         ));
+
+        /** @var ProductSupplierAssociation $productSupplierAssociation */
+        foreach ($productSupplierAssociations as $productSupplierAssociation) {
+            $matchingRow = array_reduce($data, function (?array $carry, array $row) use ($productSupplierAssociation) {
+                if (null !== $carry) {
+                    return $carry;
+                }
+
+                $supplierId = (int) $this->getSharedStorage()->get($row['supplier']);
+
+                return $supplierId === $productSupplierAssociation->getSupplierId()->getValue() ? $row : null;
+            });
+
+            $this->getSharedStorage()->set($matchingRow['product_supplier'], $productSupplierAssociation->getProductSupplierId()->getValue());
+        }
     }
 
     /**
