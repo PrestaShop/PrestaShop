@@ -1,6 +1,10 @@
 services:
   _defaults:
     public: true
+  prestashop.adapter.store.query_handler.get_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\QueryHandler\GetStoreHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore' }
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     tags:
