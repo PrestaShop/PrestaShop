@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 /**
  * Defines contract to handle @see SetSuppliersCommand
@@ -35,6 +36,8 @@ interface SetSuppliersHandlerInterface
 {
     /**
      * @param SetSuppliersCommand $command
+     *
+     * @return ProductSupplierAssociation[]
      */
-    public function handle(SetSuppliersCommand $command): void;
+    public function handle(SetSuppliersCommand $command): array;
 }
