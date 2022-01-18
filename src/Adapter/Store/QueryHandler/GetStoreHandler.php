@@ -26,32 +26,33 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
+use Store;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreHandlerInterface;
+
 use PrestaShopException;
-use Store;
 
-class GetStoreHandler implements GetStoreHandlerInterface
+final class GetStoreHandler implements GetStoreHandlerInterface
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws StoreException
-     */
-    public function handle(GetStore $query): Store
-    {
-        try {
-            $store = new Store($query->getStoreId()->getValue());
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @throws StoreException
+	 */
+	public function handle(GetStore $query):Store
+	{
+		try {
+			$store = new Store($query->getStoreId()->getValue());
 
-            if (0 >= $store->id) {
-                throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
-            }
-        } catch (PrestaShopException $e) {
-            throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
-        }
+			if (0 >= $store->id) {
+				throw new StoreNotFoundException(sprintf('Store object with id %s was not found', var_export($query->getStoreId()->getValue(), true)));
+			}
+		} catch (PrestaShopException $e) {
+			throw new ContactException(sprintf('An unexpected error occurred when retrieving store with id %s', var_export($query->getStoreId()->getValue(), true)), 0, $e);
+		}
 
-        return $store;
-    }
+		return $store;
+	}
 }
