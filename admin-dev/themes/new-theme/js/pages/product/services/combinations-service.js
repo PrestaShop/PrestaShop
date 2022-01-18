@@ -111,7 +111,7 @@ export default class CombinationsService {
 
   /**
    * @param {number} combinationId
-   * @param {FormData} data
+   * @param {Object} data
    *
    * @returns {Promise}
    */
@@ -120,7 +120,6 @@ export default class CombinationsService {
       url: this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}),
       data,
       method: 'POST',
-      processData: false,
     });
   }
 

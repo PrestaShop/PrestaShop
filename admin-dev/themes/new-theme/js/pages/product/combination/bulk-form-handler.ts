@@ -57,6 +57,6 @@ export default class BulkFormHandler {
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
     //@todo: hardcoded combinationId
-    this.combinationsService.bulkUpdate(1, new FormData(form));
+    this.combinationsService.bulkUpdate(1, $(form).serializeArray());
   }
 }
