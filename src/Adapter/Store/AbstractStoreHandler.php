@@ -37,7 +37,7 @@ abstract class AbstractStoreHandler
 {
     protected function getStore(StoreId $storeId): Store
     {
-        $store = new Store((int) $storeId->getValue());
+        $store = new Store($storeId->getValue());
         if (!Validate::isLoadedObject($store)) {
             throw new StoreNotFoundException(sprintf('Store with id "%s" was not found', $storeId->getValue()));
         }
