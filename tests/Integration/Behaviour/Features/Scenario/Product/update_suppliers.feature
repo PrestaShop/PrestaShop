@@ -55,7 +55,8 @@ Feature: Update product suppliers from Back Office (BO)
     And product product1 should not have any suppliers assigned
     # Association and update are performed by two distinct commands
     When I associate suppliers to product "product1"
-      | supplier1 |
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
     And I update product product1 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
@@ -67,9 +68,10 @@ Feature: Update product suppliers from Back Office (BO)
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product1 |
     When I associate suppliers to product "product1"
-      | supplier1 |
-      | supplier2 |
-      | supplier3 |
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
+      | supplier2 | product1supplier2 |
+      | supplier3 | product1supplier3 |
     And I update product product1 suppliers:
       | reference         | supplier reference | product supplier reference         | currency | price tax excluded |
       | product1supplier1 | supplier1          | my new first supplier for product1 | USD      | 10                 |
@@ -100,8 +102,9 @@ Feature: Update product suppliers from Back Office (BO)
       | default supplier           | supplier2                       |
       | default supplier reference | my second supplier for product1 |
     When I associate suppliers to product "product1"
-      | supplier1 |
-      | supplier2 |
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
+      | supplier2 | product1supplier2 |
     And I update product product1 suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
@@ -115,8 +118,9 @@ Feature: Update product suppliers from Back Office (BO)
       | default supplier reference | my second supplier for product1 |
     # If default supplier is removed another one is automatically associated
     When I associate suppliers to product "product1"
-      | supplier3 |
-      | supplier1 |
+      | supplier  | product_supplier     |
+      | supplier3 | product1supplier3bis |
+      | supplier1 | product1supplier1    |
     And I update product product1 suppliers:
       | reference            | supplier reference | product supplier reference      | currency | price tax excluded |
       | product1supplier3bis | supplier3          | my third supplier for product1  | EUR      | 20                 |
@@ -168,7 +172,8 @@ Feature: Update product suppliers from Back Office (BO)
       | unit_price_ratio | 0     |
       | unity            |       |
     When I associate suppliers to product "product3"
-      | supplier1 |
+      | supplier  | product_supplier  |
+      | supplier1 | product3supplier1 |
     And I update product product3 suppliers:
       | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
       | product3supplier1 | supplier1          | my first supplier for product3 | USD      | 10                 |
@@ -216,8 +221,9 @@ Feature: Update product suppliers from Back Office (BO)
       | unit_price_ratio | 0     |
       | unity            |       |
     When I associate suppliers to product "product4"
-      | supplier1 |
-      | supplier2 |
+      | supplier  | product_supplier  |
+      | supplier1 | product4supplier1 |
+      | supplier2 | product4supplier2 |
     And I update product product4 suppliers:
       | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
       | product4supplier1 | supplier1          | my first supplier for product4  | USD      | 10                 |
@@ -260,8 +266,9 @@ Feature: Update product suppliers from Back Office (BO)
       And product product5 type should be standard
       And product product5 should not have any suppliers assigned
       When I associate suppliers to product "product5"
-        | supplier2 |
-        | supplier1 |
+        | supplier  | product_supplier  |
+        | supplier2 | product5supplier2 |
+        | supplier1 | product5supplier1 |
       Then product product5 should have following suppliers:
         | product supplier reference | currency | price tax excluded | supplier  |
         |                            | USD      | 0                  | supplier1 |
@@ -281,8 +288,9 @@ Feature: Update product suppliers from Back Office (BO)
         | my second supplier for product5 | EUR      | 11                 | supplier2 |
       # We associate again, the suppliers' data is not modified especially the default one which was already set
       When I associate suppliers to product "product5"
-        | supplier1 |
-        | supplier2 |
+        | supplier  | product_supplier  |
+        | supplier1 | product5supplier1 |
+        | supplier2 | product5supplier2 |
       Then product product5 should have following suppliers:
         | product supplier reference      | currency | price tax excluded | supplier  |
         | my first supplier for product5  | USD      | 10                 | supplier1 |
@@ -293,8 +301,9 @@ Feature: Update product suppliers from Back Office (BO)
         | default supplier reference | my second supplier for product5 |
       # I associate new suppliers without default one, a new default supplier is chosen
       When I associate suppliers to product "product5"
-        | supplier1 |
-        | supplier3 |
+        | supplier  | product_supplier  |
+        | supplier1 | product5supplier1 |
+        | supplier3 | product5supplier3 |
       Then product product5 should have following suppliers:
         | product supplier reference     | currency | price tax excluded | supplier  |
         | my first supplier for product5 | USD      | 10                 | supplier1 |
