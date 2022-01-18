@@ -47,7 +47,7 @@ services:
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/configuring-shop/advanced-parameters/performance#performance-debugmode'
           'fr': 'https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/configurer-boutique/parametres-avances/performance#parametresdeperformances-modedebug'
           'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/configurar-tienda/parametros-avanzados/rendimiento#rendimiento-mododepuracion'
-          'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/configurare-negozio/parametri-avanzati/performance-prestazioni#performance-prestazioni-modalitadidebug'
+          'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/configurare-negozio/parametri-avanzati/performance-prestazioni#modalita-di-debug'
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/configuring-shop/advanced-parameters/performance#performance-debugmode'
         'attribute':
           'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-product-attributes'
