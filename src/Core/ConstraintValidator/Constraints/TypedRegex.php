@@ -31,6 +31,8 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * Provides regex validation by type
+ *
+ * @Annotation
  */
 class TypedRegex extends Constraint
 {

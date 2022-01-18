@@ -31,6 +31,8 @@ use Symfony\Component\Validator\Constraint;
 
 /**
  * Class Email is responsible of validating email according to several patterns.
+ * 
+ * @Annotation
  */
 final class Email extends Constraint
 {
