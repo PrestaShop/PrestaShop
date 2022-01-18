@@ -126,7 +126,7 @@ export default {
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkCombinationFormTemplate: '#bulk-combination-form-template',
-    bulkCombinationForm: '#bulk_combination',
+    bulkCombinationForm: 'form[name="bulk_combination"]',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
