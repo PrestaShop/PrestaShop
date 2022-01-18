@@ -85,6 +85,7 @@ class BulkCombinationType extends TranslatorAwareType
      */
     private function modifyForm(FormBuilderInterface $builder): void
     {
+        //@todo: adding disabling toggle part should be made reusable and moved to eventSubscribers.
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) {
             $form = $event->getForm();
 
