@@ -49,19 +49,19 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
         $store = new Store(self::DUMMY_STORE_ID);
         $this->getCommandBus()->handle($toggleStatusCommand);
-        SharedStorage::getStorage()->set($reference, $store->active);
     }
 
     /**
-     * @Then the store :reference is toggled
+     * @Then /^the store "(.*)" should have status (enabled|disabled)$/
      *
      * @param string $reference
+     * @param string $status
      */
-    public function isStoreToggleWithReference(string $reference): void
+    public function isStoreToggledWithReference(string $reference, string $status): void
     {
-        $status = SharedStorage::getStorage()->get($reference);
+        $isEnabled = $status === 'enabled';
         $storeQuery = new GetStore(self::DUMMY_STORE_ID);
         $storeUpdated = $this->getQueryBus()->handle($storeQuery);
-        Assert::assertEquals((bool)$storeUpdated->active, !(bool)$status);
+        Assert::assertEquals((bool)$storeUpdated->active, $isEnabled);
     }
 }
