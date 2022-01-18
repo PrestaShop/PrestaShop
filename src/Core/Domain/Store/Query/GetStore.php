@@ -48,7 +48,7 @@ class GetStore
 	/**
 	 * @return StoreId
 	 */
-	public function getStoreId()
+	public function getStoreId(): StoreId
 	{
 		return $this->storeId;
 	}
