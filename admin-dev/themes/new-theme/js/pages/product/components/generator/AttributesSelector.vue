@@ -120,7 +120,7 @@
 </template>
 
 <script lang="ts">
-  import {PropType} from 'vue';
+  import Vue, {PropType, VueConstructor} from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
@@ -158,7 +158,9 @@
   }
   /* eslint-enable camelcase */
 
-  export default isSelected.extend({
+  export type AttributesSelectorType = VueConstructor<Vue & InstanceType<typeof isSelected>>
+
+  export default (<AttributesSelectorType>Vue).extend({
     name: 'AttributesSelector',
     props: {
       attributeGroups: {
@@ -170,6 +172,7 @@
         default: () => ({}),
       },
     },
+    mixins: [isSelected],
     data(): AttributesSelectorStates {
       return {
         dataSetConfig: {},
