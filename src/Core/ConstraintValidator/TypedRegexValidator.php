@@ -141,6 +141,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return '/^[a-zA-Z0-9_-]+$/';
             case TypedRegex::TYPE_URL:
                 return $this->characterCleaner->cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u');
+            case TypedRegex::TYPE_COORDINATE:
+                return '/^\-?[0-9]{1,8}\.[0-9]{1,8}$/s';
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));
