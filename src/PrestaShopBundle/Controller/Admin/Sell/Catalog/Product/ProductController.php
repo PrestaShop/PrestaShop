@@ -272,6 +272,42 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * Active product ajax action
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @DemoRestricted(redirectRoute="admin_products_v2_index")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function activeAjaxAction(Request $request): JsonResponse
+    {
+        if ($request->get('id') === 5) {
+            $response = [
+                'success' => false,
+                'message' => 'Failure'
+            ];
+            return new JsonResponse($response);
+        }
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductStatusCommand((int) $request->get('id'), true)
+            );
+            $response = [
+                'success' => true,
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            ];
+        } catch (ProductException $e) {
+            $response = [
+                'success' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+            ];
+        }
+        return new JsonResponse($response);
+    }
+
+    /**
      * Toggles product status
      *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
@@ -293,7 +329,7 @@ class ProductController extends FrameworkBundleAdminController
                 'success',
                 $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
             );
-        } catch (ManufacturerException $e) {
+        } catch (ProductException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
 

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\AjaxBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
@@ -406,6 +407,18 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getBulkActions()
     {
         return (new BulkActionCollection())
+            ->add(
+                (new AjaxBulkAction('enable_selection_ajax'))
+                    ->setName($this->trans('Activate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'ajax_route' => 'admin_products_v2_active_ajax',
+                        'modal_title' => $this->trans('Activating products', [], 'Admin.Actions'),
+                        'modal_progress_title' => $this->trans('Activating...', [], 'Admin.Actions'),
+                        'modal_confirm_button_label' =>  $this->trans('Confirm', [], 'Admin.Actions'),
+                        'modal_close_button_label' => $this->trans('Close', [], 'Admin.Actions'),
+                        'modal_confirm_message' => $this->trans('Product activation is in progress, please don\'t close the window', [], 'Admin.Actions')
+                    ])
+            )
             ->add(
                 (new SubmitBulkAction('enable_selection'))
                     ->setName($this->trans('Activate selection', [], 'Admin.Actions'))

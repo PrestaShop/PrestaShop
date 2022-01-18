@@ -42,6 +42,7 @@ export default {
     choiceOptions: '.js-choice-options',
     modalFormSubmitBtn: '.js-bulk-modal-form-submit-btn',
     submitAction: '.js-bulk-action-submit-btn',
+    ajaxAction: '.js-bulk-action-ajax-btn',
     gridSubmitAction: '.js-grid-action-submit-btn',
   },
   rows: {
@@ -66,6 +67,7 @@ export default {
   confirmModal: (id: string): string => `${id}-grid-confirm-modal`,
   gridTable: '.js-grid-table',
   dragHandler: '.js-drag-handle',
+  dragHandlerClass: 'js-drag-handle',
   specificGridTable: (id: string): string => `${id}_grid_table`,
   grid: (id: string): string => `#${id}_grid`,
   gridPanel: '.js-grid-panel',
