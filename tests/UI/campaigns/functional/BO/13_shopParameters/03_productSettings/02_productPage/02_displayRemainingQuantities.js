@@ -28,7 +28,12 @@ const baseContext = 'functional_BO_shopParameters_productSettings_displayRemaini
 let browserContext;
 let page;
 
-const productData = new ProductFaker({type: 'Standard product', quantity: 2});
+const productData = new ProductFaker({
+  type: 'Standard product',
+  quantity: 2,
+  labelWhenInStock: ' ',
+  LabelWhenOutOfStock: ' ',
+});
 
 const remainingQuantity = 0;
 const defaultRemainingQuantity = 3;
@@ -74,7 +79,7 @@ describe('BO - Shop Parameters - Product Settings : Display remaining quantities
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+    const validationMessage = await addProductPage.setProduct(page, productData);
     await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

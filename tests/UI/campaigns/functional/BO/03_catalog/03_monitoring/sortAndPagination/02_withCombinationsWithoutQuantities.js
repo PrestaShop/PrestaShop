@@ -75,15 +75,18 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
   const creationTests = new Array(11).fill(0, 0, 11);
   describe('Create 11 products with combinations but without available quantities', async () => {
     creationTests.forEach((test, index) => {
-      const createProductData = new ProductFaker({name: `todelete${index}`, type: 'Standard product', quantity: 0});
+      const createProductData = new ProductFaker({
+        name: `todelete${index}`,
+        type: 'Standard product',
+        productHasCombinations: true,
+        quantity: 0,
+      });
       it(`should create product n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         await productsPage.goToAddProductPage(page);
 
-        await addProductPage.createEditBasicProduct(page, createProductData);
-
-        const createProductMessage = await addProductPage.setCombinationsInProduct(page, createProductData);
+        const createProductMessage = await addProductPage.setProduct(page, createProductData);
         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 

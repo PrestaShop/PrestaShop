@@ -30,11 +30,13 @@ const productWithCombinations = new ProductFaker(
   {
     type: 'Standard product',
     price: 20,
+    productHasCombinations: true,
     combinations: {
       color: ['White', 'Black'],
       size: ['S'],
     },
     quantity: 10,
+    productWithSpecificPrice: true,
     specificPrice: {
       combinations: 'Size - S, Color - White',
       discount: 50,
@@ -119,14 +121,8 @@ describe('BO - Shop Parameters - Product Settings : Choose quantity discount bas
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    await addProductPage.createEditBasicProduct(page, productWithCombinations);
 
-    const createProductMessage = await addProductPage.setCombinationsInProduct(
-      page,
-      productWithCombinations,
-    );
-
-    await addProductPage.addSpecificPrice(page, productWithCombinations.specificPrice);
+    const createProductMessage = await addProductPage.setProduct(page, productWithCombinations);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

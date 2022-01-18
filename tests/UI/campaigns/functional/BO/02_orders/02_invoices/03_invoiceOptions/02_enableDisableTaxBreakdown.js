@@ -202,7 +202,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         await boProductsPage.goToAddProductPage(page);
 
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+        const createProductMessage = await addProductPage.setProduct(page, productData);
         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     });

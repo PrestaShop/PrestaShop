@@ -81,7 +81,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
 
         await productsPage.goToAddProductPage(page);
 
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, createProductData);
+        const createProductMessage = await addProductPage.setProduct(page, createProductData);
         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 

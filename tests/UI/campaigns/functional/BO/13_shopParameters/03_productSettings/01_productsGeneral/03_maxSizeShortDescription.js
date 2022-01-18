@@ -96,7 +96,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
 
         await productsPage.goToAddProductPage(page);
-        let errorMessage = await addProductPage.createEditBasicProduct(page, productData);
+        let errorMessage = await addProductPage.setProduct(page, productData);
         await expect(errorMessage).to.equal(addProductPage.errorMessage);
 
         errorMessage = await addProductPage.getErrorMessageWhenSummaryIsTooLong(page);
@@ -110,7 +110,7 @@ describe('BO - Shop Parameters - Product Settings : Update max size of short des
         await testContext.addContextItem(this, 'testIdentifier', `testSummarySize${index + 1}`, baseContext);
 
         await productsPage.goToAddProductPage(page);
-        const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+        const validationMessage = await addProductPage.setProduct(page, productData);
         await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     }

@@ -212,7 +212,7 @@ describe('FO - product page : Add product to cart', async () => {
 
         await boProductsPage.goToAddProductPage(page);
 
-        const createProductMessage = await boAddProductPage.createEditBasicProduct(page, productData);
+        const createProductMessage = await boAddProductPage.setProduct(page, productData);
         await expect(createProductMessage).to.equal(boAddProductPage.settingUpdatedMessage);
       });
 

@@ -193,7 +193,7 @@ describe('BO - Catalog - Products : Pagination and sort Products table', async (
       it(`should create product n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, createProductData);
+        const createProductMessage = await addProductPage.setProduct(page, createProductData);
         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
 

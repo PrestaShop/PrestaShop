@@ -83,7 +83,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+    const createProductMessage = await addProductPage.setProduct(page, productData);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
@@ -123,7 +123,7 @@ describe('BO - Catalog - Products : Create, read, update and delete Standard pro
   it('should edit Product', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, editedProductData);
+    const createProductMessage = await addProductPage.setProduct(page, editedProductData);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

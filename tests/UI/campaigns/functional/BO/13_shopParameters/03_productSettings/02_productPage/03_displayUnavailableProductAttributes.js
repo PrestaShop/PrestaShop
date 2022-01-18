@@ -31,6 +31,7 @@ let page;
 const productData = new ProductFaker(
   {
     type: 'Standard product',
+    productHasCombinations: true,
     combinations: {
       color: ['White'],
       size: ['S'],
@@ -74,8 +75,7 @@ describe('BO - Shop Parameters - Product Settings :  Display unavailable product
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    await addProductPage.createEditBasicProduct(page, productData);
-    const validationMessage = await addProductPage.setCombinationsInProduct(page, productData);
+    const validationMessage = await addProductPage.setProduct(page, productData);
     await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

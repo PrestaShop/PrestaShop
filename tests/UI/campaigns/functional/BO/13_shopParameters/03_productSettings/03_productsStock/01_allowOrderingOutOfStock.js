@@ -63,7 +63,7 @@ describe('BO - Shop Parameters - Product Settings : Allow ordering of out-of-sto
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+    const validationMessage = await addProductPage.setProduct(page, productData);
     await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

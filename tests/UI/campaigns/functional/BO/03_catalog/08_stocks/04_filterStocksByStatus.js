@@ -75,7 +75,7 @@ describe('BO - Catalog - Stocks : Filter stocks by status', async () => {
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);
+    const createProductMessage = await addProductPage.setProduct(page, productData);
     await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 

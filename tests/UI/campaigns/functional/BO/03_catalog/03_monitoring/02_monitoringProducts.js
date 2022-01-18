@@ -31,7 +31,11 @@ let numberOfProductsIngrid = 0;
 const productWithoutImage = new ProductFaker({type: 'Standard product'});
 const disabledProduct = new ProductFaker({type: 'Standard product', status: false});
 const productWithoutCombinationsWithoutQuantity = new ProductFaker({type: 'Standard product', quantity: 0});
-const productWithCombinationsWithoutQuantity = new ProductFaker({type: 'Standard product', quantity: 0});
+const productWithCombinationsWithoutQuantity = new ProductFaker({
+  type: 'Standard product',
+  productHasCombinations: true,
+  quantity: 0,
+});
 const productWithoutPrice = new ProductFaker({type: 'Standard product', price: 0});
 const productWithoutDescription = new ProductFaker({type: 'Standard product', description: '', summary: ''});
 
@@ -40,7 +44,7 @@ Create new product
 Check existence of new product in monitoring page
 Delete product and check deletion in products page
  */
-describe('BO - Catalog - Monitoring : Create different products and delete them from monitoring page', async () => {
+describe('BO - Catalog - Monitoring: Create different products and delete them from monitoring page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -139,22 +143,12 @@ describe('BO - Catalog - Monitoring : Create different products and delete them 
         await expect(numberOfProducts).to.be.above(0);
       });
 
-      it('should create product and check the products number', async function () {
+      it('should create product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}_create`, baseContext);
 
         await productsPage.goToAddProductPage(page);
-        let createProductMessage = await addProductPage.createEditBasicProduct(
-          page,
-          test.args.productToCreate,
-        );
 
-        if (test.args.hasCombinations) {
-          createProductMessage = await addProductPage.setCombinationsInProduct(
-            page,
-            test.args.productToCreate,
-          );
-        }
-
+        const createProductMessage = await addProductPage.setProduct(page, test.args.productToCreate);
         await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
     });

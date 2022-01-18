@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
     await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
     await productsPage.goToAddProductPage(page);
-    const validationMessage = await addProductPage.createEditBasicProduct(page, productData);
+    const validationMessage = await addProductPage.setProduct(page, productData);
     await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
   });
 
@@ -135,7 +135,7 @@ describe('BO - Shop Parameters - Product Settings : Enable/Disable force update 
     it('should update the product name and check the friendly URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `UpdateProductAndCheckFriendlyURL${index}`, baseContext);
 
-      const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.editProduct);
+      const validationMessage = await addProductPage.setProduct(page, test.args.editProduct);
       await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
 
       const friendlyURL = await addProductPage.getFriendlyURL(page);

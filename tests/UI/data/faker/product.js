@@ -1,7 +1,5 @@
 const faker = require('faker');
 
-const behavior = ['Deny orders', 'Allow orders', 'Default behavior'];
-
 /**
  * Create new product to use on creation form on product page on BO
  * @class
@@ -73,7 +71,7 @@ class ProductData {
       : productToCreate.ecoTax;
 
     this.productWithSpecificPrice = productToCreate.productWithSpecificPrice || false;
-    /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
+    /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number, reductionType: ?string}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
       discount: faker.random.number({min: 10, max: 100}),
@@ -83,9 +81,7 @@ class ProductData {
 
     // Quantities form
     /** @type {number} Minimum quantity to buy for the product */
-    this.minimumQuantity = productToCreate.minimumQuantity === undefined
-      ? faker.random.number({min: 1, max: 9})
-      : productToCreate.minimumQuantity;
+    this.minimumQuantity = productToCreate.minimumQuantity || 1;
 
     /** @type {string} Stock location of the product */
     this.stockLocation = productToCreate.stockLocation || 'stock 1';
@@ -102,7 +98,7 @@ class ProductData {
     this.LabelWhenOutOfStock = productToCreate.LabelWhenOutOfStock || 'Label when out of stock';
 
     /** @type {string} Product behavior when it's out of stock */
-    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
+    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || 'Default behavior';
   }
 }
 

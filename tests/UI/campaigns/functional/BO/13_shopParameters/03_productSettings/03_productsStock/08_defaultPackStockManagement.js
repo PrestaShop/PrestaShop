@@ -82,7 +82,7 @@ describe('BO - Shop Parameters - Product Settings : Default pack stock managemen
         await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
 
         await productsPage.goToAddProductPage(page);
-        const validationMessage = await addProductPage.createEditBasicProduct(page, test.args.productToCreate);
+        const validationMessage = await addProductPage.setProduct(page, test.args.productToCreate);
 
         await expect(validationMessage).to.equal(addProductPage.settingUpdatedMessage);
       });
