@@ -25,12 +25,16 @@
 
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
+import CombinationsService from '@pages/product/services/combinations-service';
 
 const CombinationMap = ProductMap.combinations;
 
 export default class BulkFormHandler {
-  constructor() {
-    //@todo: add container
+  //@todo: actually productId is redundant here, but its necessary for combinationsService (probably its not right)
+  private combinationsService: CombinationsService;
+
+  constructor(productId: number) {
+    this.combinationsService = new CombinationsService(productId);
     this.init();
   }
 
@@ -51,7 +55,8 @@ export default class BulkFormHandler {
   }
 
   private submitForm() {
-    const form = document.querySelector(CombinationMap.bulkCombinationForm);
-    //@todo add service to submit form via ajax.
+    const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
+    //@todo: hardcoded combinationId
+    this.combinationsService.bulkUpdate(1, new FormData(form));
   }
 }
