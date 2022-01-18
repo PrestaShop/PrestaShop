@@ -43,7 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplier
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use Product;
 
 class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
@@ -144,17 +144,17 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
                 $productSuppliers
             );
 
-            $productSupplierIds = $this->getCommandBus()->handle($command);
+            $productSupplierAssociations = $this->getCommandBus()->handle($command);
 
             Assert::assertSameSize(
                 $references,
-                $productSupplierIds,
+                $productSupplierAssociations,
                 'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
             );
 
-            /** @var ProductSupplierId $productSupplierId */
-            foreach ($productSupplierIds as $key => $productSupplierId) {
-                $this->getSharedStorage()->set($references[$key], $productSupplierId->getValue());
+            /** @var ProductSupplierAssociation $productSupplierAssociation */
+            foreach ($productSupplierAssociations as $key => $productSupplierAssociation) {
+                $this->getSharedStorage()->set($references[$key], $productSupplierAssociation->getProductSupplierId()->getValue());
             }
         } catch (ProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
             $this->setLastException($e);
@@ -171,7 +171,6 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     {
         $expectedProductSuppliers = $table->getColumnsHash();
         $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
-        $productId = $this->getSharedStorage()->get($productReference);
 
         $checkSuppliers = false;
         foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
