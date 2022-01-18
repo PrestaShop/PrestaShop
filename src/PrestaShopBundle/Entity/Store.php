@@ -58,37 +58,37 @@ class Store
     private $stateId;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="post_code")
+     * @PrestaShopAssert\TypedRegex("post_code")
      * @ORM\Column(type="string", length=12)
      */
     private $postcode;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="city_name")
+     * @PrestaShopAssert\TypedRegex("city_name")
      * @ORM\Column(type="string", length=64)
      */
     private $city;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="coordinate")
+     * @PrestaShopAssert\TypedRegex("coordinate")
      * @ORM\Column(type="float", nullable=true)
      */
     private $latitude;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="coordinate")
+     * @PrestaShopAssert\TypedRegex("coordinate")
      * @ORM\Column(type="float", nullable=true)
      */
     private $longitude;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="phone_number")
+     * @PrestaShopAssert\TypedRegex("phone_number")
      * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $phone;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="phone_number")
+     * @PrestaShopAssert\TypedRegex("phone_number")
      * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $fax;

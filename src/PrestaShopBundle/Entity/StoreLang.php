@@ -56,19 +56,19 @@ class StoreLang
     private $lang;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="generic_name")
+     * @PrestaShopAssert\TypedRegex("generic_name")
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="address")
+     * @PrestaShopAssert\TypedRegex("address")
      * @ORM\Column(type="string", length=255)
      */
     private $address1;
 
     /**
-     * @PrestaShopAssert\TypedRegex(type="address")
+     * @PrestaShopAssert\TypedRegex("address")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address2;
