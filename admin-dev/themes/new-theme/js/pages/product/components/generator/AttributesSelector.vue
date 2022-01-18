@@ -215,7 +215,7 @@
           display: (item: Attribute) => `${item.group_name}: ${item.name}`,
           value: 'name',
           minLength: 1,
-          onSelect: (attribute: Attribute, e: Record<string, any>, $searchInput: JQuery) => {
+          onSelect: (attribute: Attribute, e: JQueryEventObject, $searchInput: JQuery) => {
             const attributeGroup: AttributeGroup = {
               id: attribute.group_id,
               name: attribute.group_name,
