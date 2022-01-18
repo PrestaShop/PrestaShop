@@ -54,6 +54,8 @@
      }|json_encode }}"
 ></div>
 
+{#@todo: need to implement dedicated theme for this form later#}
+{% form_theme bulkCombinationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 <div id="bulk-combination-form-template" class="d-none">
   {{ form_start(bulkCombinationForm) }}
   {{ form_widget(bulkCombinationForm) }}
