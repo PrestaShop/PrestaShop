@@ -260,9 +260,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | default supplier reference |           |
     # Suppliers are associated to all combinations but only product1SWhite has references for product supplier
     And combination "product1SWhite" should have following suppliers:
-      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
-      | product1SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
-      | product1SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
+      | product_supplier           | supplier  | reference | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Ter | supplier1 |           | USD      | 0                  |
+      | product1SWhiteSupplier2Ter | supplier2 |           | USD      | 0                  |
     And combination "product1SBlack" should have following suppliers:
       | supplier  | reference | currency | price_tax_excluded |
       | supplier1 |           | USD      | 0                  |
@@ -283,5 +283,5 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier2 | second supplier2        | USD      | 69                 |
     And combination "product1SWhite" should have following suppliers:
       | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
-      | product1SWhiteSupplier1Bis | supplier1 | new sup white shirt S 1 | USD      | 51                 |
-      | product1SWhiteSupplier2bis | supplier2 | second supplier2        | USD      | 69                 |
+      | product1SWhiteSupplier1Ter | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | product1SWhiteSupplier2Ter | supplier2 | second supplier2        | USD      | 69                 |
