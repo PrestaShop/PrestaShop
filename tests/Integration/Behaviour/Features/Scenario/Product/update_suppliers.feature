@@ -183,14 +183,18 @@ Feature: Update product suppliers from Back Office (BO)
     When I associate suppliers to product "product3"
       | supplier  | product_supplier  |
       | supplier1 | product3supplier1 |
+      | supplier2 | product3supplier2 |
     And I update product product3 suppliers:
-      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
-      | product3supplier1 | supplier1 | my first supplier for product3 | USD      | 10                 |
+      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
+      | product3supplier1 | supplier1 | my first supplier for product3  | USD      | 10                 |
+      | product3supplier2 | supplier2 | my second supplier for product3 | USD      | 20                 |
     Then product product3 should have the following suppliers assigned:
       | supplier1 |
+      | supplier2 |
     And product product3 should have following suppliers:
       | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
       | product3supplier1 | supplier1 | my first supplier for product3 | USD      | 10                 |
+      | product3supplier2 | supplier2 | my second supplier for product3 | USD      | 20                 |
     And product product3 should have following supplier values:
       | default supplier           | supplier1                      |
       | default supplier reference | my first supplier for product3 |
@@ -204,17 +208,31 @@ Feature: Update product suppliers from Back Office (BO)
       | unit_price       | 0     |
       | unit_price_ratio | 0     |
       | unity            |       |
-    When I remove all associated product "product3" suppliers
-    Then product product3 should not have any suppliers assigned
-    And product product3 should not have a default supplier
-    And product product3 default supplier reference should be empty
-    # The wholesale value is not removed even if default supplier has been removed
+    # Changing the default supplier should also update the wholesale price
+    When I set product product3 default supplier to supplier2
+    Then product product3 should have following supplier values:
+      | default supplier           | supplier2                       |
+      | default supplier reference | my second supplier for product3 |
     And product product3 should have following prices information:
       | price            | 0     |
       | ecotax           | 0     |
       | tax rules group  |       |
       | on_sale          | false |
-      | wholesale_price  | 10    |
+      | wholesale_price  | 20    |
+      | unit_price       | 0     |
+      | unit_price_ratio | 0     |
+      | unity            |       |
+    # The wholesale value is not removed even if default supplier has been removed
+    When I remove all associated product "product3" suppliers
+    Then product product3 should not have any suppliers assigned
+    And product product3 should not have a default supplier
+    And product product3 default supplier reference should be empty
+    And product product3 should have following prices information:
+      | price            | 0     |
+      | ecotax           | 0     |
+      | tax rules group  |       |
+      | on_sale          | false |
+      | wholesale_price  | 20    |
       | unit_price       | 0     |
       | unit_price_ratio | 0     |
       | unity            |       |
