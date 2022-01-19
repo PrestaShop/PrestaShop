@@ -29,9 +29,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\CombinationSupplierAssociation;
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Associates supplier with product combination
@@ -84,10 +85,10 @@ class UpdateCombinationSuppliersCommand
     private function setCombinationSuppliers(array $productSuppliers, int $combinationId): void
     {
         if (empty($productSuppliers)) {
-            throw new RuntimeException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Empty array of combination suppliers provided in %s. To remove all product suppliers use %s.',
                 self::class,
-                RemoveAllAssociatedCombinationSuppliersCommand::class
+                RemoveAllAssociatedProductSuppliersCommand::class
             ));
         }
 
