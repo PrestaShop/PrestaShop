@@ -840,6 +840,6 @@ abstract class ControllerCore
      */
     public function multistoreEnabled(): bool
     {
-        return $this->get(static::SERVICE_MULTISTORE_FEATURE);
+        return $this->get(static::SERVICE_MULTISTORE_FEATURE)->isUsed();
     }
 }
