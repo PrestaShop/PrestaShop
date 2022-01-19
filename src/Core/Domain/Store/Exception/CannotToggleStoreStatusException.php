@@ -29,17 +29,17 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
 /**
- * Thrown when cannot toggle carrier status
+ * Thrown when cannot toggle store status
  */
 class CannotToggleStoreStatusException extends StoreException
 {
     /**
-     * Thrown when cannot toggle single carrier status.
+     * Thrown when cannot toggle single store status.
      */
     public const SINGLE_TOGGLE = 10;
 
     /**
-     * Thrown when cannot bulk toggle carrier status.
+     * Thrown when cannot bulk toggle store status.
      */
     public const BULK_TOGGLE = 20;
 }
