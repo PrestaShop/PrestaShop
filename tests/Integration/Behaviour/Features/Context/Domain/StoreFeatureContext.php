@@ -61,6 +61,6 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
         $isEnabled = $status === 'enabled';
         $storeQuery = new GetStore(self::DUMMY_STORE_ID);
         $storeUpdated = $this->getQueryBus()->handle($storeQuery);
-        Assert::assertEquals((bool)$storeUpdated->active, $isEnabled);
+        Assert::assertEquals((bool) $storeUpdated->active, $isEnabled);
     }
 }
