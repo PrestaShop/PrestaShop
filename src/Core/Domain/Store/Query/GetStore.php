@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
@@ -48,7 +50,7 @@ class GetStore
 	/**
 	 * @return StoreId
 	 */
-	public function getStoreId()
+	public function getStoreId(): StoreId
 	{
 		return $this->storeId;
 	}

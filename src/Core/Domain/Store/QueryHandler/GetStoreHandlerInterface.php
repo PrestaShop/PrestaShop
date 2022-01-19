@@ -36,5 +36,5 @@ interface GetStoreHandlerInterface
 	 *
 	 * @return Store
 	 */
-	public function handle(GetStore $query):Store;
+	public function handle(GetStore $query): Store;
 }
