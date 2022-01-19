@@ -1000,7 +1000,7 @@ class CartCore extends ObjectModel
     /**
      * @param array $productRow
      * @param int $productQuantity
-     * @param int|null $addressId
+     * @param int|null $addressId Customer's address id (for tax calculation)
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
@@ -1077,7 +1077,7 @@ class CartCore extends ObjectModel
      * @param bool $useReduction
      * @param bool $withEcoTax
      * @param int $productQuantity
-     * @param int|null $addressId
+     * @param int|null $addressId Customer's address id (for tax calculation)
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
@@ -1121,7 +1121,7 @@ class CartCore extends ObjectModel
      * @param array $productRow
      * @param int $orderId
      * @param int $productQuantity
-     * @param int|null $addressId
+     * @param int|null $addressId Customer's address id (for tax calculation)
      * @param Context $shopContext
      * @param array|false|null $specificPriceOutput
      *
@@ -2412,6 +2412,11 @@ class CartCore extends ObjectModel
         return $addressId;
     }
 
+    /**
+     * Returns the tax address id according to the shop's configuration
+     *
+     * @return int
+     */
     public function getTaxAddressId()
     {
         $taxAddressType = $this->configuration->get('PS_TAX_ADDRESS_TYPE');
