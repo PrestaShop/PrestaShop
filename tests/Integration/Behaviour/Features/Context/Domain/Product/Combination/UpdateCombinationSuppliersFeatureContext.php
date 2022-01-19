@@ -73,19 +73,19 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     {
         $productSuppliers = [];
         foreach ($table->getColumnsHash() as $row) {
-            $productSupplierId = null;
-            if ($this->getSharedStorage()->exists($row['product_supplier'])) {
-                $productSupplierId = $this->getSharedStorage()->get($row['product_supplier']);
-            }
-
-            $productSuppliers[] = [
+            $productSupplierData = [
                 'supplier_id' => $this->getSharedStorage()->get($row['supplier']),
                 'currency_id' => (int) Currency::getIdByIsoCode($row['currency'], 0, true),
                 'reference' => $row['reference'],
                 'price_tax_excluded' => $row['price_tax_excluded'],
                 'combination_id' => $this->getSharedStorage()->get($combinationReference),
-                'product_supplier_id' => $productSupplierId,
             ];
+
+            if (!empty($row['product_supplier'])) {
+                $productSupplierData['product_supplier'] = $this->getSharedStorage()->get($row['product_supplier']);
+            }
+
+            $productSuppliers[] = $productSupplierData;
         }
 
         $command = new UpdateCombinationSuppliersCommand(
