@@ -323,3 +323,33 @@ Feature: Update product suppliers from Back Office (BO)
       Then product product5 should not have any suppliers assigned
       And product product5 should not have a default supplier
       And product product5 default supplier reference should be empty
+
+  Scenario: Update product suppliers without specifying the productSupplierId should also work
+    Given I add product "product6" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    And product product6 type should be standard
+    And product product6 should not have any suppliers assigned
+    When I associate suppliers to product "product6"
+      | supplier  | product_supplier  |
+      | supplier2 | product6supplier2 |
+      | supplier1 | product6supplier1 |
+    Then product product6 should have following suppliers:
+      | product_supplier  | supplier  | reference | currency | price_tax_excluded |
+      | product6supplier1 | supplier1 |           | USD      | 0                  |
+      | product6supplier2 | supplier2 |           | USD      | 0                  |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier2  |
+      | default supplier reference |            |
+    # Update data without specifying the product supplier ID it should work as productId/supplierId is enough to match
+    # an existing product supplier, we simply cannot assert that they match the provided productSupplierId since it is
+    # not provided This feature is important in the form it allows performing both association of new suppliers and
+    # update of such new suppliers even if we cannot know the productSupplierId in advance since it has not been created
+    When I update product product6 suppliers:
+      | supplier  | reference                       | currency | price_tax_excluded |
+      | supplier1 | my first supplier for product6  | USD      | 10                 |
+      | supplier2 | my second supplier for product6 | EUR      | 11                 |
+    Then product product6 should have following suppliers:
+      | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
+      | product6supplier1 | supplier1 | my first supplier for product6  | USD      | 10                 |
+      | product6supplier2 | supplier2 | my second supplier for product6 | EUR      | 11                 |
