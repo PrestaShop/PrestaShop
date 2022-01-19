@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Updates product suppliers
@@ -84,7 +84,7 @@ class UpdateProductSuppliersCommand
     private function setProductSuppliers(array $productSuppliers, int $productId): void
     {
         if (empty($productSuppliers)) {
-            throw new RuntimeException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Empty array of product suppliers provided in %s. To remove all product suppliers use %s.',
                 self::class,
                 RemoveAllAssociatedProductSuppliersCommand::class
