@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd93c72eebb06658e639f69beae80be9",
+    "content-hash": "559aa893c10b591d4fa882d8b7cffbc2",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4699,23 +4699,22 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v4.2.2",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "0058f82c6ed69cf545d07c787e10949a459bd011"
+                "reference": "c08d1ded67f75bde9dc06109748d0fd2e74d8c65"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/0058f82c6ed69cf545d07c787e10949a459bd011",
-                "reference": "0058f82c6ed69cf545d07c787e10949a459bd011",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/c08d1ded67f75bde9dc06109748d0fd2e74d8c65",
+                "reference": "c08d1ded67f75bde9dc06109748d0fd2e74d8c65",
                 "shasum": ""
             },
             "require": {
                 "doctrine/cache": "^1.6",
                 "guzzlehttp/cache-subscriber": "^0.2.0",
                 "php": ">=5.6.0",
-                "prestashop/circuit-breaker": "^3.0.0",
                 "symfony/css-selector": "^3.4 || ^4.4 || ^5.0"
             },
             "require-dev": {
@@ -4744,9 +4743,9 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v4.2.2"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.0"
             },
-            "time": "2021-06-10T07:45:49+00:00"
+            "time": "2021-11-29T09:55:29+00:00"
         },
         {
             "name": "prestashop/ps_banner",
