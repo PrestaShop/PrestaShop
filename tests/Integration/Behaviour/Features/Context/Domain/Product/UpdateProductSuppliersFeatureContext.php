@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
@@ -104,19 +103,35 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $supplierIds
         ));
 
+        // Reorganize input data so that they are easier to access and help to assign the references
+        $productSuppliersReferences = [];
+        foreach ($data as $supplierRow) {
+            $supplierId = (int) $this->getSharedStorage()->get($supplierRow['supplier']);
+
+            if (!empty($supplierRow['product_supplier'])) {
+                $productSuppliersReferences[$supplierId][NoCombinationId::NO_COMBINATION_ID] = $supplierRow['product_supplier'];
+            } elseif (!empty($supplierRow['combination_suppliers'])) {
+                $combinationReferences = explode(';', $supplierRow['combination_suppliers']);
+                foreach ($combinationReferences as $combinationReference) {
+                    list($combinationReference, $productSupplierReference) = explode(':', $combinationReference);
+                    $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
+                    $productSuppliersReferences[$supplierId][$combinationId] = $productSupplierReference;
+                }
+            }
+        }
+
         /** @var ProductSupplierAssociation $productSupplierAssociation */
         foreach ($productSupplierAssociations as $productSupplierAssociation) {
-            $matchingRow = array_reduce($data, function (?array $carry, array $row) use ($productSupplierAssociation) {
-                if (null !== $carry) {
-                    return $carry;
+            if (isset($productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()])) {
+                $referencesForSupplier = $productSuppliersReferences[$productSupplierAssociation->getSupplierId()->getValue()];
+
+                if (isset($referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()])) {
+                    $this->getSharedStorage()->set(
+                        $referencesForSupplier[$productSupplierAssociation->getCombinationId()->getValue()],
+                        $productSupplierAssociation->getProductSupplierId()->getValue()
+                    );
                 }
-
-                $supplierId = (int) $this->getSharedStorage()->get($row['supplier']);
-
-                return $supplierId === $productSupplierAssociation->getSupplierId()->getValue() ? $row : null;
-            });
-
-            $this->getSharedStorage()->set($matchingRow['product_supplier'], $productSupplierAssociation->getProductSupplierId()->getValue());
+            }
         }
     }
 
@@ -162,7 +177,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             Assert::assertSameSize(
                 $productSuppliers,
                 $productSupplierAssociations,
-                'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
+                'Number of updated associations does not match the input number of associations'
             );
         } catch (ProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
             $this->setLastException($e);
@@ -181,7 +196,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
 
         foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
-            $expectedProductSupplier['combination'] = CombinationId::NO_COMBINATION;
+            $expectedProductSupplier['combination'] = NoCombinationId::NO_COMBINATION_ID;
             $expectedProductSupplier['price_tax_excluded'] = new DecimalNumber($expectedProductSupplier['price_tax_excluded']);
             $expectedProductSupplier['supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['supplier']);
             $expectedProductSupplier['product_supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['product_supplier']);
