@@ -66,7 +66,6 @@ class AddProduct extends AddProductBasePage {
     // Set combinations form
     if (productData.productHasCombinations) {
       await combinations.setCombinationsInProduct(page, productData);
-      await this.reloadPage(page);
     }
     // Set quantities/virtual form
     if (!productData.productHasCombinations) {
@@ -74,6 +73,9 @@ class AddProduct extends AddProductBasePage {
     }
     // Set pricing form
     if (productData.productWithSpecificPrice) {
+      if (productData.productHasCombinations) {
+        await this.reloadPage(page);
+      }
       await pricing.addSpecificPrice(page, productData.specificPrice);
     }
     if (productData.productWithEcoTax) {
