@@ -16,7 +16,7 @@ const {Products} = require('@data/demo/products');
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 
 const baseContext = 'functional_BO_catalog_products_duplicateProductFromList';
 

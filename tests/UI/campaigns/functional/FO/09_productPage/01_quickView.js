@@ -16,7 +16,7 @@ const searchResultsPage = require('@pages/FO/searchResults');
 // BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
-const boAddProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 
 // Import test context
 const testContext = require('@utils/testContext');

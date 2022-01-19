@@ -13,7 +13,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');

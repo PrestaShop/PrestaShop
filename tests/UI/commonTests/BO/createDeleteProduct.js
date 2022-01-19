@@ -8,7 +8,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
-const addProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 
 // Import test context
 const testContext = require('@utils/testContext');

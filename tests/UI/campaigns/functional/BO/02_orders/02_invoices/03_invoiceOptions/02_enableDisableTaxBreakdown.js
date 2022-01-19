@@ -14,7 +14,7 @@ const taxesPage = require('@pages/BO/international/taxes/index');
 const taxRulesPage = require('@pages/BO/international/taxes/taxRules/index');
 const addTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 const boProductsPage = require('@pages/BO/catalog/products/index');
-const addProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 

@@ -16,7 +16,7 @@ const cartPage = require('@pages/FO/cart');
 // BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
-const boAddProductPage = require('@pages/BO/catalog/products/add');
+const addProductPage = require('@pages/BO/catalog/products/add/addProduct');
 
 // Import data
 const {Products} = require('@data/demo/products');
