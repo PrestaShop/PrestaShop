@@ -124,7 +124,7 @@ class StoreCore extends ObjectModel
     /**
      * StoreCore constructor.
      *
-     * @param null $idStore
+     * @param int|null $idStore
      * @param null $idLang
      */
     public function __construct($idStore = null, $idLang = null)
