@@ -272,7 +272,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then address :addressReference is assigned to an order :orderReference for :customerReference
+     * @When address :addressReference is assigned to an order :orderReference for :customerReference
      *
      * @param string $addressReference
      * @param string $orderReference
@@ -345,7 +345,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then product :productReference is added to a cart :cartReference for :customerReference
+     * @When product :productReference is added to a cart :cartReference for :customerReference
      *
      * @param string $productReference
      * @param string $cartReference
@@ -366,7 +366,7 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then address :addressReference is assigned to a cart :cartReference for :customerReference
+     * @When address :addressReference is assigned to a cart :cartReference for :customerReference
      *
      * @param string $addressReference
      * @param string $cartReference
