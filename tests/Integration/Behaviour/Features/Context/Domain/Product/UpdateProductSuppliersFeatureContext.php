@@ -33,6 +33,7 @@ use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\RemoveAllAssociatedProductSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductDefaultSupplierCommand;
@@ -129,29 +130,23 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     {
         $data = $tableNode->getColumnsHash();
         $productSuppliers = [];
-        $references = [];
 
         foreach ($data as $productSupplier) {
-            $productSupplierId = null;
-            $combinationId = CombinationId::NO_COMBINATION;
-            $references[] = $productSupplier['reference'];
-
-            if ($this->getSharedStorage()->exists($productSupplier['reference'])) {
-                $productSupplierId = $this->getSharedStorage()->get($productSupplier['reference']);
-            }
-
-            if (isset($productSupplier['combination']) && $this->getSharedStorage()->exists($productSupplier['combination'])) {
-                $combinationId = $this->getSharedStorage()->get($productSupplier['combination']);
-            }
-
-            $productSuppliers[] = [
-                'supplier_id' => $this->getSharedStorage()->get($productSupplier['supplier reference']),
+            $productSupplierData = [
+                'supplier_id' => $this->getSharedStorage()->get($productSupplier['supplier']),
                 'currency_id' => (int) Currency::getIdByIsoCode($productSupplier['currency'], 0, true),
-                'reference' => $productSupplier['product supplier reference'],
-                'price_tax_excluded' => $productSupplier['price tax excluded'],
-                'combination_id' => $combinationId,
-                'product_supplier_id' => $productSupplierId,
+                'reference' => $productSupplier['reference'],
+                'price_tax_excluded' => $productSupplier['price_tax_excluded'],
+                'combination_id' => NoCombinationId::NO_COMBINATION_ID,
             ];
+
+            // Product supplier id is optional because supplier_id, combination_id and product_id are enough to find the reference
+            // but it's used to assert association is consistent
+            if (isset($productSupplier['product_supplier'])) {
+                $productSupplierData['product_supplier_id'] = $this->getSharedStorage()->get($productSupplier['product_supplier']);
+            }
+
+            $productSuppliers[] = $productSupplierData;
         }
 
         try {
@@ -163,15 +158,10 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             $productSupplierAssociations = $this->getCommandBus()->handle($command);
 
             Assert::assertSameSize(
-                $references,
+                $productSuppliers,
                 $productSupplierAssociations,
                 'Cannot set references in shared storage. References and actual product suppliers doesn\'t match.'
             );
-
-            /** @var ProductSupplierAssociation $productSupplierAssociation */
-            foreach ($productSupplierAssociations as $key => $productSupplierAssociation) {
-                $this->getSharedStorage()->set($references[$key], $productSupplierAssociation->getProductSupplierId()->getValue());
-            }
         } catch (ProductSupplierNotAssociatedException | InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
@@ -188,30 +178,24 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         $expectedProductSuppliers = $table->getColumnsHash();
         $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
 
-        $checkSuppliers = false;
         foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
             $expectedProductSupplier['combination'] = CombinationId::NO_COMBINATION;
-            $expectedProductSupplier['price tax excluded'] = new DecimalNumber($expectedProductSupplier['price tax excluded']);
-            if (isset($expectedProductSupplier['supplier'])) {
-                $checkSuppliers = true;
-                $expectedProductSupplier['supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['supplier']);
-            }
+            $expectedProductSupplier['price_tax_excluded'] = new DecimalNumber($expectedProductSupplier['price_tax_excluded']);
+            $expectedProductSupplier['supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['supplier']);
+            $expectedProductSupplier['product_supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['product_supplier']);
         }
 
         $actualProductSuppliers = [];
         foreach ($actualProductSupplierOptions->getSuppliersInfo() as $actualProductSupplierOption) {
             $productSupplierForEditing = $actualProductSupplierOption->getProductSupplierForEditing();
-            $productSuppliersData = [
-                'product supplier reference' => $productSupplierForEditing->getReference(),
+            $actualProductSuppliers[] = [
+                'reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
-                'price tax excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
+                'price_tax_excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
+                'supplier' => $actualProductSupplierOption->getSupplierId(),
+                'product_supplier' => $productSupplierForEditing->getProductSupplierId(),
             ];
-
-            if ($checkSuppliers) {
-                $productSuppliersData['supplier'] = $actualProductSupplierOption->getSupplierId();
-            }
-            $actualProductSuppliers[] = $productSuppliersData;
         }
 
         Assert::assertEquals(
