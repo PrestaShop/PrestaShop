@@ -867,9 +867,9 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @param $row
-     * @param $shopContext
-     * @param $productQuantity
+     * @param array $row
+     * @param Context $shopContext
+     * @param int|null $productQuantity
      * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
      *
      * @return mixed
