@@ -47,7 +47,6 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function disableStoreWithReference(string $reference): void
     {
         $toggleStatusCommand = new ToggleStoreStatusCommand(self::DUMMY_STORE_ID);
-        $store = new Store(self::DUMMY_STORE_ID);
         $this->getCommandBus()->handle($toggleStatusCommand);
     }
 
