@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use PrestaShopBundle\Form\FormBuilderModifier;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -88,16 +89,22 @@ class DisablingToggleExtension extends AbstractTypeExtension
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($label) {
                 $form = $event->getForm();
                 $parent = $form->getParent();
-                $parent->add(self::FIELD_PREFIX . $form->getName(),
-                    CheckboxType::class,
-                    [
-                        'label' => $label,
-                        'attr' => [
-                            'container_class' => 'disabling-toggle',
-                            'data-value-type' => 'boolean',
-                        ],
-                    ]
-                );
+                $fieldName = self::FIELD_PREFIX . $form->getName();
+                if ($parent->has($fieldName)) {
+                    return;
+                }
+                $parent->add($fieldName, CheckboxType::class, [
+                    'label' => $label,
+                    'attr' => [
+                        'container_class' => 'disabling-toggle',
+                        'data-value-type' => 'boolean',
+                    ],
+                ]);
+                $formCloner = new FormCloner();
+                //@todo; need configurable (e.g. it should be possible to change if input is disabled when checkbox is checked or when unchecked
+                $newOptions = ['attr' => ['disabled' => !$parent->get($fieldName)->getData()]];
+                $newForm = $formCloner->cloneForm($form, array_merge($form->getConfig()->getOptions(), $newOptions));
+                $parent->add($newForm);
             });
         }
     }

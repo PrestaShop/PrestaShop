@@ -75,7 +75,7 @@
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
     {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
     {% set disabledField = false %}
-    {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
+    {% if (form.vars.attr.disabled is defined and form.vars.attr.disabled) or (form.parent.vars.attr.disabled is defined and form.parent.vars.attr.disabled)%}
       {% set disabledField = true %}
     {% endif %}
 
@@ -94,8 +94,12 @@
       {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
-      <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
-        {{ form_widget(form) }}
+      <div class="{{ block('form_group_class') }}">
+        {% if disabledField %}
+          {% set attr = attr|merge({'disabled': 'disabled', 'class': (attr.class|default('') ~ ' disabled')}) %}
+        {% endif %}
+
+        {{ form_widget(form, {'attr': attr}) }}
         {{ form_errors(form, {'attr': {'fieldError': true}}) }}
       </div>
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}

@@ -31,28 +31,9 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
 {
     public function getDefaultData()
     {
-        //@todo: usually we use this method for creation, but it doesn't mean we cannot use it for this case does it?
-        //@todo: need to test if null values actually works for all form types.
-        //  (e.g. DeltaQuantityInput might always convert it to 0 which is not good in our case)
         return [
-            'stock' => [
-                'quantities' => [
-                    'quantity' => null,
-                    'minimal_quantity' => null,
-                ],
-                'options' => [
-                    'low_stock_threshold' => null,
-                    'low_stock_alert' => null,
-                ],
-                'available_date' => null,
-            ],
-            'price_impact' => [
-                'wholesale_price' => null,
-                'price_tax_excluded' => null,
-                'price_tax_included' => null,
-                'weight' => null,
-            ],
-            'reference' => null,
+//            @todo: just hardcoded value to check if disabled fields are submitted
+            'disabling_toggle_reference' => true,
         ];
     }
 
@@ -61,7 +42,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        //@todo: form is common for all combinations, so data is not needed for single combination right?
+        // Not used, because form is initially the same for all combinations
         return [];
     }
 }
