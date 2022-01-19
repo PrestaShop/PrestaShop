@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -72,20 +71,18 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
      */
     public function updateCombinationSuppliers(string $combinationReference, TableNode $table): void
     {
-        $references = [];
         $productSuppliers = [];
         foreach ($table->getColumnsHash() as $row) {
             $productSupplierId = null;
-            $references[] = $row['reference'];
-            if ($this->getSharedStorage()->exists($row['reference'])) {
-                $productSupplierId = $this->getSharedStorage()->get($row['reference']);
+            if ($this->getSharedStorage()->exists($row['product_supplier'])) {
+                $productSupplierId = $this->getSharedStorage()->get($row['product_supplier']);
             }
 
             $productSuppliers[] = [
-                'supplier_id' => $this->getSharedStorage()->get($row['supplier reference']),
+                'supplier_id' => $this->getSharedStorage()->get($row['supplier']),
                 'currency_id' => (int) Currency::getIdByIsoCode($row['currency'], 0, true),
-                'reference' => $row['combination supplier reference'],
-                'price_tax_excluded' => $row['price tax excluded'],
+                'reference' => $row['reference'],
+                'price_tax_excluded' => $row['price_tax_excluded'],
                 'combination_id' => $this->getSharedStorage()->get($combinationReference),
                 'product_supplier_id' => $productSupplierId,
             ];
@@ -100,15 +97,10 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
             $productSupplierAssociations = $this->getCommandBus()->handle($command);
 
             Assert::assertSameSize(
-                $references,
+                $productSuppliers,
                 $productSupplierAssociations,
-                'Cannot set references in shared storage. References and actual combination suppliers doesn\'t match.'
+                'Number of updated associations does not match the input number of associations'
             );
-
-            /** @var ProductSupplierAssociation $productSupplierAssociation */
-            foreach ($productSupplierAssociations as $key => $productSupplierAssociation) {
-                $this->getSharedStorage()->set($references[$key], $productSupplierAssociation->getProductSupplierId()->getValue());
-            }
         } catch (InvalidProductSupplierAssociationException $e) {
             $this->setLastException($e);
         }
@@ -141,13 +133,14 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         $expectedCombinationSuppliers = $table->getColumnsHash();
         $actualCombinationSuppliersInfo = $this->getCombinationSuppliers($combinationReference);
 
-        $checkSuppliers = false;
+        $checkProductSuppliers = false;
         foreach ($expectedCombinationSuppliers as &$expectedCombinationSupplier) {
             $expectedCombinationSupplier['combination'] = $this->getSharedStorage()->get($combinationReference);
-            $expectedCombinationSupplier['price tax excluded'] = new DecimalNumber($expectedCombinationSupplier['price tax excluded']);
-            if (isset($expectedCombinationSupplier['supplier'])) {
-                $checkSuppliers = true;
-                $expectedCombinationSupplier['supplier'] = $this->getSharedStorage()->get($expectedCombinationSupplier['supplier']);
+            $expectedCombinationSupplier['price_tax_excluded'] = new DecimalNumber($expectedCombinationSupplier['price_tax_excluded']);
+            $expectedCombinationSupplier['supplier'] = $this->getSharedStorage()->get($expectedCombinationSupplier['supplier']);
+            if (!empty($expectedCombinationSupplier['product_supplier'])) {
+                $expectedCombinationSupplier['product_supplier'] = $this->getSharedStorage()->get($expectedCombinationSupplier['product_supplier']);
+                $checkProductSuppliers = true;
             }
         }
 
@@ -155,14 +148,16 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         foreach ($actualCombinationSuppliersInfo as $productSupplierInfo) {
             $productSupplierForEditing = $productSupplierInfo->getProductSupplierForEditing();
             $combinationSupplierData = [
-                'combination supplier reference' => $productSupplierForEditing->getReference(),
+                'reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
-                'price tax excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
+                'price_tax_excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
+                'supplier' => $productSupplierForEditing->getSupplierId(),
             ];
-            if ($checkSuppliers) {
-                $combinationSupplierData['supplier'] = $productSupplierForEditing->getSupplierId();
+            if ($checkProductSuppliers) {
+                $combinationSupplierData['product_supplier'] = $productSupplierForEditing->getProductSupplierId();
             }
+
             $actualCombinationSuppliers[] = $combinationSupplierData;
         }
 
