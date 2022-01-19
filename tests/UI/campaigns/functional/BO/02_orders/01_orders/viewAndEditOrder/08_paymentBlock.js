@@ -474,6 +474,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await viewOrderPage.searchProduct(page, Products.demo_5.name);
 
+      await viewOrderPage.selectInvoice(page);
+
       const textResult = await viewOrderPage.addProductToCart(page, 1, true);
       await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
     });

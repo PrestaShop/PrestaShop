@@ -84,7 +84,7 @@
   <td colspan="12">
     <div>
       <h4>{{ 'New invoice information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h4>
-      <p><b>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }} :</b> {{ orderForViewing.carrierName }}</p>
+      <p data-role="carrier-name"><b>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }} :</b> {{ orderForViewing.carrierName }}</p>
       {{ form_row(addProductRowForm.free_shipping) }}
     </div>
   </td>

@@ -21,11 +21,11 @@ let page;
 
 /**
  * Function to create standard product
- * @param productData {productData} Data to set to create product
+ * @param productData {ProductData} Data to set to create product
  * @param baseContext {string} String to identify the test
  */
 function createProductTest(productData, baseContext = 'commonTests-createProductTest') {
-  describe('PRE-TEST: Create product', async () => {
+  describe(`PRE-TEST: Create product '${productData.name}`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -78,11 +78,11 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
 
 /**
  * Function to delete product
- * @param productData {productData} Data to set to delete product
+ * @param productData {ProductData} Data to set to delete product
  * @param baseContext {string} String to identify the test
  */
 function deleteProductTest(productData, baseContext = 'commonTests-deleteProductTest') {
-  describe('POST-TEST: Delete product', async () => {
+  describe(`POST-TEST: Delete product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -106,7 +106,7 @@ function deleteProductTest(productData, baseContext = 'commonTests-deleteProduct
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
 
-    it(`should delete product '${productData.name}' from DropDown Menu`, async function () {
+    it('should delete product from dropdown menu', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
       const deleteTextResult = await productsPage.deleteProduct(page, productData);
