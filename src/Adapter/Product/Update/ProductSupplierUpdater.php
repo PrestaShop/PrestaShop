@@ -210,10 +210,6 @@ class ProductSupplierUpdater
     {
         $product = $this->productRepository->get($productId);
 
-        if ($product->getProductType() === ProductType::TYPE_COMBINATIONS) {
-            $this->throwInvalidTypeException($productId, 'removeAllForCombination');
-        }
-
         $productSupplierIds = $this->getProductSupplierIds($productId);
         $this->productSupplierRepository->bulkDelete($productSupplierIds);
         $this->resetDefaultSupplier($product);
