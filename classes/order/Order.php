@@ -966,10 +966,11 @@ class OrderCore extends ObjectModel
 
         foreach ($res as $key => $val) {
             // In case order creation crashed midway some data might be absent
-            $orderState = !empty($val['id_order_state']) ? $indexedOrderStates[$val['id_order_state']] : null;
-            $res[$key]['order_state'] = $orderState['name'] ?: null;
-            $res[$key]['invoice'] = $orderState['invoice'] ?: null;
-            $res[$key]['order_state_color'] = $orderState['color'] ?: null;
+            // also use the null coalescing operator, in case our values are `null`
+            $orderState = !empty($val['id_order_state']) ? ($indexedOrderStates[$val['id_order_state']] ?? null) : null;
+            $res[$key]['order_state'] = $orderState['name'] ?? null ?: null;
+            $res[$key]['invoice'] = $orderState['invoice'] ?? null ?: null;
+            $res[$key]['order_state_color'] = $orderState['color'] ?? null ?: null;
         }
 
         return $res;
