@@ -36,23 +36,23 @@ use PrestaShopException;
 
 class GetStoreHandler implements GetStoreHandlerInterface
 {
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @throws StoreException
-	 */
-	public function handle(GetStore $query): Store
-	{
-		try {
-			$store = new Store($query->getStoreId()->getValue());
+    /**
+     * {@inheritdoc}
+     *
+     * @throws StoreException
+     */
+    public function handle(GetStore $query): Store
+    {
+        try {
+            $store = new Store($query->getStoreId()->getValue());
 
-			if (0 >= $store->id) {
-				throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
-			}
-		} catch (PrestaShopException $e) {
-			throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
-		}
+            if (0 >= $store->id) {
+                throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
+        }
 
-		return $store;
-	}
+        return $store;
+    }
 }
