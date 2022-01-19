@@ -245,3 +245,43 @@ Feature: Update product combination suppliers in Back Office (BO)
     And combination "product1SWhite" should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
+
+  Scenario: Update product suppliers without specifying the productSupplierId should also work
+    When I associate suppliers to product "product1"
+      | supplier  | combination_suppliers                     |
+      | supplier2 | product1SWhite:product1SWhiteSupplier2Ter |
+      | supplier1 | product1SWhite:product1SWhiteSupplier1Ter |
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    # Default supplier is the first one associated
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
+    # Suppliers are associated to all combinations but only product1SWhite has references for product supplier
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
+      | product1SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
+    And combination "product1SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    # We can update combination suppliers even without specifying the productSupplierId, the matching works based on the
+    # productId,combinationId,supplierId triplet
+    When I update following suppliers for combination "product1SWhite":
+      | supplier  | reference               | currency | price_tax_excluded |
+      | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | supplier2 | second supplier2        | USD      | 69                 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Bis | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | product1SWhiteSupplier2bis | supplier2 | second supplier2        | USD      | 69                 |
