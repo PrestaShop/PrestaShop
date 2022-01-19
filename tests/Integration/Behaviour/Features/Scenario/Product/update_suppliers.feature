@@ -57,7 +57,9 @@ Feature: Update product suppliers from Back Office (BO)
     When I associate suppliers to product "product1"
       | supplier  | product_supplier  |
       | supplier1 | product1supplier1 |
-    Then product product1 should have following suppliers:
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+    And product product1 should have following suppliers:
       | product_supplier  | supplier  | reference | currency | price_tax_excluded |
       | product1supplier1 | supplier1 |           | USD      | 0                  |
     # Update product suppliers using their references
@@ -76,7 +78,11 @@ Feature: Update product suppliers from Back Office (BO)
       | supplier1 | product1supplier1 |
       | supplier2 | product1supplier2 |
       | supplier3 | product1supplier3 |
-    And I update product product1 suppliers:
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+      | supplier3 |
+    When I update product product1 suppliers:
       | product_supplier  | supplier  | reference                          | currency | price_tax_excluded |
       | product1supplier1 | supplier1 | my new first supplier for product1 | USD      | 10                 |
       | product1supplier2 | supplier2 | my second supplier for product1    | EUR      | 11                 |
@@ -110,7 +116,10 @@ Feature: Update product suppliers from Back Office (BO)
       | supplier  | product_supplier  |
       | supplier1 | product1supplier1 |
       | supplier2 | product1supplier2 |
-    Then product product1 should have following suppliers:
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product1 should have following suppliers:
       | product_supplier  | supplier  | reference                          | currency | price_tax_excluded |
       | product1supplier1 | supplier1 | my new first supplier for product1 | USD      | 10                 |
       | product1supplier2 | supplier2 | my second supplier for product1    | EUR      | 11                 |
@@ -122,7 +131,10 @@ Feature: Update product suppliers from Back Office (BO)
       | supplier  | product_supplier     |
       | supplier3 | product1supplier3bis |
       | supplier1 | product1supplier1    |
-    Then product product1 should have following suppliers:
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier3 |
+    And product product1 should have following suppliers:
       | product_supplier     | supplier  | reference                          | currency | price_tax_excluded |
       | product1supplier1    | supplier1 | my new first supplier for product1 | USD      | 10                 |
       | product1supplier3bis | supplier3 |                                    | USD      | 0                  |
@@ -174,7 +186,9 @@ Feature: Update product suppliers from Back Office (BO)
     And I update product product3 suppliers:
       | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
       | product3supplier1 | supplier1 | my first supplier for product3 | USD      | 10                 |
-    Then product product3 should have following suppliers:
+    Then product product3 should have the following suppliers assigned:
+      | supplier1 |
+    And product product3 should have following suppliers:
       | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
       | product3supplier1 | supplier1 | my first supplier for product3 | USD      | 10                 |
     And product product3 should have following supplier values:
@@ -228,7 +242,10 @@ Feature: Update product suppliers from Back Office (BO)
       | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
       | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 10                 |
       | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 11                 |
-    Then product product4 should have following suppliers:
+    Then product product4 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product4 should have following suppliers:
       | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
       | product4supplier1 | supplier1 | my first supplier for product4  | USD      | 10                 |
       | product4supplier2 | supplier2 | my second supplier for product4 | EUR      | 11                 |
@@ -272,7 +289,10 @@ Feature: Update product suppliers from Back Office (BO)
         | supplier  | product_supplier  |
         | supplier2 | product5supplier2 |
         | supplier1 | product5supplier1 |
-      Then product product5 should have following suppliers:
+      Then product product5 should have the following suppliers assigned:
+        | supplier1 |
+        | supplier2 |
+      And product product5 should have following suppliers:
         | product_supplier  | supplier  | reference | currency | price_tax_excluded |
         | product5supplier1 | supplier1 |           | USD      | 0                  |
         | product5supplier2 | supplier2 |           | USD      | 0                  |
@@ -294,7 +314,10 @@ Feature: Update product suppliers from Back Office (BO)
         | supplier  | product_supplier  |
         | supplier1 | product5supplier1 |
         | supplier2 | product5supplier2 |
-      Then product product5 should have following suppliers:
+      Then product product5 should have the following suppliers assigned:
+        | supplier1 |
+        | supplier2 |
+      And product product5 should have following suppliers:
         | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
         | product5supplier1 | supplier1 | my first supplier for product5  | USD      | 10                 |
         | product5supplier2 | supplier2 | my second supplier for product5 | EUR      | 11                 |
@@ -307,7 +330,10 @@ Feature: Update product suppliers from Back Office (BO)
         | supplier  | product_supplier  |
         | supplier1 | product5supplier1 |
         | supplier3 | product5supplier3 |
-      Then product product5 should have following suppliers:
+      Then product product5 should have the following suppliers assigned:
+        | supplier1 |
+        | supplier3 |
+      And product product5 should have following suppliers:
         | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
         | product5supplier1 | supplier1 | my first supplier for product5 | USD      | 10                 |
         | product5supplier3 | supplier3 |                                | USD      | 0                  |
@@ -334,7 +360,10 @@ Feature: Update product suppliers from Back Office (BO)
       | supplier  | product_supplier  |
       | supplier2 | product6supplier2 |
       | supplier1 | product6supplier1 |
-    Then product product6 should have following suppliers:
+    Then product product6 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product6 should have following suppliers:
       | product_supplier  | supplier  | reference | currency | price_tax_excluded |
       | product6supplier1 | supplier1 |           | USD      | 0                  |
       | product6supplier2 | supplier2 |           | USD      | 0                  |
@@ -349,7 +378,10 @@ Feature: Update product suppliers from Back Office (BO)
       | supplier  | reference                       | currency | price_tax_excluded |
       | supplier1 | my first supplier for product6  | USD      | 10                 |
       | supplier2 | my second supplier for product6 | EUR      | 11                 |
-    Then product product6 should have following suppliers:
+    Then product product6 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product6 should have following suppliers:
       | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
       | product6supplier1 | supplier1 | my first supplier for product6  | USD      | 10                 |
       | product6supplier2 | supplier2 | my second supplier for product6 | EUR      | 11                 |
