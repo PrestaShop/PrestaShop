@@ -12,6 +12,7 @@ const {getDateFormat} = require('@utils/date');
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderByCustomerTest, createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/enableDisableEcoTax');
+const {deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
 const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
 
 // Import BO pages
@@ -1480,36 +1481,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
 
   // Post-condition - Delete the created products
-  describe('POS-TEST: Delete the created products', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
-
-      await addProductPage.goToSubMenu(page, addProductPage.catalogParentLink, addProductPage.productsLink);
-
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
-
     [virtualProduct,
       customizedProduct,
       productWithSpecificPrice,
       productWithEcoTax,
-    ].forEach((product, index) => {
-      it(`should delete product '${product.name}' from DropDown Menu`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
-
-        const deleteTextResult = await productsPage.deleteProduct(page, product);
-        await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-      });
-
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFiltersAfterDelete${index}`, baseContext);
-
-        const numberOfProductsAfterReset = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProductsAfterReset).to.be.equal(numberOfProducts + 3 - index);
-      });
+    ].forEach((productData) => {
+      deleteProductTest(productData, baseContext);
     });
-  });
 
   // Post-condition - Disable EcoTax
   disableEcoTaxTest(baseContext);
