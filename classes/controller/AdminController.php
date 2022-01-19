@@ -590,7 +590,7 @@ class AdminControllerCore extends Controller
         }
 
         $this->context->smarty->assign([
-            'multistore_header' => $this->container->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
+            'multistore_header' => $this->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
         ]);
     }
 
@@ -2663,7 +2663,7 @@ class AdminControllerCore extends Controller
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            if ($this->multistoreEnabled()) {
                 $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);

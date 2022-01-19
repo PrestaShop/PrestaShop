@@ -35,6 +35,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 abstract class ControllerCore
 {
     const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    const SERVICE_MULTISTORE_FEATURE = 'prestashop.adapter.multistore_feature';
 
     /**
      * @var Context
@@ -830,5 +831,15 @@ abstract class ControllerCore
     public function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * Check if multistore feature is enabled.
+     *
+     * @return bool
+     */
+    public function multistoreEnabled(): bool;
+    {
+        return $this->get(static::SERVICE_MULTISTORE_FEATURE);
     }
 }
