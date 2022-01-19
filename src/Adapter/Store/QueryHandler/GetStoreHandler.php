@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreHandlerInterfac
 
 use PrestaShopException;
 
-final class GetStoreHandler implements GetStoreHandlerInterface
+class GetStoreHandler implements GetStoreHandlerInterface
 {
 	/**
 	 * {@inheritdoc}
