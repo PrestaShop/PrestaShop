@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreHandlerInterface;
-
 use PrestaShopException;
 
 class GetStoreHandler implements GetStoreHandlerInterface
