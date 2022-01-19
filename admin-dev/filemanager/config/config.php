@@ -9,9 +9,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require_once _PS_ADMIN_DIR_.'/init.php';
 
-if (function_exists('mb_internal_encoding')) {
-    mb_internal_encoding('UTF-8');
-}
+mb_internal_encoding('UTF-8');
 
 $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminProducts'));
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));

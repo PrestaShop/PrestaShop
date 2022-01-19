@@ -350,7 +350,7 @@ if (isset($_POST['submit'])) {
     ?>"/>
 	<input type="hidden" id="lang_extract" value="<?php echo Tools::safeOutput(lang_Extract);
     ?>"/>
-	<input type="hidden" id="lang_file_info" value="<?php echo fix_strtoupper(lang_File_info);
+	<input type="hidden" id="lang_file_info" value="<?php echo mb_strtoupper(lang_File_info);
     ?>"/>
 	<input type="hidden" id="lang_edit_image" value="<?php echo Tools::safeOutput(lang_Edit_image);
     ?>"/>
@@ -619,7 +619,7 @@ if (isset($_POST['submit'])) {
 								<?php
 }
     ?>
-								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo fix_strtolower(lang_Text_filter);
+								<input accesskey="f" type="text" class="filter-input" id="filter-input" name="filter" placeholder="<?php echo mb_strtolower(lang_Text_filter);
     ?>..." value="<?php echo Tools::safeOutput($filter);
     ?>"/><?php if ($n_files > $file_number_limit_js) {
     ?><label id="filter" class="btn"><i class="icon-play"></i></label><?php
@@ -924,7 +924,7 @@ if (isset($_POST['submit'])) {
     foreach ($files as $nu => $file_array) {
         $file = $file_array['file'];
 
-        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(fix_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
+        if ($file == '.' || $file == '..' || is_dir($current_path.$subfolder.$subdir.$file) || in_array($file, $hidden_files) || !in_array(mb_strtolower($file_array['extension']), $ext) || ($filter != '' && strpos($file, $filter) === false)) {
             continue;
         }
 
@@ -960,7 +960,7 @@ if (isset($_POST['submit'])) {
         $show_original_mini = false;
         $mini_src = "";
         $src_thumb = "";
-        $extension_lower = fix_strtolower($file_array['extension']);
+        $extension_lower = mb_strtolower($file_array['extension']);
         if (in_array($extension_lower, $ext_img)) {
             $src = $base_url.$cur_dir.rawurlencode($file);
             $mini_src = $src_thumb = $thumbs_path.$subdir.$file;

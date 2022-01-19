@@ -207,7 +207,7 @@ class ImageManagerCore
 
         list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
         $rotate = 0;
-        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
+        if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
 
             if ($exif && isset($exif['Orientation'])) {
