@@ -148,14 +148,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers
 
-  prestashop.adapter.product.combination.command_handler.remove_all_associated_combination_suppliers_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandler
-    arguments:
-      - '@prestashop.adapter.product.update.product_supplier_updater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand
-
   prestashop.adapter.product.combination.command_handler.set_combination_images_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationImagesHandler
     arguments:

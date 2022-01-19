@@ -241,7 +241,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
       | product1SWhiteSupplier1Bis | supplier1 | new sup white shirt S 1 | USD      | 42                 |
       | product1SWhiteSupplier2bis | supplier2 | second supplier2        | USD      | 10                 |
-    When I remove all associated combination "product1SWhite" suppliers
+    When I remove all associated product product1 suppliers
     And combination "product1SWhite" should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty

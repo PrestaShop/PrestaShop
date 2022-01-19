@@ -84,22 +84,6 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     }
 
     /**
-     * @When I remove all associated combination ":combinationReference" suppliers
-     *
-     * @param string $combinationReference
-     */
-    public function removeAssociatedCombinationSuppliers(string $combinationReference): void
-    {
-        try {
-            $this->getCommandBus()->handle(new RemoveAllAssociatedCombinationSuppliersCommand(
-                $this->getSharedStorage()->get($combinationReference))
-            );
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
      * @Then combination ":combinationReference" should have following suppliers:
      *
      * @param string $combinationReference
