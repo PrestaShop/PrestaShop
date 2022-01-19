@@ -3419,7 +3419,7 @@ exit;
      *
      * @return string New string
      */
-    public static function nl2br($str)
+    public static function nl2br(string $str)
     {
         return str_replace(["\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
     }
