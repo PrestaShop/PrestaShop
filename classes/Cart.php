@@ -911,10 +911,6 @@ class CartCore extends ObjectModel
             $shopContext->shop = new Shop((int) $row['id_shop']);
         }
 
-        $address = Address::initialize($address_id, true);
-        $id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int) $row['id_product'], $shopContext);
-        $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
-
         $specific_price_output = null;
         // Specify the orderId if needed so that Product::getPriceStatic returns the prices saved in OrderDetails
         $orderId = null;
