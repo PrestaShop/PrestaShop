@@ -761,30 +761,30 @@ class CartCore extends ObjectModel
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
         $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
-        $result = Db::getInstance()->executeS($sql);
+        $products = Db::getInstance()->executeS($sql);
 
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
         $products_ids = [];
         $pa_ids = [];
-        if ($result) {
-            foreach ($result as $key => $row) {
-                $products_ids[] = $row['id_product'];
-                $pa_ids[] = $row['id_product_attribute'];
-                $specific_price = SpecificPrice::getSpecificPrice($row['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $row['cart_quantity'], $row['id_product_attribute'], $this->id_customer, $this->id);
+        if ($products) {
+            foreach ($products as $key => $product) {
+                $products_ids[] = $product['id_product'];
+                $pa_ids[] = $product['id_product_attribute'];
+                $specific_price = SpecificPrice::getSpecificPrice($product['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $product['cart_quantity'], $product['id_product_attribute'], $this->id_customer, $this->id);
                 if ($specific_price) {
                     $reduction_type_row = ['reduction_type' => $specific_price['reduction_type']];
                 } else {
                     $reduction_type_row = ['reduction_type' => 0];
                 }
 
-                $result[$key] = array_merge($row, $reduction_type_row);
+                $products[$key] = array_merge($product, $reduction_type_row);
             }
         }
         // Thus you can avoid one query per product, because there will be only one query for all the products of the cart
         Product::cacheProductsFeatures($products_ids);
         Cart::cacheSomeAttributesLists($pa_ids, (int) $this->getAssociatedLanguage()->getId());
 
-        if (empty($result)) {
+        if (empty($products)) {
             $this->_products = [];
 
             return [];
@@ -799,17 +799,17 @@ class CartCore extends ObjectModel
                 $gifts = $this->getCartRules(CartRule::FILTER_ACTION_GIFT, false);
                 if (count($gifts) > 0) {
                     foreach ($gifts as $gift) {
-                        foreach ($result as $rowIndex => $row) {
-                            if (!array_key_exists('is_gift', $result[$rowIndex])) {
-                                $result[$rowIndex]['is_gift'] = false;
+                        foreach ($products as $rowIndex => $product) {
+                            if (!array_key_exists('is_gift', $products[$rowIndex])) {
+                                $products[$rowIndex]['is_gift'] = false;
                             }
 
                             if (
-                                $row['id_product'] == $gift['gift_product'] &&
-                                $row['id_product_attribute'] == $gift['gift_product_attribute']
+                                $product['id_product'] == $gift['gift_product'] &&
+                                $product['id_product_attribute'] == $gift['gift_product_attribute']
                             ) {
-                                $row['is_gift'] = true;
-                                $result[$rowIndex] = $row;
+                                $product['is_gift'] = true;
+                                $products[$rowIndex] = $product;
                             }
                         }
 
@@ -825,42 +825,42 @@ class CartCore extends ObjectModel
 
             $this->_products = [];
 
-            foreach ($result as &$row) {
-                if (!array_key_exists('is_gift', $row)) {
-                    $row['is_gift'] = false;
+            foreach ($products as &$product) {
+                if (!array_key_exists('is_gift', $product)) {
+                    $product['is_gift'] = false;
                 }
 
-                $additionalRow = Product::getProductProperties((int) $this->id_lang, $row);
-                $row['reduction'] = $additionalRow['reduction'];
-                $row['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
-                $row['price_without_reduction'] = $additionalRow['price_without_reduction'];
-                $row['specific_prices'] = $additionalRow['specific_prices'];
+                $additionalRow = Product::getProductProperties((int) $this->id_lang, $product);
+                $product['reduction'] = $additionalRow['reduction'];
+                $product['reduction_without_tax'] = $additionalRow['reduction_without_tax'];
+                $product['price_without_reduction'] = $additionalRow['price_without_reduction'];
+                $product['specific_prices'] = $additionalRow['specific_prices'];
                 unset($additionalRow);
 
                 $givenAwayQuantity = 0;
-                $giftIndex = $row['id_product'] . '-' . $row['id_product_attribute'];
-                if ($row['is_gift'] && array_key_exists($giftIndex, $givenAwayProductsIds)) {
+                $giftIndex = $product['id_product'] . '-' . $product['id_product_attribute'];
+                if ($product['is_gift'] && array_key_exists($giftIndex, $givenAwayProductsIds)) {
                     $givenAwayQuantity = $givenAwayProductsIds[$giftIndex];
                 }
 
-                if (!$row['is_gift'] || (int) $row['cart_quantity'] === $givenAwayQuantity) {
-                    $row = $this->applyProductCalculations($row, $cart_shop_context, null, $keepOrderPrices);
+                if (!$product['is_gift'] || (int) $product['cart_quantity'] === $givenAwayQuantity) {
+                    $product = $this->applyProductCalculations($product, $cart_shop_context, null, $keepOrderPrices);
                 } else {
                     // Separate products given away from those manually added to cart
-                    $this->_products[] = $this->applyProductCalculations($row, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
-                    unset($row['is_gift']);
-                    $row = $this->applyProductCalculations(
-                        $row,
+                    $this->_products[] = $this->applyProductCalculations($product, $cart_shop_context, $givenAwayQuantity, $keepOrderPrices);
+                    unset($product['is_gift']);
+                    $product = $this->applyProductCalculations(
+                        $product,
                         $cart_shop_context,
-                        $row['cart_quantity'] - $givenAwayQuantity,
+                        $product['cart_quantity'] - $givenAwayQuantity,
                         $keepOrderPrices
                     );
                 }
 
-                $this->_products[] = $row;
+                $this->_products[] = $product;
             }
         } else {
-            $this->_products = $result;
+            $this->_products = $products;
         }
 
         return $this->_products;
