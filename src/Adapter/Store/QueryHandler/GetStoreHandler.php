@@ -50,7 +50,7 @@ final class GetStoreHandler implements GetStoreHandlerInterface
 				throw new StoreNotFoundException(sprintf('Store object with id %s was not found', var_export($query->getStoreId()->getValue(), true)));
 			}
 		} catch (PrestaShopException $e) {
-			throw new ContactException(sprintf('An unexpected error occurred when retrieving store with id %s', var_export($query->getStoreId()->getValue(), true)), 0, $e);
+			throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %s', var_export($query->getStoreId()->getValue(), true)), 0, $e);
 		}
 
 		return $store;
