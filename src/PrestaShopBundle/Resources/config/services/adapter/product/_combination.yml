@@ -138,15 +138,6 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand
 
-  prestashop.adapter.product.combination.command_handler.set_combination_default_supplier_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetCombinationDefaultSupplierHandler
-    arguments:
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
-      - '@prestashop.adapter.product.update.product_supplier_updater'
-    tags:
-      - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand
-
   prestashop.adapter.product.combination.query_handler.get_combination_suppliers_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationSuppliersHandler
     arguments:
