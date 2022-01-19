@@ -149,7 +149,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | default supplier           | supplier2 |
       | default supplier reference | sup S2    |
     # Explicitly set default supplier for combination
-    When I set combination "product1SWhite" default supplier to supplier1
+    When I set product product1 default supplier to supplier2
     And product product1 should have following supplier values:
       | default supplier           | supplier1               |
       | default supplier reference | new sup white shirt S 1 |
