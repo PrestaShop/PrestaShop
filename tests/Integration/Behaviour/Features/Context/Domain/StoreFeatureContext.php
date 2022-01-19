@@ -29,10 +29,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
-use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\StoreId;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Store;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
