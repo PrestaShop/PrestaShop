@@ -449,6 +449,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
                 (int) $movementDatum['id_stock_mvt'],
                 (int) $movementDatum['id_stock'],
                 (int) $movementDatum['id_stock_mvt_reason'],
+                null === $movementDatum['id_order'] ? $movementDatum['id_order'] : (int) $movementDatum['id_order'],
                 (int) $movementDatum['id_employee'],
                 $movementDatum['employee_firstname'],
                 $movementDatum['employee_lastname'],

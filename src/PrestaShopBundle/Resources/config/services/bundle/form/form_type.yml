@@ -1430,6 +1430,15 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.stock.stock_movement_history:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementHistoryType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@form.form_cloner'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.stock.stock_options_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType'
     parent: 'form.type.translatable.aware'

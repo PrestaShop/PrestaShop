@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
 use DateTime;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementFilter;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetEmployeeStockMovementsHandlerInterface;
@@ -61,8 +62,9 @@ class GetEmployeeStockMovementsHandler implements GetEmployeeStockMovementsHandl
     public function handle(GetEmployeeStockMovements $query): array
     {
         $stockId = $this->stockAvailableRepository->getStockIdByProduct($query->getProductId());
-        $movementsData = $this->stockMovementRepository->getLastEmployeeStockMovements(
-            $stockId,
+        $movementsData = $this->stockMovementRepository->getLastStockMovements(
+            (new StockMovementFilter())
+                ->setStockIds($stockId),
             $query->getOffset(),
             $query->getLimit()
         );
@@ -73,6 +75,7 @@ class GetEmployeeStockMovementsHandler implements GetEmployeeStockMovementsHandl
                 (int) $movementDatum['id_stock_mvt'],
                 (int) $movementDatum['id_stock'],
                 (int) $movementDatum['id_stock_mvt_reason'],
+                (int) $movementDatum['id_order'],
                 (int) $movementDatum['id_employee'],
                 $movementDatum['employee_firstname'],
                 $movementDatum['employee_lastname'],

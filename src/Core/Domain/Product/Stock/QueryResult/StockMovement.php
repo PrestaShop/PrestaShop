@@ -48,6 +48,11 @@ class StockMovement
     protected $stockMovementReasonId;
 
     /**
+     * @var int|null
+     */
+    protected $orderId;
+
+    /**
      * @var int
      */
     protected $employeeId;
@@ -76,6 +81,7 @@ class StockMovement
         int $stockMovementId,
         int $stockId,
         int $stockMovementReasonId,
+        ?int $orderId,
         int $employeeId,
         ?string $employeeFirstName,
         ?string $employeeLastName,
@@ -85,6 +91,7 @@ class StockMovement
         $this->stockMovementId = $stockMovementId;
         $this->stockId = $stockId;
         $this->stockMovementReasonId = $stockMovementReasonId;
+        $this->orderId = $orderId;
         $this->employeeId = $employeeId;
         $this->employeeFirstName = $employeeFirstName;
         $this->employeeLastName = $employeeLastName;
@@ -108,6 +115,11 @@ class StockMovement
     }
 
     public function getEmployeeId(): int
+    {
+        return $this->employeeId;
+    }
+
+    public function getOrderId(): int
     {
         return $this->employeeId;
     }

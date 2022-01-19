@@ -61,8 +61,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeeStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetStockMovementHistories;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\RangeStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\SingleStockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -120,7 +123,7 @@ class ProductFormDataProviderTest extends TestCase
                         'quantity' => 0,
                         'delta' => 0,
                     ],
-                    'stock_movements' => [],
+                    'stock_movement_histories' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -187,7 +190,7 @@ class ProductFormDataProviderTest extends TestCase
                         'quantity' => 0,
                         'delta' => 0,
                     ],
-                    'stock_movements' => [],
+                    'stock_movement_histories' => [],
                     'minimal_quantity' => 0,
                 ],
             ],
@@ -485,8 +488,9 @@ class ProductFormDataProviderTest extends TestCase
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
-            'stock_movements' => [
+            'stock_movement_histories' => [
                 [
+                    'class' => SingleStockMovementHistory::class,
                     'id_stock_mvt' => 10,
                     'delta_quantity' => +42,
                     'employee_firstname' => 'Paul',
@@ -494,6 +498,7 @@ class ProductFormDataProviderTest extends TestCase
                     'date_add' => '2021-05-24 15:24:32',
                 ],
                 [
+                    'class' => SingleStockMovementHistory::class,
                     'id_stock_mvt' => 11,
                     'delta_quantity' => -15,
                     'employee_firstname' => 'Frodo',
@@ -513,15 +518,15 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
-        $expectedOutputData['stock']['quantities']['stock_movements'] = [
+        $expectedOutputData['stock']['quantities']['stock_movement_histories'] = [
             [
-                'date_add' => '2021-05-24 15:24:32',
-                'employee' => 'Paul Atreide',
+                'date_range' => '2021-05-24 15:24:32',
+                'employee_name' => 'Paul Atreide',
                 'delta_quantity' => 42,
             ],
             [
-                'date_add' => '2021-05-22 16:35:48',
-                'employee' => 'Frodo Baggins',
+                'date_range' => '2021-05-22 16:35:48',
+                'employee_name' => 'Frodo Baggins',
                 'delta_quantity' => -15,
             ],
         ];
@@ -1109,29 +1114,50 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return StockMovement[]
+     * @return StockMovementHistory[]
      */
-    private function createProductStockMovements(array $productData): array
+    private function createProductStockMovementHistories(array $productData): array
     {
-        if (!isset($productData['stock_movements'])) {
+        if (!isset($productData['stock_movement_histories'])) {
             return [];
         }
 
-        $stockMovements = [];
-        foreach ($productData['stock_movements'] as $stockMovement) {
-            $stockMovements[] = new StockMovement(
-                $stockMovement['id_stock_mvt'],
-                42,
-                11,
-                42,
-                $stockMovement['employee_firstname'],
-                $stockMovement['employee_lastname'],
-                $stockMovement['delta_quantity'],
-                new DateTime($stockMovement['date_add'])
-            );
+        $stockMovementHistories = [];
+        foreach ($productData['stock_movement_histories'] as $stockMovementHistory) {
+            $stockMovementHistoryClass = $stockMovementHistory['class'];
+
+            switch ($stockMovementHistoryClass) {
+                case SingleStockMovementHistory::class:
+                    $stockMovementHistory = new $stockMovementHistoryClass(
+                        new StockMovement(
+                            $stockMovementHistory['id_stock_mvt'],
+                            42,
+                            11,
+                            null,
+                            42,
+                            $stockMovementHistory['employee_firstname'],
+                            $stockMovementHistory['employee_lastname'],
+                            $stockMovementHistory['delta_quantity'],
+                            new DateTime($stockMovementHistory['date_add'])
+                        )
+                    );
+                    break;
+                case RangeStockMovementHistory::class:
+                    $stockMovementHistory = new $stockMovementHistoryClass(
+                        $stockMovementHistory['delta_quantity'],
+                        new DateTime($stockMovementHistory['from_date']),
+                        new DateTime($stockMovementHistory['to_date'])
+                    );
+                    break;
+                default:
+                    throw new RuntimeException(
+                        sprintf('Unsupported class "%s"', $stockMovementHistoryClass)
+                    );
+            }
+            $stockMovementHistories[] = $stockMovementHistory;
         }
 
-        return $stockMovements;
+        return $stockMovementHistories;
     }
 
     /**
@@ -1318,7 +1344,7 @@ class ProductFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
                 $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeeStockMovements::class),
+                $this->isInstanceOf(GetStockMovementHistories::class),
                 $this->isInstanceOf(GetRelatedProducts::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
@@ -1342,7 +1368,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
             GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
-            GetEmployeeStockMovements::class => $this->createProductStockMovements($productData),
+            GetStockMovementHistories::class => $this->createProductStockMovementHistories($productData),
             GetRelatedProducts::class => $this->createRelatedProducts($productData),
         ];
 
@@ -1394,7 +1420,7 @@ class ProductFormDataProviderTest extends TestCase
                         'quantity' => static::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
-                    'stock_movements' => [],
+                    'stock_movement_histories' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
