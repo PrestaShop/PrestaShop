@@ -142,13 +142,9 @@ function check_files_extensions_on_path($path, $ext)
 {
     if (!is_dir($path)) {
         $fileinfo = pathinfo($path);
-        if (function_exists('mb_strtolower')) {
             if (!in_array(mb_strtolower($fileinfo['extension']), $ext)) {
                 unlink($path);
-            } elseif (!in_array(Tools::strtolower($fileinfo['extension']), $ext)) {
-                unlink($path);
             }
-        }
     } else {
         $files = scandir($path, SCANDIR_SORT_NONE);
         foreach ($files as $file) {
@@ -161,12 +157,8 @@ function check_files_extensions_on_phar($phar, &$files, $basepath, $ext)
 {
     foreach ($phar as $file) {
         if ($file->isFile()) {
-            if (function_exists('mb_strtolower')) {
-                if (in_array(mb_strtolower($file->getExtension()), $ext)) {
-                    $files[] = $basepath.$file->getFileName();
-                } elseif (in_array(Tools::strtolower($file->getExtension()), $ext)) {
-                    $files[] = $basepath.$file->getFileName();
-                }
+            if (in_array(mb_strtolower($file->getExtension()), $ext)) {
+                $files[] = $basepath.$file->getFileName();
             }
         } elseif ($file->isDir()) {
             $iterator = new DirectoryIterator($file);
@@ -203,24 +195,6 @@ function fix_filename($str, $transliteration)
 function fix_dirname($str)
 {
     return str_replace('~', ' ', dirname(str_replace(' ', '~', $str)));
-}
-
-function fix_strtoupper($str)
-{
-    if (function_exists('mb_strtoupper')) {
-        return mb_strtoupper($str);
-    } else {
-        return strtoupper($str);
-    }
-}
-
-function fix_strtolower($str)
-{
-    if (function_exists('mb_strtoupper')) {
-        return mb_strtolower($str);
-    } else {
-        return strtolower($str);
-    }
 }
 
 function fix_path($path, $transliteration)

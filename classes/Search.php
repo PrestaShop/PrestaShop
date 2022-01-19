@@ -217,7 +217,7 @@ class SearchCore
         }
 
         // If the language is constituted with symbol and there is no "words", then split every chars
-        if (in_array($iso_code, ['zh', 'tw', 'ja']) && function_exists('mb_strlen')) {
+        if (in_array($iso_code, ['zh', 'tw', 'ja'])) {
             // Cut symbols from letters
             $symbols = '';
             $letters = '';

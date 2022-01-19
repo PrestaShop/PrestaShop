@@ -102,8 +102,7 @@ class Email
     {
         $email = html_entity_decode($email, ENT_COMPAT, 'UTF-8');
 
-        $length = function_exists('mb_strlen') ? mb_strlen($email, 'UTF-8') : strlen($email);
-        if (self::MAX_LENGTH < $length) {
+        if (self::MAX_LENGTH < mb_strlen($email, 'UTF-8')) {
             throw new DomainConstraintException(sprintf('Email is too long. Max allowed length is %s', self::MAX_LENGTH), DomainConstraintException::INVALID_EMAIL);
         }
     }
