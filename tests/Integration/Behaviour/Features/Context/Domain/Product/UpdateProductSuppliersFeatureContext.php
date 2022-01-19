@@ -141,7 +141,9 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
             ];
 
             // Product supplier id is optional because supplier_id, combination_id and product_id are enough to find the reference
-            // but it's used to assert association is consistent
+            // but it's used to assert association is consistent We need to be able to run this command even without the product_supplier_id
+            // so that the form can associate new supplier and update their content in a single POST request (the IDs can't be known before
+            // they are created).
             if (isset($productSupplier['product_supplier'])) {
                 $productSupplierData['product_supplier_id'] = $this->getSharedStorage()->get($productSupplier['product_supplier']);
             }
