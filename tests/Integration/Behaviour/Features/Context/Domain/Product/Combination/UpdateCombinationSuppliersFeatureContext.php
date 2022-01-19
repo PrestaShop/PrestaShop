@@ -31,10 +31,8 @@ use Behat\Gherkin\Node\TableNode;
 use Currency;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 
