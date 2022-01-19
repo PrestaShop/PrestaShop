@@ -31,10 +31,10 @@ use Store;
 
 interface GetStoreHandlerInterface
 {
-	/**
-	 * @param GetStore $query
-	 *
-	 * @return Store
-	 */
-	public function handle(GetStore $query): Store;
+    /**
+     * @param GetStore $query
+     *
+     * @return Store
+     */
+    public function handle(GetStore $query): Store;
 }
