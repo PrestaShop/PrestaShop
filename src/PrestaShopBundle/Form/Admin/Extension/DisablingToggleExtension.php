@@ -83,6 +83,7 @@ class DisablingToggleExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        //@todo: needs cleaning.
         $isOverridden = $builder->getOption('disabling_toggle');
         if ($isOverridden) {
             $label = $this->getCheckboxLabel();
@@ -100,9 +101,21 @@ class DisablingToggleExtension extends AbstractTypeExtension
                         'data-value-type' => 'boolean',
                     ],
                 ]);
+
+                $shouldBeDisabled = !$parent->get($fieldName)->getData();
+
                 $formCloner = new FormCloner();
+                $newOptions = ['disabled' => $shouldBeDisabled];
+
+                foreach ($form->all() as $childForm) {
+                    if ($childForm->getConfig()->hasOption('disabled') && $shouldBeDisabled === $childForm->getConfig()->getOption('disabled')) {
+                        continue;
+                    }
+                    $newChildForm = $formCloner->cloneForm($childForm, array_merge($childForm->getConfig()->getOptions(), $newOptions));
+                    $form->add($newChildForm);
+                }
+
                 //@todo; need configurable (e.g. it should be possible to change if input is disabled when checkbox is checked or when unchecked
-                $newOptions = ['attr' => ['disabled' => !$parent->get($fieldName)->getData()]];
                 $newForm = $formCloner->cloneForm($form, array_merge($form->getConfig()->getOptions(), $newOptions));
                 $parent->add($newForm);
             });
