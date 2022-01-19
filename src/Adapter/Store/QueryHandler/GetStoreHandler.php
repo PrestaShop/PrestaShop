@@ -41,7 +41,7 @@ class GetStoreHandler implements GetStoreHandlerInterface
 	 *
 	 * @throws StoreException
 	 */
-	public function handle(GetStore $query):Store
+	public function handle(GetStore $query): Store
 	{
 		try {
 			$store = new Store($query->getStoreId()->getValue());
