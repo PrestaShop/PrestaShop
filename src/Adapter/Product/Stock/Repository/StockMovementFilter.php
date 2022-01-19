@@ -48,9 +48,6 @@ class StockMovementFilter
      */
     protected $isOrder = null;
 
-    /**
-     * @return string
-     */
     public function getStockIdsAsString(string $separator = ','): string
     {
         return implode($separator, array_map(
@@ -79,9 +76,6 @@ class StockMovementFilter
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getReasonIdsAsString(string $separator = ','): string
     {
         return implode($separator, array_map(

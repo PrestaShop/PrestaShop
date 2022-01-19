@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\GetStockMovementHistoriesConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class GetStockMovementHistories
@@ -54,30 +56,31 @@ class GetStockMovementHistories
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
     ) {
-        $this->productId = new ProductId($productId);
+        if ($offset < 0) {
+            throw new GetStockMovementHistoriesConstraintException('Offset should be a positive integer');
+        }
+        if ($limit < 0) {
+            throw new GetStockMovementHistoriesConstraintException('Limit should be a positive integer');
+        }
+        try {
+            $this->productId = new ProductId($productId);
+        } catch (ProductConstraintException $exception) {
+            throw new GetStockMovementHistoriesConstraintException('ProductId is invalid', 0, $exception);
+        }
         $this->offset = $offset;
         $this->limit = $limit;
     }
 
-    /**
-     * @return ProductId
-     */
     public function getProductId(): ProductId
     {
         return $this->productId;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;

@@ -107,6 +107,6 @@ class SingleStockMovementHistory implements StockMovementHistory
             ->getStockMovement()
             ->getDateAdd()
             ->format(DateTime::DEFAULT_DATETIME_FORMAT)
-            ;
+        ;
     }
 }

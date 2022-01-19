@@ -23,19 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetStockMovementHistories;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
-
-/**
- * Defines contract for GetStockMovementsHistoryHandler
- */
-interface GetStockMovementHistoriesHandlerInterface
+class GetStockMovementHistoriesConstraintException extends ProductStockException
 {
-    /**
-     * @return StockMovementHistory[]
-     */
-    public function handle(GetStockMovementHistories $query): array;
 }

@@ -81,10 +81,13 @@ class GetStockMovementHistoriesHandler implements GetStockMovementHistoriesHandl
 
     protected function createStockMovementHistory(array $historyRow): StockMovementHistory
     {
-        return 1 === (int) $historyRow['id_stock_mvt_count']
-            ? $this->createSingleStockMovementHistory($historyRow)
-            : $this->createRangeStockMovementHistory($historyRow)
-            ;
+        if (1 === (int) $historyRow['id_stock_mvt_count']) {
+            $stockMovementHistory = $this->createSingleStockMovementHistory($historyRow);
+        } else {
+            $stockMovementHistory = $this->createRangeStockMovementHistory($historyRow);
+        }
+
+        return $stockMovementHistory;
     }
 
     protected function createSingleStockMovementHistory(array $historyRow): SingleStockMovementHistory
@@ -118,18 +121,18 @@ class GetStockMovementHistoriesHandler implements GetStockMovementHistoriesHandl
             ->setStockMovementReasonIds(...$this->splitGroupData($historyRow['id_stock_mvt_reason_list']))
             ->setOrderIds(...$this->splitGroupData($historyRow['id_order_list']))
             ->setEmployeeIds(...$this->splitGroupData($historyRow['id_employee_list']))
-            ;
+        ;
     }
 
     protected function splitGroupData(string $data, string $type = 'int', string $separator = ','): array
     {
-        return array_map(
-            static function (string $datum) use ($type) {
-                settype($datum, $type);
+        $values = [];
 
-                return $datum;
-            },
-            explode($separator, $data)
-        );
+        foreach (explode($separator, $data) as $value) {
+            settype($value, $type);
+            $values[] = $value;
+        }
+
+        return $values;
     }
 }

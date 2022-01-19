@@ -490,6 +490,13 @@ class ProductFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movement_histories' => [
                 [
+                    'class' => RangeStockMovementHistory::class,
+                    'employee_name' => null,
+                    'delta_quantity' => -17,
+                    'from_date' => '2022-01-13 18:20:58',
+                    'to_date' => '2021-05-24 15:24:32',
+                ],
+                [
                     'class' => SingleStockMovementHistory::class,
                     'id_stock_mvt' => 10,
                     'delta_quantity' => +42,
@@ -498,12 +505,26 @@ class ProductFormDataProviderTest extends TestCase
                     'date_add' => '2021-05-24 15:24:32',
                 ],
                 [
+                    'class' => RangeStockMovementHistory::class,
+                    'employee_name' => 'John Doe',
+                    'delta_quantity' => -23,
+                    'from_date' => '2021-05-24 15:24:32',
+                    'to_date' => '2021-05-22 16:35:48',
+                ],
+                [
                     'class' => SingleStockMovementHistory::class,
                     'id_stock_mvt' => 11,
-                    'delta_quantity' => -15,
+                    'delta_quantity' => +15,
                     'employee_firstname' => 'Frodo',
                     'employee_lastname' => 'Baggins',
                     'date_add' => '2021-05-22 16:35:48',
+                ],
+                [
+                    'class' => RangeStockMovementHistory::class,
+                    'employee_name' => null,
+                    'delta_quantity' => -17,
+                    'from_date' => '2021-05-22 16:35:48',
+                    'to_date' => '2021-01-24 15:24:32',
                 ],
             ],
         ];
@@ -517,20 +538,33 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
-
         $expectedOutputData['stock']['quantities']['stock_movement_histories'] = [
+            [
+                'date_range' => '2022-01-13 18:20:58 - 2021-05-24 15:24:32',
+                'employee_name' => null,
+                'delta_quantity' => -17,
+            ],
             [
                 'date_range' => '2021-05-24 15:24:32',
                 'employee_name' => 'Paul Atreide',
-                'delta_quantity' => 42,
+                'delta_quantity' => +42,
+            ],
+            [
+                'date_range' => '2021-05-24 15:24:32 - 2021-05-22 16:35:48',
+                'employee_name' => 'John Doe',
+                'delta_quantity' => -23,
             ],
             [
                 'date_range' => '2021-05-22 16:35:48',
                 'employee_name' => 'Frodo Baggins',
-                'delta_quantity' => -15,
+                'delta_quantity' => +15,
+            ],
+            [
+                'date_range' => '2021-05-22 16:35:48 - 2021-01-24 15:24:32',
+                'employee_name' => null,
+                'delta_quantity' => -17,
             ],
         ];
-
         $datasets[] = [
             $productData,
             $expectedOutputData,
@@ -1121,37 +1155,36 @@ class ProductFormDataProviderTest extends TestCase
         if (!isset($productData['stock_movement_histories'])) {
             return [];
         }
-
         $stockMovementHistories = [];
-        foreach ($productData['stock_movement_histories'] as $stockMovementHistory) {
-            $stockMovementHistoryClass = $stockMovementHistory['class'];
 
-            switch ($stockMovementHistoryClass) {
+        foreach ($productData['stock_movement_histories'] as $historyData) {
+            switch ($historyData['class']) {
                 case SingleStockMovementHistory::class:
-                    $stockMovementHistory = new $stockMovementHistoryClass(
+                    $stockMovementHistory = new SingleStockMovementHistory(
                         new StockMovement(
-                            $stockMovementHistory['id_stock_mvt'],
+                            $historyData['id_stock_mvt'],
                             42,
                             11,
                             null,
                             42,
-                            $stockMovementHistory['employee_firstname'],
-                            $stockMovementHistory['employee_lastname'],
-                            $stockMovementHistory['delta_quantity'],
-                            new DateTime($stockMovementHistory['date_add'])
+                            $historyData['employee_firstname'],
+                            $historyData['employee_lastname'],
+                            $historyData['delta_quantity'],
+                            new DateTime($historyData['date_add'])
                         )
                     );
                     break;
                 case RangeStockMovementHistory::class:
-                    $stockMovementHistory = new $stockMovementHistoryClass(
-                        $stockMovementHistory['delta_quantity'],
-                        new DateTime($stockMovementHistory['from_date']),
-                        new DateTime($stockMovementHistory['to_date'])
+                    $stockMovementHistory = new RangeStockMovementHistory(
+                        $historyData['delta_quantity'],
+                        new DateTime($historyData['from_date']),
+                        new DateTime($historyData['to_date'])
                     );
+                    $stockMovementHistory->setEmployeeName($historyData['employee_name']);
                     break;
                 default:
                     throw new RuntimeException(
-                        sprintf('Unsupported class "%s"', $stockMovementHistoryClass)
+                        sprintf('Unsupported class "%s"', $historyData['class'])
                     );
             }
             $stockMovementHistories[] = $stockMovementHistory;

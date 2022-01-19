@@ -49,11 +49,6 @@ class GetEmployeeStockMovements
      */
     private $limit;
 
-    /**
-     * @param int $productId
-     * @param int $offset
-     * @param int $limit
-     */
     public function __construct(
         int $productId,
         int $offset = 0,
@@ -64,25 +59,16 @@ class GetEmployeeStockMovements
         $this->limit = $limit;
     }
 
-    /**
-     * @return ProductId
-     */
     public function getProductId(): ProductId
     {
         return $this->productId;
     }
 
-    /**
-     * @return int
-     */
     public function getOffset(): int
     {
         return $this->offset;
     }
 
-    /**
-     * @return int
-     */
     public function getLimit(): int
     {
         return $this->limit;

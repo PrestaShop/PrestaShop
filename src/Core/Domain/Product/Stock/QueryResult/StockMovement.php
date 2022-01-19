@@ -119,9 +119,9 @@ class StockMovement
         return $this->employeeId;
     }
 
-    public function getOrderId(): int
+    public function getOrderId(): ?int
     {
-        return $this->employeeId;
+        return $this->orderId;
     }
 
     public function getEmployeeFirstName(): ?string

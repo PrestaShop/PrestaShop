@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 interface GetEmployeeStockMovementsHandlerInterface
 {
     /**
-     * @param GetEmployeeStockMovements $query
-     *
      * @return StockMovement[]
      */
     public function handle(GetEmployeeStockMovements $query): array;

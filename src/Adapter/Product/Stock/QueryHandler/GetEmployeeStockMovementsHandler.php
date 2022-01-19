@@ -63,8 +63,7 @@ class GetEmployeeStockMovementsHandler implements GetEmployeeStockMovementsHandl
     {
         $stockId = $this->stockAvailableRepository->getStockIdByProduct($query->getProductId());
         $movementsData = $this->stockMovementRepository->getLastStockMovements(
-            (new StockMovementFilter())
-                ->setStockIds($stockId),
+            (new StockMovementFilter())->setStockIds($stockId),
             $query->getOffset(),
             $query->getLimit()
         );
