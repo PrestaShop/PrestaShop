@@ -43,6 +43,7 @@
     "typeahead.js": "^0.11.1",
     "url-polyfill": "^1.1.7",
     "vue": "^2.6.14",
+    "v-calendar": "^2.3.2",
     "vue-i18n": "^8.15.1",
     "vue-resource": "^1.5.1",
     "vue-router": "^2.8.1",

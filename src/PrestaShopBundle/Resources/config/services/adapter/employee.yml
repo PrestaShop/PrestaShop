@@ -76,3 +76,10 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Profile\Employee\QueryHandler\GetEmployeeEmailByIdHandler
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Query\GetEmployeeEmailById }
+
+  prestashop.adapter.employee.command_handler.update_employee_stats_ranges_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\Employee\CommandHandler\UpdateEmployeeStatsRangesHandler'
+    arguments:
+      - '@prestashop.adapter.validate'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Employee\Command\UpdateEmployeeStatsRangesCommand }

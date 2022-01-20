@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        public: true
+
+    prestashop.adapter.dashboard.helper:
+        class: PrestaShop\PrestaShop\Adapter\Dashboard\DashboardHelper
+        arguments:
+            - '@prestashop.adapter.legacy.context'
+            - '@prestashop.module.manager'
+            - '@prestashop.adapter.validate'

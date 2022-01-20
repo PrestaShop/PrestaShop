@@ -1,0 +1,42 @@
+admin_dashboard_index:
+    path: /
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:index'
+        _legacy_controller: AdminDashboard
+        _legacy_link: AdminDashboard
+
+admin_dashboard_blog_rss:
+    path: /blog-rss
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:getBlogRss'
+        _legacy_controller: AdminDashboard
+
+admin_dashboard_set_simulation:
+    path: /set-simulation
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:setSimulationMode'
+        _legacy_controller: AdminDashboard
+
+admin_dashboard_submit_date_range:
+    path: /submit-date-range
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:submitDateRange'
+        _legacy_controller: AdminDashboard
+
+admin_dashboard_refresh:
+    path: /refresh
+    methods: GET
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:refresh'
+        _legacy_controller: AdminDashboard
+
+admin_dashboard_save_module_options:
+    path: /save-module-options
+    methods: POST
+    defaults:
+        _controller: 'PrestaShopBundle:Admin\Dashboard:saveModuleOptions'
+        _legacy_controller: AdminDashboard
