@@ -323,7 +323,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @var int
      */
-    protected int $_default_pagination = 50;
+    protected $_default_pagination = 50;
 
     /**
      * @var array
@@ -358,7 +358,7 @@ class FeatureController extends FrameworkBundleAdminController
     /**
      * @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records
      */
-    protected bool $_useFoundRows = true;
+    protected $_useFoundRows = true;
 
     //Contain the query SQL for list
     /**
@@ -1278,8 +1278,8 @@ class FeatureController extends FrameworkBundleAdminController
         }
 
         //if (!$this->ajax) {
-            $template = $this->createTemplate($this->template);
-            $page = $template->fetch();
+        $template = $this->createTemplate($this->template);
+        $page = $template->fetch();
         //} else {
         //    $page = $this->content;
         //}
