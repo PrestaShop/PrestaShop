@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotAddProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotBulkDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotDeleteProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\CannotUpdateProductSupplierException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
@@ -98,6 +100,17 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
         return $productSupplier;
     }
 
+    /**
+     * Returns productSupplierId matching the association if present (null instead)
+     * If the association had a productSupplierId defined which doesn't match the found result it means the provided
+     * data is not consistent so an exception is raised.
+     *
+     * @param SupplierAssociationInterface $association
+     *
+     * @return ProductSupplierId|null
+     *
+     * @throws InvalidProductSupplierAssociationException
+     */
     public function getIdByAssociation(SupplierAssociationInterface $association): ?ProductSupplierId
     {
         $qb = $this->connection->createQueryBuilder();
@@ -122,7 +135,44 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             return null;
         }
 
-        return new ProductSupplierId((int) $result['id_product_supplier']);
+        $productSupplierId = (int) $result['id_product_supplier'];
+
+        if ($association->getProductSupplierId() !== null &&
+            $productSupplierId !== $association->getProductSupplierId()->getValue()) {
+            throw new InvalidProductSupplierAssociationException(sprintf(
+                'Invalid ProductSupplier ID in association: %s Provided is %d but the persisted one is %d.',
+                (string) $association,
+                $association->getProductSupplierId()->getValue(),
+                $productSupplierId
+            ));
+        }
+
+        return new ProductSupplierId($productSupplierId);
+    }
+
+    /**
+     * Returns the ProductSupplier matching the association, if it's not found an exception is thrown. If you are unsure
+     * of the presence of an association use getIdByAssociation instead to check the presence, it returns null when not found.
+     *
+     * @param SupplierAssociationInterface $association
+     *
+     * @return ProductSupplier
+     *
+     * @throws InvalidProductSupplierAssociationException
+     * @throws ProductSupplierNotAssociatedException
+     * @throws ProductSupplierNotFoundException
+     */
+    public function getByAssociation(SupplierAssociationInterface $association): ProductSupplier
+    {
+        $productSupplierId = $this->getIdByAssociation($association);
+        if (!$productSupplierId) {
+            throw new ProductSupplierNotAssociatedException(sprintf(
+                'Could not find a ProductSupplier matching this association: %s',
+                (string) $association
+            ));
+        }
+
+        return $this->get($productSupplierId);
     }
 
     /**
