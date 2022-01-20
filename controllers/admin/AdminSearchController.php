@@ -98,7 +98,8 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 1) {
                 /* Handle product ID */
                 if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                    if (($product = new Product($this->query)) && Validate::isLoadedObject($product)) {
+                    $product = new Product($this->query);
+                    if (Validate::isLoadedObject($product)) {
                         Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
                     }
                 }
@@ -112,7 +113,8 @@ class AdminSearchControllerCore extends AdminController
                 if (!$searchType || $searchType == 2) {
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                        if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
+                        $customer = new Customer($this->query);
+                        if (Validate::isLoadedObject($customer)) {
                             Tools::redirectAdmin($this->context->link->getAdminLink(
                                 'AdminCustomers',
                                 true,
@@ -136,7 +138,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Order */
             if (!$searchType || $searchType == 3) {
-                if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && ($order = new Order((int) $this->query)) && Validate::isLoadedObject($order)) {
+                if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && Validate::isLoadedObject($order = new Order((int) $this->query))) {
                     if ($searchType == 3) {
                         Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
                     } else {
@@ -181,7 +183,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Cart */
             if ($searchType == 5) {
-                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
+                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart($this->query))) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);

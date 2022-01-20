@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CartCore extends ObjectModel
 {
+    /** @var int|null */
     public $id;
 
     public $id_shop_group;

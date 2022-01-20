@@ -482,16 +482,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (Combination::isFeatureActive()) {
             if ($this->display == 'edit' || $this->display == 'add') {
-                /** @var AttributeGroup $object */
+                /** @var AttributeGroup|null $object */
                 $object = $this->loadObject(true);
                 if (!($this->object = $object)) {
                     return;
                 }
                 $this->content .= $this->renderForm();
             } elseif ($this->display == 'editAttributes') {
-                if (!$this->object = new ProductAttribute((int) Tools::getValue('id_attribute'))) {
-                    return;
-                }
+                $this->object = new ProductAttribute((int) Tools::getValue('id_attribute'));
 
                 $this->content .= $this->renderFormAttributes();
             } elseif ($this->display != 'view' && !$this->ajax) {
@@ -761,13 +759,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
 
                 return;
-            } elseif (!$object = new ProductAttribute((int) Tools::getValue($this->identifier))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
-                    ' <b>' . $this->table . '</b> ' .
-                    $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
-
-                return;
             }
+            $object = new ProductAttribute((int) Tools::getValue($this->identifier));
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {
                 $_POST['id_attribute_group'] = $object->id_attribute_group;
@@ -929,7 +922,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $pos = explode('_', $value);
 
             if (isset($pos[2]) && (int) $pos[2] === $id_attribute_group) {
-                if ($group_attribute = new AttributeGroup((int) $pos[2])) {
+                $group_attribute = new AttributeGroup((int) $pos[2]);
+                if (Validate::isLoadedObject($group_attribute)) {
                     if ($group_attribute->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for attribute group ' . (int) $pos[2] . '\r\n';
                     } else {
@@ -949,7 +943,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         $way = (int) Tools::getValue('way');
         $id_attribute = (int) Tools::getValue('id_attribute');
-        $id_attribute_group = (int) Tools::getValue('id_attribute_group');
         $positions = Tools::getValue('attribute');
 
         if (is_array($positions)) {
@@ -957,7 +950,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $pos = explode('_', $value);
 
                 if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
-                    if ($attribute = new ProductAttribute((int) $pos[2])) {
+                    $attribute = new ProductAttribute((int) $pos[2]);
+                    if (Validate::isLoadedObject($attribute)) {
                         if ($attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {

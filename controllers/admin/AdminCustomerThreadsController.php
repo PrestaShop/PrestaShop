@@ -360,7 +360,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $message = Tools::getValue('message_forward');
                 if (($error = $cm->validateField('message', $message, null, [], true)) !== true) {
                     $this->errors[] = $error;
-                } elseif ($id_employee && $employee && Validate::isLoadedObject($employee)) {
+                } elseif ($id_employee && Validate::isLoadedObject($employee)) {
                     $params = [
                         '{messages}' => Tools::stripslashes($output),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
@@ -710,7 +710,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($thread->id_customer) {
             $customer = new Customer($thread->id_customer);
             $orders = Order::getCustomerOrders($customer->id);
-            if ($orders && count($orders)) {
+            if (count($orders)) {
                 $total_ok = 0;
                 $orders_ok = [];
                 foreach ($orders as $key => $order) {
@@ -1073,7 +1073,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
                 $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
-                $fetch_succeed = true;
                 if ($match_found || $new_ct) {
                     if ($new_ct) {
                         // parse from attribute and fix it if needed
@@ -1150,7 +1149,6 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         $message = nl2br($message);
                         if (!$message || strlen($message) == 0) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
-                            $fetch_succeed = false;
 
                             continue;
                         }
@@ -1164,16 +1162,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
                                 $message_errors[] = $this->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification');
-                                $fetch_succeed = false;
 
                                 continue;
                             }
                         }
                     }
                 }
-                if ($fetch_succeed) {
-                    Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
-                }
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
             }
         }
         imap_expunge($mbox);
