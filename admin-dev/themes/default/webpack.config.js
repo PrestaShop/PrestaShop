@@ -28,6 +28,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const keepLicense = require('uglify-save-license');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -55,7 +57,9 @@ module.exports = (env, argv) => {
       }, {
         test: /\.(scss|sass|css)$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
           {
             loader: 'css-loader',
           },
@@ -66,15 +70,23 @@ module.exports = (env, argv) => {
             loader: 'sass-loader',
           },
         ],
-      }, {
-        test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[hash].[ext]',
-          },
-        }],
-      }],
+      },
+      {
+        test: /\.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[hash].[ext]',
+        },
+        exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+      },
+      {
+        test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[hash].preload.[ext]',
+        },
+      },
+      ],
     },
     optimization: {
 
@@ -89,6 +101,18 @@ module.exports = (env, argv) => {
       }),
       new MiniCssExtractPlugin({
         filename: 'theme.css',
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'preload.tpl',
+        templateContent: '{{{preloadLinks}}}',
+        inject: false,
+      }),
+      new FontPreloadPlugin({
+        index: 'preload.tpl',
+        extensions: ['woff2'],
+        filter: /preload/,
+        // eslint-disable-next-line
+        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
       }),
     ],
   };

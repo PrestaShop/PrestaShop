@@ -31,6 +31,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
 
 module.exports = {
   externals: {
@@ -345,6 +347,14 @@ module.exports = {
         options: {
           name: '[hash].[ext]',
         },
+        exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+      },
+      {
+        test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[hash].preload.[ext]',
+        },
       },
     ],
   },
@@ -373,6 +383,18 @@ module.exports = {
           syntactic: true,
         },
       },
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'preload.tpl',
+      templateContent: '{{{preloadLinks}}}',
+      inject: false,
+    }),
+    new FontPreloadPlugin({
+      index: 'preload.tpl',
+      extensions: ['woff2'],
+      filter: /preload/,
+      // eslint-disable-next-line
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
     }),
   ],
 };
