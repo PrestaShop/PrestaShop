@@ -2443,9 +2443,8 @@ class AdminControllerCore extends Controller
         if (null !== $this->base_tpl_view) {
             $helper->base_tpl = $this->base_tpl_view;
         }
-        $view = $helper->generateView();
 
-        return $view;
+        return $helper->generateView();
     }
 
     public function getTemplateViewVars()
