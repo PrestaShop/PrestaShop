@@ -218,7 +218,7 @@ class OrderConfirmationControllerCore extends FrontController
         $order = new PaymentFree();
         $order->validateOrder(
             $cart->id,
-            Configuration::get('PS_OS_PAYMENT'),
+            (int) Configuration::get('PS_OS_PAYMENT'),
             0,
             $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
             null,

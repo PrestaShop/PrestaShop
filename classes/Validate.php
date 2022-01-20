@@ -640,7 +640,7 @@ class ValidateCore
     /**
      * Check for boolean validity.
      *
-     * @param bool|string|null $bool Boolean to validate
+     * @param mixed $bool Value to validate as a boolean
      *
      * @return bool Validity is ok or not
      */

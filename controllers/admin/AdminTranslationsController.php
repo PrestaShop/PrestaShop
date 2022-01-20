@@ -541,8 +541,8 @@ class AdminTranslationsControllerCore extends AdminController
             $this->exportTabs();
             $items = array_flip(Language::getFilesList($this->lang_selected->iso_code, $this->theme_selected, false, false, false, false, true));
             $file_name = _PS_TRANSLATIONS_DIR_ . '/export/' . $this->lang_selected->iso_code . '.gzip';
-            $gz = new Archive_Tar($file_name, true);
-            if ($gz->createModify($items, null, _PS_ROOT_DIR_)) {
+            $gz = new Archive_Tar($file_name, 'gz');
+            if ($gz->createModify($items, '', _PS_ROOT_DIR_)) {
                 ob_start();
                 header('Pragma: public');
                 header('Expires: 0');
@@ -782,7 +782,7 @@ class AdminTranslationsControllerCore extends AdminController
         if (!isset($_FILES['file']['tmp_name']) || !$_FILES['file']['tmp_name']) {
             $this->errors[] = $this->trans('No file has been selected.', [], 'Admin.Notifications.Error');
         } else {
-            $gz = new Archive_Tar($_FILES['file']['tmp_name'], true);
+            $gz = new Archive_Tar($_FILES['file']['tmp_name'], 'gz');
             $filename = $_FILES['file']['name'];
             $iso_code = str_replace(['.tar.gz', '.gzip'], '', $filename);
 
@@ -937,7 +937,7 @@ class AdminTranslationsControllerCore extends AdminController
                 Tools::clearAllCache();
 
                 /* @see AdminController::$_conf */
-                $this->redirect(false, '15');
+                $this->redirect(false, 15);
             } else {
                 foreach ($success as $error) {
                     $this->errors[] = $error;
@@ -1591,7 +1591,7 @@ class AdminTranslationsControllerCore extends AdminController
      * This method redirect in the translation main page or in the translation page.
      *
      * @param bool $save_and_stay : true if the user has clicked on the button "save and stay"
-     * @param bool $conf : id of confirmation message
+     * @param bool|int $conf : id of confirmation message
      * @param bool $modify_translation : true if the user has clicked on the button "Modify translation"
      */
     protected function redirect($save_and_stay = false, $conf = false, $modify_translation = false)
@@ -3147,7 +3147,7 @@ class AdminTranslationsControllerCore extends AdminController
         $matches = $this->userParseFile($content, $this->type_selected, $file_type);
 
         foreach ($matches as $key) {
-            if (stripslashes(array_key_exists($tab . md5(addslashes($key)), $lang_array))) {
+            if (array_key_exists($tab . md5(addslashes($key)), $lang_array)) {
                 $tabs_array[$tab][$key]['trad'] = html_entity_decode($lang_array[$tab . md5(addslashes($key))], ENT_COMPAT, 'UTF-8');
             } else {
                 $tabs_array[$tab][$key]['trad'] = '';

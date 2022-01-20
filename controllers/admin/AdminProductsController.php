@@ -669,7 +669,7 @@ class AdminProductsControllerCore extends AdminController
                     if (is_array($products) && ($count = count($products))) {
                         // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
                         if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
-                            ini_set('max_execution_time', round($count * 1.5));
+                            ini_set('max_execution_time', (string) round($count * 1.5));
                         }
 
                         if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
@@ -824,7 +824,7 @@ class AdminProductsControllerCore extends AdminController
                                 0,
                                 Tools::getValue('id_image_attr'),
                                 Tools::getValue('attribute_reference'),
-                                null,
+                                0,
                                 Tools::getValue('attribute_ean13'),
                                 Tools::getValue('attribute_default'),
                                 Tools::getValue('attribute_location'),
@@ -1119,7 +1119,7 @@ class AdminProductsControllerCore extends AdminController
         if (!Validate::isLoadedObject($object)) {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                 ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
-        } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+        } elseif (!$object->updatePosition((bool) Tools::getValue('way'), (int) Tools::getValue('position'))) {
             $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
         } else {
             $category = new Category((int) Tools::getValue('id_category'));
@@ -1239,7 +1239,7 @@ class AdminProductsControllerCore extends AdminController
                 $this->errors[] = $this->trans(
                     'The uploaded file exceeds the "Maximum size for a downloadable product" set in preferences (%1$dMB) or the post_max_size/ directive in php.ini (%2$dMB).',
                     [
-                        number_format((Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE'))),
+                        number_format((float) Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE')),
                         ($post_max_size / 1024 / 1024),
                     ],
                     'Admin.Catalog.Notification'
@@ -2382,7 +2382,7 @@ class AdminProductsControllerCore extends AdminController
 
     public function getPreviewUrl(Product $product)
     {
-        $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, Context::getContext()->shop->id);
+        $id_lang = (int) Configuration::get('PS_LANG_DEFAULT', null, null, Context::getContext()->shop->id);
 
         if (!ShopUrl::getMainShopDomain()) {
             return false;
@@ -2961,7 +2961,7 @@ class AdminProductsControllerCore extends AdminController
                         '- you have chosen to decrement products quantities.', ]));
                 }
 
-                StockAvailable::setProductDependsOnStock($product->id, (int) Tools::getValue('value'));
+                StockAvailable::setProductDependsOnStock($product->id, (bool) Tools::getValue('value'));
 
                 break;
 
@@ -3038,9 +3038,9 @@ class AdminProductsControllerCore extends AdminController
                     die(json_encode(['error' => 'Not possible if advanced stock management is disabled. ']));
                 }
 
-                $product->setAdvancedStockManagement((int) Tools::getValue('value'));
+                $product->setAdvancedStockManagement((bool) Tools::getValue('value'));
                 if (StockAvailable::dependsOnStock($product->id) == 1 && (int) Tools::getValue('value') == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, 0);
+                    StockAvailable::setProductDependsOnStock($product->id, false);
                 }
 
                 break;
@@ -3166,7 +3166,7 @@ class AdminProductsControllerCore extends AdminController
     public function ajaxProcessUpdatePositions()
     {
         if ($this->access('edit')) {
-            $way = (int) (Tools::getValue('way'));
+            $way = (bool) (Tools::getValue('way'));
             $id_product = (int) Tools::getValue('id_product');
             $id_category = (int) Tools::getValue('id_category');
             $positions = Tools::getValue('product');

@@ -640,9 +640,9 @@ class AdminGroupsControllerCore extends AdminController
 
     public function renderList()
     {
-        $unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
-        $guest = new Group(Configuration::get('PS_GUEST_GROUP'));
-        $default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
+        $unidentified = new Group((int) Configuration::get('PS_UNIDENTIFIED_GROUP'));
+        $guest = new Group((int) Configuration::get('PS_GUEST_GROUP'));
+        $default = new Group((int) Configuration::get('PS_CUSTOMER_GROUP'));
 
         $unidentified_group_information = $this->trans('%group_name% - All persons without a customer account or customers that are not logged in.', ['%group_name%' => '<b>' . $unidentified->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');
         $guest_group_information = $this->trans('%group_name% - All persons who placed an order through Guest Checkout.', ['%group_name%' => '<b>' . $guest->name[$this->context->language->id] . '</b>'], 'Admin.Shopparameters.Help');

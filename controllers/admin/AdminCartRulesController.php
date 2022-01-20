@@ -82,7 +82,7 @@ class AdminCartRulesControllerCore extends AdminController
             $search = Tools::getValue('search');
         }
 
-        $page = floor($count / $limit);
+        $page = (int) floor($count / $limit);
 
         $html = '';
         $next_link = '';
@@ -94,7 +94,7 @@ class AdminCartRulesControllerCore extends AdminController
 
             /** @var CartRule $current_object */
             $current_object = $this->loadObject(true);
-            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page) * $limit, $limit, $search);
+            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, $page * $limit, $limit, $search);
 
             if ($type == 'selected') {
                 $i = 1;

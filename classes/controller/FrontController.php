@@ -105,7 +105,7 @@ class FrontControllerCore extends Controller
      *
      * @see $auth
      *
-     * @var bool
+     * @var bool|string
      */
     public $authRedirection = false;
 

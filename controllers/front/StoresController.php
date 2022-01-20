@@ -124,12 +124,12 @@ class StoresControllerCore extends FrontController
             $newnode->addAttribute('phone', $store['phone']);
             $newnode->addAttribute('fax', $store['fax']);
             $newnode->addAttribute('note', $store['note']);
-            $newnode->addAttribute('id_store', (int) $store['id_store']);
-            $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
-            $newnode->addAttribute('lat', (float) $store['latitude']);
-            $newnode->addAttribute('lng', (float) $store['longitude']);
+            $newnode->addAttribute('id_store', (string) (int) $store['id_store']);
+            $newnode->addAttribute('has_store_picture', (string) file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
+            $newnode->addAttribute('lat', (string) (float) $store['latitude']);
+            $newnode->addAttribute('lng', (string) (float) $store['longitude']);
             if (isset($store['distance'])) {
-                $newnode->addAttribute('distance', (int) $store['distance']);
+                $newnode->addAttribute('distance', (string) (int) $store['distance']);
             }
         }
 

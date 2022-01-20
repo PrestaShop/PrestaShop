@@ -196,7 +196,7 @@ abstract class AdminStatsTabControllerCore extends AdminController
             }
 
             if ($module_instance && $module_instance->active) {
-                $hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
+                $hook = Hook::exec('displayAdminStatsModules', [], $module_instance->id);
             }
         }
 

@@ -295,7 +295,7 @@ class AdminShopGroupControllerCore extends AdminController
             $disabled = false;
         }
 
-        $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+        $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         $this->tpl_form_vars = [
             'disabled' => $disabled,
             'checked' => (Tools::getValue('addshop_group') !== false) ? true : false,
