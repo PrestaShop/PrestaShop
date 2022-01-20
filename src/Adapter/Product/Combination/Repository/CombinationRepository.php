@@ -106,6 +106,23 @@ class CombinationRepository extends AbstractObjectModelRepository
         return $combination;
     }
 
+    public function getProductId(CombinationId $combinationId): ProductId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result) || empty($result['id_product'])) {
+            throw new CombinationNotFoundException(sprintf('Combination #%d was not found', $combinationId->getValue()));
+        }
+
+        return new ProductId((int) $result['id_product']);
+    }
+
     /**
      * @param ProductId $productId
      * @param bool $isDefault
@@ -250,6 +267,35 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Returns default combination ID identified as such in DB by default_on property
+     *
+     * @param ProductId $productId
+     *
+     * @return CombinationId|null
+     */
+    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->andWhere('pa.default_on = 1')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result['id_product_attribute'])) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
+     *
      * @param ProductId $productId
      *
      * @return Combination|null

@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
@@ -68,8 +67,7 @@ class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler i
     public function handle(UpdateCombinationSuppliersCommand $command): array
     {
         $combinationId = $command->getCombinationId();
-        $combination = $this->combinationRepository->get($combinationId);
-        $productId = new ProductId((int) $combination->id_product);
+        $productId = $this->combinationRepository->getProductId($combinationId);
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
