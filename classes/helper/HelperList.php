@@ -815,6 +815,7 @@ class HelperListCore extends Helper
             'row_hover' => $this->row_hover,
             'js_dir' => _PS_JS_DIR_,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
+            'controller_name' => $this->controller_name,
         ], $this->tpl_vars));
 
         return $this->header_tpl->fetch();

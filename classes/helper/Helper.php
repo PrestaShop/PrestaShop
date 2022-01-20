@@ -54,6 +54,11 @@ class HelperCore
 
     public $tpl_vars = [];
 
+    /**
+     * @var string
+     */
+    public $controller_name;
+
     public function __construct()
     {
         $this->context = Context::getContext();

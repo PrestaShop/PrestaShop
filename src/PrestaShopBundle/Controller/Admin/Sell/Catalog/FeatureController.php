@@ -59,101 +59,327 @@ class FeatureController extends FrameworkBundleAdminController
     public const ACTION_TYPE_HEADER_TOOLBAR = 'header_toolbar';
     public const ACTION_TYPE_LIST_HEADER_TOOLBAR = 'list_header_toolbar';
 
-    protected string $controllerName;
-    public string $php_self;
-    protected string $controllerNameLegacy;
+    /**
+     * @var string
+     */
+    protected $controllerName;
 
-    protected string $token;
+    /**
+     * @var string
+     */
+    public $php_self;
 
-    private int $id;
-    private string $table = 'feature';
-    private string $listId = 'feature';
-    private string $shopLinkType;
-    private array $fieldsList;
-    private string $identifier = 'id_feature';
-    protected bool $deleted = false;
-    protected string $positionIdentifier;
+    /**
+     * @var string
+     */
+    protected $controllerNameLegacy;
+
+    /**
+     * @var string
+     */
+    protected $token;
+
+    /**
+     * @var int
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $table = 'feature';
+
+    /**
+     * @var string
+     */
+    private $listId = 'feature';
+
+    /**
+     * @var string
+     */
+    private $shopLinkType;
+
+    /**
+     * @var array
+     */
+    private $fieldsList;
+
+    /**
+     * @var string
+     */
+    private $identifier = 'id_feature';
+
+    /**
+     * @var bool
+     */
+    protected $deleted = false;
+
+    /**
+     * @var string
+     */
+    protected $positionIdentifier;
 
     //Display
-    protected bool $displayHeader = true;
-    protected bool $displayFooter = true;
-    protected bool $displayHeaderJavascript = true;
-    protected string $display = 'list';
-    protected bool $liteDisplay = false;
-    protected bool $bootstrap = true;
+    /**
+     * @var bool
+     */
+    protected $displayHeader = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayFooter = true;
+
+    /**
+     * @var bool
+     */
+    protected $displayHeaderJavascript = true;
+
+    /**
+     * @var string
+     */
+    protected $display = 'list';
+
+    /**
+     * @var bool
+     */
+    protected $liteDisplay = false;
+
+    /**
+     * @var bool
+     */
+    protected $bootstrap = true;
 
     //Toolbar
-    protected array $toolbarButton = [];
-    protected array $breadcrumbs = [];
-    protected array $toolbarTitle = [];
-    protected array $pageHeaderToolbarButton = [];
-    protected bool $showPageHeaderToolbar = true;
-    protected string $pageHeaderToolbarTitle = '';
+    /**
+     * @var array
+     */
+    protected $toolbarButton = [];
+
+    /**
+     * @var array
+     */
+    protected $breadcrumbs = [];
+
+    /**
+     * @var array
+     */
+    protected $toolbarTitle = [];
+
+    /**
+     * @var array
+     */
+    protected $pageHeaderToolbarButton = [];
+
+    /**
+     * @var bool
+     */
+    protected $showPageHeaderToolbar = true;
+
+    /**
+     * @var string
+     */
+    protected $pageHeaderToolbarTitle = '';
 
     //Filters
-    protected array $filter = [];
-    protected array $filterList = [];
+    /**
+     * @var array
+     */
+    protected $filter = [];
+
+    /**
+     * @var array
+     */
+    protected $filterList = [];
 
     //Current index
-    protected string $currentIndex;
+    /**
+     * @var string
+     */
+    protected $currentIndex;
 
     //Meta
-    protected array $metaTitle = [];
+    /**
+     * @var array
+     */
+    protected $metaTitle = [];
 
     //Media
-    protected array $cssFiles = [];
-    protected array $jsFiles = [];
+    /**
+     * @var array
+     */
+    protected $cssFiles = [];
+
+    /**
+     * @var array
+     */
+    protected $jsFiles = [];
 
     //Template
-    protected array $listVariableTemplate = [];
-    public array $deleteLinksVariableTemplate = [];
-    protected string $folderTemplate;
-    public string $template = 'content.tpl';
+    /**
+     * @var array
+     */
+    protected $listVariableTemplate = [];
+
+    /**
+     * @var array
+     */
+    public $deleteLinksVariableTemplate = [];
+
+    /**
+     * @var string
+     */
+    protected $folderTemplate;
+
+    /**
+     * @var string
+     */
+    public $template = 'content.tpl';
 
     //Actions or Template
-    /** @var array List of available actions for each list row - default actions are view, edit, delete, duplicate */
-    protected array $actionsAvailable = ['view', 'edit', 'duplicate', 'delete'];
-    protected array $actions = [];
-    protected array $bulkActions;
+    /**
+     * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
+     */
+    protected $actionsAvailable = ['view', 'edit', 'duplicate', 'delete'];
+
+    /**
+     * @var array
+     */
+    protected $actions = [];
+
+    /**
+     * @var array
+     */
+    protected $bulkActions;
 
     //Flash messages
-    protected array $errors = [];
-    protected array $warnings = [];
-    protected array $confirmations = [];
-    protected array $informations = [];
+    /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
+     * @var array
+     */
+    protected $warnings = [];
+
+    /**
+     * @var array
+     */
+    protected $confirmations = [];
+
+    /**
+     * @var array
+     */
+    protected $informations = [];
 
     //Handle later
-    protected bool $ajax = false;
-    protected bool $json = false;
+    /**
+     * @var bool
+     */
+    protected $ajax = false;
+
+    /**
+     * @var bool
+     */
+    protected $json = false;
 
     //SQL section
-    protected array $_filter;
-    protected string $_filterHaving;
-    private string $_orderBy = '';
-    private string $_orderWay = '';
-    private string $_defaultOrderBy = 'position';
-    protected string $_defaultOrderWay = 'ASC';
-    protected array $_pagination = [20, 50, 100, 300, 1000];
+    /**
+     * @var array
+     */
+    protected $_filter;
+
+    /**
+     * @var string
+     */
+    protected $_filterHaving;
+
+    /**
+     * @var string
+     */
+    private $_orderBy = '';
+
+    /**
+     * @var string
+     */
+    private $_orderWay = '';
+
+    /**
+     * @var string
+     */
+    private $_defaultOrderBy = 'position';
+
+    /**
+     * @var string
+     */
+    protected $_defaultOrderWay = 'ASC';
+
+    /**
+     * @var array
+     */
+    protected $_pagination = [20, 50, 100, 300, 1000];
+
+    /**
+     * @var int
+     */
     protected int $_default_pagination = 50;
+
+    /**
+     * @var array
+     */
     protected array $_list;
-    protected string $_listTotal;
-    protected string $_list_error;
-    protected string $_select;
-    protected string $_where;
-    protected string $_join;
-    /** @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records */
+
+    /**
+     * @var string
+     */
+    protected $_listTotal;
+
+    /**
+     * @var string
+     */
+    protected $_list_error;
+
+    /**
+     * @var string
+     */
+    protected $_select;
+
+    /**
+     * @var string
+     */
+    protected $_where;
+
+    /**
+     * @var string
+     */
+    protected $_join;
+
+    /**
+     * @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records
+     */
     protected bool $_useFoundRows = true;
 
     //Contain the query SQL for list
-    protected string $_listsql;
+    /**
+     * @var string
+     */
+    protected $_listsql;
 
-    /** @var bool Do not automatically select * anymore but select only what is necessary */
+    /**
+     * @var bool Do not automatically select * anymore but select only what is necessary
+     */
     protected $explicitSelect = false;
 
-    /** @var bool Automatically join language table if true */
+    /**
+     * @var bool Automatically join language table if true
+     */
     //default false
     public $isJoinLanguageTableAuto = true;
 
+    /**
+     * @var int
+     */
     private $multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
     //Variable dans le constructeur à regarder pour filtrer
@@ -173,7 +399,7 @@ class FeatureController extends FrameworkBundleAdminController
             $this->_defaultOrderBy = $this->identifier;
         }
 
-        $this->folderTemplate = Tools::toUnderscoreCase(substr($this->controllerName, 5)) . '/';
+        $this->folderTemplate = Tools::toUnderscoreCase(substr($this->controllerNameLegacy, 5)) . '/';
 
         $this->setCurrentIndex();
 
@@ -187,7 +413,7 @@ class FeatureController extends FrameworkBundleAdminController
     {
         //Keep this and in futur version maybe delete this
         $this->getContext()->controller = $this;
-        $this->initBreadcrumbs();
+        $this->initBreadcrumbsAndTitle();
         $this->initToken($request);
 
         //build list and page with action
@@ -204,7 +430,7 @@ class FeatureController extends FrameworkBundleAdminController
 
     public function renderSmarty(string $content, array $configuration): Response
     {
-        $this->initBreadcrumbs();
+        $this->initBreadcrumbsAndTitle();
         $this->initNotifications();
         $this->initToolbarFlags();
         $this->setMedia();
@@ -598,7 +824,7 @@ class FeatureController extends FrameworkBundleAdminController
             'base_url' => $this->getContext()->shop->getBaseURL(true),
             'bootstrap' => $this->bootstrap,
             //'class_name' => $this->className,
-            'controller_name' => $this->controllerName,
+            'controller_name' => $this->controllerNameLegacy,
             'country_iso_code' => $this->getContext()->country->iso_code,
             'currentIndex' => $this->generateUrl('admin_features_index'),
             //'current_parent_id' => (int) Tab::getCurrentParentId(),
@@ -615,7 +841,6 @@ class FeatureController extends FrameworkBundleAdminController
             'link' => $this->getContext()->link,
             //'pic_dir' => _THEME_PROD_PIC_DIR_,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            //@Todo handle this later
             'tabs' => $tabs,
             'version' => _PS_VERSION_,
         ]);
@@ -675,7 +900,7 @@ class FeatureController extends FrameworkBundleAdminController
         //}
         $helper->table = $this->table;
         if (isset($helper->name_controller)) {
-            $helper->name_controller = $this->controllerName;
+            $helper->name_controller = $this->controllerNameLegacy;
         }
         //Useless for list
         $helper->orderBy = $this->_orderBy;
@@ -709,7 +934,7 @@ class FeatureController extends FrameworkBundleAdminController
         //    $helper->position_group_identifier = $this->position_group_identifier;
         //}
         //// @phpstan-ignore-next-line
-        $helper->controller_name = $this->controllerName;
+        $helper->controller_name = $this->controllerNameLegacy;
         $helper->list_id = $this->listId ?? $this->table;
         $helper->bootstrap = $this->bootstrap;
         //
@@ -1043,8 +1268,8 @@ class FeatureController extends FrameworkBundleAdminController
         // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
             if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $this->display != 'view' && $this->display != 'options') {
-                if (method_exists($this, $this->display . Tools::toCamelCase($this->controllerName))) {
-                    $this->{$this->display . Tools::toCamelCase($this->controllerName)}();
+                if (method_exists($this, $this->display . Tools::toCamelCase($this->controllerNameLegacy))) {
+                    $this->{$this->display . Tools::toCamelCase($this->controllerNameLegacy)}();
                 }
                 $this->getContext()->smarty->assign('content', $this->getContext()->smarty->fetch($tpl_action));
 
@@ -1386,7 +1611,7 @@ class FeatureController extends FrameworkBundleAdminController
      *
      * @param array $tabs
      */
-    public function initBreadcrumbs(array $tabs = [])
+    public function initBreadcrumbsAndTitle(array $tabs = [])
     {
         if (!is_array($tabs)) {
             $tabs = [];
