@@ -30,9 +30,7 @@ namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints as PrestaShopAssert;
 use PrestaShopBundle\Entity\Repository\StoreRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table()
@@ -58,43 +56,36 @@ class Store
     private $stateId;
 
     /**
-     * @PrestaShopAssert\TypedRegex("post_code")
      * @ORM\Column(type="string", length=12)
      */
     private $postcode;
 
     /**
-     * @PrestaShopAssert\TypedRegex("city_name")
      * @ORM\Column(type="string", length=64)
      */
     private $city;
 
     /**
-     * @PrestaShopAssert\TypedRegex("coordinate")
      * @ORM\Column(type="float", nullable=true)
      */
     private $latitude;
 
     /**
-     * @PrestaShopAssert\TypedRegex("coordinate")
      * @ORM\Column(type="float", nullable=true)
      */
     private $longitude;
 
     /**
-     * @PrestaShopAssert\TypedRegex("phone_number")
      * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $phone;
 
     /**
-     * @PrestaShopAssert\TypedRegex("phone_number")
      * @ORM\Column(type="string", length=16, nullable=true)
      */
     private $fax;
 
     /**
-     * @Assert\Email
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $email;

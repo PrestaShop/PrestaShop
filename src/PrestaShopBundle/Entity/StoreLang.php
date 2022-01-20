@@ -29,9 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints as PrestaShopAssert;
 use PrestaShopBundle\Entity\Repository\StoreLangRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table()
@@ -56,31 +54,26 @@ class StoreLang
     private $lang;
 
     /**
-     * @PrestaShopAssert\TypedRegex("generic_name")
      * @ORM\Column(type="string", length=255)
      */
     private $name;
 
     /**
-     * @PrestaShopAssert\TypedRegex("address")
      * @ORM\Column(type="string", length=255)
      */
     private $address1;
 
     /**
-     * @PrestaShopAssert\TypedRegex("address")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address2;
 
     /**
-     * @Assert\Json
      * @ORM\Column(type="text", nullable=true)
      */
     private $hours;
 
     /**
-     * @PrestaShopAssert\CleanHtml
      * @ORM\Column(type="text", nullable=true)
      */
     private $note;

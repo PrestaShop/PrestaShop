@@ -321,23 +321,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
     }
 
-    public function testItSucceedsForCoordinateTypeWhenValidCharactersGiven(): void
-    {
-        $this->validator->validate('-48.86622', new TypedRegex('coordinate'));
-
-        $this->assertNoViolation();
-    }
-
-    /**
-     * @dataProvider getInvalidCharactersForIsbn
-     *
-     * @param string $invalidChar
-     */
-    public function testItFailsForCoordinateTypeWhenInvalidCharacterGiven(string $invalidChar): void
-    {
-        $this->assertViolationIsRaised(new TypedRegex('coordinate'), $invalidChar);
-    }
-
     /**
      * @return string[][]
      */
@@ -613,40 +596,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield ['<'];
         yield ['>'];
         yield ['|'];
-    }
-
-    /**
-     * @return Generator
-     */
-    public function getInvalidCharactersForCoordinate(): Generator
-    {
-        yield ['abcdef'];
-        yield ['what'];
-        yield ['!'];
-        yield ['@'];
-        yield ['$'];
-        yield ['%s'];
-        yield ['^'];
-        yield ['&'];
-        yield ['*'];
-        yield ['('];
-        yield [')'];
-        yield ['+'];
-        yield ['='];
-        yield ['{'];
-        yield ['}'];
-        yield ['['];
-        yield ['['];
-        yield ['<'];
-        yield ['>'];
-        yield ['?'];
-        yield ['/'];
-        yield ['\\'];
-        yield ['\''];
-        yield [';'];
-        yield [':'];
-        yield ['.'];
-        yield [','];
     }
 
     /**
