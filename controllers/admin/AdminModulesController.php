@@ -289,7 +289,7 @@ class AdminModulesControllerCore extends AdminController
     protected function extractArchive($file, $redirect = true)
     {
         $zip_folders = [];
-        $tmp_folder = _PS_MODULE_DIR_ . md5(time());
+        $tmp_folder = _PS_MODULE_DIR_ . md5((string) time());
 
         $success = false;
         if (substr($file, -4) == '.zip') {
@@ -844,7 +844,7 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /**
-     * @param string|null $tab_modules_list
+     * @param array|null $tab_modules_list
      * @param false $install_source_tracking
      *
      * @return array<string, array<Module>>

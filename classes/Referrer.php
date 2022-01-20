@@ -144,7 +144,7 @@ class ReferrerCore extends ObjectModel
      * Get some statistics on visitors connection for current referrer.
      *
      * @param int $idProduct
-     * @param int $employee
+     * @param Employee|null $employee
      *
      * @return array|bool|object|null
      */
@@ -183,7 +183,7 @@ class ReferrerCore extends ObjectModel
      * Get some statistics on customers registrations for current referrer.
      *
      * @param int $idProduct
-     * @param int $employee
+     * @param Employee|null $employee
      */
     public function getRegistrations($idProduct, $employee)
     {
@@ -220,7 +220,7 @@ class ReferrerCore extends ObjectModel
      * Get some statistics on orders for current referrer.
      *
      * @param int $idProduct
-     * @param int $employee
+     * @param Employee|null $employee
      *
      * @return array|bool|object|null
      */
@@ -285,7 +285,7 @@ class ReferrerCore extends ObjectModel
      * Refresh cache data of referrer statistics in referrer_shop table.
      *
      * @param array $referrers
-     * @param int $employee
+     * @param Employee|null $employee
      *
      * @return true
      */
@@ -359,16 +359,16 @@ class ReferrerCore extends ObjectModel
      *
      * @param int $idReferrer Referrer ID
      * @param int $idProduct Product ID
-     * @param int $idEmployee Employee ID
+     * @param Employee|null $employee Employee
      */
-    public static function getAjaxProduct($idReferrer, $idProduct, $idEmployee = null)
+    public static function getAjaxProduct($idReferrer, $idProduct, $employee = null)
     {
         $product = new Product($idProduct, false, Configuration::get('PS_LANG_DEFAULT'));
         $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
         $referrer = new Referrer($idReferrer);
-        $statsVisits = $referrer->getStatsVisits($idProduct, $idEmployee);
-        $registrations = $referrer->getRegistrations($idProduct, $idEmployee);
-        $statsSales = $referrer->getStatsSales($idProduct, $idEmployee);
+        $statsVisits = $referrer->getStatsVisits($idProduct, $employee);
+        $registrations = $referrer->getRegistrations($idProduct, $employee);
+        $statsSales = $referrer->getStatsSales($idProduct, $employee);
 
         // If it's a product and it has no visits nor orders
         if ((int) $idProduct && !$statsVisits['visits'] && !$statsSales['orders']) {

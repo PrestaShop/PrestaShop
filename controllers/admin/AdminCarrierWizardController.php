@@ -112,6 +112,7 @@ class AdminCarrierWizardControllerCore extends AdminController
         $this->initWizard();
 
         if (Tools::getValue('id_carrier') && $this->access('edit')) {
+            /** @var Carrier $carrier */
             $carrier = $this->loadObject();
         } elseif ($this->access('add')) {
             $carrier = new Carrier();
@@ -632,6 +633,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             return;
         }
 
+        /** @var Carrier $carrier */
         $carrier = $this->loadObject(true);
         $carrier->shipping_method = $shipping_method;
 
@@ -972,7 +974,7 @@ class AdminCarrierWizardControllerCore extends AdminController
             Shop::setContext($this->type_context, $this->old_context->shop->id_shop_group);
         }
 
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
 
         Shop::setContext(Shop::CONTEXT_ALL);
 

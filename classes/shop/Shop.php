@@ -1068,7 +1068,7 @@ class ShopCore extends ObjectModel
     /**
      * Add an sql restriction for shops fields.
      *
-     * @param bool|int $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
+     * @param bool|int|string $share If false, dont check share datas from group. Else can take a Shop::SHARE_* constant value
      * @param string|null $alias
      */
     public static function addSqlRestriction($share = false, $alias = null)

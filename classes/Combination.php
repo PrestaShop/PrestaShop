@@ -63,6 +63,7 @@ class CombinationCore extends ObjectModel
 
     public $weight;
 
+    /** @var bool|null */
     public $default_on;
 
     public $available_date = '0000-00-00';
@@ -173,7 +174,7 @@ class CombinationCore extends ObjectModel
     public function add($autoDate = true, $nullValues = false)
     {
         if ($this->default_on) {
-            $this->default_on = 1;
+            $this->default_on = true;
         } else {
             $this->default_on = null;
         }
@@ -209,7 +210,7 @@ class CombinationCore extends ObjectModel
     public function update($nullValues = false)
     {
         if ($this->default_on) {
-            $this->default_on = 1;
+            $this->default_on = true;
         } else {
             $this->default_on = null;
         }

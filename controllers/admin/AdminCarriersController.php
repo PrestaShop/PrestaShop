@@ -658,7 +658,7 @@ class AdminCarriersControllerCore extends AdminController
 
     public function ajaxProcessUpdatePositions()
     {
-        $way = (int) (Tools::getValue('way'));
+        $way = (bool) (Tools::getValue('way'));
         $id_carrier = (int) (Tools::getValue('id'));
         $positions = Tools::getValue($this->table);
 

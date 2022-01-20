@@ -69,7 +69,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                 $id_hook = (int) Tools::getValue('id_hook');
                 $module = Module::getInstanceById($id_module);
                 if (Validate::isLoadedObject($module)) {
-                    $module->updatePosition($id_hook, (int) Tools::getValue('direction'));
+                    $module->updatePosition($id_hook, (bool) Tools::getValue('direction'));
                     Tools::redirectAdmin($baseUrl . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token);
                 } else {
                     $this->errors[] = $this->trans('This module cannot be loaded.', [], 'Admin.Modules.Notification');
@@ -482,7 +482,7 @@ class AdminModulesPositionsControllerCore extends AdminController
         if ($this->access('edit')) {
             $id_module = (int) (Tools::getValue('id_module'));
             $id_hook = (int) (Tools::getValue('id_hook'));
-            $way = (int) (Tools::getValue('way'));
+            $way = (bool) (Tools::getValue('way'));
             $positions = Tools::getValue((string) $id_hook);
             $position = (is_array($positions)) ? array_search($id_hook . '_' . $id_module, $positions) : null;
             $module = Module::getInstanceById($id_module);
