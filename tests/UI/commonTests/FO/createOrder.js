@@ -178,7 +178,7 @@ function createOrderSpecificProductTest(orderData, baseContext = 'commonTests-cr
       await productPage.addProductToTheCart(page, orderData.productQuantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
     });
 
     it('should go to delivery step', async function () {

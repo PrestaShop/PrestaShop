@@ -1481,13 +1481,13 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
 
   // Post-condition - Delete the created products
-    [virtualProduct,
-      customizedProduct,
-      productWithSpecificPrice,
-      productWithEcoTax,
-    ].forEach((productData) => {
-      deleteProductTest(productData, baseContext);
-    });
+  [virtualProduct,
+    customizedProduct,
+    productWithSpecificPrice,
+    productWithEcoTax,
+  ].forEach((productData) => {
+    deleteProductTest(productData, baseContext);
+  });
 
   // Post-condition - Disable EcoTax
   disableEcoTaxTest(baseContext);
