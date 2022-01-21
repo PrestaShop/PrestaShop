@@ -42,6 +42,8 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
 
     public const FORM_BUILDER_HOOK_PREFIX = 'action';
     public const FORM_BUILDER_HOOK_SUFFIX = 'FormBuilderModifier';
+    private const FORM_BUILDER_HOOK_SUFFIX_DATA_PROVIDER_DATA = 'FormDataProviderData';
+    private const FORM_BUILDER_HOOK_SUFFIX_DATA_PROVIDER_DEFAULT_DATA = 'FormDataProviderDefaultData';
 
     public const FORM_HANDLER_UPDATE_BEFORE_PREFIX = 'actionBeforeUpdate';
     public const FORM_HANDLER_UPDATE_AFTER_PREFIX = 'actionAfterUpdate';
@@ -69,17 +71,31 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
     {
         $formNames = $this->getFormNames($formTypes);
 
-        $formBuilderHookNames = [];
-        $formHandlerBeforeUpdateHookNames = [];
-        $formHandlerAfterUpdateHookNames = [];
-        $formHandlerBeforeCreateHookNames = [];
-        $formHandlerAfterCreateHookNames = [];
+        $formBuilderHookNames =
+            $formBuilderDataProviderDataHookNames =
+            $formBuilderDataProviderDefaultDataHookNames =
+            $formHandlerBeforeUpdateHookNames =
+            $formHandlerAfterUpdateHookNames =
+            $formHandlerBeforeCreateHookNames =
+            $formHandlerAfterCreateHookNames = [];
 
         foreach ($formNames as $formName) {
             $formBuilderHookNames[] = $this->formatHookName(
                 self::FORM_BUILDER_HOOK_PREFIX,
                 $formName,
                 self::FORM_BUILDER_HOOK_SUFFIX
+            );
+
+            $formBuilderDataProviderDataHookNames[] = $this->formatHookName(
+                self::FORM_BUILDER_HOOK_PREFIX,
+                $formName,
+                self::FORM_BUILDER_HOOK_SUFFIX_DATA_PROVIDER_DATA
+            );
+
+            $formBuilderDataProviderDefaultDataHookNames[] = $this->formatHookName(
+                self::FORM_BUILDER_HOOK_PREFIX,
+                $formName,
+                self::FORM_BUILDER_HOOK_SUFFIX_DATA_PROVIDER_DEFAULT_DATA
             );
 
             $formHandlerBeforeUpdateHookNames[] = $this->formatHookName(
@@ -109,6 +125,8 @@ final class IdentifiableObjectHookByFormTypeProvider implements HookByFormTypePr
 
         return array_merge(
             $formBuilderHookNames,
+            $formBuilderDataProviderDataHookNames,
+            $formBuilderDataProviderDefaultDataHookNames,
             $formHandlerBeforeUpdateHookNames,
             $formHandlerAfterUpdateHookNames,
             $formHandlerBeforeCreateHookNames,
