@@ -2,6 +2,7 @@ require('module-alias/register');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
@@ -382,7 +383,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await catalogPriceRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

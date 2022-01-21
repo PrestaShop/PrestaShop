@@ -26,17 +26,10 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetEditableSpecificPricesList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceListForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
-interface GetEditableSpecificPricesListHandlerInterface
+class StoreException extends DomainException
 {
-    /**
-     * @param GetEditableSpecificPricesList $query
-     *
-     * @return SpecificPriceListForEditing
-     */
-    public function handle(GetEditableSpecificPricesList $query): SpecificPriceListForEditing;
 }

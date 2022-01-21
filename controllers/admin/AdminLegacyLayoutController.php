@@ -52,7 +52,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
      *
      * If $enableSidebar is false, the 'Help' button is a link that redirects to $helpLink
      *
-     * @var string
+     * @var string|bool
      */
     protected $helpLink;
     /** @var bool */

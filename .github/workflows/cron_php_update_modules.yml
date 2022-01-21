@@ -20,8 +20,11 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist
 
+      - name: Execute script for updating modules
+        run: php .github/workflows/cron_update_modules/script.php
+
       - name: Update PrestaShop packages
-        run: echo "PULL_REQUEST_BODY='$(php .github/workflows/cron_update_modules/script.php)'" >> $GITHUB_ENV
+        run: echo "PULL_REQUEST_BODY='$(cat cron_php_update_modules.txt)'" >> $GITHUB_ENV
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3

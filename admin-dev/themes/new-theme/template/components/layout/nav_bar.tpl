@@ -24,8 +24,8 @@
  *}
 <nav class="nav-bar d-none d-print-none d-md-block">
   <span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
-    <i class="material-icons">chevron_left</i>
-    <i class="material-icons">chevron_left</i>
+    <i class="material-icons rtl-flip">chevron_left</i>
+    <i class="material-icons rtl-flip">chevron_left</i>
   </span>
 
   <div class="nav-bar-overflow">

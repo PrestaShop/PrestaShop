@@ -666,7 +666,8 @@ class AdminCarriersControllerCore extends AdminController
             $pos = explode('_', $value);
 
             if (isset($pos[2]) && (int) $pos[2] === $id_carrier) {
-                if ($carrier = new Carrier((int) $pos[2])) {
+                $carrier = new Carrier((int) $pos[2]);
+                if (Validate::isLoadedObject($carrier)) {
                     if (isset($position) && $carrier->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for carrier ' . (int) $pos[1] . '\r\n';
                     } else {

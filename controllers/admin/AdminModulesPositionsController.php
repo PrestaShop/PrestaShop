@@ -502,6 +502,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('view')) {
             /* PrestaShop demo mode */
+            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
@@ -547,6 +548,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('view')) {
             /* PrestaShop demo mode */
+            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
@@ -577,6 +579,7 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             /* PrestaShop demo mode */
+            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }

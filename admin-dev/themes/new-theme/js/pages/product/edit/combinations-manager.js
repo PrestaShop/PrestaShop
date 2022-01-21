@@ -34,6 +34,7 @@ import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
+import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -48,15 +49,10 @@ export default class CombinationsManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
-    this.$combinationsContainer = $(
-      ProductMap.combinations.combinationsContainer,
-    );
-    this.combinationIdInputsSelector = ProductMap.combinations.combinationIdInputsSelector;
-    this.$externalCombinationTab = $(
-      ProductMap.combinations.externalCombinationTab,
-    );
+    this.$combinationsContainer = $(CombinationsMap.combinationsContainer);
+    this.$externalCombinationTab = $(CombinationsMap.externalCombinationTab);
 
-    this.$preloader = $(ProductMap.combinations.preloader);
+    this.$preloader = $(CombinationsMap.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
     this.$emptyState = $(CombinationsMap.emptyState);
 
@@ -245,12 +241,12 @@ export default class CombinationsManager {
 
     this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
       const $generateButtons = $(
-        ProductMap.combinations.generateCombinationsButton
+        CombinationsMap.generateCombinationsButton
       );
       $generateButtons.prop('disabled', false);
       $('body').on(
         'click',
-        ProductMap.combinations.generateCombinationsButton,
+        CombinationsMap.generateCombinationsButton,
         event => {
           // Stop event or it will be caught by click-outside directive and automatically close the modal
           event.stopImmediatePropagation();
@@ -265,42 +261,44 @@ export default class CombinationsManager {
    */
   initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
-    const { quantityKey } = CombinationsMap.combinationItemForm;
-    const { impactOnPriceKey } = CombinationsMap.combinationItemForm;
-    const { referenceKey } = CombinationsMap.combinationItemForm;
-    const { tokenKey } = CombinationsMap.combinationItemForm;
+    const {impactOnPriceKey, referenceKey, tokenKey, deltaQuantityKey} = CombinationsMap.combinationItemForm;
 
-    /* eslint-disable */
-    new SubmittableInput(CombinationsMap.quantityInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [quantityKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
+    new SubmittableInput({
+      wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,
+      submitCallback: input =>
+        this.combinationsService.updateListedCombination(
+          this.findCombinationId(input),
+          {
+            [impactOnPriceKey]: input.value,
+            [tokenKey]: combinationToken
+          }
+        )
+    });
+
+    new SubmittableInput({
+        wrapperSelector: CombinationsMap.referenceInputWrapper,
+        submitCallback: input =>
+          this.combinationsService.updateListedCombination(
+            this.findCombinationId(input),
+            {
+              [referenceKey]: input.value,
+              [tokenKey]: combinationToken
+            }
+          )
+      },
     );
 
-    new SubmittableInput(CombinationsMap.impactOnPriceInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
+    new SubmittableDeltaQuantityInput({
+      submittableWrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
+      submitCallback: input => this.combinationsService.updateListedCombination(
         this.findCombinationId(input),
         {
-          [impactOnPriceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
-    );
-
-    new SubmittableInput(CombinationsMap.referenceInputWrapper, input =>
-      this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [referenceKey]: input.value,
-          [tokenKey]: combinationToken
-        }
-      )
-    );
-    /* eslint-enable */
+          [deltaQuantityKey]: input.value,
+          [tokenKey]: combinationToken,
+        },
+      ),
+      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
+    });
   }
 
   /**
@@ -404,8 +402,8 @@ export default class CombinationsManager {
     const checkedDefaultId = this.findCombinationId(checkedInput);
 
     await this.combinationsService.updateListedCombination(checkedDefaultId, {
-      'combination_item[is_default]': checkedInput.value,
-      'combination_item[_token]': this.getCombinationToken(),
+      [CombinationsMap.combinationItemForm.isDefaultKey]: checkedInput.value,
+      [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
     });
 
     $.each(checkedInputs, (index, input) => {
@@ -432,7 +430,7 @@ export default class CombinationsManager {
   findCombinationId(input) {
     return $(input)
       .closest('tr')
-      .find(this.combinationIdInputsSelector)
+      .find(CombinationsMap.combinationIdInputsSelector)
       .val();
   }
 }

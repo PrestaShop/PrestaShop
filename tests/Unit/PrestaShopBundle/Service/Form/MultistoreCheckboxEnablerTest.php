@@ -26,7 +26,6 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
@@ -141,9 +140,9 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     /**
      * @param bool $isMultistoreUsed
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return FeatureInterface
      */
-    private function createMultistoreFeatureMock(bool $isMultistoreUsed = true): MockObject
+    private function createMultistoreFeatureMock(bool $isMultistoreUsed = true): FeatureInterface
     {
         $stub = $this->createMock(FeatureInterface::class);
         $stub->method('isUsed')->willReturn($isMultistoreUsed);
@@ -155,9 +154,9 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
      * @param bool $isAllShopContext
      * @param bool $isGroupShopContext
      *
-     * @return MockObject
+     * @return ShopContext
      */
-    private function createMultistoreContextMock(bool $isAllShopContext = false, bool $isGroupShopContext = true): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext = false, bool $isGroupShopContext = true): ShopContext
     {
         $shopGroupObject = new stdClass();
         $shopGroupObject->id = 2;
@@ -171,9 +170,9 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @return MockObject
+     * @return ShopConfiguration
      */
-    private function createShopConfigurationMock(): MockObject
+    private function createShopConfigurationMock(): ShopConfiguration
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
@@ -183,9 +182,9 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
     }
 
     /**
-     * @return MockObject
+     * @return MultistoreController
      */
-    private function createMultistoreControllerMock(): MockObject
+    private function createMultistoreControllerMock(): MultistoreController
     {
         $multistoreStub = $this->createMock(MultistoreController::class);
         $responseStub = $this->createMock(Response::class);

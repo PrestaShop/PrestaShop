@@ -98,7 +98,8 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 1) {
                 /* Handle product ID */
                 if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                    if (($product = new Product($this->query)) && Validate::isLoadedObject($product)) {
+                    $product = new Product($this->query);
+                    if (Validate::isLoadedObject($product)) {
                         Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
                     }
                 }
@@ -112,7 +113,8 @@ class AdminSearchControllerCore extends AdminController
                 if (!$searchType || $searchType == 2) {
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                        if (($customer = new Customer($this->query)) && Validate::isLoadedObject($customer)) {
+                        $customer = new Customer($this->query);
+                        if (Validate::isLoadedObject($customer)) {
                             Tools::redirectAdmin($this->context->link->getAdminLink(
                                 'AdminCustomers',
                                 true,
@@ -136,7 +138,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Order */
             if (!$searchType || $searchType == 3) {
-                if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && ($order = new Order((int) $this->query)) && Validate::isLoadedObject($order)) {
+                if (Validate::isUnsignedInt(trim($this->query)) && (int) $this->query && Validate::isLoadedObject($order = new Order((int) $this->query))) {
                     if ($searchType == 3) {
                         Tools::redirectAdmin('index.php?tab=AdminOrders&id_order=' . (int) $order->id . '&vieworder' . '&token=' . Tools::getAdminTokenLite('AdminOrders'));
                     } else {
@@ -181,7 +183,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Cart */
             if ($searchType == 5) {
-                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && ($cart = new Cart($this->query)) && Validate::isLoadedObject($cart)) {
+                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart($this->query))) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
@@ -250,22 +252,44 @@ class AdminSearchControllerCore extends AdminController
     {
         $this->_list['features'] = [];
 
-        $result = Db::getInstance()->executeS(
-            'SELECT class_name, name, route_name
-            FROM ' . _DB_PREFIX_ . 'tab t
-            INNER JOIN ' . _DB_PREFIX_ . 'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = ' . (int) $this->context->employee->id_lang . ')
-            WHERE active = 1'
+        $sql = sprintf(
+            'SELECT class_name, name, route_name FROM %stab t INNER JOIN %stab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = %d) WHERE active = 1',
+            _DB_PREFIX_,
+            _DB_PREFIX_,
+            (int) $this->context->employee->id_lang
         );
+        $result = Db::getInstance()->executeS($sql);
+        $mainControllers = Dispatcher::getControllers([
+            _PS_ADMIN_DIR_ . '/tabs/',
+            _PS_ADMIN_CONTROLLER_DIR_,
+            _PS_OVERRIDE_DIR_ . 'controllers/admin/',
+        ]);
+
         foreach ($result as $row) {
-            if (
-                false !== stripos($row['name'], $this->query)
-                && Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)
-            ) {
-                $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
-                $this->_list['features'][$row['name']][] = [
-                    'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
-                ];
+            // Search pages with the query need
+            if (stripos($row['name'], $this->query) === false) {
+                continue;
             }
+            // Remove pages without access
+            if (!Access::isGranted('ROLE_MOD_TAB_' . strtoupper($row['class_name']) . '_READ', $this->context->employee->id_profile)) {
+                continue;
+            }
+            $tab = Tab::getInstanceFromClassName($row['class_name']);
+            if (!Validate::isLoadedObject($tab)) {
+                continue;
+            }
+            // Check if it's not a parent tab
+            if (!isset($mainControllers[strtolower($row['class_name'])])) {
+                $tabs = Tab::getTabs(Context::getContext()->language->id, $tab->id);
+                if (isset($tabs[0])) {
+                    continue;
+                }
+            }
+
+            $sfRouteParams = (!empty($row['route_name'])) ? ['route' => $row['route_name']] : [];
+            $this->_list['features'][$row['name']][] = [
+                'link' => Context::getContext()->link->getAdminLink((string) $row['class_name'], true, $sfRouteParams),
+            ];
         }
     }
 
@@ -422,7 +446,6 @@ class AdminSearchControllerCore extends AdminController
             }
 
             if ($this->isCountableAndNotEmpty($this->_list, 'orders')) {
-                $view = '';
                 $this->initOrderList();
 
                 $helper = new HelperList();
@@ -435,8 +458,7 @@ class AdminSearchControllerCore extends AdminController
                 $helper->currentIndex = $this->context->link->getAdminLink('AdminOrders', false);
                 $helper->token = Tools::getAdminTokenLite('AdminOrders');
 
-                $view = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
-                $this->tpl_view_vars['orders'] = $view;
+                $this->tpl_view_vars['orders'] = $helper->generateList($this->_list['orders'], $this->fields_list['orders']);
                 $this->tpl_view_vars['orderCount'] = count($this->_list['orders']);
             }
 

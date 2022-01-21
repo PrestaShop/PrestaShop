@@ -114,6 +114,7 @@
         </div>
       {/foreach}
     </div>
-
+  {else}
+    <div class="alert alert-info" role="alert" data-alert="info">{l s='You have not placed any orders.' d='Shop.Notifications.Warning'}</div>
   {/if}
 {/block}

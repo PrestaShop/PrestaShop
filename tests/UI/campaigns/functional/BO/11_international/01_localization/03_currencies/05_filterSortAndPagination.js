@@ -2,7 +2,11 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
+
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
@@ -263,7 +267,7 @@ describe('BO - International - Currencies : Filter, sort and pagination', async 
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await currenciesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);

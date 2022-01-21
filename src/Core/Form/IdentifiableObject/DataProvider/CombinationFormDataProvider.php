@@ -89,7 +89,10 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         return [
             'quantities' => [
-                'quantity' => $stockInformation->getQuantity(),
+                'delta_quantity' => [
+                    'quantity' => $stockInformation->getQuantity(),
+                    'delta' => 0,
+                ],
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [

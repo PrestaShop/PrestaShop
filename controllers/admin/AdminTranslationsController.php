@@ -401,26 +401,35 @@ class AdminTranslationsControllerCore extends AdminController
 
         if (!$from_lang || !$to_lang) {
             $this->errors[] = $this->trans('You must select two languages in order to copy data from one to another.', [], 'Admin.International.Notification');
-        } elseif (!$from_theme || !$to_theme) {
+
+            return;
+        }
+        if (!$from_theme || !$to_theme) {
             $this->errors[] = $this->trans('You must select two themes in order to copy data from one to another.', [], 'Admin.International.Notification');
-        } elseif (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang))) {
-            $this->errors[] = $this->trans('An error occurred while copying data.', [], 'Admin.International.Notification');
-        } elseif ($from_lang == $to_lang && $from_theme == $to_theme) {
+
+            return;
+        }
+        if ($from_lang == $to_lang && $from_theme == $to_theme) {
             $this->errors[] = $this->trans('There is nothing to copy (same language and theme).', [], 'Admin.International.Notification');
-        } else {
-            $theme_exists = ['from_theme' => false, 'to_theme' => false];
-            foreach ($this->themes as $theme) {
-                if ($theme->getName() == $from_theme) {
-                    $theme_exists['from_theme'] = true;
-                }
-                if ($theme->getName() == $to_theme) {
-                    $theme_exists['to_theme'] = true;
-                }
+
+            return;
+        }
+
+        Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang));
+
+        $theme_exists = ['from_theme' => false, 'to_theme' => false];
+        foreach ($this->themes as $theme) {
+            if ($theme->getName() == $from_theme) {
+                $theme_exists['from_theme'] = true;
             }
-            if ($theme_exists['from_theme'] == false || $theme_exists['to_theme'] == false) {
-                $this->errors[] = $this->trans('Theme(s) not found', [], 'Admin.International.Notification');
+            if ($theme->getName() == $to_theme) {
+                $theme_exists['to_theme'] = true;
             }
         }
+        if ($theme_exists['from_theme'] == false || $theme_exists['to_theme'] == false) {
+            $this->errors[] = $this->trans('Theme(s) not found', [], 'Admin.International.Notification');
+        }
+
         if (count($this->errors)) {
             return;
         }
@@ -695,6 +704,7 @@ class AdminTranslationsControllerCore extends AdminController
                     include_once _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $file['filename'];
                 }
 
+                /** @var mixed $_TABS */
                 if (is_array($_TABS) && count($_TABS)) {
                     foreach ($_TABS as $class_name => $translations) {
                         // Get instance of this tab by class name
@@ -783,7 +793,9 @@ class AdminTranslationsControllerCore extends AdminController
 
                 $uniqid = uniqid();
                 $sandbox = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR . $uniqid . DIRECTORY_SEPARATOR;
-                if ($gz->extractList($files_paths, $sandbox)) {
+                /** @var bool $statusExtract */
+                $statusExtract = $gz->extractList($files_paths, $sandbox);
+                if ($statusExtract) {
                     foreach ($files_list as $file2check) {
                         //don't validate index.php, will be overwrite when extract in translation directory
                         if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php') {
@@ -815,8 +827,10 @@ class AdminTranslationsControllerCore extends AdminController
                     return false;
                 }
 
-                if ($error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_ . '../')) {
-                    if (is_object($error) && !empty($error->message)) {
+                /** @var bool $error */
+                $error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_ . '../');
+                if ($error) {
+                    if (!empty($error->message)) {
                         $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification') . ' ' . $error->message;
                     } else {
                         foreach ($files_list as $file2check) {
@@ -917,15 +931,14 @@ class AdminTranslationsControllerCore extends AdminController
         $isoCode = $languageDetails['iso_code'];
 
         if (Validate::isLangIsoCode($isoCode)) {
-            if ($success = Language::downloadAndInstallLanguagePack($isoCode, _PS_VERSION_, null, true)) {
+            $success = Language::downloadAndInstallLanguagePack($isoCode, _PS_VERSION_, null, true);
+            if ($success === true) {
                 Language::loadLanguages();
                 Tools::clearAllCache();
 
-                /*
-                 * @see AdminController::$_conf
-                 */
+                /* @see AdminController::$_conf */
                 $this->redirect(false, '15');
-            } elseif (is_array($success) && count($success) > 0) {
+            } else {
                 foreach ($success as $error) {
                     $this->errors[] = $error;
                 }
@@ -1485,6 +1498,7 @@ class AdminTranslationsControllerCore extends AdminController
         $this->getInformations();
 
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line  */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 

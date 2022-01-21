@@ -119,7 +119,7 @@ class CombinationFormDataProviderTest extends TestCase
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
         ];
-        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
         $expectedOutputData['stock']['options']['low_stock_alert'] = true;
@@ -468,7 +468,10 @@ class CombinationFormDataProviderTest extends TestCase
             'name' => self::DEFAULT_NAME,
             'stock' => [
                 'quantities' => [
-                    'quantity' => self::DEFAULT_QUANTITY,
+                    'delta_quantity' => [
+                        'quantity' => self::DEFAULT_QUANTITY,
+                        'delta' => 0,
+                    ],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [

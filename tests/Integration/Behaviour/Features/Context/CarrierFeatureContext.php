@@ -231,7 +231,7 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCarrier($carrierName)
     {
-        $carrier = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
+        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
         $carrier->name = $carrierName;
         $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
         $carrier->delay = '28 days later';

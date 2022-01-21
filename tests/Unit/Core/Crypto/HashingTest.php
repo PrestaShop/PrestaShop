@@ -54,6 +54,6 @@ class HashingTest extends TestCase
         $salt = '2349123849231-4123';
 
         $this->assertTrue($hashing->isFirstHash('123', $hashing->hash('123', $salt), $salt));
-        $this->assertFalse($hashing->isFirstHash('123', md5('123', $salt), $salt));
+        $this->assertFalse($hashing->isFirstHash('123', md5('123'), $salt));
     }
 }

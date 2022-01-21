@@ -71,13 +71,17 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         ];
 
         $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
-        $command->setQuantity(100);
+        $command->setDeltaQuantity(100);
         $command->setMinimalQuantity(1);
         yield [
             [
                 'stock' => [
                     'quantities' => [
-                        'quantity' => '100',
+                        'delta_quantity' => [
+                            // quantity is used for view only, the real value that is used now is delta
+                            'quantity' => 1000000,
+                            'delta' => 100,
+                        ],
                         'minimal_quantity' => 1,
                     ],
                 ],

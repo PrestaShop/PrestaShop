@@ -28,10 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Quantity field that displays the initial quantity (not editable) and allows editing with delta quantity
@@ -49,31 +50,17 @@ class DeltaQuantityType extends TranslatorAwareType
             ->add('quantity', TextPreviewType::class, [
                 'block_prefix' => 'delta_quantity_quantity',
             ])
-            ->add('delta', NumberType::class, [
-                'scale' => 0,
+            ->add('delta', IntegerType::class, [
                 'default_empty_data' => 0,
                 'label' => $this->trans('Add or subtract items', 'Admin.Global'),
                 'block_prefix' => 'delta_quantity_delta',
-                'row_attr' => [
-                    'class' => 'delta-quantity-delta-container',
+                'constraints' => [
+                    new Type(['type' => 'numeric']),
+                    new NotBlank(),
                 ],
-            ])
-        ;
-        $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+            ]);
 
-        // Thanks to this transformer the input data is the quantity value (as integer) and the output is the
-        // edited delta (as an integer as well)
-        $builder->addModelTransformer(new CallbackTransformer(
-            function (int $initialQuantity) {
-                return [
-                    'quantity' => $initialQuantity,
-                    'delta' => 0,
-                ];
-            },
-            function (array $inputData) {
-                return (int) $inputData['delta'];
-            }
-        ));
+        $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
     }
 
     /**

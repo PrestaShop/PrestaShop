@@ -2443,9 +2443,8 @@ class AdminControllerCore extends Controller
         if (null !== $this->base_tpl_view) {
             $helper->base_tpl = $this->base_tpl_view;
         }
-        $view = $helper->generateView();
 
-        return $view;
+        return $helper->generateView();
     }
 
     public function getTemplateViewVars()
@@ -3650,7 +3649,7 @@ class AdminControllerCore extends Controller
      * @param string $key Field name
      * @param int|null $id_lang Language id (optional)
      *
-     * @return string|false
+     * @return false|mixed
      */
     public function getFieldValue($obj, $key, $id_lang = null)
     {

@@ -130,7 +130,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // First update the product with a few data
         $formData = [
             'product[header][name][1]' => static::TEST_NAME,
-            'product[stock][quantities][quantity][delta]' => static::TEST_QUANTITY,
+            'product[stock][quantities][delta_quantity][delta]' => static::TEST_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_PRICE,
         ];
 
@@ -140,7 +140,7 @@ class ProductControllerTest extends FormGridControllerTestCase
         // Price is reformatted with 6 digits
         $expectedFormData = [
             'product[header][name][1]' => static::TEST_NAME,
-            'product[stock][quantities][quantity][quantity]' => static::TEST_QUANTITY,
+            'product[stock][quantities][delta_quantity][quantity]' => static::TEST_QUANTITY,
             'product[pricing][retail_price][price_tax_excluded]' => static::TEST_PRICE,
         ];
         $this->assertFormValuesFromPage(

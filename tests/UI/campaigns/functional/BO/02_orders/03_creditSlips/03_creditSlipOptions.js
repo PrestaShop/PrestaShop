@@ -3,8 +3,10 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createProductTest, deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
+const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -12,8 +14,13 @@ const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const ordersPage = require('@pages/BO/orders/index');
 const viewOrderPage = require('@pages/BO/orders/view');
 
-// Import data
+// Import demo data
 const {Statuses} = require('@data/demo/orderStatuses');
+const {DefaultCustomer} = require('@data/demo/customer');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
+
+// Import faker data
+const ProductFaker = require('@data/faker/product');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -29,14 +36,43 @@ let page;
 let fileName;
 const prefixToEdit = 'CreSlip';
 
+// Product to create
+const product = new ProductFaker({
+  name: 'New product',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: 20,
+});
+
+// New order by customer
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: product.name,
+  productQuantity: 3,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
 /*
-Edit credit slip prefix
-Change the Order status to shipped
-Check the credit slip file name
-Delete the slip prefix value
-Check the credit slip file name
+Pre-condition
+- Create product
+- Create order from FO
+Scenario
+- Edit credit slip prefix
+- Change the Order status to shipped
+- Add a partial refund
+- Check the credit slip file name
+- Delete the slip prefix value
+- Check the credit slip file name
+Post-condition
+- Delete product
  */
-describe('BO - Orders - Credit slips : Credit slip options', async () => {
+describe('BO - Orders - Credit slips: Credit slip options', async () => {
+  // Pre-condition: Create first product
+  createProductTest(product, baseContext);
+
+  // Pre-condition: Create order by default customer
+  createOrderSpecificProductTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -77,7 +113,7 @@ describe('BO - Orders - Credit slips : Credit slip options', async () => {
   });
 
   describe('Check the new credit slip prefix', async () => {
-    it('should go to the orders page', async function () {
+    it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
       await creditSlipsPage.goToSubMenu(
@@ -106,6 +142,23 @@ describe('BO - Orders - Credit slips : Credit slip options', async () => {
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
+    it('should create a partial refund', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
+
+      await viewOrderPage.clickOnPartialRefund(page);
+
+      const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+    });
+
+    it('should check the existence of the Credit slip document', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
+
+      // Get document name
+      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      await expect(documentType).to.be.equal('Credit slip');
+    });
+
     it(`should check that the credit slip file name contain the prefix '${prefixToEdit}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedPrefixOnFileName', baseContext);
 
@@ -115,7 +168,7 @@ describe('BO - Orders - Credit slips : Credit slip options', async () => {
     });
   });
 
-  describe(`Back to the default credit slip prefix value '${prefixToEdit}'`, async () => {
+  describe('Back to the default credit slip prefix value', async () => {
     it('should go to \'Orders > Credit slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPageToResetPrefix', baseContext);
 
@@ -132,7 +185,7 @@ describe('BO - Orders - Credit slips : Credit slip options', async () => {
     it('should delete the credit slip prefix', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deletePrefix', baseContext);
 
-      await creditSlipsPage.changePrefix(page, ' ');
+      await creditSlipsPage.deletePrefix(page);
 
       const textMessage = await creditSlipsPage.saveCreditSlipOptions(page);
       await expect(textMessage).to.contains(creditSlipsPage.successfulUpdateMessage);
@@ -166,7 +219,10 @@ describe('BO - Orders - Credit slips : Credit slip options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedPrefix', baseContext);
 
       fileName = await viewOrderPage.getFileName(page, 4);
-      expect(fileName).to.not.contains(prefixToEdit);
+      expect(fileName, 'Credit slip file name is not changed to default!').to.not.contains(prefixToEdit);
     });
   });
+
+  // Post-condition
+  deleteProductTest(product, baseContext);
 });

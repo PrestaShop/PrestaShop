@@ -167,6 +167,7 @@ export default class EntitySearchInput {
   private buildOptions(options: OptionsObject): void {
     const inputOptions = options || {};
     const defaultOptions: OptionsObject = {
+      suggestionField: 'name',
       prototypeTemplate: undefined,
       prototypeIndex: '__index__',
       prototypeMapping: {
@@ -175,7 +176,6 @@ export default class EntitySearchInput {
         image: '__image__',
       },
       identifierField: 'id',
-
       allowDelete: true,
       dataLimit: 0,
       minLength: 2,
@@ -205,6 +205,7 @@ export default class EntitySearchInput {
       // These are configurable callbacks
       onRemovedContent: undefined,
       onSelectedContent: undefined,
+      responseTransformer: (response: any) => response || [],
     };
 
     Object.keys(defaultOptions).forEach((optionName) => {
@@ -266,6 +267,7 @@ export default class EntitySearchInput {
 
     // For now adapt the display based on the allowDelete option
     const $entityDelete = $(this.options.entityDeleteSelector, this.$entitiesContainer);
+    //'!!' converts option to bool (because if its 1 or 0, jquery toggle works differently than with true/false)
     $entityDelete.toggle(!!this.options.allowDelete);
   }
 
@@ -286,7 +288,7 @@ export default class EntitySearchInput {
             entityImage = `<img src="${entity.image}" /> `;
           }
 
-          return `<div class="search-suggestion">${entityImage}${entity.name}</div>`;
+          return `<div class="search-suggestion">${entityImage}${entity[this.options.suggestionField]}</div>`;
         },
       },
       onSelect: (selectedItem: any) => {
@@ -328,10 +330,10 @@ export default class EntitySearchInput {
           if (!response) {
             return [];
           }
-
+          const transformedResponse = this.options.responseTransformer(response);
           const selectedIds: string[] = this.getSelectedIds();
           const suggestedItems: any[] = [];
-          response.forEach((responseItem: any) => {
+          transformedResponse.forEach((responseItem: any) => {
             // Force casting to string to avoid inequality with number IDs because of type
             const responseIdentifier: string = String(responseItem[this.options.identifierField]);
             const isIdContained = this.options.filterSelected && selectedIds.includes(responseIdentifier);

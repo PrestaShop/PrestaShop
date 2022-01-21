@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 
 class CartCore extends ObjectModel
 {
+    /** @var int|null */
     public $id;
 
     public $id_shop_group;
@@ -3104,6 +3105,12 @@ class CartCore extends ObjectModel
         foreach ($delivery_option_list as &$array) {
             uasort($array, ['Cart', 'sortDeliveryOptionList']);
         }
+
+        Hook::exec('actionFilterDeliveryOptionList',
+            [
+                'delivery_option_list' => &$delivery_option_list,
+            ]
+        );
 
         static::$cacheDeliveryOptionList[$this->id] = $delivery_option_list;
 

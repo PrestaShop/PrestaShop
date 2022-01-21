@@ -40,25 +40,28 @@ class PhpErrorsCounter
      */
     public function registerErrorHandler()
     {
-        set_error_handler(function ($errorType) {
-            switch ($errorType) {
-                case E_WARNING:
-                    $this->warnings++;
+        set_error_handler([$this, 'errorHandler'], E_ALL);
+    }
+
+    public function errorHandler(int $errorType, string $errstr, string $errfile, int $errline, array $errcontext)
+    {
+        switch ($errorType) {
+            case E_WARNING:
+                $this->warnings++;
                 break;
-                case E_DEPRECATED:
-                case E_USER_DEPRECATED:
-                    $this->deprecations++;
+            case E_DEPRECATED:
+            case E_USER_DEPRECATED:
+                $this->deprecations++;
                 break;
-                case E_ERROR:
-                    $this->errors++;
+            case E_ERROR:
+                $this->errors++;
                 break;
-                case E_NOTICE:
-                    $this->notices++;
+            case E_NOTICE:
+                $this->notices++;
                 break;
-                default:
-                    // nothing to do.
-            }
-        }, E_ALL);
+            default:
+                // nothing to do.
+        }
     }
 
     public function restoreErrorHandler()

@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
@@ -78,6 +79,7 @@ export default class CombinationsGridRenderer {
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
+      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityWrapper, $row);
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
       const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
       // @todo final price should be calculated based on price impact and product price,
@@ -94,6 +96,8 @@ export default class CombinationsGridRenderer {
       $referenceInput.data('initial-value', combination.reference);
       $quantityInput.val(combination.quantity);
       $quantityInput.data('initial-value', combination.quantity);
+      $quantityInput.find(ComponentsMap.deltaQuantityInput.initialQuantityPreviewSelector).text(combination.quantity);
+      $deltaQuantityContainer.data('initial-quantity', combination.quantity);
       $impactOnPriceInput.val(combination.impactOnPrice);
       $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
       $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);

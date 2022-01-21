@@ -233,7 +233,8 @@ final class GetOrderPreviewHandler implements GetOrderPreviewHandlerInterface
                 (int) $detail['product_quantity'],
                 $locale->formatPrice($unitPrice, $currency->iso_code),
                 $locale->formatPrice($totalPrice, $currency->iso_code),
-                $locale->formatPrice((string) $totalTaxAmount, $currency->iso_code)
+                $locale->formatPrice((string) $totalTaxAmount, $currency->iso_code),
+                (int) $detail['id_product']
             );
         }
 

@@ -30,11 +30,24 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
-use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
@@ -59,9 +72,9 @@ class AddProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var DecimalNumber
+     * @var FixedPriceInterface
      */
-    private $price;
+    private $fixedPrice;
 
     /**
      * @var int
@@ -69,34 +82,38 @@ class AddProductSpecificPriceCommand
     private $fromQuantity;
 
     /**
-     * @var int|null
+     * @var ShopIdInterface
      */
     private $shopId;
 
     /**
-     * @var CombinationId|null
+     * @var CombinationIdInterface
      */
     private $combinationId;
 
     /**
-     * @var int|null
+     * @var CurrencyIdInterface
      */
     private $currencyId;
 
     /**
-     * @var int|null
+     * @var int
+     *
+     * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
+     *        but it requires some refactoring as it was already used in many places this primitive way
+     *        related reminder issue https://github.com/PrestaShop/PrestaShop/issues/27205
      */
-    private $countryId;
+    private $countryId = 0;
 
     /**
-     * @var int|null
+     * @var GroupIdInterface
      */
     private $groupId;
 
     /**
-     * @var int|null
+     * @var int
      */
-    private $customerId;
+    private $customerId = 0;
 
     /**
      * @var DateTimeInterface
@@ -119,7 +136,7 @@ class AddProductSpecificPriceCommand
      * @param string $reductionType
      * @param string $reductionValue
      * @param bool $includeTax
-     * @param string $price
+     * @param string $fixedPrice
      * @param int $fromQuantity
      *
      * @throws DomainConstraintException
@@ -130,14 +147,18 @@ class AddProductSpecificPriceCommand
         string $reductionType,
         string $reductionValue,
         bool $includeTax,
-        string $price,
+        string $fixedPrice,
         int $fromQuantity
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
+        $this->setFixedPrice($fixedPrice);
         $this->includesTax = $includeTax;
-        $this->price = new DecimalNumber($price);
         $this->fromQuantity = $fromQuantity;
+        $this->shopId = new NoShopId();
+        $this->combinationId = new NoCombinationId();
+        $this->currencyId = new NoCurrencyId();
+        $this->groupId = new NoGroupId();
         $this->dateTimeFrom = new NullDateTime();
         $this->dateTimeTo = new NullDateTime();
     }
@@ -167,11 +188,11 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return DecimalNumber
+     * @return FixedPriceInterface
      */
-    public function getPrice(): DecimalNumber
+    public function getFixedPrice(): FixedPriceInterface
     {
-        return $this->price;
+        return $this->fixedPrice;
     }
 
     /**
@@ -229,9 +250,9 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return ShopIdInterface
      */
-    public function getShopId(): ?int
+    public function getShopId(): ShopIdInterface
     {
         return $this->shopId;
     }
@@ -243,15 +264,19 @@ class AddProductSpecificPriceCommand
      */
     public function setShopId(int $shopId): self
     {
-        $this->shopId = $shopId;
+        if (NoShopId::NO_SHOP_ID === $shopId) {
+            $this->shopId = new NoShopId();
+        } else {
+            $this->shopId = new ShopId($shopId);
+        }
 
         return $this;
     }
 
     /**
-     * @return CombinationId|null
+     * @return CombinationIdInterface
      */
-    public function getCombinationId(): ?CombinationId
+    public function getCombinationId(): CombinationIdInterface
     {
         return $this->combinationId;
     }
@@ -263,15 +288,19 @@ class AddProductSpecificPriceCommand
      */
     public function setCombinationId(int $combinationId): self
     {
-        $this->combinationId = new CombinationId($combinationId);
+        if (NoCombinationId::NO_COMBINATION_ID === $combinationId) {
+            $this->combinationId = new NoCombinationId();
+        } else {
+            $this->combinationId = new CombinationId($combinationId);
+        }
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return CurrencyIdInterface
      */
-    public function getCurrencyId(): ?int
+    public function getCurrencyId(): CurrencyIdInterface
     {
         return $this->currencyId;
     }
@@ -283,15 +312,19 @@ class AddProductSpecificPriceCommand
      */
     public function setCurrencyId(int $currencyId): self
     {
-        $this->currencyId = $currencyId;
+        if (NoCurrencyId::NO_CURRENCY_ID === $currencyId) {
+            $this->currencyId = new NoCurrencyId();
+        } else {
+            $this->currencyId = new CurrencyId($currencyId);
+        }
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getCountryId(): ?int
+    public function getCountryId(): int
     {
         return $this->countryId;
     }
@@ -309,9 +342,9 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return int|null
+     * @return GroupIdInterface
      */
-    public function getGroupId(): ?int
+    public function getGroupId(): GroupIdInterface
     {
         return $this->groupId;
     }
@@ -323,15 +356,19 @@ class AddProductSpecificPriceCommand
      */
     public function setGroupId(int $groupId): self
     {
-        $this->groupId = $groupId;
+        if (NoGroupId::NO_GROUP_ID === $groupId) {
+            $this->groupId = new NoGroupId();
+        } else {
+            $this->groupId = new GroupId($groupId);
+        }
 
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getCustomerId(): ?int
+    public function getCustomerId(): int
     {
         return $this->customerId;
     }
@@ -346,5 +383,19 @@ class AddProductSpecificPriceCommand
         $this->customerId = $customerId;
 
         return $this;
+    }
+
+    /**
+     * @param string $value
+     */
+    private function setFixedPrice(string $value): void
+    {
+        if (InitialPrice::isInitialPriceValue($value)) {
+            $this->fixedPrice = new InitialPrice();
+
+            return;
+        }
+
+        $this->fixedPrice = new FixedPrice($value);
     }
 }

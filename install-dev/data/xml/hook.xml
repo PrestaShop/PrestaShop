@@ -3530,5 +3530,10 @@
       <title>Dashboard column three</title>
       <description>This hook is displayed in the third column of the dashboard</description>
     </hook>
+    <hook id="actionFilterDeliveryOptionList">
+      <name>actionFilterDeliveryOptionList</name>
+      <title>Modify delivery option list result</title>
+      <description>This hook allows you to modify delivery option list</description>
+    </hook>
   </entities>
 </entity_hook>

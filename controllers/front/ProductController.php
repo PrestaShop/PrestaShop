@@ -40,7 +40,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     /** @var Product */
     protected $product;
 
-    /** @var Category */
+    /** @var Category|null */
     protected $category;
 
     protected $redirectionExtraExcludedKeys = ['id_product_attribute', 'rewrite'];
@@ -162,28 +162,20 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
-
-                        break;
                         case RedirectType::TYPE_PRODUCT_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
-
-                        break;
                         case RedirectType::TYPE_CATEGORY_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
-
-                            break;
                         case RedirectType::TYPE_CATEGORY_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
-
-                            break;
                         case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
@@ -675,9 +667,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image])) {
                                 $product_images[$id_image]['cover'] = 1;
                                 $this->context->smarty->assign('mainImage', $product_images[$id_image]);
-                                if (count($product_images)) {
-                                    $this->context->smarty->assign('images', $product_images);
-                                }
+                                $this->context->smarty->assign('images', $product_images);
                             }
 
                             $cover = $current_cover;
@@ -821,7 +811,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected function assignCategory()
     {
         // Assign category to the template
-        if (($this->category === false || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop()) && Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
+        if (
+            (empty($this->category) || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
+            && Category::inShopStatic($this->product->id_category_default, $this->context->shop)
+        ) {
             $this->category = new Category((int) $this->product->id_category_default, (int) $this->context->language->id);
         }
 
@@ -981,7 +974,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by id_product_attribute group parameter,
      * or request parameter, or the default attribute as a fallback.
      *
-     * @return int|null
+     * @return int
      *
      * @throws PrestaShopException
      */
@@ -1216,7 +1209,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
-        if ($combinations === false || !is_array($combinations) || empty($combinations)) {
+        if (!is_array($combinations) || empty($combinations)) {
             return null;
         }
 

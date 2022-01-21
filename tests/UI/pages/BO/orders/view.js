@@ -23,6 +23,8 @@ class Order extends BOBasePage {
     this.successfulDeleteProductMessage = 'The product was successfully removed.';
     this.errorMinimumQuantityMessage = 'Minimum quantity of "3" must be added';
     this.errorAddSameProduct = 'This product is already in your order, please edit the quantity instead.';
+    this.errorAddSameProductInInvoice = invoice => `This product is already in the invoice #${invoice}, `
+      + 'please edit the quantity instead.';
     this.noAvailableDocumentsMessage = 'There is no available document';
     this.updateSuccessfullMessage = 'Update successful';
     this.commentSuccessfullMessage = 'Comment successfully added.';
@@ -73,6 +75,7 @@ class Order extends BOBasePage {
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
     this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
+    this.orderProductsLoading = '#orderProductsLoading';
 
     // Pagination selectors
     this.paginationLimitSelect = '#orderProductsTablePaginationNumberSelector';
@@ -91,6 +94,8 @@ class Order extends BOBasePage {
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
+    this.modalConfirmNewPrice = '#modal-confirm-new-price';
+    this.modalConfirmNewPriceSubmitButton = `${this.modalConfirmNewPrice} button.btn-confirm-submit`;
     this.orderTotalPriceSpan = '#orderTotal';
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
     this.returnProductsButton = '#order-view-page button.return-product-display';
@@ -98,10 +103,14 @@ class Order extends BOBasePage {
     this.addProductButton = '#addProductBtn';
     this.addProductRowSearch = '#add_product_row_search';
     this.addProductRowQuantity = '#add_product_row_quantity';
+    this.addProductRowPrice = '#add_product_row_price_tax_included';
     this.addProductRowStockLocation = '#addProductLocation';
     this.addProductAvailable = '#addProductAvailable';
     this.addProductTotalPrice = '#addProductTotalPrice';
     this.addProductInvoiceSelect = '#add_product_row_invoice';
+    this.addProductNewInvoiceCarrierName = '#addProductNewInvoiceInfo div p[data-role=\'carrier-name\']';
+    this.addProductNewInvoiceFreeShippingCheckbox = '#add_product_row_free_shipping';
+    this.addProductNewInvoiceFreeShippingDiv = '#addProductNewInvoiceInfo td div.md-checkbox';
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
     this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
@@ -608,6 +617,34 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Modify product price for multi invoice
+   * @param page {Page} Browser tab
+   * @param row {number} Product row on table
+   * @param price {number} Price to edit
+   * @returns {Promise<void>}
+   */
+  async modifyProductPriceForMultiInvoice(page, row, price) {
+    this.dialogListener(page);
+    await Promise.all([
+      page.click(this.editProductButton(row)),
+      this.waitForVisibleSelector(page, this.editProductPriceInput),
+    ]);
+    await this.setValue(page, this.editProductPriceInput, price);
+
+    await Promise.all([
+      page.click(this.UpdateProductButton),
+      this.waitForVisibleSelector(page, this.modalConfirmNewPrice),
+    ]);
+
+    await page.click(this.modalConfirmNewPriceSubmitButton);
+
+    await this.waitForVisibleSelector(page, this.orderProductsLoading);
+    await this.waitForHiddenSelector(page, this.orderProductsLoading);
+
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductName(row));
+  }
+
+  /**
    * Delete product
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
@@ -638,6 +675,72 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Create new invoice
+   * @param page {Page} Browser tab
+   * @param invoice {string} The invoice to select from dropdown list
+   * @returns {Promise<void>}
+   */
+  async selectInvoice(page, invoice = 'Create a new invoice') {
+    await this.selectByVisibleText(page, this.addProductInvoiceSelect, invoice);
+  }
+
+  /**
+   * Get invoices list from select options
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getInvoicesFromSelectOptions(page) {
+    return this.getTextContent(page, this.addProductInvoiceSelect);
+  }
+
+  /**
+   * Get carrier name when creating new invoice
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getNewInvoiceCarrierName(page) {
+    return this.getTextContent(page, this.addProductNewInvoiceCarrierName);
+  }
+
+  /**
+   * Is free shipping selected
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isFreeShippingSelected(page) {
+    return this.isChecked(page, this.addProductNewInvoiceFreeShippingCheckbox);
+  }
+
+  /**
+   * Select free shipping checkbox
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async selectFreeShippingCheckbox(page) {
+    await this.waitForSelectorAndClick(page, this.addProductNewInvoiceFreeShippingDiv);
+  }
+
+  /**
+   * Update product price
+   * @param page {Page} Browser tab
+   * @param price {float} Value of price to update
+   * @returns {Promise<void>}
+   */
+  async updateProductPrice(page, price) {
+    await this.setValue(page, this.addProductRowPrice, price);
+  }
+
+  /**
+   * add product quantity
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add
+   * @returns {Promise<void>}
+   */
+  async addQuantity(page, quantity) {
+    await this.setValue(page, this.addProductRowQuantity, quantity);
+  }
+
+  /**
    * Add product to cart
    * @param page {Page} Browser tab
    * @param quantity {number} Product quantity to add
@@ -649,24 +752,12 @@ class Order extends BOBasePage {
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
-    if (createNewInvoice) {
-      await this.selectByVisibleText(page, this.addProductInvoiceSelect, 'Create a new invoice');
-    }
     await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
     if (createNewInvoice) {
       await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
     }
-    return this.getGrowlMessageContent(page);
-  }
 
-  /**
-   * add product quantity
-   * @param page {Page} Browser tab
-   * @param quantity {number} Product quantity to add
-   * @returns {Promise<void>}
-   */
-  async addQuantity(page, quantity) {
-    await this.setValue(page, this.addProductRowQuantity, quantity);
+    return this.getGrowlMessageContent(page);
   }
 
   /**

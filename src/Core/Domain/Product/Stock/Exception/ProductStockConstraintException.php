@@ -57,4 +57,9 @@ class ProductStockConstraintException extends ProductStockException
      * When id is invalid
      */
     public const INVALID_ID = 50;
+
+    /**
+     * When delta quantity is invalid
+     */
+    public const INVALID_DELTA_QUANTITY = 60;
 }

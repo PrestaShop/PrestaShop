@@ -37,6 +37,7 @@ $(() => {
     'TranslatableInput',
     'EventEmitter',
     'TextWithLengthCounter',
+    'DeltaQuantityInput',
   ]);
 
   const $productForm = $(window.parent.document.querySelector(ProductMap.productForm));

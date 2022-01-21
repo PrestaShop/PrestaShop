@@ -109,20 +109,6 @@ class ApiClient
         return isset($responseArray->module) ? $responseArray->module : [];
     }
 
-    public function getModule($moduleId)
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('module')
-            ->setModuleId($moduleId)
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        if (!empty($responseArray->modules)) {
-            return $responseArray->modules[0];
-        }
-    }
-
     /**
      * Call API for module ZIP content (= download).
      *

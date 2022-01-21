@@ -37,7 +37,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Adds a button right into specified input and toggles it's availability on change
  *
- * Check admin-dev/themes/new-theme/js/components/form/submittable-input.js for related javascript component
+ * Check admin-dev/themes/new-theme/js/components/form/submittable-input.ts for related javascript component
  */
 class SubmittableInputType extends AbstractType
 {

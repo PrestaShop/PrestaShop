@@ -50,10 +50,14 @@ export default {
     openCombinationsGenerator: 'openCombinationsGenerator',
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
+    listRendered: 'combinationsListRendered',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
     tagRemoved: 'tagRemoved',
     categoriesUpdated: 'categoriesUpdated',
+  },
+  specificPrice: {
+    specificPriceUpdated: 'specificPriceUpdated',
   },
 };

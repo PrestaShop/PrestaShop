@@ -25,11 +25,12 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Update;
+namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class ProductStockProperties
 {
@@ -39,9 +40,9 @@ class ProductStockProperties
     private $packStockType;
 
     /**
-     * @var int|null
+     * @var StockModification|null
      */
-    private $deltaQuantity;
+    private $stockModification;
 
     /**
      * @var OutOfStockType|null
@@ -85,7 +86,7 @@ class ProductStockProperties
 
     /**
      * @param PackStockType|null $packStockType
-     * @param int|null $deltaQuantity
+     * @param StockModification|null $stockModification
      * @param OutOfStockType|null $outOfStockType
      * @param int|null $minimalQuantity
      * @param string|null $location
@@ -97,7 +98,7 @@ class ProductStockProperties
      */
     public function __construct(
         ?PackStockType $packStockType = null,
-        ?int $deltaQuantity = null,
+        ?StockModification $stockModification = null,
         ?OutOfStockType $outOfStockType = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
@@ -108,7 +109,7 @@ class ProductStockProperties
         ?DateTimeInterface $availableDate = null
     ) {
         $this->packStockType = $packStockType;
-        $this->deltaQuantity = $deltaQuantity;
+        $this->stockModification = $stockModification;
         $this->outOfStockType = $outOfStockType;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
@@ -128,11 +129,11 @@ class ProductStockProperties
     }
 
     /**
-     * @return int|null
+     * @return StockModification|null
      */
-    public function getDeltaQuantity(): ?int
+    public function getStockModification(): ?StockModification
     {
-        return $this->deltaQuantity;
+        return $this->stockModification;
     }
 
     /**

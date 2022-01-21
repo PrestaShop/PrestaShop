@@ -270,6 +270,7 @@ class AdminTabsControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -368,7 +369,8 @@ class AdminTabsControllerCore extends AdminController
             $pos = explode('_', $value);
 
             if (isset($pos[2]) && (int) $pos[2] === $id_tab) {
-                if ($tab = new Tab((int) $pos[2])) {
+                $tab = new Tab((int) $pos[2]);
+                if (Validate::isLoadedObject($tab)) {
                     if (isset($position) && $tab->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for tab ' . (int) $pos[1] . '\r\n';
                     } else {

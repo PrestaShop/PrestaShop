@@ -5,6 +5,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
@@ -163,7 +164,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
 
-          const expectedResult = await brandsPage.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);

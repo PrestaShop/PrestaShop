@@ -82,10 +82,7 @@ jobs:
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 classes/
 
       - name: Run phpstan on controllers directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 3 controllers/
-
-      - name: Run phpstan on tests directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 tests/
+        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 controllers/
 
   phpunit:
     name: PHPUnit

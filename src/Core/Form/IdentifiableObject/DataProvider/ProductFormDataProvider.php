@@ -118,7 +118,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId));
 
-        $productData = [
+        return [
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
@@ -132,8 +132,6 @@ final class ProductFormDataProvider implements FormDataProviderInterface
                 'active' => $productForEditing->isActive(),
             ],
         ];
-
-        return $this->addShortcutData($productData);
     }
 
     /**
@@ -146,7 +144,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         //  If not - don't forget to refactor this - legacy object model cannot stay in Core. Don't forget related test.
         $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
 
-        return $this->addShortcutData([
+        return [
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
             ],
@@ -165,7 +163,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'delta_quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -201,30 +202,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'footer' => [
                 'active' => $this->defaultProductActivation,
             ],
-        ]);
-    }
-
-    /**
-     * Returned product data with shortcut data that is picked from existing data.
-     *
-     * @param array $productData
-     *
-     * @return array
-     */
-    private function addShortcutData(array $productData): array
-    {
-        $productData['shortcuts'] = [
-            'retail_price' => [
-                'price_tax_excluded' => $productData['pricing']['retail_price']['price_tax_excluded'],
-                'price_tax_included' => $productData['pricing']['retail_price']['price_tax_included'],
-                'tax_rules_group_id' => $productData['pricing']['tax_rules_group_id'],
-            ],
-            'stock' => [
-                'quantity' => $productData['stock']['quantities']['quantity'],
-            ],
         ];
-
-        return $productData;
     }
 
     /**
@@ -409,7 +387,10 @@ final class ProductFormDataProvider implements FormDataProviderInterface
 
         return [
             'quantities' => [
-                'quantity' => $stockInformation->getQuantity(),
+                'delta_quantity' => [
+                    'quantity' => $stockInformation->getQuantity(),
+                    'delta' => 0,
+                ],
                 'stock_movements' => $this->getStockMovements($productForEditing->getProductId()),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],

@@ -75,11 +75,6 @@
             ...
           {% endif %}
         </div>
-        <div class="module-read-more-grid">
-          {% if module.attributes.id != "0" %}
-            <a class="module-read-more-grid-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
-          {% endif %}
-        </div>
       {% endblock %}
     </div>
 
@@ -112,7 +107,6 @@
       {% endif %}
       {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module, 'level' : level } %}
     </div>
-    {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default(''), 'level' : level } %}
     {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
   </div>
 </div>

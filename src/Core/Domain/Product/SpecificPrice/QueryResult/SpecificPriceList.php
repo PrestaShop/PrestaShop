@@ -26,82 +26,48 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
 
 /**
- * Retrieves product specific prices
+ * Transfer SpecificPrice list data
  */
-class GetEditableSpecificPricesList
+class SpecificPriceList
 {
     /**
-     * @var ProductId
+     * @var SpecificPriceForListing[]
      */
-    private $productId;
+    private $specificPrices;
 
     /**
-     * @var int|null
+     * @var int
      */
-    private $limit;
+    private $totalSpecificPricesCount;
 
     /**
-     * @var int|null
-     */
-    private $offset;
-
-    /**
-     * @var array
-     */
-    private $filters;
-
-    /**
-     * @param int $productId
-     * @param int|null $limit
-     * @param int|null $offset
-     * @param array|null $filters
+     * @param SpecificPriceForListing[] $specificPrices
+     * @param int $totalSpecificPricesCount
      */
     public function __construct(
-        int $productId,
-        ?int $limit = null,
-        ?int $offset = null,
-        ?array $filters = null
+        array $specificPrices,
+        int $totalSpecificPricesCount
     ) {
-        $this->productId = new ProductId($productId);
-        $this->limit = $limit;
-        $this->offset = $offset;
-        $this->filters = $filters;
+        $this->specificPrices = $specificPrices;
+        $this->totalSpecificPricesCount = $totalSpecificPricesCount;
     }
 
     /**
-     * @return ProductId
+     * @return SpecificPriceForListing[]
      */
-    public function getProductId(): ProductId
+    public function getSpecificPrices(): array
     {
-        return $this->productId;
+        return $this->specificPrices;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getLimit(): ?int
+    public function getTotalSpecificPricesCount(): int
     {
-        return $this->limit;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOffset(): ?int
-    {
-        return $this->offset;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFilters(): ?array
-    {
-        return $this->filters;
+        return $this->totalSpecificPricesCount;
     }
 }

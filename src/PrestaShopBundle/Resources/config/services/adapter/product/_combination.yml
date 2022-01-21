@@ -30,6 +30,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\UpdateCombinationStockHandler
     arguments:
       - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand
@@ -38,6 +39,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\GetCombinationForEditingHandler
     arguments:
       - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.repository.product_repository'
@@ -58,6 +60,7 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList
@@ -120,6 +123,7 @@ services:
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
       - '@prestashop.adapter.product.combination.update.combination_stock_updater'
+      - '@prestashop.adapter.product.stock.repository.movement_reason_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand

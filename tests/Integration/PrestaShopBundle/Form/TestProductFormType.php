@@ -45,12 +45,10 @@ class TestProductFormType extends CommonAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('shortcuts', FormType::class)
             ->add('stock', FormType::class)
             ->add('shipping', FormType::class)
             ->add('options', FormType::class)
         ;
-        $builder->get('shortcuts')->add('stock', FormType::class);
 
         $stock = $builder->get('stock');
         $stock->add('pack_stock_type', ChoiceType::class);

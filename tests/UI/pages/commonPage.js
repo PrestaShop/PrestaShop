@@ -361,25 +361,6 @@ class CommonPage {
   }
 
   /**
-   * Sort array of strings or numbers
-   * @param arrayToSort {Array<string|number>} Array to sort
-   * @param isFloat {boolean} True if array values type are float
-   * @param isDate {boolean} True if array values type are date
-   * @return {Promise<Array<string|number>>}
-   */
-  async sortArray(arrayToSort, isFloat = false, isDate = false) {
-    if (isFloat) {
-      return arrayToSort.sort((a, b) => a - b);
-    }
-
-    if (isDate) {
-      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
-    }
-
-    return arrayToSort.sort((a, b) => a.localeCompare(b));
-  }
-
-  /**
    * Drag and drop element
    * @param page {Page} Browser tab
    * @param source {string} String to locate the element to drag

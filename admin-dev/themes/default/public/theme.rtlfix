@@ -1,35 +1,46 @@
 @font-face {
   font-family: Vazir;
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot');
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.eot?#iefix') format('embedded-opentype'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir.ttf') format('truetype');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf') format('truetype');
   font-weight: normal;
+  font-style: normal;
 }
-
 @font-face {
   font-family: Vazir;
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot');
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045380/vazir_v18.0.0/Vazir.woff') format('woff'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522045523/vazir_v18.0.0/Vazir-Bold.ttf') format('truetype');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.ttf') format('truetype');
   font-weight: bold;
+  font-style: normal;
 }
-
 @font-face {
   font-family: Vazir;
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot');
-  src: url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.eot?#iefix') format('embedded-opentype'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.woff') format('woff'),
-       url('https://res.cloudinary.com/ipresta/raw/upload/v1522044764/vazir_v18.0.0/Vazir-Light.ttf') format('truetype');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot');
+  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff2') format('woff2'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff') format('woff'),
+    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.ttf') format('truetype');
   font-weight: 300;
+  font-style: normal;
 }
-.bootstrap body.lang-fa, body.lang-fa, .lang-fa #content.bootstrap .panel .panel-heading a.btn, .lang-fa #content.bootstrap #dash_version .panel-heading a.btn, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-fa #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-fa .bootstrap .tooltip, .lang-fa .bootstrap .btn-group-action .btn, .lang-fa .bootstrap .page-head h2.page-title, .lang-fa .bootstrap .page-head h4.page-subtitle, .lang-fa .bootstrap #dashboard section > section header .small, .lang-fa .bootstrap #login-panel #shop_name, .bootstrap #login-panel #reset_name, .bootstrap #login-panel #reset_confirm_name, .bootstrap #login-panel #forgot_name, .bootstrap #login-panel #forgot_confirm_name, .bootstrap h1, .lang-fa .bootstrap h2, .lang-fa .bootstrap h3, .lang-fa .bootstrap h4, .lang-fa .bootstrap h5, .lang-fa .bootstrap h6, .lang-fa .bootstrap .h1, .lang-fa .bootstrap .h2, .lang-fa .bootstrap .h3, .lang-fa .bootstrap .h4, .lang-fa .bootstrap .h5, .lang-fa .bootstrap .h6, .lang-fa #content.bootstrap .panel .panel-heading, .lang-fa #content.bootstrap #dash_version .panel-heading, .lang-fa #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-fa #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .bootstrap .nav-tabs li a, .bootstrap .list-empty .list-empty-msg, .bootstrap #dashboard #dashtrends dt, .bootstrap #dashboard #dashproducts nav, .lang-fa .bootstrap #dashboard .tooltip-panel-heading {
-  font-family:"Vazir",Helvetica,Arial,sans-serif;
+
+body.lang-rtl, .lang-rtl #content.bootstrap .panel .panel-heading a.btn, .lang-rtl #content.bootstrap #dash_version .panel-heading a.btn, .lang-rtl #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-rtl #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-rtl #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-rtl .bootstrap .tooltip, .lang-rtl .bootstrap .btn-group-action .btn, .lang-rtl .bootstrap .page-head h2.page-title, .lang-rtl .bootstrap .page-head h4.page-subtitle, .lang-rtl .bootstrap #dashboard #dashproducts nav, .lang-rtl .bootstrap #dashboard #dashtrends dt, .lang-rtl .bootstrap #dashboard section > section header .small, .bootstrap h1, .lang-rtl .bootstrap h2, .lang-rtl .bootstrap h3, .lang-rtl .bootstrap h4, .lang-rtl .bootstrap h5, .lang-rtl .bootstrap h6, .lang-rtl .bootstrap .h1, .lang-rtl .bootstrap .h2, .lang-rtl .bootstrap .h3, .lang-rtl .bootstrap .h4, .lang-rtl .bootstrap .h5, .lang-rtl .bootstrap .h6, .lang-rtl #content.bootstrap .panel .panel-heading, .lang-rtl #content.bootstrap #dash_version .panel-heading, .lang-rtl #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-rtl #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .lang-rtl .bootstrap #dashboard .tooltip-panel-heading, .lang-rtl .bootstrap input[type="text"], .lang-rtl .bootstrap input[type="search"], .lang-rtl .bootstrap input[type="password"], .lang-rtl .bootstrap input[type="email"], .lang-rtl .bootstrap input[type="tel"], .lang-rtl #content.bootstrap input, .lang-rtl #content.bootstrap button, .lang-rtl #content.bootstrap textarea, .lang-rtl #content.bootstrap select {
+  font-family: Vazir, Tahoma, Arial, sans-serif !important;
 }
-.lang-fa .bootstrap input[type="text"], .lang-fa .bootstrap input[type="search"], .lang-fa .bootstrap input[type="password"], .lang-fa .bootstrap input[type="email"], .lang-fa .bootstrap input[type="tel"] {
-  font-family:"Vazir",Helvetica,Arial,sans-serif !important;
+
+.lang-rtl #login-panel input[type="email"], .lang-rtl #login-panel input[type="password"], .lang-rtl #login-panel #forgot_name {
+  font-family: Vazir, Tahoma, Arial, "FontAwesome", sans-serif !important;
 }
+
+.lang-rtl .bootstrap .page-head .page-title {
+  font-size: 1.625rem;
+}
+
 .rtl-flip:not(.rtl-no-flip) {
   -moz-transform: scaleX(-1);
   -o-transform: scaleX(-1);
@@ -104,13 +115,13 @@ svg {
   background-position: right;
 }
 
-/* fix notification dropdown */
+/* Fix notification dropdown */
 .notification-center .dropdown-menu {
   right: auto;
   left: 85px !important;
 }
 
-/* fix popover */
+/* Fix popover */
 .popover {
   right: auto;
   left: 5px;
@@ -123,7 +134,7 @@ svg {
   transform: scaleX(-1);
 }
 
-/* fix stock quantity arrow direction */
+/* Fix stock quantity arrow direction */
 .stock-app .stock-overview .table .qty-update .material-icons {
   transform: scaleX(-1);
 }
@@ -135,14 +146,14 @@ svg {
     -webkit-transform: translate(-20px) translateX(-1);
     transform: translate(-20px) translateX(-1);
     opacity: 0;
- }
+  }
   to {
     -webkit-transform: translate(0) translateX(-1);
     -ms-transform: translate(0) translateX(-1);
     -webkit-transform: translate(0) translateX(-1);
     transform: translate(0) translateX(-1);
     opacity: 1;
- }
+  }
 }
 
 /* Fixes image flipping for RTL language */
@@ -151,3 +162,20 @@ svg {
   transform: scaleX(-1);
   animation: showcase-img-appearance-rtl .4s;
 }
+
+/* Fix bidirectionality for material icons */
+.material-icons.rtl-flip {
+  transform: scaleX(-1);
+}
+
+/* Fix close button position in dropzone modal */
+#psthemecusto .modal .modal-header .close {
+  right: auto !important;
+  left: 1rem;
+}
+
+/* Fix header overflow in mobile screen */
+.mobile #content.bootstrap {
+  overflow: hidden;
+}
+

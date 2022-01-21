@@ -23,83 +23,66 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
 /**
- * Transfers data of single combination attributes
+ * Holds delta quantity for a product update along with a stock movement reason
  */
-class CombinationAttributeInformation
+class StockModification
 {
     /**
      * @var int
      */
-    private $attributeGroupId;
+    private $deltaQuantity;
 
     /**
-     * @var string
+     * @var MovementReasonId
      */
-    private $attributeGroupName;
+    private $movementReasonId;
 
     /**
-     * @var int
-     */
-    private $attributeId;
-
-    /**
-     * @var string
-     */
-    private $attributeName;
-
-    /**
-     * @param int $attributeGroupId
-     * @param string $attributeGroupName
-     * @param int $attributeId
-     * @param string $attributeName
+     * @param int $deltaQuantity
+     * @param MovementReasonId $movementReasonId
      */
     public function __construct(
-        int $attributeGroupId,
-        string $attributeGroupName,
-        int $attributeId,
-        string $attributeName
+        int $deltaQuantity,
+        MovementReasonId $movementReasonId
     ) {
-        $this->attributeGroupId = $attributeGroupId;
-        $this->attributeGroupName = $attributeGroupName;
-        $this->attributeId = $attributeId;
-        $this->attributeName = $attributeName;
+        $this->assertDeltaQuantityIsNotZero($deltaQuantity);
+        $this->deltaQuantity = $deltaQuantity;
+        $this->movementReasonId = $movementReasonId;
     }
 
     /**
      * @return int
      */
-    public function getAttributeGroupId(): int
+    public function getDeltaQuantity(): int
     {
-        return $this->attributeGroupId;
+        return $this->deltaQuantity;
     }
 
     /**
-     * @return string
+     * @return MovementReasonId
      */
-    public function getAttributeGroupName(): string
+    public function getMovementReasonId(): MovementReasonId
     {
-        return $this->attributeGroupName;
+        return $this->movementReasonId;
     }
 
     /**
-     * @return int
+     * @param int $quantity
      */
-    public function getAttributeId(): int
+    private function assertDeltaQuantityIsNotZero(int $quantity): void
     {
-        return $this->attributeId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAttributeName(): string
-    {
-        return $this->attributeName;
+        if (0 === $quantity) {
+            throw new ProductStockConstraintException(
+                'Delta quantity cannot be 0',
+                ProductStockConstraintException::INVALID_DELTA_QUANTITY
+            );
+        }
     }
 }

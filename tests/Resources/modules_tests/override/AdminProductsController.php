@@ -126,7 +126,7 @@ class AdminProductsController extends AdminProductsControllerCore
                     $context->shop = new Shop((int) $this->_list[$i]['id_shop_default']);
                 }
                 $this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-                $this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
+                $this->_list[$i]['price_tmp'] = (float) Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
             }
         }
         if ($orderByPriceFinal == 'price_final') {

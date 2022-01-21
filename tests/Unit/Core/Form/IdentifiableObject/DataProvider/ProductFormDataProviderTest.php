@@ -117,7 +117,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'delta_quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -153,16 +156,6 @@ class ProductFormDataProviderTest extends TestCase
             'footer' => [
                 'active' => false,
             ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
-            ],
         ];
 
         $defaultData = $provider->getDefaultData();
@@ -191,7 +184,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => 0,
+                    'delta_quantity' => [
+                        'quantity' => 0,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -226,16 +222,6 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'footer' => [
                 'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
             ],
         ];
 
@@ -461,10 +447,6 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['pricing']['unit_price']['price_tax_included'] = 7.9872;
         $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
 
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
-        $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
-
         $datasets[] = [
             $productData,
             $expectedOutputData,
@@ -521,7 +503,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
             ],
         ];
-        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
@@ -544,8 +526,6 @@ class ProductFormDataProviderTest extends TestCase
                 'delta_quantity' => -15,
             ],
         ];
-
-        $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
 
         $datasets[] = [
             $productData,
@@ -1411,7 +1391,10 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
+                    'delta_quantity' => [
+                        'quantity' => static::DEFAULT_QUANTITY,
+                        'delta' => 0,
+                    ],
                     'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
@@ -1484,16 +1467,6 @@ class ProductFormDataProviderTest extends TestCase
             ],
             'footer' => [
                 'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 19.86,
-                    'price_tax_included' => 23.832,
-                    'tax_rules_group_id' => 1,
-                ],
-                'stock' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
-                ],
             ],
         ];
     }

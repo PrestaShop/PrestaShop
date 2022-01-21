@@ -71,7 +71,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $cart->update();
         $paymentModule->validateOrder(
             $cart->id,
-            Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
+            (int) Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
             0,
             'Unknown',
             null,

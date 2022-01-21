@@ -1451,11 +1451,6 @@ class ToolsCore
     {
         static $array_str = [];
         static $allow_accented_chars = null;
-        static $has_mb_strtolower = null;
-
-        if ($has_mb_strtolower === null) {
-            $has_mb_strtolower = function_exists('mb_strtolower');
-        }
 
         if (!is_string($str)) {
             return false;
@@ -1474,10 +1469,8 @@ class ToolsCore
         }
 
         $return_str = trim($str);
+        $return_str = mb_strtolower($return_str, 'UTF-8');
 
-        if ($has_mb_strtolower) {
-            $return_str = mb_strtolower($return_str, 'utf-8');
-        }
         if (!$allow_accented_chars) {
             $return_str = Tools::replaceAccentedChars($return_str);
         }
@@ -1491,12 +1484,6 @@ class ToolsCore
 
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
         $return_str = str_replace([' ', '/'], '-', $return_str);
-
-        // If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
-        // This way we lose fewer special chars.
-        if (!$has_mb_strtolower) {
-            $return_str = Tools::strtolower($return_str);
-        }
 
         $array_str[$str] = $return_str;
 
@@ -1815,11 +1802,8 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtolower')) {
-            return mb_strtolower($str, 'utf-8');
-        }
 
-        return strtolower($str);
+        return mb_strtolower($str, 'UTF-8');
     }
 
     public static function strlen($str, $encoding = 'UTF-8')
@@ -1827,12 +1811,10 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
-        if (function_exists('mb_strlen')) {
-            return mb_strlen($str, $encoding);
-        }
 
-        return strlen($str);
+        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
+
+        return mb_strlen($str, $encoding);
     }
 
     /**
@@ -1854,41 +1836,27 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtoupper')) {
-            return mb_strtoupper($str, 'utf-8');
-        }
 
-        return strtoupper($str);
+        return mb_strtoupper($str, 'utf-8');
     }
 
-    public static function substr($str, $start, $length = false, $encoding = 'utf-8')
+    public static function substr($str, $start, $length = false, $encoding = 'UTF-8')
     {
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_substr')) {
-            return mb_substr($str, (int) $start, ($length === false ? Tools::strlen($str) : (int) $length), $encoding);
-        }
 
-        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
+        return mb_substr($str, (int) $start, ($length === false ? null : (int) $length), $encoding);
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strpos')) {
-            return mb_strpos($str, $find, $offset, $encoding);
-        }
-
-        return strpos($str, $find, $offset);
+        return mb_strpos($str, $find, $offset, $encoding);
     }
 
-    public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
+    public static function strrpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strrpos')) {
-            return mb_strrpos($str, $find, $offset, $encoding);
-        }
-
-        return strrpos($str, $find, $offset);
+        return mb_strrpos($str, $find, $offset, $encoding);
     }
 
     public static function ucfirst($str)
@@ -1898,17 +1866,13 @@ class ToolsCore
 
     public static function ucwords($str)
     {
-        if (function_exists('mb_convert_case')) {
-            return mb_convert_case($str, MB_CASE_TITLE);
-        }
-
-        return ucwords(Tools::strtolower($str));
+        return mb_convert_case($str, MB_CASE_TITLE);
     }
 
     public static function orderbyPrice(&$array, $order_way)
     {
         foreach ($array as &$row) {
-            $row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
+            $row['price_tmp'] = (float) Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
         }
         unset($row);
 
@@ -3918,57 +3882,6 @@ exit;
         return $characterCleaner->cleanNonUnicodeSupport($pattern);
     }
 
-    protected static $is_addons_up = true;
-
-    public static function addonsRequest($request, $params = [])
-    {
-        if (!self::$is_addons_up) {
-            return false;
-        }
-
-        $post_query_data = [
-            'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
-            'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
-            'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-            'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
-            'format' => isset($params['format']) ? $params['format'] : 'xml',
-        ];
-        if (isset($params['source'])) {
-            $post_query_data['source'] = $params['source'];
-        }
-
-        $post_data = http_build_query($post_query_data);
-
-        $end_point = 'api.addons.prestashop.com';
-
-        switch ($request) {
-            case 'module':
-                $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-
-                break;
-            default:
-                return false;
-        }
-
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'content' => $post_data,
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
-            ],
-        ]);
-
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
-            return $content;
-        }
-
-        self::$is_addons_up = false;
-
-        return false;
-    }
-
     /**
      * Returns an array containing information about
      * HTTP file upload variable ($_FILES).
@@ -4259,35 +4172,14 @@ exit;
      *
      * @param array $base the array in which elements are replaced
      * @param array $replacements the array from which elements will be extracted
+     *
+     * @deprecated since version 8.0.0, to be removed.
      */
     public static function arrayReplaceRecursive($base, $replacements)
     {
-        if (function_exists('array_replace_recursive')) {
-            return array_replace_recursive($base, $replacements);
-        }
+        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
 
-        foreach (array_slice(func_get_args(), 1) as $replacements) {
-            $bref_stack = [&$base];
-            $head_stack = [$replacements];
-
-            do {
-                end($bref_stack);
-
-                $bref = &$bref_stack[key($bref_stack)];
-                $head = array_pop($head_stack);
-                unset($bref_stack[key($bref_stack)]);
-                foreach (array_keys($head) as $key) {
-                    if (is_array($bref[$key]) && is_array($head[$key])) {
-                        $bref_stack[] = &$bref[$key];
-                        $head_stack[] = $head[$key];
-                    } else {
-                        $bref[$key] = $head[$key];
-                    }
-                }
-            } while (count($head_stack));
-        }
-
-        return $base;
+        return array_replace_recursive($base, $replacements);
     }
 
     /**
@@ -4425,16 +4317,9 @@ exit;
  *
  * @return int
  */
-/* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
-    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
-        return -1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
-        return 1;
-    }
-
-    return 0;
+    return $a['price_tmp'] <=> $b['price_tmp'];
 }
 
 /**
@@ -4445,11 +4330,5 @@ function cmpPriceAsc($a, $b)
  */
 function cmpPriceDesc($a, $b)
 {
-    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
-        return 1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
-        return -1;
-    }
-
-    return 0;
+    return $b['price_tmp'] <=> $a['price_tmp'];
 }

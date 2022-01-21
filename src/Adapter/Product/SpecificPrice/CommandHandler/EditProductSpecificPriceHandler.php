@@ -74,6 +74,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
     private function fillUpdatableProperties(EditProductSpecificPriceCommand $command, SpecificPrice $specificPrice): array
     {
         $updatableProperties = [];
+
         if (null !== $command->getReduction()) {
             $specificPrice->reduction_type = $command->getReduction()->getType();
             $specificPrice->reduction = (string) $command->getReduction()->getValue();
@@ -83,14 +84,14 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
             ];
         }
 
+        if ($command->getFixedPrice()) {
+            $specificPrice->price = (string) $command->getFixedPrice()->getValue();
+            $updatableProperties[] = 'price';
+        }
+
         if (null !== $command->includesTax()) {
             $specificPrice->reduction_tax = $command->includesTax();
             $updatableProperties[] = 'reduction_tax';
-        }
-
-        if (null !== $command->getPrice()) {
-            $specificPrice->price = (float) (string) $command->getPrice();
-            $updatableProperties[] = 'price';
         }
 
         if (null !== $command->getFromQuantity()) {
@@ -114,7 +115,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         if (null !== $command->getCountryId()) {
-            $specificPrice->id_country = $command->getCountryId()->getValue();
+            $specificPrice->id_country = $command->getCountryId();
             $updatableProperties[] = 'id_country';
         }
 
@@ -124,7 +125,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
         }
 
         if (null !== $command->getCustomerId()) {
-            $specificPrice->id_customer = $command->getCustomerId()->getValue();
+            $specificPrice->id_customer = $command->getCustomerId();
             $updatableProperties[] = 'id_customer';
         }
 

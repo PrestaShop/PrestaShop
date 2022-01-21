@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 
 /**
  * Builds commands from command stock form type
@@ -48,8 +49,9 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
         $quantityData = $formData['stock'];
         $command = new UpdateCombinationStockCommand($combinationId->getValue());
 
-        if (isset($quantityData['quantities']['quantity'])) {
-            $command->setQuantity((int) $quantityData['quantities']['quantity']);
+        /* @see DeltaQuantityType */
+        if (isset($quantityData['quantities']['delta_quantity']['delta'])) {
+            $command->setDeltaQuantity((int) $quantityData['quantities']['delta_quantity']['delta']);
         }
         if (isset($quantityData['quantities']['minimal_quantity'])) {
             $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);

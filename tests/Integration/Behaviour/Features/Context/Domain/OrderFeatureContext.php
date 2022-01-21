@@ -124,7 +124,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = $this->getCommandBus()->handle(
             new AddOrderFromBackOfficeCommand(
                 $data['cartId'],
-                $data['employeeId'],
+                (int) $data['employeeId'],
                 $data['orderMessage'],
                 $data['paymentModuleName'],
                 $data['orderStateId']
@@ -1938,10 +1938,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         if ($addressType == 'shipping') {
-            /** @var OrderShippingAddressForViewing $address */
             $address = $orderForViewing->getShippingAddressFormatted();
         } elseif ($addressType == 'invoice') {
-            /** @var OrderInvoiceAddressForViewing $address */
             $address = $orderForViewing->getInvoiceAddressFormatted();
         }
 

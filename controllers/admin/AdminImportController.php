@@ -785,20 +785,14 @@ class AdminImportControllerCore extends AdminController
                     $this->trans('(click to open "Generators" page)', [], 'Admin.Advparameters.Notification') . '</a>';
 
                     break;
-
-                break;
                 case UPLOAD_ERR_PARTIAL:
                     $_FILES['file']['error'] = $this->trans('The uploaded file was only partially uploaded.', [], 'Admin.Advparameters.Notification');
 
                     break;
-
-                break;
                 case UPLOAD_ERR_NO_FILE:
                     $_FILES['file']['error'] = $this->trans('No file was uploaded.', [], 'Admin.Advparameters.Notification');
 
                     break;
-
-                break;
             }
         } elseif (!preg_match('#([^\.]*?)\.(csv|xls[xt]?|o[dt]s)$#is', $_FILES['file']['name'])) {
             $_FILES['file']['error'] = $this->trans('The extension of your file should be .csv.', [], 'Admin.Advparameters.Notification');
@@ -1565,7 +1559,7 @@ class AdminImportControllerCore extends AdminController
                 [
                     !empty($info['name']) ? Tools::safeOutput($info['name']) : 'No Name',
                     !empty($info['id']) ? Tools::safeOutput($info['id']) : 'No ID',
-                    ($validateOnly ? 'validated' : 'saved'),
+                    'saved',
                 ],
                 'Admin.Advparameters.Notification'
             );
@@ -1580,9 +1574,7 @@ class AdminImportControllerCore extends AdminController
 					DELETE FROM ' . _DB_PREFIX_ . 'category_shop
 					WHERE id_category = ' . (int) $category->id);
 
-                if (!$shop_is_feature_active) {
-                    $info['shop'] = 1;
-                } elseif (!isset($info['shop']) || empty($info['shop'])) {
+                if (!isset($info['shop']) || empty($info['shop'])) {
                     $info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
                 }
 
@@ -1766,7 +1758,7 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::setEntityDefaultValues($product);
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $product);
 
-        /** @var Product $product */
+        /** @var Product|null $product */
         if (!$product) {
             return;
         }
@@ -2801,7 +2793,7 @@ class AdminImportControllerCore extends AdminController
                             // gets all the combinations of this product
                             $attribute_combinations = $product->getAttributeCombinations($default_language);
                             foreach ($attribute_combinations as $attribute_combination) {
-                                if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination)) {
+                                if (in_array($id_product_attribute, $attribute_combination)) {
                                     // FIXME: ~3s/declinaison
                                     $product->updateAttribute(
                                         $id_product_attribute,
@@ -3967,7 +3959,7 @@ class AdminImportControllerCore extends AdminController
             }
         }
 
-        if (isset($store->hours) && is_array($store->hours)) {
+        if (is_array($store->hours)) {
             $newHours = [];
             foreach ($store->hours as $hour) {
                 $newHours[] = [$hour];
@@ -4300,7 +4292,8 @@ class AdminImportControllerCore extends AdminController
         }
 
         // checks parameters
-        if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier))) {
+        $supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier);
+        if (false === $supplier_reference) {
             $this->errors[] = sprintf(
                 $this->trans('Product (%d/%d) is not available for this order (at line %d).', [], 'Admin.Advparameters.Notification'),
                 $id_product,
@@ -4605,6 +4598,7 @@ class AdminImportControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 

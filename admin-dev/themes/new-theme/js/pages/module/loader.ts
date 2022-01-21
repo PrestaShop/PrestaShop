@@ -32,7 +32,6 @@ const {$} = window;
 class ModuleLoader {
   constructor() {
     ModuleLoader.handleImport();
-    ModuleLoader.handleEvents();
   }
 
   static handleImport(): void {
@@ -54,22 +53,6 @@ class ModuleLoader {
         moduleImport.removeClass('validate');
       }, 1250);
     }
-  }
-
-  static handleEvents(): void {
-    $('body').on(
-      'click',
-      'a.module-read-more-grid-btn, a.module-read-more-list-btn',
-      (event) => {
-        event.preventDefault();
-        const modulePoppin = $(event.target).data('target');
-
-        $.get(event.target.href, (data) => {
-          $(modulePoppin).html(data);
-          $(modulePoppin).modal();
-        });
-      },
-    );
   }
 }
 

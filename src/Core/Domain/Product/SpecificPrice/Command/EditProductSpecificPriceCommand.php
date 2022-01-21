@@ -29,18 +29,18 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
-use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\NoGroupId;
-use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\NoShopId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -66,9 +66,9 @@ class EditProductSpecificPriceCommand
     private $includesTax;
 
     /**
-     * @var DecimalNumber|null
+     * @var FixedPriceInterface|null
      */
-    private $price;
+    private $fixedPrice;
 
     /**
      * @var int|null
@@ -91,7 +91,7 @@ class EditProductSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var CountryId|null
+     * @var int|null
      */
     private $countryId;
 
@@ -101,7 +101,11 @@ class EditProductSpecificPriceCommand
     private $groupId;
 
     /**
-     * @var CustomerId|null
+     * @var int|null
+     *
+     * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
+     *        but it requires some refactoring as it was already used in many places this primitive way
+     *        related reminder issue https://github.com/PrestaShop/PrestaShop/issues/27205
      */
     private $customerId;
 
@@ -179,21 +183,25 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return DecimalNumber|null
+     * @return FixedPriceInterface|null
      */
-    public function getPrice(): ?DecimalNumber
+    public function getFixedPrice(): ?FixedPriceInterface
     {
-        return $this->price;
+        return $this->fixedPrice;
     }
 
     /**
-     * @param string $price
+     * @param string $fixedPrice
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setPrice(string $price): self
+    public function setFixedPrice(string $fixedPrice): self
     {
-        $this->price = new DecimalNumber($price);
+        if (InitialPrice::isInitialPriceValue($fixedPrice)) {
+            $this->fixedPrice = new InitialPrice();
+        } else {
+            $this->fixedPrice = new FixedPrice($fixedPrice);
+        }
 
         return $this;
     }
@@ -279,9 +287,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CountryId|null
+     * @return int|null
      */
-    public function getCountryId(): ?CountryId
+    public function getCountryId(): ?int
     {
         return $this->countryId;
     }
@@ -293,7 +301,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCountryId(int $countryId): self
     {
-        $this->countryId = new CountryId($countryId);
+        $this->countryId = $countryId;
 
         return $this;
     }
@@ -319,9 +327,9 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @return CustomerId|null
+     * @return int|null
      */
-    public function getCustomerId(): ?CustomerId
+    public function getCustomerId(): ?int
     {
         return $this->customerId;
     }
@@ -333,7 +341,7 @@ class EditProductSpecificPriceCommand
      */
     public function setCustomerId(int $customerId): self
     {
-        $this->customerId = new CustomerId($customerId);
+        $this->customerId = $customerId;
 
         return $this;
     }
@@ -347,11 +355,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param DateTimeInterface|null $dateTimeFrom
+     * @param DateTimeInterface $dateTimeFrom
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeFrom(?DateTimeInterface $dateTimeFrom): self
+    public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
         $this->dateTimeFrom = $dateTimeFrom;
 
@@ -367,11 +375,11 @@ class EditProductSpecificPriceCommand
     }
 
     /**
-     * @param DateTimeInterface|null $dateTimeTo
+     * @param DateTimeInterface $dateTimeTo
      *
      * @return EditProductSpecificPriceCommand
      */
-    public function setDateTimeTo(?DateTimeInterface $dateTimeTo): self
+    public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {
         $this->dateTimeTo = $dateTimeTo;
 

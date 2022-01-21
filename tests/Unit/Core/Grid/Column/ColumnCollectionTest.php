@@ -143,8 +143,8 @@ class ColumnCollectionTest extends TestCase
     {
         $columns = (new ColumnCollection())
             ->add($this->createColumnMock(3))
-            ->addAfter(3, $this->createColumnMock(1))
-            ->addBefore(3, $this->createColumnMock(2))
+            ->addAfter('3', $this->createColumnMock(1))
+            ->addBefore('3', $this->createColumnMock(2))
             ->add($this->createColumnMock('second'))
             ->addAfter('second', $this->createColumnMock(9))
             ->addBefore('second', $this->createColumnMock('7'))

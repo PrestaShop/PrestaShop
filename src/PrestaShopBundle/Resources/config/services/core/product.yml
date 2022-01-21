@@ -9,3 +9,6 @@ services:
 
   prestashop.core.product.combination.generator.combination_generator:
     class: PrestaShop\PrestaShop\Core\Product\Combination\Generator\CombinationGenerator
+
+  prestashop.core.product.combination.name_builder.combination_name_builder:
+    class: PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder

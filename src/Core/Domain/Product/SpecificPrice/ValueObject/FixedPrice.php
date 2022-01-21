@@ -23,47 +23,49 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject;
 
-/**
- * Transfer SpecificPrice list data
- */
-class SpecificPriceListForEditing
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+
+class FixedPrice implements FixedPriceInterface
 {
     /**
-     * @var SpecificPriceForEditing[]
+     * @var DecimalNumber
      */
-    private $specificPrices;
-
-    /**
-     * @var int
-     */
-    private $totalSpecificPricesCount;
+    private $value;
 
     public function __construct(
-        array $specificPrices,
-        int $totalSpecificPricesCount
+        string $value
     ) {
-        $this->specificPrices = $specificPrices;
-        $this->totalSpecificPricesCount = $totalSpecificPricesCount;
+        $this->setValue($value);
+    }
+
+    public function getValue(): DecimalNumber
+    {
+        return $this->value;
     }
 
     /**
-     * @return SpecificPriceForEditing[]
+     * @param string $value
+     *
+     * @throws SpecificPriceConstraintException
      */
-    public function getSpecificPrices(): array
+    private function setValue(string $value): void
     {
-        return $this->specificPrices;
-    }
+        $decimalValue = new DecimalNumber($value);
 
-    /**
-     * @return int
-     */
-    public function getTotalSpecificPricesCount(): int
-    {
-        return $this->totalSpecificPricesCount;
+        if (!$decimalValue->isNegative()) {
+            $this->value = $decimalValue;
+
+            return;
+        }
+
+        throw new SpecificPriceConstraintException(
+            sprintf('Invalid fixed price "%s". It cannot be negative', $value),
+            SpecificPriceConstraintException::INVALID_FIXED_PRICE
+        );
     }
 }

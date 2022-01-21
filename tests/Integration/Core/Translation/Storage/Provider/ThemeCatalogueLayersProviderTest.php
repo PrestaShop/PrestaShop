@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProv
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\ThemeCatalogueLayersProvider;
 use PrestaShop\PrestaShop\Core\Translation\TranslationRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 /**
@@ -52,7 +51,7 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
     private $themeExtractor;
 
     /**
-     * @var MockObject|LoaderInterface
+     * @var ThemeRepository
      */
     private $themeRepository;
 
@@ -73,13 +72,16 @@ class ThemeCatalogueLayersProviderTest extends AbstractCatalogueLayersProviderTe
         $this->themesDir = self::$kernel->getContainer()->getParameter('translations_theme_dir');
         $this->themeExtractor = self::$kernel->getContainer()->get('prestashop.translation.extractor.theme');
 
-        $this->themeRepository = $this->createMock(ThemeRepository::class);
-        $this->themeRepository
+        $themeRepository = $this->createMock(ThemeRepository::class);
+        $themeRepository
             ->method('getInstanceByName')
             ->willReturn(new Theme([
                 'name' => 'fakeThemeForTranslations',
                 'directory' => rtrim($this->themesDir, '/') . '/fakeThemeForTranslations',
             ])); // doesn't really matter
+        /* @var ThemeRepository $themeRepository */
+        $this->themeRepository = $themeRepository;
+
         $this->filesystem = new Filesystem();
     }
 

@@ -21,7 +21,8 @@ parameters:
     - override
     - pdf
     - src
-    # - tests
+    - tests
+    - tests-legacy
     - themes
     - tools
     - translations

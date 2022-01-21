@@ -30,8 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateCombinationStockCommand using legacy object model
@@ -44,12 +46,20 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
     private $combinationStockUpdater;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param CombinationStockUpdater $combinationStockUpdater
+     * @param MovementReasonRepository $movementReasonRepository
      */
     public function __construct(
-        CombinationStockUpdater $combinationStockUpdater
+        CombinationStockUpdater $combinationStockUpdater,
+        MovementReasonRepository $movementReasonRepository
     ) {
         $this->combinationStockUpdater = $combinationStockUpdater;
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -57,8 +67,16 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
      */
     public function handle(UpdateCombinationStockCommand $command): void
     {
+        $stockModification = null;
+        if ($command->getDeltaQuantity()) {
+            $stockModification = new StockModification(
+                $command->getDeltaQuantity(),
+                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+            );
+        }
+
         $properties = new CombinationStockProperties(
-            $command->getQuantity(),
+            $stockModification,
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),

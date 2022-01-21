@@ -96,7 +96,6 @@ export default class FormObjectMapper {
 
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
-  /* eslint-disable */
   /**
    * @param {jQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names
@@ -182,7 +181,12 @@ export default class FormObjectMapper {
       return undefined;
     }
 
-    const inputNames = this.fullModelMapping[modelKey];
+    let inputNames = this.fullModelMapping[modelKey];
+
+    // Turn single identifier into array to limit duplicated code in the following code
+    if (!Array.isArray(inputNames)) {
+      inputNames = [inputNames];
+    }
 
     // We must loop manually to keep the order in configuration,
     // if we use jQuery multiple selectors the collection
