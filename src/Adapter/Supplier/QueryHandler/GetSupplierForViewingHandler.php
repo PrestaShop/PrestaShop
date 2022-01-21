@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
-use Context;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -51,20 +50,20 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
     private $locale;
 
     /**
-     * @var string
+     * @var int
      */
-    private $defaultCurrencyIsoCode;
+    private $defaultCurrencyId;
 
     /**
      * @param Locale $locale
-     * @param string|null $defaultCurrencyIsoCode
+     * @param int $defaultCurrencyId
      */
     public function __construct(
         Locale $locale,
-        ?string $defaultCurrencyIsoCode = null
+        int $defaultCurrencyId
     ) {
         $this->locale = $locale;
-        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode ?? Context::getContext()->currency->iso_code;
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -150,7 +149,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         $productInfo = Supplier::getProductInformationsBySupplier($supplier->id, $product->id);
         $product->wholesale_price = $productInfo['product_supplier_price_te'];
         $product->supplier_reference = $productInfo['product_supplier_reference'];
-        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
+        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: Currency::getIsoCodeById($this->defaultCurrencyId);
         $formattedWholesalePrice = null !== $product->wholesale_price
             ? $this->locale->formatPrice($product->wholesale_price, $isoCode)
             : null;
@@ -197,7 +196,7 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
                     continue;
                 }
                 $isoCode = Currency::getIsoCodeById((int) $combinationSupplierInfo['id_currency'])
-                    ?: $this->defaultCurrencyIsoCode;
+                    ?: Currency::getIsoCodeById($this->defaultCurrencyId);
                 $formattedWholesalePrice = null !== $combinationSupplierInfo['product_supplier_price_te']
                     ? $this->locale->formatPrice($combinationSupplierInfo['product_supplier_price_te'], $isoCode)
                     : null;
