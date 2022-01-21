@@ -34,6 +34,7 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
 {
     public const ISO_CODE = 'isoCode';
     public const LOCALE = 'locale';
+    public const ID = 'id';
 
     /**
      * Stores language instances in different arrays to match them quickly
@@ -44,7 +45,20 @@ class LangRepository extends EntityRepository implements LanguageRepositoryInter
     private $matches = [
         self::ISO_CODE => [],
         self::LOCALE => [],
+        self::ID => [],
     ];
+
+    /**
+     * @param int $languageId
+     *
+     * @return bool
+     */
+    public function isRTLById(int $languageId): bool
+    {
+        $language = $this->searchLanguage(self::ID, (string) $languageId);
+
+        return $language->isRTL();
+    }
 
     /**
      * @param string $isoCode
