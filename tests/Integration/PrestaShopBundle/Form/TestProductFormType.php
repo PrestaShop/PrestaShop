@@ -47,18 +47,20 @@ class TestProductFormType extends CommonAbstractType
     {
         $builder
             ->add('stock', FormType::class)
+            ->add('description', FormType::class)
             ->add('shipping', FormType::class)
             ->add('options', FormType::class)
             ->add('pricing', FormType::class)
         ;
+        $description = $builder->get('description');
+        $description->add('packed_products', FormType::class);
 
         $stockForm = $builder->get('stock');
         $stockForm->add('pack_stock_type', ChoiceType::class);
         $stockForm->add('virtual_product_file', FormType::class);
         $stockForm->add('quantities', FormType::class);
-
-        $quantitiesForm = $stockForm->get('quantities');
-        $quantitiesForm->add('stock_movements', FormType::class);
+        $quantities = $stockForm->get('quantities');
+        $quantities->add('stock_movements', FormType::class);
 
         $optionsForm = $builder->get('options');
         $optionsForm->add('suppliers', ChoiceType::class);
