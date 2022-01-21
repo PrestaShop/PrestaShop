@@ -58,6 +58,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
     public function testFormTypeExistsInFormDependingOnProductType(string $productType, string $formTypeName, bool $shouldExist): void
     {
         $form = $this->createForm(TestProductFormType::class);
+
         $this->assertFormTypeExistsInForm($form, $formTypeName, true);
         $this->adaptProductFormBasedOnProductType($form, $productType);
         $this->assertFormTypeExistsInForm($form, $formTypeName, $shouldExist);
@@ -65,6 +66,11 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
+        yield [ProductType::TYPE_PACK, 'packed_products', true];
+        yield [ProductType::TYPE_STANDARD, 'packed_products', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'packed_products', false];
+        yield [ProductType::TYPE_VIRTUAL, 'packed_products', false];
+
         yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
         yield [ProductType::TYPE_PACK, 'options.suppliers', true];
         yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];

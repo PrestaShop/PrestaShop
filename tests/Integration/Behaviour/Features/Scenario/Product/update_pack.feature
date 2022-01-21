@@ -64,9 +64,9 @@ Feature: Add product to pack from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     Then product "productPack1" type should be pack
-    And pack "productPack1" should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 5        |
+    And pack "productPack1" should contain products with following details:
+      | product  | combination | quantity | name             |
+      | product2 |             | 5        | shady sunglasses |
 
   Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:
@@ -86,22 +86,22 @@ Feature: Add product to pack from Back Office (BO)
       | product3 | 3        |
       | product4 | 20       |
     Then product "productPack2" type should be pack
-    And pack productPack2 should contain products with following quantities:
-      | product  | quantity |
-      | product3 | 3        |
-      | product4 | 20       |
+    And pack productPack2 should contain products with following details:
+      | product  | combination | quantity | name           |
+      | product3 |             | 3        | summerstreet   |
+      | product4 |             | 20       | winterstreet |
 
   Scenario: I update pack by removing one of the products
-    Given pack productPack2 should contain products with following quantities:
-      | product  | quantity |
-      | product3 | 3        |
-      | product4 | 20       |
+    Given pack productPack2 should contain products with following details:
+      | product  | combination | quantity | name           |
+      | product3 |             | 3        | summerstreet   |
+      | product4 |             | 20       | winterstreet   |
     When I update pack "productPack2" with following product quantities:
       | product  | quantity |
       | product3 | 3        |
-    And pack productPack2 should contain products with following quantities:
-      | product  | quantity |
-      | product3 | 3        |
+    And pack productPack2 should contain products with following details:
+      | product  | combination | quantity | name           |
+      | product3 |             | 3        | summerstreet   |
 
   Scenario: I add pack product to a pack
     Given product "productPack1" type should be pack
@@ -122,10 +122,10 @@ Feature: Add product to pack from Back Office (BO)
       | product2 | 2        |
       | product3 | 3        |
     Then product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 2        |
-      | product3 | 3        |
+    And pack productPack4 should contain products with following details:
+      | product  | combination | quantity | name             |
+      | product2 |             | 2        | shady sunglasses |
+      | product3 |             | 3        | summerstreet     |
 
   Scenario: I add product with negative quantity to a pack
     Given product "product2" type should be standard
@@ -138,86 +138,104 @@ Feature: Add product to pack from Back Office (BO)
 
   Scenario: I remove all products from existing pack
     Given product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 2        |
-      | product3 | 3        |
+    And pack productPack4 should contain products with following details:
+      | product  | combination | quantity | name             |
+      | product2 |             | 2        | shady sunglasses |
+      | product3 |             | 3        | summerstreet     |
     When I remove all products from pack productPack4
     Then product "productPack4" type should be pack
     And pack "productPack4" should be empty
 
-  Scenario: Add combination product to a pack
-    Given I add product "productSkirt1" with following information:
+  Scenario: Fake Add combination product to a pack
+    Given I add product "productSkirtToBePacked" with following information:
       | name[en-US] | regular skirt |
       | type        | combinations  |
-    And product "productSkirt1" has following combinations:
+    Then product "productSkirtToBePacked" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "packedProduct" type should be pack
+    And product productSkirtToBePacked type should be combinations
+
+  Scenario: Add combination product to a pack
+    Given I add product packedProduct with following information:
+      | name[en-US] | mixed pack 2 |
+      | type        | pack       |
+    Given I add product "productSkirtToBePacked" with following information:
+      | name[en-US] | regular skirt |
+      | type        | combinations  |
+    And product "productSkirtToBePacked" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
       | whiteM    | 15       | Size:M;Color:White |
       | blackM    | 13       | Size:M;Color:Black |
-    And product productSkirt1 type should be combinations
-    And product "productPack4" type should be pack
-    When I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-    Then product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
+    And product "packedProduct" type should be pack
+    When I update pack packedProduct with following product quantities:
+      | product                | combination | quantity |
+      | productSkirtToBePacked | whiteS      | 10       |
+      | productSkirtToBePacked | whiteM      | 11       |
+      | productSkirtToBePacked | blackM      | 12       |
+    Then product productSkirtToBePacked type should be combinations
+    And product "packedProduct" type should be pack
+    And pack packedProduct should contain products with following details:
+      | product                | combination | quantity | name           |
+      | productSkirtToBePacked | whiteS      | 10       | tobereplaced20 |
+      | productSkirtToBePacked | whiteM      | 11       | tobereplaced21 |
+      | productSkirtToBePacked | blackM      | 12       | tobereplaced22 |
 
   Scenario: Add combination & standard product to a pack
     Given product "product2" type should be standard
-    And product productSkirt1 type should be combinations
-    And product "productSkirt1" has following combinations:
+    And product productSkirtToBePacked type should be combinations
+    And product "productSkirtToBePacked" has following combinations:
       | reference | quantity | attributes         |
       | whiteS    | 15       | Size:S;Color:White |
       | whiteM    | 15       | Size:M;Color:White |
       | blackM    | 13       | Size:M;Color:Black |
-    When I update pack productPack4 with following product quantities:
+    When I update pack packedProduct with following product quantities:
       | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
-    Then product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
+      | productSkirtToBePacked | whiteS      | 10       |
+      | productSkirtToBePacked | whiteM      | 11       |
+      | productSkirtToBePacked | blackM      | 12       |
+      | product2               |             | 2        |
+    Then product "packedProduct" type should be pack
+    And pack packedProduct should contain products with following details:
+      | product                | combination | quantity | name           |
+      | productSkirtToBePacked | whiteS      | 10       | tobereplaced15 |
+      | productSkirtToBePacked | whiteM      | 11       | tobereplaced16 |
+      | productSkirtToBePacked | blackM      | 12       | tobereplaced17 |
+      | product2               |             | 2        | tobereplaced18 |
 
   Scenario: I remove one combination of same product from existing pack and change another combination quantity
-    Given product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | whiteM      | 11       |
-      | productSkirt1 | blackM      | 12       |
-      | product2      |             | 2        |
-    When I update pack productPack4 with following product quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
-    Then pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
-    Then product "productPack4" type should be pack
+    Given product "packedProduct" type should be pack
+    And pack packedProduct should contain products with following details:
+      | product                | combination | quantity | name           |
+      | productSkirtToBePacked | whiteS      | 10       | tobereplaced11 |
+      | productSkirtToBePacked | whiteM      | 11       | tobereplaced12 |
+      | productSkirtToBePacked | blackM      | 12       | tobereplaced13 |
+      | product2               |             | 2        | tobereplaced14 |
+    When I update pack packedProduct with following product quantities:
+      | product                | combination | quantity |
+      | productSkirtToBePacked | whiteS      | 10       |
+      | productSkirtToBePacked | blackM      | 9        |
+      | product2               |             | 2        |
+    Then pack packedProduct should contain products with following details:
+      | product                | combination | quantity | name           |
+      | productSkirtToBePacked | whiteS      | 10       | tobereplaced8  |
+      | productSkirtToBePacked | blackM      | 9        | tobereplaced9  |
+      | product2               |             | 2        | tobereplaced10 |
+    Then product "packedProduct" type should be pack
 
   Scenario: I remove all products from existing pack when it contains combination and standard products
-    Given product "productPack4" type should be pack
-    And pack productPack4 should contain products with following quantities:
-      | product       | combination | quantity |
-      | productSkirt1 | whiteS      | 10       |
-      | productSkirt1 | blackM      | 9        |
-      | product2      |             | 2        |
-    When I remove all products from pack productPack4
-    Then product "productPack4" type should be pack
-    And pack "productPack4" should be empty
+    Given product "packedProduct" type should be pack
+    And pack packedProduct should contain products with following details:
+      | product                | combination | quantity | name          |
+      | productSkirtToBePacked | whiteS      | 10       | tobereplaced3 |
+      | productSkirtToBePacked | blackM      | 9        | tobereplaced4 |
+      | product2               |             | 2        | tobereplaced5 |
+    When I remove all products from pack packedProduct
+    Then product "packedProduct" type should be pack
+    And pack "packedProduct" should be empty

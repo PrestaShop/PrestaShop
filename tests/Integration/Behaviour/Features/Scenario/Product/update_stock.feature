@@ -56,9 +56,9 @@ Feature: Update product stock from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     Then product "productPack1" type should be pack
-    And pack "productPack1" should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 5        |
+    And pack "productPack1" should contain products with following details:
+      | product  | combination | quantity | name             |
+      | product2 |             | 5        | shady sunglasses |
     And product "productPack1" should have following stock information:
       | pack_stock_type | default |
     When I update product "productPack1" stock with following information:

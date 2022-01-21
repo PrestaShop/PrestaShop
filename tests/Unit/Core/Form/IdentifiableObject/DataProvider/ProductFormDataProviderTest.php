@@ -45,6 +45,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
@@ -84,6 +87,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ProductFormDataProviderTest extends TestCase
 {
     private const PRODUCT_ID = 42;
+    private const IMAGE_ID = 102;
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
     private const HOME_CATEGORY_NAME = 'Home';
@@ -243,6 +247,7 @@ class ProductFormDataProviderTest extends TestCase
         $provider = $this->buildProvider($queryBusMock, false);
 
         $formData = $provider->getData(static::PRODUCT_ID);
+
         Assert::assertSame($expectedData, $formData);
     }
 
@@ -262,6 +267,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
+            $this->getDatasetsForPackedProducts(),
             $this->getDatasetsForRelatedProducts(),
         ];
 
@@ -563,6 +569,60 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData['description']['categories']['default_category_id'] = 51;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForPackedProducts(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'packed_products' => [
+                0 => [
+                    'id' => 42,
+                    'productName' => 'cool glasses',
+                    'quantity' => 5,
+                    'reference' => 'demo_42',
+                    'combinationId' => null,
+                    'image' => null,
+                ],
+                1 => [
+                    'id' => 15,
+                    'productName' => 'wicked snowboard',
+                    'quantity' => 3,
+                    'reference' => 'demo_15',
+                    'combinationId' => null,
+                    'image' => null,
+                ],
+            ],
+        ];
+
+        $expectedOutputData['description']['packed_products'] = [
+            0 => [
+                'id' => 42,
+                'name' => 'cool glasses (ref: demo_42)',
+                'combinationId' => 0,
+                'image' => null,
+                'quantity' => 5,
+            ],
+            1 => [
+                'id' => 15,
+                'name' => 'wicked snowboard (ref: demo_15)',
+                'combinationId' => 0,
+                'image' => null,
+                'quantity' => 3,
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -1061,6 +1121,32 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
+     * @return PackedProductDetails[]
+     */
+    private function createPackedProductsDetails(array $productData): array
+    {
+        if (empty($productData['packed_products'])) {
+            return [];
+        }
+
+        $packedProducts = [];
+        foreach ($productData['packed_products'] as $packedProduct) {
+            $packedProducts[] = new PackedProductDetails(
+                (int) $packedProduct['id'],
+                (int) $packedProduct['quantity'],
+                $packedProduct['combinationId'],
+                $packedProduct['productName'],
+                $packedProduct['reference'],
+                $packedProduct['image']
+            );
+        }
+
+        return $packedProducts;
+    }
+
+    /**
+     * @param array $productData
+     *
      * @return RelatedProduct[]
      */
     private function createRelatedProducts(array $productData): array
@@ -1316,11 +1402,13 @@ class ProductFormDataProviderTest extends TestCase
             ->method('handle')
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetProductForEditing::class),
+                $this->isInstanceOf(GetProductImages::class),
                 $this->isInstanceOf(GetProductSupplierOptions::class),
                 $this->isInstanceOf(GetProductFeatureValues::class),
                 $this->isInstanceOf(GetProductCustomizationFields::class),
                 $this->isInstanceOf(GetEmployeesStockMovements::class),
-                $this->isInstanceOf(GetRelatedProducts::class)
+                $this->isInstanceOf(GetRelatedProducts::class),
+                $this->isInstanceOf(GetPackedProductsDetails::class)
             ))
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
@@ -1345,6 +1433,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
             GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
             GetRelatedProducts::class => $this->createRelatedProducts($productData),
+            GetPackedProductsDetails::class => $this->createPackedProductsDetails($productData),
         ];
 
         $queryClass = get_class($query);
@@ -1376,6 +1465,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
+                'packed_products' => [],
             ],
             'specifications' => [
                 'references' => [
