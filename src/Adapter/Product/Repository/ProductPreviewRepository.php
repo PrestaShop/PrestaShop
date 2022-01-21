@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
-use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -53,23 +52,15 @@ class ProductPreviewRepository
     private $productImageRepository;
 
     /**
-     * @var ProductImagePathFactory
-     */
-    private $productImagePathFactory;
-
-    /**
      * @param ProductRepository $productRepository
      * @param ProductImageRepository $productImageRepository
-     * @param ProductImagePathFactory $productImagePathFactory
      */
     public function __construct(
         ProductRepository $productRepository,
-        ProductImageRepository $productImageRepository,
-        ProductImagePathFactory $productImagePathFactory
+        ProductImageRepository $productImageRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productImageRepository = $productImageRepository;
-        $this->productImagePathFactory = $productImagePathFactory;
     }
 
     /**
@@ -84,11 +75,7 @@ class ProductPreviewRepository
     {
         $product = $this->productRepository->get($productId);
         $name = $product->name[$languageId->getValue()] ?? reset($product->name);
-        $imageId = $this->productImageRepository->getDefaultImageId($productId);
-        $imagePath = $imageId ?
-            $this->productImagePathFactory->getPath($imageId) :
-            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
-        ;
+        $imagePath = $this->productImageRepository->getProductCoverUrl($productId);
 
         return new ProductPreview(
             $productId->getValue(),
