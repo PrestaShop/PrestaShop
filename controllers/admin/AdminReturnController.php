@@ -42,6 +42,8 @@ class AdminReturnControllerCore extends AdminController
         $this->_join = 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
         $this->_join .= 'LEFT JOIN ' . _DB_PREFIX_ . 'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = ' . (int) $this->context->language->id . ')';
         $this->_join .= ' LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.`id_order` = a.`id_order`)';
+        $this->_orderBy = 'id_order_return';
+        $this->_orderWay = 'DESC';
 
         $this->fields_list = [
             'id_order_return' => ['title' => $this->trans('ID', [], 'Admin.Global'), 'align' => 'center', 'width' => 25],
@@ -147,6 +149,15 @@ class AdminReturnControllerCore extends AdminController
             ],
             'submit' => [
                 'title' => $this->trans('Save', [], 'Admin.Actions'),
+            ],
+            'buttons' => [
+                'save-and-stay' => [
+                    'title' => $this->trans('Save and stay', [], 'Admin.Actions'),
+                    'name' => 'submitAdd' . $this->table . 'AndStay',
+                    'type' => 'submit',
+                    'class' => 'btn btn-default pull-right',
+                    'icon' => 'process-icon-save',
+                ],
             ],
         ];
 
