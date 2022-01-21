@@ -130,10 +130,11 @@ class ProductSupplierUpdater
 
         // Get list of combinations for product, or NoCombination for products without association
         $productType = $this->productRepository->getProductType($productId);
+
+        // We should always create an association not related to a combination
+        $combinationIds = [new NoCombinationId()];
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
-            $combinationIds = $this->combinationRepository->getCombinationIdsByProductId($productId);
-        } else {
-            $combinationIds = [new NoCombinationId()];
+            $combinationIds = array_merge($combinationIds, $this->combinationRepository->getCombinationIdsByProductId($productId));
         }
 
         // Now we search for each associated supplier if some associations are missing

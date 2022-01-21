@@ -544,3 +544,44 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier  | reference | currency | price_tax_excluded |
       | supplier1 |           | USD      | 0                  |
       | supplier2 |           | USD      | 0                  |
+
+  Scenario: I should be able to associate suppliers even when no combinations has been created
+    Given I add product "product5" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product5 type should be combinations
+    When I associate suppliers to product "product5"
+      | supplier  | product_supplier  |
+      | supplier2 | product5supplier2 |
+      | supplier1 | product5supplier1 |
+    Then product product5 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product5 should have following supplier values:
+      | default supplier           | supplier2 |
+    # Now I generate combinations, since the supplier's associations are existent the combination will also be associated
+    When I generate combinations for product product5 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product5" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product5SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product5SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product5MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product5MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product5SWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product5SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product5MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product5MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
