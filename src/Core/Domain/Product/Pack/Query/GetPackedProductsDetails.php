@@ -26,49 +26,49 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
 
-use Pack;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Handles GetPackedProducts query using legacy object model
+ * Retrieves product from a pack
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+class GetPackedProductsDetails
 {
     /**
-     * @var int
+     * @var ProductId
      */
-    private $defaultLangId;
+    private $packId;
 
     /**
-     * @param int $defaultLangId
+     * @var LanguageId
      */
-    public function __construct(int $defaultLangId)
+    private $languageId;
+
+    /**
+     * @param ProductId $packId
+     * @param LanguageId $languageId
+     */
+    public function __construct(ProductId $packId, LanguageId $languageId)
     {
-        $this->defaultLangId = $defaultLangId;
+        $this->packId = $packId;
+        $this->languageId = $languageId;
     }
 
     /**
-     * {@inheritdoc}
+     * @return ProductId
      */
-    public function handle(GetPackedProducts $query): array
+    public function getPackId(): ProductId
     {
-        $packId = $query->getPackId()->getValue();
+        return $this->packId;
+    }
 
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
-
-        $packedProducts = [];
-        foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
-            );
-        }
-
-        return $packedProducts;
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 }
