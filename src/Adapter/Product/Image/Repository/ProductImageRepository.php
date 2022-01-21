@@ -31,7 +31,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\Connection;
 use Image;
 use ImageType;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotDeleteProductImageException;
@@ -39,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotUpdateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPreview;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -65,18 +69,42 @@ class ProductImageRepository extends AbstractObjectModelRepository
     private $productImageValidator;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImagePathFactory;
+
+    /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var int
+     */
+    private $defaultLanguageId;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param int $defaultLanguageId
      * @param ProductImageValidator $productImageValidator
+     * @param ProductImagePathFactory $productImagePathFactory
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ProductImageValidator $productImageValidator
+        int $defaultLanguageId,
+        ProductImageValidator $productImageValidator,
+        ProductImagePathFactory $productImagePathFactory,
+        ProductRepository $productRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productImageValidator = $productImageValidator;
+        $this->productImagePathFactory = $productImagePathFactory;
+        $this->productRepository = $productRepository;
+        $this->defaultLanguageId = $defaultLanguageId;
     }
 
     /**
@@ -363,5 +391,77 @@ class ProductImageRepository extends AbstractObjectModelRepository
     public function delete(Image $image): void
     {
         $this->deleteObjectModel($image, CannotDeleteProductImageException::class);
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return ProductPreview
+     *
+     * @throws CoreException
+     */
+    public function getProductCoverUrl(ProductId $productId, LanguageId $languageId): ProductPreview
+    {
+        $product = $this->productRepository->get($productId);
+        $name = $product->name[$languageId->getValue()] ?? ($product->name[$this->defaultLanguageId] ?? reset($product->name));
+        $imageId = $this->getDefaultImageId($productId);
+        $imagePath = $imageId ?
+            $this->productImagePathFactory->getPath($imageId, ProductImagePathFactory::DEFAULT_IMAGE_FORMAT) :
+            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT)
+        ;
+
+        return new ProductPreview(
+            $productId->getValue(),
+            $name,
+            $imagePath
+        );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     * @param ?CombinationId $combinationId
+     *
+     * @return ProductPreview
+     *
+     * @throws CoreException
+     */
+    public function getCombinationCoverUrl(ProductId $productId, LanguageId $languageId, ?CombinationId $combinationId = null): ProductPreview
+    {
+        if ($combinationId === null) {
+            return $this->getProductCoverUrl($productId, $languageId);
+        }
+
+        $product = $this->productRepository->get($productId);
+        $name = $product->name[$languageId->getValue()] ?? ($product->name[$this->defaultLanguageId] ?? reset($product->name));
+        $imageId = $this->getPreviewCombinationProduct($combinationId);
+        $imagePath = $imageId ?
+            $this->productImagePathFactory->getPath($imageId, ProductImagePathFactory::DEFAULT_IMAGE_FORMAT) :
+            $this->productImagePathFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+
+        return new ProductPreview(
+            $productId->getValue(),
+            $name,
+            $imagePath
+        );
+    }
+
+    private function getPreviewCombinationProduct(CombinationId $combinationId): ?ImageId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pai.id_image')
+            ->from($this->dbPrefix . 'product_attribute_image', 'pai')
+            ->leftJoin('pai', $this->dbPrefix . 'image', 'i', 'i.id_image = pai.id_image')
+            ->where('pai.id_product_attribute = :productAttribute')
+            ->orderBy('i.cover', 'DESC')
+            ->setMaxResults(1)
+            ->setParameter('productAttribute', $combinationId->getValue());
+        $data = $qb->execute()->fetchOne();
+        if ($data > 0) {
+            return new ImageId((int) $data);
+        }
+
+        return null;
     }
 }
