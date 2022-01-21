@@ -4,6 +4,9 @@ services:
 
   prestashop.adapter.product.pack.repository.product_pack_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
 
   prestashop.adapter.product.pack.update.product_pack_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater

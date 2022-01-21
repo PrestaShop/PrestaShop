@@ -117,26 +117,12 @@ class AttributeRepository extends AbstractObjectModelRepository
     public function getAttributesInfoByCombinationIds(array $combinationIds, LanguageId $langId): array
     {
         $attributeCombinationAssociations = $this->getAttributeCombinationAssociations($combinationIds);
+        $attributesInfoByAttributeId = $this->getAttributesInfoByAttributeId($attributeCombinationAssociations, $langId);
 
-        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
-            return (int) $attributeByCombination['id_attribute'];
-        }, $attributeCombinationAssociations));
-
-        $attributesInfoByAttributeId = $this->getAttributesInformation($attributeIds, $langId->getValue());
-
-        $attributesInfoByCombinationId = [];
-        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
-            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
-            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
-            $attributesInfoByCombinationId[$combinationId][] = new CombinationAttributeInformation(
-                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute_group'],
-                $attributesInfoByAttributeId[$attributeId]['attribute_group_name'],
-                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute'],
-                $attributesInfoByAttributeId[$attributeId]['attribute_name']
-            );
-        }
-
-        return $attributesInfoByCombinationId;
+        return $this->getAttributesInfoByCombinationId(
+            $attributeCombinationAssociations,
+            $attributesInfoByAttributeId
+        );
     }
 
     /**
@@ -169,7 +155,7 @@ class AttributeRepository extends AbstractObjectModelRepository
      * @param int[] $attributeIds
      * @param int $langId
      *
-     * @return array<int, array<string, mixed>>
+     * @return array
      */
     private function getAttributesInformation(array $attributeIds, int $langId): array
     {
@@ -210,5 +196,45 @@ class AttributeRepository extends AbstractObjectModelRepository
         }
 
         return $attributesInfoByAttributeId;
+    }
+
+    /**
+     * @param array<int, array<string, int>> $attributeCombinationAssociations
+     * @param LanguageId $languageId
+     *
+     * @return array
+     */
+    private function getAttributesInfoByAttributeId(array $attributeCombinationAssociations, LanguageId $languageId): array
+    {
+        $attributeIds = array_unique(array_map(function (array $attributeByCombination): int {
+            return (int) $attributeByCombination['id_attribute'];
+        }, $attributeCombinationAssociations));
+
+        return $this->getAttributesInformation($attributeIds, $languageId->getValue());
+    }
+
+    /**
+     * @param array<int, array<string, int>> $attributeCombinationAssociations
+     * @param array<int, array<string, mixed>> $attributesInfoByAttributeId
+     *
+     * @return array<int, CombinationAttributeInformation[]>
+     */
+    private function getAttributesInfoByCombinationId(
+        array $attributeCombinationAssociations,
+        array $attributesInfoByAttributeId
+    ): array {
+        $attributesInfoByCombinationId = [];
+        foreach ($attributeCombinationAssociations as $attributeCombinationAssociation) {
+            $combinationId = (int) $attributeCombinationAssociation['id_product_attribute'];
+            $attributeId = (int) $attributeCombinationAssociation['id_attribute'];
+            $attributesInfoByCombinationId[$combinationId][] = new CombinationAttributeInformation(
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute_group'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_group_name'],
+                (int) $attributesInfoByAttributeId[$attributeId]['id_attribute'],
+                $attributesInfoByAttributeId[$attributeId]['attribute_name']
+            );
+        }
+
+        return $attributesInfoByCombinationId;
     }
 }
