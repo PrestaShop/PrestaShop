@@ -158,9 +158,9 @@ Feature: Add basic product from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     Then product "productPack1" type should be pack
-    And pack "productPack1" should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 5        |
+    And pack "productPack1" should contain products with following details:
+      | product  | combination | quantity | name             | image url                                              |
+      | product2 |             | 5        | shady sunglasses | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     When I update product "productPack1" type to standard
     Then product "productPack1" type should be standard
     And pack "productPack1" should be empty
