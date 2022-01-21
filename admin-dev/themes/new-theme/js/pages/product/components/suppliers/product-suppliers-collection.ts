@@ -32,6 +32,8 @@ export default class ProductSuppliersCollection {
 
   private map: any;
 
+  private $collectionRow: JQuery;
+
   private $productSuppliersCollection: JQuery;
 
   private $productsTable: JQuery;
@@ -52,6 +54,7 @@ export default class ProductSuppliersCollection {
     this.productFormModel = productFormModel;
     this.map = ProductSuppliersMap(productSuppliersFormId);
     this.$productSuppliersCollection = $(this.map.productSuppliersCollection);
+    this.$collectionRow = this.$productSuppliersCollection.parent('.product-suppliers-collection-row');
     this.$productsTable = $(this.map.productSuppliersTable);
     this.$productsTableBody = $(this.map.productsSuppliersTableBody);
 
@@ -84,7 +87,7 @@ export default class ProductSuppliersCollection {
 
     this.memorizeCurrentSuppliers();
     this.renderSuppliers();
-    this.toggleTableVisibility();
+    this.toggleRowVisibility();
   }
 
   updateDefaultProductSupplierPrice(newPrice: number): void {
@@ -100,6 +103,7 @@ export default class ProductSuppliersCollection {
 
   private init(): void {
     this.memorizeCurrentSuppliers();
+    this.toggleRowVisibility();
 
     this.$productsTable.on('change', 'input', () => {
       this.memorizeCurrentSuppliers();
@@ -183,22 +187,22 @@ export default class ProductSuppliersCollection {
     });
   }
 
-  private toggleTableVisibility() {
+  private toggleRowVisibility() {
     if (this.selectedSuppliers.length === 0) {
-      this.hideTable();
+      this.hideCollectionRow();
 
       return;
     }
 
-    this.showTable();
+    this.showCollectionRow();
   }
 
-  private showTable(): void {
-    this.$productsTable.removeClass('d-none');
+  private showCollectionRow(): void {
+    this.$collectionRow.removeClass('d-none');
   }
 
-  private hideTable(): void {
-    this.$productsTable.addClass('d-none');
+  private hideCollectionRow(): void {
+    this.$collectionRow.addClass('d-none');
   }
 
   /**
