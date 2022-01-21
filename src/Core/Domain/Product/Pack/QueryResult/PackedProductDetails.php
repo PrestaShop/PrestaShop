@@ -69,15 +69,15 @@ class PackedProductDetails
      * @param int $combinationId
      * @param string $productName
      * @param string $reference
-     * @param ?string $imageUrl
+     * @param string $imageUrl
      */
     public function __construct(
         int $productId,
         int $quantity,
-        ?int $combinationId,
+        int $combinationId,
         string $productName,
         string $reference,
-        ?string $imageUrl
+        string $imageUrl
     ) {
         $this->productId = $productId;
         $this->quantity = $quantity;
