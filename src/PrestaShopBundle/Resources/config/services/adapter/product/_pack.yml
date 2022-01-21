@@ -30,10 +30,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand
 
-  prestashop.adapter.product.pack.command_handler.get_packed_products_handler:
-    class: PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsHandler
+  prestashop.adapter.product.pack.command_handler.get_packed_products_details_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsDetailsHandler
     arguments:
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+      - "@=service('prestashop.adapter.legacy.context').getLanguage().id"
+      - "@=service('prestashop.adapter.product.pack.repository.product_pack_repository')"
+      - "@=service('prestashop.adapter.attribute.repository.attribute_repository')"
+      - "@=service('prestashop.core.product.combination.name_builder.combination_name_builder')"
+      - "@=service('prestashop.adapter.product.image.repository.product_image_repository')"
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails
