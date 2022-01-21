@@ -91,9 +91,9 @@ class SetPackProductsCommand
         foreach ($products as $product) {
             $this->assertQuantity($product['quantity']);
             $this->products[] = new QuantifiedProduct(
-                $product['product_id'],
+                $product['productId'],
                 $product['quantity'],
-                isset($product['combination_id']) ? $product['combination_id'] : null
+                $product['combinationId'] ?? null
             );
         }
     }
