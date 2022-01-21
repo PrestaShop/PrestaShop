@@ -75,6 +75,7 @@ class EntitySearchInputType extends CollectionType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
+            'class' => '',
             // These are parameters from collection type which default values are modified
             'allow_add' => true,
             'allow_delete' => true,
@@ -123,7 +124,7 @@ class EntitySearchInputType extends CollectionType
             // field name in record dataset which should be used to show suggestion in search dropdown
             'suggestion_field' => 'name',
         ]);
-
+        $resolver->setAllowedTypes('class', 'string');
         $resolver->setAllowedTypes('allow_search', ['bool']);
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);
@@ -177,6 +178,7 @@ class EntitySearchInputType extends CollectionType
         unset($removeModal['button_class']);
 
         $view->vars = array_replace($view->vars, [
+            'class' => $options['class'],
             'allow_search' => $options['allow_search'],
             'remote_url' => $options['remote_url'],
             'limit' => $options['limit'],

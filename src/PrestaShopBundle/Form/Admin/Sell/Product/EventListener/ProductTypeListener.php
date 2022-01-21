@@ -60,6 +60,13 @@ class ProductTypeListener implements EventSubscriberInterface
         $data = $event->getData();
         $productType = $data['header']['type'];
 
+        if (ProductType::TYPE_PACK !== $productType) {
+            if ($form->has('description')) {
+                $description = $form->get('description');
+                $description->remove('packed_products');
+            }
+        }
+
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
             $form->remove('stock');

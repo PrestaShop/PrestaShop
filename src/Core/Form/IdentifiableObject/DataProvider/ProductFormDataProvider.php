@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCust
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
@@ -175,6 +177,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $relatedProductsData = [];
         foreach ($relatedProducts as $relatedProduct) {
             $productName = $relatedProduct->getName();
+
             if (!empty($relatedProduct->getReference())) {
                 $productName .= sprintf(
                     ' (ref: %s)',
@@ -190,6 +193,36 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $relatedProductsData;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    private function extractPackedProducts(int $productId): array
+    {
+        /** @var PackedProductDetails[] $packedProductsDetails
+         */
+        $packedProductsDetails = $this->queryBus->handle(
+            new GetPackedProducts(
+                $productId,
+                $this->contextLangId
+            )
+        );
+        $packedProductsData = [];
+        foreach ($packedProductsDetails as $packedProductDetails) {
+            $packedProductsData[] = [
+                'product_id' => $packedProductDetails->getProductId(),
+                'name' => $packedProductDetails->getProductName(),
+                'combination_id' => $packedProductDetails->getCombinationId(),
+                'image' => $packedProductDetails->getImageUrl(),
+                'quantity' => $packedProductDetails->getQuantity(),
+                'unique_identifier' => $packedProductDetails->getProductId() . '_' . $packedProductDetails->getCombinationId(),
+            ];
+        }
+
+        return $packedProductsData;
     }
 
     /**
@@ -341,6 +374,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'available_later_label' => $stockInformation->getLocalizedAvailableLaterLabels(),
                 'available_date' => $availableDate ? $availableDate->format(DateTime::DEFAULT_DATE_FORMAT) : '',
             ],
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
         ];
     }
 

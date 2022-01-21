@@ -28,10 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class StockType extends TranslatorAwareType
@@ -42,17 +44,33 @@ class StockType extends TranslatorAwareType
     private $packStockTypeChoiceProvider;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var string
+     */
+    private $employeeIsoCode;
+
+    /**
      * @param TranslatorInterface $translator
+     * @param RouterInterface $router,
      * @param array $locales
      * @param FormChoiceProviderInterface $packStockTypeChoiceProvider
+     * @param string $employeeIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FormChoiceProviderInterface $packStockTypeChoiceProvider
+        FormChoiceProviderInterface $packStockTypeChoiceProvider,
+        RouterInterface $router,
+        string $employeeIsoCode
     ) {
         parent::__construct($translator, $locales);
         $this->packStockTypeChoiceProvider = $packStockTypeChoiceProvider;
+        $this->router = $router;
+        $this->employeeIsoCode = $employeeIsoCode;
     }
 
     /**
@@ -61,6 +79,23 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('packed_products', EntitySearchInputType::class, [
+                'class' => 'product_packed_products',
+                'label' => $this->trans('Pack of products', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'entry_type' => PackedProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'packed',
+                ],
+                'remote_url' => $this->router->generate('admin_products_v2_search_combinations_for_packed', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'min_length' => 3,
+                'filtered_identities' => [],
+                'identifier_field' => 'unique_identifier',
+                'placeholder' => $this->trans('Search combination', 'Admin.Catalog.Help'),
+            ])
             ->add('quantities', QuantityType::class, [
                 'product_id' => $options['product_id'],
             ])

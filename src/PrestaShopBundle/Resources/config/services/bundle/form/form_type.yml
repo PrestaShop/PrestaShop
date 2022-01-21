@@ -1413,6 +1413,8 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 
