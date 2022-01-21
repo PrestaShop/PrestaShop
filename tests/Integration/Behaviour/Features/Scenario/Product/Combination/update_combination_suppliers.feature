@@ -546,19 +546,54 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier2 |           | USD      | 0                  |
 
   Scenario: I should be able to associate suppliers even when no combinations has been created
-    Given I add product "product5" with following information:
-      | name[en-US] | universal T-shirt |
-      | type        | combinations      |
+    # We create new empty suppliers which have no other products
+    Given I add new supplier supplier4 with following properties:
+      | name                    | my supplier 4       |
+      | address                 | Donelaicio st. 4    |
+      | city                    | Kaunas              |
+      | country                 | Lithuania           |
+      | enabled                 | true                |
+      | description[en-US]      | just a supplier     |
+      | meta title[en-US]       | my supplier nr four |
+      | meta description[en-US] |                     |
+      | meta keywords[en-US]    | sup,4               |
+      | shops                   | [shop1]             |
+    And I add new supplier supplier5 with following properties:
+      | name                    | my supplier 5       |
+      | address                 | Donelaicio st. 5    |
+      | city                    | Kaunas              |
+      | country                 | Lithuania           |
+      | enabled                 | true                |
+      | description[en-US]      | just a supplier     |
+      | meta title[en-US]       | my supplier nr five |
+      | meta description[en-US] |                     |
+      | meta keywords[en-US]    | sup,5               |
+      | shops                   | [shop1]             |
+    And I add product "product5" with following information:
+      | name[en-US] | really unique T-shirt |
+      | type        | combinations          |
     And product product5 type should be combinations
+    But product product5 should have no combinations
     When I associate suppliers to product "product5"
       | supplier  | product_supplier  |
-      | supplier2 | product5supplier2 |
-      | supplier1 | product5supplier1 |
+      | supplier5 | product5supplier5 |
+      | supplier4 | product5supplier4 |
     Then product product5 should have the following suppliers assigned:
-      | supplier1 |
-      | supplier2 |
+      | supplier4 |
+      | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier2 |
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # No combinations but suppliers display the product regardless
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    # Event if association is present no details are provided in product form
+    But product product5 should not have suppliers infos
     # Now I generate combinations, since the supplier's associations are existent the combination will also be associated
     When I generate combinations for product product5 using following attributes:
       | Size  | [S,M]         |
@@ -571,17 +606,89 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product5MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
     And combination "product5SWhite" should have following suppliers:
       | supplier  | reference | currency | price_tax_excluded |
-      | supplier1 |           | USD      | 0                  |
-      | supplier2 |           | USD      | 0                  |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
     And combination "product5SBlack" should have following suppliers:
       | supplier  | reference | currency | price_tax_excluded |
-      | supplier1 |           | USD      | 0                  |
-      | supplier2 |           | USD      | 0                  |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
     And combination "product5MWhite" should have following suppliers:
       | supplier  | reference | currency | price_tax_excluded |
-      | supplier1 |           | USD      | 0                  |
-      | supplier2 |           | USD      | 0                  |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
     And combination "product5MBlack" should have following suppliers:
       | supplier  | reference | currency | price_tax_excluded |
-      | supplier1 |           | USD      | 0                  |
-      | supplier2 |           | USD      | 0                  |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # Now that combinations are present only them are displayed
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    # Now I delete a combination its association should disappear
+    When I delete combination product5SWhite
+    Then product "product5" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product5SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product5MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product5MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product5SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # Now that combinations are present only them are displayed
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    When I delete following combinations of product product5:
+      | id reference   |
+      | product5SBlack |
+      | product5MWhite |
+      | product5MBlack |
+    Then product product5 should have no combinations
+    # Suppliers association are still present
+    But product product5 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product5 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # No combinations but suppliers display the product regardless
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    When I delete product product5
+    Then product product5 should not exist anymore
+    And supplier "supplier4" should have 0 products associated
+    And supplier "supplier5" should have 0 products associated
