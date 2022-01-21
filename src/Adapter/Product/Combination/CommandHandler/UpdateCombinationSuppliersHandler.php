@@ -74,7 +74,7 @@ class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler i
             $productSuppliers[] = $this->loadEntityFromDTO($productSupplierDTO);
         }
 
-        return $this->productSupplierUpdater->updateCombinationSuppliers(
+        return $this->productSupplierUpdater->updateSuppliersForCombination(
             $productId,
             $combinationId,
             $productSuppliers
