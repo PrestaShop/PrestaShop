@@ -271,6 +271,7 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
 
   prestashop.adapter.product.update.product_price_properties_filler:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
@@ -414,9 +415,3 @@ services:
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
 
-  prestashop.adapter.product.repository.product_preview_repository:
-    class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository
-    arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.image.repository.product_image_repository'
-      - '@prestashop.adapter.product.image.product_image_url_factory'

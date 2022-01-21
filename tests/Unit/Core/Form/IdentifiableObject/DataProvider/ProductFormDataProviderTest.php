@@ -589,14 +589,6 @@ class ProductFormDataProviderTest extends TestCase
         $productData = [
             'packed_products' => [
                 0 => [
-                    'id' => 42,
-                    'productName' => 'cool glasses',
-                    'quantity' => 5,
-                    'reference' => 'demo_42',
-                    'combinationId' => null,
-                    'image' => null,
-                ],
-                1 => [
                     'id' => 15,
                     'productName' => 'wicked snowboard',
                     'quantity' => 3,
@@ -604,23 +596,30 @@ class ProductFormDataProviderTest extends TestCase
                     'combinationId' => null,
                     'image' => null,
                 ],
-            ],
+                1 => [
+                    'id' => 42,
+                    'productName' => 'cool glasses',
+                    'quantity' => 5,
+                    'reference' => 'demo_42',
+                    'combinationId' => null,
+                    'image' => null,
+                ],            ],
         ];
 
         $expectedOutputData['description']['packed_products'] = [
             0 => [
-                'id' => 42,
-                'name' => 'cool glasses (ref: demo_42)',
-                'combinationId' => 0,
-                'image' => null,
-                'quantity' => 5,
-            ],
-            1 => [
                 'id' => 15,
-                'name' => 'wicked snowboard (ref: demo_15)',
+                'name' => 'wicked snowboard',
                 'combinationId' => 0,
                 'image' => null,
                 'quantity' => 3,
+            ],
+            1 => [
+                'id' => 42,
+                'name' => 'cool glasses',
+                'combinationId' => 0,
+                'image' => null,
+                'quantity' => 5,
             ],
         ];
 
@@ -642,30 +641,30 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'related_products' => [
-                [
-                    'id' => 42,
-                    'name' => 'cool glasses',
-                    'reference' => '',
-                    'image' => 'http://awesome.jpg',
-                ],
-                [
+                0 => [
                     'id' => 15,
                     'name' => 'wicked snowboard',
                     'reference' => 'zebest',
+                    'image' => 'http://awesome.jpg',
+                ],
+                1 => [
+                    'id' => 42,
+                    'name' => 'cool glasses',
+                    'reference' => '',
                     'image' => 'http://awesome.jpg',
                 ],
             ],
         ];
 
         $expectedOutputData['description']['related_products'] = [
-            [
-                'id' => 42,
-                'name' => 'cool glasses',
-                'image' => 'http://awesome.jpg',
-            ],
-            [
+            0 => [
                 'id' => 15,
                 'name' => 'wicked snowboard (ref: zebest)',
+                'image' => 'http://awesome.jpg',
+            ],
+            1 => [
+                'id' => 42,
+                'name' => 'cool glasses',
                 'image' => 'http://awesome.jpg',
             ],
         ];

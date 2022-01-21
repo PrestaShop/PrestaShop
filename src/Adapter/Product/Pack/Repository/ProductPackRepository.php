@@ -28,16 +28,79 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\Repository;
 
+use Doctrine\DBAL\Connection;
 use Pack;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 
-class ProductPackRepository
+class ProductPackRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LanguageId $languageId
+     *
+     * @return array<array<string, string>>
+     *                             e.g [
+     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                             ]
+     *
+     * @throws CoreException
+     */
+    public function getPackedProducts(ProductId $productId, LanguageId $languageId): array
+    {
+        $this->assertProductExists($productId);
+        $productIdValue = $productId->getValue();
+
+        try {
+            $qb = $this->connection->createQueryBuilder();
+            $qb->select('pack.id_product_item, pack.id_product_attribute_item, pack.quantity, packed.reference, language.name')
+                ->from($this->dbPrefix . 'pack', 'pack')
+                ->leftJoin('pack', $this->dbPrefix . 'product', 'product', 'product.id_product = pack.id_product_pack')
+                ->leftJoin('pack', $this->dbPrefix . 'product', 'packed', 'packed.id_product = pack.id_product_item')
+                ->leftJoin('pack', $this->dbPrefix . 'product_lang', 'language', 'pack.id_product_item = language.id_product')
+                ->where('pack.id_product_pack = :idProduct')
+                ->andWhere('language.id_lang = :idLanguage')
+                ->orderBy('pack.id_product_item', 'ASC')
+                ->setParameter('idProduct', $productId->getValue())
+                ->setParameter('idLanguage', $languageId->getValue());
+            $packedProducts = $qb->execute()->fetchAll();
+        } catch (\Exception $e) {
+            throw new CoreException(sprintf(
+                'Error occurred when fetching related products for product #%d',
+                $productIdValue
+            ));
+        }
+
+        return $packedProducts;
+    }
+
     /**
      * @param PackId $packId
      * @param QuantifiedProduct $productForPacking
@@ -120,5 +183,13 @@ class ProductPackRepository
             $product->getProductId()->getValue(),
             isset($combinationId) ? $combinationId : ''
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     */
+    private function assertProductExists(ProductId $productId): void
+    {
+        $this->assertObjectModelExists($productId->getValue(), 'product', ProductNotFoundException::class);
     }
 }
