@@ -33,7 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
@@ -76,7 +76,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
                 $productSupplierAssociations,
                 'Number of updated associations does not match the input number of associations'
             );
-        } catch (InvalidProductSupplierAssociationException $e) {
+        } catch (ProductSupplierNotAssociatedException $e) {
             $this->setLastException($e);
         }
     }

@@ -57,4 +57,9 @@ class CannotUpdateCombinationException extends CombinationException
      * When fails to update default combination
      */
     public const FAILED_UPDATE_DEFAULT_COMBINATION = 50;
+
+    /**
+     * When fails to update default supplier data
+     */
+    public const FAILED_UPDATE_DEFAULT_SUPPLIER_DATA = 60;
 }
