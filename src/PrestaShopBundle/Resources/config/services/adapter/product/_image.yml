@@ -58,6 +58,7 @@ services:
     arguments:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
+      - "@=service('prestashop.adapter.legacy.context').getLanguage().id"
       - '@prestashop.adapter.product.image.validate.product_image_validator'
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@prestashop.adapter.product.repository.product_repository'
