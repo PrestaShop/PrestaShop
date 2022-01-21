@@ -65,35 +65,40 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
-        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
-        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
+        yield 'pack in standard context' => [ProductType::TYPE_STANDARD, 'description.packed_products', false];
+        yield 'pack in pack context' => [ProductType::TYPE_PACK, 'description.packed_products', true];
+        yield 'pack in combination context' => [ProductType::TYPE_COMBINATIONS, 'description.packed_products', false];
+        yield 'pack in virtual context' => [ProductType::TYPE_VIRTUAL, 'description.packed_products', false];
 
-        yield [ProductType::TYPE_STANDARD, 'stock', true];
-        yield [ProductType::TYPE_PACK, 'stock', true];
-        yield [ProductType::TYPE_VIRTUAL, 'stock', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
+        yield 'suppliers in standard context' => [ProductType::TYPE_STANDARD, 'options.suppliers', true];
+        yield 'suppliers in pack context' => [ProductType::TYPE_PACK, 'options.suppliers', true];
+        yield 'suppliers in combination context' => [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
+        yield 'suppliers in virtual context' => [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
 
-        yield [ProductType::TYPE_STANDARD, 'shipping', true];
-        yield [ProductType::TYPE_PACK, 'shipping', true];
-        yield [ProductType::TYPE_VIRTUAL, 'shipping', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'shipping', true];
+        yield 'stock in standard context' => [ProductType::TYPE_STANDARD, 'stock', true];
+        yield 'stock in pack context' => [ProductType::TYPE_PACK, 'stock', true];
+        yield 'stock in combination context' => [ProductType::TYPE_VIRTUAL, 'stock', true];
+        yield 'stock in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock', false];
 
-        yield [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
-        yield [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
-        yield [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
+        yield 'shipping in standard context' => [ProductType::TYPE_STANDARD, 'shipping', true];
+        yield 'shipping in pack context' => [ProductType::TYPE_PACK, 'shipping', true];
+        yield 'shipping in combination context' => [ProductType::TYPE_VIRTUAL, 'shipping', false];
+        yield 'shipping in virtual context' => [ProductType::TYPE_COMBINATIONS, 'shipping', true];
 
-        yield [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
-        yield [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
-        yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+        yield 'retail_price.ecotax in standard context' => [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax', true];
+        yield 'retail_price.ecotax  in standard context' => [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax', true];
+        yield 'retail_price.ecotax  in standard context' => [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
+        yield 'retail_price.ecotax  in standard context' => [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
 
-        yield [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax', true];
-        yield [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax', true];
-        yield [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
+        yield 'pack_stock_type in standard context' => [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
+        yield 'pack_stock_type in pack context' => [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
+        yield 'pack_stock_type in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
+        yield 'pack_stock_type in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
+
+        yield 'virtual_product_file in standard context' => [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
+        yield 'virtual_product_file in pack context' => [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
+        yield 'virtual_product_file in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
+        yield 'virtual_product_file in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
     }
 
     /**
