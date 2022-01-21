@@ -270,6 +270,7 @@ services:
       - '@prestashop.adapter.product.validate.product_validator'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
 
   prestashop.adapter.product.repository.product_multi_shop_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository
