@@ -55,6 +55,8 @@
         <a href="#stock-tab" role="tab" data-toggle="tab" class="nav-link">
           {% if productType == 'virtual' %}
             {{ 'Virtual product'|trans({}, 'Admin.Catalog.Feature') }}
+          {% elseif productType == 'pack' %}
+            {{ 'Pack'|trans({}, 'Admin.Catalog.Feature') }}
           {% else %}
             {{ 'Stocks'|trans({}, 'Admin.Catalog.Feature') }}
           {% endif %}

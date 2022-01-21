@@ -142,56 +142,56 @@ Feature: Search combinations to associate them in the BO
       | upc                | 354321354321      |
     # Search by all types of references matching wine_bottle_red combination
     When I search for combinations with locale "english" matching "154867313573" I should get following results:
-      | product     | combination     | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination     | name                        | reference | image url                                             |
+      | wine_bottle | wine_bottle_red | bottle of wine: Color - Red | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "978-3-16-148410-3" I should get following results:
-      | product     | combination     | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination     | name                         | reference | image url                                             |
+      | wine_bottle | wine_bottle_red | bottle of wine: Color - Red  | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "mpn3red" I should get following results:
-      | product     | combination     | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination     | name                         | reference | image url                                             |
+      | wine_bottle | wine_bottle_red | bottle of wine: Color - Red  | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "ref3red" I should get following results:
-      | product     | combination     | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination     | name                         | reference | image url                                             |
+      | wine_bottle | wine_bottle_red | bottle of wine: Color - Red  | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "137684192354" I should get following results:
-      | product     | combination     | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination     | name                         | reference | image url                                             |
+      | wine_bottle | wine_bottle_red | bottle of wine: Color - Red  | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     # Search by all types of references matching wine_bottle_white combination
     When I search for combinations with locale "english" matching "1357321357213" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "978-3-16-148410-4" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "mpn3white" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "ref3white" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "354321354321" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     # Search by types that match both combinations, both are returned
     When I search for combinations with locale "english" matching "mpn3" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red   | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "ref3" I should get following results:
-      | product     | combination       | name           | reference | image url                                             |
-      | wine_bottle | wine_bottle_red   | bottle of wine | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle | wine_bottle_white | bottle of wine | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product     | combination       | name                          | reference | image url                                             |
+      | wine_bottle | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     # Search by types that match two combinations and a product
     When I search for combinations with locale "english" matching "mpn" I should get following results:
-      | product          | combination       | name                | reference | image url                                             |
-      | champaign_bottle |                   | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle      | wine_bottle_red   | bottle of wine      | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle      | wine_bottle_white | bottle of wine      | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product          | combination       | name                          | reference | image url                                             |
+      | champaign_bottle |                   | bottle of champaign           | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle      | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle      | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I search for combinations with locale "english" matching "ref" I should get following results:
-      | product          | combination       | name                | reference | image url                                             |
-      | champaign_bottle |                   | bottle of champaign | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle      | wine_bottle_red   | bottle of wine      | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | wine_bottle      | wine_bottle_white | bottle of wine      | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product          | combination       | name                          | reference | image url                                             |
+      | champaign_bottle |                   | bottle of champaign           | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle      | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle      | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
 
   Scenario: Search results include the appropriate images
     Given following image types should be applicable to products:
@@ -246,12 +246,12 @@ Feature: Search combinations to associate them in the BO
       | lemon_tshirt_m_black | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     # No image can be returned for both products
     When I search for combinations with locale "english" matching "lemon" I should get following results:
-      | product       | combination          | name            | reference | image url                                             |
-      | lemonade_can  |                      | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt   |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt   |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt   |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt   |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product       | combination          | name                                    | reference | image url                                             |
+      | lemonade_can  |                      | can of lemonade                         |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt: Size - S, Color - White  |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt: Size - S, Color - Black  |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt: Size - M, Color - White  |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt: Size - M, Color - Black  |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And I add new image "lemon_image1" named "app_icon.png" to product "lemon_tshirt"
     And I add new image "lemon_image2" named "logo.jpg" to product "lemon_tshirt"
     And I add new image "lemon_image3" named "app_icon.png" to product "lemon_tshirt"
@@ -265,12 +265,12 @@ Feature: Search combinations to associate them in the BO
       | lemon_tshirt_m_black | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{lemon_image1}-small_default.jpg |
     # Search results follow the same principle
     When I search for combinations with locale "english" matching "lemon" I should get following results:
-      | product       | combination          | name            | reference | image url                                               |
-      | lemonade_can  |                      | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg   |
-      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
+      | product       | combination          | name                                    | reference | image url                                               |
+      | lemonade_can  |                      | can of lemonade                         |           | http://myshop.com/img/p/{no_picture}-home_default.jpg   |
+      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt: Size - S, Color - White  |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt: Size - S, Color - Black  |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt: Size - M, Color - White  |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt: Size - M, Color - Black  |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
     And combination "lemon_tshirt_s_white" should have no images
     When I associate "[lemon_image2,lemon_image3]" to combination "lemon_tshirt_s_white"
     Then combination "lemon_tshirt_s_white" should have following images "[lemon_image2,lemon_image3]"
@@ -287,9 +287,9 @@ Feature: Search combinations to associate them in the BO
       | lemon_tshirt_m_black | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{lemon_image3}-small_default.jpg |
     # Search results follow the same principle
     When I search for combinations with locale "english" matching "lemon" I should get following results:
-      | product       | combination          | name            | reference | image url                                               |
-      | lemonade_can  |                      | can of lemonade |           | http://myshop.com/img/p/{no_picture}-home_default.jpg   |
-      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image2}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image4}-home_default.jpg |
-      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt   |           | http://myshop.com/img/p/{lemon_image3}-home_default.jpg |
+      | product       | combination          | name                                   | reference | image url                                               |
+      | lemonade_can  |                      | can of lemonade                        |           | http://myshop.com/img/p/{no_picture}-home_default.jpg   |
+      | lemon_tshirt  | lemon_tshirt_s_white | lemon t-shirt: Size - S, Color - White |           | http://myshop.com/img/p/{lemon_image2}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt: Size - S, Color - Black |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt: Size - M, Color - White |           | http://myshop.com/img/p/{lemon_image4}-home_default.jpg |
+      | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt: Size - M, Color - Black |           | http://myshop.com/img/p/{lemon_image3}-home_default.jpg |

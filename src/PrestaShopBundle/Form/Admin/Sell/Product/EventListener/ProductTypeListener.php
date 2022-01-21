@@ -56,63 +56,116 @@ class ProductTypeListener implements EventSubscriberInterface
      */
     public function adaptProductForm(FormEvent $event): void
     {
-        $form = $event->getForm();
         $data = $event->getData();
+        $form = $event->getForm();
         // We need both initial and new types because we may need to keep some fields during the transition request
         $productType = $data['header']['type'];
         $initialProductType = $data['header']['initial_type'] ?? $productType;
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
-            $this->removeSuppliers($form);
-            $form->remove('stock');
-
-            return;
+            $this->removeSuppliers($form, $data);
+            $this->removeStock($form, $data);
         } else {
-            $form->remove('combinations');
+            $this->removeCombinations($form, $data);
         }
 
-        if ($form->has('stock')) {
-            $stock = $form->get('stock');
-            if (ProductType::TYPE_PACK !== $productType) {
-                $stock->remove('pack_stock_type');
-            }
-            if (ProductType::TYPE_VIRTUAL !== $productType) {
-                $stock->remove('virtual_product_file');
-            }
-
-            if ($stock->has('quantities')) {
-                $quantities = $stock->get('quantities');
-                if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
-                    $quantities->remove('stock_movements');
-                }
-            }
+        if (ProductType::TYPE_PACK !== $productType) {
+            $this->removePackStockType($form, $data);
+            $this->removePack($form, $data);
         }
+
+        $this->removeStockMovementsIfNecessary($form, $data);
 
         if (ProductType::TYPE_VIRTUAL === $productType) {
-            $form->remove('shipping');
+            $this->removeShipping($form, $data);
             // We don't remove the ecotax during the transition request because we could lose the ecotax data
             // and some part of the price with it
             if (ProductType::TYPE_VIRTUAL === $initialProductType) {
-                $this->removeEcotax($form);
+                $this->removeEcotax($form, $data);
             }
+        } else {
+            $this->removeVirtualProduct($form, $data);
+        }
+
+        $event->setData($data);
+    }
+
+    protected function removeCombinations(FormInterface $form, array &$data): void
+    {
+        if ($form->has('options')) {
+            $form->remove('combinations');
+            unset($data['combinations']);
         }
     }
 
-    /**
-     * @param FormInterface $form
-     */
-    private function removeSuppliers(FormInterface $form): void
+    protected function removeSuppliers(FormInterface $form, array &$data): void
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
             $optionsForm->remove('product_suppliers');
+            unset($data['options']['product_suppliers']);
         }
     }
 
-    /**
-     * @param FormInterface $form
-     */
-    private function removeEcotax(FormInterface $form): void
+    protected function removeStock(FormInterface $form, array &$data): void
+    {
+        $form->remove('stock');
+        unset($data['stock']);
+    }
+
+    protected function removePackStockType(FormInterface $form, array &$data): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('pack_stock_type');
+        unset($data['stock']['pack_stock_type']);
+    }
+
+    protected function removePack(FormInterface $form, array &$data): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('packed_products');
+        unset($data['stock']['packed_products']);
+    }
+
+    protected function removeVirtualProduct(FormInterface $form, array &$data): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('virtual_product_file');
+        unset($data['stock']['virtual_product_file']);
+    }
+
+    protected function removeStockMovementsIfNecessary(FormInterface $form, array &$data): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        if (!$stock->has('quantities')) {
+            return;
+        }
+        $quantities = $stock->get('quantities');
+        if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
+            $quantities->remove('stock_movements');
+            unset($data['stock']['stock_movements']);
+        }
+    }
+
+    protected function removeShipping(FormInterface $form, array &$data): void
+    {
+        $form->remove('shipping');
+        unset($data['shipping']);
+    }
+
+    protected function removeEcotax(FormInterface $form, array &$data): void
     {
         if (!$form->has('pricing')) {
             return;
@@ -125,6 +178,7 @@ class ProductTypeListener implements EventSubscriberInterface
         if ($retailPrice->has('ecotax_tax_excluded')) {
             $retailPrice->remove('ecotax_tax_excluded');
         }
+
         if ($retailPrice->has('ecotax_tax_included')) {
             $retailPrice->remove('ecotax_tax_included');
         }
