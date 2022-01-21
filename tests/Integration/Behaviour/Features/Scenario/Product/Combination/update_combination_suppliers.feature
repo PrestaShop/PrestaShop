@@ -692,3 +692,82 @@ Feature: Update product combination suppliers in Back Office (BO)
     Then product product5 should not exist anymore
     And supplier "supplier4" should have 0 products associated
     And supplier "supplier5" should have 0 products associated
+
+  Scenario: Supplier associations should still be present if I change the product type
+    When I add product "product6" with following information:
+      | name[en-US] | even more unique T-shirt |
+      | type        | combinations             |
+    And product product6 type should be combinations
+    But product product6 should have no combinations
+    When I associate suppliers to product "product6"
+      | supplier  | product_supplier  |
+      | supplier5 | product6supplier5 |
+      | supplier4 | product6supplier4 |
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    # Now I change the product type
+    When I update product "product6" type to standard
+    # Nothing should change
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    # Let's try again with a product that has combinations
+    When I update product "product6" type to combinations
+    When I generate combinations for product product6 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product6" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product6SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product6SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product6MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product6MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    # We switch the type again
+    When I update product "product6" type to standard
+    # Still no changes, associations are still present
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
