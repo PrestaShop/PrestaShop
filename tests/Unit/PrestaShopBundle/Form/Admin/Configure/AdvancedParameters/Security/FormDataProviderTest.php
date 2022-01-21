@@ -29,13 +29,14 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider;
 
 class FormDataProviderTest extends TestCase
 {
     /**
-     * @var DataConfigurationInterface
+     * @var DataConfigurationInterface|MockObject
      */
     protected $config;
 
