@@ -111,7 +111,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
-     * @Then product ":productReference" should have no combinations
+     * @Then product :productReference should have no combinations
      *
      * @param string $productReference
      */
