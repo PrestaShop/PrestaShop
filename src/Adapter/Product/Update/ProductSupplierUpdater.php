@@ -231,23 +231,6 @@ class ProductSupplierUpdater
     }
 
     /**
-     * @todo: needs to be removed
-     * Removes all product suppliers associated to specified combination
-     *
-     * @param CombinationId $combinationId
-     */
-    public function removeAllForCombination(CombinationId $combinationId): void
-    {
-        $combination = $this->combinationRepository->get($combinationId);
-        $productId = new ProductId((int) $combination->id_product);
-        $product = $this->productRepository->get($productId);
-
-        $productSupplierIds = $this->getProductSupplierIds($productId, $combinationId);
-        $this->productSupplierRepository->bulkDelete($productSupplierIds);
-        $this->resetDefaultSupplier($product);
-    }
-
-    /**
      * When the default supplier is changed we must update all the synced field for the product and all its combinations.
      *
      * @param ProductId $productId
