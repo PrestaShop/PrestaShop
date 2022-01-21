@@ -161,7 +161,6 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->virtualProductFileRepository = $virtualProductFileRepository;
         $this->taxComputer = $taxComputer;
         $this->countryId = $countryId;
-        $this->productRepository = $productRepository;
         $this->attachmentRepository = $attachmentRepository;
         $this->targetProvider = $targetProvider;
         $this->productImageRepository = $productImageRepository;

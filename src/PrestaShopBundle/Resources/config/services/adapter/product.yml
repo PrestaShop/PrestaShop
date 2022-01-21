@@ -380,6 +380,19 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllRelatedProductsCommand
 
+  prestashop.adapter.product.query_handler.get_packed_products_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler\GetPackedProductsDetailsHandler
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@prestashop.adapter.product.pack.repository.product_pack_repository'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@prestashop.adapter.product.image.repository.product_image_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails
+
+
   prestashop.adapter.product.repository.tag_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository
 
