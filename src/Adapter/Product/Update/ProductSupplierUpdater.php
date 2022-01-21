@@ -158,7 +158,8 @@ class ProductSupplierUpdater
                         (int) $productSupplier->id
                     );
                 } else {
-                    $allAssociations[] = $matchingAssociations[0];
+                    // We must use reset as the returned array is a filtered one so the first index is not necessarily 0
+                    $allAssociations[] = reset($matchingAssociations);
                 }
             }
         }

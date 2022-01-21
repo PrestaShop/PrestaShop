@@ -447,7 +447,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
       | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
     When I set product product3 default supplier to supplier1
-    Then product product1 should have following supplier values:
+    Then product product3 should have following supplier values:
       | default supplier           | supplier1 |
     # Back to 0 since it's the value for supplier1
     And combination "product3SWhite" should have following prices:
