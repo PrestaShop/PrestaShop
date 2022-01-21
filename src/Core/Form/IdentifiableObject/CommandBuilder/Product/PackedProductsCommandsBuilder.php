@@ -24,20 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-/**
- * Defines contract for GetPackedProductsHandler
- */
-interface GetPackedProductsHandlerInterface
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+
+class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @param GetPackedProducts $query
-     *
-     * @return PackedProductDetails[]
+     * {@inheritDoc}
      */
-    public function handle(GetPackedProducts $query): array;
+    public function buildCommands(ProductId $productId, array $formData): array
+    {
+        if (!isset($formData['stock']['packed_products'])) {
+            return [];
+        }
+
+        $packedProducts = $formData['stock']['packed_products'];
+        if (empty($packedProducts)) {
+            return [new RemoveAllProductsFromPackCommand($productId->getValue())];
+        }
+        $command = new SetPackProductsCommand(
+            $productId->getValue(),
+            $packedProducts
+        );
+
+        return [$command];
+    }
 }
