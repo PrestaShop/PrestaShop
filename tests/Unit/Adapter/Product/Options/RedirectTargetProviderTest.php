@@ -33,8 +33,8 @@ use Language;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryPreview;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -60,7 +60,7 @@ class RedirectTargetProviderTest extends TestCase
     public function testGetRedirectTarget(?array $mockOptions, string $redirectType, int $redirectTargetId, ?ProductRedirectTarget $expectedTarget): void
     {
         $provider = new RedirectTargetProvider(
-            $this->getProductPreviewRepositoryMock($mockOptions),
+            $this->getProductImageRepositoryMock($mockOptions),
             $this->getCategoryPreviewRepository($mockOptions),
             $this->getLegacyContext($mockOptions)
         );
@@ -238,10 +238,10 @@ class RedirectTargetProviderTest extends TestCase
         return $categoryPreviewRepository;
     }
 
-    private function getProductPreviewRepositoryMock(?array $mockOptions = null): ProductPreviewRepository
+    private function getProductImageRepositoryMock(?array $mockOptions = null): ProductImageRepository
     {
-        $productPreviewRepository = $this
-            ->getMockBuilder(ProductPreviewRepository::class)
+        $productImageRepository = $this
+            ->getMockBuilder(ProductImageRepository::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -251,7 +251,7 @@ class RedirectTargetProviderTest extends TestCase
         $productName = $mockOptions['product_name'] ?? null;
         $productImage = $mockOptions['product_image'] ?? null;
         if ($productId) {
-            $productPreviewRepository
+            $productImageRepository
                 ->expects($this->once())
                 ->method('getPreview')
                 ->with(
@@ -274,12 +274,12 @@ class RedirectTargetProviderTest extends TestCase
                     $productImage
                 ));
         } else {
-            $productPreviewRepository
+            $productImageRepository
                 ->expects($this->never())
                 ->method('getPreview')
             ;
         }
 
-        return $productPreviewRepository;
+        return $productImageRepository;
     }
 }
