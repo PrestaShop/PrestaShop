@@ -112,8 +112,8 @@ class RedirectTargetProvider
      */
     private function getProductTarget(int $redirectTargetId): ProductRedirectTarget
     {
-        $languageId = (int) $this->legacyContext->getLanguage()->id;
-        $product = $this->productPreviewRepository->getPreview(
+        $languageId = $this->legacyContext->getLanguage()->id;
+        $productPreview = $this->productPreviewRepository->getPreview(
             new ProductId($redirectTargetId),
             new LanguageId($languageId)
         );
@@ -121,8 +121,8 @@ class RedirectTargetProvider
         return new ProductRedirectTarget(
             $redirectTargetId,
             ProductRedirectTarget::PRODUCT_TYPE,
-            $product->getName(),
-            $product->getImage()
+            $productPreview->getName(),
+            $productPreview->getImage()
         );
     }
 

@@ -28,27 +28,67 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Pack\QueryHandler;
 
-use Pack;
+use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Pack\Repository\ProductPackRepository;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler\GetPackedProductsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder;
 
 /**
  * Handles GetPackedProducts query using legacy object model
  */
-final class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
+class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
 {
+    /**
+     * @var ProductPackRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var CombinationNameBuilder
+     */
+    protected $combinationNameBuilder;
+
+    /**
+     * @var AttributeRepository
+     */
+    protected $attributeRepository;
+
     /**
      * @var int
      */
-    private $defaultLangId;
+    protected $languageId;
+
+    /**
+     * @var ProductImageRepository
+     */
+    protected $productImageRepository;
 
     /**
      * @param int $defaultLangId
+     * @param ProductPackRepository $productPackRepository
+     * @param AttributeRepository $attributeRepository
+     * @param CombinationNameBuilder $combinationNameBuilder
+     * @param ProductImageRepository $productImageRepository
      */
-    public function __construct(int $defaultLangId)
-    {
-        $this->defaultLangId = $defaultLangId;
+    public function __construct(
+        int $defaultLangId,
+        ProductPackRepository $productPackRepository,
+        AttributeRepository $attributeRepository,
+        CombinationNameBuilder $combinationNameBuilder,
+        ProductImageRepository $productImageRepository
+    ) {
+        $this->productRepository = $productPackRepository;
+        $this->combinationNameBuilder = $combinationNameBuilder;
+        $this->attributeRepository = $attributeRepository;
+        $this->languageId = $defaultLangId;
+        $this->productImageRepository = $productImageRepository;
     }
 
     /**
@@ -56,16 +96,47 @@ final class GetPackedProductsHandler implements GetPackedProductsHandlerInterfac
      */
     public function handle(GetPackedProducts $query): array
     {
-        $packId = $query->getPackId()->getValue();
-
-        $packedItems = Pack::getItems($packId, $this->defaultLangId);
-
+        $packedItems = $this->productRepository->getPackedProducts(
+            $query->getPackId(),
+            $query->getLanguageId()
+        );
         $packedProducts = [];
+        $combinationIds = [];
         foreach ($packedItems as $packedItem) {
-            $packedProducts[] = new PackedProduct(
-                (int) $packedItem->id,
-                (int) $packedItem->pack_quantity,
-                (int) $packedItem->id_pack_product_attribute
+            $combinationId = (int) $packedItem['id_product_attribute_item'];
+
+            if ($combinationId > 0) {
+                $combinationIds[] = new CombinationId($combinationId);
+            }
+        }
+        $attributesInformations = $this->attributeRepository->getAttributesInfoByCombinationIds(
+            $combinationIds,
+            new LanguageId($this->languageId)
+        );
+
+        foreach ($packedItems as $packedItem) {
+            $combinationId = (int) $packedItem['id_product_attribute_item'];
+            if ($combinationId === NoCombinationId::NO_COMBINATION_ID) {
+                $coverUrl = $this->productImageRepository->getProductCoverUrl(
+                    new ProductId((int) $packedItem['id_product_item'])
+                );
+            } else {
+                $coverUrl = $this->productImageRepository->getCombinationCoverUrl(
+                    new CombinationId($combinationId)
+                );
+            }
+            $name = $packedItem['name'];
+            if ($combinationId > 0) {
+                $name = $this->combinationNameBuilder->buildFullName($name, $attributesInformations[$combinationId]);
+            }
+
+            $packedProducts[] = new PackedProductDetails(
+                (int) $packedItem['id_product_item'],
+                (int) $packedItem['quantity'],
+                (int) $combinationId,
+                (string) $name,
+                (string) $packedItem['reference'],
+                $coverUrl
             );
         }
 
