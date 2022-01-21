@@ -40,6 +40,7 @@ use PDO;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command;
 use PrestaShop\PrestaShop\Core\Search\Filters\Security\Session;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
