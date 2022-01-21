@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCust
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
@@ -245,6 +247,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         $relatedProductsData = [];
         foreach ($relatedProducts as $relatedProduct) {
             $productName = $relatedProduct->getName();
+
             if (!empty($relatedProduct->getReference())) {
                 $productName .= sprintf(
                     ' (ref: %s)',
@@ -260,6 +263,37 @@ final class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $relatedProductsData;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    private function extractPackedProducts(int $productId): array
+    {
+        /** @var PackedProductDetails[] $packedProductsDetails
+         */
+        $packedProductsDetails = $this->queryBus->handle(
+            new GetPackedProductsDetails(
+                $productId,
+                $this->contextLangId
+            )
+        );
+        $packedProductsData = [];
+        foreach ($packedProductsDetails as $packedProductDetails) {
+            $productName = $packedProductDetails->getProductName();
+            $packedProductsData[] = [
+                'id' => $packedProductDetails->getProductId(),
+                'name' => $productName,
+                'combinationId' => $packedProductDetails->getCombinationId(),
+                'image' => $packedProductDetails->getImageUrl(),
+                'quantity' => $packedProductDetails->getQuantity(),
+                'uniqueIdentifier' => $packedProductDetails->getProductId() . '_' . $packedProductDetails->getCombinationId(),
+            ];
+        }
+
+        return $packedProductsData;
     }
 
     /**
@@ -317,6 +351,7 @@ final class ProductFormDataProvider implements FormDataProviderInterface
             'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'related_products' => $this->extractRelatedProducts($productForEditing->getProductId()),
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
         ];
     }
 

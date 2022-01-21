@@ -77,6 +77,23 @@ class DescriptionType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $productId = (int) $options['product_id'];
+        $builder
+            ->add('packed_products', EntitySearchInputType::class, [
+                'label' => $this->trans('Pack of products', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
+                'entry_type' => PackedProductType::class,
+                'entry_options' => [
+                    'block_prefix' => 'packed',
+                ],
+                'remote_url' => $this->router->generate('admin_products_v2_search_combinations_for_packed', [
+                    'languageCode' => $this->employeeIsoCode,
+                    'query' => '__QUERY__',
+                ]),
+                'min_length' => 3,
+                'filtered_identities' => [],
+                'identifier_field' => 'uniqueIdentifier',
+                'placeholder' => $this->trans('Search combination', 'Admin.Catalog.Help'),
+            ]);
 
         if ($productId) {
             $builder

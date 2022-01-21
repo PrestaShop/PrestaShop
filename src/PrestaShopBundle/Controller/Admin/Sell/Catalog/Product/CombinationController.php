@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResult\Attribute;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
@@ -38,6 +39,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -100,6 +103,96 @@ class CombinationController extends FrameworkBundleAdminController
             'lightDisplay' => $liteDisplaying,
             'combinationForm' => $combinationForm->createView(),
         ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchCombinationProductsAction(
+        Request $request,
+        string $languageCode
+    ): JsonResponse {
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $language = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+        if (null === $language) {
+            return $this->json([
+                'message' => sprintf(
+                    'Invalid language code %s was used which matches no existing language in this shop.',
+                    $languageCode
+                ),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var CombinationForAssociation[] $combinationProducts */
+            $combinationProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+                $request->get('query', ''),
+                $language->getId(),
+                (int) $shopId,
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($combinationProducts)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json(
+            $this->formatCombinationProductsForAssociation(
+                $combinationProducts,
+                new LanguageId($language->getId())
+            )
+        );
+    }
+
+    /**
+     * @param CombinationForAssociation[] $productsForAssociation
+     *
+     * @return array
+     */
+    private function formatCombinationProductsForAssociation(
+        array $productsForAssociation,
+        LanguageId $languageId
+    ): array {
+        $combinationNameBuilder = $this->get('prestashop.core.product.combination.name_builder.combination_name_builder');
+        $attributeRepository = $this->get('prestashop.adapter.attribute.repository.attribute_repository');
+        $productsData = [];
+        foreach ($productsForAssociation as $productForAssociation) {
+            $productName = $productForAssociation->getName();
+            if ($productForAssociation->getCombinationId() > 0) {
+                $attributesInformation = $attributeRepository->getAttributesInfoByCombinationIds(
+                    [new CombinationId($productForAssociation->getCombinationId())],
+                    $languageId
+                );
+                $productName .= ' : ' . $combinationNameBuilder->buildName(
+                        $attributesInformation[$productForAssociation->getCombinationId()]
+                    );
+            }
+            $productsData[] = [
+                'id' => $productForAssociation->getProductId(),
+                'uniqueIdentifier' => $productForAssociation->getProductId() . '_' . $productForAssociation->getCombinationId(),
+                'name' => $productName,
+                'combinationId' => $productForAssociation->getCombinationId(),
+                'image' => $productForAssociation->getImageUrl(),
+                'quantity' => 1,
+            ];
+        }
+
+        return $productsData;
     }
 
     /**
