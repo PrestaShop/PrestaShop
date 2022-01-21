@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormRegistryInterface;
 
 /**
  * Creates new forms for identifiable objects.
@@ -64,10 +65,16 @@ final class FormBuilder implements FormBuilderInterface
     private $optionsProvider;
 
     /**
+     * @var FormRegistryInterface|null
+     */
+    private $registry;
+
+    /**
      * @param FormFactoryInterface $formFactory
      * @param HookDispatcherInterface $hookDispatcher
      * @param FormDataProviderInterface $dataProvider
      * @param string $formType
+     * @param FormRegistryInterface $registry
      * @param FormOptionsProviderInterface|null $optionsProvider
      */
     public function __construct(
@@ -75,12 +82,14 @@ final class FormBuilder implements FormBuilderInterface
         HookDispatcherInterface $hookDispatcher,
         FormDataProviderInterface $dataProvider,
         string $formType,
+        FormRegistryInterface $registry,
         ?FormOptionsProviderInterface $optionsProvider = null
     ) {
         $this->formFactory = $formFactory;
         $this->hookDispatcher = $hookDispatcher;
         $this->dataProvider = $dataProvider;
         $this->formType = $formType;
+        $this->registry = $registry;
         $this->optionsProvider = $optionsProvider;
     }
 
@@ -89,7 +98,17 @@ final class FormBuilder implements FormBuilderInterface
      */
     public function getForm(array $data = [], array $options = [])
     {
-        if (is_array($defaultData = $this->dataProvider->getDefaultData())) {
+        $defaultData = $this->dataProvider->getDefaultData();
+
+        $this->hookDispatcher->dispatchWithParameters(
+            'action' . $this->registry->getType($this->formType)->getBlockPrefix() . 'FormDataProviderDefaultData',
+            [
+                'defaultData' => &$defaultData,
+                'options' => $options,
+            ]
+        );
+
+        if (is_array($defaultData)) {
             $data = array_merge($defaultData, $data);
         }
         if (null !== $this->optionsProvider
@@ -100,7 +119,6 @@ final class FormBuilder implements FormBuilderInterface
         return $this->buildForm(
             $this->formType,
             $data,
-            null,
             $options
         );
     }
@@ -110,7 +128,15 @@ final class FormBuilder implements FormBuilderInterface
      */
     public function getFormFor($id, array $data = [], array $options = [])
     {
-        $data = array_merge($this->dataProvider->getData($id), $data);
+        $dataProvider = $this->dataProvider->getData($id);
+
+        $this->hookDispatcher->dispatchWithParameters('action' . $this->registry->getType($this->formType)->getBlockPrefix() . 'FormDataProviderData', [
+            'data' => &$dataProvider,
+            'id' => $id,
+            'options' => $options,
+        ]);
+
+        $data = array_merge($dataProvider, $data);
         if (null !== $this->optionsProvider) {
             $options = array_merge($this->optionsProvider->getOptions($id, $data), $options);
         }
@@ -118,20 +144,20 @@ final class FormBuilder implements FormBuilderInterface
         return $this->buildForm(
             $this->formType,
             $data,
-            $id,
-            $options
+            $options,
+            $id
         );
     }
 
     /**
      * @param string $formType
      * @param array $data
-     * @param int|null $id
      * @param array $options
+     * @param int|null $id
      *
      * @return FormInterface
      */
-    private function buildForm($formType, $data, $id = null, array $options = [])
+    private function buildForm($formType, $data, array $options = [], $id = null)
     {
         $formBuilder = $this->formFactory->createBuilder($formType, $data, $options);
 
