@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Options;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryPreviewRepository;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
@@ -45,9 +45,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 class RedirectTargetProvider
 {
     /**
-     * @var ProductPreviewRepository
+     * @var ProductImageRepository
      */
-    private $productPreviewRepository;
+    private $productImageRepository;
 
     /**
      * @var CategoryPreviewRepository
@@ -60,16 +60,15 @@ class RedirectTargetProvider
     private $legacyContext;
 
     /**
-     * @param ProductPreviewRepository $productPreviewRepository
      * @param CategoryPreviewRepository $categoryPreviewRepository
      * @param LegacyContext $legacyContext
      */
     public function __construct(
-        ProductPreviewRepository $productPreviewRepository,
+        ProductImageRepository $productImageRepository,
         CategoryPreviewRepository $categoryPreviewRepository,
         LegacyContext $legacyContext
     ) {
-        $this->productPreviewRepository = $productPreviewRepository;
+        $this->productImageRepository = $productImageRepository;
         $this->categoryPreviewRepository = $categoryPreviewRepository;
         $this->legacyContext = $legacyContext;
     }
@@ -113,7 +112,7 @@ class RedirectTargetProvider
     private function getProductTarget(int $redirectTargetId): ProductRedirectTarget
     {
         $languageId = (int) $this->legacyContext->getLanguage()->id;
-        $product = $this->productPreviewRepository->getPreview(
+        $product = $this->productImageRepository->getPreview(
             new ProductId($redirectTargetId),
             new LanguageId($languageId)
         );

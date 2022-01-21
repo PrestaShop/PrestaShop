@@ -30,11 +30,14 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProductsDetails;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
@@ -46,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierO
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -263,6 +267,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $relatedProductsData = [];
         foreach ($relatedProducts as $relatedProduct) {
             $productName = $relatedProduct->getName();
+
             if (!empty($relatedProduct->getReference())) {
                 $productName .= sprintf(
                     ' (ref: %s)',
@@ -278,6 +283,37 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $relatedProductsData;
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return array<int, array<string, int|string>>
+     */
+    private function extractPackedProducts(int $productId): array
+    {
+        /** @var PackedProductDetails[] $packedProductsDetails
+         */
+        $packedProductsDetails = $this->queryBus->handle(
+            new GetPackedProductsDetails(
+                new ProductId($productId),
+                new LanguageId($this->contextLangId)
+            )
+        );
+        $packedProductsData = [];
+        foreach ($packedProductsDetails as $packedProductDetails) {
+            $productName = $packedProductDetails->getProductName();
+            $packedProductsData[] = [
+                'productId' => $packedProductDetails->getProductId(),
+                'name' => $productName,
+                'combinationId' => $packedProductDetails->getCombinationId(),
+                'image' => $packedProductDetails->getImageUrl(),
+                'quantity' => $packedProductDetails->getQuantity(),
+                'uniqueIdentifier' => $packedProductDetails->getProductId() . '_' . $packedProductDetails->getCombinationId(),
+            ];
+        }
+
+        return $packedProductsData;
     }
 
     /**
@@ -335,6 +371,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'categories' => $this->extractCategoriesData($productForEditing),
             'manufacturer' => $productForEditing->getOptions()->getManufacturerId(),
             'related_products' => $this->extractRelatedProducts($productForEditing->getProductId()),
+            'packed_products' => $this->extractPackedProducts($productForEditing->getProductId()),
         ];
     }
 
