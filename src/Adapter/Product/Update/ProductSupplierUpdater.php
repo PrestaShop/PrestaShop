@@ -44,6 +44,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use Product;
 use ProductSupplier;
 
@@ -110,6 +111,10 @@ class ProductSupplierUpdater
      */
     public function associateSuppliers(ProductId $productId, array $supplierIds): array
     {
+        if (empty($supplierIds)) {
+            throw new InvalidArgumentException('Provided empty list of suppliers to associate');
+        }
+
         // First check that all suppliers exist
         foreach ($supplierIds as $supplierId) {
             $this->supplierRepository->assertSupplierExists($supplierId);
@@ -179,6 +184,24 @@ class ProductSupplierUpdater
     }
 
     /**
+     * When new combinations are created some product supplier are absent, so we get associated suppliers and associate
+     * them again, it will only created the missing ones without modifying the existing ones.
+     *
+     * @param ProductId $productId
+     *
+     * @return ProductSupplierAssociation[]
+     */
+    public function updateMissingProductSuppliers(ProductId $productId): array
+    {
+        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($productId);
+        if (empty($supplierIds)) {
+            return [];
+        }
+
+        return $this->associateSuppliers($productId, $supplierIds);
+    }
+
+    /**
      * @param ProductId $productId
      * @param array<int, ProductSupplier> $productSuppliers
      *
@@ -204,7 +227,7 @@ class ProductSupplierUpdater
      *
      * @return array<int, ProductSupplierAssociation>
      */
-    public function updateCombinationSuppliers(
+    public function updateSuppliersForCombination(
         ProductId $productId,
         CombinationId $combinationId,
         array $productSuppliers
