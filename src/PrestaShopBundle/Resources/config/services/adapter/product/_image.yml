@@ -59,6 +59,8 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.image.validate.product_image_validator'
+      - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@prestashop.adapter.product.repository.product_repository'
 
   prestashop.adapter.product.image.update.product_image_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Image\Update\ProductImageUpdater
