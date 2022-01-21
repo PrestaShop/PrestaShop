@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 {% if productForm.options.product_suppliers is defined %}
-  {% dump(productForm.options.product_suppliers) %}
   {% form_theme productForm.options.product_suppliers '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_suppliers.html.twig' %}
 {% endif %}
 
