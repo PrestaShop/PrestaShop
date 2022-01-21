@@ -37,7 +37,7 @@
 
 {% block link %}
 <a 
-  class="{{ class }}"
+  class="{{ class }} text-nowrap"
   href="{{ path(column.options.route, { (column.options.route_param_name) : record[column.options.route_param_field]}) }}"
   {% if column.options.target is defined %}
     target="{{ column.options.target }}"
