@@ -399,14 +399,14 @@ Feature: Update product combination suppliers in Back Office (BO)
       | wholesale price            | 0     |
 
   Scenario: Updating combination wholesale price should update default supplier price
-    And I add product "product3" with following information:
+    Given I add product "product3" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product3 type should be combinations
     And I generate combinations for product product3 using following attributes:
       | Size  | [S,M]         |
       | Color | [White,Black] |
-    And product "product3" should have following combinations:
+    Then product "product3" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -423,7 +423,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier  | combination_suppliers                  |
       | supplier2 | product3SWhite:product3SWhiteSupplier2 |
       | supplier1 | product3SWhite:product3SWhiteSupplier1 |
-    Given product product3 should have the following suppliers assigned:
+    Then product product3 should have the following suppliers assigned:
       | supplier1 |
       | supplier2 |
     And combination "product3SWhite" should have following suppliers:
@@ -464,3 +464,83 @@ Feature: Update product combination suppliers in Back Office (BO)
       | product_supplier        | supplier  | reference | currency | price_tax_excluded |
       | product3SWhiteSupplier1 | supplier1 |           | USD      | 44                  |
       | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
+
+  Scenario: When new combinations are generated the suppliers must be associated to them
+    Given I add product "product4" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product4 type should be combinations
+    And I generate combinations for product product4 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product4" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product4SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product4SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product4MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product4MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    When I associate suppliers to product "product4"
+      | supplier  | combination_suppliers                  |
+      | supplier2 | product4SWhite:product4SWhiteSupplier2 |
+      | supplier1 | product4SWhite:product4SWhiteSupplier1 |
+    And I update following suppliers for combination "product4SWhite":
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    Then product product4 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product4 should have following supplier values:
+      | default supplier           | supplier2 |
+    And combination "product4SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    And combination "product4SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    # Now I generate new combinations
+    When I generate combinations for product product4 using following attributes:
+      | Size  | [S,M]  |
+      | Color | [Blue] |
+    Then product "product4" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product4SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product4SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product4MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product4MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product4SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product4MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And combination "product4SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    And combination "product4SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4SBlue" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlue" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |

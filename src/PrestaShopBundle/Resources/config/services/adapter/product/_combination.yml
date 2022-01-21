@@ -6,6 +6,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\GenerateProductCombinationsHandler
     arguments:
       - '@prestashop.adapter.product.combination.create.combination_creator'
+      - '@prestashop.adapter.product.update.product_supplier_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand
