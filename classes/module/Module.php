@@ -295,6 +295,10 @@ abstract class ModuleCore implements ModuleInterface
             Tools::displayParameterAsDeprecated('name');
         }
 
+        if (!isset($this->ps_versions_compliancy)) {
+            $this->ps_versions_compliancy = [];
+        }
+
         if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min'])) {
             $this->ps_versions_compliancy['min'] = '1.4.0.0';
         }
