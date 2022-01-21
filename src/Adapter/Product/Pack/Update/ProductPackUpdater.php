@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QuantifiedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
+use Product;
 
 /**
  * Provides methods related to Product Pack update
