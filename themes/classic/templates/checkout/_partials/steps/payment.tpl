@@ -121,6 +121,8 @@
     </form>
   {/if}
 
+  {hook h='displayCheckoutBeforeConfirmation'}
+
   {if $show_final_summary}
     {include file='checkout/_partials/order-final-summary.tpl'}
   {/if}
