@@ -3535,5 +3535,10 @@
       <title>Modify delivery option list result</title>
       <description>This hook allows you to modify delivery option list</description>
     </hook>
+    <hook id="displayCheckoutBeforeConfirmation">
+      <name>displayCheckoutBeforeConfirmation</name>
+      <title>Show custom content before checkout confirmation</title>
+      <description>This hook allows you to display custom content at the end of checkout process</description>
+    </hook>
   </entities>
 </entity_hook>
