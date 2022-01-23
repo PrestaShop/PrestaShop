@@ -194,7 +194,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
             // legacy context selector is hidden on migrated pages when multistore feature is used
-            'hideLegacyStoreContextSelector' => $this->multistoreEnabled(),
+            'hideLegacyStoreContextSelector' => $this->isMultistoreEnabled(),
         ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {

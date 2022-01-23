@@ -132,7 +132,7 @@ class AdminStatesControllerCore extends AdminController
     public function renderForm()
     {
         // display multistore information message if multistore is used
-        if ($this->multistoreEnabled()) {
+        if ($this->isMultistoreEnabled()) {
             $this->informations[] = $this->trans(
                 'Note that this feature is available in all shops context only. It will be added to all your stores.',
                 [],
