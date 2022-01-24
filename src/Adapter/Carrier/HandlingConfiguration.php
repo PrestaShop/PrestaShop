@@ -26,29 +26,13 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 
 /**
  * Class HandlingConfiguration is responsible for saving and loading Handling options configuration.
  */
-class HandlingConfiguration implements DataConfigurationInterface
+class HandlingConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * HandlingConfiguration constructor.
-     *
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -67,9 +51,10 @@ class HandlingConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHIPPING_HANDLING', $configuration['shipping_handling_charges']);
-            $this->configuration->set('PS_SHIPPING_FREE_PRICE', $configuration['free_shipping_price']);
-            $this->configuration->set('PS_SHIPPING_FREE_WEIGHT', $configuration['free_shipping_weight']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_SHIPPING_HANDLING', 'shipping_handling_charges', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHIPPING_FREE_PRICE', 'free_shipping_price', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHIPPING_FREE_WEIGHT', 'free_shipping_weight', $configuration, $shopConstraint);
         }
 
         return [];
