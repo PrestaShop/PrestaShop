@@ -24,48 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
-
 /**
- * Class SupplierId
+ * Defines contract for supplier identity value
  */
-class SupplierId implements SupplierIdInterface
+interface SupplierIdInterface
 {
-    /**
-     * @var int
-     */
-    private $value;
-
-    /**
-     * @param int $supplierId
-     *
-     * @throws SupplierException
-     */
-    public function __construct(int $supplierId)
-    {
-        $this->assertIsIntegerGreaterThanZero($supplierId);
-        $this->value = $supplierId;
-    }
-
     /**
      * @return int
      */
-    public function getValue(): int
-    {
-        return $this->value;
-    }
-
-    /**
-     * @param int $supplierId
-     *
-     * @throws SupplierException
-     */
-    private function assertIsIntegerGreaterThanZero(int $supplierId)
-    {
-        if (0 >= $supplierId) {
-            throw new SupplierException(sprintf('Invalid Supplier id: %s', var_export($supplierId, true)));
-        }
-    }
+    public function getValue(): int;
 }
