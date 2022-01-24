@@ -65,10 +65,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
-        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
-        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
+        yield [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_PACK, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'options.product_suppliers', false];
 
         yield [ProductType::TYPE_STANDARD, 'stock', true];
         yield [ProductType::TYPE_PACK, 'stock', true];
