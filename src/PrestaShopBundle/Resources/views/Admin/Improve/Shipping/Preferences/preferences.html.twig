@@ -36,3 +36,7 @@
     {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
   {{ form_end(carrierOptionsForm) }}
 {% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/shipping_preferences.bundle.js') }}"></script>
+{% endblock %}

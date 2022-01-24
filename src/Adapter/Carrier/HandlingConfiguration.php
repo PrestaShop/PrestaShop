@@ -27,21 +27,26 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class HandlingConfiguration is responsible for saving and loading Handling options configuration.
  */
 class HandlingConfiguration extends AbstractMultistoreConfiguration
 {
+    private const CONFIGURATION_FIELDS = ['shipping_handling_charges', 'free_shipping_price', 'free_shipping_weight'];
+
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'shipping_handling_charges' => $this->configuration->get('PS_SHIPPING_HANDLING'),
-            'free_shipping_price' => $this->configuration->get('PS_SHIPPING_FREE_PRICE'),
-            'free_shipping_weight' => $this->configuration->get('PS_SHIPPING_FREE_WEIGHT'),
+            'shipping_handling_charges' => $this->configuration->get('PS_SHIPPING_HANDLING', null, $shopConstraint),
+            'free_shipping_price' => $this->configuration->get('PS_SHIPPING_FREE_PRICE', null, $shopConstraint),
+            'free_shipping_weight' => $this->configuration->get('PS_SHIPPING_FREE_WEIGHT', null, $shopConstraint),
         ];
     }
 
@@ -61,14 +66,16 @@ class HandlingConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['shipping_handling_charges'],
-            $configuration['free_shipping_price'],
-            $configuration['free_shipping_weight']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('shipping_handling_charges', 'float')
+            ->setAllowedTypes('free_shipping_price', 'float')
+            ->setAllowedTypes('free_shipping_weight', 'float');
+
+        return $resolver;
     }
 }

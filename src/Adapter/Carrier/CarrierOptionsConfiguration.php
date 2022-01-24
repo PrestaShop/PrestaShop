@@ -27,21 +27,26 @@
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration.
  */
 class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
 {
+    private const CONFIGURATION_FIELDS = ['default_carrier', 'carrier_default_order_by', 'carrier_default_order_way'];
+
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+        
         return [
-            'default_carrier' => $this->configuration->getInt('PS_CARRIER_DEFAULT'),
-            'carrier_default_order_by' => $this->configuration->getInt('PS_CARRIER_DEFAULT_SORT'),
-            'carrier_default_order_way' => $this->configuration->getInt('PS_CARRIER_DEFAULT_ORDER'),
+            'default_carrier' => $this->configuration->getInt('PS_CARRIER_DEFAULT', null, $shopConstraint),
+            'carrier_default_order_by' => $this->configuration->getInt('PS_CARRIER_DEFAULT_SORT', null, $shopConstraint),
+            'carrier_default_order_way' => $this->configuration->getInt('PS_CARRIER_DEFAULT_ORDER', null, $shopConstraint),
         ];
     }
 
@@ -63,12 +68,26 @@ class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
     /**
      * {@inheritdoc}
      */
-    public function validateConfiguration(array $configuration)
+    public function validateConfiguration(array $configuration): bool
     {
         return isset(
             $configuration['default_carrier'],
             $configuration['carrier_default_order_by'],
             $configuration['carrier_default_order_way']
         );
+    }
+
+    /**
+     * @return OptionsResolver
+     */
+    protected function buildResolver(): OptionsResolver
+    {
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('default_carrier', 'string')
+            ->setAllowedTypes('carrier_default_order_by', 'string')
+            ->setAllowedTypes('carrier_default_order_way', 'string');
+
+        return $resolver;
     }
 }
