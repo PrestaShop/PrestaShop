@@ -29,6 +29,7 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\Product\StockConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
@@ -37,14 +38,21 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 class StockFormDataProvider implements FormDataProviderInterface
 {
     /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
      * @var StockConfiguration
      */
     private $configuration;
 
     public function __construct(
-        StockConfiguration $configuration
+        StockConfiguration $configuration,
+        TranslatorInterface $translator
     ) {
         $this->configuration = $configuration;
+        $this->translator = $translator;
     }
 
     /**
@@ -67,7 +75,7 @@ class StockFormDataProvider implements FormDataProviderInterface
         return $this->configuration->updateConfiguration($data);
     }
 
-     /**
+    /**
      * Perform validation on form data before saving it.
      *
      * @param array $data
