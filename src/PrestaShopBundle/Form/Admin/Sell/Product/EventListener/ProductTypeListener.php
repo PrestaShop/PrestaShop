@@ -94,7 +94,6 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
-            $optionsForm->remove('suppliers');
             $optionsForm->remove('product_suppliers');
         }
     }
