@@ -97,7 +97,7 @@ class UpdateCombinationSuppliersCommand
                 new CombinationSupplierAssociation(
                     $combinationId,
                     $productSupplier['supplier_id'],
-                    $productSupplier['product_supplier_id'] ?: null
+                    !empty($productSupplier['product_supplier_id']) ? $productSupplier['product_supplier_id'] : null
                 ),
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
