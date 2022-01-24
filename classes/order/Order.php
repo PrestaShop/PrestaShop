@@ -970,7 +970,6 @@ class OrderCore extends ObjectModel
                 $res[$key]['order_state'] = $res[$key]['order_state_color'] = null;
                 continue;
             }
-            
             $orderState = $indexedOrderStates[$val['id_order_state']];
             $res[$key]['order_state'] = $orderState['name'];
             $res[$key]['invoice'] = $orderState['invoice'];
