@@ -825,10 +825,7 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['options']['suppliers']['supplier_ids'] = [
-            0 => 1,
-            1 => 2,
-        ];
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
         $expectedOutputData['options']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
@@ -851,29 +848,49 @@ class ProductFormDataProviderTest extends TestCase
         $productData = [
             'suppliers' => [
                 'default_supplier_id' => 1,
-                'product_suppliers' => [
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 1,
-                        'supplier_name' => 'test supplier 1',
-                        'product_supplier_id' => 1,
-                        'price' => '0',
-                        'reference' => 'test supp ref 1',
-                        'currency_id' => 1,
-                        'combination_id' => 0,
-                    ],
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 2,
-                        'supplier_name' => 'test supplier 2',
-                        'product_supplier_id' => 2,
-                        'price' => '0',
-                        'reference' => 'test supp ref 2',
-                        'currency_id' => 3,
-                        'combination_id' => 0,
-                    ],
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 1,
+                    'supplier_name' => 'test supplier 1',
+                    'product_supplier_id' => 1,
+                    'price' => '0',
+                    'reference' => 'test supp ref 1',
+                    'currency_id' => 1,
+                    'combination_id' => 0,
+                ],
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 2,
+                    'supplier_name' => 'test supplier 2',
+                    'product_supplier_id' => 2,
+                    'price' => '0',
+                    'reference' => 'test supp ref 2',
+                    'currency_id' => 3,
+                    'combination_id' => 0,
                 ],
             ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // We can have only the list of suppliers with no product suppliers infos (for product with combinations)
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
+        $expectedOutputData['options']['product_suppliers'] = [];
+
+        $productData = [
+            'suppliers' => [
+                'default_supplier_id' => 1,
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [],
         ];
 
         $datasets[] = [
@@ -1043,29 +1060,32 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductSupplierOptions(array $productData): ProductSupplierOptions
     {
         if (empty($productData['suppliers'])) {
-            return new ProductSupplierOptions(0, []);
+            return new ProductSupplierOptions(0, [], []);
         }
 
-        $suppliersInfo = [];
-        foreach ($productData['suppliers']['product_suppliers'] as $supplierInfo) {
-            $suppliersInfo[] = new ProductSupplierInfo(
-                $supplierInfo['supplier_name'],
-                $supplierInfo['supplier_id'],
-                new ProductSupplierForEditing(
-                    $supplierInfo['product_supplier_id'],
-                    $supplierInfo['product_id'],
+        $suppliersInfos = [];
+        if (!empty($productData['product_suppliers'])) {
+            foreach ($productData['product_suppliers'] as $supplierInfo) {
+                $suppliersInfos[] = new ProductSupplierInfo(
+                    $supplierInfo['supplier_name'],
                     $supplierInfo['supplier_id'],
-                    $supplierInfo['reference'],
-                    $supplierInfo['price'],
-                    $supplierInfo['currency_id'],
-                    $supplierInfo['combination_id']
-                )
-            );
+                    new ProductSupplierForEditing(
+                        $supplierInfo['product_supplier_id'],
+                        $supplierInfo['product_id'],
+                        $supplierInfo['supplier_id'],
+                        $supplierInfo['reference'],
+                        $supplierInfo['price'],
+                        $supplierInfo['currency_id'],
+                        $supplierInfo['combination_id']
+                    )
+                );
+            }
         }
 
         return new ProductSupplierOptions(
             $productData['suppliers']['default_supplier_id'],
-            $suppliersInfo
+            $productData['suppliers']['supplier_ids'],
+            $suppliersInfos
         );
     }
 
