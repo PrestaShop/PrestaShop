@@ -27,20 +27,25 @@
 namespace PrestaShop\PrestaShop\Adapter\Webservice;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Manages the configuration data about upload quota options.
  */
 final class WebserviceConfiguration extends AbstractMultistoreConfiguration
 {
+    private const CONFIGURATION_FIELDS = ['enable_webservice', 'enable_cgi'];
+
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_webservice' => $this->configuration->getBoolean('PS_WEBSERVICE'),
-            'enable_cgi' => $this->configuration->getBoolean('PS_WEBSERVICE_CGI_HOST'),
+            'enable_webservice' => (bool)$this->configuration->get('PS_WEBSERVICE', false, $shopConstraint),
+            'enable_cgi' => (bool)$this->configuration->get('PS_WEBSERVICE_CGI_HOST', false, $shopConstraint),
         ];
     }
 
@@ -59,13 +64,15 @@ final class WebserviceConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $enableWebserviceisValid = (isset($configuration['enable_webservice']) && (is_bool($configuration['enable_webservice'])));
-        $enableCGI = (isset($configuration['enable_webservice']) && (is_bool($configuration['enable_webservice'])));
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('enable_webservice', 'bool')
+            ->setAllowedTypes('enable_cgi', 'bool');
 
-        return $enableWebserviceisValid && $enableCGI;
+        return $resolver;
     }
 }
