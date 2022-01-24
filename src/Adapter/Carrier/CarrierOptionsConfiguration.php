@@ -42,7 +42,7 @@ class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
     public function getConfiguration()
     {
         $shopConstraint = $this->getShopConstraint();
-        
+
         return [
             'default_carrier' => $this->configuration->getInt('PS_CARRIER_DEFAULT', null, $shopConstraint),
             'carrier_default_order_by' => $this->configuration->getInt('PS_CARRIER_DEFAULT_SORT', null, $shopConstraint),

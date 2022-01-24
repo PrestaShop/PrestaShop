@@ -136,7 +136,7 @@ class CarrierOptionsType extends TranslatorAwareType
     {
         return 'shipping_preferences_carrier_options_block';
     }
-    
+
     /**
      * {@inheritdoc}
      *
