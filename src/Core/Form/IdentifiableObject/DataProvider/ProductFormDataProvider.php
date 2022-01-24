@@ -589,17 +589,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
         /** @var ProductSupplierOptions $productSupplierOptions */
         $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+        $suppliersData['suppliers']['default_supplier_id'] = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData['suppliers']['supplier_ids'] = $productSupplierOptions->getSupplierIds();
 
         if (empty($productSupplierOptions->getSuppliersInfo())) {
             return $suppliersData;
         }
 
-        $suppliersData['suppliers']['default_supplier_id'] = $productSupplierOptions->getDefaultSupplierId();
         foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
             $supplierForEditing = $supplierOption->getProductSupplierForEditing();
             $supplierId = $supplierOption->getSupplierId();
 
-            $suppliersData['suppliers']['supplier_ids'][] = $supplierId;
             if ($productForEditing->getType() !== ProductType::TYPE_COMBINATIONS) {
                 $suppliersData['product_suppliers'][$supplierId] = [
                     'supplier_id' => $supplierId,
