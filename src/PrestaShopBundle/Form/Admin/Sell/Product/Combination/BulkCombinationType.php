@@ -34,7 +34,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -99,30 +98,27 @@ class BulkCombinationType extends TranslatorAwareType
             $stockOptionsType->remove('stock_location');
             $priceImpactType->remove('unit_price');
 
-            $this->addDisablingToggle([
-                $stockQuantitiesType,
-                $stockOptionsType,
-                $priceImpactType,
-            ]);
+            foreach ([$stockQuantitiesType, $stockOptionsType, $priceImpactType] as $formType) {
+                foreach ($formType->all() as $type) {
+                    $this->addDisablingToggle($type);
+                }
+            }
+
+            $this->addDisablingToggle($stockType->get('available_date'));
         });
     }
 
     /**
-     * @param FormInterface[] $forms
+     * @param FormInterface $form
      */
-    private function addDisablingToggle(array $forms): void
+    private function addDisablingToggle(FormInterface $form): void
     {
         $formCloner = new FormCloner();
-        /* @var FormInterface $childForm */
-        foreach ($forms as $form) {
-            foreach ($form->all() as $childForm) {
-                $newForm = $formCloner->cloneForm(
-                    $childForm,
-                    array_merge($childForm->getConfig()->getOptions(), ['disabling_toggle' => true])
-                );
+        $newForm = $formCloner->cloneForm(
+            $form,
+            array_merge($form->getConfig()->getOptions(), ['disabling_toggle' => true])
+        );
 
-                $form->add($newForm);
-            }
-        }
+        $form->getParent()->add($newForm);
     }
 }
