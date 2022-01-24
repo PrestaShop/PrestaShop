@@ -454,7 +454,7 @@ class ProductController extends FrameworkBundleAdminController
             ),
             SpecificPriceConstraintException::class => [
                 SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
-                    'Specific price priorities cannot duplicate',
+                    'The selected condition must be different in each field to set an order of priority.',
                     'Admin.Notifications.Error'
                 ),
             ],
