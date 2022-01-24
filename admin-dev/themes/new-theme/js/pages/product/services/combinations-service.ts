@@ -130,7 +130,7 @@ export default class CombinationsService implements ServiceType {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}),
       data,
-      method: 'PATCH',
+      method: 'POST',
     });
   }
 
