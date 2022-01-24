@@ -94,9 +94,12 @@ Feature: Duplicate product from Back Office (BO).
       | meta description[en-US] |                    |
       | meta keywords[en-US]    | sup,1              |
       | shops                   | [shop1]            |
-    When I update product product1 suppliers:
-      | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
-      | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
+    When I associate suppliers to product "product1"
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
+    And I update product product1 suppliers:
+      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
+      | product1supplier1 | supplier1 | my first supplier for product1 | USD      | 10                 |
     And I set following related products to product product1:
       | product2 |
     And I update product product1 with following customization fields:
@@ -167,8 +170,8 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | smart,glasses,sunglasses,men |
       | fr-FR  | lunettes,bien,soleil         |
     And product copy_of_product1 should have following suppliers:
-      | product supplier reference     | currency | price tax excluded |
-      | my first supplier for product1 | USD      | 10                 |
+      | supplier  | reference                      | currency | price_tax_excluded |
+      | supplier1 | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
       | price            | 100.00          |
       | ecotax           | 0               |
