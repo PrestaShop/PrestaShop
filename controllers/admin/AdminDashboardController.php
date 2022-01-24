@@ -415,21 +415,6 @@ class AdminDashboardControllerCore extends AdminController
         die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
     }
 
-    /**
-     * Returns last news from the blog
-     *
-     * @throws PrestaShopException
-     */
-    public function displayAjaxGetBlogRss()
-    {
-        $newsFetcher = $this->get('prestashop.adapter.news.provider');
-        $return = $newsFetcher->getData($this->context->language->iso_code);
-
-        // Response
-        header('Content-Type: application/json');
-        $this->ajaxRender(json_encode($return));
-    }
-
     public function ajaxProcessSaveDashConfig()
     {
         $return = ['has_errors' => false, 'errors' => []];
