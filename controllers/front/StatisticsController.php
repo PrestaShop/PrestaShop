@@ -25,10 +25,13 @@
  */
 class StatisticsControllerCore extends FrontController
 {
-    public $display_header = false;
-    public $display_footer = false;
-
     protected $param_token;
+
+    public function init()
+    {
+        $this->ajax = true;
+        parent::init();
+    }
 
     public function postProcess()
     {
