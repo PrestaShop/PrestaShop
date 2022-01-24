@@ -98,7 +98,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
     arguments:
       - '@prestashop.adapter.shop.context'
-      - '@form.form_builder_modifier'
       - '@translator'
     tags:
       - { name: form.type_extension }

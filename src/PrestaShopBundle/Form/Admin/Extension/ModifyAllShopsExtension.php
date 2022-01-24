@@ -56,11 +56,6 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
     private $multistoreContextChecker;
 
     /**
-     * @var FormBuilderModifier
-     */
-    private $formBuilderModifier;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -72,11 +67,9 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
 
     public function __construct(
         MultistoreContextCheckerInterface $multistoreContextChecker,
-        FormBuilderModifier $formBuilderModifier,
         TranslatorInterface $translator
     ) {
         $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->formBuilderModifier = $formBuilderModifier;
         $this->translator = $translator;
     }
 
@@ -103,6 +96,12 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
         $isOverridden = $builder->getOption('modify_all_shops');
         if ($isOverridden) {
             $label = $this->getCheckboxLabel();
+            // We want to add a field on the parent, sadly builder doesn't allow to get the parent builder, so we can't modify the parent builder
+            // Another solution would be to loop through a builder's children, but they are not always present when the extension is run (mainly
+            // because the root element is first built, and the compound children are built just in time later) so when the extension first runs
+            // the children are not accessible nor parseable
+            // For this reason the only moment where children are all present is when the form is already completely built, which is why we have
+            // to add the new fields directly on the built form, so we need to rely on form events to handle this
             $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($label) {
                 $form = $event->getForm();
                 $parent = $form->getParent();
