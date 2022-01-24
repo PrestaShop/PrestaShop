@@ -41,7 +41,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSupp
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\InvalidProductSupplierAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use Product;
@@ -240,7 +242,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoSuppliers(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductSupplierOptions($productReference)->getSupplierIds(),
+            $this->getAssociatedSuppliers($productReference)->getSupplierIds(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }
@@ -265,7 +267,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function assertAssignedSuppliers(string $productReference, TableNode $tableNode): void
     {
-        $supplierIds = $this->getProductSupplierOptions($productReference)->getSupplierIds();
+        $supplierIds = $this->getAssociatedSuppliers($productReference)->getSupplierIds();
         $expectedSupplierIds = [];
         foreach ($tableNode->getRows() as $row) {
             $expectedSupplierIds[] = $this->getSharedStorage()->get($row[0]);
@@ -306,7 +308,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductHasNoDefaultSupplier(string $productReference): void
     {
-        $defaultSupplierId = $this->getProductSupplierOptions($productReference)->getDefaultSupplierId();
+        $defaultSupplierId = $this->getAssociatedSuppliers($productReference)->getDefaultSupplierId();
 
         Assert::assertEmpty(
             $defaultSupplierId,
@@ -323,12 +325,12 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertDefaultSupplier(string $productReference, TableNode $tableNode): void
     {
         $data = $tableNode->getRowsHash();
-        $productSupplierOptions = $this->getProductSupplierOptions($productReference);
+        $associatedSuppliers = $this->getAssociatedSuppliers($productReference);
 
         if (isset($data['default supplier'])) {
             Assert::assertEquals(
                 $this->getSharedStorage()->get($data['default supplier']),
-                $productSupplierOptions->getDefaultSupplierId(),
+                $associatedSuppliers->getDefaultSupplierId(),
                 'Unexpected product default supplier'
             );
             unset($data['default supplier']);
@@ -348,6 +350,18 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertLastErrorInvalidProductType(): void
     {
         $this->assertLastErrorIs(InvalidProductTypeException::class);
+    }
+
+    /**
+     * @param string $productReference
+     *
+     * @return AssociatedSuppliers
+     */
+    private function getAssociatedSuppliers(string $productReference): AssociatedSuppliers
+    {
+        return $this->getQueryBus()->handle(new GetAssociatedSuppliers(
+            $this->getSharedStorage()->get($productReference)
+        ));
     }
 
     /**
