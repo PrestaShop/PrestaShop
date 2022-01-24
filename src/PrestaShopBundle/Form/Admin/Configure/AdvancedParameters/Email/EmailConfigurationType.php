@@ -82,6 +82,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'multistore_configuration_key' => 'PS_MAIL_EMAIL_MESSAGE',
             ])
             ->add('mail_method', ChoiceType::class, [
+                'label' => $this->trans('Which method', 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'class' => 'js-email-method',
                     'data-smtp-mail-method' => MailOption::METHOD_SMTP,
@@ -92,6 +93,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'multistore_configuration_key' => 'PS_MAIL_METHOD',
             ])
             ->add('mail_type', ChoiceType::class, [
+                'label' => $this->trans('Which format', 'Admin.Advparameters.Feature'),
                 'expanded' => true,
                 'multiple' => false,
                 'choices' => [
