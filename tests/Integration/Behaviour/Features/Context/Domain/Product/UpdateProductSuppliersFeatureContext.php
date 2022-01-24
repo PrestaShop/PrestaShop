@@ -197,24 +197,32 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         $expectedProductSuppliers = $table->getColumnsHash();
         $actualProductSupplierOptions = $this->getProductSupplierOptions($productReference);
 
+        $checkProductSuppliers = false;
         foreach ($expectedProductSuppliers as &$expectedProductSupplier) {
             $expectedProductSupplier['combination'] = NoCombinationId::NO_COMBINATION_ID;
             $expectedProductSupplier['price_tax_excluded'] = new DecimalNumber($expectedProductSupplier['price_tax_excluded']);
             $expectedProductSupplier['supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['supplier']);
-            $expectedProductSupplier['product_supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['product_supplier']);
+            // Product supplier ID can be skipped (for example when testing duplicate product)
+            if (isset($expectedProductSupplier['product_supplier'])) {
+                $checkProductSuppliers = true;
+                $expectedProductSupplier['product_supplier'] = $this->getSharedStorage()->get($expectedProductSupplier['product_supplier']);
+            }
         }
 
         $actualProductSuppliers = [];
         foreach ($actualProductSupplierOptions->getSuppliersInfo() as $actualProductSupplierOption) {
             $productSupplierForEditing = $actualProductSupplierOption->getProductSupplierForEditing();
-            $actualProductSuppliers[] = [
+            $productSupplierData = [
                 'reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
                 'price_tax_excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
                 'supplier' => $actualProductSupplierOption->getSupplierId(),
-                'product_supplier' => $productSupplierForEditing->getProductSupplierId(),
             ];
+            if ($checkProductSuppliers) {
+                $productSupplierData['product_supplier'] = $productSupplierForEditing->getProductSupplierId();
+            }
+            $actualProductSuppliers[] = $productSupplierData;
         }
 
         Assert::assertEquals(
