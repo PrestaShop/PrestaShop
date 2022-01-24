@@ -36,9 +36,16 @@ class BulkCombinationFormDataFormatter
      */
     public function format(array $formData): array
     {
-        $formData['references']['reference'] = $formData['reference'];
-        unset($formData['reference']);
+        $formattedData = [
+            'references' => [
+                'reference' => null,
+            ],
+        ];
 
-        return $formData;
+        if (isset($formData['disabling_toggle_reference'])) {
+            $formattedData['references']['reference'] = $formData['reference'] ?? '';
+        }
+
+        return $formattedData;
     }
 }
