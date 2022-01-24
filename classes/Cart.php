@@ -4466,6 +4466,7 @@ class CartCore extends ObjectModel
     }
 
     /**
+<<<<<<< HEAD
      * If the carrier name is 0, use this function to replace it with the shop name.
      *
      * @param string $echo Text to use
@@ -4478,6 +4479,8 @@ class CartCore extends ObjectModel
     }
 
     /**
+=======
+>>>>>>> e99e86eef6 (Remove useless code)
      * Duplicate this Cart in the database.
      *
      * @return array|bool Duplicated cart, with success bool
