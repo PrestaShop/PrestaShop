@@ -68,9 +68,12 @@ class BulkCombinationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('stock', CombinationStockType::class)
-            ->add('price_impact', CombinationPriceImpactType::class)
+//            ->add('stock', CombinationStockType::class)
+//            ->add('price_impact', CombinationPriceImpactType::class)
             ->add('reference', TextType::class, [
+                'constraints' => [
+                    new NotBlank(),
+                ],
                 'disabling_toggle' => true,
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
@@ -78,7 +81,7 @@ class BulkCombinationType extends TranslatorAwareType
             ])
         ;
 
-        $this->modifyForm($builder);
+//        $this->modifyForm($builder);
     }
 
     /**
