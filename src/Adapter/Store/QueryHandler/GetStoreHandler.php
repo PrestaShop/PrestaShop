@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
-use Store;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
