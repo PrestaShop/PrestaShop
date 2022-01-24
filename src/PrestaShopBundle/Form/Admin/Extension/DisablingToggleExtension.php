@@ -109,7 +109,7 @@ class DisablingToggleExtension extends AbstractTypeExtension
                     'disabled' => $shouldBeDisabled,
                     'attr' => [
                         'disabled' => $shouldBeDisabled,
-                        'class' => 'disabled',
+                        'class' => $shouldBeDisabled ? 'disabled' : '',
                     ],
                 ];
 
