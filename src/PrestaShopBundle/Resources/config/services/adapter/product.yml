@@ -211,7 +211,15 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions
 
-  prestashop.adapter.product.supplier.command_handler.associate_product_suppliers_handler:
+  prestashop.adapter.product.supplier.command_handler.get_associated_suppliers_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Supplier\QueryHandler\GetAssociatedSuppliersHandler
+    arguments:
+      - '@prestashop.adapter.product.repository.product_supplier_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers
+
+  prestashop.adapter.product.supplier.command_handler.set_product_suppliers_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler\SetSuppliersHandler
     arguments:
       - '@prestashop.adapter.product.update.product_supplier_updater'
