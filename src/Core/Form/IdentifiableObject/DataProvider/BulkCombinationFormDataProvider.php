@@ -32,24 +32,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-//            'stock' => [
-//                'quantities' => [
-//                    'disabling_toggle_delta_quantity' => true,
-//                    'disabling_toggle_minimal_quantity' => true,
-//                ],
-//                'options' => [
-//                    'disabling_toggle_low_stock_threshold' => true,
-//                    'disabling_toggle_low_stock_alert' => true,
-//                ],
-//                'disabling_toggle_available_date' => true,
-//            ],
-//            'price_impact' => [
-//                'disabling_toggle_wholesale_price' => true,
-//                'disabling_toggle_price_tax_excluded' => true,
-//                'disabling_toggle_price_tax_included' => true,
-//                'disabling_toggle_weight' => true,
-//            ],
-            'disabling_toggle_reference' => true,
+            'disabling_toggle_reference' => false,
         ];
     }
 
@@ -59,6 +42,8 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         // Not used, because form is initially the same for all combinations
-        return [];
+        return [
+            'disabling_toggle_reference' => false,
+        ];
     }
 }

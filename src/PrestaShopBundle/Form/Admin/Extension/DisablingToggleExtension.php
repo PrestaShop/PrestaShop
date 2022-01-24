@@ -125,7 +125,8 @@ class DisablingToggleExtension extends AbstractTypeExtension
                 //@todo; need configurable (e.g. it should be possible to change if input is disabled when checkbox is checked or when unchecked
                 $newForm = $formCloner->cloneForm($form, array_merge($form->getConfig()->getOptions(), $newOptions));
                 $parent->add($newForm);
-            });
+            }
+            );
         }
     }
 
