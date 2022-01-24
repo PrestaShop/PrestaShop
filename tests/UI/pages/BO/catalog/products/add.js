@@ -87,6 +87,13 @@ class AddProduct extends BOBasePage {
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
+
+    // Selectors of step 6 : Options
+    this.customFieldsBlock = '#custom_fields';
+    this.addCustomizationFieldButton = `${this.customFieldsBlock} a[data-role='add-customization-field']`;
+    this.customFieldInput = row => `#form_step6_custom_fields_${row}_label_1`;
+    this.customFieldTypeSelect = row => `select#form_step6_custom_fields_${row}_type`;
+    this.customRequiredLabel = row => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field label`;
   }
 
   /*
@@ -401,6 +408,31 @@ class AddProduct extends BOBasePage {
     await this.goToFormStep(page, 5);
 
     return this.getAttributeContent(page, this.friendlyUrlInput, 'value');
+  }
+
+  /**
+   * Add customized value
+   * @param page {Page} Browser tab
+   * @param customizationData {{label: string, type: string, required: boolean}} Data to set on customized form
+   * @param row {number} Row of input
+   * @returns {Promise<string>}
+   */
+  async addCustomization(page, customizationData, row = 0) {
+    // Go to options tab : id = 6
+    await this.goToFormStep(page, 6);
+    await Promise.all([
+      page.click(this.addCustomizationFieldButton),
+      this.waitForVisibleSelector(page, this.customFieldInput(row)),
+    ]);
+
+    await this.setValue(page, this.customFieldInput(row), customizationData.label);
+    await this.selectByVisibleText(page, this.customFieldTypeSelect(row), customizationData.type);
+
+    if (customizationData.required) {
+      await this.waitForSelectorAndClick(page, this.customRequiredLabel(row + 1));
+    }
+
+    return this.saveProduct(page);
   }
 
   /**

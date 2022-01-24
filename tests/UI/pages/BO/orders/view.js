@@ -34,15 +34,18 @@ class Order extends BOBasePage {
     this.invalidPercentValueErrorMessage = 'Percent value cannot exceed 100.';
     this.percentValueNotPositiveErrorMessage = 'Percent value must be greater than 0.';
     this.discountCannotExceedTotalErrorMessage = 'Discount value cannot exceed the total price of this order.';
+
     // Selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
+    this.orderReference = '.title-content strong[data-role=\'order-reference\']';
 
     // Order actions selectors
-    this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
     this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
     this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=\'view-delivery-slip\']';
     this.partialRefundButton = 'button.partial-refund-display';
+    this.orderStatusesSelect = '#update_order_status_action_input';
+    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
 
     // Customer block
     this.customerInfoBlock = '#customerInfo';
@@ -224,6 +227,15 @@ class Order extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Get order reference
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderReference(page) {
+    return this.getTextContent(page, this.orderReference);
+  }
 
   // Methods for order actions
   /**
@@ -652,6 +664,9 @@ class Order extends BOBasePage {
    */
   async deleteProduct(page, row) {
     await this.dialogListener(page);
+    if (await this.elementVisible(page, this.growlMessageBlock, 1000)) {
+      await this.closeGrowlMessage(page);
+    }
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
     return this.getGrowlMessageContent(page);
   }
@@ -827,6 +842,18 @@ class Order extends BOBasePage {
   async getSearchedProductDetails(page) {
     return {
       stockLocation: await this.getTextContent(page, this.addProductRowStockLocation),
+      available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+      price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
+    };
+  }
+
+  /**
+   * Get searched product information
+   * @param page {Page} Browser tab
+   * @returns {Promise<{available: number, price: float}>}
+   */
+  async getSearchedProductInformation(page) {
+    return {
       available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
       price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
     };
@@ -1408,7 +1435,7 @@ class Order extends BOBasePage {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {{carrier: string, shippingCost: string, trackingNumber: string}} Data to set on shipping form
+   * @param shippingData {{carrier: string, trackingNumber: string}} Data to set on shipping form
    * @returns {Promise<string>}
    */
   async setShippingDetails(page, shippingData) {

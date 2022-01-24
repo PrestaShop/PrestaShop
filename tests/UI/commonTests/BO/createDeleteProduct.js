@@ -25,7 +25,7 @@ let page;
  * @param baseContext {string} String to identify the test
  */
 function createProductTest(productData, baseContext = 'commonTests-createProductTest') {
-  describe(`PRE-TEST: Create product '${productData.name}`, async () => {
+  describe(`PRE-TEST: Create product '${productData.name}'`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -67,7 +67,7 @@ function createProductTest(productData, baseContext = 'commonTests-createProduct
       await expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
 
-    it('should create Product', async function () {
+    it('should create product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
       const createProductMessage = await addProductPage.createEditBasicProduct(page, productData);

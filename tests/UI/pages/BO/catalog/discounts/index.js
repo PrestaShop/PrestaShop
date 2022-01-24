@@ -121,7 +121,11 @@ class CartRules extends BOBasePage {
    * @param row {number} Row on table
    * @returns {Promise<unknown>}
    */
-  async deleteCartRule(page, row = 1) {
+  async deleteCartRule(page, row = 1, cartRuleName = '') {
+    if (await this.elementVisible(page, this.filterColumn('name'))) {
+      await this.filterCartRules(page, 'input', 'name', cartRuleName);
+    }
+
     await page.click(this.tableColumnActionsToggleButton(row));
 
     await this.waitForSelectorAndClick(page, this.tableColumnActionsDeleteLink(row));
