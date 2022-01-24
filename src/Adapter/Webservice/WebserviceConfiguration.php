@@ -44,8 +44,8 @@ final class WebserviceConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'enable_webservice' => (bool)$this->configuration->get('PS_WEBSERVICE', false, $shopConstraint),
-            'enable_cgi' => (bool)$this->configuration->get('PS_WEBSERVICE_CGI_HOST', false, $shopConstraint),
+            'enable_webservice' => (bool) $this->configuration->get('PS_WEBSERVICE', false, $shopConstraint),
+            'enable_cgi' => (bool) $this->configuration->get('PS_WEBSERVICE_CGI_HOST', false, $shopConstraint),
         ];
     }
 
