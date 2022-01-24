@@ -441,7 +441,7 @@ class CustomerController extends AbstractAdminController
     public function searchAction(Request $request)
     {
         $query = $request->query->get('customer_search');
-        $phrases = explode(' ', $query);
+        $phrases = explode('OR', $query);
         $isRequestFromLegacyPage = !$request->query->has('sf2');
 
         try {
