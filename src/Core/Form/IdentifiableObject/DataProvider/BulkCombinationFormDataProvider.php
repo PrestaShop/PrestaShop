@@ -32,7 +32,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-//            @todo: just hardcoded value to check if disabled fields are submitted
+            //            @todo: just hardcoded value to check if disabled fields are submitted
             'disabling_toggle_reference' => true,
         ];
     }
