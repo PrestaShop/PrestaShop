@@ -61,7 +61,7 @@ class TestProductFormType extends CommonAbstractType
         $quantitiesForm->add('stock_movements', FormType::class);
 
         $optionsForm = $builder->get('options');
-        $optionsForm->add('suppliers', ChoiceType::class);
+        $optionsForm->add('product_suppliers', ChoiceType::class);
 
         $pricingForm = $builder->get('pricing');
         $pricingForm->add('retail_price', FormType::class);
