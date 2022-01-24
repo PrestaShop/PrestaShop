@@ -105,10 +105,17 @@ class DisablingToggleExtension extends AbstractTypeExtension
                 $shouldBeDisabled = !$parent->get($fieldName)->getData();
 
                 $formCloner = new FormCloner();
-                $newOptions = ['disabled' => $shouldBeDisabled];
+                $newOptions = [
+                    'disabled' => $shouldBeDisabled,
+                    'attr' => [
+                        'disabled' => $shouldBeDisabled,
+                        'class' => 'disabled',
+                    ],
+                ];
 
                 foreach ($form->all() as $childForm) {
-                    if ($childForm->getConfig()->hasOption('disabled') && $shouldBeDisabled === $childForm->getConfig()->getOption('disabled')) {
+                    $config = $childForm->getConfig();
+                    if ($shouldBeDisabled === $config->getOption('disabled', false)) {
                         continue;
                     }
                     $newChildForm = $formCloner->cloneForm($childForm, array_merge($childForm->getConfig()->getOptions(), $newOptions));
