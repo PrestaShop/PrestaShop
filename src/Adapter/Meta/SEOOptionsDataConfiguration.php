@@ -28,16 +28,26 @@ namespace PrestaShop\PrestaShop\Adapter\Meta;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SEOOptionsDataConfiguration extends AbstractMultistoreConfiguration
 {
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'product_attributes_in_title',
+    ];
+
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'product_attributes_in_title' => $this->configuration->getBoolean('PS_PRODUCT_ATTRIBUTES_IN_TITLE'),
+            'product_attributes_in_title' => (bool) $this->configuration->get('PS_PRODUCT_ATTRIBUTES_IN_TITLE', false, $shopConstraint),
         ];
     }
 
@@ -61,12 +71,14 @@ class SEOOptionsDataConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['product_attributes_in_title']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('product_attributes_in_title', 'bool');
+
+        return $resolver;
     }
 }

@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class UrlSchemaDataConfiguration is responsible for validating, updating and retrieving data used in
@@ -37,6 +38,19 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
  */
 final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
 {
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'product_rule',
+        'category_rule',
+        'supplier_rule',
+        'manufacturer_rule',
+        'cms_rule',
+        'cms_category_rule',
+        'module',
+    ];
+
     /**
      * @var array
      */
@@ -63,8 +77,10 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
     public function getConfiguration()
     {
         $configResult = [];
+        $shopConstraint = $this->getShopConstraint();
+
         foreach ($this->rules as $routeId => $defaultRule) {
-            $result = $this->configuration->get($this->getConfigurationKey($routeId)) ?: $defaultRule;
+            $result = $this->configuration->get($this->getConfigurationKey($routeId), null, $shopConstraint) ?: $defaultRule;
             $configResult[$routeId] = $result;
         }
 
@@ -88,16 +104,21 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $configurationExists = true;
-        foreach (array_keys($configuration) as $routeId) {
-            $configurationExists &= isset($this->rules[$routeId]);
-        }
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('product_rule', 'string')
+            ->setAllowedTypes('category_rule', 'string')
+            ->setAllowedTypes('supplier_rule', 'string')
+            ->setAllowedTypes('manufacturer_rule', 'string')
+            ->setAllowedTypes('cms_rule', 'string')
+            ->setAllowedTypes('cms_category_rule', 'string')
+            ->setAllowedTypes('module', 'string');
 
-        return $configurationExists;
+        return $resolver;
     }
 
     /**

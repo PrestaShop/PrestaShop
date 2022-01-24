@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -39,6 +40,17 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
 {
+    /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'friendly_url',
+        'accented_url',
+        'canonical_url_redirection',
+        'disable_apache_multiview',
+        'disable_apache_mod_security',
+    ];
+
     /**
      * @var HtaccessFileGenerator
      */
@@ -71,12 +83,14 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'friendly_url' => $this->configuration->getBoolean('PS_REWRITING_SETTINGS'),
-            'accented_url' => $this->configuration->getBoolean('PS_ALLOW_ACCENTED_CHARS_URL'),
-            'canonical_url_redirection' => $this->configuration->get('PS_CANONICAL_REDIRECT'),
-            'disable_apache_multiview' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS'),
-            'disable_apache_mod_security' => $this->configuration->getBoolean('PS_HTACCESS_DISABLE_MODSEC'),
+            'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
+            'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
+            'canonical_url_redirection' => $this->configuration->get('PS_CANONICAL_REDIRECT', null, $shopConstraint),
+            'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint),
+            'disable_apache_mod_security' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MODSEC', false, $shopConstraint),
         ];
     }
 
@@ -130,16 +144,18 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['friendly_url'],
-            $configuration['accented_url'],
-            $configuration['canonical_url_redirection'],
-            $configuration['disable_apache_multiview'],
-            $configuration['disable_apache_mod_security']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('friendly_url', 'bool')
+            ->setAllowedTypes('accented_url', 'bool')
+            ->setAllowedTypes('canonical_url_redirection', 'string')
+            ->setAllowedTypes('disable_apache_multiview', 'bool')
+            ->setAllowedTypes('disable_apache_mod_security', 'bool');
+
+        return $resolver;
     }
 }
