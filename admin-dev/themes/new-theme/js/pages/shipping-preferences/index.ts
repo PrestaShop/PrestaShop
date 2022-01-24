@@ -24,9 +24,9 @@
  */
 
  $(() => {
-    window.prestashop.component.initComponents(
-      [
-        'MultistoreConfigField',
-      ],
-    );
-  });
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+});

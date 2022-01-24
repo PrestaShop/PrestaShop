@@ -66,18 +66,6 @@ class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function validateConfiguration(array $configuration): bool
-    {
-        return isset(
-            $configuration['default_carrier'],
-            $configuration['carrier_default_order_by'],
-            $configuration['carrier_default_order_way']
-        );
-    }
-
-    /**
      * @return OptionsResolver
      */
     protected function buildResolver(): OptionsResolver
