@@ -40,10 +40,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
 
@@ -218,12 +219,8 @@ class CombinationFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['suppliers']['supplier_ids'] = [
-            0 => 1,
-            1 => 2,
-        ];
-        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['default_supplier_id'] = 1;
+        $expectedOutputData['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -232,7 +229,7 @@ class CombinationFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => self::COMBINATION_ID,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -243,29 +240,27 @@ class CombinationFormDataProviderTest extends TestCase
         ];
 
         $combinationData = [
-            'suppliers' => [
-                'default_supplier_id' => 1,
-                'product_suppliers' => [
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 1,
-                        'supplier_name' => 'test supplier 1',
-                        'product_supplier_id' => 1,
-                        'price' => '0',
-                        'reference' => 'test supp ref 1',
-                        'currency_id' => 1,
-                        'combination_id' => self::COMBINATION_ID,
-                    ],
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 2,
-                        'supplier_name' => 'test supplier 2',
-                        'product_supplier_id' => 2,
-                        'price' => '0',
-                        'reference' => 'test supp ref 2',
-                        'currency_id' => 3,
-                        'combination_id' => self::COMBINATION_ID,
-                    ],
+            'default_supplier_id' => 1,
+            'product_suppliers' => [
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 1,
+                    'supplier_name' => 'test supplier 1',
+                    'product_supplier_id' => 1,
+                    'price' => '0',
+                    'reference' => 'test supp ref 1',
+                    'currency_id' => 1,
+                    'combination_id' => self::COMBINATION_ID,
+                ],
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 2,
+                    'supplier_name' => 'test supplier 2',
+                    'product_supplier_id' => 2,
+                    'price' => '0',
+                    'reference' => 'test supp ref 2',
+                    'currency_id' => 3,
+                    'combination_id' => self::COMBINATION_ID,
                 ],
             ],
         ];
@@ -313,7 +308,7 @@ class CombinationFormDataProviderTest extends TestCase
             ->method('handle')
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetCombinationForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
+                $this->isInstanceOf(GetAssociatedSuppliers::class),
                 $this->isInstanceOf(GetCombinationSuppliers::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
@@ -328,7 +323,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|ProductSupplierOptions|ProductSupplierInfo[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierInfo[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -336,8 +331,8 @@ class CombinationFormDataProviderTest extends TestCase
         switch ($queryClass) {
             case GetCombinationForEditing::class:
                 return $this->createCombinationForEditing($combinationData);
-            case GetProductSupplierOptions::class:
-                return $this->createProductSupplierOptions($combinationData);
+            case GetAssociatedSuppliers::class:
+                return $this->createAssociatedSuppliers($combinationData);
             case GetCombinationSuppliers::class:
                 return $this->createCombinationSupplierInfos($combinationData);
         }
@@ -416,12 +411,12 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return ProductSupplierOptions
+     * @return AssociatedSuppliers
      */
-    private function createProductSupplierOptions(array $combinationData): ProductSupplierOptions
+    private function createAssociatedSuppliers(array $combinationData): AssociatedSuppliers
     {
-        return new ProductSupplierOptions(
-            $combinationData['suppliers']['default_supplier_id'] ?? 0,
+        return new AssociatedSuppliers(
+            $combinationData['default_supplier_id'] ?? 0,
             []
         );
     }
@@ -433,12 +428,12 @@ class CombinationFormDataProviderTest extends TestCase
      */
     private function createCombinationSupplierInfos(array $combinationData): array
     {
-        if (empty($combinationData['suppliers']['product_suppliers'])) {
+        if (empty($combinationData['product_suppliers'])) {
             return [];
         }
 
         $suppliersInfo = [];
-        foreach ($combinationData['suppliers']['product_suppliers'] as $supplierInfo) {
+        foreach ($combinationData['product_suppliers'] as $supplierInfo) {
             $suppliersInfo[] = new ProductSupplierInfo(
                 $supplierInfo['supplier_name'],
                 $supplierInfo['supplier_id'],
@@ -496,7 +491,8 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
-            'suppliers' => [],
+            'default_supplier_id' => NoSupplierId::NO_SUPPLIER_ID,
+            'product_suppliers' => [],
             'images' => [],
         ];
     }
