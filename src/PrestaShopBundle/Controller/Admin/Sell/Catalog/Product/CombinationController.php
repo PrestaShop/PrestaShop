@@ -114,7 +114,11 @@ class CombinationController extends FrameworkBundleAdminController
     public function bulkEditAction(Request $request, int $combinationId): JsonResponse
     {
         try {
-            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId);
+            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor(
+                $combinationId,
+                [],
+                ['method' => Request::METHOD_PATCH]
+            );
         } catch (CombinationNotFoundException $e) {
             return $this->returnErrorJsonResponse(
                 [$this->getErrorMessageForException($e, $this->getErrorMessages($e))],
