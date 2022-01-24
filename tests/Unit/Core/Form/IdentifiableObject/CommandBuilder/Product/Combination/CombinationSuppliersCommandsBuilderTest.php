@@ -28,8 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationSuppliersCommandsBuilder;
 
@@ -59,18 +57,9 @@ class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommand
 
         yield [
             [
-                'suppliers' => [],
+                'product_suppliers' => [],
             ],
             [],
-        ];
-
-        yield [
-            [
-                'suppliers' => [
-                    'product_suppliers' => [],
-                ],
-            ],
-            [new RemoveAllAssociatedCombinationSuppliersCommand($this->getCombinationId()->getValue())],
         ];
 
         $suppliersCommand = new UpdateCombinationSuppliersCommand(
@@ -92,34 +81,27 @@ class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommand
                 ],
             ]
         );
-        $defaultSupplierCommand = new SetCombinationDefaultSupplierCommand(
-            $this->getCombinationId()->getValue(),
-            5
-        );
 
         yield [
             [
-                'suppliers' => [
-                    'default_supplier_id' => 5,
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'product_supplier_id' => null,
-                        ],
-                        [
-                            'supplier_id' => 3,
-                            'currency_id' => 5,
-                            'reference' => null,
-                            'price_tax_excluded' => '50.65',
-                            'product_supplier_id' => 1,
-                        ],
+                'product_suppliers' => [
+                    [
+                        'supplier_id' => 5,
+                        'currency_id' => 2,
+                        'reference' => '',
+                        'price_tax_excluded' => '0.5',
+                        'product_supplier_id' => null,
+                    ],
+                    [
+                        'supplier_id' => 3,
+                        'currency_id' => 5,
+                        'reference' => null,
+                        'price_tax_excluded' => '50.65',
+                        'product_supplier_id' => 1,
                     ],
                 ],
             ],
-            [$suppliersCommand, $defaultSupplierCommand],
+            [$suppliersCommand],
         ];
 
         $suppliersCommand = new UpdateCombinationSuppliersCommand(
@@ -137,33 +119,13 @@ class CombinationSuppliersCommandsBuilderTest extends AbstractCombinationCommand
 
         yield [
             [
-                'suppliers' => [
-                    'default_supplier_id' => 0,
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'product_supplier_id' => null,
-                        ],
-                    ],
-                ],
-            ],
-            [$suppliersCommand],
-        ];
-
-        yield [
-            [
-                'suppliers' => [
-                    'product_suppliers' => [
-                        [
-                            'supplier_id' => 5,
-                            'currency_id' => 2,
-                            'reference' => '',
-                            'price_tax_excluded' => '0.5',
-                            'product_supplier_id' => null,
-                        ],
+                'product_suppliers' => [
+                    [
+                        'supplier_id' => 5,
+                        'currency_id' => 2,
+                        'reference' => '',
+                        'price_tax_excluded' => '0.5',
+                        'product_supplier_id' => null,
                     ],
                 ],
             ],
