@@ -1192,6 +1192,27 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+
+  .tokenfield {
+    .token {
+      padding: 0.5rem 0.8rem;
+      background-color: $gray-medium;
+      @include border-radius(0.25rem);
+
+      .close {
+        float: left;
+        margin: 0 0.4rem 0 0;
+        font-size: 1.5rem;
+        line-height: 1rem;
+        color: $white;
+        opacity: 1;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
 }
 
 #modal-create-product-attachment {
