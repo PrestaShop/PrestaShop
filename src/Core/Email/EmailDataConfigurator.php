@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['send_emails_to', 'mail_method', 'mail_type', 'log_emails', 'dkim_enable', 'smtp_config','dkim_config'];
+    private const CONFIGURATION_FIELDS = ['send_emails_to', 'mail_method', 'mail_type', 'log_emails', 'dkim_enable', 'smtp_config', 'dkim_config'];
 
     /**
      * {@inheritdoc}
