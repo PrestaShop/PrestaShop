@@ -32,7 +32,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'disabling_toggle_reference' => false,
+            'disabling_toggle_reference' => true,
         ];
     }
 
@@ -43,7 +43,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     {
         // Not used, because form is initially the same for all combinations
         return [
-            'disabling_toggle_reference' => false,
+            'disabling_toggle_reference' => true,
         ];
     }
 }
