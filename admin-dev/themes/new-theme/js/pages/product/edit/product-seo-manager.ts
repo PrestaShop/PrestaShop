@@ -80,6 +80,7 @@ export default class ProductSEOManager {
       tokenFieldSelector: ProductMap.seo.tagFields,
       options: {
         createTokensOnBlur: true,
+        delimiter: ',',
       },
     });
   }
