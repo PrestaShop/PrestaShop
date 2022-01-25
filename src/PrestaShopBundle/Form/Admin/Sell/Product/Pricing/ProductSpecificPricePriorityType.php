@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,13 +42,26 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
      */
     private $router;
 
+    /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param RouterInterface $router
+     * @param SpecificPriceRepository $specificPriceRepository
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        RouterInterface $router
+        RouterInterface $router,
+        SpecificPriceRepository $specificPriceRepository
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
+        $this->specificPriceRepository = $specificPriceRepository;
     }
 
     /**
@@ -58,7 +73,7 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
         $builder
             ->add('use_custom_priority', ChoiceType::class, [
                 'choices' => [
-                    $this->trans('Use default order', 'Admin.Catalog.Feature') => false,
+                    $this->buildDefaultPriorityChoiceLabel() => false,
                     $this->trans('Set a specific order for this product', 'Admin.Catalog.Feature') => true,
                 ],
                 'default_empty_data' => false,
@@ -81,5 +96,41 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * @return string
+     */
+    private function buildDefaultPriorityChoiceLabel(): string
+    {
+        $label = $this->trans('Use default order:', 'Admin.Catalog.Feature');
+
+        return sprintf(
+            '%s %s',
+            $label,
+            implode(' - ', $this->getTranslatedDefaultPriorities())
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getTranslatedDefaultPriorities(): array
+    {
+        $priorityList = $this->specificPriceRepository->getDefaultPriorities();
+
+        $priorityTranslations = [
+            PriorityList::PRIORITY_SHOP => $this->trans('Store', 'Admin.Global'),
+            PriorityList::PRIORITY_CURRENCY => $this->trans('Currency', 'Admin.Global'),
+            PriorityList::PRIORITY_COUNTRY => $this->trans('Country', 'Admin.Global'),
+            PriorityList::PRIORITY_GROUP => $this->trans('Group', 'Admin.Global'),
+        ];
+
+        $translatedPriorities = [];
+        foreach ($priorityList->getPriorities() as $priority) {
+            $translatedPriorities[] = $priorityTranslations[$priority];
+        }
+
+        return $translatedPriorities;
     }
 }
