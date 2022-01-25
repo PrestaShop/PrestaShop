@@ -46,6 +46,14 @@ class AddOrder extends BOBasePage {
     // Checkout history selectors
     this.checkoutHistoryBlock = '#customer-checkout-history';
 
+    // Carts table selectors
+    this.customerCartsTable = '#customer-carts-table';
+    this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
+    this.customerCartsTableRow = `${this.customerCartsTableBody} tr`;
+    this.customerCartsTableColumn = `${this.customerCartsTableRow} td`;
+    this.emptyCartBlock = `${this.customerCartsTableColumn} div.grid-table-empty`;
+    this.cartsTableLoadingListRow = '#js-loading-list-row';
+
     // Cart selectors
     this.cartBlock = '#cart-block';
     this.productSearchInput = '#product-search';
