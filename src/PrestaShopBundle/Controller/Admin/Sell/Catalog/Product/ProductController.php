@@ -494,7 +494,7 @@ class ProductController extends FrameworkBundleAdminController
         //@todo this error message should be improved to indicate which shop can/should be used for this product and/or how to associate it to the current context
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
-                'This product is not associated to the store selected in the current context, please select another one.',
+                'This product is not associated with the store selected in the multistore header, please select another one.',
                 'Admin.Notifications.Info'
             ),
             'standardPageUrl' => $this->generateUrl(
@@ -513,7 +513,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
-                'This page is only compatible with the single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
+                'This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
                 'Admin.Notifications.Info',
                 [
                     '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
