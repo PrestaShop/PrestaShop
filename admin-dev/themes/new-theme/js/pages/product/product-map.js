@@ -25,6 +25,8 @@
 
 const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
+// It does not include "#" so it can be selected by getElementById
+const bulkCombinationModalId = 'bulk-combination-modal';
 
 export default {
   productForm: 'form[name=product]',
@@ -124,9 +126,10 @@ export default {
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
-    bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkCombinationFormTemplate: '#bulk-combination-form-template',
-    bulkCombinationForm: 'form[name="bulk_combination"]',
+    bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkCombinationModalId,
+    bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
   },
   virtualProduct: {
     container: '.virtual-product-file-container',

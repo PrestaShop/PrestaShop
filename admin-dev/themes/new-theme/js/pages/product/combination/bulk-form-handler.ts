@@ -43,7 +43,7 @@ export default class BulkFormHandler {
     const content = template.innerHTML;
     const modal = new ConfirmModal(
       {
-        id: 'bulk-combination-modal',
+        id: CombinationMap.bulkCombinationModalId,
         confirmMessage: content,
       },
       () => this.submitForm(),
