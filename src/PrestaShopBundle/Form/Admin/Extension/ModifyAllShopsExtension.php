@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Extension;
 
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -50,6 +51,11 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
     public const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
 
     /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
      * @var MultistoreContextCheckerInterface
      */
     private $multistoreContextChecker;
@@ -65,9 +71,11 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
     private $checkboxLabel;
 
     public function __construct(
+        FeatureInterface $multistoreFeature,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         TranslatorInterface $translator
     ) {
+        $this->multistoreFeature = $multistoreFeature;
         $this->multistoreContextChecker = $multistoreContextChecker;
         $this->translator = $translator;
     }
@@ -88,7 +96,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if (!$this->multistoreContextChecker->isSingleShopContext()) {
+        if (!$this->multistoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
             return;
         }
 
@@ -125,7 +133,7 @@ class ModifyAllShopsExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        if (!$this->multistoreContextChecker->isSingleShopContext()) {
+        if (!$this->multistoreFeature->isUsed() || !$this->multistoreContextChecker->isSingleShopContext()) {
             return;
         }
 

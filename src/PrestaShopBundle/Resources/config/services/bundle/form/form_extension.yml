@@ -97,6 +97,7 @@ services:
   form.extension.modify_all_shops_extension:
     class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
     arguments:
+      - '@prestashop.adapter.feature.multistore'
       - '@prestashop.adapter.shop.context'
       - '@translator'
     tags:
