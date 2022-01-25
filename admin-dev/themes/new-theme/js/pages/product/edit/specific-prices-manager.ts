@@ -22,7 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import VisibilityToggler from '@components/form/visibility-toggler';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
@@ -31,6 +30,7 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
+import DisablingToggler from '@components/form/disabling-toggler';
 
 Vue.use(VueI18n);
 const SpecificPriceMap = ProductMap.specificPrice;
@@ -60,7 +60,7 @@ export default class SpecificPricesManager {
 
   private initComponents() {
     this.initSpecificPriceModal(this.productId, SpecificPriceMap.formModal, this.eventEmitter);
-    new VisibilityToggler(
+    new DisablingToggler(
       PriorityMap.priorityTypeCheckboxesSelector,
       '0',
       PriorityMap.priorityListWrapper,
