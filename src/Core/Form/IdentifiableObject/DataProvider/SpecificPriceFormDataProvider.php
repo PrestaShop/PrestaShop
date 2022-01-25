@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 class SpecificPriceFormDataProvider implements FormDataProviderInterface
@@ -104,6 +105,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     {
         return [
             'reduction' => [
+                'type' => Reduction::TYPE_AMOUNT,
                 'value' => 0,
             ],
             'leave_initial_price' => false,
