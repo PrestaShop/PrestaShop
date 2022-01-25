@@ -1340,8 +1340,10 @@ $product-page-padding-bottom: 80px !default;
   }
 
   .tokenfield {
+    padding: 0.15rem;
+
     .token {
-      padding: 0.5rem 0.8rem;
+      padding: 0.4rem 0.7rem;
       background-color: $gray-medium;
       @include border-radius(0.25rem);
 
