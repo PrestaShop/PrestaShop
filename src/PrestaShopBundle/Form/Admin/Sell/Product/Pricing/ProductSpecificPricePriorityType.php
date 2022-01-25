@@ -94,6 +94,9 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
                     // hide by default. Javascript handles visibility based on priority type choice
                     'class' => 'specific-price-priority-list d-none',
                 ],
+                'attr' => [
+                    'class' => 'specific-price-priorities',
+                ],
             ])
         ;
     }
@@ -103,12 +106,12 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
      */
     private function buildDefaultPriorityChoiceLabel(): string
     {
-        $label = $this->trans('Use default order:', 'Admin.Catalog.Feature');
+        $defaultPriorities = implode(' - ', $this->getTranslatedDefaultPriorities());
 
-        return sprintf(
-            '%s %s',
-            $label,
-            implode(' - ', $this->getTranslatedDefaultPriorities())
+        return $this->trans(
+            'Use default order: [1]{priority_list}[/1]',
+            'Admin.Catalog.Feature',
+            ['[1]' => '<strong>', '[/1]' => '</strong>', '{priority_list}' => $defaultPriorities]
         );
     }
 
