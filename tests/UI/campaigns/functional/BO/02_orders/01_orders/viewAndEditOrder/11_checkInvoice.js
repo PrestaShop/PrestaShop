@@ -123,7 +123,7 @@ let fileName = '';
 let orderReference = '';
 
 /*
-Pre-Conditions:
+Pre-conditions:
 - Create virtual product
 - Create customized product
 - Create product with specific price
@@ -139,7 +139,7 @@ Scenario:
 - Add discount then check all invoice
 - Add note then check invoice
 - Add payment method then check invoice
-Post-condition
+Post-conditions:
 - Delete virtual product
 - Delete customized product
 - Delete product with specific price
@@ -350,7 +350,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice1', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
@@ -583,7 +583,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice2', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
@@ -777,7 +777,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice3', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
@@ -1015,7 +1015,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     describe('Check the invoice', async () => {
       // Check: Header, Delivery address, Billing address, Invoice number, Invoice date, Order reference and date
       describe('Check Header', async () => {
-        it('should check the header of the invoice', async function () {
+        it.skip('should check the header of the invoice', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'checkHeaderInvoice4', baseContext);
 
           const imageNumber = await files.getImageNumberInPDF(filePath);
