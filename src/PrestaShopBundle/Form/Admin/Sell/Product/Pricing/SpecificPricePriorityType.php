@@ -60,6 +60,9 @@ class SpecificPricePriorityType extends CollectionType
                 'placeholder' => false,
                 'label' => false,
             ],
+            'attr' => [
+                'class' => 'specific-price-priorities',
+            ],
         ]);
     }
 }
