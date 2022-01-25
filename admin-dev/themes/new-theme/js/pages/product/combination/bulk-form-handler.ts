@@ -49,7 +49,7 @@ export default class BulkFormHandler {
       () => this.submitForm(),
     );
 
-    //@todo: probably this should be wrapped into some public method reachable from outside
+    //@todo: probably this should be wrapped into some public method reachable from outsid
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     btn.addEventListener('click', () => modal.show());
   }

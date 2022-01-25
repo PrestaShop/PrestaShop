@@ -1858,3 +1858,7 @@ services:
       - '@prestashop.core.form.choice_provider.configurable_country_by_id'
     tags:
       - { name: form.type }
+
+  form.event_listener.disabling_toggle_listener:
+    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\DisablingToggleListener'
+    public: true
