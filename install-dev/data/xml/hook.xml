@@ -281,6 +281,11 @@
       <title>Customer account creation form</title>
       <description>This hook displays some information on the form to create a customer account</description>
     </hook>
+    <hook id="displayModuleConfigureExtraButtons">
+      <name>displayModuleConfigureExtraButtons</name>
+      <title>Module configuration - After toolbar butons</title>
+      <description>This hook allows to add toolbar's additional content on module configuration page</description>
+    </hook>
     <hook id="displayAdminStatsModules">
       <name>displayAdminStatsModules</name>
       <title>Stats - Modules</title>
