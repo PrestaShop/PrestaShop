@@ -156,9 +156,16 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      */
     private function getMailLayoutTransformations(LayoutInterface $mailLayout, $templateType)
     {
+        $themeName = '';
+        if (preg_match('#mails/themes/([^/]+)/#', $mailLayout->getHtmlPath(), $matches)) {
+            $themeName = $matches[1];
+        }
         $templateTransformations = new TransformationCollection();
         /** @var TransformationInterface $transformation */
         foreach ($this->transformations as $transformation) {
+            if (get_class($transformation) == 'PrestaShop\PrestaShop\Core\MailTemplate\Transformation\CSSInlineTransformation' && $themeName == 'modern') {
+                continue;
+            }
             if ($templateType !== $transformation->getType()) {
                 continue;
             }
