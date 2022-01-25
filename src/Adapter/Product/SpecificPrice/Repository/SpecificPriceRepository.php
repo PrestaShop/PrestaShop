@@ -272,6 +272,30 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @return PriorityList
+     *
+     * @throws CoreException
+     */
+    public function getDefaultPriorities(): PriorityList
+    {
+        try {
+            $priorities = SpecificPrice::getPriority(0);
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                'Something went wrong when trying to get default priorities of specific prices',
+                0,
+                $e->getPrevious()
+            );
+        }
+
+        if ($priorities[0] === 'id_customer') {
+            unset($priorities[0]);
+        }
+
+        return new PriorityList(array_values($priorities));
+    }
+
+    /**
      * @param ProductId $productId
      * @param LanguageId $langId
      * @param array<string, mixed> $filters

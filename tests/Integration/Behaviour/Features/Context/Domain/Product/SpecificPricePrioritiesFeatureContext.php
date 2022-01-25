@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Install\DatabaseDump;
 use SpecificPrice;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -117,7 +118,9 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
      */
     public function assertDefaultPriorities(PriorityList $priorityList): void
     {
+        // checks legacy method and the newer one introduced in repository
         $this->assertPriorities($priorityList, $this->getUsablePriorities(null));
+        $this->assertPriorities($priorityList, $this->getDefaultPriorities());
     }
 
     /**
@@ -159,6 +162,12 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
     {
         $this->assertPriorities(
             $this->getUsablePriorities(null),
+            $this->getUsablePriorities($productReference)
+        );
+
+        // Makes sure that repository method is returning the same as legacy method
+        $this->assertPriorities(
+            $this->getDefaultPriorities(),
             $this->getUsablePriorities($productReference)
         );
     }
@@ -225,5 +234,18 @@ class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContex
         }
 
         return new PriorityList(array_values($actualPriorities));
+    }
+
+    /**
+     * @return PriorityList
+     *
+     * @throws CoreException
+     */
+    private function getDefaultPriorities(): PriorityList
+    {
+        SpecificPrice::flushCache();
+        $specificPriceRepository = $this->getContainer()->get('prestashop.adapter.product.specific_price.repository.specific_price_repository');
+
+        return $specificPriceRepository->getDefaultPriorities();
     }
 }
