@@ -1056,6 +1056,14 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+
+  .specific-price-priorities {
+    display: flex;
+
+    > div {
+      margin: 0.5rem;
+    }
+  }
 }
 
 .product-page-v2 {
