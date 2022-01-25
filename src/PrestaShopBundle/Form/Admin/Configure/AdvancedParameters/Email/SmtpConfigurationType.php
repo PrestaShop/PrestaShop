@@ -63,6 +63,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'label' => $this->trans('SMTP username', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_USER',
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
+                'attr' => ['autocomplete' => 'new-password'],
             ])
             ->add('password', PasswordType::class, [
                 'required' => false,
@@ -70,6 +71,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'label' => $this->trans('SMTP password', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_PASSWD',
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
+                'attr'=> ['autocomplete' => 'new-password'],
             ])
             ->add('encryption', ChoiceType::class, [
                 'choices' => [
