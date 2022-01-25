@@ -217,6 +217,11 @@ class GuestCore extends ObjectModel
             'id_guest' => (int) $idGuest,
         ], 'id_guest = ' . (int) $this->id);
 
+        // Since the guests are merged, the guest id in the cart table must be changed too
+        Db::getInstance()->update('cart', [
+            'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
+
         // The existing guest is removed from the database
         $existingGuest = new Guest((int) $idGuest);
         $existingGuest->delete();
