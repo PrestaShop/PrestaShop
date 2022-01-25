@@ -114,7 +114,7 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
     private function validateCartRule(CartRule $cartRule, Cart $cart): ?string
     {
         Context::getContext()->cart = $cart;
-        $previousCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
+        $previousCartRules = $cart->getCartRules();
         $isValid = $cartRule->checkValidity(Context::getContext(), false, true);
 
         foreach ($previousCartRules as $previousCartRule) {
