@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Gift Settings configuration available in ShopParameters > Order Preferences.
@@ -34,15 +35,27 @@ use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'enable_gift_wrapping',
+        'gift_wrapping_price',
+        'gift_wrapping_tax_rules_group',
+        'offer_recyclable_pack',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_gift_wrapping' => $this->configuration->getBoolean('PS_GIFT_WRAPPING'),
-            'gift_wrapping_price' => $this->configuration->get('PS_GIFT_WRAPPING_PRICE'),
-            'gift_wrapping_tax_rules_group' => $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'),
-            'offer_recyclable_pack' => $this->configuration->getBoolean('PS_RECYCLABLE_PACK'),
+            'enable_gift_wrapping' => (bool) $this->configuration->get('PS_GIFT_WRAPPING', false, $shopConstraint),
+            'gift_wrapping_price' => $this->configuration->get('PS_GIFT_WRAPPING_PRICE', null, $shopConstraint),
+            'gift_wrapping_tax_rules_group' => $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP', null, $shopConstraint),
+            'offer_recyclable_pack' => (bool) $this->configuration->get('PS_RECYCLABLE_PACK', false, $shopConstraint),
         ];
     }
 
@@ -64,15 +77,17 @@ class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['enable_gift_wrapping'],
-            $configuration['gift_wrapping_price'],
-            $configuration['gift_wrapping_tax_rules_group'],
-            $configuration['offer_recyclable_pack']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('enable_gift_wrapping', 'bool')
+            ->setAllowedTypes('gift_wrapping_price', 'float')
+            ->setAllowedTypes('gift_wrapping_tax_rules_group', 'int')
+            ->setAllowedTypes('offer_recyclable_pack', 'bool');
+
+        return $resolver;
     }
 }
