@@ -173,11 +173,16 @@ class SEOType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
+                'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product. Separate each tag with a comma.', 'Admin.Catalog.Feature'),
                 'help' => sprintf(
                     '%s %s',
-                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key.', 'Admin.Shopparameters.Help'),
+                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key or comma.', 'Admin.Shopparameters.Help'),
                     $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
                 ),
+                'external_link' => [
+                    'href' => $this->legacyContext->getAdminLink('AdminTags', true),
+                    'text' => $this->trans('[1]Manage all tags[/1]', 'Admin.Catalog.Feature'),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
@@ -186,17 +191,6 @@ class SEOType extends TranslatorAwareType
                         'class' => 'js-taggable-field',
                     ],
                     'required' => false,
-                ],
-                'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
-                'alert_message' => [
-                    $this->trans('Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', 'Admin.Catalog.Help'),
-                    $this->trans('You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Help', [
-                        '[1]' => sprintf(
-                            '<a target="_blank" href="%s">',
-                            $this->legacyContext->getAdminLink('AdminSearchConf')
-                        ),
-                        '[/1]' => '</a>',
-                    ]),
                 ],
             ])
         ;
