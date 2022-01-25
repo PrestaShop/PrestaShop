@@ -42,7 +42,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then there is no delivery options available for my cart
      */
-    public function noDeliveryOptions(): void
+    public function noDeliveryOptions()
     {
         if ($this->getCurrentCart() === null) {
             throw new \RuntimeException('No current cart, cannot check available delivery options');
@@ -60,7 +60,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @todo: improve this to assert the content of delivery options
      */
-    public function deliveryOptionsAreAvailable(): void
+    public function deliveryOptionsAreAvailable()
     {
         if ($this->getCurrentCart() === null) {
             throw new \RuntimeException('No current cart, cannot check available delivery options');
@@ -76,7 +76,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given /^I have an empty default cart$/
      */
-    public function iHaveAnEmptyDefaultCart(): void
+    public function iHaveAnEmptyDefaultCart()
     {
         $cart = new CartOld();
         $cart->id_lang = (int) Context::getContext()->language->id;
@@ -91,7 +91,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @AfterScenario
      */
-    public function emptyCartProducts(): void
+    public function emptyCartProducts()
     {
         if ($this->getCurrentCart() !== null) {
             // remove products from cart
@@ -107,7 +107,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I should have (\d+) different products in my cart$/
      */
-    public function productCountInMyCartShouldBe($productCount): void
+    public function productCountInMyCartShouldBe($productCount)
     {
         $currentCartProducts = $this->getCurrentCart()->getProducts(true);
         if ($productCount != count($currentCartProducts)) {
@@ -118,7 +118,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^I should have (\d+) products in my cart$/
      */
-    public function totalProductCountInMyCartShouldBe($productCount): void
+    public function totalProductCountInMyCartShouldBe($productCount)
     {
         $currentCartProducts = Cart::getNbProducts($this->getCurrentCart()->id);
         if ($productCount != $currentCartProducts) {
@@ -129,7 +129,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxShouldBe($precisely, $expectedTotal): void
+    public function totalCartWithTaxShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v2', true, !empty($precisely));
     }
@@ -137,7 +137,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax included$/
      */
-    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal): void
+    public function totalCartWithTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v1', true, !empty($precisely));
     }
@@ -145,7 +145,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total should be (precisely )?(\d+\.\d+) tax excluded$/
      */
-    public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal): void
+    public function totalCartWithoutTaxShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v2', false, !empty($precisely));
     }
@@ -153,12 +153,12 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^my cart total using previous calculation method should be (precisely )?(\d+\.\d+) tax excluded$/
      */
-    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal): void
+    public function totalCartWithoutTaxOnPreviousCaclculationMethodShouldBe($precisely, $expectedTotal)
     {
         $this->expectsTotal($expectedTotal, 'v1', false, !empty($precisely));
     }
 
-    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false): void
+    protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
     {
         $cart = $this->getCurrentCart();
         $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
@@ -180,7 +180,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I select gift wrapping$/
      */
-    public function iSelectGiftWrapping(): void
+    public function iSelectGiftWrapping()
     {
         $this->getCurrentCart()->gift = true;
     }
@@ -188,7 +188,7 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^cart shipping fees should be (\d+\.\d+)( tax excluded| tax included)?$/
      */
-    public function calculateCartShippingFees($expectedShippingFees, $taxes = null): void
+    public function calculateCartShippingFees($expectedShippingFees, $taxes = null)
     {
         $withTaxes = $taxes == ' tax excluded' ? false : true;
         $expectedTotal = round($expectedShippingFees, 1);
