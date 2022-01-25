@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
-use PrestaShopBundle\Form\FormBuilderModifier;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

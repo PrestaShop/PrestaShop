@@ -44,7 +44,6 @@ trait TranslatorAwareTrait
      */
     protected $locales;
 
-
     /**
      * Get the translated chain from key.
      *
