@@ -1,4 +1,4 @@
-require('module-aliases/register');
+require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
