@@ -97,7 +97,6 @@ services:
   form.extension.disabling_togle_extension:
     class: 'PrestaShopBundle\Form\Admin\Extension\DisablingToggleExtension'
     arguments:
-      - '@form.form_builder_modifier'
-      - '@translator'
+      - '@form.event_listener.disabling_toggle_listener'
     tags:
       - { name: form.type_extension }

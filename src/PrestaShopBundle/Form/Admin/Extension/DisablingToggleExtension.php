@@ -27,45 +27,28 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Extension;
 
-use PrestaShopBundle\Form\FormBuilderModifier;
-use PrestaShopBundle\Form\FormCloner;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisablingToggleExtension extends AbstractTypeExtension
 {
-    public const FIELD_PREFIX = 'disabling_toggle_';
-
     /**
-     * @var FormBuilderModifier
+     * @var EventSubscriberInterface
      */
-    private $formBuilderModifier;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $checkboxLabel;
+    private $disablingToggleListener;
 
     public function __construct(
-        FormBuilderModifier $formBuilderModifier,
-        TranslatorInterface $translator
+        EventSubscriberInterface $disablingToggleListener
     ) {
-        $this->formBuilderModifier = $formBuilderModifier;
-        $this->translator = $translator;
+        $this->disablingToggleListener = $disablingToggleListener;
     }
+
+    public const FIELD_PREFIX = 'disabling_toggle_';
 
     /**
      * {@inheritdoc}
@@ -83,50 +66,8 @@ class DisablingToggleExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //@todo: needs cleaning.
-        $isOverridden = $builder->getOption('disabling_toggle');
-        if ($isOverridden) {
-            $label = $this->getCheckboxLabel();
-            $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($label) {
-                $form = $event->getForm();
-                $parent = $form->getParent();
-                $fieldName = self::FIELD_PREFIX . $form->getName();
-                if ($parent->has($fieldName)) {
-                    return;
-                }
-                $parent->add($fieldName, CheckboxType::class, [
-                    'label' => $label,
-                    'attr' => [
-                        'container_class' => 'disabling-toggle',
-                        'data-value-type' => 'boolean',
-                    ],
-                ]);
-
-                $shouldBeDisabled = !$parent->get($fieldName)->getData();
-
-                $formCloner = new FormCloner();
-                $newOptions = [
-                    'disabled' => $shouldBeDisabled,
-                    'attr' => [
-                        'disabled' => $shouldBeDisabled,
-                        'class' => $shouldBeDisabled ? 'disabled' : '',
-                    ],
-                ];
-
-                foreach ($form->all() as $childForm) {
-                    $config = $childForm->getConfig();
-                    if ($shouldBeDisabled === $config->getOption('disabled', false)) {
-                        continue;
-                    }
-                    $newChildForm = $formCloner->cloneForm($childForm, array_merge($childForm->getConfig()->getOptions(), $newOptions));
-                    $form->add($newChildForm);
-                }
-
-                //@todo; need configurable (e.g. it should be possible to change if input is disabled when checkbox is checked or when unchecked
-                $newForm = $formCloner->cloneForm($form, array_merge($form->getConfig()->getOptions(), $newOptions));
-                $parent->add($newForm);
-            }
-            );
+        if ($builder->getOption('disabling_toggle')) {
+            $builder->addEventSubscriber($this->disablingToggleListener);
         }
     }
 
@@ -150,18 +91,5 @@ class DisablingToggleExtension extends AbstractTypeExtension
         $resolver->setDefaults([
             'disabling_toggle' => false,
         ]);
-    }
-
-    /**
-     * @return string
-     */
-    private function getCheckboxLabel(): string
-    {
-        if (!$this->checkboxLabel) {
-            //@todo: need wording check. This toggle should appear next to field, which would be enabled/disabled based on this switch value.
-            $this->checkboxLabel = $this->translator->trans('Use field', [], 'Admin.Global');
-        }
-
-        return $this->checkboxLabel;
     }
 }
