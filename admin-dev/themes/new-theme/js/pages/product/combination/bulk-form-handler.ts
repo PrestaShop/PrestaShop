@@ -56,7 +56,18 @@ export default class BulkFormHandler {
 
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
-    //@todo: hardcoded combinationId
-    this.combinationsService.bulkUpdate(1, $(form).serializeArray());
+    this.bulkUpdate(form);
+  }
+
+  private bulkUpdate(form: HTMLFormElement): void {
+    const combinationsContainer = document.querySelector(CombinationMap.combinationsContainer) as HTMLDivElement;
+    const checkedBoxes = combinationsContainer.querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+
+    checkedBoxes.forEach((checkbox: Element) => {
+      const idInput = checkbox.closest(CombinationMap.tableRow.tableRowSelector)
+        ?.querySelector(CombinationMap.combinationIdInputsSelector) as HTMLInputElement;
+
+      this.combinationsService.bulkUpdate(Number(idInput.value), $(form).serializeArray());
+    });
   }
 }

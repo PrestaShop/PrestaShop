@@ -102,6 +102,8 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      tableRowSelector: 'tr.combination',
+      isSelectedCombination: '.combination-is-selected',
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
       combinationCheckbox: (rowIndex) => `${combinationListId}_combinations_${rowIndex}_is_selected`,
