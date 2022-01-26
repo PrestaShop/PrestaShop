@@ -114,6 +114,10 @@ export default class FormObjectMapper {
     eventEmitter: typeof EventEmitter,
     config: Record<string, any>,
   ) {
+    if (!$form.length) {
+      console.error('Invalid empty form as input');
+    }
+
     this.$form = $form;
     this.fullModelMapping = modelMapping;
     this.eventEmitter = eventEmitter;
