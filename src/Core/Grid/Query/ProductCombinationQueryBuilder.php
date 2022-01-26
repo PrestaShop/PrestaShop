@@ -68,7 +68,13 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             );
         }
 
-        return $this->getCombinationsQueryBuilder($searchCriteria)->addSelect('pa.*');
+        $qb = $this->getCombinationsQueryBuilder($searchCriteria)->addSelect('pa.*');
+
+        $this->searchCriteriaApplicator
+            ->applyPagination($searchCriteria, $qb)
+            ->applySorting($searchCriteria, $qb);
+
+        return $qb;
     }
 
     /**
@@ -105,10 +111,6 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ->where('pa.id_product = :productId')
             ->setParameter('productId', $productId)
         ;
-
-        $this->searchCriteriaApplicator
-            ->applyPagination($productCombinationFilters, $qb)
-            ->applySorting($productCombinationFilters, $qb);
 
         // filter by attributes
         if (isset($filters['attributes'])) {
