@@ -156,37 +156,6 @@ class ViewOrderBasePage extends BOBasePage {
   }
 
   /**
-   * Click on partial refund button
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async clickOnPartialRefund(page) {
-    await page.click(this.partialRefundButton);
-    await this.waitForVisibleSelector(page, this.refundProductQuantity(1));
-  }
-
-  /**
-   * Add partial refund product
-   * @param page {Page} Browser tab
-   * @param productRow {number} Product row on table
-   * @param quantity {number} Quantity value to set
-   * @param amount {number} Amount value to set
-   * @param shipping {number} Shipping cost to set
-   * @returns {Promise<string>}
-   */
-  async addPartialRefundProduct(page, productRow, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(page, this.refundProductQuantity(productRow), quantity.toString());
-    if (amount !== 0) {
-      await this.setValue(page, this.refundProductAmount(productRow), amount.toString());
-    }
-    if (shipping !== 0) {
-      await this.setValue(page, this.refundShippingCost(productRow), shipping.toString());
-    }
-    await this.clickAndWaitForNavigation(page, this.partialRefundSubmitButton);
-    return this.getAlertSuccessBlockParagraphContent(page);
-  }
-
-  /**
    * Is return products button visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
@@ -196,4 +165,4 @@ class ViewOrderBasePage extends BOBasePage {
   }
 }
 
-module.exports = new ViewOrderBasePage();
+module.exports = ViewOrderBasePage;

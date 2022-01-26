@@ -16,6 +16,7 @@ class OrdersBlock extends ViewOrderBasePage {
 
     // Products block
     this.productsCountSpan = '#orderProductsPanelCount';
+    this.orderProductsLoading = '#orderProductsLoading';
 
     // Products table
     this.orderProductsTable = '#orderProductsTable';
@@ -28,11 +29,7 @@ class OrdersBlock extends ViewOrderBasePage {
     this.orderProductsTableProductAvailable = row => `${this.orderProductsRowTable(row)}
      td.cellProductAvailableQuantity`;
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
-
-
-
     this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
-    this.orderProductsLoading = '#orderProductsLoading';
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;

@@ -14,7 +14,7 @@ const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/productsBlock');
 const taxesPage = require('@pages/BO/international/taxes');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
