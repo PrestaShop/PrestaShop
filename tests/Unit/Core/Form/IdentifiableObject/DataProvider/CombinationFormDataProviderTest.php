@@ -43,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
@@ -323,7 +322,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierInfo[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -424,7 +423,7 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return ProductSupplierInfo[]
+     * @return ProductSupplierForEditing[]
      */
     private function createCombinationSupplierInfos(array $combinationData): array
     {
@@ -434,19 +433,15 @@ class CombinationFormDataProviderTest extends TestCase
 
         $suppliersInfo = [];
         foreach ($combinationData['product_suppliers'] as $supplierInfo) {
-            $suppliersInfo[] = new ProductSupplierInfo(
-                $supplierInfo['supplier_name'],
+            $suppliersInfo[] = new ProductSupplierForEditing(
+                $supplierInfo['product_supplier_id'],
+                $supplierInfo['product_id'],
                 $supplierInfo['supplier_id'],
-                new ProductSupplierForEditing(
-                    $supplierInfo['product_supplier_id'],
-                    $supplierInfo['product_id'],
-                    $supplierInfo['supplier_id'],
-                    $supplierInfo['supplier_name'],
-                    $supplierInfo['reference'],
-                    $supplierInfo['price'],
-                    $supplierInfo['currency_id'],
-                    $supplierInfo['combination_id']
-                )
+                $supplierInfo['supplier_name'],
+                $supplierInfo['reference'],
+                $supplierInfo['price'],
+                $supplierInfo['currency_id'],
+                $supplierInfo['combination_id']
             );
         }
 
