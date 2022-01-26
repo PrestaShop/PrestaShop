@@ -31,6 +31,8 @@ import ChangeEvent = JQuery.ChangeEvent;
 export default class ProductSuppliersCollection {
   private defaultSupplierId: string;
 
+  private wholesalePrice: number;
+
   private defaultProductSupplierCallback?: (productSupplier: ProductSupplier) => void;
 
   private map: any;
@@ -56,9 +58,11 @@ export default class ProductSuppliersCollection {
   constructor(
     productSuppliersFormId: string,
     defaultSupplierId: string,
+    wholesalePrice: number,
     defaultProductSupplierCallback?: (productSupplier: ProductSupplier) => void,
   ) {
     this.defaultSupplierId = defaultSupplierId;
+    this.wholesalePrice = wholesalePrice;
     this.defaultProductSupplierCallback = defaultProductSupplierCallback;
     this.map = ProductSuppliersMap(productSuppliersFormId);
     this.$productSuppliersCollection = $(this.map.productSuppliersCollection);
@@ -110,7 +114,7 @@ export default class ProductSuppliersCollection {
 
     // Update internal data (mostly the isDefault value)
     this.memorizeCurrentSuppliers();
-    this.triggerDefaultProductSupplier();
+    this.updateDefaultProductSupplier();
   }
 
   updateDefaultProductSupplierPrice(newPrice: number): void {
@@ -142,25 +146,26 @@ export default class ProductSuppliersCollection {
       const supplierId = <string> $(this.map.productSupplierRow.supplierIdInput(supplierIndex)).val();
 
       if (supplierId === this.defaultSupplierId) {
-        this.triggerDefaultProductSupplier();
+        this.updateDefaultProductSupplier();
       }
     });
   }
 
-  private triggerDefaultProductSupplier(): void {
+  private updateDefaultProductSupplier(): void {
     if (!this.defaultProductSupplierCallback) {
       return;
     }
     const defaultProductSupplier: ProductSupplier | undefined = this.getDefaultProductSupplier();
 
     if (defaultProductSupplier) {
+      this.wholesalePrice = defaultProductSupplier.price;
       this.defaultProductSupplierCallback(defaultProductSupplier);
     }
   }
 
   private addSupplier(supplier: Supplier): void {
     const defaultSupplier: ProductSupplier | undefined = this.getDefaultProductSupplier();
-    const defaultPrice: number = defaultSupplier?.price || 0;
+    const defaultPrice: number = defaultSupplier?.price || this.wholesalePrice;
 
     if (typeof this.productSuppliers[supplier.supplierId] === 'undefined') {
       const newSupplier: ProductSupplier = Object.create(this.baseDataForSupplier);
