@@ -117,7 +117,8 @@ export default class ProductSuppliersCollection {
     this.updateDefaultProductSupplier();
   }
 
-  updateDefaultProductSupplierPrice(newPrice: number): void {
+  updateWholesalePrice(newPrice: number): void {
+    this.wholesalePrice = newPrice;
     const defaultProductSupplier: Supplier | undefined = this.getDefaultSupplier();
 
     if (defaultProductSupplier) {
