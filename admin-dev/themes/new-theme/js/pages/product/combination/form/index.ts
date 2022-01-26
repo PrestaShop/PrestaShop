@@ -23,10 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ImageSelector from '@pages/product/combination/image-selector';
-import ProductMap from '@pages/product/product-map';
-import ProductFormModel from '@pages/product/edit/product-form-model';
+import ImageSelector from '@pages/product/combination/form/image-selector';
+import CombinationMap from '@pages/product/combination/form/combination-map';
+import CombinationFormModel from '@pages/product/combination/form/combination-form-model';
 import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
+import {FormUpdateEvent} from '@components/form/form-object-mapper';
+import {ProductSupplier} from '@pages/product/components/suppliers/supplier-types';
 
 const {$} = window;
 
@@ -40,17 +42,21 @@ $(() => {
     'DeltaQuantityInput',
   ]);
 
-  const $productForm: JQuery = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
+  const $combinationForm: JQuery = $(CombinationMap.combinationForm);
   const {eventEmitter} = window.prestashop.instance;
-  // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+  // Init combination model along with input watching and syncing
+  const combinationFormModel = new CombinationFormModel($combinationForm, eventEmitter);
 
   const productSuppliers: ProductSuppliersCollection = new ProductSuppliersCollection(
-    ProductMap.suppliers.combinationSuppliersParent,
-    productFormModel,
+    CombinationMap.suppliers.productSuppliers,
+    combinationFormModel.getCombination().suppliers.defaultSupplierId,
+    combinationFormModel.getCombination().price.wholesalePrice,
+    (defaultProductSupplier: ProductSupplier) => {
+      combinationFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
+    },
   );
-  productFormModel.watch('price.wholesalePrice', (event) => {
-    productSuppliers.updateDefaultProductSupplierPrice(event.value);
+  combinationFormModel.watch('price.wholesalePrice', (event: FormUpdateEvent) => {
+    productSuppliers.updateWholesalePrice(event.value);
   });
   new ImageSelector();
 });
