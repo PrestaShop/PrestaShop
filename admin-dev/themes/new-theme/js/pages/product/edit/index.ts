@@ -37,7 +37,7 @@ import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
-import {Supplier} from '@pages/product/components/suppliers/supplier-types';
+import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
 import ProductTypeManager from '@pages/product/edit/product-type-manager';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
@@ -107,25 +107,27 @@ $(() => {
   let productSuppliers: ProductSuppliersCollection;
 
   if (productType !== ProductMap.productType.COMBINATIONS) {
-    productSuppliers = new ProductSuppliersCollection(ProductMap.suppliers.productSuppliers, productFormModel);
+    productSuppliers = new ProductSuppliersCollection(
+      ProductMap.suppliers.productSuppliers,
+      productFormModel.getProduct().suppliers.defaultSupplierId,
+      (defaultProductSupplier: ProductSupplier) => {
+        productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
+      },
+    );
+
     productFormModel.watch('price.wholesalePrice', (event) => {
       productSuppliers.updateDefaultProductSupplierPrice(event.value);
     });
+    productFormModel.watch('suppliers.defaultSupplierId', (event) => {
+      productSuppliers.setDefaultSupplierId(event.value);
+    });
   }
 
-  new SuppliersSelector(
-    ProductMap.suppliers.productSuppliers,
-    (defaultSupplier: Supplier) => {
-      if (defaultSupplier.price) {
-        productFormModel.set('price.wholesalePrice', defaultSupplier.price);
-      }
-    },
-    (suppliers: Supplier[]) => {
-      if (productSuppliers) {
-        productSuppliers.setSelectedSuppliers(suppliers);
-      }
-    },
-  );
+  new SuppliersSelector((suppliers: Supplier[]) => {
+    if (productSuppliers) {
+      productSuppliers.setSelectedSuppliers(suppliers);
+    }
+  });
 
   if (productType === ProductMap.productType.VIRTUAL) {
     new VirtualProductManager(productFormModel);
