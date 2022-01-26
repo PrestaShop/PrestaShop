@@ -75,6 +75,7 @@ abstract class AbstractProductSupplierHandler
                     (int) $productSupplierInfo['id_product_supplier'],
                     (int) $productSupplierInfo['id_product'],
                     (int) $productSupplierInfo['id_supplier'],
+                    $productSupplierInfo['name'],
                     $productSupplierInfo['product_supplier_reference'],
                     $productSupplierInfo['product_supplier_price_te'],
                     (int) $productSupplierInfo['id_currency'],

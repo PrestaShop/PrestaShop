@@ -164,11 +164,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
 
         foreach ($combinationSupplierInfos as $supplierOption) {
             $supplierForEditing = $supplierOption->getProductSupplierForEditing();
-            $supplierId = $supplierOption->getSupplierId();
+            $supplierId = $supplierForEditing->getSupplierId();
 
             $suppliersData['product_suppliers'][$supplierId] = [
                 'supplier_id' => $supplierId,
-                'supplier_name' => $supplierOption->getSupplierName(),
+                'supplier_name' => $supplierForEditing->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
                 'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
                 'reference' => $supplierForEditing->getReference(),
