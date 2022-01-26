@@ -44,7 +44,7 @@ import RelatedProductsManager from '@pages/product/edit/related-products-manager
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
-import {Supplier} from '@pages/product/components/suppliers/supplier-types';
+import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 
@@ -108,25 +108,27 @@ $(() => {
   let productSuppliers: ProductSuppliersCollection;
 
   if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
-    productSuppliers = new ProductSuppliersCollection(ProductMap.suppliers.productSuppliers, productFormModel);
+    productSuppliers = new ProductSuppliersCollection(
+      ProductMap.suppliers.productSuppliers,
+      productFormModel.getProduct().suppliers.defaultSupplierId,
+      (defaultProductSupplier: ProductSupplier) => {
+        productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
+      },
+    );
+
     productFormModel.watch('price.wholesalePrice', (event) => {
       productSuppliers.updateDefaultProductSupplierPrice(event.value);
     });
+    productFormModel.watch('suppliers.defaultSupplierId', (event) => {
+      productSuppliers.setDefaultSupplierId(event.value);
+    });
   }
 
-  new SuppliersSelector(
-    ProductMap.suppliers.productSuppliers,
-    (defaultSupplier: Supplier) => {
-      if (defaultSupplier.price) {
-        productFormModel.set('price.wholesalePrice', defaultSupplier.price);
-      }
-    },
-    (suppliers: Supplier[]) => {
-      if (productSuppliers) {
-        productSuppliers.setSelectedSuppliers(suppliers);
-      }
-    },
-  );
+  new SuppliersSelector((suppliers: Supplier[]) => {
+    if (productSuppliers) {
+      productSuppliers.setSelectedSuppliers(suppliers);
+    }
+  });
 
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
