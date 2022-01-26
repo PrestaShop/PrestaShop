@@ -189,7 +189,7 @@
     },
     mounted() {
       this.combinationList = $(ProductMap.combinations.combinationsContainer);
-      this.combinationsService = new CombinationsService(this.productId);
+      this.combinationsService = new CombinationsService();
       this.initCombinationIds();
       this.watchEditButtons();
       this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
@@ -211,7 +211,7 @@
         );
       },
       async initCombinationIds() {
-        this.combinationIds = await this.combinationsService.getCombinationIds();
+        this.combinationIds = await this.combinationsService.getCombinationIds(this.productId);
       },
       frameLoading() {
         this.applyIframeStyling();

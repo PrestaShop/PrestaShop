@@ -95,7 +95,7 @@
       return {
         attributeGroups: [],
         selectedAttributeGroups: {},
-        combinationsService: new CombinationsService(this.productId),
+        combinationsService: new CombinationsService(),
         isModalShown: false,
         preLoading: true,
         loading: false,
@@ -199,9 +199,7 @@
         });
 
         try {
-          const response = await this.combinationsService.generateCombinations(
-            data,
-          );
+          const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
               '%combinationsNb%': response.combination_ids.length,

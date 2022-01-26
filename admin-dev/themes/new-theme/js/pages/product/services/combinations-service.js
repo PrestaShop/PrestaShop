@@ -28,42 +28,11 @@ import Router from '@components/router';
 const {$} = window;
 
 export default class CombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
-    this.productId = productId;
+  constructor() {
     this.router = new Router();
     this.filters = {};
     this.orderBy = null;
     this.orderWay = null;
-  }
-
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
-    const filterId = `product_combinations_${this.productId}`;
-    const requestParams = {};
-    // Required for route generation
-    requestParams.productId = this.productId;
-
-    // These are the query parameters
-    requestParams[filterId] = {};
-    requestParams[filterId].offset = offset;
-    requestParams[filterId].limit = limit;
-    requestParams[filterId].filters = this.filters;
-    if (this.orderBy !== null) {
-      requestParams[filterId].orderBy = this.orderBy;
-    }
-    if (this.orderWay !== null) {
-      requestParams[filterId].sortOrder = this.orderWay;
-    }
-
-    return $.get(this.router.generate('admin_products_combinations', requestParams));
   }
 
   /**
@@ -97,12 +66,13 @@ export default class CombinationsService {
   }
 
   /**
+   * @param {Number} productId
    * @param {Object} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
    */
-  generateCombinations(data) {
+  generateCombinations(productId, data) {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_generate', {
-        productId: this.productId,
+        productId,
       }),
       data,
       method: 'POST',
@@ -127,36 +97,15 @@ export default class CombinationsService {
   }
 
   /**
+   * @param {Number} productId
+   *
    * @returns {Promise}
    */
-  getCombinationIds() {
+  getCombinationIds(productId) {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {
-        productId: this.productId,
+        productId,
       }),
     );
-  }
-
-  /**
-   * @param {string} orderBy
-   * @param {string} orderWay
-   */
-  setOrderBy(orderBy, orderWay) {
-    this.orderBy = orderBy;
-    this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
-  }
-
-  /**
-   * @returns {Object}
-   */
-  getFilters() {
-    return this.filters;
-  }
-
-  /**
-   * @param {Object} filters
-   */
-  setFilters(filters) {
-    this.filters = filters;
   }
 }

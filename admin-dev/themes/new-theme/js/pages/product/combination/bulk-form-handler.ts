@@ -33,8 +33,8 @@ export default class BulkFormHandler {
   //@todo: actually productId is redundant here, but its necessary for combinationsService (probably its not right)
   private combinationsService: CombinationsService;
 
-  constructor(productId: number) {
-    this.combinationsService = new CombinationsService(productId);
+  constructor() {
+    this.combinationsService = new CombinationsService();
     this.init();
   }
 
