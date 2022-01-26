@@ -176,6 +176,12 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+                        case RedirectType::TYPE_GONE:
+                            header('HTTP/1.1 410 Gone');
+                            header('Status: 410 Not Found');
+                            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                            $this->setTemplate('errors/410');
+                            exit;
                         case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');

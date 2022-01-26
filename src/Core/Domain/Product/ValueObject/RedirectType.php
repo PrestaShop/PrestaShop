@@ -41,6 +41,11 @@ class RedirectType
     public const TYPE_NOT_FOUND = '404';
 
     /**
+     * Represents value of no redirection. Page gone (410) will be displayed.
+     */
+    public const TYPE_GONE = '410';
+
+    /**
      * Represents value of permanent redirection to a category
      */
     public const TYPE_CATEGORY_PERMANENT = '301-category';
@@ -65,6 +70,7 @@ class RedirectType
      */
     public const AVAILABLE_REDIRECT_TYPES = [
         self::TYPE_NOT_FOUND => self::TYPE_NOT_FOUND,
+        self::TYPE_GONE => self::TYPE_GONE,
         self::TYPE_CATEGORY_PERMANENT => self::TYPE_CATEGORY_PERMANENT,
         self::TYPE_CATEGORY_TEMPORARY => self::TYPE_CATEGORY_TEMPORARY,
         self::TYPE_PRODUCT_PERMANENT => self::TYPE_PRODUCT_PERMANENT,
@@ -117,6 +123,14 @@ class RedirectType
     public function isTypeNotFound(): bool
     {
         return $this->getValue() === static::TYPE_NOT_FOUND;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTypeGone(): bool
+    {
+        return $this->getValue() === static::TYPE_GONE;
     }
 
     /**
