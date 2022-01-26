@@ -37,8 +37,6 @@ import './listing';
 import './product';
 import './cart';
 
-import prestashop from 'prestashop';
-import EventEmitter from 'events';
 import DropDown from './components/drop-down';
 import Form from './components/form';
 import ProductMinitature from './components/product-miniature';
@@ -51,12 +49,6 @@ import './lib/jquery.scrollbox.min';
 import './components/block-cart';
 import $ from 'jquery';
 /* eslint-enable */
-
-// "inherit" EventEmitter
-// eslint-disable-next-line
-for (const i in EventEmitter.prototype) {
-  prestashop[i] = EventEmitter.prototype[i];
-}
 
 $(document).ready(() => {
   const dropDownEl = $('.js-dropdown');
