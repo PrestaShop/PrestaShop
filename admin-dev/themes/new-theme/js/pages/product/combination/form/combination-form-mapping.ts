@@ -24,7 +24,7 @@
  */
 
 export default {
-  suppliers: {
-    productSuppliers: '#combination_form_product_suppliers',
-  },
+  'price.priceTaxExcluded': 'combination_form[price_impact][price_tax_excluded]',
+  'price.wholesalePrice': 'combination_form[price_impact][wholesale_price]',
+  'suppliers.defaultSupplierId': 'combination_form[default_supplier_id]',
 };
