@@ -110,7 +110,8 @@ $(() => {
   if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     productSuppliers = new ProductSuppliersCollection(
       ProductMap.suppliers.productSuppliers,
-      productFormModel.getProduct().suppliers.defaultSupplierId,
+      productFormModel.getProduct().suppliers?.defaultSupplierId || 0,
+      productFormModel.getProduct().price.wholesalePrice,
       (defaultProductSupplier: ProductSupplier) => {
         productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
       },
