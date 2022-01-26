@@ -39,8 +39,9 @@ class ShoppingCarts extends BOBasePage {
     this.tableBodyRow = row => `${this.tableBodyRows}:nth-child(${row})`;
     this.tableBodyColumn = row => `${this.tableBodyRow(row)} td`;
 
-    // Columns selectors
+    // Columns selectors:
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(1)`;
+    // #table-cart tbody tr:nth-child(${row}) td:nth-child(1)
     this.tableColumnOrderId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
     this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;

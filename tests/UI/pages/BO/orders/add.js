@@ -40,6 +40,14 @@ class AddOrder extends BOBasePage {
     // Checkout history selectors
     this.checkoutHistoryBlock = '#customer-checkout-history';
 
+    // Carts table selectors
+    this.customerCartsTable = '#customer-carts-table';
+    this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
+    this.customerCartsTableRow = `${this.customerCartsTableBody} tr`;
+    this.customerCartsTableColumn = `${this.customerCartsTableRow} td`;
+    this.emptyCartBlock = `${this.customerCartsTableColumn} div.grid-table-empty`;
+    this.cartsTableLoadingListRow = '#js-loading-list-row';
+
     // Cart selectors
     this.cartBlock = '#cart-block';
     this.productSearchInput = '#product-search';
@@ -48,6 +56,7 @@ class AddOrder extends BOBasePage {
     this.productQuantityInput = '#quantity-input';
     this.addtoCartButton = '#add-product-to-cart-btn';
     this.productsTable = '#products-table';
+
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -122,15 +131,26 @@ class AddOrder extends BOBasePage {
    * Click on choose customer in list
    * @param page {Page} Browser tab
    * @param cardPosition {number} Position of customer to choose on the list
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async chooseCustomer(page, cardPosition = 1) {
     await page.click(this.customerCardChooseButton(cardPosition));
 
-    await Promise.all([
-      this.waitForHiddenSelector(page, this.customerCardChooseButton(cardPosition)),
-      this.waitForVisibleSelector(page, this.checkoutHistoryBlock),
-    ]);
+    await this.waitForHiddenSelector(page, this.customerCardChooseButton(cardPosition));
+    return this.elementVisible(page, this.checkoutHistoryBlock, 1000);
+  }
+
+  /* Carts table methods */
+
+  /**
+   * Get text column from carts table
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromCartsTable(page) {
+    await page.waitForTimeout(2000);
+    // await page.waitForSelector(this.cartsTableLoadingListRow);
+    return this.getTextContent(page, this.emptyCartBlock, true);
   }
 
   /* Cart methods */
