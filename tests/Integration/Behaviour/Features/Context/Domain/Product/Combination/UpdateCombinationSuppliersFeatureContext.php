@@ -34,7 +34,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception\ProductSupplierNotAssociatedException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 
 class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -90,7 +90,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     public function assertSuppliers(string $combinationReference, TableNode $table): void
     {
         $expectedCombinationSuppliers = $table->getColumnsHash();
-        $actualCombinationSuppliersInfo = $this->getCombinationSuppliers($combinationReference);
+        $combinationProductSuppliers = $this->getCombinationSuppliers($combinationReference);
 
         $checkProductSuppliers = false;
         foreach ($expectedCombinationSuppliers as &$expectedCombinationSupplier) {
@@ -104,8 +104,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
         }
 
         $actualCombinationSuppliers = [];
-        foreach ($actualCombinationSuppliersInfo as $productSupplierInfo) {
-            $productSupplierForEditing = $productSupplierInfo->getProductSupplierForEditing();
+        foreach ($combinationProductSuppliers as $productSupplierForEditing) {
             $combinationSupplierData = [
                 'reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
@@ -143,7 +142,7 @@ class UpdateCombinationSuppliersFeatureContext extends AbstractCombinationFeatur
     /**
      * @param string $combinationReference
      *
-     * @return ProductSupplierInfo[]
+     * @return ProductSupplierForEditing[]
      */
     private function getCombinationSuppliers(string $combinationReference): array
     {
