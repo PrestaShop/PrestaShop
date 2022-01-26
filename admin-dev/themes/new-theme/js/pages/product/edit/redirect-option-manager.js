@@ -97,6 +97,7 @@ export default class RedirectOptionManager {
           this.showTarget();
           break;
         case '404':
+        case '410':
         default:
           this.entitySearchInput.setValues(null);
           this.hideTarget();
