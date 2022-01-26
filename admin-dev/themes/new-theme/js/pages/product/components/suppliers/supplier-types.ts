@@ -36,6 +36,7 @@ export type ProductSupplier = {
   reference: string,
   price: number,
   currencyId: string,
+  isDefault: boolean,
   removed: boolean,
 }
-export type DefaultProductSupplier = Omit<ProductSupplier, 'supplierId' | 'supplierName'>;
+export type BaseProductSupplier = Omit<ProductSupplier, 'supplierId' | 'supplierName'>;

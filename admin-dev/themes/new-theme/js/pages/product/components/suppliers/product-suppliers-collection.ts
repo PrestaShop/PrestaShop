@@ -23,12 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductSuppliersMap from '@pages/product/components/suppliers/product-suppliers-map';
-import {Supplier, ProductSupplier, DefaultProductSupplier} from '@pages/product/components/suppliers/supplier-types';
+import {Supplier, ProductSupplier, BaseProductSupplier} from '@pages/product/components/suppliers/supplier-types';
 
 export default class ProductSuppliersCollection {
-  private readonly productFormModel: ProductFormModel;
+  private defaultSupplierId: string;
 
   private map: any;
 
@@ -48,10 +47,10 @@ export default class ProductSuppliersCollection {
 
   private readonly productSuppliers: Record<string, ProductSupplier>;
 
-  private readonly defaultDataForSupplier: DefaultProductSupplier;
+  private readonly baseDataForSupplier: BaseProductSupplier;
 
-  constructor(productSuppliersFormId: string, productFormModel: ProductFormModel) {
-    this.productFormModel = productFormModel;
+  constructor(productSuppliersFormId: string, defaultSupplierId: string) {
+    this.defaultSupplierId = defaultSupplierId;
     this.map = ProductSuppliersMap(productSuppliersFormId);
     this.$productSuppliersCollection = $(this.map.productSuppliersCollection);
     this.$collectionRow = this.$productSuppliersCollection.parent('.product-suppliers-collection-row');
@@ -62,7 +61,7 @@ export default class ProductSuppliersCollection {
     this.productSuppliers = {};
     this.prototypeTemplate = this.$productSuppliersCollection.data('prototype');
     this.prototypeName = this.$productSuppliersCollection.data('prototypeName');
-    this.defaultDataForSupplier = this.getDefaultDataForSupplier();
+    this.baseDataForSupplier = this.getBaseDataForSupplier();
 
     this.init();
   }
@@ -85,9 +84,25 @@ export default class ProductSuppliersCollection {
       }
     });
 
-    this.memorizeCurrentSuppliers();
+    // Update suppliers list
     this.renderSuppliers();
+    // Update internal data based on list values
+    this.memorizeCurrentSuppliers();
+    // Toggle component visibility
     this.toggleRowVisibility();
+  }
+
+  setDefaultSupplierId(defaultSupplierId: string): void {
+    this.defaultSupplierId = defaultSupplierId;
+    this.selectedSuppliers.forEach((supplier: Supplier) => {
+      // eslint-disable-next-line no-param-reassign
+      supplier.isDefault = supplier.supplierId === defaultSupplierId;
+    });
+
+    // Update internal data (mostly the isDefault value)
+    this.memorizeCurrentSuppliers();
+
+    // @todo dispatch default price
   }
 
   updateDefaultProductSupplierPrice(newPrice: number): void {
@@ -102,27 +117,35 @@ export default class ProductSuppliersCollection {
   }
 
   private init(): void {
+    // First memorize product suppliers data
     this.memorizeCurrentSuppliers();
+    // Then init selected suppliers from the initial table content
+    this.selectedSuppliers = this.getSuppliersFromTable();
+    // Finally toggle component visibility
     this.toggleRowVisibility();
 
     this.$productsTable.on('change', 'input', () => {
       this.memorizeCurrentSuppliers();
+      // @todo dispatch default price
     });
   }
 
   private addSupplier(supplier: Supplier): void {
-    const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
+    const defaultSupplier: ProductSupplier | undefined = this.getDefaultProductSupplier();
+    const defaultPrice: number = defaultSupplier?.price || 0;
 
     if (typeof this.productSuppliers[supplier.supplierId] === 'undefined') {
-      const newSupplier: ProductSupplier = Object.create(this.defaultDataForSupplier);
+      const newSupplier: ProductSupplier = Object.create(this.baseDataForSupplier);
       newSupplier.supplierId = supplier.supplierId;
       newSupplier.supplierName = supplier.supplierName;
-      newSupplier.price = wholeSalePrice;
 
       this.productSuppliers[supplier.supplierId] = newSupplier;
     } else {
       this.productSuppliers[supplier.supplierId].removed = false;
     }
+
+    // Always add with the current default price
+    this.productSuppliers[supplier.supplierId].price = defaultPrice;
   }
 
   private removeSupplier(supplierId: string): void {
@@ -153,16 +176,40 @@ export default class ProductSuppliersCollection {
         reference: <string> $(this.map.productSupplierRow.referenceInput(supplierIndex)).val(),
         price: <number> $(this.map.productSupplierRow.priceInput(supplierIndex)).val(),
         currencyId: <string> $(this.map.productSupplierRow.currencyIdInput(supplierIndex)).val(),
+        isDefault: supplierId === this.defaultSupplierId,
         removed: false,
       };
     });
+  }
+
+  private getSuppliersFromTable(): Array<Supplier> {
+    const suppliers: Array<Supplier> = [];
+    const rows = document.querySelectorAll(this.map.productsSuppliersRows);
+
+    if (!rows.length) {
+      return suppliers;
+    }
+
+    rows.forEach((row: HTMLElement) => {
+      const supplierIndex: string = <string> row.dataset.supplierIndex;
+      const supplierId = <string> $(this.map.productSupplierRow.supplierIdInput(supplierIndex)).val();
+
+      suppliers.push({
+        supplierId,
+        supplierName: <string> $(this.map.productSupplierRow.supplierNameInput(supplierIndex)).val(),
+        isDefault: supplierId === this.defaultSupplierId,
+        price: <number> $(this.map.productSupplierRow.priceInput(supplierIndex)).val(),
+      });
+    });
+
+    return suppliers;
   }
 
   private renderSuppliers(): void {
     this.$productsTableBody.empty();
 
     // Loop through select suppliers so that we use the same order as in the select list
-    this.selectedSuppliers.forEach((selectedSupplier) => {
+    this.selectedSuppliers.forEach((selectedSupplier: Supplier) => {
       const supplier = this.productSuppliers[selectedSupplier.supplierId];
 
       if (supplier.removed) {
@@ -209,7 +256,7 @@ export default class ProductSuppliersCollection {
    * Create a "shadow" prototype just to parse default values set inside the input fields,
    * this allow to build an object with default values set in the FormType
    */
-  private getDefaultDataForSupplier(): DefaultProductSupplier {
+  private getBaseDataForSupplier(): BaseProductSupplier {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -221,16 +268,21 @@ export default class ProductSuppliersCollection {
       reference: <string> this.extractFromPrototype(this.map.productSupplierRow.referenceInput, rowPrototype),
       price: <number> this.extractFromPrototype(this.map.productSupplierRow.priceInput, rowPrototype),
       currencyId: <string> this.extractFromPrototype(this.map.productSupplierRow.currencyIdInput, rowPrototype),
+      isDefault: false,
     };
   }
 
   private extractFromPrototype(selector: (supplierIndex: string) => string, rowPrototype: Document): number | string | null {
     const rowField: HTMLInputElement | null = rowPrototype.querySelector(selector(this.prototypeName));
 
-    return rowField ? rowField.value : null;
+    return rowField?.value ?? null;
   }
 
   private getDefaultSupplier(): Supplier| undefined {
     return this.selectedSuppliers.find((supplier: Supplier) => supplier.isDefault);
+  }
+
+  private getDefaultProductSupplier(): ProductSupplier| undefined {
+    return Object.values(this.productSuppliers).find((productSupplier: ProductSupplier) => productSupplier.isDefault);
   }
 }
