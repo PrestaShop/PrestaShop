@@ -26,8 +26,12 @@
 import ProductSuppliersMap from '@pages/product/components/suppliers/product-suppliers-map';
 import {Supplier, ProductSupplier, BaseProductSupplier} from '@pages/product/components/suppliers/supplier-types';
 
+import ChangeEvent = JQuery.ChangeEvent;
+
 export default class ProductSuppliersCollection {
   private defaultSupplierId: string;
+
+  private defaultProductSupplierCallback?: (productSupplier: ProductSupplier) => void;
 
   private map: any;
 
@@ -49,11 +53,16 @@ export default class ProductSuppliersCollection {
 
   private readonly baseDataForSupplier: BaseProductSupplier;
 
-  constructor(productSuppliersFormId: string, defaultSupplierId: string) {
+  constructor(
+    productSuppliersFormId: string,
+    defaultSupplierId: string,
+    defaultProductSupplierCallback?: (productSupplier: ProductSupplier) => void,
+  ) {
     this.defaultSupplierId = defaultSupplierId;
+    this.defaultProductSupplierCallback = defaultProductSupplierCallback;
     this.map = ProductSuppliersMap(productSuppliersFormId);
     this.$productSuppliersCollection = $(this.map.productSuppliersCollection);
-    this.$collectionRow = this.$productSuppliersCollection.parent('.product-suppliers-collection-row');
+    this.$collectionRow = this.$productSuppliersCollection.parents(this.map.productSuppliersCollectionRow);
     this.$productsTable = $(this.map.productSuppliersTable);
     this.$productsTableBody = $(this.map.productsSuppliersTableBody);
 
@@ -101,8 +110,7 @@ export default class ProductSuppliersCollection {
 
     // Update internal data (mostly the isDefault value)
     this.memorizeCurrentSuppliers();
-
-    // @todo dispatch default price
+    this.triggerDefaultProductSupplier();
   }
 
   updateDefaultProductSupplierPrice(newPrice: number): void {
@@ -124,10 +132,30 @@ export default class ProductSuppliersCollection {
     // Finally toggle component visibility
     this.toggleRowVisibility();
 
-    this.$productsTable.on('change', 'input', () => {
+    this.$productsTable.on('change', 'input', (event: ChangeEvent) => {
       this.memorizeCurrentSuppliers();
-      // @todo dispatch default price
+
+      // Trigger default product supplier changed if it's the correct one
+      const $input: JQuery = $(event.target);
+      const $productSupplierRow: JQuery = $input.parents(this.map.productsSupplierRowSelector);
+      const supplierIndex: string = <string> $productSupplierRow.data('supplierIndex');
+      const supplierId = <string> $(this.map.productSupplierRow.supplierIdInput(supplierIndex)).val();
+
+      if (supplierId === this.defaultSupplierId) {
+        this.triggerDefaultProductSupplier();
+      }
     });
+  }
+
+  private triggerDefaultProductSupplier(): void {
+    if (!this.defaultProductSupplierCallback) {
+      return;
+    }
+    const defaultProductSupplier: ProductSupplier | undefined = this.getDefaultProductSupplier();
+
+    if (defaultProductSupplier) {
+      this.defaultProductSupplierCallback(defaultProductSupplier);
+    }
   }
 
   private addSupplier(supplier: Supplier): void {
@@ -198,7 +226,6 @@ export default class ProductSuppliersCollection {
         supplierId,
         supplierName: <string> $(this.map.productSupplierRow.supplierNameInput(supplierIndex)).val(),
         isDefault: supplierId === this.defaultSupplierId,
-        price: <number> $(this.map.productSupplierRow.priceInput(supplierIndex)).val(),
       });
     });
 

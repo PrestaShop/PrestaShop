@@ -29,9 +29,11 @@ export default (productSuppliersId: string): Record<string, any> => {
 
   return {
     productSuppliersCollection: `${productSuppliersId}`,
+    productSuppliersCollectionRow: '.product-suppliers-collection-row',
     productSuppliersTable: `${productSuppliersId} table`,
     productsSuppliersTableBody: `${productSuppliersId} table tbody`,
     productsSuppliersRows: `${productSuppliersId} table tbody .product_supplier_row`,
+    productsSupplierRowSelector: '.product_supplier_row',
     productSupplierRow: {
       supplierIdInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_id'),
       supplierNameInput: (supplierIndex: string): string => productSupplierInputId(supplierIndex, 'supplier_name'),
