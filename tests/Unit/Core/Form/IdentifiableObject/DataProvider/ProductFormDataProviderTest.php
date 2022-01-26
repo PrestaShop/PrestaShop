@@ -1078,6 +1078,7 @@ class ProductFormDataProviderTest extends TestCase
                         $supplierInfo['product_supplier_id'],
                         $supplierInfo['product_id'],
                         $supplierInfo['supplier_id'],
+                        $supplierInfo['supplier_name'],
                         $supplierInfo['reference'],
                         $supplierInfo['price'],
                         $supplierInfo['currency_id'],
