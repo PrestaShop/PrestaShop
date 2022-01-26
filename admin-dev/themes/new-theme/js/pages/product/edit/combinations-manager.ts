@@ -37,6 +37,7 @@ import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
+import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -93,7 +94,8 @@ export default class CombinationsManager {
     this.combinationModalApp = null;
 
     this.initialized = false;
-    this.combinationsService = new CombinationsService(this.productId);
+    this.combinationsService = new CombinationsService();
+    this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
     this.bulkCombinationFormHandler = new BulkFormHandler();
 
@@ -211,7 +213,7 @@ export default class CombinationsManager {
     // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
-      this.combinationsService,
+      this.paginatedCombinationsService,
       this.combinationsRenderer,
       0,
     );
@@ -255,7 +257,7 @@ export default class CombinationsManager {
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,
       attributeGroups => {
-        const currentFilters = this.combinationsService.getFilters();
+        const currentFilters = this.paginatedCombinationsService.getFilters();
         currentFilters.attributes = {};
         Object.keys(attributeGroups).forEach(attributeGroupId => {
           currentFilters.attributes[attributeGroupId] = [];
@@ -265,8 +267,7 @@ export default class CombinationsManager {
           });
         });
 
-        this.combinationsService.setFilters(currentFilters);
-
+        this.paginatedCombinationsService.setFilters(currentFilters);
         if(this.paginator) {
           this.paginator.paginate(1);
         }
@@ -383,8 +384,7 @@ export default class CombinationsManager {
         $sortableColumn.attr('data-sort-direction', direction);
 
         // Finally update list
-        this.combinationsService.setOrderBy(columnName, direction);
-
+        this.paginatedCombinationsService.setOrderBy(columnName, direction);
         if (this.paginator) {
           this.paginator.paginate(1);
         }
