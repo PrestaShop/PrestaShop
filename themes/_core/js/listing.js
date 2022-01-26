@@ -25,11 +25,9 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
-$(document).ready(() => {
-  $('body').on('click', prestashop.selectors.listing.quickview, (event) => {
-    prestashop.emit('clickQuickView', {
-      dataset: $(event.target).closest(prestashop.selectors.product.miniature).data(),
-    });
-    event.preventDefault();
+$('body').on('click', prestashop.selectors.listing.quickview, (event) => {
+  prestashop.emit('clickQuickView', {
+    dataset: $(event.target).closest(prestashop.selectors.product.miniature).data(),
   });
+  event.preventDefault();
 });

@@ -69,8 +69,6 @@ function handleSubmitButton() {
   });
 }
 
-$(document).ready(() => {
-  if ($('#checkout').length === 1) {
-    setUpCheckout();
-  }
-});
+if ($('#checkout').length === 1) {
+  setUpCheckout();
+}

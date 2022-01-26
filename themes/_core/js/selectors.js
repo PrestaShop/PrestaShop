@@ -22,18 +22,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import prestashop from 'prestashop';
-import $ from 'jquery';
 
 prestashop.selectors = {
   quantityWanted: '#quantity_wanted',
   product: {
     imageContainer:
-      // eslint-disable-next-line
+    // eslint-disable-next-line
       '.quickview .images-container, .page-product:not(.modal-open) .row .images-container, .page-product:not(.modal-open) .product-container .images-container, .quickview .js-images-container, .page-product:not(.modal-open) .row .js-images-container, .page-product:not(.modal-open) .product-container .js-images-container',
     container: '.product-container, .js-product-container',
     availability: '#product-availability, .js-product-availability',
     actions: '.product-actions, .js-product-actions',
+    actionsForm: '.product-actions form:first, .js-product-actions form:first',
     variants: '.product-variants, .js-product-variants',
     refresh: '.product-refresh, .js-product-refresh',
     miniature: '.js-product-miniature',
@@ -106,6 +105,4 @@ prestashop.selectors = {
   },
 };
 
-$(document).ready(() => {
-  prestashop.emit('selectorsInit');
-});
+prestashop.emit('selectorsInit');

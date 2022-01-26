@@ -54,10 +54,10 @@ function getProductUpdateUrl() {
 
   if (
     prestashop !== null
-    && prestashop.urls !== null
-    && prestashop.urls.pages !== null
-    && prestashop.urls.pages.product !== ''
-    && prestashop.urls.pages.product !== null
+        && prestashop.urls !== null
+        && prestashop.urls.pages !== null
+        && prestashop.urls.pages.product !== ''
+        && prestashop.urls.pages.product !== null
   ) {
     dfd.resolve(prestashop.urls.pages.product);
 
@@ -102,10 +102,10 @@ function getProductUpdateUrl() {
 function showErrorNextToAddtoCartButton(errorMessage) {
   showError(
     /* eslint-disable */
-    $(
-      ".quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability"
-    ),
-    /* eslint-enable */
+        $(
+            ".quickview #product-availability, .page-product:not(.modal-open) .row #product-availability, .page-product:not(.modal-open) .product-container #product-availability"
+        ),
+        /* eslint-enable */
     errorMessage,
   );
 }
@@ -150,8 +150,8 @@ function updateProduct(event, eventType, updateUrl) {
   // New request only if new value
   if (
     event
-    && event.type === 'keyup'
-    && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
+        && event.type === 'keyup'
+        && $quantityWantedInput.val() === $quantityWantedInput.data('old-value')
   ) {
     return;
   }
@@ -176,19 +176,19 @@ function updateProduct(event, eventType, updateUrl) {
 
     currentRequest = $.ajax({
       url:
-        updateUrl
-        + (updateUrl.indexOf('?') === -1 ? '?' : '&')
-        + formSerialized
-        + preview,
+                updateUrl
+                + (updateUrl.indexOf('?') === -1 ? '?' : '&')
+                + formSerialized
+                + preview,
       method: 'POST',
       data: {
         quickview: $('.modal.quickview.in').length,
         ajax: 1,
         action: 'refresh',
         quantity_wanted:
-          eventType === 'updatedProductCombination'
-            ? $quantityWantedInput.attr('min')
-            : $quantityWantedInput.val(),
+                    eventType === 'updatedProductCombination'
+                      ? $quantityWantedInput.attr('min')
+                      : $quantityWantedInput.val(),
       },
       dataType: 'json',
       beforeSend() {
@@ -199,7 +199,7 @@ function updateProduct(event, eventType, updateUrl) {
       error(jqXHR, textStatus) {
         if (
           textStatus !== 'abort'
-          && $('section#main > .ajax-error').length === 0
+                    && $('section#main > .ajax-error').length === 0
         ) {
           showErrorNextToAddtoCartButton();
         }
@@ -214,9 +214,9 @@ function updateProduct(event, eventType, updateUrl) {
         // Used to avoid image blinking if same image = epileptic friendly
         if (
           $(prestashop.selectors.product.imageContainer).html()
-          !== $newImagesContainer
-            .find(prestashop.selectors.product.imageContainer)
-            .html()
+                    !== $newImagesContainer
+                      .find(prestashop.selectors.product.imageContainer)
+                      .html()
         ) {
           $(prestashop.selectors.product.imageContainer).replaceWith(
             data.product_cover_thumbnails,
@@ -255,7 +255,7 @@ function updateProduct(event, eventType, updateUrl) {
         // Prevent quantity input from blinking with classic theme.
         if (
           !isNaN(minimalProductQuantity)
-          && eventType !== 'updatedProductQuantity'
+                    && eventType !== 'updatedProductQuantity'
         ) {
           $quantityWantedInput.attr('min', minimalProductQuantity);
           $quantityWantedInput.val(minimalProductQuantity);
@@ -351,161 +351,159 @@ function showError($container, textError) {
   $container.replaceWith($error);
 }
 
-$(document).ready(() => {
-  const $productActions = $(prestashop.selectors.product.actions);
+const $productActions = $(prestashop.selectors.product.actions);
 
-  // Listen on all form elements + those who have a data-product-attribute
-  $('body').on(
-    'change touchspin.on.startspin',
-    `${prestashop.selectors.product.variants} *[name]`,
-    (e) => {
-      formChanged = true;
-
-      prestashop.emit('updateProduct', {
-        eventType: 'updatedProductCombination',
-        event: e,
-        // Following variables are not used anymore, but kept for backward compatibility
-        resp: {},
-        reason: {
-          productUrl: prestashop.urls.pages.product || '',
-        },
-      });
-    },
-  );
-
-  // Stocking first form information
-  $($productActions.find('form:first').serializeArray()).each(
-    (k, {value, name}) => {
-      firstFormData.push({value, name});
-    },
-  );
-
-  window.addEventListener('popstate', (event) => {
-    isOnPopStateEvent = true;
-
-    if (
-      (!event.state
-        || (event.state && event.state.form && event.state.form.length === 0))
-      && !formChanged
-    ) {
-      return;
-    }
-
-    const $form = $(prestashop.selectors.product.actions).find('form:first');
-
-    if (event.state && event.state.form) {
-      event.state.form.forEach((pair) => {
-        $form.find(`[name="${pair.name}"]`).val(pair.value);
-      });
-    } else {
-      firstFormData.forEach((pair) => {
-        $form.find(`[name="${pair.name}"]`).val(pair.value);
-      });
-    }
+// Listen on all form elements + those who have a data-product-attribute
+$('body').on(
+  'change touchspin.on.startspin',
+  `${prestashop.selectors.product.variants} *[name]`,
+  (e) => {
+    formChanged = true;
 
     prestashop.emit('updateProduct', {
       eventType: 'updatedProductCombination',
-      event,
+      event: e,
       // Following variables are not used anymore, but kept for backward compatibility
       resp: {},
       reason: {
         productUrl: prestashop.urls.pages.product || '',
       },
     });
-  });
+  },
+);
 
-  /**
-   * Button has been removed on classic theme, but event triggering has been kept for compatibility
-   */
-  $('body').on(
-    'click',
-    prestashop.selectors.product.refresh,
-    (e, extraParameters) => {
-      e.preventDefault();
-      let eventType = 'updatedProductCombination';
+// Stocking first form information
+$($productActions.find('form:first').serializeArray()).each(
+  (k, {value, name}) => {
+    firstFormData.push({value, name});
+  },
+);
 
-      if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
-        // eslint-disable-next-line
-        eventType = extraParameters.eventType;
-      }
+window.addEventListener('popstate', (event) => {
+  isOnPopStateEvent = true;
 
-      prestashop.emit('updateProduct', {
-        eventType,
-        event: e,
-        // Following variables are not used anymore, but kept for backward compatibility
-        resp: {},
-        reason: {
-          productUrl: prestashop.urls.pages.product || '',
-        },
-      });
+  if (
+    (!event.state
+            || (event.state && event.state.form && event.state.form.length === 0))
+        && !formChanged
+  ) {
+    return;
+  }
+
+  const $form = $(prestashop.selectors.product.actions).find('form:first');
+
+  if (event.state && event.state.form) {
+    event.state.form.forEach((pair) => {
+      $form.find(`[name="${pair.name}"]`).val(pair.value);
+    });
+  } else {
+    firstFormData.forEach((pair) => {
+      $form.find(`[name="${pair.name}"]`).val(pair.value);
+    });
+  }
+
+  prestashop.emit('updateProduct', {
+    eventType: 'updatedProductCombination',
+    event,
+    // Following variables are not used anymore, but kept for backward compatibility
+    resp: {},
+    reason: {
+      productUrl: prestashop.urls.pages.product || '',
     },
-  );
-
-  // Refresh all the product content
-  prestashop.on('updateProduct', (args) => {
-    const {eventType} = args;
-    const {event} = args;
-
-    getProductUpdateUrl()
-      .done((productUpdateUrl) => updateProduct(event, eventType, productUpdateUrl),
-      )
-      .fail(() => {
-        if ($('section#main > .ajax-error').length === 0) {
-          showErrorNextToAddtoCartButton();
-        }
-      });
   });
+});
 
-  prestashop.on('updatedProduct', (args, formData) => {
-    if (!args.product_url || !args.id_product_attribute) {
-      return;
+/**
+ * Button has been removed on classic theme, but event triggering has been kept for compatibility
+ */
+$('body').on(
+  'click',
+  prestashop.selectors.product.refresh,
+  (e, extraParameters) => {
+    e.preventDefault();
+    let eventType = 'updatedProductCombination';
+
+    if (typeof extraParameters !== 'undefined' && extraParameters.eventType) {
+      // eslint-disable-next-line
+            eventType = extraParameters.eventType;
     }
 
-    /*
+    prestashop.emit('updateProduct', {
+      eventType,
+      event: e,
+      // Following variables are not used anymore, but kept for backward compatibility
+      resp: {},
+      reason: {
+        productUrl: prestashop.urls.pages.product || '',
+      },
+    });
+  },
+);
+
+// Refresh all the product content
+prestashop.on('updateProduct', (args) => {
+  const {eventType} = args;
+  const {event} = args;
+
+  getProductUpdateUrl()
+    .done((productUpdateUrl) => updateProduct(event, eventType, productUpdateUrl),
+    )
+    .fail(() => {
+      if ($('section#main > .ajax-error').length === 0) {
+        showErrorNextToAddtoCartButton();
+      }
+    });
+});
+
+prestashop.on('updatedProduct', (args, formData) => {
+  if (!args.product_url || !args.id_product_attribute) {
+    return;
+  }
+
+  /*
      * If quickview modal is present we are not on product page, so
      * we don't change the url nor title
      */
-    const quickView = $('.modal.quickview');
+  const quickView = $('.modal.quickview');
 
-    if (quickView.length) {
-      return;
-    }
+  if (quickView.length) {
+    return;
+  }
 
-    let pageTitle = document.title;
+  let pageTitle = document.title;
 
-    if (args.product_title) {
-      pageTitle = args.product_title;
-      $(document).attr('title', pageTitle);
-    }
+  if (args.product_title) {
+    pageTitle = args.product_title;
+    $(document).attr('title', pageTitle);
+  }
 
-    if (!isOnPopStateEvent) {
-      window.history.pushState(
-        {
-          id_product_attribute: args.id_product_attribute,
-          form: formData,
-        },
-        pageTitle,
-        args.product_url,
-      );
-    }
+  if (!isOnPopStateEvent) {
+    window.history.pushState(
+      {
+        id_product_attribute: args.id_product_attribute,
+        form: formData,
+      },
+      pageTitle,
+      args.product_url,
+    );
+  }
 
-    isOnPopStateEvent = false;
-  });
+  isOnPopStateEvent = false;
+});
 
-  prestashop.on('updateCart', (event) => {
-    if (!event || !event.reason || event.reason.linkAction !== 'add-to-cart') {
-      return;
-    }
-    const $quantityWantedInput = $('#quantity_wanted');
-    // Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
-    $quantityWantedInput.val(1);
-  });
+prestashop.on('updateCart', (event) => {
+  if (!event || !event.reason || event.reason.linkAction !== 'add-to-cart') {
+    return;
+  }
+  const $quantityWantedInput = $('#quantity_wanted');
+  // Force value to 1, it will automatically trigger updateProduct and reset the appropriate min value if needed
+  $quantityWantedInput.val(1);
+});
 
-  prestashop.on('showErrorNextToAddtoCartButton', (event) => {
-    if (!event || !event.errorMessage) {
-      return;
-    }
+prestashop.on('showErrorNextToAddtoCartButton', (event) => {
+  if (!event || !event.errorMessage) {
+    return;
+  }
 
-    showErrorNextToAddtoCartButton(event.errorMessage);
-  });
+  showErrorNextToAddtoCartButton(event.errorMessage);
 });
