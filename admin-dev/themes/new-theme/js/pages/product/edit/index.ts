@@ -121,7 +121,7 @@ $(() => {
     );
 
     productFormModel.watch('price.wholesalePrice', (event) => {
-      productSuppliers.updateDefaultProductSupplierPrice(event.value);
+      productSuppliers.updateWholesalePrice(event.value);
     });
     productFormModel.watch('suppliers.defaultSupplierId', (event) => {
       productSuppliers.setDefaultSupplierId(event.value);
