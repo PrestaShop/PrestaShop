@@ -24,7 +24,6 @@ Feature: Duplicate product from Back Office (BO).
     And attribute group "Color" named "Color" in en language exists
     And attribute "Red" named "Red" in en language exists
     And attribute "Blue" named "Blue" in en language exists
-    Given I add product "product1" with following information:
     And following image types should be applicable to products:
       | reference     | name           | width | height |
       | cartDefault   | cart_default   | 125   | 125    |
@@ -134,7 +133,7 @@ Feature: Duplicate product from Back Office (BO).
     Then product "product1" should have 1 specific prices
     And I update product "product1" stock with following information:
       | minimal_quantity              | 12           |
-      | quantity                      | 10           |
+      | delta_quantity                | 10           |
       | location                      | dtc          |
       | low_stock_threshold           | 42           |
       | low_stock_alert               | true         |
@@ -217,10 +216,10 @@ Feature: Duplicate product from Back Office (BO).
       | product supplier reference     | currency | price tax excluded |
       | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
-      | price            | 100.00          |
-      | ecotax           | 0               |
-      | tax rules group  | US-AL Rate (4%) |
-      | on_sale          | true            |
+      | price                   | 100.00          |
+      | ecotax                  | 0               |
+      | tax rules group         | US-AL Rate (4%) |
+      | on_sale                 | true            |
       # wholesale_price = 10, because of assigned product supplier 'price tax excluded'.
       | wholesale_price         | 10              |
       | unit_price              | 500             |
