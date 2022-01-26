@@ -217,7 +217,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
                 'price_tax_excluded' => new DecimalNumber($productSupplierForEditing->getPriceTaxExcluded()),
                 'combination' => $productSupplierForEditing->getCombinationId(),
-                'supplier' => $actualProductSupplierOption->getSupplierId(),
+                'supplier' => $productSupplierForEditing->getSupplierId(),
             ];
             if ($checkProductSuppliers) {
                 $productSupplierData['product_supplier'] = $productSupplierForEditing->getProductSupplierId();
