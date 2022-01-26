@@ -32,7 +32,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 export default class ProductFormModel {
   private eventEmitter: EventEmitter;
 
-  private mapper: ObjectFormMapper;
+  private mapper: FormObjectMapper;
 
   private precision: number;
 
@@ -53,8 +53,8 @@ export default class ProductFormModel {
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
-    this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
+    const $priceTaxExcludedInput: JQuery = this.mapper.getInputsFor('price.priceTaxExcluded');
+    this.precision = <number>$priceTaxExcludedInput.data('displayPricePrecision');
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
@@ -62,15 +62,15 @@ export default class ProductFormModel {
   }
 
   getProduct(): any {
-    return this.mapper.getModel().product;
+    return this.mapper.getModel();
   }
 
-  watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    this.mapper.watch(`product.${productModelKey}`, callback);
+  watch(modelKey: string, callback: (event: FormUpdateEvent) => void): void {
+    this.mapper.watch(modelKey, callback);
   }
 
-  set(productModelKey: string, value: string | number | string[] | undefined): void {
-    this.mapper.set(`product.${productModelKey}`, value);
+  set(modelKey: string, value: string | number | string[] | undefined): void {
+    this.mapper.set(modelKey, value);
   }
 
   /**
@@ -85,18 +85,18 @@ export default class ProductFormModel {
    */
   private updateProductPrices(event: FormUpdateEvent): void {
     const pricesFields = [
-      'product.price.priceTaxIncluded',
-      'product.price.priceTaxExcluded',
-      'product.price.taxRulesGroupId',
-      'product.price.unitPriceTaxIncluded',
-      'product.price.unitPriceTaxExcluded',
+      'price.priceTaxIncluded',
+      'price.priceTaxExcluded',
+      'price.taxRulesGroupId',
+      'price.unitPriceTaxIncluded',
+      'price.unitPriceTaxExcluded',
     ];
 
     if (!pricesFields.includes(event.modelKey)) {
       return;
     }
 
-    const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
+    const $taxRulesGroupIdInput: JQuery | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
 
     if (!$taxRulesGroupIdInput) {
       console.error('Could not find tax rules input');
@@ -123,33 +123,33 @@ export default class ProductFormModel {
 
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
-      case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
-        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
+      case 'price.priceTaxIncluded': {
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded');
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
         break;
       }
-      case 'product.price.priceTaxExcluded': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        break;
-      }
-
-      case 'product.price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
-        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
-        break;
-      }
-      case 'product.price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+      case 'price.priceTaxExcluded': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
+        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
         break;
       }
 
-      case 'product.price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+      case 'price.unitPriceTaxIncluded': {
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('price.unitPriceTaxIncluded');
+        this.mapper.set('price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
+        break;
+      }
+      case 'price.unitPriceTaxExcluded': {
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+        break;
+      }
+
+      case 'price.taxRulesGroupId': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
+        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
         break;
       }
     }
