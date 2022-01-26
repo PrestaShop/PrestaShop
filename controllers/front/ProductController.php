@@ -150,8 +150,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     if (!$this->product->id_type_redirected) {
                         if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
-                        } else {
-                            $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                         }
                     } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
                         $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
@@ -178,7 +176,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             exit;
                         case RedirectType::TYPE_GONE:
                             header('HTTP/1.1 410 Gone');
-                            header('Status: 410 Not Found');
+                            header('Status: 410 Gone');
                             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
                             $this->setTemplate('errors/410');
                             exit;
