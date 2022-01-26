@@ -24,7 +24,6 @@
  */
 
 export default {
-  'stock.quantity': 'product[stock][quantities][quantity]',
   'price.priceTaxExcluded': 'product[pricing][retail_price][price_tax_excluded]',
   'price.overrideAllPriceTaxExcluded': [
     'product[pricing][retail_price][modify_all_shops_price_tax_excluded]',
