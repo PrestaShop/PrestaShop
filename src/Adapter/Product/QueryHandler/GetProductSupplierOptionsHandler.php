@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 /**
  * Handles @see GetProductSupplierOptions query
  */
-final class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
+class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
 {
     /**
      * @var ProductRepository

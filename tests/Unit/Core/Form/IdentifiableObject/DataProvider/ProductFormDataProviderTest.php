@@ -67,7 +67,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -1063,22 +1062,18 @@ class ProductFormDataProviderTest extends TestCase
             return new ProductSupplierOptions(0, [], []);
         }
 
-        $suppliersInfos = [];
+        $productSuppliers = [];
         if (!empty($productData['product_suppliers'])) {
             foreach ($productData['product_suppliers'] as $supplierInfo) {
-                $suppliersInfos[] = new ProductSupplierInfo(
-                    $supplierInfo['supplier_name'],
+                $productSuppliers[] = new ProductSupplierForEditing(
+                    $supplierInfo['product_supplier_id'],
+                    $supplierInfo['product_id'],
                     $supplierInfo['supplier_id'],
-                    new ProductSupplierForEditing(
-                        $supplierInfo['product_supplier_id'],
-                        $supplierInfo['product_id'],
-                        $supplierInfo['supplier_id'],
-                        $supplierInfo['supplier_name'],
-                        $supplierInfo['reference'],
-                        $supplierInfo['price'],
-                        $supplierInfo['currency_id'],
-                        $supplierInfo['combination_id']
-                    )
+                    $supplierInfo['supplier_name'],
+                    $supplierInfo['reference'],
+                    $supplierInfo['price'],
+                    $supplierInfo['currency_id'],
+                    $supplierInfo['combination_id']
                 );
             }
         }
@@ -1086,7 +1081,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductSupplierOptions(
             $productData['suppliers']['default_supplier_id'],
             $productData['suppliers']['supplier_ids'],
-            $suppliersInfos
+            $productSuppliers
         );
     }
 
