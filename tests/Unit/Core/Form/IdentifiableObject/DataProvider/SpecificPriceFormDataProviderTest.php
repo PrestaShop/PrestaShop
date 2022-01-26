@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Customer
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SpecificPriceFormDataProvider;
 
 class SpecificPriceFormDataProviderTest extends TestCase
@@ -49,6 +50,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
         $expectedDefaultData = [
             'reduction' => [
                 'value' => 0,
+                'type' => Reduction::TYPE_AMOUNT,
             ],
             'leave_initial_price' => false,
             'from_quantity' => 1,
