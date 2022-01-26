@@ -121,6 +121,9 @@ export default class CombinationsService implements ServiceType {
   }
 
   /**
+   * It actually updates one combination at a time, but calls api designed for bulk update purpose
+   *  (same form applied to multiple combinations one by one)
+   *
    * @param {number} combinationId
    * @param {Object} data
    *
