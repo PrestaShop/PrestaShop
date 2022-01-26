@@ -195,6 +195,7 @@ class RedirectOptionType extends TranslatorAwareType
     {
         return [
             $this->trans('No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (410) = Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help'),
             $this->trans('Permanent redirection (301) = Permanently display another product or category instead.', 'Admin.Catalog.Help'),
             $this->trans('Temporary redirection (302) = Temporarily display another product or category instead.', 'Admin.Catalog.Help'),
         ];
