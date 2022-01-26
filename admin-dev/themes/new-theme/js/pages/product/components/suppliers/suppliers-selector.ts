@@ -29,27 +29,15 @@ import {Supplier} from '@pages/product/components/suppliers/supplier-types';
 const {$} = window;
 
 export default class SuppliersSelector {
-  private defaultSupplierCallback?: (defaultSupplier: Supplier) => void;
-
   private updateSuppliersCallback?: (suppliers: Array<Supplier>) => void;
 
   private $supplierIdsGroup: JQuery;
 
   private $defaultSupplierGroup: JQuery;
 
-  /**
-   * @todo: productFormModel should not be used for combination suppliers.
-   *        It is now also initialized for combinations as temporary fix to, but should be fixed in other PR.
-   *        Dedicated issue- https://github.com/PrestaShop/PrestaShop/issues/26906
-   */
-  constructor(
-    parentFormId: string,
-    defaultSupplierCallback?: (defaultSupplier: Supplier) => void,
-    updateSuppliersCallback?: (suppliers: Array<Supplier>) => void,
-  ) {
+  constructor(updateSuppliersCallback?: (suppliers: Array<Supplier>) => void) {
     this.$supplierIdsGroup = $(ProductMap.suppliers.supplierIdsInput).closest('.form-group');
     this.$defaultSupplierGroup = $(ProductMap.suppliers.defaultSupplierInput).closest('.form-group');
-    this.defaultSupplierCallback = defaultSupplierCallback;
     this.updateSuppliersCallback = updateSuppliersCallback;
 
     this.init();
@@ -64,17 +52,6 @@ export default class SuppliersSelector {
         this.updateSuppliersCallback(this.getSelectedSuppliers());
       }
     });
-
-    // Default supplier changed
-    this.$defaultSupplierGroup.on('change', 'input', () => {
-      const defaultProductSupplier = this.getDefaultSupplier();
-
-      if (!this.defaultSupplierCallback || !defaultProductSupplier) {
-        return;
-      }
-
-      this.defaultSupplierCallback(defaultProductSupplier);
-    });
   }
 
   getDefaultSupplier(): Supplier | null {
@@ -84,18 +61,11 @@ export default class SuppliersSelector {
       return null;
     }
 
-    const defaultSupplier: Supplier = {
+    return {
       supplierId: <string> $defaultSupplier.first().val(),
       supplierName: <string> $defaultSupplier.first().data('label'),
       isDefault: true,
     };
-    const $defaultPriceInput = $(ProductMap.suppliers.supplierPriceInput(defaultSupplier.supplierId));
-
-    if (!$defaultPriceInput.length) {
-      defaultSupplier.price = <number> $defaultPriceInput.val();
-    }
-
-    return defaultSupplier;
   }
 
   private getSelectedSuppliers(): Array<Supplier> {
