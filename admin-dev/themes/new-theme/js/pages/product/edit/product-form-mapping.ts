@@ -24,20 +24,21 @@
  */
 
 export default {
-  'product.stock.quantity': 'product[stock][quantities][quantity]',
-  'product.price.priceTaxExcluded': 'product[pricing][retail_price][price_tax_excluded]',
-  'product.price.overrideAllPriceTaxExcluded': [
+  'stock.quantity': 'product[stock][quantities][quantity]',
+  'price.priceTaxExcluded': 'product[pricing][retail_price][price_tax_excluded]',
+  'price.overrideAllPriceTaxExcluded': [
     'product[pricing][retail_price][modify_all_shops_price_tax_excluded]',
     'product[pricing][retail_price][modify_all_shops_price_tax_included]',
   ],
-  'product.price.priceTaxIncluded': 'product[pricing][retail_price][price_tax_included]',
-  'product.price.taxRulesGroupId': 'product[pricing][tax_rules_group_id]',
-  'product.price.wholesalePrice': 'product[pricing][wholesale_price]',
-  'product.price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
-  'product.price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
-  'product.price.overrideAllUnitPriceTaxExcluded': [
+  'price.priceTaxIncluded': 'product[pricing][retail_price][price_tax_included]',
+  'price.taxRulesGroupId': 'product[pricing][tax_rules_group_id]',
+  'price.wholesalePrice': 'product[pricing][wholesale_price]',
+  'price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
+  'price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
+  'price.overrideAllUnitPriceTaxExcluded': [
     'product[pricing][unit_price][modify_all_shops_price_tax_excluded]',
     'product[pricing][unit_price][modify_all_shops_price_tax_included]',
   ],
-  'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
+  'stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
+  'suppliers.defaultSupplierId': 'product[options][suppliers][default_supplier_id]',
 };
