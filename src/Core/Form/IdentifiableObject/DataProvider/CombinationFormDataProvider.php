@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSu
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -155,15 +155,14 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'product_suppliers' => [],
         ];
 
-        /** @var ProductSupplierInfo[] $combinationSupplierInfos */
-        $combinationSupplierInfos = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
+        /** @var ProductSupplierForEditing[] $combinationProductSuppliers */
+        $combinationProductSuppliers = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
 
-        if (empty($combinationSupplierInfos)) {
+        if (empty($combinationProductSuppliers)) {
             return $suppliersData;
         }
 
-        foreach ($combinationSupplierInfos as $supplierOption) {
-            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
+        foreach ($combinationProductSuppliers as $supplierForEditing) {
             $supplierId = $supplierForEditing->getSupplierId();
 
             $suppliersData['product_suppliers'][$supplierId] = [
