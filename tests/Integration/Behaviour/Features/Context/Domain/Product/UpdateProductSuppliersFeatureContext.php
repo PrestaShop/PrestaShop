@@ -210,8 +210,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         }
 
         $actualProductSuppliers = [];
-        foreach ($actualProductSupplierOptions->getSuppliersInfo() as $actualProductSupplierOption) {
-            $productSupplierForEditing = $actualProductSupplierOption->getProductSupplierForEditing();
+        foreach ($actualProductSupplierOptions->getProductSuppliers() as $productSupplierForEditing) {
             $productSupplierData = [
                 'reference' => $productSupplierForEditing->getReference(),
                 'currency' => Currency::getIsoCodeById($productSupplierForEditing->getCurrencyId()),
@@ -263,7 +262,7 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
     public function assertProductHasNoSuppliersInfo(string $productReference): void
     {
         Assert::assertEmpty(
-            $this->getProductSupplierOptions($productReference)->getSuppliersInfo(),
+            $this->getProductSupplierOptions($productReference)->getProductSuppliers(),
             sprintf('Expected product %s to have no suppliers assigned', $productReference)
         );
     }
