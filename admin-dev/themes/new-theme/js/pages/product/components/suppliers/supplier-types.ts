@@ -26,8 +26,7 @@
 export type Supplier = {
   supplierId: string,
   supplierName: string,
-  isDefault: boolean,
-  price?: number
+  isDefault: boolean
 }
 export type ProductSupplier = {
   supplierId: string,
