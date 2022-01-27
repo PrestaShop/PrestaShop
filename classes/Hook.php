@@ -126,8 +126,18 @@ class HookCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         Cache::clean('hook_idsbyname');
+        Cache::clean('hook_idsbyname_withalias');
+        Cache::clean('active_hooks');
 
         return parent::add($autodate, $null_values);
+    }
+
+    public function clearCache($all = false)
+    {
+        Cache::clean('hook_idsbyname');
+        Cache::clean('hook_idsbyname_withalias');
+        Cache::clean('active_hooks');
+        parent::clearCache($all);
     }
 
     /**
@@ -1262,11 +1272,23 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $sql = new DbQuery();
-        $sql->select('active');
-        $sql->from('hook', 'h');
-        $sql->where('h.name = "' . pSQL($hook_name) . '"');
+        $hook_names = [];
+        if (Cache::isStored('active_hooks')) {
+            $hook_names = Cache::retrieve('active_hooks');
+        } else {
+            $sql = new DbQuery();
+            $sql->select('name');
+            $sql->from('hook', 'h');
+            $sql->where('h.active = 1');
+            $active_hooks = Db::getInstance()->executeS($sql);
+            if (!empty($active_hooks)) {
+                $hook_names = array_column($active_hooks, 'name');
+                if (is_array($hook_names)) {
+                    Cache::store('active_hooks', $hook_names);
+                }
+            }
+        }
 
-        return (bool) Db::getInstance()->getValue($sql);
+        return in_array($hook_name, $hook_names);
     }
 }

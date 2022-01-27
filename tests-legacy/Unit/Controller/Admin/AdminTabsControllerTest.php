@@ -105,8 +105,9 @@ class AdminTabsControllerTest extends UnitTestCase
                 if ($subject instanceof DbQuery) {
                     $builtQuery = $subject->build();
 
-                    // It should select modules
-                    return strpos($builtQuery, 'module') !== false;
+                    // It should select modules and test if hook is active
+                    return strpos($builtQuery, 'module') !== false ||
+                        strpos($builtQuery, 'hook') !== false;
 
                 }
 
