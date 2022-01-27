@@ -120,7 +120,7 @@ class CategoryControllerCore extends ProductListingFrontController
             $check_exceptions = true,
             $use_push = false,
             $id_shop = null,
-            $chain = true
+            $chain = false
         );
         if (!empty($filteredCategory['object'])) {
             $categoryVar = $filteredCategory['object'];
