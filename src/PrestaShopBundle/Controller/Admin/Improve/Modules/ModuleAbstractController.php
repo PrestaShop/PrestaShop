@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
@@ -59,6 +60,11 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         ];
     }
 
+    protected function getModuleRepository(): ModuleRepositoryInterface
+    {
+        return $this->get('prestashop.core.admin.module.repository');
+    }
+
     /**
      * Common method for all module related controller for getting the header buttons.
      *
@@ -84,11 +90,42 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return $toolbarButtons;
+        return array_merge($toolbarButtons, $this->getExtraToolbarButtons());
     }
 
-    protected function getModuleRepository(): ModuleRepositoryInterface
+    /**
+     * This method will call the actionAdminModuleExtraToolbarButton hook and allow
+     * modules to add some extra buttons to the modules catalogue toolbar.
+     * All the button's specification keys ('href', 'desc', 'icon', 'help') are mandatory
+     */
+    private function getExtraToolbarButtons(): array
     {
-        return $this->get('prestashop.core.admin.module.repository');
+        try {
+            $extraToolbarContentFromHooks = (new HookFinder())
+                ->setHookName('actionAdminModuleExtraToolbarButton')
+                ->setParams(['controller' => $this])
+                ->find();
+        } catch (CoreException $exception) {
+            return [];
+        }
+
+        $extraToolbarButtons = [];
+
+        // Validation. We check that we have the exact keys
+        foreach ($extraToolbarContentFromHooks as $moduleName => $extraToolbarContentFromHook) {
+            if (!is_array($extraToolbarContentFromHook)) {
+                continue;
+            }
+
+            foreach ($extraToolbarContentFromHook as $buttonIndex => $extraToolbarButton) {
+                if (!empty(array_diff(['href', 'desc', 'icon', 'help'], array_keys($extraToolbarButton)))) {
+                    return [];
+                } else {
+                    $extraToolbarButtons[$buttonIndex] = $extraToolbarButton;
+                }
+            }
+        }
+
+        return $extraToolbarButtons;
     }
 }
