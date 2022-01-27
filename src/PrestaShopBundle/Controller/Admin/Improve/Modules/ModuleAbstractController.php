@@ -27,8 +27,10 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
+use PrestaShopBundle\Service\Hook\HookFinder;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
@@ -89,6 +91,42 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return $toolbarButtons;
+        return array_merge($toolbarButtons, $this->getExtraToolbarButtons());
+    }
+
+    /**
+     * This method will call the actionAdminModuleExtraToolbarButton hook and allow
+     * modules to add some extra buttons to the modules catalogue toolbar.
+     * All the button's specification keys ('href', 'desc', 'icon', 'help') are mandatory
+     */
+    private function getExtraToolbarButtons(): array
+    {
+        try {
+            $extraToolbarContentFromHooks = (new HookFinder())
+                ->setHookName('actionAdminModuleExtraToolbarButton')
+                ->setParams(['controller' => $this])
+                ->find();
+        } catch (CoreException $exception) {
+            return [];
+        }
+
+        $extraToolbarButtons = [];
+
+        // Validation. We check that we have the exact keys
+        foreach ($extraToolbarContentFromHooks as $moduleName => $extraToolbarContentFromHook) {
+            if (!is_array($extraToolbarContentFromHook)) {
+                continue;
+            }
+
+            foreach ($extraToolbarContentFromHook as $buttonIndex => $extraToolbarButton) {
+                if (!empty(array_diff(['href', 'desc', 'icon', 'help'], array_keys($extraToolbarButton)))) {
+                    return [];
+                } else {
+                    $extraToolbarButtons[$buttonIndex] = $extraToolbarButton;
+                }
+            }
+        }
+
+        return $extraToolbarButtons;
     }
 }
