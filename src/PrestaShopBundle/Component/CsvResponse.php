@@ -196,8 +196,14 @@ class CsvResponse extends StreamedResponse
     private function processDataArray()
     {
         $handle = tmpfile();
+
+        // Write BOM - for proper recognition of the encoding
+        fwrite($handle, (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
+        // Write first row of CSV - the header
         fputcsv($handle, $this->headersData, ';');
 
+        // Write other rows of CSV - the content
         foreach ($this->data as $line) {
             fputcsv($handle, $line, ';');
         }
@@ -211,8 +217,14 @@ class CsvResponse extends StreamedResponse
     private function processDataCallback()
     {
         $handle = tmpfile();
+
+        // Write BOM - for proper recognition of the encoding
+        fwrite($handle, (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
+        // Write first row of CSV - the header
         fputcsv($handle, $this->headersData, ';');
 
+        // Write other rows of CSV - the content
         do {
             $data = call_user_func_array($this->data, [$this->start, $this->limit]);
 
