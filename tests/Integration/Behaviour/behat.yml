@@ -244,10 +244,11 @@ default:
         product:
             paths:
                 - "%paths.base%/Features/Scenario/Product"
+            filters:
+                tags: "~@legacy-product-type"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
@@ -308,6 +309,21 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
+        legacy_product:
+            paths:
+                - "%paths.base%/Features/Scenario/Product"
+            filters:
+                tags: "@legacy-product-type"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CategoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProductFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
         shop:
             paths:
                 - "%paths.base%/Features/Scenario/Shop"

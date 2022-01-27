@@ -8,7 +8,8 @@ Feature: Legacy products have consistent product type through dynamic checking (
   I need to be sure that "legacy" products (created with page v1) have a correct product type (used for v2)
 
   Background:
-    Given language with iso code "en" is the default one
+    Given shop "shop1" with name "test_shop" exists
+    And language with iso code "en" is the default one
     And attribute group "Size" named "Size" in en language exists
     And attribute group "Color" named "Color" in en language exists
     And attribute "S" named "S" in en language exists
@@ -18,6 +19,7 @@ Feature: Legacy products have consistent product type through dynamic checking (
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
+    And single shop shop1 context is loaded
 
   Scenario: I create a standard product using legacy methods, its product type should be standard
     Given there is a product in the catalog named "Standard Product" with a price of 15.0 and 100 items in stock
