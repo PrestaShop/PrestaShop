@@ -1069,6 +1069,11 @@ class AdminControllerCore extends Controller
         header('Content-disposition: attachment; filename="' . $this->table . '_' . date('Y-m-d_His') . '.csv"');
 
         $fd = fopen('php://output', 'wb');
+
+        // Write BOM - for proper recognition of the encoding
+        fwrite($fd, (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+
+        // Write first row of CSV - the header
         $headers = [];
         foreach ($this->fields_list as $key => $datas) {
             if ('PDF' === $datas['title']) {
@@ -1083,6 +1088,7 @@ class AdminControllerCore extends Controller
         }
         fputcsv($fd, $headers, ';', $text_delimiter);
 
+        // Write other rows of CSV - the content
         foreach ($this->_list as $i => $row) {
             $content = [];
             $path_to_image = false;
