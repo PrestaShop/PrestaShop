@@ -35,6 +35,7 @@ use PrestaShopBundle\Service\Hook\HookFinder;
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
+    public const MANDATORY_TOOLBAR_BUTTON_KEYS = ['href', 'desc', 'icon', 'help'];
 
     public const CONFIGURABLE_MODULE_TYPE = 'to_configure';
     public const UPDATABLE_MODULE_TYPE = 'to_update';
@@ -118,7 +119,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             }
 
             foreach ($extraToolbarContentFromHook as $buttonIndex => $extraToolbarButton) {
-                if (!empty(array_diff(['href', 'desc', 'icon', 'help'], array_keys($extraToolbarButton)))) {
+                if (count(array_intersect_key(static::MANDATORY_TOOLBAR_BUTTON_KEYS, array_keys($extraToolbarButton))) !== count(static::MANDATORY_TOOLBAR_BUTTON_KEYS)) {
                     return [];
                 } else {
                     $extraToolbarButtons[$buttonIndex] = $extraToolbarButton;
