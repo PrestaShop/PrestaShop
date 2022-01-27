@@ -173,10 +173,10 @@ class SEOType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product. Separate each tag with a comma.', 'Admin.Catalog.Feature'),
+                'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product.', 'Admin.Catalog.Feature'),
                 'help' => sprintf(
                     '%s %s',
-                    $this->trans('To add tags, click in the field, write something, and then press the "Enter" key or comma.', 'Admin.Shopparameters.Help'),
+                    $this->trans('Separate each tag with a comma or press the Enter key.', 'Admin.Shopparameters.Help'),
                     $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
                 ),
                 'external_link' => [
