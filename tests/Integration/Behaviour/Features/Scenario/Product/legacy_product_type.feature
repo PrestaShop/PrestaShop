@@ -9,7 +9,6 @@ Feature: Legacy products have consistent product type through dynamic checking (
 
   Background:
     Given language with iso code "en" is the default one
-    And the current currency is "USD"
     And attribute group "Size" named "Size" in en language exists
     And attribute group "Color" named "Color" in en language exists
     And attribute "S" named "S" in en language exists

@@ -34,6 +34,7 @@ use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Configuration;
+use Currency;
 use Exception;
 use Language;
 use ObjectModel;
@@ -298,6 +299,16 @@ abstract class AbstractDomainFeatureContext implements Context
     protected function getDefaultLangId(): int
     {
         return (int) Configuration::get('PS_LANG_DEFAULT');
+    }
+
+    protected function getDefaultCurrencyId(): int
+    {
+        return (int) Configuration::get('PS_CURRENCY_DEFAULT');
+    }
+
+    protected function getDefaultCurrencyIsoCode(): string
+    {
+        return Currency::getIsoCodeById($this->getDefaultCurrencyId());
     }
 
     /**

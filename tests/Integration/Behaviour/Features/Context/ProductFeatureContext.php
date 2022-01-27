@@ -659,6 +659,9 @@ class ProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * This step was created when CQRS commands did not exist for product It shouldn't be used unless you want to force
+     * creating combinations in a "legacy way" and make sure they are consistent with the usage of new commands.
+     *
      * @Given /^product "(.+)" has combinations with following details:$/
      */
     public function productWithNameHasCombinationsWithFollowingDetails($productName, TableNode $table)
