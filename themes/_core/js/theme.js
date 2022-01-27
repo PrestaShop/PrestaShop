@@ -1,6 +1,5 @@
 import $ from 'jquery';
 
-
 import './migrate-mute';
 import 'jquery-migrate';
 import 'jquery.browser';
