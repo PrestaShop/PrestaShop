@@ -65,8 +65,13 @@ final class ExportCsvFileWriter implements FileWriterInterface
             throw new FileWritingException(sprintf('Cannot open export file for writing'), FileWritingException::CANNOT_OPEN_FILE_FOR_WRITING);
         }
 
+        // Write BOM - for proper recognition of the encoding
+        $exportFile->fwrite(chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // Write first row of CSV - the header
         $exportFile->fputcsv($data->getTitles(), ';');
 
+        // Write other rows of CSV - the content
         foreach ($data->getRows() as $row) {
             $exportFile->fputcsv($row, ';');
         }
