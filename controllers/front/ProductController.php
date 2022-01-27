@@ -178,7 +178,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Status: 410 Gone');
                             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
                             $this->setTemplate('errors/410');
-                            
+
                             break;
                         case RedirectType::TYPE_NOT_FOUND:
                         default:
