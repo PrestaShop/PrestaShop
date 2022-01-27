@@ -116,7 +116,7 @@ class CategoryControllerCore extends ProductListingFrontController
             'filterCategoryContent',
             ['object' => $categoryVar],
             $id_module = null,
-            $array_return = false,
+            $array_return = true,
             $check_exceptions = true,
             $use_push = false,
             $id_shop = null,
