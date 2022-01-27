@@ -35,7 +35,7 @@
         <div class="row">
           <div class="col-md-5 divide-right">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6 product-image-block">
                 {if $product.default_image}
                   <img
                     src="{$product.default_image.medium.url}"
