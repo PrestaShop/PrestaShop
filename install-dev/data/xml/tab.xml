@@ -69,6 +69,11 @@
                     <wording>Products</wording>
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
+                <tab id="Products_v2" id_parent="Catalog" active="1" enabled="1" icon="science" route_name="admin_products_v2_index">
+                  <class_name>AdminProducts</class_name>
+                  <wording>Products (experimental)</wording>
+                  <wording_domain>Admin.Navigation.Menu</wording_domain>
+                </tab>
                 <tab id="Categories" id_parent="Catalog" active="1" enabled="1">
                     <class_name>AdminCategories</class_name>
                     <wording>Categories</wording>
@@ -268,9 +273,9 @@
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
                     <tab id="Mail_Theme" id_parent="Mail_Theme_Parent" active="1" enabled="1">
-                      <class_name>AdminMailTheme</class_name>
-                      <wording>Email Theme</wording>
-                      <wording_domain>Admin.Navigation.Menu</wording_domain>
+                        <class_name>AdminMailTheme</class_name>
+                        <wording>Email Theme</wording>
+                        <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
 
                 <tab id="Pages" id_parent="Look_feel" active="1" enabled="1">
@@ -363,9 +368,9 @@
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
                     <tab id="Zones" id_parent="Locations" active="1" enabled="1">
-                      <class_name>AdminZones</class_name>
-                      <wording>Zones</wording>
-                      <wording_domain>Admin.Navigation.Menu</wording_domain>
+                        <class_name>AdminZones</class_name>
+                        <wording>Zones</wording>
+                        <wording_domain>Admin.Navigation.Menu</wording_domain>
                     </tab>
                     <tab id="Countries" id_parent="Locations" active="1" enabled="1">
                         <class_name>AdminCountries</class_name>
@@ -647,22 +652,22 @@
 
       <!--QUICK ACCESS-->
       <tab id="Quick_Access" id_parent="-1" active="1" enabled="1">
-        <class_name>AdminQuickAccesses</class_name>
-        <wording>Quick Access</wording>
-        <wording_domain>Admin.Navigation.Menu</wording_domain>
+          <class_name>AdminQuickAccesses</class_name>
+          <wording>Quick Access</wording>
+          <wording_domain>Admin.Navigation.Menu</wording_domain>
       </tab>
 
       <!--DEFAULT-->
       <tab id="DEFAULT" id_parent="" active="1" enabled="1">
-        <class_name>DEFAULT</class_name>
-        <wording>More</wording>
-        <wording_domain>Admin.Navigation.Menu</wording_domain>
+          <class_name>DEFAULT</class_name>
+          <wording>More</wording>
+          <wording_domain>Admin.Navigation.Menu</wording_domain>
       </tab>
 
       <tab id="Patterns" id_parent="-1" active="1" enabled="1">
-        <class_name>AdminPatterns</class_name>
-        <wording/>
-        <wording_domain/>
+          <class_name>AdminPatterns</class_name>
+          <wording/>
+          <wording_domain/>
       </tab>
     </entities>
 </entity_tab>
