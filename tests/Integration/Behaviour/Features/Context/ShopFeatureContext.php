@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
+use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 use Shop;
 use ShopGroup;
@@ -45,6 +46,26 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @AfterFeature @restore-shops-after-feature
+     */
+    public static function restoreShopTablesAfterFeature(): void
+    {
+        static::restoreShopTables();
+    }
+
+    private static function restoreShopTables(): void
+    {
+        DatabaseDump::restoreTables([
+            'shop',
+            'shop_group',
+            'shop_url',
+        ]);
+        DatabaseDump::restoreMatchingTables('/.*_shop$/');
+        Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Shop::resetStaticCache();
+    }
+
     /**
      * @Given single shop :shopReference context is loaded
      *
@@ -73,6 +94,23 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
         }
 
         SharedStorage::getStorage()->set($reference, $shopId);
+    }
+
+    /**
+     * @Given shop group :reference with name :shopGroupName exists
+     *
+     * @param string $reference
+     * @param string $shopName
+     */
+    public function shopGroupWithNameExists(string $reference, string $shopName): void
+    {
+        $shopGroupId = ShopGroup::getIdByName($shopName);
+
+        if (empty($shopGroupId)) {
+            throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
+        }
+
+        SharedStorage::getStorage()->set($reference, new ShopGroup($shopGroupId));
     }
 
     /**

@@ -33,7 +33,7 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
@@ -78,7 +78,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -90,6 +89,7 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
+    private const DEFAULT_SHOP_ID = 99;
     private const COVER_URL = 'http://localhost/cover.jpg';
 
     public function testGetDefaultData(): void
@@ -229,6 +229,41 @@ class ProductFormDataProviderTest extends TestCase
 
         // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
+    }
+
+    public function testSwitchDefaultContextShop(): void
+    {
+        // The real test is performed by the mock here, which assert the correct shopId is used
+        $queryBusMock = $this->createQueryBusCheckingShopMock(self::DEFAULT_SHOP_ID);
+        $provider = new ProductFormDataProvider(
+            $queryBusMock,
+            false,
+            42,
+            self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            null
+        );
+
+        $formData = $provider->getData(static::PRODUCT_ID);
+        $this->assertNotNull($formData);
+
+        $contextShopId = 51;
+        $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
+        $provider = new ProductFormDataProvider(
+            $queryBusMock,
+            false,
+            42,
+            self::HOME_CATEGORY_ID,
+            $this->mockCategoryDataProvider(),
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            $contextShopId
+        );
+
+        $formData = $provider->getData(static::PRODUCT_ID);
+        $this->assertNotNull($formData);
     }
 
     /**
@@ -1304,30 +1339,62 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param array $productData
+     * @param int $expectedShopId
      *
-     * @return MockObject|CommandBusInterface
+     * @return CommandBusInterface
      */
-    private function createQueryBusMock(array $productData)
+    private function createQueryBusCheckingShopMock(int $expectedShopId): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
         $queryBusMock
             ->method('handle')
-            ->with($this->logicalOr(
-                $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
-                $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class),
-                $this->isInstanceOf(GetEmployeesStockMovements::class),
-                $this->isInstanceOf(GetRelatedProducts::class)
-            ))
+            ->with($this->getHandledQueries())
+            ->willReturnCallback(function ($query) use ($expectedShopId) {
+                if ($query instanceof GetProductForEditing) {
+                    $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
+                }
+
+                return $this->createResultBasedOnQuery($query, []);
+            })
+        ;
+
+        return $queryBusMock;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return CommandBusInterface
+     */
+    private function createQueryBusMock(array $productData): CommandBusInterface
+    {
+        $queryBusMock = $this->createMock(CommandBusInterface::class);
+
+        $queryBusMock
+            ->method('handle')
+            ->with($this->getHandledQueries())
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
             })
         ;
 
         return $queryBusMock;
+    }
+
+    /**
+     * @return LogicalOr
+     */
+    private function getHandledQueries(): LogicalOr
+    {
+        return $this->logicalOr(
+            $this->isInstanceOf(GetProductForEditing::class),
+            $this->isInstanceOf(GetProductSupplierOptions::class),
+            $this->isInstanceOf(GetProductFeatureValues::class),
+            $this->isInstanceOf(GetProductCustomizationFields::class),
+            $this->isInstanceOf(GetEmployeesStockMovements::class),
+            $this->isInstanceOf(GetRelatedProducts::class)
+        );
     }
 
     /**
@@ -1479,16 +1546,15 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
     {
-        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
-        $urlGeneratorMock->method('generate')->willReturnArgument(0);
-
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
             42,
             self::HOME_CATEGORY_ID,
             $this->mockCategoryDataProvider(),
-            self::CONTEXT_LANG_ID
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            null
         );
     }
 

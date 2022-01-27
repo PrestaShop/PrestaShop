@@ -85,7 +85,7 @@ class ShopCore extends ObjectModel
         ],
     ];
 
-    /** @var array List of shops cached */
+    /** @var array|null List of shops cached */
     protected static $shops;
 
     protected static $asso_tables = [];
@@ -179,6 +179,7 @@ class ShopCore extends ObjectModel
             'product' => ['type' => 'shop'],
             'product_attribute' => ['type' => 'shop'],
             'product_lang' => ['type' => 'fk_shop'],
+            'customization_field_lang' => ['type' => 'fk_shop'],
             'referrer' => ['type' => 'shop'],
             'store' => ['type' => 'shop'],
             'webservice_account' => ['type' => 'shop'],
@@ -997,6 +998,14 @@ class ShopCore extends ObjectModel
         return self::$context;
     }
 
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        static::$shops = null;
+        static::$feature_active = null;
+        Cache::clean('Shop::*');
+    }
+
     /**
      * Reset current context of shop.
      */
@@ -1194,6 +1203,7 @@ class ShopCore extends ObjectModel
         $tables_import['category_lang'] = true;
         if (isset($tables_import['product'])) {
             $tables_import['product_lang'] = true;
+            $tables_import['customization_field_lang'] = true;
         }
 
         if (isset($tables_import['module'])) {

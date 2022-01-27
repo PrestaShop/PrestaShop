@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Feature\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use FeatureValue;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Feature\Validate\FeatureValueValidator;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotAddFeatureValueException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\CannotUpdateFeatureValueException;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureValueIdExc
 use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureValueId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
  * Methods to access data storage for FeatureValue

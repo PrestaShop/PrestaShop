@@ -29,24 +29,27 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder;
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
+    private const MULTI_SHOP_PREFIX = 'prices_multi_shop';
+
     /**
      * @dataProvider getExpectedCommands
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new PricesCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    public function getExpectedCommands(): iterable
     {
         yield [
             [
@@ -55,17 +58,16 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
         yield [
             [
                 'pricing' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setPrice('45.56');
         yield [
             [
@@ -79,7 +81,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setPrice('45.56');
         yield [
             [
@@ -94,7 +96,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setEcotax('45.56');
         yield [
             [
@@ -108,7 +110,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setTaxRulesGroupId(42);
         yield [
             [
@@ -120,7 +122,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setOnSale(true);
         yield [
             [
@@ -132,7 +134,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setOnSale(false);
         yield [
             [
@@ -144,7 +146,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setWholesalePrice('45.56');
         yield [
             [
@@ -156,7 +158,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setUnitPrice('45.56');
         yield [
             [
@@ -170,7 +172,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductPricesCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setUnity('kg');
         yield [
             [
@@ -183,5 +185,152 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+    }
+
+    /**
+     * @dataProvider getExpectedCommandsMultiShop
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
+    {
+        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function getExpectedCommandsMultiShop(): iterable
+    {
+        $command = $this->getSingleShopCommand();
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setPrice('45.56');
+        yield [
+            [
+                'pricing' => [
+                    'not_handled' => 0,
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setPrice('45.56')
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price_tax_excluded' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setPrice('45.56')
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => false,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price_tax_excluded' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $singleCommand = $this->getSingleShopCommand();
+        $singleCommand
+            ->setEcotax('45.56')
+            ->setTaxRulesGroupId(42)
+            ->setOnSale(true)
+            ->setWholesalePrice('45.56')
+            ->setUnitPrice('45.56')
+            ->setUnity('kg')
+        ;
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand
+            ->setPrice('45.56')
+        ;
+        yield [
+            [
+                'pricing' => [
+                    'retail_price' => [
+                        'price_tax_excluded' => 45.56,
+                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
+                        'ecotax' => '45.56',
+                    ],
+                    'tax_rules_group_id' => '42',
+                    'on_sale' => true,
+                    'wholesale_price' => '45.56',
+                    'unit_price' => [
+                        'price_tax_excluded' => '45.56',
+                        'unity' => 'kg',
+                    ],
+                ],
+            ],
+            [$singleCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductPricesCommand
+    {
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+    }
+
+    private function getAllShopsCommand(): UpdateProductPricesCommand
+    {
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

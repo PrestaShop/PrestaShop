@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductCommandsBuilder;
 
 /**
@@ -49,15 +50,31 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     private $commandsBuilder;
 
     /**
+     * @var int
+     */
+    private $defaultShopId;
+
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param CommandBusInterface $bus
      * @param ProductCommandsBuilder $commandsBuilder
+     * @param int $defaultShopId
+     * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $bus,
-        ProductCommandsBuilder $commandsBuilder
+        ProductCommandsBuilder $commandsBuilder,
+        int $defaultShopId,
+        ?int $contextShopId
     ) {
         $this->bus = $bus;
         $this->commandsBuilder = $commandsBuilder;
+        $this->defaultShopId = $defaultShopId;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -65,7 +82,11 @@ class ProductFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data): int
     {
-        $createCommand = new AddProductCommand($data['type']);
+        // If a shop is selected in the context the product is added to it, if not use the default shop as a fallback
+        $createCommand = new AddProductCommand(
+            $data['header']['type'],
+            $this->contextShopId ?: $this->defaultShopId
+        );
 
         /** @var ProductId $productId */
         $productId = $this->bus->handle($createCommand);
@@ -78,7 +99,12 @@ class ProductFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        $commands = $this->commandsBuilder->buildCommands(new ProductId($id), $data);
+        $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
+        $commands = $this->commandsBuilder->buildCommands(
+            new ProductId($id),
+            $data,
+            $shopConstraint
+        );
 
         foreach ($commands as $command) {
             $this->bus->handle($command);

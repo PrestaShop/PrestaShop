@@ -99,7 +99,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
     arguments:
       - '@prestashop.core.util.number.number_extractor'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.category.repository.category_repository'
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
@@ -116,7 +116,7 @@ services:
   prestashop.adapter.product.command_handler.add_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand
@@ -133,7 +133,7 @@ services:
   prestashop.adapter.product.command_handler.update_product_prices_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPricesHandler
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.update.product_price_properties_filler'
       - '@prestashop.adapter.product.repository.product_supplier_repository'
     tags:
@@ -268,6 +268,15 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.product.validate.product_validator'
+      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
+      - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
+
+  prestashop.adapter.product.repository.product_multi_shop_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.product.validate.product_validator'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id_category'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@prestashop.adapter.manufacturer.repository.manufacturer_repository'
@@ -391,6 +400,14 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand
 
+  prestashop.adapter.product.shop.command_handler.copy_product_to_shop_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\CopyProductToShopHandler
+    arguments:
+      - '@prestashop.adapter.product.update.product_shop_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop
+
   prestashop.adapter.product.product_duplicator:
     class: PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator
     arguments:
@@ -420,3 +437,9 @@ services:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
+
+  prestashop.adapter.product.update.product_shop_updater:
+    class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater
+    arguments:
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.shop.repository.shop_repository'

@@ -85,6 +85,7 @@ class RetailPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
@@ -97,6 +98,7 @@ class RetailPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_shops' => true,
             ])
         ;
 
@@ -108,6 +110,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
+                'modify_all_shops' => true,
             ]);
         }
     }

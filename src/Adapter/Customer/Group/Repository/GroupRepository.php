@@ -27,9 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Customer\Group\Repository;
 
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\Exception\GroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Group\ValueObject\GroupId;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 /**
  * Provides methods to access Group data storage

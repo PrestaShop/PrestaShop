@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Combination;
-use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
@@ -235,7 +234,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             (int) $combination->low_stock_threshold,
             (bool) $combination->low_stock_alert,
             $stockAvailable->location,
-            DateTimeUtil::NULL_DATE === $combination->available_date ? null : new DateTime($combination->available_date)
+            DateTimeUtil::buildDateTimeOrNull($combination->available_date)
         );
     }
 

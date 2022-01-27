@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPr
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 use SpecificPrice;
 

@@ -30,15 +30,15 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
@@ -50,10 +50,11 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 use Product;
 
@@ -78,11 +79,6 @@ class ProductRepository extends AbstractObjectModelRepository
     private $productValidator;
 
     /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
      * @var TaxRulesGroupRepository
      */
     private $taxRulesGroupRepository;
@@ -96,7 +92,6 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
-     * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
      */
@@ -104,19 +99,21 @@ class ProductRepository extends AbstractObjectModelRepository
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId,
         TaxRulesGroupRepository $taxRulesGroupRepository,
         ManufacturerRepository $manufacturerRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
     }
 
     /**
+     * @todo: Not sure this should be in the repository as it gives a false feeling the the repository can duplicate a
+     *        product on its own, but you actually need to use the ProductDuplicator service to do it right, this method
+     *        should be removed and the duplicator service should rely on repository to add/update but it is the one that
+     *        must perform the required modifications on the object instance
      * Duplicates product entity without relations
      *
      * @param Product $product
@@ -169,6 +166,8 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws ProductNotFoundException
      */
     public function assertProductExists(ProductId $productId): void
     {
@@ -252,69 +251,18 @@ class ProductRepository extends AbstractObjectModelRepository
             ProductNotFoundException::class
         );
 
-        try {
-            $product->loadStockData();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
-                0,
-                $e
-            );
-        }
-
-        return $product;
-    }
-
-    /**
-     * @param array<int, string> $localizedNames
-     * @param string $productType
-     *
-     * @return Product
-     *
-     * @throws CannotAddProductException
-     */
-    public function create(array $localizedNames, string $productType): Product
-    {
-        $product = new Product();
-        $product->active = false;
-        $product->id_category_default = $this->defaultCategoryId;
-        $product->name = $localizedNames;
-        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
-        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
-        $product->product_type = $productType;
-
-        $this->productValidator->validateCreation($product);
-        $this->addObjectModel($product, CannotAddProductException::class);
-        $product->addToCategories([$product->id_category_default]);
-
-        return $product;
+        return $this->loadProduct($product);
     }
 
     /**
      * @param Product $product
      * @param array $propertiesToUpdate
      * @param int $errorCode
-     *
-     * @throws CoreException
-     * @throws ProductConstraintException
-     * @throws ProductPackConstraintException
-     * @throws ProductStockConstraintException
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
-        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
-        $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
-        $manufacturerId = (int) $product->id_manufacturer;
+        $this->validateProduct($product, $propertiesToUpdate);
 
-        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
-            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
-        }
-        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
-            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
-        }
-
-        $this->productValidator->validate($product);
         $this->partiallyUpdateObjectModel(
             $product,
             $propertiesToUpdate,
@@ -457,5 +405,68 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * This override was needed because of the extra parameter in product constructor
+     *
+     * {@inheritDoc}
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new Product($id, false, null, $shopId);
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
+     * @throws ManufacturerException
+     * @throws TaxRulesGroupException
+     */
+    private function validateProduct(Product $product, array $propertiesToUpdate = []): void
+    {
+        $taxRulesGroupIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_tax_rules_group', $propertiesToUpdate, true);
+        $taxRulesGroupId = (int) $product->id_tax_rules_group;
+        $manufacturerIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerId = (int) $product->id_manufacturer;
+
+        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
+        }
+
+        $this->productValidator->validate($product);
+    }
+
+    /**
+     * @todo: this should be removable soon once the deprecated stock properties have been removed see PR #26682
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function loadProduct(Product $product): Product
+    {
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $product->id),
+                0,
+                $e
+            );
+        }
+
+        return $product;
     }
 }

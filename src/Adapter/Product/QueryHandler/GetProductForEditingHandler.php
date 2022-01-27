@@ -29,13 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 
 use Customization;
-use DateTime;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -79,7 +78,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $numberExtractor;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -130,7 +129,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
 
     /**
      * @param NumberExtractor $numberExtractor
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
      * @param StockAvailableRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
@@ -143,7 +142,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     public function __construct(
         NumberExtractor $numberExtractor,
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         CategoryRepository $categoryRepository,
         StockAvailableRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
@@ -173,7 +172,10 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     public function handle(GetProductForEditing $query): ProductForEditing
     {
-        $product = $this->productRepository->get($query->getProductId());
+        $product = $this->productRepository->getByShopConstraint(
+            $query->getProductId(),
+            $query->getShopConstraint()
+        );
 
         return new ProductForEditing(
             (int) $product->id,
@@ -448,7 +450,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $product->available_now,
             $product->available_later,
             $stockAvailable->location,
-            DateTimeUtil::NULL_DATE === $product->available_date ? null : new DateTime($product->available_date)
+            DateTimeUtil::buildDateTimeOrNull($product->available_date)
         );
     }
 
@@ -474,7 +476,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $virtualProductFile->display_filename,
             (int) $virtualProductFile->nb_days_accessible,
             (int) $virtualProductFile->nb_downloadable,
-            DateTimeUtil::isNull($virtualProductFile->date_expiration) ? null : new DateTime($virtualProductFile->date_expiration)
+            DateTimeUtil::buildDateTimeOrNull($virtualProductFile->date_expiration)
         );
     }
 

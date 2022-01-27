@@ -55,6 +55,7 @@ $(() => {
     'EventEmitter',
     'TextWithLengthCounter',
     'DeltaQuantityInput',
+    'ModifyAllShopsCheckbox',
   ]);
 
   const $productForm = $(ProductMap.productForm);

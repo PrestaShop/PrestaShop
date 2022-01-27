@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,15 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
-
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-
 /**
- * Thrown when trying to create a CommandField with invalid type.
+ * Encapsulates selectors for multi shop modify all component
  */
-class InvalidCommandFieldTypeException extends CoreException
-{
-}
+export default {
+  modifyAllWidgets: '.modify-all-shops',
+  widgetCheckbox: '[type=checkbox]',
+  fieldFocusedClass: 'multi-shop-field-focused',
+  focusedClass: 'multi-shop-focused',
+  updatedClass: 'multi-shop-updated',
+};

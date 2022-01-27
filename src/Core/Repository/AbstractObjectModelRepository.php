@@ -26,13 +26,18 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter;
+namespace PrestaShop\PrestaShop\Core\Repository;
 
 use ObjectModel;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopException;
 
+/**
+ * This abstract class provides the base helper function to build a repository service based on the use of legacy
+ * objects from PrestaShop. You need to implement the required methods (get, add, update, ...) into your repository,
+ * but you can use this abstract class to do most of the job.
+ */
 abstract class AbstractObjectModelRepository
 {
     /**
@@ -74,26 +79,7 @@ abstract class AbstractObjectModelRepository
      */
     protected function getObjectModel(int $id, string $objectModelClass, string $exceptionClass): ObjectModel
     {
-        try {
-            $objectModel = new $objectModelClass($id);
-
-            if ((int) $objectModel->id !== $id) {
-                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
-            }
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf(
-                    'Error occurred when trying to get %s #%d [%s]',
-                    $objectModelClass,
-                    $id,
-                    $e->getMessage()
-                ),
-                0,
-                $e
-            );
-        }
-
-        return $objectModel;
+        return $this->fetchObjectModel($id, $objectModelClass, $exceptionClass, null);
     }
 
     /**
@@ -255,7 +241,7 @@ abstract class AbstractObjectModelRepository
      *
      * @return array<string, mixed>
      */
-    private function formatPropertiesToUpdate(array $propertiesToUpdate): array
+    protected function formatPropertiesToUpdate(array $propertiesToUpdate): array
     {
         $formattedPropertiesToUpdate = [];
         foreach ($propertiesToUpdate as $propertyName => $property) {
@@ -277,5 +263,52 @@ abstract class AbstractObjectModelRepository
         }
 
         return $formattedPropertiesToUpdate;
+    }
+
+    /**
+     * @param int $id
+     * @param string $objectModelClass
+     * @param string $exceptionClass
+     * @param int|null $shopId
+     *
+     * @return ObjectModel
+     *
+     * @throws CoreException
+     */
+    protected function fetchObjectModel(int $id, string $objectModelClass, string $exceptionClass, ?int $shopId): ObjectModel
+    {
+        try {
+            $objectModel = $this->constructObjectModel($id, $objectModelClass, $shopId);
+            if ((int) $objectModel->id !== $id) {
+                throw new $exceptionClass(sprintf('%s #%d was not found', $objectModelClass, $id));
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to get %s #%d [%s]',
+                    $objectModelClass,
+                    $id,
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
+        }
+
+        return $objectModel;
+    }
+
+    /**
+     * This method can be overridden in case your ObjectModel has a special constructor
+     *
+     * @param int $id
+     * @param string $objectModelClass
+     * @param int|null $shopId
+     *
+     * @return ObjectModel
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new $objectModelClass($id, null, $shopId);
     }
 }

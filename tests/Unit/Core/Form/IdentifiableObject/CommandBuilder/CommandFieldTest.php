@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Accessor;
+namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\CommandField;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Accessor\InvalidCommandFieldTypeException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\InvalidCommandFieldTypeException;
 use Symfony\Component\PropertyAccess\Exception\InvalidPropertyPathException;
 
 class CommandFieldTest extends TestCase
@@ -41,16 +41,16 @@ class CommandFieldTest extends TestCase
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
-     * @param bool $isMultistoreField
+     * @param bool $isMultiShopField
      */
-    public function testValidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultistoreField): void
+    public function testValidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField): void
     {
-        $field = new CommandField($dataPath, $commandSetter, $type, $isMultistoreField);
+        $field = new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
         $this->assertNotNull($field);
         $this->assertEquals($dataPath, $field->getDataPath());
         $this->assertEquals($commandSetter, $field->getCommandSetter());
         $this->assertEquals($type, $field->getType());
-        $this->assertEquals($isMultistoreField, $field->isMultistoreField());
+        $this->assertEquals($isMultiShopField, $field->isMultiShopField());
     }
 
     public function getValidParameters(): iterable
@@ -83,13 +83,13 @@ class CommandFieldTest extends TestCase
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
-     * @param bool $isMultistoreField
+     * @param bool $isMultiShopField
      * @param string $expectedException
      */
-    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultistoreField, string $expectedException): void
+    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField, string $expectedException): void
     {
         $this->expectException($expectedException);
-        new CommandField($dataPath, $commandSetter, $type, $isMultistoreField);
+        new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
     }
 
     public function getInvalidParameters(): iterable

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Responsible for updating information associated with product price
@@ -77,11 +78,20 @@ class UpdateProductPricesCommand
     private $unity;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
-    {
+    private $shopConstraint;
+
+    /**
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -230,5 +240,13 @@ class UpdateProductPricesCommand
         $this->unity = $unity;
 
         return $this;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

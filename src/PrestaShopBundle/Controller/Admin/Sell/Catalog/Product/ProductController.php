@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFe
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -112,7 +113,7 @@ class ProductController extends FrameworkBundleAdminController
 
             return $this->redirectToRoute('admin_product_new');
         }
-        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage();
         }
 
@@ -151,16 +152,20 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
         }
 
-        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
 
-        $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
-            'product_id' => $productId,
-            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
-            // 'method' => Request::METHOD_PATCH,
-            'method' => Request::METHOD_POST,
-        ]);
+        try {
+            $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
+                'product_id' => $productId,
+                // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
+                // 'method' => Request::METHOD_PATCH,
+                'method' => Request::METHOD_POST,
+            ]);
+        } catch (ShopAssociationNotFound $e) {
+            return $this->renderMissingAssociation($productId);
+        }
 
         try {
             $productForm->handleRequest($request);
@@ -480,6 +485,26 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param int $productId
+     *
+     * @return Response
+     */
+    private function renderMissingAssociation(int $productId): Response
+    {
+        //@todo this error message should be improved to indicate which shop can/should be used for this product and/or how to associate it to the current context
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
+            'errorMessage' => $this->trans(
+                'This product is not associated with the store selected in the multistore header, please select another one.',
+                'Admin.Notifications.Info'
+            ),
+            'standardPageUrl' => $this->generateUrl(
+                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
+                !empty($productId) ? ['id' => $productId] : []
+            ),
+        ]);
+    }
+
+    /**
      * @param int|null $productId
      *
      * @return Response
@@ -488,7 +513,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
-                'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
+                'This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
                 'Admin.Notifications.Info',
                 [
                     '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),

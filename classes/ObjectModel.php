@@ -62,7 +62,14 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int Shop ID */
     protected $id_shop = null;
 
-    /** @var array List of shop IDs */
+    /**
+     * This field contains the list of shop that you intend to update. When add or update is called the ObjectModel
+     * uses the IDs from the Context by default, except when this field is not empty. In this case the shop IDs
+     * contained in this field override the ones from the Context allowing you to control exactly which shops are
+     * impacted.
+     *
+     * @var array List of shop IDs
+     */
     public $id_shop_list = [];
 
     /** @var bool */
