@@ -55,8 +55,8 @@ class WebserviceConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_WEBSERVICE', false, true, $shopConstraint],
-                    ['PS_WEBSERVICE_CGI_HOST', false, true, $shopConstraint],
+                    ['PS_WEBSERVICE', false, $shopConstraint, true],
+                    ['PS_WEBSERVICE_CGI_HOST', false, $shopConstraint, true],
                 ]
             );
 
@@ -64,8 +64,8 @@ class WebserviceConfigurationTest extends AbstractConfigurationTestCase
 
         $this->assertSame(
             [
-                'enable_webservice' => false,
-                'enable_cgi' => false,
+                'enable_webservice' => true,
+                'enable_cgi' => true,
             ],
             $result
         );
