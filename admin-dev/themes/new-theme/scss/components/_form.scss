@@ -38,10 +38,8 @@
     @extend .col-sm-10;
   }
 
-  .switch-widget {
-    .form-check-radio {
-      padding-top: calc(0.375rem + 1px);
-    }
+  .form-check-radio {
+    padding-top: calc(0.375rem + 1px);
   }
 
   .form-group {
