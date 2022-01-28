@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
-use Category;
 use DateTime;
 use DateTimeImmutable;
 use Generator;
@@ -36,7 +35,6 @@ use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
@@ -85,7 +83,6 @@ class ProductFormDataProviderTest extends TestCase
     private const PRODUCT_ID = 42;
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
-    private const HOME_CATEGORY_NAME = 'Home';
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
     private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
@@ -95,143 +92,12 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-
-        $provider = $this->buildProvider($queryBusMock, false);
-
-        $expectedDefaultData = [
-            'header' => [
-                'type' => ProductType::TYPE_STANDARD,
-            ],
-            'description' => [
-                'categories' => [
-                    'product_categories' => [
-                        [
-                            'id' => self::HOME_CATEGORY_ID,
-                            'name' => self::HOME_CATEGORY_NAME,
-                        ],
-                    ],
-                    'default_category_id' => self::HOME_CATEGORY_ID,
-                ],
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-                'related_products' => [],
-            ],
-            'specifications' => [
-                'condition' => ProductCondition::NEW,
-            ],
-            'stock' => [
-                'quantities' => [
-                    'delta_quantity' => [
-                        'quantity' => 0,
-                        'delta' => 0,
-                    ],
-                    'stock_movements' => [],
-                    'minimal_quantity' => 0,
-                ],
-            ],
-            'pricing' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-                'tax_rules_group_id' => 42,
-                'wholesale_price' => 0,
-                'unit_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-            ],
-            'shipping' => [
-                'dimensions' => [
-                    'width' => 0,
-                    'height' => 0,
-                    'depth' => 0,
-                    'weight' => 0,
-                ],
-                'additional_shipping_cost' => 0,
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-            ],
-            'options' => [
-                'visibility' => [
-                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                ],
-            ],
-            'footer' => [
-                'active' => false,
-            ],
-        ];
-
-        $defaultData = $provider->getDefaultData();
-
-        // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedDefaultData, $defaultData);
-
-        $provider = $this->buildProvider($queryBusMock, true);
+        $provider = $this->buildProvider($queryBusMock);
 
         $expectedDefaultData = [
-            'header' => [
-                'type' => ProductType::TYPE_STANDARD,
-            ],
-            'description' => [
-                'categories' => [
-                    'product_categories' => [
-                        [
-                            'id' => self::HOME_CATEGORY_ID,
-                            'name' => self::HOME_CATEGORY_NAME,
-                        ],
-                    ],
-                    'default_category_id' => self::HOME_CATEGORY_ID,
-                ],
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-                'related_products' => [],
-            ],
-            'specifications' => [
-                'condition' => ProductCondition::NEW,
-            ],
-            'stock' => [
-                'quantities' => [
-                    'delta_quantity' => [
-                        'quantity' => 0,
-                        'delta' => 0,
-                    ],
-                    'stock_movements' => [],
-                    'minimal_quantity' => 0,
-                ],
-            ],
-            'pricing' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-                'tax_rules_group_id' => 42,
-                'wholesale_price' => 0,
-                'unit_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-            ],
-            'shipping' => [
-                'dimensions' => [
-                    'width' => 0,
-                    'height' => 0,
-                    'depth' => 0,
-                    'weight' => 0,
-                ],
-                'additional_shipping_cost' => 0,
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-            ],
-            'options' => [
-                'visibility' => [
-                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                ],
-            ],
-            'footer' => [
-                'active' => true,
-            ],
+            'type' => ProductType::TYPE_STANDARD,
         ];
-
         $defaultData = $provider->getDefaultData();
-
-        // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
     }
 
@@ -241,10 +107,6 @@ class ProductFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusCheckingShopMock(self::DEFAULT_SHOP_ID);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
-            false,
-            42,
-            self::HOME_CATEGORY_ID,
-            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
             null
@@ -257,10 +119,6 @@ class ProductFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
-            false,
-            42,
-            self::HOME_CATEGORY_ID,
-            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
             $contextShopId
@@ -279,7 +137,7 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = $this->buildProvider($queryBusMock, false);
+        $provider = $this->buildProvider($queryBusMock);
 
         $formData = $provider->getData(static::PRODUCT_ID);
         Assert::assertSame($expectedData, $formData);
@@ -1545,35 +1403,16 @@ class ProductFormDataProviderTest extends TestCase
 
     /**
      * @param CommandBusInterface $queryBusMock
-     * @param bool $activation
      *
      * @return ProductFormDataProvider
      */
-    private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
+    private function buildProvider(CommandBusInterface $queryBusMock): ProductFormDataProvider
     {
         return new ProductFormDataProvider(
             $queryBusMock,
-            $activation,
-            42,
-            self::HOME_CATEGORY_ID,
-            $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
             null
         );
-    }
-
-    private function mockCategoryDataProvider(): CategoryDataProvider
-    {
-        $defaultCategoryMock = $this->createMock(Category::class);
-        $defaultCategoryMock->id = self::HOME_CATEGORY_ID;
-        $defaultCategoryMock->name = [
-            self::CONTEXT_LANG_ID => self::HOME_CATEGORY_NAME,
-        ];
-
-        $categoryDataProvider = $this->createMock(CategoryDataProvider::class);
-        $categoryDataProvider->method('getCategory')->willReturn($defaultCategoryMock);
-
-        return $categoryDataProvider;
     }
 }
