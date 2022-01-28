@@ -44,6 +44,34 @@
     </h3>
     <div class="card-body">
       <div class="form-wrapper">
+        <div class="alert medium-alert alert-warning" role="alert">
+          <div class="alert-text">
+            <p>{{ 'Before making any changes to the default pattern of your URLs, make sure to meet the following requirements:'|trans({}, 'Admin.Shopparameters.Help') }}</p>
+            <ul>
+              <li>
+                {{ 'The Friendly URL feature must be enabled'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+              <li>
+                {{ 'URL rewriting must be activated on your web server'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+              <li>
+                {{ 'All mandatory keywords (*) must be included in the route'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+            </ul>
+            <p>{{ 'You should also comply with the syntax:'|trans({}, 'Admin.Shopparameters.Help') }}</p>
+            <ul>
+              <li>
+                {{ 'Keywords must be in braces {keyword}'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+              <li>
+                {{ 'All keywords must be separated'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+              <li>
+                {{ 'As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it'|trans({}, 'Admin.Shopparameters.Help') }}
+              </li>
+            </ul>
+          </div>
+        </div>
         {{ form_widget(urlSchemaForm) }}
       </div>
     </div>
