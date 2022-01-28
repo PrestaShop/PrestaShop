@@ -607,8 +607,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             foreach ($result as $row) {
                 if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
-                        return false;
+                    $columns =  Db::getInstance()->executeS('SHOW COLUMNS FROM `' . $row[$tableNameKey] . '` LIKE "id_lang" ');
+                    if (count($columns) > 0) {
+                        if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
+                            return false;
+                        }
                     }
                 }
             }
