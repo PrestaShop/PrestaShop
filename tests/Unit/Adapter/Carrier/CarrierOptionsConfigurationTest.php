@@ -57,8 +57,8 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_CARRIER_DEFAULT', null, $shopConstraint, 25],
-                    ['PS_CARRIER_DEFAULT_SORT', null, $shopConstraint, Carrier::SORT_BY_PRICE],
-                    ['PS_CARRIER_DEFAULT_ORDER', null, $shopConstraint, Carrier::SORT_BY_ASC],
+                    ['PS_CARRIER_DEFAULT_SORT', null, $shopConstraint, Carrier::SORT_BY_POSITION],
+                    ['PS_CARRIER_DEFAULT_ORDER', null, $shopConstraint, Carrier::SORT_BY_DESC],
                 ]
             );
 
@@ -66,8 +66,8 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
         $this->assertSame(
             [
                 'default_carrier' => 25,
-                'carrier_default_order_by' => 0,
-                'carrier_default_order_way' => 0,
+                'carrier_default_order_by' => Carrier::SORT_BY_POSITION,
+                'carrier_default_order_way' => Carrier::SORT_BY_DESC,
             ],
             $result
         );
