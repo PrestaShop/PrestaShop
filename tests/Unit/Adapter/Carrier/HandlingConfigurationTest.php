@@ -55,18 +55,18 @@ class HandlingConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_SHIPPING_HANDLING', 2.6, $shopConstraint, null],
-                    ['PS_SHIPPING_FREE_PRICE', 50.45, $shopConstraint, null],
-                    ['PS_SHIPPING_FREE_WEIGHT', 80.6, $shopConstraint, null],
+                    ['PS_SHIPPING_HANDLING', null, $shopConstraint, 2.6],
+                    ['PS_SHIPPING_FREE_PRICE', null, $shopConstraint, 50.45],
+                    ['PS_SHIPPING_FREE_WEIGHT', null, $shopConstraint, 80.6],
                 ]
             );
 
         $result = $HandlingConfiguration->getConfiguration();
         $this->assertSame(
             [
-                'shipping_handling_charges' => 0.00,
-                'free_shipping_price' => 0.00,
-                'free_shipping_weight' => 0.00,
+                'shipping_handling_charges' => 2.6,
+                'free_shipping_price' => 50.45,
+                'free_shipping_weight' => 80.6,
             ],
             $result
         );

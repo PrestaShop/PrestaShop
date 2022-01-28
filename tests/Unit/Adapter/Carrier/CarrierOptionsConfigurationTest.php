@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Carrier;
 
+use Carrier;
 use PrestaShop\PrestaShop\Adapter\Carrier\CarrierOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
@@ -55,16 +56,16 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_CARRIER_DEFAULT', 0, $shopConstraint, null],
-                    ['PS_CARRIER_DEFAULT_SORT', 0, $shopConstraint, null],
-                    ['PS_CARRIER_DEFAULT_ORDER', 0, $shopConstraint, null],
+                    ['PS_CARRIER_DEFAULT', null, $shopConstraint, 25],
+                    ['PS_CARRIER_DEFAULT_SORT', null, $shopConstraint, Carrier::SORT_BY_PRICE],
+                    ['PS_CARRIER_DEFAULT_ORDER', null, $shopConstraint, Carrier::SORT_BY_ASC],
                 ]
             );
 
         $result = $CarrierOptionsConfiguration->getConfiguration();
         $this->assertSame(
             [
-                'default_carrier' => 0,
+                'default_carrier' => 25,
                 'carrier_default_order_by' => 0,
                 'carrier_default_order_way' => 0,
             ],
@@ -93,9 +94,9 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['default_carrier' => true, 'carrier_default_order_by' => 1, 'carrier_default_order_way' => 1]],
-            [InvalidOptionsException::class, ['default_carrier' => 1, 'carrier_default_order_by' => true, 'carrier_default_order_way' => 1]],
-            [InvalidOptionsException::class, ['default_carrier' => 1, 'carrier_default_order_by' => 1, 'carrier_default_order_way' => true]],
+            [InvalidOptionsException::class, ['default_carrier' => true, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
+            [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => true, 'carrier_default_order_way' => Carrier::SORT_BY_DESC]],
+            [InvalidOptionsException::class, ['default_carrier' => 25, 'carrier_default_order_by' => Carrier::SORT_BY_POSITION, 'carrier_default_order_way' => true]],
         ];
     }
 
@@ -104,9 +105,9 @@ class CarrierOptionsConfigurationTest extends AbstractConfigurationTestCase
         $CarrierOptionsConfiguration = new CarrierOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $res = $CarrierOptionsConfiguration->updateConfiguration([
-            'default_carrier' => 99,
-            'carrier_default_order_by' => 1,
-            'carrier_default_order_way' => 0,
+            'default_carrier' => 26,
+            'carrier_default_order_by' => Carrier::SORT_BY_POSITION,
+            'carrier_default_order_way' => Carrier::SORT_BY_DESC,
         ]);
 
         $this->assertSame([], $res);
