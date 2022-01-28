@@ -602,11 +602,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             // Database translations deletion
-            $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+            $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
             $tableNameKey = 'Tables_in_' . _DB_NAME_;
 
             foreach ($result as $row) {
-                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
+                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey])) {
                     if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
                         return false;
                     }
@@ -1009,9 +1009,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function copyLanguageData($from, $to)
     {
-        $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
+        $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
         foreach ($result as $row) {
-            if (preg_match('/_lang/', $row['Tables_in_' . _DB_NAME_]) && $row['Tables_in_' . _DB_NAME_] != _DB_PREFIX_ . 'lang') {
+            if ($row['Tables_in_' . _DB_NAME_] != _DB_PREFIX_ . 'lang') {
                 $result2 = Db::getInstance()->executeS('SELECT * FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $from);
                 if (!count($result2)) {
                     continue;
