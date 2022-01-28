@@ -35,6 +35,7 @@ export default {
     switchModalId: 'switch-product-type-modal',
     switchModalSelector: '#switch-product-type-modal .header-product-type-selector',
     switchModalContent: '#product-type-selector-modal-content',
+    switchModalButton: '#switch-product-type-modal .btn-confirm-submit',
     productTypeSelector: {
       choicesContainer: '.product-type-choices',
       typeChoices: '.product-type-choice',

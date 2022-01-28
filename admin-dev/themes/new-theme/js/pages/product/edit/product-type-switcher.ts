@@ -79,7 +79,15 @@ export default class ProductTypeSwitcher {
     );
 
     // We init the type selector component but we target the one which has been rendered inside the modal
-    new ProductTypeSelector(ProductMap.productType.switchModalSelector);
+    new ProductTypeSelector(ProductMap.productType.switchModalSelector, this.initialType);
+
+    // Confirm button is disabled until a different type is selected
+    const $switchModalButton: JQuery = $(ProductMap.productType.switchModalButton);
+    $switchModalButton.prop('disabled', true);
+    $(ProductMap.productType.switchModalSelector).on('change', () => {
+      const modalSelector = $(ProductMap.productType.switchModalSelector);
+      $switchModalButton.prop('disabled', <string> modalSelector.val() === this.initialType);
+    });
 
     selectionModal.show();
   }
