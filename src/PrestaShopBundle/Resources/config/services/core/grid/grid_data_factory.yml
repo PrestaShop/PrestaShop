@@ -105,7 +105,7 @@ services:
             - '@prestashop.core.grid.query_builder.customer_address'
             - '@prestashop.core.hook.dispatcher'
             - '@prestashop.core.grid.query.doctrine_query_parser'
-            - 'customer'
+            - 'customer_address'
 
     prestashop.core.grid.data_provider.customer_address_decorator:
         class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerAddressGridDataFactoryDecorator'
