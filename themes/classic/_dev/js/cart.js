@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import debounce from './components/debounce';
 
 prestashop.cart = prestashop.cart || {};
 
@@ -146,55 +147,15 @@ $(document).ready(() => {
   });
 
   const handleCartAction = (event) => {
+    abortPreviousRequests();
     window.shouldPreventModal = true;
     event.preventDefault();
-
-    const $target = $(event.currentTarget);
-    const {dataset} = event.currentTarget;
-    const cartAction = parseCartAction($target, event.namespace);
-    const requestData = {
-      ajax: '1',
-      action: 'update',
-    };
-
-    if (!cartAction) {
-      return;
-    }
-
-    abortPreviousRequests();
-    $.ajax({
-      url: cartAction.url,
-      method: 'POST',
-      data: requestData,
-      dataType: 'json',
-      beforeSend(jqXHR) {
-        promises.push(jqXHR);
-      },
-    })
-      .then((resp) => {
-        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
-        const $quantityInput = getTouchSpinInput($target);
-        $quantityInput.val(resp.quantity);
-
-        // Refresh cart preview
-        prestashop.emit('updateCart', {
-          reason: dataset,
-          resp,
-        });
-      })
-      .fail((resp) => {
-        prestashop.emit('handleError', {
-          eventType: 'updateProductInCart',
-          resp,
-          cartAction: cartAction.type,
-        });
-      });
+    updateProductQuantityInCart(event);
   };
 
   $body.on('click', prestashop.themeSelectors.cart.actions, handleCartAction);
 
-  $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
-  $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
+  $body.on('touchspin.on.stopspin', spinnerSelector, debounce(handleCartAction));
 
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
@@ -210,7 +171,7 @@ $(document).ready(() => {
       },
     })
       .then((resp) => {
-        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        CheckUpdateQuantityOperations.checkUpdateOperation(resp);
 
         $target.val(resp.quantity);
 
@@ -356,7 +317,7 @@ const CheckUpdateQuantityOperations = {
       $checkoutBtn.removeClass('disabled');
     }
   },
-  checkUpdateOpertation: (resp) => {
+  checkUpdateOperation: (resp) => {
     /**
      * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
      * when resp.hasError=true, quantity is not updated
