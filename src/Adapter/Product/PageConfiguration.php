@@ -35,17 +35,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class PageConfiguration extends AbstractMultistoreConfiguration
 {
     /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'display_quantities',
+        'display_last_quantities',
+        'display_unavailable_attributes',
+        'allow_add_variant_to_cart_from_listing',
+        'attribute_anchor_separator',
+        'display_discount_price',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'display_quantities' => $this->configuration->getBoolean('PS_DISPLAY_QTIES'),
-            'display_last_quantities' => $this->configuration->get('PS_LAST_QTIES'),
-            'display_unavailable_attributes' => $this->configuration->getBoolean('PS_DISP_UNAVAILABLE_ATTR'),
-            'allow_add_variant_to_cart_from_listing' => $this->configuration->getBoolean('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-            'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'),
-            'display_discount_price' => $this->configuration->getBoolean('PS_DISPLAY_DISCOUNT_PRICE'),
+            'display_quantities' => (bool) $this->configuration->get('PS_DISPLAY_QTIES', false, $shopConstraint),
+            'display_last_quantities' => $this->configuration->get('PS_LAST_QTIES', null, $shopConstraint),
+            'display_unavailable_attributes' => (bool) $this->configuration->get('PS_DISP_UNAVAILABLE_ATTR', false, $shopConstraint),
+            'allow_add_variant_to_cart_from_listing' => (bool) $this->configuration->get('PS_ATTRIBUTE_CATEGORY_DISPLAY', false, $shopConstraint),
+            'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', null, $shopConstraint),
+            'display_discount_price' => (bool) $this->configuration->get('PS_DISPLAY_DISCOUNT_PRICE', false, $shopConstraint),
         ];
     }
 
@@ -71,22 +85,19 @@ class PageConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'display_quantities',
-            'display_last_quantities',
-            'display_unavailable_attributes',
-            'allow_add_variant_to_cart_from_listing',
-            'attribute_anchor_separator',
-            'display_discount_price',
-        ]);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('display_quantities', 'bool')
+            ->setAllowedTypes('display_last_quantities', 'int')
+            ->setAllowedTypes('display_unavailable_attributes', 'bool')
+            ->setAllowedTypes('allow_add_variant_to_cart_from_listing', 'bool')
+            ->setAllowedTypes('attribute_anchor_separator', 'string')
+            ->setAllowedTypes('display_discount_price', 'bool');
 
-        $resolver->resolve($config);
-
-        return true;
+        return $resolver;
     }
 }

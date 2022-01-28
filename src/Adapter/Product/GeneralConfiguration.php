@@ -35,18 +35,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
     /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'catalog_mode',
+        'catalog_mode_with_prices',
+        'new_days_number',
+        'short_description_limit',
+        'quantity_discount',
+        'force_friendly_url',
+        'default_status',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'catalog_mode' => $this->configuration->getBoolean('PS_CATALOG_MODE'),
-            'catalog_mode_with_prices' => $this->configuration->getBoolean('PS_CATALOG_MODE_WITH_PRICES'),
-            'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT'),
-            'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT'),
-            'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
-            'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
-            'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
+            'catalog_mode' => (bool) $this->configuration->get('PS_CATALOG_MODE', false, $shopConstraint),
+            'catalog_mode_with_prices' => (bool) $this->configuration->get('PS_CATALOG_MODE_WITH_PRICES', false, $shopConstraint),
+            'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT', null, $shopConstraint),
+            'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT', null, $shopConstraint),
+            'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION', null, $shopConstraint),
+            'force_friendly_url' => (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT', false, $shopConstraint),
+            'default_status' => (bool) $this->configuration->get('PS_PRODUCT_ACTIVATION_DEFAULT', false, $shopConstraint),
         ];
     }
 
@@ -75,23 +90,20 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'catalog_mode',
-            'catalog_mode_with_prices',
-            'new_days_number',
-            'short_description_limit',
-            'quantity_discount',
-            'force_friendly_url',
-            'default_status',
-        ]);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('catalog_mode', 'bool')
+            ->setAllowedTypes('catalog_mode_with_prices', 'bool')
+            ->setAllowedTypes('new_days_number', 'int')
+            ->setAllowedTypes('short_description_limit', 'int')
+            ->setAllowedTypes('quantity_discount', 'int')
+            ->setAllowedTypes('force_friendly_url', 'bool')
+            ->setAllowedTypes('default_status', 'bool');
 
-        $resolver->resolve($configuration);
-
-        return true;
+        return $resolver;
     }
 }

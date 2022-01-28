@@ -35,20 +35,37 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class StockConfiguration extends AbstractMultistoreConfiguration
 {
     /**
+     * @var array<int, string>
+     */
+    private const CONFIGURATION_FIELDS = [
+        'allow_ordering_oos',
+        'stock_management',
+        'in_stock_label',
+        'oos_allowed_backorders',
+        'oos_denied_backorders',
+        'delivery_time',
+        'oos_delivery_time',
+        'pack_stock_management',
+        'oos_show_label_listing_pages',
+    ];
+
+    /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'allow_ordering_oos' => $this->configuration->getBoolean('PS_ORDER_OUT_OF_STOCK'),
-            'stock_management' => $this->configuration->getBoolean('PS_STOCK_MANAGEMENT'),
-            'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS'),
-            'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA'),
-            'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD'),
-            'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE'),
-            'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA'),
-            'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE'),
-            'oos_show_label_listing_pages' => $this->configuration->getBoolean('PS_SHOW_LABEL_OOS_LISTING_PAGES'),
+            'allow_ordering_oos' => (bool) $this->configuration->get('PS_ORDER_OUT_OF_STOCK', false, $shopConstraint),
+            'stock_management' => (bool) $this->configuration->get('PS_STOCK_MANAGEMENT', false, $shopConstraint),
+            'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS', null, $shopConstraint),
+            'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA', null, $shopConstraint),
+            'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD', null, $shopConstraint),
+            'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', null, $shopConstraint),
+            'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', null, $shopConstraint),
+            'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE', null, $shopConstraint),
+            'oos_show_label_listing_pages' => (bool) $this->configuration->get('PS_SHOW_LABEL_OOS_LISTING_PAGES', false, $shopConstraint),
         ];
     }
 
@@ -77,25 +94,22 @@ class StockConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $resolver = new OptionsResolver();
-        $resolver->setRequired([
-            'allow_ordering_oos',
-            'stock_management',
-            'in_stock_label',
-            'delivery_time',
-            'oos_allowed_backorders',
-            'oos_delivery_time',
-            'oos_denied_backorders',
-            'pack_stock_management',
-            'oos_show_label_listing_pages',
-        ]);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('allow_ordering_oos', 'bool')
+            ->setAllowedTypes('stock_management', 'bool')
+            ->setAllowedTypes('in_stock_label', 'string')
+            ->setAllowedTypes('oos_allowed_backorders', 'string')
+            ->setAllowedTypes('oos_denied_backorders', 'string')
+            ->setAllowedTypes('delivery_time', 'string')
+            ->setAllowedTypes('oos_delivery_time', 'string')
+            ->setAllowedTypes('pack_stock_management', 'int')
+            ->setAllowedTypes('oos_show_label_listing_pages', 'bool');
 
-        $resolver->resolve($configuration);
-
-        return true;
+        return $resolver;
     }
 }
