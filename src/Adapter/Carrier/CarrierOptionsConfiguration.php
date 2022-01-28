@@ -72,9 +72,9 @@ class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('default_carrier', 'string')
-            ->setAllowedTypes('carrier_default_order_by', 'string')
-            ->setAllowedTypes('carrier_default_order_way', 'string');
+            ->setAllowedTypes('default_carrier', 'int')
+            ->setAllowedTypes('carrier_default_order_by', 'int')
+            ->setAllowedTypes('carrier_default_order_way', 'int');
 
         return $resolver;
     }
