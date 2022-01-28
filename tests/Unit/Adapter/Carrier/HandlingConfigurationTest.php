@@ -64,9 +64,9 @@ class HandlingConfigurationTest extends AbstractConfigurationTestCase
         $result = $HandlingConfiguration->getConfiguration();
         $this->assertSame(
             [
-                'shipping_handling_charges' => null,
-                'free_shipping_price' => null,
-                'free_shipping_weight' => null,
+                'shipping_handling_charges' => 0.00,
+                'free_shipping_price' => 0.00,
+                'free_shipping_weight' => 0.00,
             ],
             $result
         );
@@ -93,9 +93,9 @@ class HandlingConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['shipping_handling_charges' => true, 'free_shipping_price' => 10.5, 'free_shipping_weight' => 10.5]],
-            [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => true, 'free_shipping_weight' => 10.5]],
-            [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => 10.5, 'free_shipping_weight' => true]],
+            [InvalidOptionsException::class, ['shipping_handling_charges' => 'wrong_value', 'free_shipping_price' => 10.5, 'free_shipping_weight' => 10.5]],
+            [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => 'wrong_value', 'free_shipping_weight' => 10.5]],
+            [InvalidOptionsException::class, ['shipping_handling_charges' => 10.5, 'free_shipping_price' => 10.5, 'free_shipping_weight' => 'wrong_value']],
         ];
     }
 
@@ -106,7 +106,7 @@ class HandlingConfigurationTest extends AbstractConfigurationTestCase
         $res = $HandlingConfiguration->updateConfiguration([
             'shipping_handling_charges' => 1.5,
             'free_shipping_price' => 50.600,
-            'free_shipping_weight' => 1.8,
+            'free_shipping_weight' => 75.8,
         ]);
 
         $this->assertSame([], $res);

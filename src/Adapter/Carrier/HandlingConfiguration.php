@@ -44,9 +44,9 @@ class HandlingConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'shipping_handling_charges' => $this->configuration->get('PS_SHIPPING_HANDLING', null, $shopConstraint),
-            'free_shipping_price' => $this->configuration->get('PS_SHIPPING_FREE_PRICE', null, $shopConstraint),
-            'free_shipping_weight' => $this->configuration->get('PS_SHIPPING_FREE_WEIGHT', null, $shopConstraint),
+            'shipping_handling_charges' => (float) $this->configuration->get('PS_SHIPPING_HANDLING', null, $shopConstraint),
+            'free_shipping_price' => (float) $this->configuration->get('PS_SHIPPING_FREE_PRICE', null, $shopConstraint),
+            'free_shipping_weight' => (float) $this->configuration->get('PS_SHIPPING_FREE_WEIGHT', null, $shopConstraint),
         ];
     }
 
