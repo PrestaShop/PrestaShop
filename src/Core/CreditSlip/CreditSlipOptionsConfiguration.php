@@ -27,20 +27,34 @@
 namespace PrestaShop\PrestaShop\Core\CreditSlip;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Responsible for saving configuration options for credit slip
  */
 final class CreditSlipOptionsConfiguration extends AbstractMultistoreConfiguration
 {
+    private const CONFIGURATION_FIELDS = ['slip_prefix'];
+
     /**
      * {@inheritdoc}
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         return [
             'slip_prefix' => $this->configuration->get('PS_CREDIT_SLIP_PREFIX'),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return OptionsResolver
+     */
+    protected function buildResolver(): OptionsResolver
+    {
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('slip_prefix', ['string[]']);
     }
 
     /**
@@ -64,13 +78,5 @@ final class CreditSlipOptionsConfiguration extends AbstractMultistoreConfigurati
         }
 
         return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateConfiguration(array $configuration)
-    {
-        return isset($configuration['slip_prefix']);
     }
 }

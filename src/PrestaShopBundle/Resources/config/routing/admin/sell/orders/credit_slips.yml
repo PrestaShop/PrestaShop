@@ -38,7 +38,7 @@ _admin_credit_slips_pdf_by_date:
 
 admin_credit_slips_process_options:
   path: /
-  methods: [PATCH, POST]
+  methods: [ PATCH , POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController::indexAction'
     _legacy_controller: AdminSlip
