@@ -60,8 +60,8 @@ class AdminModuleDataProvider implements ModuleInterface
         'uninstall' => 'Admin.Actions',
         'enable' => 'Admin.Actions',
         'disable' => 'Admin.Actions',
-        'enable_mobile' => 'Admin.Modules.Feature',
-        'disable_mobile' => 'Admin.Modules.Feature',
+        'enableMobile' => 'Admin.Modules.Feature',
+        'disableMobile' => 'Admin.Modules.Feature',
         'reset' => 'Admin.Actions',
         'upgrade' => 'Admin.Actions',
         'configure' => 'Admin.Actions',
@@ -70,7 +70,7 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * @var array of defined and callable module actions
      */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'];
+    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enableMobile', 'disableMobile', 'reset', 'upgrade'];
 
     /**
      * @var int
@@ -297,9 +297,9 @@ class AdminModuleDataProvider implements ModuleInterface
                 }
 
                 if (!$addon->database->getBoolean('active_on_mobile')) {
-                    unset($urls['disable_mobile']);
+                    unset($urls['disableMobile']);
                 } else {
-                    unset($urls['enable_mobile']);
+                    unset($urls['enableMobile']);
                 }
                 if (!$addon->canBeUpgraded()) {
                     unset(
@@ -316,8 +316,8 @@ class AdminModuleDataProvider implements ModuleInterface
                     $urls['uninstall'],
                     $urls['enable'],
                     $urls['disable'],
-                    $urls['enable_mobile'],
-                    $urls['disable_mobile'],
+                    $urls['enableMobile'],
+                    $urls['disableMobile'],
                     $urls['reset'],
                     $urls['upgrade'],
                     $urls['configure']
