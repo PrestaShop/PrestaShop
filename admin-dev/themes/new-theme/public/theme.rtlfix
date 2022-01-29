@@ -132,3 +132,8 @@
   border-right-style: none;
   border-left-style: solid;
 }
+
+/* Fix scrollbar position in sidebar menu */
+.nav-bar-overflow .ps__rail-y {
+  left: 0 !important;
+}
