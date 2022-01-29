@@ -49,6 +49,8 @@ class ModuleCommand extends Command
         'reset',
         'upgrade',
         'configure',
+        'registerHook',
+        'unregisterHook',
     ];
 
     /**
@@ -107,6 +109,7 @@ class ModuleCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
             ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration');
+            ->addOption('hook', null, InputOption::VALUE_IS_ARRAY|InputOption::VALUE_OPTIONAL, 'Hook name', []);
     }
 
     protected function init(InputInterface $input, OutputInterface $output)
@@ -128,7 +131,6 @@ class ModuleCommand extends Command
 
         $moduleName = $input->getArgument('module name');
         $action = $input->getArgument('action');
-        $file = $input->getArgument('file path');
 
         if (!in_array($action, $this->allowedActions)) {
             $this->displayMessage(
@@ -144,9 +146,18 @@ class ModuleCommand extends Command
         }
 
         if ($action === 'configure') {
+            $file = $input->getArgument('file path');
             $this->executeConfigureModuleAction($moduleName, $file);
         } else {
-            $this->executeGenericModuleAction($action, $moduleName);
+            switch ($action) {
+                case 'registerHook':
+                case 'unregisterHook':
+                    $options = $input->getOption('hook');
+                    break;
+                default:
+                    $options = null;
+            }
+            $this->executeGenericModuleAction($action, $moduleName, $options);
         }
 
         return 0;
@@ -185,7 +196,13 @@ class ModuleCommand extends Command
 
     protected function executeGenericModuleAction($action, $moduleName)
     {
-        if ($this->moduleManager->{$action}($moduleName)) {
+        if (is_array($options)) {
+            $result = $this->moduleManager->{$action}($moduleName, $options);
+        } else {
+            $result = $this->moduleManager->{$action}($moduleName);
+        }
+
+        if ($result) {
             $this->displayMessage(
                 $this->translator->trans(
                     '%action% action on module %module% succeeded.',
