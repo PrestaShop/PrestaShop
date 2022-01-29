@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Adapter\Preferences;
+namespace Tests\Unit\Core\Tax;
 
-use PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Tax\Ecotax\ProductEcotaxResetterInterface;
+use PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
@@ -39,6 +39,10 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
 
+    /**
+     * @var ProductEcotaxResetterInterface
+     */
+    protected $mockProductEcotaxResetter;
 
     protected function setUp(): void
     {
@@ -49,7 +53,7 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
-     * @return MockObject|ShopContext
+     * @return ProductEcotaxResetterInterface
      */
     protected function createProductEcotaxResetterMock()
     {
@@ -117,42 +121,41 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
             [InvalidOptionsException::class, [
-                'enable_tax' => 'wrong_type', 
+                'enable_tax' => 'wrong_type',
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
                 'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 3
+                'eco_tax_rule_group' => 3,
             ]],
             [InvalidOptionsException::class, [
-                'enable_tax' => true, 
+                'enable_tax' => true,
                 'display_tax_in_cart' => 'wrong_type',
                 'use_eco_tax' => true,
                 'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 3
+                'eco_tax_rule_group' => 3,
             ]],
             [InvalidOptionsException::class, [
-                'enable_tax' => true, 
+                'enable_tax' => true,
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => 'wrong_type',
                 'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 3
+                'eco_tax_rule_group' => 3,
             ]],
             [InvalidOptionsException::class, [
-                'enable_tax' => true, 
+                'enable_tax' => true,
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
                 'tax_address_type' => true,
-                'eco_tax_rule_group' => 3
+                'eco_tax_rule_group' => 3,
             ]],
             [InvalidOptionsException::class, [
-                'enable_tax' => true, 
+                'enable_tax' => true,
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
                 'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 'wrong_type'
+                'eco_tax_rule_group' => 'wrong_type',
             ]],
         ];
     }

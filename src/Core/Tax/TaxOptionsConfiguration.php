@@ -129,7 +129,7 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
 
         $wasEnabled = (bool) $this->configuration->get('PS_USE_ECOTAX', false, $shopConstraint);
 
-        if (!$isEnabled && $wasEnabled !== $isEnabled && !$this->shopContext->isAllShopContext()  ) {
+        if (!$isEnabled && $wasEnabled !== $isEnabled && !$this->shopContext->isAllShopContext()) {
             $this->productEcotaxResetter->reset();
         }
 
