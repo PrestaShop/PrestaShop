@@ -56,4 +56,10 @@ $(() => {
 
   new DisplayInCartOptionHandler();
   new TranslatableInput();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );  
 });
