@@ -108,7 +108,7 @@ class ModuleCommand extends Command
             ->setDescription('Manage your modules via command line')
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
-            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration');
+            ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
             ->addOption('hook', null, InputOption::VALUE_IS_ARRAY|InputOption::VALUE_OPTIONAL, 'Hook name', []);
     }
 
