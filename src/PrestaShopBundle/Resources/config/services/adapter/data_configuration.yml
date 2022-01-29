@@ -249,6 +249,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Tax\TaxOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.tax.ecotax.ecotax_resetter'
 
   prestashop.core.mail_theme.configuration:
