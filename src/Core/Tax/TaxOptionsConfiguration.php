@@ -121,7 +121,7 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
      * Responsible for ecotax update
      *
      * @param bool $isEnabled
-     * @param array $$configuration
+     * @param array $configuration
      */
     private function updateEcotax($isEnabled, $configuration)
     {
