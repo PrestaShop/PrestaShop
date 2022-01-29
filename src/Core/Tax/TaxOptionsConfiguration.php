@@ -91,7 +91,7 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
                 $this->updateConfigurationValue('PS_ECOTAX_TAX_RULES_GROUP_ID', 'eco_tax_rule_group', $configuration, $shopConstraint);
             }
 
-            if (false === $configuration['enable_tax'] || (isset($configuration['multistore_enable_tax']) && false === $configuration['multistore_enable_tax'])) {
+            if (false === $configuration['enable_tax']) {
                 $configuration['multistore_display_tax_in_cart'] = false;
                 $configuration['display_tax_in_cart'] = false;
                 $this->updateConfigurationValue('PS_TAX_DISPLAY', 'display_tax_in_cart', $configuration, $shopConstraint);
@@ -129,11 +129,10 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
 
         $wasEnabled = (bool) $this->configuration->get('PS_USE_ECOTAX', false, $shopConstraint);
 
-        if (!$isEnabled && $wasEnabled !== $isEnabled) {
+        if (!$isEnabled && $wasEnabled !== $isEnabled && !$this->shopContext->isAllShopContext()  ) {
             $this->productEcotaxResetter->reset();
         }
 
         $this->updateConfigurationValue('PS_USE_ECOTAX', 'use_eco_tax', $configuration, $shopConstraint);
-        //$this->configuration->set('PS_USE_ECOTAX', $isEnabled);
     }
 }
