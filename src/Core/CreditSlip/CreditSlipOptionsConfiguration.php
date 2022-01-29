@@ -48,6 +48,7 @@ final class CreditSlipOptionsConfiguration extends AbstractMultistoreConfigurati
 
     /**
      * {@inheritdoc}
+     *
      * @return OptionsResolver
      */
     protected function buildResolver(): OptionsResolver
