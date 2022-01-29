@@ -293,6 +293,70 @@ class ModuleManager implements ModuleManagerInterface
         return $reset;
     }
 
+    /**
+     * Register a module on given hook.
+     *
+     * @param string $name The module name
+     * @param array $hooksName The hooks name
+     *
+     * @return bool True for success
+     */
+    public function registerHook($name, $hooksName)
+    {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
+            throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
+        }
+
+        $this->checkIsInstalled($name);
+
+        $module = $this->moduleRepository->getModule($name);
+
+        try {
+            $result = true;
+            foreach ($hooksName as $hookName) {
+                $result &= $module->onRegisterHook($hookName);
+            }
+        } catch (Exception $e) {
+            throw new Exception($this->translator->trans('Error when register hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+        }
+
+        $this->checkAndClearCache($result);
+
+        return $result;
+    }
+
+    /**
+     * Unregister a module on given hook.
+     *
+     * @param string $name The module name
+     * @param array $hooksName The hooks name
+     *
+     * @return bool True for success
+     */
+    public function unregisterHook($name, $hooksName)
+    {
+        if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
+            throw new Exception($this->translator->trans('You are not allowed to unregister hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
+        }
+
+        $this->checkIsInstalled($name);
+
+        $module = $this->moduleRepository->getModule($name);
+
+        try {
+            $result = true;
+            foreach ($hooksName as $hookName) {
+                $result &= $module->onUnregisterHook($hookName);
+            }
+        } catch (Exception $e) {
+            throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+        }
+
+        $this->checkAndClearCache($result);
+
+        return $result;
+    }
+
     public function isInstalled(string $name): bool
     {
         return $this->moduleDataProvider->isInstalled($name);

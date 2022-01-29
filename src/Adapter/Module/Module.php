@@ -48,6 +48,8 @@ class Module implements ModuleInterface
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
     public const ACTION_CONFIGURE = 'configure';
+    public const ACTION_REGISTER_HOOK = 'registerHook';
+    public const ACTION_UNREGISTER_HOOK = 'unregisterHook';
 
     /**
      * @var LegacyModule Module The instance of the legacy module
@@ -393,6 +395,34 @@ class Module implements ModuleInterface
     public function getDatabaseAttributes(): ParameterBag
     {
         return $this->database;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onRegisterHook($hookName): bool
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+
+        $result = $this->instance->registerHook($hookName);
+
+        return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function onUnregisterHook($hookName): bool
+    {
+        if (!$this->hasValidInstance()) {
+            return false;
+        }
+
+        $result = $this->instance->unregisterHook($hookName);
+
+        return $result;
     }
 
     /**
