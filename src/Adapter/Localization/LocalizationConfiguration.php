@@ -27,10 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
 use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -48,7 +48,6 @@ class LocalizationConfiguration extends AbstractMultistoreConfiguration
         'default_currency',
         'timezone',
     ];
-
 
     /**
      * @var LanguageActivatorInterface
