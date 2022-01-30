@@ -74,9 +74,7 @@ class AdvancedConfiguration extends AbstractMultistoreConfiguration
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('language_identifier', 'string')
-            ->setAllowedTypes('country_identifier', 'string')
-            ->setAllowedTypes('volume_unit', 'string')
-            ->setAllowedTypes('dimension_unit', 'string');
+            ->setAllowedTypes('country_identifier', 'string');
 
         return $resolver;
     }
