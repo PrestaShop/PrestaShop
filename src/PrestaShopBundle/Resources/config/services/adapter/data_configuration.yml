@@ -157,6 +157,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.language.activator'
       - '@prestashop.adapter.manager.currency'
       - '@prestashop.adapter.admin.data_provider.module'
