@@ -87,8 +87,8 @@ class LocalizationConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'default_language' => (int) $this->configuration->get('PS_LANG_DEFAULT', null, $shopConstraint),
-            'detect_language_from_browser' => $this->configuration->getBoolean('PS_DETECT_LANG', null, $shopConstraint),
+            'default_language' => (int) $this->configuration->get('PS_LANG_DEFAULT', 1, $shopConstraint),
+            'detect_language_from_browser' => (bool) $this->configuration->get('PS_DETECT_LANG', false, $shopConstraint),
             'default_country' => (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $shopConstraint),
             'detect_country_from_browser' => (bool) $this->configuration->get('PS_DETECT_COUNTRY', false, $shopConstraint),
             'default_currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $shopConstraint),
