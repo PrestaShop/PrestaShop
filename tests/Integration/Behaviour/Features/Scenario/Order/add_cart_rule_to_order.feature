@@ -49,7 +49,7 @@ Feature: Add discounts to order from Back Office (BO)
       | name      | <<           |
       | type      | amount      |
       | value     | 5.50         |
-    Then I should get no error
+    Then I should get no order error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have a cart rule with name "<<"
 
