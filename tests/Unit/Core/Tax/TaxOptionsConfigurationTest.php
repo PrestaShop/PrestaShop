@@ -38,6 +38,8 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
+    private const TAX_ADDRESS_TYPE = 'id_address_invoice';
+    private const ECOTAX_TAX_RULES_GROUP_ID = 5;
 
     /**
      * @var ProductEcotaxResetterInterface
@@ -81,9 +83,9 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
                 [
                     ['PS_TAX', false, $shopConstraint, true],
                     ['PS_TAX_DISPLAY', false, $shopConstraint, true],
-                    ['PS_TAX_ADDRESS_TYPE', null, $shopConstraint, 'id_address_invoice'],
+                    ['PS_TAX_ADDRESS_TYPE', null, $shopConstraint, self::TAX_ADDRESS_TYPE],
                     ['PS_USE_ECOTAX', false, $shopConstraint, true],
-                    ['PS_ECOTAX_TAX_RULES_GROUP_ID', 0, $shopConstraint, 5],
+                    ['PS_ECOTAX_TAX_RULES_GROUP_ID', 0, $shopConstraint, self::ECOTAX_TAX_RULES_GROUP_ID],
                 ]
             );
 
@@ -92,9 +94,9 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
             [
                 'enable_tax' => true,
                 'display_tax_in_cart' => true,
-                'tax_address_type' => null,
+                'tax_address_type' => self::TAX_ADDRESS_TYPE,
                 'use_eco_tax' => true,
-                'eco_tax_rule_group' => 0,
+                'eco_tax_rule_group' => self::ECOTAX_TAX_RULES_GROUP_ID,
             ],
             $result
         );
@@ -126,21 +128,21 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
                 'enable_tax' => 'wrong_type',
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
-                'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 3,
+                'tax_address_type' => self::TAX_ADDRESS_TYPE,
+                'eco_tax_rule_group' => self::ECOTAX_TAX_RULES_GROUP_ID,
             ]],
             [InvalidOptionsException::class, [
                 'enable_tax' => true,
                 'display_tax_in_cart' => 'wrong_type',
                 'use_eco_tax' => true,
-                'tax_address_type' => 'id_address_invoice',
-                'eco_tax_rule_group' => 3,
+                'tax_address_type' => self::TAX_ADDRESS_TYPE,
+                'eco_tax_rule_group' => self::ECOTAX_TAX_RULES_GROUP_ID,
             ]],
             [InvalidOptionsException::class, [
                 'enable_tax' => true,
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => 'wrong_type',
-                'tax_address_type' => 'id_address_invoice',
+                'tax_address_type' => self::TAX_ADDRESS_TYPE,
                 'eco_tax_rule_group' => 3,
             ]],
             [InvalidOptionsException::class, [
@@ -148,13 +150,13 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
                 'tax_address_type' => true,
-                'eco_tax_rule_group' => 3,
+                'eco_tax_rule_group' => self::ECOTAX_TAX_RULES_GROUP_ID,
             ]],
             [InvalidOptionsException::class, [
                 'enable_tax' => true,
                 'display_tax_in_cart' => true,
                 'use_eco_tax' => true,
-                'tax_address_type' => 'id_address_invoice',
+                'tax_address_type' => self::TAX_ADDRESS_TYPE,
                 'eco_tax_rule_group' => 'wrong_type',
             ]],
         ];
@@ -167,9 +169,9 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
         $res = $TaxOptionsConfiguration->updateConfiguration([
             'enable_tax' => true,
             'display_tax_in_cart' => true,
-            'tax_address_type' => 'id_address_invoice',
+            'tax_address_type' => self::TAX_ADDRESS_TYPE,
             'use_eco_tax' => true,
-            'eco_tax_rule_group' => 5,
+            'eco_tax_rule_group' => self::ECOTAX_TAX_RULES_GROUP_ID,
         ]);
 
         $this->assertSame([], $res);

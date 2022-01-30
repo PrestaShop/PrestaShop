@@ -68,9 +68,9 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
         return [
             'enable_tax' => (bool) $this->configuration->get('PS_TAX', false, $shopConstraint),
             'display_tax_in_cart' => (bool) $this->configuration->get('PS_TAX_DISPLAY', false, $shopConstraint),
-            'tax_address_type' => $this->configuration->get('PS_TAX_ADDRESS_TYPE', false, $shopConstraint),
+            'tax_address_type' => $this->configuration->get('PS_TAX_ADDRESS_TYPE', null, $shopConstraint),
             'use_eco_tax' => (bool) $this->configuration->get('PS_USE_ECOTAX', false, $shopConstraint),
-            'eco_tax_rule_group' => (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', false, $shopConstraint),
+            'eco_tax_rule_group' => (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', 0, $shopConstraint),
         ];
     }
 
@@ -110,7 +110,7 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('enable_tax', 'bool')
             ->setAllowedTypes('display_tax_in_cart', 'bool')
-            ->setAllowedTypes('tax_address_type', 'string')
+            ->setAllowedTypes('tax_address_type', ['string', 'null'])
             ->setAllowedTypes('use_eco_tax', 'bool')
             ->setAllowedTypes('eco_tax_rule_group', 'int');
 
