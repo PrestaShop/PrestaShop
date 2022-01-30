@@ -196,7 +196,7 @@ class ModuleCommand extends Command
         );
     }
 
-    protected function executeGenericModuleAction($action, $moduleName)
+    protected function executeGenericModuleAction($action, $moduleName, $options = null)
     {
         if (is_array($options)) {
             $result = $this->moduleManager->{$action}($moduleName, $options);
