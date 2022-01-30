@@ -186,3 +186,8 @@ ul.category-tree .more > .radio:before,
 .table-responsive {
   overflow-y: hidden;
 }
+
+/* Fix scrollbar position in sidebar menu */
+.nav-bar-overflow .ps__rail-y {
+  left: 0 !important;
+}

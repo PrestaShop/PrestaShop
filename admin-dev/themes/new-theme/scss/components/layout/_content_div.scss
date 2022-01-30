@@ -56,9 +56,21 @@
   }
 }
 
+.light_display_layout {
+  #main-div {
+    padding-top: 0.625rem;
+  }
+}
+
 .page-sidebar-closed:not(.mobile) {
   .content-div {
     padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
+
+    &.-notoolbar {
+      .header-toolbar {
+        padding-left: 0;
+      }
+    }
   }
 }
 

@@ -6100,16 +6100,16 @@
         },
         {
             "name": "prestashop/ps_dataprivacy",
-            "version": "v2.0.1",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_dataprivacy.git",
-                "reference": "70f08623c99466fc2f93d4aa37476978fa910dc7"
+                "reference": "0a1380ea25c2b1285788cb2d5d6246b374500bd2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_dataprivacy/zipball/70f08623c99466fc2f93d4aa37476978fa910dc7",
-                "reference": "70f08623c99466fc2f93d4aa37476978fa910dc7",
+                "url": "https://api.github.com/repos/PrestaShop/ps_dataprivacy/zipball/0a1380ea25c2b1285788cb2d5d6246b374500bd2",
+                "reference": "0a1380ea25c2b1285788cb2d5d6246b374500bd2",
                 "shasum": ""
             },
             "require": {
@@ -6132,9 +6132,9 @@
             "description": "PrestaShop - Data privacy",
             "homepage": "https://github.com/PrestaShop/ps_dataprivacy",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_dataprivacy/tree/v2.0.1"
+                "source": "https://github.com/PrestaShop/ps_dataprivacy/tree/v2.1.0"
             },
-            "time": "2021-02-01T10:23:06+00:00"
+            "time": "2021-12-31T10:42:45+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",
@@ -7148,16 +7148,16 @@
         },
         {
             "name": "prestashop/statscheckup",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statscheckup.git",
-                "reference": "7acd7702ab8ecb2b88e529e1eab8d4b7fafbca07"
+                "reference": "ef485adc627745c7e0fa25ad8082c6f4b96dc3cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/7acd7702ab8ecb2b88e529e1eab8d4b7fafbca07",
-                "reference": "7acd7702ab8ecb2b88e529e1eab8d4b7fafbca07",
+                "url": "https://api.github.com/repos/PrestaShop/statscheckup/zipball/ef485adc627745c7e0fa25ad8082c6f4b96dc3cf",
+                "reference": "ef485adc627745c7e0fa25ad8082c6f4b96dc3cf",
                 "shasum": ""
             },
             "require": {
@@ -7166,7 +7166,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -7177,9 +7177,9 @@
             "description": "PrestaShop module statscheckup",
             "homepage": "https://github.com/PrestaShop/statscheckup",
             "support": {
-                "source": "https://github.com/PrestaShop/statscheckup/tree/master"
+                "source": "https://github.com/PrestaShop/statscheckup/tree/v2.0.2"
             },
-            "time": "2018-12-17T09:59:57+00:00"
+            "time": "2022-01-04T15:20:35+00:00"
         },
         {
             "name": "prestashop/statsdata",
@@ -7323,16 +7323,16 @@
         },
         {
             "name": "prestashop/statsproduct",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsproduct.git",
-                "reference": "d9d01b83abee4887a0981e6c54cd9560a34d556e"
+                "reference": "804f5a33ac45e41525613a1c87ff73928a2a4126"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/d9d01b83abee4887a0981e6c54cd9560a34d556e",
-                "reference": "d9d01b83abee4887a0981e6c54cd9560a34d556e",
+                "url": "https://api.github.com/repos/PrestaShop/statsproduct/zipball/804f5a33ac45e41525613a1c87ff73928a2a4126",
+                "reference": "804f5a33ac45e41525613a1c87ff73928a2a4126",
                 "shasum": ""
             },
             "require": {
@@ -7352,22 +7352,22 @@
             "description": "PrestaShop module statsproduct",
             "homepage": "https://github.com/PrestaShop/statsproduct",
             "support": {
-                "source": "https://github.com/PrestaShop/statsproduct/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/statsproduct/tree/v2.1.1"
             },
-            "time": "2021-10-26T14:18:29+00:00"
+            "time": "2022-01-04T12:54:39+00:00"
         },
         {
             "name": "prestashop/statsregistrations",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/statsregistrations.git",
-                "reference": "51d79fb12770919f1b1f9d9d9f931148d60149c2"
+                "reference": "efdc328afa96ffed859fb8333a3a18b9a86e1c4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/statsregistrations/zipball/51d79fb12770919f1b1f9d9d9f931148d60149c2",
-                "reference": "51d79fb12770919f1b1f9d9d9f931148d60149c2",
+                "url": "https://api.github.com/repos/PrestaShop/statsregistrations/zipball/efdc328afa96ffed859fb8333a3a18b9a86e1c4a",
+                "reference": "efdc328afa96ffed859fb8333a3a18b9a86e1c4a",
                 "shasum": ""
             },
             "require": {
@@ -7376,7 +7376,7 @@
             "type": "prestashop-module",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -7387,9 +7387,9 @@
             "description": "PrestaShop module statsregistrations",
             "homepage": "https://github.com/PrestaShop/statsregistrations",
             "support": {
-                "source": "https://github.com/PrestaShop/statsregistrations/tree/master"
+                "source": "https://github.com/PrestaShop/statsregistrations/tree/v2.0.1"
             },
-            "time": "2017-01-31T17:22:19+00:00"
+            "time": "2022-01-04T13:38:03+00:00"
         },
         {
             "name": "prestashop/statssales",

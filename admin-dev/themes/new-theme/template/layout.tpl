@@ -5,7 +5,7 @@
 </head>
 
 <body
-  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}{if isset($is_multishop) && $is_multishop} multishop-enabled{/if}"
+  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}{if isset($is_multishop) && $is_multishop} multishop-enabled{/if}{if isset($lite_display) && $lite_display} light_display_layout{/if}"
   {if isset($js_router_metadata.base_url)}data-base-url="{$js_router_metadata.base_url}"{/if}
   {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
 >

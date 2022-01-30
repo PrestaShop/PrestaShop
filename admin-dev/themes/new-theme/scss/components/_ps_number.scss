@@ -2,9 +2,16 @@
   position: relative;
   display: inline-block;
 
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    margin: 0;
     appearance: none;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    appearance: textfield;
   }
 
   .danger {

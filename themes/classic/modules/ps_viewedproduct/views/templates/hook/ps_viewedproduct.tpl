@@ -24,5 +24,5 @@
  *}
 <section class="featured-products clearfix mt-3">
   <h2>{l s='Viewed products' d='Shop.Theme.Catalog'}</h2>
-  {include file="catalog/_partials/productlist.tpl" products=$products}
+  {include file="catalog/_partials/productlist.tpl" products=$products productClass="col-xs-6 col-lg-4 col-xl-3"}
 </section>

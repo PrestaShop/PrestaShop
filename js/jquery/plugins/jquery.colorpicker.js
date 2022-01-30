@@ -53,8 +53,8 @@
 
     // update the colors of the newly created inputs
     $(document).ready(function() {
-      inputs.forEach(function() {
-        $.fn.mColorPicker.setTextColor($(this));
+      inputs.forEach(function(input) {
+        $.fn.mColorPicker.setTextColor(input);
       });
     });
 
@@ -118,8 +118,7 @@
   };
 
   $.fn.mColorPicker.drawPickerTriggers = function ($t) {
-
-    if ($t[0].nodeName.toLowerCase() != 'input') return false;
+    if (!$t.is('input')) return false;
 
     var id = $t.attr('id') || 'color_' + $.fn.mColorPicker.init.index++,
         hidden = false;
