@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['weight_unit', 'distance_unit','volume_unit','dimension_unit'];
+    private const CONFIGURATION_FIELDS = ['weight_unit', 'distance_unit','volume_unit', 'dimension_unit'];
 
     /**
      * {@inheritdoc}
@@ -43,7 +43,7 @@ class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
     public function getConfiguration()
     {
         $shopConstraint = $this->getShopConstraint();
-        
+
         return [
             'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT', null, $shopConstraint),
             'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT', null, $shopConstraint),
