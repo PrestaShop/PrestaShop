@@ -172,6 +172,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\AdvancedConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.geolocation_by_ip_address.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationByIpAddressConfiguration'
