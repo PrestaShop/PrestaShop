@@ -143,6 +143,19 @@ class CustomerPersisterCore
             Hook::exec('actionCustomerAccountUpdate', [
                 'customer' => $customer,
             ]);
+
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Customer updated',
+                    [],
+                    'Admin.Advparameters.Feature'
+                ),
+                1,
+                null,
+                'Customer',
+                $customer->id
+            );
+
             if ($guest_to_customer) {
                 $this->sendConfirmationMail($customer);
             }
@@ -201,6 +214,18 @@ class CustomerPersisterCore
             Hook::exec('actionCustomerAccountAdd', [
                 'newCustomer' => $customer,
             ]);
+
+            PrestaShopLogger::addLog(
+                Context::getContext()->getTranslator()->trans(
+                    'Customer created',
+                    [],
+                    'Admin.Advparameters.Feature'
+                ),
+                1,
+                null,
+                'Customer',
+                $customer->id
+            );
         }
 
         return $ok;
