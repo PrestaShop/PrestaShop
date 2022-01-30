@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,6 +52,17 @@ class GeolocationByIpAddressType extends TranslatorAwareType
                     'This option allows you, among other things, to restrict access to your shop for certain countries. See below.',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_GEOLOCATION_ENABLED',
             ]);
+    }
+    
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

@@ -26,27 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GeolocationByIpAddressConfiguration is responsible for configuring geolocation configuration.
  */
-final class GeolocationByIpAddressConfiguration implements DataConfigurationInterface
+final class GeolocationByIpAddressConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(
-        Configuration $configuration
-    ) {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['geolocation_enabled'];
 
     /**
      * {@inheritdoc}
@@ -54,27 +42,31 @@ final class GeolocationByIpAddressConfiguration implements DataConfigurationInte
     public function getConfiguration()
     {
         return [
-            'geolocation_enabled' => $this->configuration->getBoolean('PS_GEOLOCATION_ENABLED'),
+            'geolocation_enabled' => (bool) $this->configuration->get('PS_GEOLOCATION_ENABLED', false, $this->getShopConstraint()),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_GEOLOCATION_ENABLED', $config['geolocation_enabled']);
+        if ($this->validateConfiguration($configuration)) {
+            $this->updateConfigurationValue('PS_GEOLOCATION_ENABLED', 'geolocation_enabled', $configuration, $this->getShopConstraint());
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset($config['geolocation_enabled']);
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('geolocation_enabled', 'bool');
+
+        return $resolver;
     }
 }
