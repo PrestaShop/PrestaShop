@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['weight_unit', 'distance_unit','volume_unit', 'dimension_unit'];
+    private const CONFIGURATION_FIELDS = ['weight_unit', 'distance_unit', 'volume_unit', 'dimension_unit'];
 
     /**
      * {@inheritdoc}
