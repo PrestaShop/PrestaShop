@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -53,6 +54,7 @@ class GeolocationIpAddressWhitelistType extends TranslatorAwareType
                     'col' => 15,
                     'rows' => 30,
                 ],
+                'multistore_configuration_key' => 'PS_GEOLOCATION_WHITELIST',
             ]);
 
         $builder->get('geolocation_whitelist')
@@ -64,5 +66,15 @@ class GeolocationIpAddressWhitelistType extends TranslatorAwareType
                     return str_replace(["\r\n", "\r", "\n"], ';', $ipWhitelistTextWithNewLines);
                 }
             ));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

@@ -26,26 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GeolocationIpAddressWhitelistConfiguration is responsible for configuring geolocation IP address whitelist data.
  */
-final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurationInterface
+final class GeolocationIpAddressWhitelistConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['geolocation_whitelist'];
 
     /**
      * {@inheritdoc}
@@ -53,29 +42,31 @@ final class GeolocationIpAddressWhitelistConfiguration implements DataConfigurat
     public function getConfiguration()
     {
         return [
-            'geolocation_whitelist' => $this->configuration->get('PS_GEOLOCATION_WHITELIST'),
+            'geolocation_whitelist' => $this->configuration->get('PS_GEOLOCATION_WHITELIST', null, $this->getShopConstraint()),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_GEOLOCATION_WHITELIST', $config['geolocation_whitelist']);
+        if ($this->validateConfiguration($configuration)) {
+            $this->updateConfigurationValue('PS_GEOLOCATION_WHITELIST', 'geolocation_whitelist', $configuration, $this->getShopConstraint());
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['geolocation_whitelist']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('geolocation_whitelist', 'string');
+
+        return $resolver;
     }
 }
