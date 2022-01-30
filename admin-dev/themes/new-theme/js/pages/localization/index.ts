@@ -29,4 +29,9 @@ $(() => {
   $(LocalizationPageMap.formDefaultCurrency).on('change', function () {
     alert($(this).data('warning-message'));
   });
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });
