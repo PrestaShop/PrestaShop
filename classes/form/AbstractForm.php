@@ -138,6 +138,8 @@ abstract class AbstractFormCore implements FormInterface
                     $field->addError(
                         $this->constraintTranslator->translate('required')
                     );
+
+                    continue;
                 } elseif (!$this->checkFieldLength($field)) {
                     $field->addError(
                         $this->translator->trans(
@@ -147,8 +149,6 @@ abstract class AbstractFormCore implements FormInterface
                         )
                     );
                 }
-
-                continue;
             } elseif (!$field->isRequired()) {
                 if (!$field->getValue()) {
                     continue;
