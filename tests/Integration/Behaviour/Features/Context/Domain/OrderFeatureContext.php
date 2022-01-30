@@ -855,7 +855,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($reference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(sprintf(
