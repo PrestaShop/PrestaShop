@@ -55,7 +55,7 @@ class GeolocationByIpAddressType extends TranslatorAwareType
                 'multistore_configuration_key' => 'PS_GEOLOCATION_ENABLED',
             ]);
     }
-    
+
     /**
      * {@inheritdoc}
      *

@@ -63,7 +63,6 @@ class GeolocationByIpAddressConfigurationTest extends AbstractConfigurationTestC
         $this->assertSame(
             [
                 'geolocation_enabled' => true,
-
             ],
             $result
         );

@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -83,6 +84,7 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
                 'choice_translation_domain' => false,
+                'multistore_configuration_key' => 'PS_GEOLOCATION_BEHAVIOR',
             ])
             ->add('geolocation_na_behaviour', ChoiceType::class, [
                 'label' => $this->trans(
@@ -95,6 +97,7 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
                 'choice_translation_domain' => false,
+                'multistore_configuration_key' => 'PS_GEOLOCATION_NA_BEHAVIORD',
             ])
             ->add('geolocation_countries', MaterialChoiceTableType::class, [
                 'label' => $this->trans(
@@ -103,6 +106,17 @@ class GeolocationOptionsType extends TranslatorAwareType
                 ),
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
+                'multistore_configuration_key' => 'PS_ALLOWED_COUNTRIES',
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

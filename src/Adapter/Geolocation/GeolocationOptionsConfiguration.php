@@ -26,61 +26,60 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Geolocation;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class GeolocationOptionsConfiguration is responsible for configuring geolocation options data.
  */
-final class GeolocationOptionsConfiguration implements DataConfigurationInterface
+final class GeolocationOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['geolocation_behaviour', 'geolocation_na_behaviour', 'geolocation_countries'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'geolocation_behaviour' => $this->configuration->get('PS_GEOLOCATION_BEHAVIOR'),
-            'geolocation_na_behaviour' => $this->configuration->getInt('PS_GEOLOCATION_NA_BEHAVIOR'),
-            'geolocation_countries' => $this->configuration->get('PS_ALLOWED_COUNTRIES'),
+            'geolocation_behaviour' => $this->configuration->get('PS_GEOLOCATION_BEHAVIOR', false, $shopConstraint),
+            'geolocation_na_behaviour' => $this->configuration->get('PS_GEOLOCATION_NA_BEHAVIOR', false, $shopConstraint),
+            'geolocation_countries' => (int) $this->configuration->get('PS_ALLOWED_COUNTRIES', false, $shopConstraint),
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function updateConfiguration(array $config)
+    public function updateConfiguration(array $configuration)
     {
-        if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_GEOLOCATION_BEHAVIOR', $config['geolocation_behaviour']);
-            $this->configuration->set('PS_GEOLOCATION_NA_BEHAVIOR', $config['geolocation_na_behaviour']);
-            $this->configuration->set('PS_ALLOWED_COUNTRIES', $config['geolocation_countries']);
+        if ($this->validateConfiguration($configuration)) {
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_GEOLOCATION_BEHAVIOR', 'geolocation_behaviour', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GEOLOCATION_NA_BEHAVIOR', 'geolocation_na_behaviour', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_ALLOWED_COUNTRIES', 'geolocation_countries', $configuration, $shopConstraint);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['geolocation_behaviour'],
-            $config['geolocation_na_behaviour']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('geolocation_behaviour', 'int')
+            ->setAllowedTypes('geolocation_na_behaviour', 'int')
+            ->setAllowedTypes('geolocation_behaviour', 'int')
+            ->setAllowedTypes('log_emails', 'bool')
+            ->setAllowedTypes('dkim_enable', 'bool')
+            ->setAllowedTypes('smtp_config', 'array')
+            ->setAllowedTypes('dkim_config', 'array');
+
+        return $resolver;
     }
 }
