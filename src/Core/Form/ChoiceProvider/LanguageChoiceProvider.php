@@ -60,7 +60,7 @@ final class LanguageChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         foreach ($this->languages as $language) {
-            $choices[$language['name']] = $language['id_lang'];
+            $choices[$language['name']] = (int) $language['id_lang'];
         }
 
         return $choices;
