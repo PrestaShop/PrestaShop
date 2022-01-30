@@ -377,9 +377,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->registerHook($hookName);
-
-        return $result;
+        return (bool)$this->instance->registerHook($hookName);
     }
 
     /**
@@ -391,9 +389,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        $result = $this->instance->unregisterHook($hookName);
-
-        return $result;
+        return (bool)$this->instance->unregisterHook($hookName);
     }
 
     /**
