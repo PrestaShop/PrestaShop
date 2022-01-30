@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
@@ -61,31 +60,23 @@ class LocalizationConfiguration extends AbstractMultistoreConfiguration
     private $currencyManager;
 
     /**
-     * @var AdminModuleDataProvider
-     */
-    private $adminModuleDataProvider;
-
-    /**
      * @param Configuration $configuration
      * @param Context $shopContext
      * @param FeatureInterface $multistoreFeature
      * @param LanguageActivatorInterface $languageActivator
      * @param CurrencyManager $currencyManager
-     * @param AdminModuleDataProvider $adminModuleDataProvider
      */
     public function __construct(
         Configuration $configuration,
         Context $shopContext,
         FeatureInterface $multistoreFeature,
         LanguageActivatorInterface $languageActivator,
-        CurrencyManager $currencyManager,
-        AdminModuleDataProvider $adminModuleDataProvider
+        CurrencyManager $currencyManager
     ) {
         parent::__construct($configuration, $shopContext, $multistoreFeature);
 
         $this->languageActivator = $languageActivator;
         $this->currencyManager = $currencyManager;
-        $this->adminModuleDataProvider = $adminModuleDataProvider;
     }
 
     /**
@@ -96,8 +87,8 @@ class LocalizationConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'default_language' => (int) $this->configuration->get('PS_LANG_DEFAULT', null, $shopConstraint),
-            'detect_language_from_browser' => $this->configuration->getBoolean('PS_DETECT_LANG', null, $shopConstraint),
+            'default_language' => (int) $this->configuration->get('PS_LANG_DEFAULT', 1, $shopConstraint),
+            'detect_language_from_browser' => (bool) $this->configuration->get('PS_DETECT_LANG', false, $shopConstraint),
             'default_country' => (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, $shopConstraint),
             'detect_country_from_browser' => (bool) $this->configuration->get('PS_DETECT_COUNTRY', false, $shopConstraint),
             'default_currency' => (int) $this->configuration->get('PS_CURRENCY_DEFAULT', null, $shopConstraint),

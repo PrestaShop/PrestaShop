@@ -161,7 +161,6 @@ services:
       - '@prestashop.adapter.multistore_feature'
       - '@prestashop.adapter.language.activator'
       - '@prestashop.adapter.manager.currency'
-      - '@prestashop.adapter.admin.data_provider.module'
 
   prestashop.adapter.local_units.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'

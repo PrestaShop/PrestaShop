@@ -28,21 +28,20 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Localization;
 
+use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
 use PrestaShop\PrestaShop\Adapter\Localization\LocalizationConfiguration;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-
-
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class LocalizationConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
-    private const TAX_ADDRESS_TYPE = 'id_address_invoice';
-    private const ECOTAX_TAX_RULES_GROUP_ID = 5;
+    private const COUNTRY_DEFAULT = 3;
+    private const LANG_DEFAULT = 5;
+    private const CURRENCY_DEFAULT = 2;
 
     /**
      * @var LanguageActivatorInterface
@@ -54,19 +53,13 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
      */
     private $mockCurrencyManager;
 
-    /**
-     * @var AdminModuleDataProvider
-     */
-    private $mockAdminModuleDataProvider;
-
     protected function setUp(): void
     {
         $this->mockConfiguration = $this->createConfigurationMock();
         $this->mockShopConfiguration = $this->createShopContextMock();
         $this->mockMultistoreFeature = $this->createMultistoreFeatureMock();
         $this->mockLanguageActivator = $this->createLanguageActivatorMock();
-        $this->mockCurrencyManagerActivator = $this->createCurrencyManagerMock();
-        $this->mockAdminModuleDataProvider = $this->createAdminModuleDataProviderMock();
+        $this->mockCurrencyManager = $this->createCurrencyManagerMock();
     }
 
     /**
@@ -89,15 +82,6 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
     }
 
     /**
-     * @return AdminModuleDataProvider
-     */
-    protected function createAdminModuleDataProviderMock()
-    {
-        return $this->getMockBuilder(AdminModuleDataProvider::class)
-            ->getMock();
-    }
-
-    /**
      * @dataProvider provideShopConstraints
      *
      * @param ShopConstraint $shopConstraint
@@ -109,8 +93,7 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             $this->mockLanguageActivator,
-            $this->mockCurrencyManagerActivator,
-            $this->mockAdminModuleDataProvider,
+            $this->mockCurrencyManager
         );
 
         $this->mockShopConfiguration
@@ -121,11 +104,11 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_LANG_DEFAULT', 1, $shopConstraint, 5],
+                    ['PS_LANG_DEFAULT', 1, $shopConstraint, self::LANG_DEFAULT],
                     ['PS_DETECT_LANG', false, $shopConstraint, true],
-                    ['PS_COUNTRY_DEFAULT', null, $shopConstraint, 3],
+                    ['PS_COUNTRY_DEFAULT', null, $shopConstraint, self::COUNTRY_DEFAULT],
                     ['PS_DETECT_COUNTRY', false, $shopConstraint, true],
-                    ['PS_CURRENCY_DEFAULT', null, $shopConstraint, 5],
+                    ['PS_CURRENCY_DEFAULT', null, $shopConstraint, self::CURRENCY_DEFAULT],
                     ['PS_TIMEZONE', null, $shopConstraint, 'Europe/Paris'],
                 ]
             );
@@ -133,11 +116,11 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
         $result = $localizationConfiguration->getConfiguration();
         $this->assertSame(
             [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => true,
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => true,
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => 'Europe/Paris',
             ],
             $result
@@ -157,8 +140,7 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             $this->mockLanguageActivator,
-            $this->mockCurrencyManagerActivator,
-            $this->mockAdminModuleDataProvider,
+            $this->mockCurrencyManager
         );
 
         $this->expectException($exception);
@@ -176,49 +158,49 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
             [InvalidOptionsException::class, [
                 'default_language' => 'wrong_type',
                 'detect_language_from_browser' => true,
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => true,
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => 'Europe/Paris',
             ]],
             [InvalidOptionsException::class, [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => 'wrong_type',
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => true,
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => 'Europe/Paris',
             ]],
             [InvalidOptionsException::class, [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => true,
                 'default_country' => 'wrong_type',
                 'detect_country_from_browser' => true,
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => 'Europe/Paris',
             ]],
             [InvalidOptionsException::class, [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => true,
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => 'wrong_type',
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => 'Europe/Paris',
             ]],
             [InvalidOptionsException::class, [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => true,
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => true,
                 'default_currency' => 'wrong_type',
                 'timezone' => 'Europe/Paris',
             ]],
             [InvalidOptionsException::class, [
-                'default_language' => 5,
+                'default_language' => self::LANG_DEFAULT,
                 'detect_language_from_browser' => true,
-                'default_country' => 3,
+                'default_country' => self::COUNTRY_DEFAULT,
                 'detect_country_from_browser' => true,
-                'default_currency' => 2,
+                'default_currency' => self::CURRENCY_DEFAULT,
                 'timezone' => true,
             ]],
         ];
@@ -231,16 +213,15 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
             $this->mockLanguageActivator,
-            $this->mockCurrencyManagerActivator,
-            $this->mockAdminModuleDataProvider,
+            $this->mockCurrencyManager
         );
 
         $res = $localizationConfiguration->updateConfiguration([
-            'default_language' => 5,
+            'default_language' => self::LANG_DEFAULT,
             'detect_language_from_browser' => true,
-            'default_country' => 3,
+            'default_country' => self::COUNTRY_DEFAULT,
             'detect_country_from_browser' => true,
-            'default_currency' => 2,
+            'default_currency' => self::CURRENCY_DEFAULT,
             'timezone' => 'Europe/Paris',
         ]);
 
