@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Localization;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -51,6 +52,7 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default weight unit for your shop (e.g. "kg" for kilograms, "lbs" for pound-mass, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_WEIGHT_UNIT',
             ])
             ->add('distance_unit', TextType::class, [
                 'label' => $this->trans(
@@ -61,6 +63,7 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default distance unit for your shop (e.g. "km" for kilometer, "mi" for mile, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DISTANCE_UNIT',
             ])
             ->add('volume_unit', TextType::class, [
                 'label' => $this->trans(
@@ -71,6 +74,7 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default volume unit for your shop (e.g. "L" for liter, "gal" for gallon, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_VOLUME_UNIT',
             ])
             ->add('dimension_unit', TextType::class, [
                 'label' => $this->trans(
@@ -81,6 +85,17 @@ class LocalUnitsType extends TranslatorAwareType
                     'The default dimension unit for your shop (e.g. "cm" for centimeter, "in" for inch, etc.).',
                     'Admin.International.Help'
                 ),
+                'multistore_configuration_key' => 'PS_DIMENSION_UNIT',
             ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
