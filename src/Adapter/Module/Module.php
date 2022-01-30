@@ -406,7 +406,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return (bool)$this->instance->registerHook($hookName);
+        return (bool) $this->instance->registerHook($hookName);
     }
 
     /**
@@ -418,7 +418,7 @@ class Module implements ModuleInterface
             return false;
         }
 
-        return (bool)$this->instance->unregisterHook($hookName);
+        return (bool) $this->instance->unregisterHook($hookName);
     }
 
     /**
