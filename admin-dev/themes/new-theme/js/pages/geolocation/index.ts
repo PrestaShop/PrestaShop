@@ -27,6 +27,7 @@ $(() => {
   window.prestashop.component.initComponents(
     [
       'ChoiceTable',
+      'MultistoreConfigField',
     ],
   );
 });
