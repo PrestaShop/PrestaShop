@@ -8,7 +8,7 @@ admin_geolocation_index:
 
 admin_geolocation_by_ip_address_save:
   path: /by-ip-address
-  methods: [ POST ]
+  methods: [ POST, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\GeolocationController::processByIpAddressFormAction
     _legacy_controller: AdminGeolocation
