@@ -45,10 +45,10 @@ class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
         
         return [
-            'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT', 0, $shopConstraint),
-            'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT', 0, $shopConstraint),
-            'volume_unit' => $this->configuration->get('PS_VOLUME_UNIT', 0, $shopConstraint),
-            'dimension_unit' => $this->configuration->get('PS_DIMENSION_UNIT', 0, $shopConstraint),
+            'weight_unit' => $this->configuration->get('PS_WEIGHT_UNIT', null, $shopConstraint),
+            'distance_unit' => $this->configuration->get('PS_DISTANCE_UNIT', null, $shopConstraint),
+            'volume_unit' => $this->configuration->get('PS_VOLUME_UNIT', null, $shopConstraint),
+            'dimension_unit' => $this->configuration->get('PS_DIMENSION_UNIT', null, $shopConstraint),
         ];
     }
 
@@ -77,10 +77,10 @@ class LocalUnitsConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('weight_unit', 'int')
-            ->setAllowedTypes('distance_unit', 'int')
-            ->setAllowedTypes('volume_unit', 'int')
-            ->setAllowedTypes('dimension_unit', 'int');
+            ->setAllowedTypes('weight_unit', 'string')
+            ->setAllowedTypes('distance_unit', 'string')
+            ->setAllowedTypes('volume_unit', 'string')
+            ->setAllowedTypes('dimension_unit', 'string');
 
         return $resolver;
     }
