@@ -24,7 +24,7 @@ admin_geolocation_whitelist_save:
 
 admin_geolocation_options_save:
   path: /options
-  methods: [ POST ]
+  methods: [ PTACH/POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\GeolocationController::processOptionsFormAction
     _legacy_controller: AdminGeolocation
