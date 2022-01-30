@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -110,7 +110,7 @@ class ModuleCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, sprintf('Action to execute (Allowed actions: %s).', implode(' / ', $this->allowedActions)))
             ->addArgument('module name', InputArgument::REQUIRED, 'Module on which the action will be executed')
             ->addArgument('file path', InputArgument::OPTIONAL, 'YML file path for configuration')
-            ->addOption('hook', null, InputOption::VALUE_IS_ARRAY|InputOption::VALUE_OPTIONAL, 'Hook name', []);
+            ->addOption('hook', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL, 'Hook name', []);
     }
 
     protected function init(InputInterface $input, OutputInterface $output)
