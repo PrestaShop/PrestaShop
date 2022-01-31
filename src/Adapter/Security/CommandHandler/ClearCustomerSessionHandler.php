@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearCustomerSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearCustomerSessionHandlerInterface;
 
 /**
@@ -52,7 +52,7 @@ final class ClearCustomerSessionHandler implements ClearCustomerSessionHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(ClearCustomerSessionCommand $command): void
+    public function handle(ClearOutdatedCustomerSessionCommand $command): void
     {
         $this->repository->clearOutdatedSessions();
     }
