@@ -100,9 +100,9 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     public function clearOutdatedSessions(string $type): void
     {
         if ($type === 'customer') {
-            $clearSessionCommand = new Command\ClearCustomerSessionCommand();
+            $clearSessionCommand = new Command\ClearOutdatedCustomerSessionCommand();
         } else {
-            $clearSessionCommand = new Command\ClearEmployeeSessionCommand();
+            $clearSessionCommand = new Command\ClearOutdatedEmployeeSessionCommand();
         }
 
         try {

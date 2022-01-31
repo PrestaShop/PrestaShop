@@ -26,11 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
+namespace Tests\Unit\Core\Domain\Security\ValueObject;
 
-/**
- * Class ClearEmployeeSessionCommand is a command to clear employee sessions.
- */
-class ClearEmployeeSessionCommand
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\CustomerSessionId;
+
+class CustomerSessionTest extends TestCase
 {
+    /**
+     * @dataProvider createsSessionIdWithValidValuesData
+     */
+    public function testItCreatesSessionIdWithValidValues($idValue)
+    {
+        $sessionId = new CustomerSessionId($idValue);
+
+        $this->assertEquals((int) $idValue, $sessionId->getValue());
+    }
+
+    public function createsSessionIdWithValidValuesData()
+    {
+        return [
+            [1],
+            [42],
+        ];
+    }
+
+    /**
+     * @dataProvider exceptionThrownWithInvalidValuesData
+     */
+    public function testItExceptionThrownWithInvalidValues($sessionId)
+    {
+        $this->expectException(SessionException::class);
+        new CustomerSessionId($sessionId);
+    }
+
+    public function exceptionThrownWithInvalidValuesData()
+    {
+        return [
+            [0],
+            [-1],
+        ];
+    }
 }

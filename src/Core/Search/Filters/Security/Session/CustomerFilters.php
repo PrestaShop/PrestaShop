@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 /**
  * Class CustomerFilters is responsible for providing default filter values for Customer sessions grid.
  */
-final class CustomerFilters extends Filters
+class CustomerFilters extends Filters
 {
     /**
      * {@inheritdoc}

@@ -31,8 +31,8 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteCustomerSessionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\BulkDeleteEmployeeSessionsCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearCustomerSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearEmployeeSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteCustomerSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\DeleteEmployeeSessionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Security\Exception\CannotBulkDeleteCustomerSessionException;
@@ -188,7 +188,7 @@ class SecurityController extends FrameworkBundleAdminController
     public function clearCustomerSessionAction(): RedirectResponse
     {
         try {
-            $clearSessionCommand = new ClearCustomerSessionCommand();
+            $clearSessionCommand = new ClearOutdatedCustomerSessionCommand();
 
             $this->getCommandBus()->handle($clearSessionCommand);
 
@@ -208,7 +208,7 @@ class SecurityController extends FrameworkBundleAdminController
     public function clearEmployeeSessionAction(): RedirectResponse
     {
         try {
-            $clearSessionCommand = new ClearEmployeeSessionCommand();
+            $clearSessionCommand = new ClearOutdatedEmployeeSessionCommand();
 
             $this->getCommandBus()->handle($clearSessionCommand);
 

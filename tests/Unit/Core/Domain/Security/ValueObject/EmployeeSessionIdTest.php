@@ -26,32 +26,46 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Search\Filters\Security\Session;
+namespace Tests\Unit\Core\Domain\Security\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Search\Filters;
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Security\Exception\SessionException;
+use PrestaShop\PrestaShop\Core\Domain\Security\ValueObject\EmployeeSessionId;
 
-/**
- * Class EmployeeFilters is responsible for providing default filter values for Employees sessions grid.
- */
-class EmployeeFilters extends Filters
+class EmployeeSessionTest extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @dataProvider createsSessionIdWithValidValuesData
      */
-    protected $filterId = EmployeeGridDefinitionFactory::GRID_ID;
+    public function testItCreatesSessionIdWithValidValues($idValue)
+    {
+        $sessionId = new EmployeeSessionId($idValue);
 
-    /**
-     * {@inheritdoc}
-     */
-    public static function getDefaults(): array
+        $this->assertEquals((int) $idValue, $sessionId->getValue());
+    }
+
+    public function createsSessionIdWithValidValuesData()
     {
         return [
-            'limit' => 10,
-            'offset' => 0,
-            'orderBy' => 'id_employee_session',
-            'sortOrder' => 'asc',
-            'filters' => [],
+            [1],
+            [42],
+        ];
+    }
+
+    /**
+     * @dataProvider exceptionThrownWithInvalidValuesData
+     */
+    public function testItExceptionThrownWithInvalidValues($sessionId)
+    {
+        $this->expectException(SessionException::class);
+        new EmployeeSessionId($sessionId);
+    }
+
+    public function exceptionThrownWithInvalidValuesData()
+    {
+        return [
+            [0],
+            [-1],
         ];
     }
 }
