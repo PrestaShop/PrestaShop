@@ -30,6 +30,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Specification;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,6 +52,9 @@ class ReferencesType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
+                'constraints' => [
+                    new Length(['max' => Reference::MAX_LENGTH]),
+                ],
                 'empty_data' => '',
             ])
             ->add('mpn', TextType::class, [
@@ -65,6 +72,7 @@ class ReferencesType extends TranslatorAwareType
                 'label_help_box' => $this->trans('This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_UPC),
+                    new Length(['max' => Upc::MAX_LENGTH]),
                 ],
                 'empty_data' => '',
             ])
@@ -74,6 +82,7 @@ class ReferencesType extends TranslatorAwareType
                 'label_help_box' => $this->trans('This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_EAN_13),
+                    new Length(['max' => Ean13::MAX_LENGTH]),
                 ],
                 'empty_data' => '',
             ])
@@ -83,6 +92,7 @@ class ReferencesType extends TranslatorAwareType
                 'label_help_box' => $this->trans('ISBN is used internationally to identify books and their various editions.', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new TypedRegex(TypedRegex::TYPE_ISBN),
+                    new Length(['max' => Isbn::MAX_LENGTH]),
                 ],
                 'empty_data' => '',
             ])
