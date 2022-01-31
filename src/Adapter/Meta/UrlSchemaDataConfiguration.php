@@ -39,19 +39,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var array<int, string>
-     */
-    private const CONFIGURATION_FIELDS = [
-        'product_rule',
-        'category_rule',
-        'supplier_rule',
-        'manufacturer_rule',
-        'cms_rule',
-        'cms_category_rule',
-        'module',
-    ];
-
-    /**
      * @var array
      */
     private $rules;
@@ -108,15 +95,13 @@ final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
      */
     protected function buildResolver(): OptionsResolver
     {
-        $resolver = (new OptionsResolver())
-            ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('product_rule', 'string')
-            ->setAllowedTypes('category_rule', 'string')
-            ->setAllowedTypes('supplier_rule', 'string')
-            ->setAllowedTypes('manufacturer_rule', 'string')
-            ->setAllowedTypes('cms_rule', 'string')
-            ->setAllowedTypes('cms_category_rule', 'string')
-            ->setAllowedTypes('module', 'string');
+        $rulesIds = array_keys($this->rules);
+
+        $resolver = new OptionsResolver();
+        $resolver->setDefined($rulesIds);
+        foreach ($rulesIds as $ruleId) {
+            $resolver->setAllowedTypes($ruleId, 'string');
+        }
 
         return $resolver;
     }
