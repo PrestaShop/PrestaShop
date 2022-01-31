@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearEmployeeSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand;
 
 /**
  * Interface ClearEmployeeSessionHandlerInterface defines session deletion handler.
@@ -38,5 +38,5 @@ interface ClearEmployeeSessionHandlerInterface
      *
      * @param ClearEmployeeSessionCommand $command
      */
-    public function handle(ClearEmployeeSessionCommand $command): void;
+    public function handle(ClearOutdatedEmployeeSessionCommand $command): void;
 }
