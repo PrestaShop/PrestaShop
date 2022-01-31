@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Security\Command;
 
 /**
- * Class ClearCustomerSessionCommand is a command to clear customer sessions.
+ * Class ClearOutdatedCustomerSessionCommand is a command to clear customer sessions.
  */
 class ClearOutdatedCustomerSessionCommand
 {

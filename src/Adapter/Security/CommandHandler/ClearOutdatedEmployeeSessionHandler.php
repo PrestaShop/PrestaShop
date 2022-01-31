@@ -30,14 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Session\Repository\EmployeeSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedEmployeeSessionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearEmployeeSessionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearOutdatedEmployeeSessionHandlerInterface;
 
 /**
- * Class ClearEmployeeSessionHandler
+ * Class ClearOutdatedEmployeeSessionHandler
  *
  * @internal
  */
-final class ClearEmployeeSessionHandler implements ClearEmployeeSessionHandlerInterface
+class ClearOutdatedEmployeeSessionHandler implements ClearOutdatedEmployeeSessionHandlerInterface
 {
     /**
      * @var EmployeeSessionRepository

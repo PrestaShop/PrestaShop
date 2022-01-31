@@ -24,19 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler;
+declare(strict_types=1);
 
+namespace PrestaShop\PrestaShop\Adapter\Security\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Session\Repository\CustomerSessionRepository;
 use PrestaShop\PrestaShop\Core\Domain\Security\Command\ClearOutdatedCustomerSessionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Security\CommandHandler\ClearOutdatedCustomerSessionHandlerInterface;
 
 /**
- * Interface ClearCustomerSessionHandlerInterface defines session deletion handler.
+ * Class ClearOutdatedCustomerSessionHandler
+ *
+ * @internal
  */
-interface ClearCustomerSessionHandlerInterface
+class ClearOutdatedCustomerSessionHandler implements ClearOutdatedCustomerSessionHandlerInterface
 {
     /**
-     * Delete session.
-     *
-     * @param ClearCustomerSessionCommand $command
+     * @var CustomerSessionRepository
      */
-    public function handle(ClearOutdatedCustomerSessionCommand $command): void;
+    private $repository;
+
+    public function __construct(CustomerSessionRepository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(ClearOutdatedCustomerSessionCommand $command): void
+    {
+        $this->repository->clearOutdatedSessions();
+    }
 }
