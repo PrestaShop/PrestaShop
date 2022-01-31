@@ -127,6 +127,7 @@ $product-page-padding-bottom: 80px !default;
 
     .product-header-cover {
       flex-grow: 0;
+      min-width: $product-cover-size;
       max-width: $product-cover-size;
 
       .form-group {
@@ -136,6 +137,7 @@ $product-page-padding-bottom: 80px !default;
 
     .product-header-form {
       flex-grow: 2;
+      min-width: 35%;
 
       > .form-group {
         margin-bottom: 0;
@@ -197,13 +199,16 @@ $product-page-padding-bottom: 80px !default;
         flex-wrap: wrap;
         justify-content: flex-end;
         margin: 1.75rem 0 0;
-        gap: 1rem;
         font-size: 0.875rem;
         font-weight: 400;
 
-        label {
-          &::after {
-            content: ":";
+        .product-reference {
+          padding: 0 0.5rem 0 0;
+
+          label {
+            &::after {
+              content: ":";
+            }
           }
         }
       }
