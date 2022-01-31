@@ -83,12 +83,13 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
                 'required' => false,
                 'label' => false,
                 'external_link' => [
-                    'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Global'),
+                    'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Actions'),
                     'href' => $this->router->generate('admin_product_preferences'),
                     'position' => 'prepend',
                 ],
             ])
             ->add('priorities', SpecificPricePriorityType::class, [
+                'label' => false,
                 'row_attr' => [
                     'class' => 'specific-price-priority-list',
                 ],
@@ -106,7 +107,7 @@ class ProductSpecificPricePriorityType extends TranslatorAwareType
         return $this->trans(
             'Use default order: [1]{priority_list}[/1]',
             'Admin.Catalog.Feature',
-            ['[1]' => '<strong>', '[/1]' => '</strong>', '{priority_list}' => $defaultPriorities]
+            ['[1]' => '<strong>&nbsp', '[/1]' => '</strong>', '{priority_list}' => $defaultPriorities]
         );
     }
 
