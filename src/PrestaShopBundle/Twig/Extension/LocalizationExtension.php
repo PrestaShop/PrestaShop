@@ -100,14 +100,14 @@ class LocalizationExtension extends AbstractExtension
      */
     public function priceFormat(float $price, string $currencyCode = null, string $locale = null): string
     {
-        // If no locale is specified and the context language is not accessible we can't format so we return the input
-        // unchanged, same thing for the currency
-        if ((null === $locale && (null === $this->contextLanguage || empty($this->contextLanguage->locale))) ||
+        // If no locale is specified and the context language is not accessible we can't format, so we return the input
+        // unchanged, same thing for the currency (use getLocale getter, it is smarter ^^)
+        if ((null === $locale && (null === $this->contextLanguage || empty($this->contextLanguage->getLocale()))) ||
             (null === $currencyCode && (null === $this->contextCurrency || empty($this->contextCurrency->iso_code)))) {
             return (string) $price;
         }
 
-        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLanguage->locale);
+        $locale = $this->localeRepository->getLocale($locale ?? $this->contextLanguage->getLocale());
 
         return $locale->formatPrice($price, $currencyCode ?? $this->contextCurrency->iso_code);
     }
