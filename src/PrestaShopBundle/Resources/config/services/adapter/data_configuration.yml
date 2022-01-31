@@ -213,6 +213,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Webservice\WebserviceConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.meta.set_up_urls.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration'
