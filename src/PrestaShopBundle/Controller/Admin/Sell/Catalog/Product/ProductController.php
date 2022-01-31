@@ -365,6 +365,7 @@ class ProductController extends FrameworkBundleAdminController
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
+            'languageId' => $this->getContextLangId(),
             'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
