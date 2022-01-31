@@ -33,6 +33,7 @@ const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 module.exports = {
   externals: {
@@ -395,6 +396,9 @@ module.exports = {
       filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
+    }),
+    new CssoWebpackPlugin({
+      forceMediaMerge: true,
     }),
   ],
 };
