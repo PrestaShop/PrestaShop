@@ -169,14 +169,18 @@ $paddingLeftMobile: 0.625rem;
 $widthSidebarSubmenu: 200px;
 $menu-item-size: 34px;
 $min-height: 950px;
-$gray-dark-text: #bebebe;
-$gray-dark-text-hover: #fff;
+$gray-dark-link: #fff;
+$gray-dark-link-hover: #fff;
 $size-navbar-width: 13.13rem;
 $size-navbar-width-mini: 3.125rem;
 $size-header-height: 2.5rem;
 $header-mobile-padding-y: 0.625rem;
 $medium-gray: #6c868e;
 $gray-medium: $medium-gray;
+$gray-dark-active-menu: #22252a;
+$gray-dark-title: #98aab0;
+$gray-dark-secondary-link: #b6c3c7;
+$gray-dark-logout: #ff7a7a;
 
 // use rems to ensure homogeneity on all zoom scales
 $grid-breakpoints: (xs: 0, sm: 34em, md: 48em, lg: 64em, xl: 81.25em);
