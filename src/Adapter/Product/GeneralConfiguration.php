@@ -57,9 +57,9 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
         return [
             'catalog_mode' => (bool) $this->configuration->get('PS_CATALOG_MODE', false, $shopConstraint),
             'catalog_mode_with_prices' => (bool) $this->configuration->get('PS_CATALOG_MODE_WITH_PRICES', false, $shopConstraint),
-            'new_days_number' => $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT', null, $shopConstraint),
-            'short_description_limit' => $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT', null, $shopConstraint),
-            'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION', null, $shopConstraint),
+            'new_days_number' => (int) $this->configuration->get('PS_NB_DAYS_NEW_PRODUCT', null, $shopConstraint),
+            'short_description_limit' => (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT', null, $shopConstraint),
+            'quantity_discount' => (int) $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION', null, $shopConstraint),
             'force_friendly_url' => (bool) $this->configuration->get('PS_FORCE_FRIENDLY_PRODUCT', false, $shopConstraint),
             'default_status' => (bool) $this->configuration->get('PS_PRODUCT_ACTIVATION_DEFAULT', false, $shopConstraint),
         ];

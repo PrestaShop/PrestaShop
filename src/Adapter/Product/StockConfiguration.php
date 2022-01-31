@@ -62,9 +62,9 @@ class StockConfiguration extends AbstractMultistoreConfiguration
             'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS', null, $shopConstraint),
             'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA', null, $shopConstraint),
             'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD', null, $shopConstraint),
-            'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', null, $shopConstraint),
-            'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', null, $shopConstraint),
-            'pack_stock_management' => $this->configuration->get('PS_PACK_STOCK_TYPE', null, $shopConstraint),
+            'delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', null, $shopConstraint),
+            'oos_delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', null, $shopConstraint),
+            'pack_stock_management' => (int) $this->configuration->get('PS_PACK_STOCK_TYPE', null, $shopConstraint),
             'oos_show_label_listing_pages' => (bool) $this->configuration->get('PS_SHOW_LABEL_OOS_LISTING_PAGES', false, $shopConstraint),
         ];
     }

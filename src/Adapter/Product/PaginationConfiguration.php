@@ -51,9 +51,9 @@ class PaginationConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'products_per_page' => $this->configuration->get('PS_PRODUCTS_PER_PAGE', null, $shopConstraint),
-            'default_order_by' => $this->configuration->get('PS_PRODUCTS_ORDER_BY', null, $shopConstraint),
-            'default_order_way' => $this->configuration->get('PS_PRODUCTS_ORDER_WAY', null, $shopConstraint),
+            'products_per_page' => (int) $this->configuration->get('PS_PRODUCTS_PER_PAGE', null, $shopConstraint),
+            'default_order_by' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_BY', null, $shopConstraint),
+            'default_order_way' => (int) $this->configuration->get('PS_PRODUCTS_ORDER_WAY', null, $shopConstraint),
         ];
     }
 
