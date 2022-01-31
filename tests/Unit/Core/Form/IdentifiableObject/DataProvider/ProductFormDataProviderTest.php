@@ -254,6 +254,7 @@ class ProductFormDataProviderTest extends TestCase
 
     public function testSwitchDefaultContextShop(): void
     {
+        $configurationMock = $this->getDefaultConfigurationMock();
         // The real test is performed by the mock here, which assert the correct shopId is used
         $queryBusMock = $this->createQueryBusCheckingShopMock(self::DEFAULT_SHOP_ID);
         $provider = new ProductFormDataProvider(
@@ -264,7 +265,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $configurationMock
         );
 
         $formData = $provider->getData(static::PRODUCT_ID);
@@ -280,7 +282,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->mockCategoryDataProvider(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId
+            $contextShopId,
+            $configurationMock
         );
 
         $formData = $provider->getData(static::PRODUCT_ID);
@@ -1595,11 +1598,6 @@ class ProductFormDataProviderTest extends TestCase
         $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
         $urlGeneratorMock->method('generate')->willReturnArgument(0);
 
-        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)->getMock();
-        $configurationMock->method('get')->willReturnMap([
-            ['PS_SPECIFIC_PRICE_PRIORITIES', implode(';', self::DEFAULT_PRIORITY_LIST)],
-        ]);
-
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,
@@ -1609,10 +1607,27 @@ class ProductFormDataProviderTest extends TestCase
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
             null,
-            $configurationMock
+            $this->getDefaultConfigurationMock()
         );
     }
 
+    /**
+     * @return ConfigurationInterface
+     */
+    private function getDefaultConfigurationMock(): ConfigurationInterface
+    {
+        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)->getMock();
+
+        $configurationMock->method('get')->willReturnMap([
+            ['PS_SPECIFIC_PRICE_PRIORITIES', implode(';', self::DEFAULT_PRIORITY_LIST)],
+        ]);
+
+        return $configurationMock;
+    }
+
+    /**
+     * @return CategoryDataProvider
+     */
     private function mockCategoryDataProvider(): CategoryDataProvider
     {
         $defaultCategoryMock = $this->createMock(Category::class);
