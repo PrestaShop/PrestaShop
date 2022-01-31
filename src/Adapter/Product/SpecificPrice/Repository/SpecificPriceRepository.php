@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
+use Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
@@ -279,7 +280,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     public function getDefaultPriorities(): PriorityList
     {
         try {
-            $priorities = SpecificPrice::getPriority(0);
+            $priorities = explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'));
         } catch (PrestaShopException $e) {
             throw new CoreException(
                 'Something went wrong when trying to get default priorities of specific prices',
@@ -288,11 +289,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
             );
         }
 
-        if ($priorities[0] === 'id_customer') {
-            unset($priorities[0]);
-        }
-
-        return new PriorityList(array_values($priorities));
+        return new PriorityList($priorities);
     }
 
     /**
