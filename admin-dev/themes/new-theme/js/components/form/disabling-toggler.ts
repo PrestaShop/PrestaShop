@@ -27,33 +27,35 @@
  * Shows or hides specified element based on specified checkbox "checked" property.
  */
 export default class DisablingToggler {
-  checkboxesSelector: string;
+  inputForMatchingSelector: string;
 
   elementToToggleSelector: string;
 
-  checkedValueForDisabling: string;
+  matchingValue: string;
+
+  disableOnMatch: boolean;
 
   constructor(
-    checkboxesSelector: string,
-    checkedValueForDisabling: string,
+    inputForMatchingSelector: string,
+    matchingValue: string,
     elementToToggleSelector: string,
+    disableOnMatch: boolean = true,
   ) {
-    this.checkboxesSelector = checkboxesSelector;
+    this.inputForMatchingSelector = inputForMatchingSelector;
     this.elementToToggleSelector = elementToToggleSelector;
-    this.checkedValueForDisabling = checkedValueForDisabling;
+    this.matchingValue = matchingValue;
+    this.disableOnMatch = disableOnMatch;
     this.init();
   }
 
   private init(): void {
-    const checkboxes: NodeListOf<HTMLInputElement> = document.querySelectorAll(this.checkboxesSelector);
-    const initiallyCheckedCheckbox: HTMLInputElement|null = document.querySelector(`${this.checkboxesSelector}:checked`);
-    this.toggle(initiallyCheckedCheckbox?.value === this.checkedValueForDisabling);
+    const disablingInputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(this.inputForMatchingSelector);
+    const initiallyCheckedCheckbox: HTMLInputElement|null = document.querySelector(`${this.inputForMatchingSelector}:checked`);
+    this.toggle(initiallyCheckedCheckbox?.value === this.matchingValue);
 
-    checkboxes.forEach((checkbox: HTMLInputElement) => {
-      checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          this.toggle(checkbox.value === this.checkedValueForDisabling);
-        }
+    disablingInputs.forEach((input: HTMLInputElement) => {
+      input.addEventListener('change', () => {
+        this.toggle(input.value === this.matchingValue && this.disableOnMatch);
       });
     });
   }
@@ -61,17 +63,7 @@ export default class DisablingToggler {
   private toggle(disable: boolean): void {
     const elementToToggle = document.querySelector(this.elementToToggleSelector) as HTMLElement;
     elementToToggle.classList.toggle('disabled', disable);
-
-    if (
-      elementToToggle instanceof HTMLInputElement
-      || elementToToggle instanceof HTMLSelectElement
-      || elementToToggle instanceof HTMLTextAreaElement
-      || elementToToggle instanceof HTMLButtonElement
-      || elementToToggle instanceof HTMLOptionElement
-      || elementToToggle instanceof HTMLFieldSetElement
-    ) {
-      elementToToggle.toggleAttribute('disabled', disable);
-    }
+    elementToToggle.toggleAttribute('disabled', disable);
 
     const formElements = elementToToggle.querySelectorAll('input, select, textarea, button, option, fieldset');
 
