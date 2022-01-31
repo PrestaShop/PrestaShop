@@ -95,7 +95,7 @@ class SecurityController extends FrameworkBundleAdminController
         return $this->processForm(
             $request,
             $this->getGeneralFormHandler(),
-            'General'
+            'actionAdminSecurityControllerPostProcessGeneralBefore'
         );
     }
 
@@ -111,7 +111,7 @@ class SecurityController extends FrameworkBundleAdminController
     protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName): RedirectResponse
     {
         $this->dispatchHook(
-            'actionAdminSecurityControllerPostProcess' . $hookName . 'Before',
+            $hookName,
             ['controller' => $this]
         );
 
