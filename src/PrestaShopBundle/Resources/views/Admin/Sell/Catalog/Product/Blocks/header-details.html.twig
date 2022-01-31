@@ -60,7 +60,7 @@
       </div>
     </div>
 
-    {% if productForm.stock is defined %}
+    {% if productForm.stock.quantities.delta_quantity is defined %}
       {% set quantityData = productForm.stock.quantities.delta_quantity.quantity.vars.data %}
       {% set quantityValue = productForm.stock.quantities.delta_quantity.quantity.vars.value %}
       {% set lowStock = productForm.stock.options.low_stock_threshold.vars.data %}
