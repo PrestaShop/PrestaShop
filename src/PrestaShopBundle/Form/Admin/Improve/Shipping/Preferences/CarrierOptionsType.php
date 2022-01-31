@@ -74,8 +74,8 @@ class CarrierOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $carrierChoices = array_merge([
-            'Best price' => -1,
-            'Best grade' => -2,
+            'Best price' => (int) -1,
+            'Best grade' => (int) -2,
         ], $this->carriers);
 
         $builder
