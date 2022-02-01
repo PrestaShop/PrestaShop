@@ -74,6 +74,7 @@ export default class CombinationsGridRenderer {
    */
   private renderCombinations(combinations: Array<Record<string, any>>): void {
     this.$combinationsTableBody.empty();
+    this.$combinationsTable.find(ProductMap.combinations.bulkSelectAllInPage).prop('checked', false);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
