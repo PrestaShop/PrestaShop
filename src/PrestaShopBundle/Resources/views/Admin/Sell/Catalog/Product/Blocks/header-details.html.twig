@@ -25,13 +25,14 @@
 
 <div class="product-header-details">
 {% block header_summary %}
+  {% set productData = productForm.vars.data %}
   <div class="product-header-summary">
     <div class="product-field-preview">
       <div class="product-field-value">
         {# It is important to use vars.data and not vars.value because value contains the localized value which may
          # not be written with numeric characters anymore depending on the language but data is the initial float data.
          #}
-        {{ productForm.pricing.retail_price.price_tax_excluded.vars.data|price_format }}
+        {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
       </div>
       <div class="product-field-label">
         {{ 'tax excl.'|trans({}, 'Admin.Global') }}
@@ -40,13 +41,13 @@
 
     <div class="product-field-preview">
       <div class="product-field-value">
-        {{ productForm.pricing.retail_price.price_tax_included.vars.data|price_format }}
+        {{ productData.pricing.retail_price.price_tax_included|price_format }}
       </div>
       <div class="product-field-label">
         {# First find the selected tax rate #}
         {% set taxRate = 0 %}
         {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
-          {% if choice is selectedchoice(productForm.pricing.tax_rules_group_id.vars.value) %}
+          {% if choice is selectedchoice(productData.pricing.tax_rules_group_id) %}
             {% set taxRate = choice.attr['data-tax-rate'] %}
           {% endif %}
         {% endfor %}
@@ -60,31 +61,32 @@
       </div>
     </div>
 
-    {% if productForm.stock.quantities.delta_quantity is defined %}
-      {% set quantityData = productForm.stock.quantities.delta_quantity.quantity.vars.data %}
-      {% set quantityValue = productForm.stock.quantities.delta_quantity.quantity.vars.value %}
-      {% set lowStock = productForm.stock.options.low_stock_threshold.vars.data %}
-
-      {% if quantityData <= 0 %}
-        {% set stockClass = 'danger' %}
-        {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
-      {% elseif lowStock > 0 and quantityData < lowStock %}
-        {% set stockClass = 'warning' %}
-        {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
-      {% else %}
-        {% set stockClass = 'success' %}
-        {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
-      {% endif %}
-
-      <div class="product-field-preview">
-        <div class="product-field-value {{ stockClass }}">
-          {{ quantityValue }}
-        </div>
-        <div class="product-field-label">
-          {{ stockLabel }}
-        </div>
-      </div>
+    {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
+    {% if productData.header.type != 'combinations' %}
+      {% set lowStock = productData.stock.options.low_stock_threshold %}
+    {% else %}
+      {% set lowStock = 0 %}
     {% endif %}
+
+    {% if quantityData <= 0 %}
+      {% set stockClass = 'danger' %}
+      {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+    {% elseif lowStock > 0 and quantityData < lowStock %}
+      {% set stockClass = 'warning' %}
+      {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+    {% else %}
+      {% set stockClass = 'success' %}
+      {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+    {% endif %}
+
+    <div class="product-field-preview">
+      <div class="product-field-value {{ stockClass }}">
+        {{ quantityData }}
+      </div>
+      <div class="product-field-label">
+        {{ stockLabel }}
+      </div>
+    </div>
   </div>
 {% endblock %}
 
