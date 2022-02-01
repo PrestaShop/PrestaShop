@@ -584,12 +584,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      */
     private function getOrderReturns(Order $order): OrderReturnsForViewing
     {
-        $returns = $order->getReturn();
-
-        if ($order->isVirtual()) {
+        if ($order->isVirtual() || $this->configuration->getBoolean('PS_ORDER_RETURN') === false) {
             return new OrderReturnsForViewing();
         }
 
+        $returns = $order->getReturn();
         $orderReturns = [];
 
         foreach ($returns as $orderReturn) {
