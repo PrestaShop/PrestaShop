@@ -1,5 +1,6 @@
 require('module-alias/register');
 const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
+const paymentBlock = require('@pages/BO/orders/view/paymentBlock');
 
 /**
  * Tab list block, contains functions that can be used on view/edit order page
@@ -381,7 +382,7 @@ class TabListBlock extends ViewOrderBasePage {
   async clickOnEnterPaymentButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.enterPaymentButton(row));
 
-    return page.$eval(this.paymentAmountInput, el => el.value);
+    return page.$eval(paymentBlock.paymentAmountInput, el => el.value);
   }
 
   /**

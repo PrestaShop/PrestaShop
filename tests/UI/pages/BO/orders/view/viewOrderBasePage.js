@@ -34,6 +34,7 @@ class ViewOrderBasePage extends BOBasePage {
 
     // Selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
+    this.orderReference = '.title-content strong[data-role=\'order-reference\']';
 
     // Order actions selectors
     this.orderStatusesSelect = '#update_order_status_action_input';
@@ -47,6 +48,14 @@ class ViewOrderBasePage extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Get order reference
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getOrderReference(page) {
+    return this.getTextContent(page, this.orderReference);
+  }
 
   // Methods for order actions
   /**
@@ -162,6 +171,15 @@ class ViewOrderBasePage extends BOBasePage {
    */
   isReturnProductsButtonVisible(page) {
     return this.elementVisible(page, this.returnProductsButton, 2000);
+  }
+
+  /**
+   * Click on partial refund button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnPartialRefund(page) {
+    await page.click(this.partialRefundButton);
   }
 }
 

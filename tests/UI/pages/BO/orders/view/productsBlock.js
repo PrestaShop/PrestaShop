@@ -14,7 +14,7 @@ class OrdersBlock extends ViewOrderBasePage {
   constructor() {
     super();
 
-    // Products block
+    // Products block header
     this.productsCountSpan = '#orderProductsPanelCount';
     this.orderProductsLoading = '#orderProductsLoading';
 
@@ -31,17 +31,25 @@ class OrdersBlock extends ViewOrderBasePage {
     this.orderProductsTableProductPrice = row => `${this.orderProductsRowTable(row)} td.cellProductTotalPrice`;
     this.deleteProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-delete-btn`;
     this.editProductButton = row => `${this.orderProductsRowTable(row)} button.js-order-product-edit-btn`;
+    this.productQuantitySpan = row => `${this.orderProductsRowTable(row)} td.cellProductQuantity span`;
+
+    // Edit row table
     this.orderProductsEditRowTable = `${this.orderProductsTable} tbody tr.editProductRow`;
     this.editProductQuantityInput = `${this.orderProductsEditRowTable} input.editProductQuantity`;
     this.editProductPriceInput = `${this.orderProductsEditRowTable} input.editProductPriceTaxIncl`;
     this.UpdateProductButton = `${this.orderProductsEditRowTable} button.productEditSaveBtn`;
     this.modalConfirmNewPrice = '#modal-confirm-new-price';
     this.modalConfirmNewPriceSubmitButton = `${this.modalConfirmNewPrice} button.btn-confirm-submit`;
+
+    // Total order
     this.orderTotalPriceSpan = '#orderTotal';
+
+    // Add discount
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
-    this.returnProductsButton = '#order-view-page button.return-product-display';
-    this.addProductTableRow = '#addProductTableRow';
+
+    // Add product
     this.addProductButton = '#addProductBtn';
+    this.addProductTableRow = '#addProductTableRow';
     this.addProductRowSearch = '#add_product_row_search';
     this.addProductRowQuantity = '#add_product_row_quantity';
     this.addProductRowPrice = '#add_product_row_price_tax_included';
@@ -52,16 +60,21 @@ class OrdersBlock extends ViewOrderBasePage {
     this.addProductNewInvoiceCarrierName = '#addProductNewInvoiceInfo div p[data-role=\'carrier-name\']';
     this.addProductNewInvoiceFreeShippingCheckbox = '#add_product_row_free_shipping';
     this.addProductNewInvoiceFreeShippingDiv = '#addProductNewInvoiceInfo td div.md-checkbox';
+
     this.addProductAddButton = '#add_product_row_add';
     this.addProductCancelButton = '#add_product_row_cancel';
     this.addProductModalConfirmNewInvoice = '#modal-confirm-new-invoice';
     this.addProductCreateNewInvoiceButton = `${this.addProductModalConfirmNewInvoice} .btn-confirm-submit`;
+
+    // Add discount
     this.addDiscountButton = 'button[data-target=\'#addOrderDiscountModal\']';
     this.orderDiscountModal = '#addOrderDiscountModal';
     this.addOrderCartRuleNameInput = '#add_order_cart_rule_name';
     this.addOrderCartRuleTypeSelect = '#add_order_cart_rule_type';
     this.addOrderCartRuleValueInput = '#add_order_cart_rule_value';
     this.addOrderCartRuleAddButton = '#add_order_cart_rule_submit';
+
+    // Discount table
     this.discountListTable = 'table.table.discountList';
     this.discountListRowTable = row => `${this.discountListTable} tbody tr:nth-child(${row})`;
     this.discountListNameColumn = row => `${this.discountListRowTable(row)} td.discountList-name`;
@@ -84,16 +97,8 @@ class OrdersBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-  /**
-   * Click on partial refund button
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async clickOnPartialRefund(page) {
-    await page.click(this.partialRefundButton);
-    await this.waitForVisibleSelector(page, this.refundProductQuantity(1));
-  }
 
+  // Methods for create partial refund
   /**
    * Add partial refund product
    * @param page {Page} Browser tab
@@ -104,14 +109,16 @@ class OrdersBlock extends ViewOrderBasePage {
    * @returns {Promise<string>}
    */
   async addPartialRefundProduct(page, productRow, quantity = 0, amount = 0, shipping = 0) {
-    await this.setValue(page, this.refundProductQuantity(productRow), quantity.toString());
+    await this.waitForVisibleSelector(page, this.refundProductQuantity(1));
+    await this.setValue(page, this.refundProductQuantity(productRow), quantity);
     if (amount !== 0) {
-      await this.setValue(page, this.refundProductAmount(productRow), amount.toString());
+      await this.setValue(page, this.refundProductAmount(productRow), amount);
     }
     if (shipping !== 0) {
-      await this.setValue(page, this.refundShippingCost(productRow), shipping.toString());
+      await this.setValue(page, this.refundShippingCost(productRow), shipping);
     }
     await this.clickAndWaitForNavigation(page, this.partialRefundSubmitButton);
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -136,7 +143,7 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Modify the product quantity
+   * Modify product quantity
    * @param page {Page} Browser tab
    * @param row {number} Product row on table
    * @param quantity {number} Quantity to edit
@@ -148,13 +155,14 @@ class OrdersBlock extends ViewOrderBasePage {
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
-    await this.setValue(page, this.editProductQuantityInput, quantity.toString());
+    await this.setValue(page, this.editProductQuantityInput, quantity);
     await Promise.all([
       page.click(this.UpdateProductButton),
       this.waitForVisibleSelector(page, this.editProductQuantityInput),
     ]);
-    await this.waitForVisibleSelector(page, this.orderProductsTableProductQuantity(row));
-    return parseFloat(await this.getTextContent(page, this.orderProductsTableProductQuantity(row)));
+    await this.waitForVisibleSelector(page, this.productQuantitySpan(row));
+
+    return parseFloat(await this.getTextContent(page, this.productQuantitySpan(row)));
   }
 
   /**
@@ -166,21 +174,19 @@ class OrdersBlock extends ViewOrderBasePage {
    */
   async modifyProductPrice(page, row, price) {
     this.dialogListener(page);
-    await Promise.all([
-      page.click(this.editProductButton(row)),
-      this.waitForVisibleSelector(page, this.editProductPriceInput),
-    ]);
+
+    await this.waitForSelectorAndClick(page, this.editProductButton(row));
     await this.setValue(page, this.editProductPriceInput, price);
+
     await Promise.all([
       page.click(this.UpdateProductButton),
       this.waitForHiddenSelector(page, this.editProductPriceInput),
     ]);
-
-    await page.waitForTimeout(1000);
     await Promise.all([
-      this.waitForVisibleSelector(page, this.customerInfoBlock),
-      this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row)),
+      this.waitForVisibleSelector(page, this.orderProductsLoading),
+      this.waitForHiddenSelector(page, this.orderProductsLoading),
     ]);
+    await this.waitForVisibleSelector(page, this.orderProductsTableProductBasePrice(row));
   }
 
   /**
@@ -192,6 +198,7 @@ class OrdersBlock extends ViewOrderBasePage {
    */
   async modifyProductPriceForMultiInvoice(page, row, price) {
     this.dialogListener(page);
+
     await Promise.all([
       page.click(this.editProductButton(row)),
       this.waitForVisibleSelector(page, this.editProductPriceInput),
@@ -220,6 +227,7 @@ class OrdersBlock extends ViewOrderBasePage {
   async deleteProduct(page, row) {
     await this.dialogListener(page);
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
+
     return this.getGrowlMessageContent(page);
   }
 
@@ -288,23 +296,23 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Update product price
-   * @param page {Page} Browser tab
-   * @param price {float} Value of price to update
-   * @returns {Promise<void>}
-   */
-  async updateProductPrice(page, price) {
-    await this.setValue(page, this.addProductRowPrice, price);
-  }
-
-  /**
-   * add product quantity
+   * Add product quantity from add product input
    * @param page {Page} Browser tab
    * @param quantity {number} Product quantity to add
    * @returns {Promise<void>}
    */
   async addQuantity(page, quantity) {
     await this.setValue(page, this.addProductRowQuantity, quantity);
+  }
+
+  /**
+   * Set new product price from add product input
+   * @param page {Page} Browser tab
+   * @param price {float} Value of price to update
+   * @returns {Promise<void>}
+   */
+  async updateProductPrice(page, price) {
+    await this.setValue(page, this.addProductRowPrice, price);
   }
 
   /**
@@ -328,7 +336,7 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Cancel add product
+   * Cancel add product to cart
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
@@ -337,7 +345,7 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Is button disabled
+   * Is add button disabled
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
@@ -400,6 +408,18 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 
   /**
+   * Get searched product information
+   * @param page {Page} Browser tab
+   * @returns {Promise<{available: number, price: float}>}
+   */
+  async getSearchedProductInformation(page) {
+    return {
+      available: parseInt(await this.getTextContent(page, this.addProductAvailable), 10),
+      price: parseFloat(await this.getTextContent(page, this.addProductTotalPrice)),
+    };
+  }
+
+  /**
    * Add discount
    * @param page {Page} Browser tab
    * @param discountData {{name: string, type: string, value:number}} Data to set on discount form
@@ -408,10 +428,10 @@ class OrdersBlock extends ViewOrderBasePage {
   async addDiscount(page, discountData) {
     await this.waitForSelectorAndClick(page, this.addDiscountButton);
     await this.waitForVisibleSelector(page, this.orderDiscountModal);
-
     await this.waitForSelectorAndClick(page, this.addOrderCartRuleNameInput);
     await this.setValue(page, this.addOrderCartRuleNameInput, discountData.name);
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
+
     if (discountData.type !== 'Free shipping') {
       await this.setValue(page, this.addOrderCartRuleValueInput, discountData.value);
     }
