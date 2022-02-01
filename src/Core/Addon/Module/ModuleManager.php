@@ -604,7 +604,7 @@ class ModuleManager implements AddonManagerInterface
                 $result &= $module->onRegisterHook($hookName);
             }
         } catch (Exception $e) {
-            throw new Exception($this->translator->trans('Error when register hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+            throw new Exception($this->translator->trans('Error when registering hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
         $this->checkAndClearCache($result);
