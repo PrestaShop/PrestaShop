@@ -67,25 +67,13 @@
 
       {% if quantityData <= 0 %}
         {% set stockClass = 'danger' %}
-        {# Use custom labels if available #}
-        {% set availableLaterLabels = productForm.stock.availability.available_later_label.vars.value %}
-        {% if availableLaterLabels[languageId] is defined and availableLaterLabels[languageId] is not empty %}
-          {% set stockLabel = availableLaterLabels[languageId] %}
-        {% else %}
-          {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
-        {% endif %}
+        {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
       {% elseif lowStock > 0 and quantityData < lowStock %}
         {% set stockClass = 'warning' %}
         {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
       {% else %}
         {% set stockClass = 'success' %}
-        {# Use custom labels if available #}
-        {% set availableNowLabels = productForm.stock.availability.available_now_label.vars.value %}
-        {% if availableNowLabels[languageId] is defined and availableNowLabels[languageId] is defined is not empty %}
-          {% set stockLabel = availableNowLabels[languageId] %}
-        {% else %}
-          {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
-        {% endif %}
+        {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
       {% endif %}
 
       <div class="product-field-preview">
