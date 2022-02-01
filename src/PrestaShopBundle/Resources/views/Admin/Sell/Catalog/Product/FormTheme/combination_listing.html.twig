@@ -59,9 +59,11 @@
       {{ form_widget(form.is_default) }}
       {{ form_errors(form.is_default) }}
     </td>
-    <td class="combination-actions">
-      {{ form_widget(form.edit) }}
-      {{ form_widget(form.delete) }}
+    <td>
+      <div class="combination-actions">
+        {{ form_widget(form.edit) }}
+        {{ form_widget(form.delete) }}
+      </div>
     </td>
   </tr>
 {%- endblock -%}
