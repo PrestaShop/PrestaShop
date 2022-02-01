@@ -636,7 +636,7 @@ class ModuleManager implements AddonManagerInterface
                 $result &= $module->onUnregisterHook($hookName);
             }
         } catch (Exception $e) {
-            throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
+            throw new Exception($this->translator->trans('Error when unregistering hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
         $this->checkAndClearCache((bool) $result);
