@@ -26,20 +26,28 @@
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import CombinationsService from '@pages/product/services/combinations-service';
+import DisablingToggler from '@components/form/disabling-toggler';
+import ProductEventMap from '@pages/product/product-event-map';
+import {EventEmitter} from 'events';
 
 const CombinationMap = ProductMap.combinations;
+const CombinationEvents = ProductEventMap.combinations;
 
 export default class BulkFormHandler {
   //@todo: actually productId is redundant here, but its necessary for combinationsService (probably its not right)
   private combinationsService: CombinationsService;
 
+  private eventEmitter: EventEmitter;
+
   constructor() {
     this.combinationsService = new CombinationsService();
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.init();
   }
 
   private init() {
     this.listenSelectAllInPage();
+    this.listenToggleAvailability();
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
     const modal = new ConfirmModal(
@@ -53,6 +61,21 @@ export default class BulkFormHandler {
     //@todo: probably this should be wrapped into some public method reachable from outsid
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     btn.addEventListener('click', () => modal.show());
+  }
+
+  private listenToggleAvailability() {
+    this.eventEmitter.on(CombinationEvents.listRendered, () => {
+      const idCheckboxes = this.getCombinationsContainer()
+        .querySelectorAll(CombinationMap.combinationIdInputsSelector) as NodeListOf<HTMLInputElement>;
+
+      idCheckboxes.forEach((input) => {
+        input.addEventListener('change', () => {
+          console.log(this.getSelectedIds());
+          console.log('test');
+          //@todo: failing to add event listener to disable the modal button when none selected
+        });
+      });
+    });
   }
 
   private listenSelectAllInPage() {
