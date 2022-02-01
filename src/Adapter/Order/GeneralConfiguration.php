@@ -60,12 +60,12 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
             'enable_final_summary' => (bool) $this->configuration->get('PS_FINAL_SUMMARY_ENABLED', false, $shopConstraint),
             'enable_guest_checkout' => (bool) $this->configuration->get('PS_GUEST_CHECKOUT_ENABLED', false, $shopConstraint),
             'disable_reordering_option' => (bool) $this->configuration->get('PS_DISALLOW_HISTORY_REORDERING', false, $shopConstraint),
-            'purchase_minimum_value' => (float) $this->configuration->get('PS_PURCHASE_MINIMUM', null, $shopConstraint),
+            'purchase_minimum_value' => (float) $this->configuration->get('PS_PURCHASE_MINIMUM', 0, $shopConstraint),
             'recalculate_shipping_cost' => (bool) $this->configuration->get('PS_ORDER_RECALCULATE_SHIPPING', false, $shopConstraint),
             'allow_multishipping' => (bool) $this->configuration->get('PS_ALLOW_MULTISHIPPING', false, $shopConstraint),
             'allow_delayed_shipping' => (bool) $this->configuration->get('PS_SHIP_WHEN_AVAILABLE', false, $shopConstraint),
             'enable_tos' => (bool) $this->configuration->get('PS_CONDITIONS', false, $shopConstraint),
-            'tos_cms_id' => (int) $this->configuration->get('PS_CONDITIONS_CMS_ID', null, $shopConstraint),
+            'tos_cms_id' => (int) $this->configuration->get('PS_CONDITIONS_CMS_ID', 0, $shopConstraint),
         ];
     }
 
