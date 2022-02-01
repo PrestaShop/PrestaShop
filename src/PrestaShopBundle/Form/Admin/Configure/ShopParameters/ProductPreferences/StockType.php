@@ -111,7 +111,16 @@ class StockType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
             ])
-            ->add('display_last_quantities', IntegerType::class)
+            ->add('display_last_quantities', IntegerType::class, [
+                'label' => $this->trans(
+                    'Display remaining quantities when the quantity is lower than',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Set to "0" to disable this feature.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
             ->add('display_unavailable_attributes', SwitchType::class);
     }
 
