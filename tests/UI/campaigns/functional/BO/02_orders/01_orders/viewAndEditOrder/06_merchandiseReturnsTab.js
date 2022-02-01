@@ -38,7 +38,8 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_merchandiseRet
 let browserContext;
 let page;
 let orderID = 1;
-let trackingNumber = 1;
+const merchandiseReturnsNumber = '#RE00000';
+let returnID = 0;
 const today = getDateFormat('mm/dd/yyyy');
 
 // New order by customer data
@@ -260,11 +261,11 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await expect(result).to.contains(orderID);
     });
 
-    it('should get the tracking number from the table', async function () {
+    it('should get the ID from the table', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getTrackingNumber', baseContext);
 
-      trackingNumber = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return');
-      await expect(parseInt(trackingNumber, 10)).to.not.equal(0);
+      returnID = await boMerchandiseReturnsPage.getTextColumnFromMerchandiseReturnsTable(page, 'id_order_return');
+      await expect(parseInt(returnID, 10)).to.not.equal(0);
     });
   });
 
@@ -322,8 +323,8 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await Promise.all([
         expect(result.date).to.contains(today),
         expect(result.type).to.equal('Return'),
-        expect(result.carrier).to.equal('Waiting for confirmation'),
-        expect(result.trackingNumber).to.equal(trackingNumber),
+        expect(result.status).to.equal('Waiting for confirmation'),
+        expect(result.number).to.equal(`${merchandiseReturnsNumber}${returnID}`),
       ]);
     });
   });
@@ -428,7 +429,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
         const result = await viewOrderPage.getMerchandiseReturnsDetails(page);
-        await expect(result.carrier).to.equal(test.args.status);
+        await expect(result.status).to.equal(test.args.status);
       });
     });
 

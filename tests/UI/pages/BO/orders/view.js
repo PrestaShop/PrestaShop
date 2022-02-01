@@ -992,16 +992,16 @@ class Order extends BOBasePage {
    * Get merchandise returns details
    * @param page {Page} Browser tab
    * @param row {number} Row on table merchandise returns
-   * @returns {Promise<{date: string, carrier: string, shippingCost: string, weight: string, trackingNumber: string}>}
+   * @returns {Promise<{date: string, type: string, status: string, number: string}>}
    */
   async getMerchandiseReturnsDetails(page, row = 1) {
     return {
       date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
       type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
-      carrier: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
-      trackingNumber: await this.getTextContent(
+      status: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
+      number: await this.getTextContent(
         page,
-        this.merchandiseReturnsTableColumn(row, 'return-tracking-number'),
+        this.merchandiseReturnsTableColumn(row, 'return-id'),
       ),
     };
   }
