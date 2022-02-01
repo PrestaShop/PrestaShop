@@ -47,7 +47,7 @@
         {# First find the selected tax rate #}
         {% set taxRate = 0 %}
         {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
-          {% if choice is selectedchoice(productData.pricing.tax_rules_group_id) %}
+          {% if choice.data == productData.pricing.tax_rules_group_id %}
             {% set taxRate = choice.attr['data-tax-rate'] %}
           {% endif %}
         {% endfor %}
