@@ -77,18 +77,27 @@ export default class BulkFormHandler {
   }
 
   private bulkUpdate(form: HTMLFormElement): void {
-    const checkedBoxes = this.getCombinationsContainer()
-      .querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
-
-    checkedBoxes.forEach((checkbox: Element) => {
-      const idInput = checkbox.closest(CombinationMap.tableRow.tableRowSelector)
-        ?.querySelector(CombinationMap.combinationIdInputsSelector) as HTMLInputElement;
-
-      this.combinationsService.bulkUpdate(Number(idInput.value), $(form).serializeArray());
+    this.getSelectedIds().forEach((combinationId) => {
+      this.combinationsService.bulkUpdate(combinationId, $(form).serializeArray());
     });
   }
 
   private getCombinationsContainer(): HTMLDivElement {
     return document.querySelector(CombinationMap.combinationsContainer) as HTMLDivElement;
+  }
+
+  private getSelectedIds(): number[] {
+    const checkedBoxes = this.getCombinationsContainer()
+      .querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`) as NodeListOf<HTMLInputElement>;
+
+    const ids: number[] = [];
+    checkedBoxes.forEach((checkbox: Element) => {
+      const idInput = checkbox.closest(CombinationMap.tableRow.tableRowSelector)
+        ?.querySelector(CombinationMap.combinationIdInputsSelector) as HTMLInputElement;
+
+      ids.push(Number(idInput.value));
+    });
+
+    return ids;
   }
 }
