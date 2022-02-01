@@ -1,4 +1,3 @@
-/*
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -76,7 +75,7 @@ let newMail;
 // mailListener
 let mailListener;
 
-/!*
+/*
 Pre-condition :
 - Setup smtp parameters
 - Create new employee
@@ -97,7 +96,7 @@ Post-condition :
 - Delete employee
 - Delete guest account
 - Reset default email parameters
- *!/
+ */
 
 describe('BO - Orders - View and edit order : Check order status tab', async () => {
   // Pre-Condition : Setup config SMTP
@@ -548,4 +547,3 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
   // Post-Condition : Reset SMTP config
   resetSmtpConfigTest(baseContext);
 });
-*/

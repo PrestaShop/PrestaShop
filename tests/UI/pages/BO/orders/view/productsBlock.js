@@ -226,6 +226,9 @@ class OrdersBlock extends ViewOrderBasePage {
    */
   async deleteProduct(page, row) {
     await this.dialogListener(page);
+    if (await this.elementVisible(page, this.growlMessageBlock)) {
+      await this.closeGrowlMessage(page);
+    }
     await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
 
     return this.getGrowlMessageContent(page);
