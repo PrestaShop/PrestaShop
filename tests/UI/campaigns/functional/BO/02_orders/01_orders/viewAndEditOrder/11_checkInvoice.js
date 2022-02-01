@@ -20,7 +20,10 @@ const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const paymentBlockViewOrderPage = require('@pages/BO/orders/view/paymentBlock');
+const customerBlockViewOrderPage = require('@pages/BO/orders/view/customerBlock');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -280,23 +283,23 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it('should delete the ordered product', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'deleteOrderedProduct', baseContext);
 
-        const textResult = await viewOrderPage.deleteProduct(page, 1);
-        await expect(textResult).to.contains(viewOrderPage.successfulDeleteProductMessage);
+        const textResult = await productsBlockViewOrderPage.deleteProduct(page, 1);
+        await expect(textResult).to.contains(productsBlockViewOrderPage.successfulDeleteProductMessage);
       });
 
       it(`should search for the product '${virtualProduct.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct1', baseContext);
 
-        await viewOrderPage.searchProduct(page, virtualProduct.name);
-        const result = await viewOrderPage.getSearchedProductInformation(page);
+        await productsBlockViewOrderPage.searchProduct(page, virtualProduct.name);
+        const result = await productsBlockViewOrderPage.getSearchedProductInformation(page);
         await expect(result.available).to.equal(virtualProduct.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart1', baseContext);
 
-        const textResult = await viewOrderPage.addProductToCart(page, 13);
-        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        const textResult = await productsBlockViewOrderPage.addProductToCart(page, 13);
+        await expect(textResult).to.contains(productsBlockViewOrderPage.successfulAddProductMessage);
       });
 
       it('should change the \'Invoice address\'', async function () {
@@ -305,8 +308,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
           + `${Address.third.zipCode} ${Address.third.city}`;
 
-        const alertMessage = await viewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
-        expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+        const alertMessage = await customerBlockViewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
+        expect(alertMessage).to.contains(customerBlockViewOrderPage.successfulUpdateMessage);
       });
 
       it(`should change the order status to '${Statuses.paymentAccepted.status}'`, async function () {
@@ -737,16 +740,16 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should search for the product '${productWithSpecificPrice.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct2', baseContext);
 
-        await viewOrderPage.searchProduct(page, productWithSpecificPrice.name);
+        await productsBlockViewOrderPage.searchProduct(page, productWithSpecificPrice.name);
 
-        const result = await viewOrderPage.getSearchedProductInformation(page);
+        const result = await productsBlockViewOrderPage.getSearchedProductInformation(page);
         await expect(result.available).to.equal(productWithSpecificPrice.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart2', baseContext);
 
-        const textResult = await viewOrderPage.addProductToCart(page, 1);
+        const textResult = await productsBlockViewOrderPage.addProductToCart(page, 1);
         await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
       });
 
@@ -939,8 +942,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it(`should delete the ordered product '${productWithSpecificPrice.name}' from the list`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteAddedProduct', baseContext);
 
-          const textResult = await viewOrderPage.deleteProduct(page, 1);
-          await expect(textResult).to.contains(viewOrderPage.successfulDeleteProductMessage);
+          const textResult = await productsBlockViewOrderPage.deleteProduct(page, 1);
+          await expect(textResult).to.contains(productsBlockViewOrderPage.successfulDeleteProductMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
@@ -975,17 +978,17 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
       it(`should search for the product '${productWithEcoTax.name}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'searchProduct3', baseContext);
 
-        await viewOrderPage.searchProduct(page, productWithEcoTax.name);
+        await productsBlockViewOrderPage.searchProduct(page, productWithEcoTax.name);
 
-        const result = await viewOrderPage.getSearchedProductInformation(page);
+        const result = await productsBlockViewOrderPage.getSearchedProductInformation(page);
         await expect(result.available).to.equal(productWithEcoTax.quantity - 1);
       });
 
       it('should add the product to the cart', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart3', baseContext);
 
-        const textResult = await viewOrderPage.addProductToCart(page, 1);
-        await expect(textResult).to.contains(viewOrderPage.successfulAddProductMessage);
+        const textResult = await productsBlockViewOrderPage.addProductToCart(page, 1);
+        await expect(textResult).to.contains(productsBlockViewOrderPage.successfulAddProductMessage);
       });
 
       it('should get the invoice file name', async function () {
@@ -1178,8 +1181,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
             + `${Address.third.zipCode} ${Address.third.city}`;
 
-          const alertMessage = await viewOrderPage.selectAnotherShippingAddress(page, addressToSelect);
-          expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+          const alertMessage = await customerBlockViewOrderPage.selectAnotherShippingAddress(page, addressToSelect);
+          expect(alertMessage).to.contains(customerBlockViewOrderPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
@@ -1213,8 +1216,8 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
             + `${Address.third.zipCode} ${Address.third.city}`;
 
-          const alertMessage = await viewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
-          expect(alertMessage).to.contains(viewOrderPage.successfulUpdateMessage);
+          const alertMessage = await customerBlockViewOrderPage.selectAnotherInvoiceAddress(page, addressToSelect);
+          expect(alertMessage).to.contains(customerBlockViewOrderPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {
@@ -1369,7 +1372,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should add discount', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'addDiscountPercent', baseContext);
 
-          const validationMessage = await viewOrderPage.addDiscount(page, discountData);
+          const validationMessage = await productsBlockViewOrderPage.addDiscount(page, discountData);
           await expect(validationMessage, 'Validation message is not correct!')
             .to.equal(viewOrderPage.successfulUpdateMessage);
         });
@@ -1417,7 +1420,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should delete the discount', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'deleteDiscount', baseContext);
 
-          const validationMessage = await viewOrderPage.deleteDiscount(page);
+          const validationMessage = await productsBlockViewOrderPage.deleteDiscount(page);
           await expect(validationMessage, 'Successful delete alert is not correct')
             .to.equal(viewOrderPage.successfulUpdateMessage);
         });
@@ -1450,11 +1453,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should add payment', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'addPayment', baseContext);
 
-          const validationMessage = await viewOrderPage.addPayment(page, paymentData);
+          const validationMessage = await paymentBlockViewOrderPage.addPayment(page, paymentData);
           expect(
             validationMessage,
             'Successful message is not correct!',
-          ).to.equal(viewOrderPage.successfulUpdateMessage);
+          ).to.equal(paymentBlockViewOrderPage.successfulUpdateMessage);
         });
 
         it('should click on \'View invoice\' button and check that the file is downloaded', async function () {

@@ -15,7 +15,7 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');

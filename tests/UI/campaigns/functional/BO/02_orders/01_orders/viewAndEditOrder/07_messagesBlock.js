@@ -14,7 +14,7 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/messagesBlock');
 const orderMessagesPage = require('@pages/BO/customerService/orderMessages');
 
 // Import FO pages

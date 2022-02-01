@@ -16,7 +16,7 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 const editMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns/edit');
 
 // Import FO mages

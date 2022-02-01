@@ -13,7 +13,8 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const tabListViewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 
 // Import demo data
@@ -488,22 +489,22 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     it('should click on \'Carriers\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-      const isTabOpened = await viewOrderPage.goToCarriersTab(page);
+      const isTabOpened = await tabListViewOrderPage.goToCarriersTab(page);
       await expect(isTabOpened).to.be.true;
     });
 
     it('should click on \'Edit\' link and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-      const isModalVisible = await viewOrderPage.clickOnEditLink(page);
+      const isModalVisible = await tabListViewOrderPage.clickOnEditLink(page);
       await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
     });
 
     it('should update the carrier and add a tracking number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-      const textResult = await viewOrderPage.setShippingDetails(page, shippingDetailsData);
-      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+      const textResult = await tabListViewOrderPage.setShippingDetails(page, shippingDetailsData);
+      await expect(textResult).to.equal(tabListViewOrderPage.successfulUpdateMessage);
     });
 
     it('should check that the discount value is changed', async function () {
