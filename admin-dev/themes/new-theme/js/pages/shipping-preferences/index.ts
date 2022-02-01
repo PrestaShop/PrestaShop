@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,22 +21,12 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  {{ form_start(handlingForm, {attr : {class: 'form', id: 'configuration_handling_form'}, action: path('admin_shipping_preferences_handling_save') }) }}
-    {# Block for "Handling" fieldset #}
-    {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_handling.html.twig' %}
-  {{ form_end(handlingForm) }}
-
-  {{ form_start(carrierOptionsForm, {attr : {class: 'form', id: 'configuration_carrier_options_form'}, action: path('admin_shipping_preferences_carrier_options_save') }) }}
-    {# Block for "Carrier options" fieldset #}
-    {% include '@PrestaShop/Admin/Improve/Shipping/Preferences/Blocks/shipping_preferences_carrier_options.html.twig' %}
-  {{ form_end(carrierOptionsForm) }}
-{% endblock %}
-{% block javascripts %}
-  {{ parent() }}
-  <script src="{{ asset('themes/new-theme/public/shipping_preferences.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+});
