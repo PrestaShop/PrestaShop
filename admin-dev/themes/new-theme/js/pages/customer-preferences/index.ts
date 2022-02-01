@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +21,14 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-{% trans_default_domain "Admin.Shopparameters.Feature" %}
+ */
 
-{% block content %}
-    {{ form_start(generalForm, {'attr': {'class': 'form', 'id': 'configuration_form'}}) }}
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
-    {{ form_end(generalForm) }}
-{% endblock %}
+const {$} = window;
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/customer_preferences.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+});
