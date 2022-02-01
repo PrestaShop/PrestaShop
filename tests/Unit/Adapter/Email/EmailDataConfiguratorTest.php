@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Email;
 
-use PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
@@ -91,7 +91,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ],
             $result
@@ -136,7 +136,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -156,7 +156,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -176,7 +176,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -196,7 +196,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -216,7 +216,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -236,7 +236,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -256,7 +256,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -276,7 +276,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -296,7 +296,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -316,7 +316,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -330,13 +330,13 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                     'username' => 'test',
                     'password' => 'test',
                     'encryption' => 'test',
-                    'port' => 'test'
+                    'port' => 'test',
                 ],
-                'dkim_enable' => 'wrong type', // Wrong Type  
+                'dkim_enable' => 'wrong type', // Wrong Type
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -356,7 +356,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => false, // Wrong type
                     'selector' => 'test',
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -376,7 +376,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'test',
                     'selector' => false, // Wrong Type
-                    'key' => 'test',                    
+                    'key' => 'test',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -396,7 +396,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'test',
                     'selector' => 'test',
-                    'key' => false, // Wrong Type                   
+                    'key' => false, // Wrong Type
                 ],
             ]],
         ];
@@ -424,7 +424,6 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'domain' => 'smtp.domain.com',
                 'selector' => 'test',
                 'key' => 'test',
-                
             ],
         ]);
 

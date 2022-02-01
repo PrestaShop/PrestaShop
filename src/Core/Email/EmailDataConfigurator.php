@@ -89,7 +89,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             $smtpPassword = (string) $config['smtp_config']['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password',$config['smtp_config'], $shopConstraint);
+                $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password', $config['smtp_config'], $shopConstraint);
             }
         }
 
@@ -111,13 +111,13 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('smtp_config', 'array')
             ->setAllowedTypes('dkim_config', 'array');
 
-            $resolver->setNormalizer('dkim_config', function (Options $options, $value) {
-                return $this->getDkimResolver()->resolve($value ?? []);
-            });
+        $resolver->setNormalizer('dkim_config', function (Options $options, $value) {
+            return $this->getDkimResolver()->resolve($value ?? []);
+        });
 
-            $resolver->setNormalizer('smtp_config', function (Options $options, $value) {
-                return $this->getSmtpResolver()->resolve($value ?? []);
-            });
+        $resolver->setNormalizer('smtp_config', function (Options $options, $value) {
+            return $this->getSmtpResolver()->resolve($value ?? []);
+        });
 
         return $resolver;
     }
@@ -134,7 +134,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('selector', 'string')
             ->setAllowedTypes('key', 'string');
 
-        return  $dkimResolver;
+        return $dkimResolver;
     }
 
     /**
@@ -152,6 +152,6 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('port', 'string')
             ->setAllowedTypes('password', 'string');
 
-        return  $smtpResolver;
+        return $smtpResolver;
     }
 }
