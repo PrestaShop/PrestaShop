@@ -1204,6 +1204,10 @@ $product-page-padding-bottom: 80px !default;
   padding-bottom: $product-page-padding-bottom;
   margin-top: -$product-page-padding-bottom;
 
+  #combination-actions {
+    margin: 0.5rem 0;
+  }
+
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
