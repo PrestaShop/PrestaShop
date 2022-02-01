@@ -1692,6 +1692,7 @@ services:
     public: true
     arguments:
       - '@router'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
     tags:
       - { name: form.type }
 
