@@ -28,15 +28,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\Form\Event\PreSetDataEvent;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * For combination update in bulk action
@@ -49,17 +47,25 @@ class BulkCombinationType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var string
+     */
+    private $defaultCurrencyIsoCode;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
+     * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        RouterInterface $router
+        RouterInterface $router,
+        string $defaultCurrencyIsoCode
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
     }
 
     /**
@@ -68,8 +74,18 @@ class BulkCombinationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-//            ->add('stock', CombinationStockType::class)
-//            ->add('price_impact', CombinationPriceImpactType::class)
+            ->add('price_tax_excluded', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrencyIsoCode,
+                'disabling_toggle' => true,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                ],
+            ])
             ->add('reference', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
@@ -80,49 +96,5 @@ class BulkCombinationType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
             ])
         ;
-
-//        $this->modifyForm($builder);
-    }
-
-    /**
-     * @param FormBuilderInterface $builder
-     */
-    private function modifyForm(FormBuilderInterface $builder): void
-    {
-        //@todo: adding disabling toggle part should be made reusable and moved to eventSubscribers.
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (PreSetDataEvent $event) {
-            $form = $event->getForm();
-
-            $stockType = $form->get('stock');
-            $stockQuantitiesType = $stockType->get('quantities');
-            $stockOptionsType = $stockType->get('options');
-            $priceImpactType = $form->get('price_impact');
-
-            $stockQuantitiesType->remove('stock_movements');
-            $stockOptionsType->remove('stock_location');
-            $priceImpactType->remove('unit_price');
-
-            foreach ([$stockQuantitiesType, $stockOptionsType, $priceImpactType] as $formType) {
-                foreach ($formType->all() as $type) {
-                    $this->addDisablingToggle($type);
-                }
-            }
-
-            $this->addDisablingToggle($stockType->get('available_date'));
-        });
-    }
-
-    /**
-     * @param FormInterface $form
-     */
-    private function addDisablingToggle(FormInterface $form): void
-    {
-        $formCloner = new FormCloner();
-        $newForm = $formCloner->cloneForm(
-            $form,
-            array_merge($form->getConfig()->getOptions(), ['disabling_toggle' => true])
-        );
-
-        $form->getParent()->add($newForm);
     }
 }
