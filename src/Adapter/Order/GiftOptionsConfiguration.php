@@ -53,8 +53,8 @@ class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'enable_gift_wrapping' => (bool) $this->configuration->get('PS_GIFT_WRAPPING', false, $shopConstraint),
-            'gift_wrapping_price' => (float) $this->configuration->get('PS_GIFT_WRAPPING_PRICE', null, $shopConstraint),
-            'gift_wrapping_tax_rules_group' => (int) $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP', null, $shopConstraint),
+            'gift_wrapping_price' => (float) $this->configuration->get('PS_GIFT_WRAPPING_PRICE', 0, $shopConstraint),
+            'gift_wrapping_tax_rules_group' => (int) $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP', 0, $shopConstraint),
             'offer_recyclable_pack' => (bool) $this->configuration->get('PS_RECYCLABLE_PACK', false, $shopConstraint),
         ];
     }
