@@ -32,6 +32,9 @@ $product-description-height: 70px;
 }
 
 .product-miniature {
+  display: flex;
+  justify-content: center;
+
   .product {
     display: flex;
     justify-content: center;
@@ -137,7 +140,7 @@ $product-description-height: 70px;
     position: absolute;
     top: 100%;
     z-index: 2;
-    width: $thumbnail-size;
+    width: 100%;
     height: auto;
     padding: 0.625rem 0;
     text-align: center;
