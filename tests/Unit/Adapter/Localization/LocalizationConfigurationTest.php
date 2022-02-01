@@ -65,7 +65,7 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @return LanguageActivatorInterface
      */
-    protected function createLanguageActivatorMock()
+    protected function createLanguageActivatorMock(): LanguageActivatorInterface
     {
         return $this->getMockBuilder(LanguageActivatorInterface::class)
             ->getMock();
@@ -74,7 +74,7 @@ class LocalizationConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @return CurrencyManager
      */
-    protected function createCurrencyManagerMock()
+    protected function createCurrencyManagerMock(): CurrencyManager
     {
         return $this->getMockBuilder(CurrencyManager::class)
             ->setMethods(['updateDefaultCurrency'])
