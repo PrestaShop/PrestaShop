@@ -327,7 +327,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
         try {
             $file = $uploader->upload($fileToUpload);
             if (!empty($attachment->id)) {
-                unlink(PS_DOWNLOAD_DIR . $attachment->file);
+                unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
             }
 
             $attachment->file = $file['id'];
