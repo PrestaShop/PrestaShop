@@ -132,6 +132,7 @@ export default {
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkCombinationModalId,
     bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
+    bulkSelectAllInPage: '#bulk-select-all-in-page',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',

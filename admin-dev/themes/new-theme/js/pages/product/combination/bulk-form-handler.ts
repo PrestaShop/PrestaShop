@@ -39,6 +39,7 @@ export default class BulkFormHandler {
   }
 
   private init() {
+    this.listenSelectAllInPage();
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
     const modal = new ConfirmModal(
@@ -54,14 +55,30 @@ export default class BulkFormHandler {
     btn.addEventListener('click', () => modal.show());
   }
 
+  private listenSelectAllInPage() {
+    const combinationsContainer = this.getCombinationsContainer();
+
+    combinationsContainer.querySelector(CombinationMap.bulkSelectAllInPage)
+      ?.addEventListener('change', (e) => {
+        const selectAllCheckbox = e.currentTarget as HTMLInputElement;
+        const allCheckboxes = combinationsContainer
+          .querySelectorAll(CombinationMap.tableRow.isSelectedCombination) as NodeListOf<HTMLInputElement>;
+
+        allCheckboxes.forEach((checkbox) => {
+          // eslint-disable-next-line no-param-reassign
+          checkbox.checked = selectAllCheckbox.checked;
+        });
+      });
+  }
+
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
     this.bulkUpdate(form);
   }
 
   private bulkUpdate(form: HTMLFormElement): void {
-    const combinationsContainer = document.querySelector(CombinationMap.combinationsContainer) as HTMLDivElement;
-    const checkedBoxes = combinationsContainer.querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+    const checkedBoxes = this.getCombinationsContainer()
+      .querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
 
     checkedBoxes.forEach((checkbox: Element) => {
       const idInput = checkbox.closest(CombinationMap.tableRow.tableRowSelector)
@@ -69,5 +86,9 @@ export default class BulkFormHandler {
 
       this.combinationsService.bulkUpdate(Number(idInput.value), $(form).serializeArray());
     });
+  }
+
+  private getCombinationsContainer(): HTMLDivElement {
+    return document.querySelector(CombinationMap.combinationsContainer) as HTMLDivElement;
   }
 }
