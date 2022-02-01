@@ -91,7 +91,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ],
             $result
@@ -136,7 +136,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -156,7 +156,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -176,7 +176,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -196,7 +196,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -216,7 +216,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -236,7 +236,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -256,7 +256,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -276,7 +276,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -296,7 +296,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -316,7 +316,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -336,7 +336,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -356,7 +356,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => false, // Wrong type
                     'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -376,7 +376,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'dkim_config' => [
                     'domain' => 'domain.com',
                     'selector' => false, // Wrong Type
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -423,7 +423,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
             'dkim_config' => [
                 'domain' => 'smtp.domain.com',
                 'selector' => 'selector.domain.com',
-                'key' => '-----BEGIN RSA PRIVATE KEY-----.'
+                'key' => '-----BEGIN RSA PRIVATE KEY-----.',
             ],
         ]);
 
