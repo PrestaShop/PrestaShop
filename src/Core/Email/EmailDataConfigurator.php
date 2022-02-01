@@ -45,9 +45,9 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'send_emails_to' => (int) $this->configuration->get('PS_MAIL_EMAIL_MESSAGE', null, $shopConstraint),
-            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD', null, $shopConstraint),
-            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE', null, $shopConstraint),
+            'send_emails_to' => (int) $this->configuration->get('PS_MAIL_EMAIL_MESSAGE', 0, $shopConstraint),
+            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD', 0, $shopConstraint),
+            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE', 0, $shopConstraint),
             'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
             'smtp_config' => [
                 'domain' => $this->configuration->get('PS_MAIL_DOMAIN', null, $shopConstraint),
@@ -89,7 +89,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             $smtpPassword = (string) $config['smtp_config']['password'];
 
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->configuration->set('PS_MAIL_PASSWD', $smtpPassword, $shopConstraint);
+                $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password',$config['smtp_config'], $shopConstraint);
             }
         }
 
