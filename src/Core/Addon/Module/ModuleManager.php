@@ -639,7 +639,7 @@ class ModuleManager implements AddonManagerInterface
             throw new Exception($this->translator->trans('Error when unregister hook on module %module% . %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
-        $this->checkAndClearCache($result);
+        $this->checkAndClearCache((bool) $result);
 
         return $result;
     }
