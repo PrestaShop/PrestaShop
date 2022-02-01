@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -96,31 +97,6 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
-     */
-    /*
-    public function validateConfiguration(array $config): bool
-    {
-        return isset(
-            $config['send_emails_to'],
-            $config['mail_method'],
-            $config['mail_type'],
-            $config['log_emails'],
-            $config['dkim_enable'],
-            $config['dkim_config']['domain'],
-            $config['dkim_config']['selector'],
-            $config['dkim_config']['key'],
-            $config['smtp_config']['domain'],
-            $config['smtp_config']['server'],
-            $config['smtp_config']['username'],
-            $config['smtp_config']['encryption'],
-            $config['smtp_config']['port'],
-            $config['smtp_config']['password']
-        );
-    }
-    */
-
-    /**
      * @return OptionsResolver
      */
     protected function buildResolver(): OptionsResolver
@@ -135,6 +111,47 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('smtp_config', 'array')
             ->setAllowedTypes('dkim_config', 'array');
 
+            $resolver->setNormalizer('dkim_config', function (Options $options, $value) {
+                return $this->getDkimResolver()->resolve($value ?? []);
+            });
+
+            $resolver->setNormalizer('smtp_config', function (Options $options, $value) {
+                return $this->getSmtpResolver()->resolve($value ?? []);
+            });
+
         return $resolver;
+    }
+
+    /**
+     * @return OptionsResolver
+     */
+    private function getDkimResolver(): OptionsResolver
+    {
+        $dkimResolver = new OptionsResolver();
+        $dkimResolver
+            ->setRequired(['domain', 'selector', 'key'])
+            ->setAllowedTypes('domain', 'string')
+            ->setAllowedTypes('selector', 'string')
+            ->setAllowedTypes('key', 'string');
+
+        return  $dkimResolver;
+    }
+
+    /**
+     * @return OptionsResolver
+     */
+    private function getSmtpResolver(): OptionsResolver
+    {
+        $smtpResolver = new OptionsResolver();
+        $smtpResolver
+            ->setRequired(['domain', 'server', 'username', 'encryption', 'port', 'password'])
+            ->setAllowedTypes('domain', 'string')
+            ->setAllowedTypes('server', 'string')
+            ->setAllowedTypes('username', 'string')
+            ->setAllowedTypes('encryption', 'string')
+            ->setAllowedTypes('port', 'string')
+            ->setAllowedTypes('password', 'string');
+
+        return  $smtpResolver;
     }
 }
