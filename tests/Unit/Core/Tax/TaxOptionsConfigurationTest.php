@@ -57,7 +57,7 @@ class TaxOptionsConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @return ProductEcotaxResetterInterface
      */
-    protected function createProductEcotaxResetterMock()
+    protected function createProductEcotaxResetterMock(): ProductEcotaxResetterInterface
     {
         return $this->getMockBuilder(ProductEcotaxResetterInterface::class)
             ->setMethods(['reset'])
