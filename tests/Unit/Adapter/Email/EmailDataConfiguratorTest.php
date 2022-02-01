@@ -61,13 +61,13 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                     ['PS_LOG_EMAILS', false, $shopConstraint, true],
                     ['PS_MAIL_DKIM_ENABLE', false, $shopConstraint, true],
                     ['PS_MAIL_DKIM_DOMAIN', null, $shopConstraint, 'smtp.domain.com'],
-                    ['PS_MAIL_DKIM_SELECTOR', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_DKIM_KEY', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_DOMAIN', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_SERVER', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_USER', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_SMTP_ENCRYPTION', null, $shopConstraint, 'test'],
-                    ['PS_MAIL_SMTP_PORT', null, $shopConstraint, 'test'],
+                    ['PS_MAIL_DKIM_SELECTOR', null, $shopConstraint, 'selector.domain.com'],
+                    ['PS_MAIL_DKIM_KEY', null, $shopConstraint, '-----BEGIN RSA PRIVATE KEY-----.'],
+                    ['PS_MAIL_DOMAIN', null, $shopConstraint, 'domain.com'],
+                    ['PS_MAIL_SERVER', null, $shopConstraint, 'smtp.domain.com'],
+                    ['PS_MAIL_USER', null, $shopConstraint, 'myusername'],
+                    ['PS_MAIL_SMTP_ENCRYPTION', null, $shopConstraint, 'ssl'],
+                    ['PS_MAIL_SMTP_PORT', null, $shopConstraint, '21'],
                     ['PS_MAIL_PASSWD', null, $shopConstraint, 'password'],
                 ]
             );
@@ -80,18 +80,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => true,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ],
             $result
@@ -125,18 +125,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => true,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'domain' => 'domain.com',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -145,18 +145,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => true,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -165,18 +165,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 'wrong type', // Wrong Type
                 'log_emails' => true,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -185,18 +185,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 'wrong type', // Wrong Type
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -206,17 +206,17 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'log_emails' => 1,
                 'smtp_config' => [
                     'domain' => false, // Wrong type
-                    'server' => 'test',
-                    'username' => 'test',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -225,18 +225,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
+                    'domain' => 'domain.com',
                     'server' => false, // Wrong type
-                    'username' => 'test',
+                    'username' => 'myusername',
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -245,18 +245,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
                     'username' => false, // Wrong type
                     'password' => 'password',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -265,18 +265,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => false, // Wrong type
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -285,18 +285,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
                     'encryption' => false, // Wrong Type
-                    'port' => 'test',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -305,18 +305,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
-                    'encryption' => 'test',
+                    'encryption' => 'ssl',
                     'port' => false, // Wrong Type
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -325,18 +325,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => 'wrong type', // Wrong Type
                 'dkim_config' => [
                     'domain' => 'smtp.domain.com',
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -345,18 +345,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => false, // Wrong type
-                    'selector' => 'test',
-                    'key' => 'test',
+                    'selector' => 'selector.domain.com',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -365,18 +365,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
-                    'domain' => 'test',
+                    'domain' => 'domain.com',
                     'selector' => false, // Wrong Type
-                    'key' => 'test',
+                    'key' => '-----BEGIN RSA PRIVATE KEY-----.'
                 ],
             ]],
             [InvalidOptionsException::class, [
@@ -385,17 +385,17 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                 'mail_type' => 1,
                 'log_emails' => 1,
                 'smtp_config' => [
-                    'domain' => 'test',
-                    'server' => 'test',
-                    'username' => 'test',
+                    'domain' => 'domain.com',
+                    'server' => 'smtp.domain.com',
+                    'username' => 'myusername',
                     'password' => 'test',
-                    'encryption' => 'test',
-                    'port' => 'test',
+                    'encryption' => 'ssl',
+                    'port' => '21',
                 ],
                 'dkim_enable' => true,
                 'dkim_config' => [
-                    'domain' => 'test',
-                    'selector' => 'test',
+                    'domain' => 'domain.com',
+                    'selector' => 'selector.domain.com',
                     'key' => false, // Wrong Type
                 ],
             ]],
@@ -412,18 +412,18 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
             'mail_type' => 1,
             'log_emails' => true,
             'smtp_config' => [
-                'domain' => 'test',
-                'server' => 'test',
-                'username' => 'test',
+                'domain' => 'domain.com',
+                'server' => 'smtp.domain.com',
+                'username' => 'myusername',
                 'password' => 'password',
-                'encryption' => 'test',
-                'port' => 'test',
+                'encryption' => 'ssl',
+                'port' => '21',
             ],
             'dkim_enable' => true,
             'dkim_config' => [
                 'domain' => 'smtp.domain.com',
-                'selector' => 'test',
-                'key' => 'test',
+                'selector' => 'selector.domain.com',
+                'key' => '-----BEGIN RSA PRIVATE KEY-----.'
             ],
         ]);
 
