@@ -25,6 +25,7 @@
 
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 
 const {$} = window;
 
@@ -36,6 +37,7 @@ export default class CombinationsGridRenderer {
    * @returns {{render: (function(*=): void)}}
    */
   constructor() {
+    this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
@@ -87,6 +89,7 @@ export default class CombinationsGridRenderer {
       //    so it doesnt need to be in api response
       const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
       $combinationIdInput.val(combination.id);
+      $combinationCheckbox.val(combination.id);
       $combinationNameInput.val(combination.name);
       // This adds the ID in the checkbox label
       $combinationCheckbox.closest('label').append(combination.id);
@@ -114,6 +117,7 @@ export default class CombinationsGridRenderer {
       this.$combinationsTableBody.append($row);
       rowIndex += 1;
     });
+    this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
   }
 
   /**
