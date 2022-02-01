@@ -74,7 +74,13 @@
   <table {{ block('widget_attributes') }}>
     <thead class="thead-default">
     <tr class="column-headers">
-      <th scope="col">
+      <th scope="col" id="id-header">
+        <div class="md-checkbox md-checkbox-inline">
+          <label>
+            <input type="checkbox" id="bulk-select-all-in-page">
+            <i class="md-checkbox-control"></i>
+          </label>
+        </div>
         {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_product_attribute') }}
       </th>
       <th scope="col"></th>

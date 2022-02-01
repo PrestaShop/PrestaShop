@@ -1208,6 +1208,18 @@ $product-page-padding-bottom: 80px !default;
     position: relative;
     min-height: 3.5rem;
 
+    #id-header {
+      white-space: nowrap;
+
+      .md-checkbox {
+        display: inline-block;
+      }
+
+      .ps-sortable-column {
+        display: inline-block;
+      }
+    }
+
     .combination {
       &-actions {
         display: flex;
