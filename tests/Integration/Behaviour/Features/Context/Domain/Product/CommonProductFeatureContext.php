@@ -32,6 +32,7 @@ use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Install\DatabaseDump;
 use Product;
@@ -113,8 +114,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then /^product "(.+)" localized "(.+)" should be:$/
-     * @Given /^product "(.+)" localized "(.+)" is:$/
+     * @Then product :productReference localized :fieldName should be:
+     * @Given product :productReference localized :fieldName is:
      *
      * localizedValues transformation handled by @see LocalizedArrayTransformContext
      *
@@ -122,10 +123,37 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $fieldName
      * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues): void
+    public function assertLocalizedPropertyForDefaultShop(string $productReference, string $fieldName, array $expectedLocalizedValues): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
+        $this->assertLocalizedProperty($productForEditing, $fieldName, $expectedLocalizedValues);
+    }
 
+    /**
+     * @Then product :productReference localized :fieldName for shops :shopReferences should be:
+     *
+     * localizedValues transformation handled by @see LocalizedArrayTransformContext
+     *
+     * @param string $productReference
+     * @param string $fieldName
+     * @param array $expectedLocalizedValues
+     */
+    public function assertLocalizedPropertyForShops(string $productReference, string $fieldName, string $shopReferences, array $expectedLocalizedValues): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $productForEditing = $this->getProductForEditing(
+                $productReference,
+                $shopId
+            );
+
+            $this->assertLocalizedProperty($productForEditing, $fieldName, $expectedLocalizedValues);
+        }
+    }
+
+    private function assertLocalizedProperty(ProductForEditing $productForEditing, string $fieldName, array $expectedLocalizedValues): void
+    {
         if ('tags' === $fieldName) {
             UpdateTagsFeatureContext::assertLocalizedTags(
                 $expectedLocalizedValues,
