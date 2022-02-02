@@ -64,6 +64,12 @@ class PermissionController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
                 'configurablePermissions' => $configurablePermissions,
+                'multistoreInfoTip' => $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                ),
+                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
         );
     }

@@ -108,6 +108,8 @@
 
           if (isChecked && !this.status.includes(t)) {
             this.status.push(t);
+          } else if (this.status.includes(t) && !isChecked) {
+            this.status.splice(this.status.indexOf(t), 1);
           }
         });
         this.checkForTypeAllCheckbox();
