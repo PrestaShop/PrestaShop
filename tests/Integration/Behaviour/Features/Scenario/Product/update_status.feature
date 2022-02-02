@@ -9,6 +9,12 @@ Feature: Update product status from BO (Back Office)
     Given language "language1" with locale "en-US" exists
     And category "home" in default language named "Home" exists
     And category "home" is the default one
+    And attribute group "Size" named "Size" in en language exists
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "S" named "S" in en language exists
+    And attribute "M" named "M" in en language exists
+    And attribute "White" named "White" in en language exists
+    And attribute "Black" named "Black" in en language exists
 
   Scenario: I update standard product status
     Given I add product "product1" with following information:
@@ -41,11 +47,15 @@ Feature: Update product status from BO (Back Office)
     And I add product "product3" with following information:
       | name[en-US] | T-Shirt with listed values |
       | type        | combinations               |
-    And product "product3" has following combinations:
-      | reference | quantity | attributes         |
-      | whiteS    | 100      | Size:S;Color:White |
-      | whiteM    | 150      | Size:M;Color:White |
-      | blackM    | 130      | Size:M;Color:Black |
+    When I generate combinations for product product3 using following attributes:
+      | Size  | [S,M]              |
+      | Color | [White,Black] |
+    Then product "product3" should have following combinations:
+      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
     And product product3 type should be combinations
     And product "product3" should be disabled
     When I enable product "product3"
