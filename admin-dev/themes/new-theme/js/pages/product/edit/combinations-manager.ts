@@ -289,6 +289,7 @@ export default class CombinationsManager {
         }
       );
     });
+    this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 
   /**
