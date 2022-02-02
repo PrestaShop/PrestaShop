@@ -11,7 +11,7 @@ const loginCommon = require('@commonTests/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const orderPage = require('@pages/BO/orders/view');
+const orderPage = require('@pages/BO/orders/view/productsBlock');
 const ordersPage = require('@pages/BO/orders');
 
 // Import data

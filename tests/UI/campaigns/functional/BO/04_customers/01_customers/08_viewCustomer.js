@@ -16,7 +16,7 @@ const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
 const viewCustomerPage = require('@pages/BO/customers/view');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/customerBlock');
 const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
 
 // Import FO pages

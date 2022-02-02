@@ -16,7 +16,7 @@ const addTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 const boProductsPage = require('@pages/BO/catalog/products/index');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const foProductPage = require('@pages/FO/product');

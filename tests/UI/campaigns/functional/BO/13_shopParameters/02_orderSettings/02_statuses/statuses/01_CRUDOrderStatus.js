@@ -16,7 +16,7 @@ const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 const addOrderStatusPage = require('@pages/BO/shopParameters/orderSettings/statuses/add');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/viewOrderPage');
 
 // Import data
 const OrderStatusFaker = require('@data/faker/orderStatus');

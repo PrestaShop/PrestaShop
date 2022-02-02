@@ -11,7 +11,8 @@ const loginCommon = require('@commonTests/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const productsBlockOrderPage = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 
 // Import FO pages
@@ -188,8 +189,12 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
         await viewOrderPage.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderPage.addPartialRefundProduct(page, test.args.productID, test.args.quantity);
-        await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+        const textMessage = await productsBlockOrderPage.addPartialRefundProduct(
+          page,
+          test.args.productID,
+          test.args.quantity,
+        );
+        await expect(textMessage).to.contains(productsBlockOrderPage.partialRefundValidationMessage);
       });
 
       it('should check the existence of the Credit slip document', async function () {

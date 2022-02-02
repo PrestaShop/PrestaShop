@@ -12,7 +12,8 @@ const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
 
 // Import demo data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -147,8 +148,8 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       await viewOrderPage.clickOnPartialRefund(page);
 
-      const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+      const textMessage = await productsBlockViewOrderPage.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(productsBlockViewOrderPage.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
