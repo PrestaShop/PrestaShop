@@ -5,14 +5,14 @@ const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 /**
- * Customer block, contains functions that can be used on view/edit customer on view/edit order page
+ * Customer block, contains functions that can be used on view/edit customer block
  * @class
  * @extends ViewOrderBasePage
  */
-class CustomerBlock extends ViewOrderBasePage {
+class CustomerBlock extends ViewOrderBasePage.constructor {
   /**
    * @constructs
-   * Setting up texts and selectors to use on view/edit order page
+   * Setting up texts and selectors to use on view/edit customer block
    */
   constructor() {
     super();
@@ -42,8 +42,6 @@ class CustomerBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-
-  // Methods for customer block
   /**
    * Get customer information
    * @param page {Page} Browser tab

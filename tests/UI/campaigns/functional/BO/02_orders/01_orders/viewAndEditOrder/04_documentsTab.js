@@ -16,7 +16,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
-const productBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -362,10 +362,10 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     it('should create \'Partial refund\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-      await productBlockViewOrderPage.clickOnPartialRefund(page);
+      await productsBlockViewOrderPage.clickOnPartialRefund(page);
 
-      const textMessage = await productBlockViewOrderPage.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(productBlockViewOrderPage.partialRefundValidationMessage);
+      const textMessage = await productsBlockViewOrderPage.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(productsBlockViewOrderPage.partialRefundValidationMessage);
     });
 
     it('should check if \'Credit slip\' document is created', async function () {

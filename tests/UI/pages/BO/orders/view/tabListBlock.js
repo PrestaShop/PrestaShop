@@ -3,14 +3,14 @@ const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 const paymentBlock = require('@pages/BO/orders/view/paymentBlock');
 
 /**
- * Tab list block, contains functions that can be used on view/edit order page
+ * Tab list block, contains functions that can be used on status, documents, carriers and merchandise returns tabs
  * @class
  * @extends ViewOrderBasePage
  */
-class TabListBlock extends ViewOrderBasePage {
+class TabListBlock extends ViewOrderBasePage.constructor {
   /**
    * @constructs
-   * Setting up texts and selectors to use on view/edit order page
+   * Setting up texts and selectors to use on status, documents, carriers and merchandise returns tabs
    */
   constructor() {
     super();
@@ -72,43 +72,6 @@ class TabListBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-
-  // Methods for Merchandise returns tab
-  /**
-   * Go to merchandise returns tab
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async goToMerchandiseReturnsTab(page) {
-    await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
-
-    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
-  }
-
-  /**
-   * Get merchandise returns number
-   * @param page {Page} Browser tab
-   * @returns {Promise<number>}
-   */
-  getMerchandiseReturnsNumber(page) {
-    return this.getNumberFromText(page, this.merchandisereturnCount);
-  }
-
-  /**
-   * Get merchandise returns details
-   * @param page {Page} Browser tab
-   * @param row {number} Row on table merchandise returns
-   * @returns {Promise<{date: string, type: string, status: string, number: string}>}
-   */
-  async getMerchandiseReturnsDetails(page, row = 1) {
-    return {
-      date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
-      type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
-      status: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
-      number: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-id')),
-    };
-  }
-
   // Methods for status tab
   /**
    * Get statuses number
@@ -456,6 +419,42 @@ class TabListBlock extends ViewOrderBasePage {
     await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  // Methods for Merchandise returns tab
+  /**
+   * Go to merchandise returns tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async goToMerchandiseReturnsTab(page) {
+    await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
+
+    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
+  }
+
+  /**
+   * Get merchandise returns number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getMerchandiseReturnsNumber(page) {
+    return this.getNumberFromText(page, this.merchandisereturnCount);
+  }
+
+  /**
+   * Get merchandise returns details
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table merchandise returns
+   * @returns {Promise<{date: string, type: string, status: string, number: string}>}
+   */
+  async getMerchandiseReturnsDetails(page, row = 1) {
+    return {
+      date: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-date')),
+      type: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-type')),
+      status: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-state')),
+      number: await this.getTextContent(page, this.merchandiseReturnsTableColumn(row, 'return-id')),
+    };
   }
 }
 

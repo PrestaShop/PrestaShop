@@ -2,14 +2,14 @@ require('module-alias/register');
 const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
- * Add order page, contains functions that can be used on view/edit order page
+ * Products block, contains functions that can be used on view/edit products block on view order page
  * @class
  * @extends ViewOrderBasePage
  */
-class OrdersBlock extends ViewOrderBasePage {
+class ProductsBlock extends ViewOrderBasePage.constructor {
   /**
    * @constructs
-   * Setting up texts and selectors to use on view/edit order page
+   * Setting up texts and selectors to use on products block
    */
   constructor() {
     super();
@@ -97,7 +97,6 @@ class OrdersBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-
   // Methods for create partial refund
   /**
    * Add partial refund product
@@ -531,4 +530,4 @@ class OrdersBlock extends ViewOrderBasePage {
   }
 }
 
-module.exports = new OrdersBlock();
+module.exports = new ProductsBlock();

@@ -32,11 +32,9 @@ class ViewOrderBasePage extends BOBasePage {
     this.percentValueNotPositiveErrorMessage = 'Percent value must be greater than 0.';
     this.discountCannotExceedTotalErrorMessage = 'Discount value cannot exceed the total price of this order.';
 
-    // Selectors
+    // Header selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
     this.orderReference = '.title-content strong[data-role=\'order-reference\']';
-
-    // Order actions selectors
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
     this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
@@ -59,39 +57,27 @@ class ViewOrderBasePage extends BOBasePage {
 
   // Methods for order actions
   /**
+   * Does status exist
+   * @param page {Page} Browser tab
+   * @param statusName {string} Status to check
+   * @returns {Promise<boolean>}
+   */
+  async doesStatusExist(page, statusName) {
+    const options = await page.$$eval(
+      `${this.orderStatusesSelect} option`,
+      all => all.map(option => option.textContent),
+    );
+
+    return options.indexOf(statusName) !== -1;
+  }
+
+  /**
    * Is update status button disabled
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   isUpdateStatusButtonDisabled(page) {
     return this.elementVisible(page, `${this.updateStatusButton}[disabled]`, 1000);
-  }
-
-  /**
-   * Is view invoice button visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isViewInvoiceButtonVisible(page) {
-    return this.elementVisible(page, this.viewInvoiceButton, 1000);
-  }
-
-  /**
-   * Is partial refund button visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isPartialRefundButtonVisible(page) {
-    return this.elementVisible(page, this.partialRefundButton, 1000);
-  }
-
-  /**
-   * Is delivery slip button visible
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  isDeliverySlipButtonVisible(page) {
-    return this.elementVisible(page, this.viewDeliverySlipButton, 1000);
   }
 
   /**
@@ -114,7 +100,7 @@ class ViewOrderBasePage extends BOBasePage {
   }
 
   /**
-   * Modify the order status from the page header
+   * Modify the order status
    * @param page {Page} Browser tab
    * @param status {string} Status to edit
    * @returns {Promise<string>}
@@ -132,18 +118,12 @@ class ViewOrderBasePage extends BOBasePage {
   }
 
   /**
-   * Does status exist
+   * Is view invoice button visible
    * @param page {Page} Browser tab
-   * @param statusName {string} Status to check
    * @returns {Promise<boolean>}
    */
-  async doesStatusExist(page, statusName) {
-    const options = await page.$$eval(
-      `${this.orderStatusesSelect} option`,
-      all => all.map(option => option.textContent),
-    );
-
-    return options.indexOf(statusName) !== -1;
+  isViewInvoiceButtonVisible(page) {
+    return this.elementVisible(page, this.viewInvoiceButton, 1000);
   }
 
   /**
@@ -153,6 +133,33 @@ class ViewOrderBasePage extends BOBasePage {
    */
   async viewInvoice(page) {
     return this.clickAndWaitForDownload(page, this.viewInvoiceButton);
+  }
+
+  /**
+   * Is partial refund button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isPartialRefundButtonVisible(page) {
+    return this.elementVisible(page, this.partialRefundButton, 1000);
+  }
+
+  /**
+   * Click on partial refund button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnPartialRefund(page) {
+    await page.click(this.partialRefundButton);
+  }
+
+  /**
+   * Is delivery slip button visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isDeliverySlipButtonVisible(page) {
+    return this.elementVisible(page, this.viewDeliverySlipButton, 1000);
   }
 
   /**
@@ -172,15 +179,6 @@ class ViewOrderBasePage extends BOBasePage {
   isReturnProductsButtonVisible(page) {
     return this.elementVisible(page, this.returnProductsButton, 2000);
   }
-
-  /**
-   * Click on partial refund button
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async clickOnPartialRefund(page) {
-    await page.click(this.partialRefundButton);
-  }
 }
 
-module.exports = ViewOrderBasePage;
+module.exports = new ViewOrderBasePage();

@@ -2,14 +2,14 @@ require('module-alias/register');
 const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
- * Add order page, contains functions that can be used on view/edit order page
+ * Messages block, contains functions that can be used on view/edit messages block on view order page
  * @class
  * @extends ViewOrderBasePage
  */
-class MessagesBlock extends ViewOrderBasePage {
+class MessagesBlock extends ViewOrderBasePage.constructor {
   /**
    * @constructs
-   * Setting up texts and selectors to use on view/edit order page
+   * Setting up texts and selectors to use on view/edit messages block
    */
   constructor() {
     super();
@@ -34,8 +34,6 @@ class MessagesBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-
-  // Messages block
   /**
    * Send message
    * @param page {Page} Browser tab
@@ -117,7 +115,7 @@ class MessagesBlock extends ViewOrderBasePage {
   }
 
   /**
-   * Click on configure message link
+   * Click on configure predefined messages link
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */

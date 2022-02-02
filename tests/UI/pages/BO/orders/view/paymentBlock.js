@@ -2,14 +2,14 @@ require('module-alias/register');
 const ViewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 /**
- * Add order page, contains functions that can be used on view/edit order page
+ * Payment block, contains functions that can be used on view/edit payment block on view order page
  * @class
  * @extends ViewOrderBasePage
  */
-class PaymentBlock extends ViewOrderBasePage {
+class PaymentBlock extends ViewOrderBasePage.constructor {
   /**
    * @constructs
-   * Setting up texts and selectors to use on view/edit order page
+   * Setting up texts and selectors to use on payment block
    */
   constructor() {
     super();
@@ -36,7 +36,6 @@ class PaymentBlock extends ViewOrderBasePage {
   /*
   Methods
    */
-
   // Methods for payment block
   /**
    * Get payments number

@@ -16,8 +16,8 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view/paymentBlock');
-const productBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
-const tabListViewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const documentsTabViewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 const localizationPage = require('@pages/BO/international/localization');
 const currenciesPage = require('@pages/BO/international/currencies');
 const addCurrencyPage = require('@pages/BO/international/currencies/add');
@@ -474,12 +474,12 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     it(`should add the product '${Products.demo_5.name}' to the cart`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchCustomizedProduct', baseContext);
 
-      await productBlockViewOrderPage.searchProduct(page, Products.demo_5.name);
+      await productsBlockViewOrderPage.searchProduct(page, Products.demo_5.name);
 
-      await productBlockViewOrderPage.selectInvoice(page);
+      await productsBlockViewOrderPage.selectInvoice(page);
 
-      const textResult = await productBlockViewOrderPage.addProductToCart(page, 1, true);
-      await expect(textResult).to.contains(productBlockViewOrderPage.successfulAddProductMessage);
+      const textResult = await productsBlockViewOrderPage.addProductToCart(page, 1, true);
+      await expect(textResult).to.contains(productsBlockViewOrderPage.successfulAddProductMessage);
     });
 
     it('should check that products number is equal to 2', async function () {
@@ -487,14 +487,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
 
       await viewOrderPage.reloadPage(page);
 
-      const productCount = await productBlockViewOrderPage.getProductsNumber(page);
+      const productCount = await productsBlockViewOrderPage.getProductsNumber(page);
       await expect(productCount).to.equal(2);
     });
 
     it('should check that invoices number is equal to 2', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentsNumber', baseContext);
 
-      const documentsNumber = await tabListViewOrderPage.getDocumentsNumber(page);
+      const documentsNumber = await documentsTabViewOrderPage.getDocumentsNumber(page);
       await expect(documentsNumber).to.be.equal(2);
     });
 
@@ -533,7 +533,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceAndCheckPayment', baseContext);
 
       // Download invoice
-      filePath = await tabListViewOrderPage.downloadInvoice(page, 3);
+      filePath = await documentsTabViewOrderPage.downloadInvoice(page, 3);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist, 'File doesn\'t exist!').to.be.true;
