@@ -45,7 +45,6 @@
     <div class="card-body">
       <div class="form-wrapper">
         <div class="alert alert-warning" role="alert">
-          <div class="alert-text">
             {{ 'Before making any changes to the default pattern of your URLs, make sure to meet the following requirements:'|trans({}, 'Admin.Shopparameters.Help') }}
             <ul>
               <li>
@@ -69,8 +68,7 @@
               <li>
                 {{ 'As long as a keyword has an associated value, you can use the syntax {prepend:keyword:append} to add text before and after it'|trans({}, 'Admin.Shopparameters.Help') }}
               </li>
-            </ul>
-          </div>
+            </ul>          
         </div>
         {{ form_widget(urlSchemaForm) }}
       </div>
