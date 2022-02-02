@@ -129,6 +129,8 @@ export default {
   virtualProduct: {
     container: '.virtual-product-file-container',
     fileContentContainer: '.virtual-product-file-content',
+    fileUploadField: '#product_stock_virtual_product_file_file',
+    fileNameField: '#product_stock_virtual_product_file_name',
   },
   dropzone: {
     configuration: {

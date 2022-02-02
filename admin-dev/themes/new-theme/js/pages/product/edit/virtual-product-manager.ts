@@ -48,6 +48,7 @@ export default class VirtualProductManager {
   private init(): void {
     this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
     this.toggleContentVisibility();
+    this.fillVirtualProductNameField();
   }
 
   private toggleContentVisibility(): void {
@@ -75,5 +76,20 @@ export default class VirtualProductManager {
    */
   private showContent(): void {
     this.$fileContentContainer.removeClass('d-none');
+  }
+
+  fillVirtualProductNameField() {
+    $(ProductMap.virtualProduct.fileUploadField).on('change', () => {
+      const fullPath = $(ProductMap.virtualProduct.fileUploadField).val();
+
+      // get file name from full path
+      const startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+      let filename = fullPath.substring(startIndex);
+
+      if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+        filename = filename.substring(1);
+      }
+      $(ProductMap.virtualProduct.fileNameField).val(filename);
+    });
   }
 }
