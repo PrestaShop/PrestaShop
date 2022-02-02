@@ -5,9 +5,7 @@ services:
   prestashop.core.admin.module.repository:
     class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository
     arguments:
-      - "@prestashop.adapter.admin.data_provider.module"
       - "@prestashop.adapter.data_provider.module"
-      - "@prestashop.core.module.updater"
       - "@prestashop.adapter.legacy.logger"
       - "@translator"
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"

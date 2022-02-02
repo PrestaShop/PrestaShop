@@ -19,8 +19,6 @@ services:
     class: PrestaShopBundle\Service\DataUpdater\Admin\ProductInterface
   prestashop.core.admin.page_preference_interface:
     class: PrestaShopBundle\Service\TransitionalBehavior\AdminPagePreferenceInterface
-  prestashop.core.admin.data_provider.addons_interface:
-    class: PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface
   prestashop.core.admin.data_provider.module_interface:
     class: PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface
 

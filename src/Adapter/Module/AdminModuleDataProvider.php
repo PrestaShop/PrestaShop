@@ -27,17 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Context;
-use Doctrine\Common\Cache\CacheProvider;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -48,8 +43,6 @@ use Tools;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    public const _CACHEKEY_MODULES_ = '_addons_modules';
-
     public const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     /**
@@ -73,24 +66,9 @@ class AdminModuleDataProvider implements ModuleInterface
     protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'];
 
     /**
-     * @var int
-     */
-    private $languageISO;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var Router|null
      */
     private $router = null;
-
-    /**
-     * @var AddonsInterface
-     */
-    private $addonsDataProvider;
 
     /**
      * @var CategoriesProvider
@@ -101,11 +79,6 @@ class AdminModuleDataProvider implements ModuleInterface
      * @var ModuleDataProvider
      */
     private $moduleProvider;
-
-    /**
-     * @var CacheProvider|null
-     */
-    private $cacheProvider;
 
     /**
      * @var Employee|null
@@ -128,21 +101,12 @@ class AdminModuleDataProvider implements ModuleInterface
     public $failed = false;
 
     public function __construct(
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
-        AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
         ModuleDataProvider $modulesProvider,
-        CacheProvider $cacheProvider = null,
         Employee $employee = null
     ) {
-        list($this->languageISO) = explode('-', $translator->getLocale());
-
-        $this->logger = $logger;
-        $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
         $this->moduleProvider = $modulesProvider;
-        $this->cacheProvider = $cacheProvider;
         $this->employee = $employee;
     }
 
@@ -152,17 +116,6 @@ class AdminModuleDataProvider implements ModuleInterface
     public function setRouter(Router $router)
     {
         $this->router = $router;
-    }
-
-    /**
-     * Clear the modules information from Addons cache.
-     */
-    public function clearCatalogCache()
-    {
-        if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-        $this->catalog_modules = [];
     }
 
     /**
@@ -176,33 +129,6 @@ class AdminModuleDataProvider implements ModuleInterface
             true,
             (int) Context::getContext()->employee->id
         );
-    }
-
-    /**
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function getCatalogModules(array $filters = [])
-    {
-        if (count($this->catalog_modules) === 0 && !$this->failed) {
-            $this->loadCatalogData();
-        }
-
-        return $this->applyModuleFilters(
-                $this->catalog_modules,
-            $filters
-        );
-    }
-
-    /**
-     * @param array $filter
-     *
-     * @return array
-     */
-    public function getCatalogModulesNames(array $filter = [])
-    {
-        return array_keys($this->getCatalogModules($filter));
     }
 
     /**
@@ -396,92 +322,5 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $modules;
-    }
-
-    /**
-     * Load module catalogue. If not in cache, query Addons API.
-     */
-    protected function loadCatalogData()
-    {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-
-        if (!$this->catalog_modules) {
-            $params = ['format' => 'json'];
-            $requests = [
-                AddonListFilterOrigin::ADDONS_SERVICE => 'service',
-            ];
-
-            try {
-                $listAddons = [];
-                // We execute each addons request
-                foreach ($requests as $action_filter_value => $action) {
-                    if (!$this->addonsDataProvider->isAddonsUp()) {
-                        continue;
-                    }
-                    // We add the request name in each product returned by Addons,
-                    // so we know whether is bought
-
-                    $addons = $this->addonsDataProvider->request($action, $params);
-                    /** @var \stdClass $addon */
-                    foreach ($addons as $addonsType => $addon) {
-                        if (empty($addon->name)) {
-                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
-
-                            continue;
-                        }
-
-                        $addon->origin = $action;
-                        $addon->origin_filter_value = $action_filter_value;
-                        $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName);
-                        if (isset($addon->version)) {
-                            $addon->version_available = $addon->version;
-                        }
-                        if (!isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
-                        } else {
-                            $addon->productType = $addon->product_type;
-                        }
-                        $listAddons[$addon->name] = $addon;
-                    }
-                }
-
-                if (!empty($listAddons)) {
-                    $this->catalog_modules = $listAddons;
-                    if ($this->cacheProvider) {
-                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
-                    }
-                } else {
-                    $this->fallbackOnCatalogCache();
-                }
-            } catch (\Exception $e) {
-                if (!$this->fallbackOnCatalogCache()) {
-                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
-                }
-            }
-        }
-    }
-
-    /**
-     * If cache exists, get the Catalogue from the cache.
-     *
-     * @return array Module loaded from the cache
-     */
-    protected function fallbackOnCatalogCache()
-    {
-        // Fallback on data from cache if exists
-        if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-
-        if (!$this->catalog_modules) {
-            $this->catalog_modules = [];
-        }
-
-        $this->failed = true;
-
-        return $this->catalog_modules;
     }
 }

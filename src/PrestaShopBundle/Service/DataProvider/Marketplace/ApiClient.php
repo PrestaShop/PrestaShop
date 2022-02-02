@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Service\DataProvider\Marketplace;
 
 use GuzzleHttp\Client;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 
 class ApiClient
 {
@@ -96,33 +95,6 @@ class ApiClient
     public function reset()
     {
         $this->queryParameters = $this->defaultQueryParameters;
-    }
-
-    public function getCategories()
-    {
-        $response = $this->setMethod('listing')
-            ->setAction('categories')
-            ->getResponse();
-
-        $responseArray = json_decode($response);
-
-        return isset($responseArray->module) ? $responseArray->module : [];
-    }
-
-    /**
-     * Call API for module ZIP content (= download).
-     *
-     * @param int $moduleId
-     * @param string $moduleChannel
-     *
-     * @return string binary content (zip format)
-     */
-    public function getModuleZip($moduleId, string $moduleChannel = AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE)
-    {
-        return $this->setMethod('module')
-            ->setModuleId($moduleId)
-            ->setModuleChannel($moduleChannel)
-            ->getPostResponse();
     }
 
     public function getResponse()

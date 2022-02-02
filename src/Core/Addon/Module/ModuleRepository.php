@@ -29,10 +29,8 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Doctrine\Common\Cache\CacheProvider;
 use Exception;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
@@ -52,11 +50,6 @@ class ModuleRepository implements ModuleRepositoryInterface
     public const PARTNER_AUTHOR = 'PrestaShop Partners';
 
     /**
-     * @var AdminModuleDataProvider
-     */
-    private $adminModuleProvider;
-
-    /**
      * @var Finder
      */
     private $finder;
@@ -70,11 +63,6 @@ class ModuleRepository implements ModuleRepositoryInterface
      * @var ModuleDataProvider
      */
     private $moduleProvider;
-
-    /**
-     * @var ModuleDataUpdater
-     */
-    private $moduleUpdater;
 
     /**
      * @var TranslatorInterface
@@ -117,18 +105,14 @@ class ModuleRepository implements ModuleRepositoryInterface
     private $loadedModules;
 
     public function __construct(
-        AdminModuleDataProvider $adminModulesProvider,
         ModuleDataProvider $modulesProvider,
-        ModuleDataUpdater $modulesUpdater,
         LoggerInterface $logger,
         TranslatorInterface $translator,
         $modulePath,
         CacheProvider $cacheProvider = null
     ) {
-        $this->adminModuleProvider = $adminModulesProvider;
         $this->logger = $logger;
         $this->moduleProvider = $modulesProvider;
-        $this->moduleUpdater = $modulesUpdater;
         $this->translator = $translator;
         $this->finder = new Finder();
         $this->modulePath = $modulePath;
@@ -341,43 +325,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $partnersModules;
     }
 
-    private function getAddonsCatalogModules()
-    {
-        $modules = [];
-        foreach ($this->adminModuleProvider->getCatalogModulesNames() as $name) {
-            try {
-                $module = $this->getModule($name);
-                if ($module instanceof ModuleInterface) {
-                    $modules[$name] = $module;
-                }
-            } catch (\ParseError $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Parse error on module %module%. %error_details%',
-                        [
-                            '%module%' => $name,
-                            '%error_details%' => $e->getMessage(),
-                        ],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            } catch (Exception $e) {
-                $this->logger->critical(
-                    $this->translator->trans(
-                        'Unexpected exception on module %module%. %error_details%',
-                        [
-                            '%module%' => $name,
-                            '%error_details%' => $e->getMessage(),
-                        ],
-                        'Admin.Modules.Notification'
-                    )
-                );
-            }
-        }
-
-        return $modules;
-    }
-
     /**
      * Get the new module presenter class of the specified name provided.
      * It contains data from its instance, the disk, the database and from the marketplace if exists.
@@ -402,23 +349,6 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         // Get filemtime of module main class (We do this directly with an error suppressor to go faster)
         $current_filemtime = (int) @filemtime($php_file_path);
-
-        // We check that we have data from the marketplace
-        try {
-            $module_catalog_data = $this->adminModuleProvider->getCatalogModules(['name' => $name]);
-            $attributes = array_merge(
-                $attributes,
-                (array) array_shift($module_catalog_data)
-            );
-        } catch (Exception $e) {
-            $this->logger->alert(
-                $this->translator->trans(
-                    'Loading data from Addons failed. %error_details%',
-                    ['%error_details%' => $e->getMessage()],
-                    'Admin.Modules.Notification'
-                )
-            );
-        }
 
         // Now, we check that cache is up to date
         if (isset($this->cache[$name]['disk']['filemtime']) &&
