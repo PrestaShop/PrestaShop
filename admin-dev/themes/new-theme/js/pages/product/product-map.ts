@@ -27,6 +27,8 @@ const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
 const bulkCombinationModalId = 'bulk-combination-modal';
+const isSelectedCombinationInputClass = 'combination-is-selected';
+const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 
 export default {
   productForm: 'form[name=product]',
@@ -76,7 +78,7 @@ export default {
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     combinationsPaginatedList: '#combinations-paginated-list',
-    combinationsContainer: `${combinationListId}`,
+    combinationsListContainer: `${combinationListId}`,
     combinationsFiltersContainer: '#combinations_filters',
     combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListId} table`,
@@ -104,7 +106,8 @@ export default {
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
       tableRowSelector: 'tr.combination',
-      isSelectedCombination: '.combination-is-selected',
+      isSelectedCombinationInputClass,
+      isSelectedCombination: `.${isSelectedCombinationInputClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
       deltaQuantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
@@ -133,7 +136,8 @@ export default {
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkCombinationModalId,
     bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
-    bulkSelectAllInPage: '#bulk-select-all-in-page',
+    bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
+    bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
