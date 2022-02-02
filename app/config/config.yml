@@ -102,26 +102,6 @@ swiftmailer:
   password: "%mailer_password%"
   spool: { type: memory }
 
-# Guzzle configuration
-eight_points_guzzle:
-  logging: "%kernel.debug%"
-  clients:
-    addons_api:
-      base_url: "https://api-addons.prestashop.com"
-      options:  # you can specify the options as in http://docs.guzzlephp.org/en/latest/quickstart.html#creating-a-client
-        timeout: "5.0"
-        headers:
-          Accept: "application/json"
-        curl:
-          forbid_reuse: true
-          fresh_connect: true
-
-prestashop:
-  addons:
-    api_client:
-      ttl: 7200  # 2h
-      # verify_ssl: ~ # Bundle CA by default, declaring "addons.api_client.verify_ssl" parameter overrides its usage
-
 sensio_framework_extra:
   router:
     annotations: false

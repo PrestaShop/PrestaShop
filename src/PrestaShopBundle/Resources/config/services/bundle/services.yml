@@ -91,19 +91,6 @@ services:
       - [ 'setTokenManager', [ '@security.csrf.token_manager' ] ]
       - [ 'setUserProvider', [ "@=service('prestashop.user_provider')" ] ]
 
-  # Addons API Client
-  prestashop.addons.client_api:
-    class: PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient
-    arguments:
-      - "@eight_points_guzzle.client.addons_api"
-      - "@=service('translator').getLocale()"
-      - "@=service('prestashop.adapter.data_provider.country').getIsoCodebyId()"
-      - "@prestashop.adapter.tools"
-      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_BASE_URL_')"
-      - "@=service('prestashop.core.foundation.version').getSemVersion()"
-    calls:
-      - [ "setSslVerification", [ "%prestashop.addons.api_client.verify_ssl%" ] ]
-
   prestashop.multistore.customized_configuration_checker:
     class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
     arguments:

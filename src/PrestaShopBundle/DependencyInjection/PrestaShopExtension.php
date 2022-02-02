@@ -49,19 +49,6 @@ class PrestaShopExtension extends Extension
         $loader->load('services_' . $env . '.yml');
 
         $container->setParameter('prestashop.addons.categories', $config['addons']['categories']);
-
-        $hasVerifySslParameter = $container->hasParameter('addons.api_client.verify_ssl');
-
-        if ($hasVerifySslParameter) {
-            $verifySsl = $container->getParameter('addons.api_client.verify_ssl');
-        } else {
-            $verifySsl = $config['addons']['api_client']['verify_ssl'];
-        }
-
-        $container->setParameter('prestashop.addons.api_client.verify_ssl', $verifySsl);
-        if (!$container->hasParameter('prestashop.addons.api_client.ttl')) {
-            $container->setParameter('prestashop.addons.api_client.ttl', $config['addons']['api_client']['ttl']);
-        }
     }
 
     /**

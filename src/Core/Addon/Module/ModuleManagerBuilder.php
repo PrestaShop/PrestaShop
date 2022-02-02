@@ -162,21 +162,10 @@ class ModuleManagerBuilder
 
         $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
-        $prestashopAddonsConfig =
-            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
+        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
         $tools = new Tools();
         $tools->refreshCaCertFile();
-
-        $clientConfig = $config['eight_points_guzzle']['clients']['addons_api'];
-        $clientConfig['verify'] = _PS_CACHE_CA_CERT_FILE_;
-        if (file_exists($this->getConfigDir() . '/parameters.php')) {
-            $parameters = require $this->getConfigDir() . '/parameters.php';
-            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
-                $clientConfig['verify'] = $parameters['parameters']['addons.api_client.verify_ssl'];
-            }
-        }
 
         self::$translator = Context::getContext()->getTranslator();
 
