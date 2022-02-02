@@ -212,7 +212,7 @@
       },
     },
     mounted() {
-      this.combinationList = $(ProductMap.combinations.combinationsContainer);
+      this.combinationList = $(ProductMap.combinations.combinationsListContainer);
       this.combinationsService = new CombinationsService();
       this.initCombinationIds();
       this.watchEditButtons();

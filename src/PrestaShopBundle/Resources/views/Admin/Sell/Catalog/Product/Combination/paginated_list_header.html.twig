@@ -30,9 +30,9 @@
      }|json_encode }}"
 ></div>
 
-{#    @todo: not styled #}
 <div id="combination-actions">
-  <button id="combination-bulk-form-btn" class="btn btn-outline-primary" type="button">
+{# button disabled by default, because js toggles its availability based on selected combonations #}
+  <button id="combination-bulk-form-btn" class="btn btn-outline-primary" type="button" disabled>
     {{ 'Apply bulk action'|trans({}, 'Admin.Actions') }}
   </button>
 </div>
