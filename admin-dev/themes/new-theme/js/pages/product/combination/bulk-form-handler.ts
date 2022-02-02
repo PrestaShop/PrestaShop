@@ -25,10 +25,12 @@
 
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
+import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 
 const CombinationMap = ProductMap.combinations;
+const CombinationEvents = ProductEvents.combinations;
 
 export default class BulkFormHandler {
   private combinationsService: CombinationsService;
@@ -100,6 +102,7 @@ export default class BulkFormHandler {
     this.getSelectedCheckboxes().forEach((checkbox) => {
       this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
     });
+    this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
   }
 
   private getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
