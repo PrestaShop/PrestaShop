@@ -321,13 +321,13 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price by total weight.
+     * Check if the carrier is available for a given weight and zone
      *
      * @param int $id_carrier Carrier ID
      * @param float $total_weight Total weight
      * @param int $id_zone Zone ID
      *
-     * @return float|bool Delivery price, false if not possible
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
@@ -349,7 +349,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_weight = Hook::exec('actionDeliveryPriceByWeight', ['id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_weight)) {
-            self::$price_by_weight2[$cache_key] = $price_by_weight;
+            self::$price_by_weight2[$cache_key] = true;
         }
 
         return self::$price_by_weight2[$cache_key];
@@ -426,14 +426,14 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price for a given order.
+     * Check if the carrier is available for a given order total, currency and zone
      *
      * @param int $id_carrier Carrier ID
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
      *
-     * @return float Delivery price
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
     {
@@ -459,7 +459,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_price)) {
-            self::$price_by_price2[$cache_key] = $price_by_price;
+            self::$price_by_price2[$cache_key] = true;
         }
 
         return self::$price_by_price2[$cache_key];
@@ -747,7 +747,7 @@ class CarrierCore extends ObjectModel
 
                     // Get only carriers that have a range compatible with cart
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone))) {
+                        && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
 
@@ -755,7 +755,7 @@ class CarrierCore extends ObjectModel
                     }
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null))) {
+                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
