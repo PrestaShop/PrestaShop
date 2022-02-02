@@ -282,6 +282,9 @@
           this.$emit('sendRequest', params);
         }
 
+        // Update profile permission to prevent wrong bulk refresh
+        this.profilePermissions[this.permissionId][type] = this.permissionValues.includes(type);
+
         if (this.permissionValues.includes(type)) {
           this.$emit('childUpdated', type);
         }
