@@ -24,16 +24,23 @@
  */
 
 import BigNumber from 'bignumber.js';
-import ObjectFormMapper from '@components/form/form-object-mapper';
+import {EventEmitter} from 'events';
+import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
 
 export default class ProductFormModel {
-  constructor($form, eventEmitter) {
+  eventEmitter: EventEmitter;
+
+  mapper: FormObjectMapper;
+
+  precision: number;
+
+  constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
 
     // Init form mapper
-    this.mapper = new ObjectFormMapper(
+    this.mapper = new FormObjectMapper(
       $form,
       ProductFormMapping,
       eventEmitter,
@@ -47,17 +54,11 @@ export default class ProductFormModel {
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
     const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
-    this.precision = $priceTaxExcludedInput.data('displayPricePrecision');
+    this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
     this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
-
-    return {
-      getProduct: () => this.getProduct(),
-      watch: (productModelKey, callback) => this.watchProductModel(productModelKey, callback),
-      set: (modelKey, value) => this.setProductValue(modelKey, value),
-    };
   }
 
   /**
@@ -65,7 +66,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  getProduct() {
+  getProduct(): Record<string, any> {
     return this.mapper.getModel().product;
   }
 
@@ -75,7 +76,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  watchProductModel(productModelKey, callback) {
+  watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
     this.mapper.watch(`product.${productModelKey}`, callback);
   }
 
@@ -83,7 +84,7 @@ export default class ProductFormModel {
    * @param {string} productModelKey
    * @param {*} value
    */
-  setProductValue(productModelKey, value) {
+  set(productModelKey: string, value: any): void {
     this.mapper.set(`product.${productModelKey}`, value);
   }
 
@@ -94,7 +95,7 @@ export default class ProductFormModel {
    *
    * @private
    */
-  productFieldUpdated(event) {
+  private productFieldUpdated(event: FormUpdateEvent): void {
     this.updateProductPrices(event);
   }
 
@@ -104,7 +105,7 @@ export default class ProductFormModel {
    * @param {Object} event
    * @private
    */
-  updateProductPrices(event) {
+  private updateProductPrices(event: Record<string, any>) {
     const pricesFields = [
       'product.price.priceTaxIncluded',
       'product.price.priceTaxExcluded',
@@ -124,7 +125,7 @@ export default class ProductFormModel {
     try {
       taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
     } catch (error) {
-      taxRate = BigNumber.NaN;
+      taxRate = new BigNumber(NaN);
     }
     if (taxRate.isNaN()) {
       taxRate = new BigNumber(0);
@@ -170,9 +171,11 @@ export default class ProductFormModel {
    * @param {BigNumber} price
    * @param {BigNumber} taxRatio
    *
+   * @private
+   *
    * @returns {string}
    */
-  removeTax(price, taxRatio) {
+  private removeTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
@@ -180,9 +183,11 @@ export default class ProductFormModel {
    * @param {BigNumber} price
    * @param {BigNumber} taxRatio
    *
+   * @private
+   *
    * @returns {string}
    */
-  addTax(price, taxRatio) {
+  private addTax(price: BigNumber, taxRatio: BigNumber): string {
     return price.times(taxRatio).toFixed(this.precision);
   }
 }

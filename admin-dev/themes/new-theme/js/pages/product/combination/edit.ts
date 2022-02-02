@@ -22,31 +22,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
-Vue.use(VueI18n);
+import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
+import ImageSelector from '@pages/product/combination/image-selector';
+import ProductMap from '@pages/product/product-map';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
-export default function initCombinationGenerator(combinationGeneratorSelector, eventEmitter, productId) {
-  const container = document.querySelector(combinationGeneratorSelector);
+const {$} = window;
 
-  const translations = JSON.parse(container.dataset.translations);
-  const i18n = new VueI18n({
-    locale: 'en',
-    formatter: new ReplaceFormatter(),
-    messages: {en: translations},
-  });
+$(() => {
+  window.prestashop.component.initComponents([
+    'TranslatableField',
+    'TinyMCEEditor',
+    'TranslatableInput',
+    'EventEmitter',
+    'TextWithLengthCounter',
+    'DeltaQuantityInput',
+  ]);
 
-  return new Vue({
-    el: combinationGeneratorSelector,
-    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
-    components: {CombinationGenerator},
-    i18n,
-    data: {
-      productId,
-      eventEmitter,
-    },
-  });
-}
+  const $productForm = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
+  const {eventEmitter} = window.prestashop.instance;
+  // Init product model along with input watching and syncing
+  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+
+  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
+  new ImageSelector();
+});

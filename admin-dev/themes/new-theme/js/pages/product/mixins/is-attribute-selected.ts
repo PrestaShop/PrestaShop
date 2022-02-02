@@ -22,14 +22,27 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import Vue from 'vue';
+import {Attribute, AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
 
-import Router from '@components/router';
+export default Vue.extend({
+  methods: {
+    /**
+     * The selected attribute is provided as a parameter instead od using this reference because it helps the
+     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
+     *
+     * @param {Object} attribute
+     * @param {Object} attributeGroup
+     * @param {Object} attributeGroups
+     *
+     * @returns {boolean}
+     */
+    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: Record<string, AttributeGroup>): boolean {
+      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
+        return false;
+      }
 
-const router = new Router();
-const {$} = window;
-
-export const getCategories = async () => $.get(router.generate('admin_categories_get_categories_tree'));
-
-export default {
-  getCategories,
-};
+      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
+    },
+  },
+});

@@ -22,36 +22,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import Dropzone from './Dropzone.vue';
 
-Vue.use(VueI18n);
+/* eslint-disable max-len */
 
-export default function initDropzone(imagesContainerSelector) {
-  const container = document.querySelector(imagesContainerSelector);
+import Router from '@components/router';
 
-  const translations = JSON.parse(container.dataset.translations);
-  const i18n = new VueI18n({
-    locale: 'en',
-    formatter: new ReplaceFormatter(),
-    messages: {en: translations},
-  });
+const router = new Router();
+const {$} = window;
 
-  const productId = Number(container.dataset.productId);
-  const locales = JSON.parse(container.dataset.locales);
+export const getCategories = async (): Promise<Array<TreeCategory>> => $.get(router.generate('admin_categories_get_categories_tree'));
 
-  return new Vue({
-    el: imagesContainerSelector,
-    template: '<dropzone :productId=productId :locales=locales :token=token :formName=formName />',
-    components: {Dropzone},
-    i18n,
-    data: {
-      locales,
-      productId,
-      token: container.dataset.token,
-      formName: container.dataset.formName,
-    },
-  });
-}
+export default {
+  getCategories,
+};

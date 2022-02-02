@@ -24,14 +24,25 @@
  */
 
 import Router from '@components/router';
+import ServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-export default class CombinationsService {
+export default class CombinationsService implements ServiceType {
+  productId: number;
+
+  router: Router;
+
+  filters: Record<string, any>;
+
+  orderBy: string | null;
+
+  orderWay: string | null;
+
   /**
    * @param {Number} productId
    */
-  constructor(productId) {
+  constructor(productId: number) {
     this.productId = productId;
     this.router = new Router();
     this.filters = {};
@@ -45,9 +56,9 @@ export default class CombinationsService {
    *
    * @returns {Promise}
    */
-  fetch(offset, limit) {
+  fetch(offset: number, limit: number): JQuery.jqXHR<any> {
     const filterId = `product_combinations_${this.productId}`;
-    const requestParams = {};
+    const requestParams: Record<string, any> = {};
     // Required for route generation
     requestParams.productId = this.productId;
 
@@ -67,11 +78,11 @@ export default class CombinationsService {
   }
 
   /**
-   * @param {int} combinationId
+   * @param {number} combinationId
    *
    * @returns {Promise}
    */
-  deleteCombination(combinationId) {
+  deleteCombination(combinationId: number): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
         combinationId,
@@ -86,7 +97,7 @@ export default class CombinationsService {
    *
    * @returns {Promise}
    */
-  updateListedCombination(combinationId, data) {
+  updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
         combinationId,
@@ -99,7 +110,7 @@ export default class CombinationsService {
   /**
    * @param {Object} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
    */
-  generateCombinations(data) {
+  generateCombinations(data: Record<string, any>): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_generate', {
         productId: this.productId,
@@ -112,7 +123,7 @@ export default class CombinationsService {
   /**
    * @returns {Promise}
    */
-  getCombinationIds() {
+  getCombinationIds(): JQuery.jqXHR<any> {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {
         productId: this.productId,
@@ -124,7 +135,7 @@ export default class CombinationsService {
    * @param {string} orderBy
    * @param {string} orderWay
    */
-  setOrderBy(orderBy, orderWay) {
+  setOrderBy(orderBy: string, orderWay: string): void {
     this.orderBy = orderBy;
     this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
   }
@@ -132,14 +143,14 @@ export default class CombinationsService {
   /**
    * @returns {Object}
    */
-  getFilters() {
+  getFilters(): Record<string, any> {
     return this.filters;
   }
 
   /**
    * @param {Object} filters
    */
-  setFilters(filters) {
+  setFilters(filters: Record<string, any>): void {
     this.filters = filters;
   }
 }

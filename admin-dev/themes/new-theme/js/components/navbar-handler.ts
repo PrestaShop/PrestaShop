@@ -35,7 +35,7 @@
  * and of course the hash is kept in sync when the navbar or alternative links are used.
  */
 export default class NavbarHandler {
-  tabPrefix: string;
+  tabPrefix?: string;
 
   $navigationContainer: JQuery;
 

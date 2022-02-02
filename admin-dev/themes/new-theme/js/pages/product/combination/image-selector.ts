@@ -27,49 +27,23 @@ import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
-export default class VirtualProductManager {
-  constructor(productFormModel) {
-    this.productFormModel = productFormModel;
-    this.$virtualProductContainer = $(ProductMap.virtualProduct.container);
-    this.$fileContentContainer = $(ProductMap.virtualProduct.fileContentContainer);
+export default class ImageSelector {
+  $selectorContainer: JQuery;
 
+  constructor() {
+    this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
     this.init();
-
-    return {};
   }
 
-  /**
-   * @private
-   */
-  init() {
-    this.productFormModel.watch('stock.hasVirtualProductFile', () => this.toggleContentVisibility());
-    this.toggleContentVisibility();
-  }
+  private init(): void {
+    $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
+    this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
+      const $imageChoice = $(event.currentTarget);
+      const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
 
-  toggleContentVisibility() {
-    const hasVirtualFile = Number(this.productFormModel.getProduct().stock.hasVirtualProductFile) === 1;
-    const hasErrors = this.$virtualProductContainer
-      .find(ProductMap.invalidField)
-      .length !== 0;
-
-    if (hasVirtualFile || hasErrors) {
-      this.showContent();
-    } else {
-      this.hideContent();
-    }
-  }
-
-  /**
-   * @private
-   */
-  hideContent() {
-    this.$fileContentContainer.addClass('d-none');
-  }
-
-  /**
-   * @private
-   */
-  showContent() {
-    this.$fileContentContainer.removeClass('d-none');
+      const isChecked = $checkbox.prop('checked');
+      $imageChoice.toggleClass('selected', !isChecked);
+      $checkbox.prop('checked', !isChecked);
+    });
   }
 }

@@ -27,13 +27,15 @@ import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 
 export default class ProductFooterManager {
+  $deleteProductButton: JQuery;
+
   constructor() {
     this.$deleteProductButton = $(ProductMap.footer.deleteProductButton);
     this.$deleteProductButton.click(() => this.deleteProduct());
   }
 
-  deleteProduct() {
-    const modal = new ConfirmModal(
+  private deleteProduct(): void {
+    const modal = new (ConfirmModal as any)(
       {
         id: 'modal-confirm-delete-product',
         confirmTitle: this.$deleteProductButton.data('modal-title'),

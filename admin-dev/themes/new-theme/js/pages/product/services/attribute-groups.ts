@@ -22,29 +22,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+/* eslint-disable max-len */
+import Router from '@components/router';
+import {AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ImageSelector from '@pages/product/combination/image-selector';
-import ProductMap from '@pages/product/product-map';
-import ProductFormModel from '@pages/product/edit/product-form-model';
-
+const router = new Router();
 const {$} = window;
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'TranslatableField',
-    'TinyMCEEditor',
-    'TranslatableInput',
-    'EventEmitter',
-    'TextWithLengthCounter',
-    'DeltaQuantityInput',
-  ]);
+export const getProductAttributeGroups = async (productId: number): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_products_attribute_groups', {
+  productId,
+}));
 
-  const $productForm = $(window.parent.document.querySelector(ProductMap.productForm));
-  const {eventEmitter} = window.prestashop.instance;
-  // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+export const getAllAttributeGroups = async (): Promise<Array<AttributeGroup>> => $.get(router.generate('admin_all_attribute_groups'));
 
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
-  new ImageSelector();
-});
+export default {
+  getProductAttributeGroups,
+  getAllAttributeGroups,
+};

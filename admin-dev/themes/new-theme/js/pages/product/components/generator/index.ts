@@ -22,26 +22,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import EventEmitter from '@components/event-emitter';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
 
-import ProductMap from '@pages/product/product-map';
+Vue.use(VueI18n);
 
-const {$} = window;
+export default function initCombinationGenerator(
+  combinationGeneratorSelector: string,
+  eventEmitter: typeof EventEmitter,
+  productId: number,
+): Vue {
+  const container = <HTMLElement> document.querySelector(combinationGeneratorSelector);
 
-export default class ImageSelector {
-  constructor() {
-    this.$selectorContainer = $(ProductMap.combinations.images.selectorContainer);
-    this.init();
-  }
+  const translations = JSON.parse(<string>container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
 
-  init() {
-    $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
-    this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
-      const $imageChoice = $(event.currentTarget);
-      const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
-
-      const isChecked = $checkbox.prop('checked');
-      $imageChoice.toggleClass('selected', !isChecked);
-      $checkbox.prop('checked', !isChecked);
-    });
-  }
+  return new Vue({
+    el: combinationGeneratorSelector,
+    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
+    components: {CombinationGenerator},
+    i18n,
+    data: {
+      productId,
+      eventEmitter,
+    },
+  });
 }

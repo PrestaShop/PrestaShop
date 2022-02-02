@@ -24,10 +24,37 @@
  */
 
 import SuppliersMap from '@pages/product/suppliers-map';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 
 export default class ProductSuppliersManager {
+  forceUpdateDefault: boolean;
+
+  suppliersMap: Record<string, any>;
+
+  $productSuppliersCollection: JQuery;
+
+  $defaultSupplierGroup: JQuery;
+
+  $supplierIdsGroup: JQuery;
+
+  $productsTable: JQuery;
+
+  $productsTableBody: JQuery;
+
+  suppliers: Array<Record<string, any>>;
+
+  prototypeTemplate: string;
+
+  prototypeName: string;
+
+  defaultDataForSupplier: Record<string, any>;
+
+  $initialDefault!: JQuery;
+
+  productFormModel!: ProductFormModel | null | undefined;
+
   /**
    *
    * @param {string} suppliersFormId
@@ -40,7 +67,7 @@ export default class ProductSuppliersManager {
    *        It is now also initialized for combinations as temporary fix to, but should be fixed in other PR.
    *        Dedicated issue- https://github.com/PrestaShop/PrestaShop/issues/26906
    */
-  constructor(suppliersFormId, forceUpdateDefault, productFormModel) {
+  constructor(suppliersFormId: string, forceUpdateDefault: boolean, productFormModel: ProductFormModel | null = null) {
     this.productFormModel = productFormModel;
     this.forceUpdateDefault = forceUpdateDefault;
     this.suppliersMap = SuppliersMap(suppliersFormId);
@@ -56,11 +83,9 @@ export default class ProductSuppliersManager {
     this.defaultDataForSupplier = this.getDefaultDataForSupplier();
 
     this.init();
-
-    return {};
   }
 
-  init() {
+  private init(): void {
     this.memorizeCurrentSuppliers();
     this.toggleTableVisibility();
     this.refreshDefaultSupplierBlock();
@@ -98,7 +123,7 @@ export default class ProductSuppliersManager {
       this.updateProductWholesalePrice();
     });
 
-    if (this.productFormModel !== null) {
+    if (this.productFormModel) {
       this.productFormModel.watch('price.wholesalePrice', (event) => {
         this.updateDefaultProductSupplierPrice(event.value);
       });
@@ -107,8 +132,10 @@ export default class ProductSuppliersManager {
 
   /**
    * @param {string} newPrice
+   *
+   * @private
    */
-  updateDefaultProductSupplierPrice(newPrice) {
+  private updateDefaultProductSupplierPrice(newPrice: number): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -119,7 +146,7 @@ export default class ProductSuppliersManager {
     }
   }
 
-  updateProductWholesalePrice() {
+  private updateProductWholesalePrice(): void {
     const defaultProductSupplierId = this.getDefaultProductSupplierId();
 
     if (defaultProductSupplierId) {
@@ -129,14 +156,19 @@ export default class ProductSuppliersManager {
         return;
       }
       const newDefaultPrice = $defaultPriceInput.val();
-      this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
+
+      if (this.productFormModel) {
+        this.productFormModel.set('price.wholesalePrice', newDefaultPrice);
+      }
     }
   }
 
   /**
    * @returns {null|int}
+   *
+   * @private
    */
-  getDefaultProductSupplierId() {
+  private getDefaultProductSupplierId(): string | number | string[] | undefined | null {
     if (this.getSelectedSuppliers().length === 0) {
       return null;
     }
@@ -150,7 +182,7 @@ export default class ProductSuppliersManager {
     return defaultSupplier.first().val();
   }
 
-  toggleTableVisibility() {
+  private toggleTableVisibility(): void {
     if (this.getSelectedSuppliers().length === 0) {
       this.hideTable();
 
@@ -162,30 +194,36 @@ export default class ProductSuppliersManager {
 
   /**
    * @param {Object} supplier
+   *
+   * @private
    */
-  addSupplier(supplier) {
-    const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
+  private addSupplier(supplier: Record<string, any>): void {
+    if (this.productFormModel) {
+      const wholeSalePrice = this.productFormModel.getProduct().price.wholesalePrice;
 
-    if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
-      const newSupplier = Object.create(this.defaultDataForSupplier);
-      newSupplier.supplierId = supplier.supplierId;
-      newSupplier.supplierName = supplier.supplierName;
-      newSupplier.price = wholeSalePrice;
+      if (typeof this.suppliers[supplier.supplierId] === 'undefined') {
+        const newSupplier = Object.create(this.defaultDataForSupplier);
+        newSupplier.supplierId = supplier.supplierId;
+        newSupplier.supplierName = supplier.supplierName;
+        newSupplier.price = wholeSalePrice;
 
-      this.suppliers[supplier.supplierId] = newSupplier;
-    } else {
-      this.suppliers[supplier.supplierId].removed = false;
+        this.suppliers[supplier.supplierId] = newSupplier;
+      } else {
+        this.suppliers[supplier.supplierId].removed = false;
+      }
     }
   }
 
   /**
    * @param {int} supplierId
+   *
+   * @private
    */
-  removeSupplier(supplierId) {
+  private removeSupplier(supplierId: number): void {
     this.suppliers[supplierId].removed = true;
   }
 
-  renderSuppliers() {
+  private renderSuppliers(): void {
     this.$productsTableBody.empty();
 
     // Loop through select suppliers so that we use the same order as in the select list
@@ -214,19 +252,21 @@ export default class ProductSuppliersManager {
     });
   }
 
-  getSelectedSuppliers() {
-    const selectedSuppliers = [];
+  private getSelectedSuppliers(): Array<Record<string, any>> {
+    const selectedSuppliers: Array<Record<string, any>> = [];
     this.$supplierIdsGroup.find('input:checked').each((index, input) => {
+      const inputElement = <HTMLInputElement> input;
+
       selectedSuppliers.push({
-        supplierName: input.dataset.label,
-        supplierId: input.value,
+        supplierName: inputElement.dataset.label,
+        supplierId: inputElement.value,
       });
     });
 
     return selectedSuppliers;
   }
 
-  refreshDefaultSupplierBlock() {
+  private refreshDefaultSupplierBlock(): void {
     const suppliers = this.getSelectedSuppliers();
 
     if (suppliers.length === 0) {
@@ -242,12 +282,13 @@ export default class ProductSuppliersManager {
     const selectedSupplierIds = suppliers.map((supplier) => supplier.supplierId);
 
     this.$defaultSupplierGroup.find('input').each((key, input) => {
+      const inputElement = <HTMLInputElement> input;
       const isValid = selectedSupplierIds.includes(input.value);
 
       if (this.forceUpdateDefault && !isValid) {
-        input.checked = false;
+        inputElement.checked = false;
       }
-      input.disabled = !isValid;
+      inputElement.disabled = !isValid;
     });
 
     if (this.$defaultSupplierGroup.find('input:checked').length === 0 && this.forceUpdateDefault) {
@@ -255,35 +296,39 @@ export default class ProductSuppliersManager {
     }
   }
 
-  hideDefaultSuppliers() {
+  private hideDefaultSuppliers(): void {
     this.$defaultSupplierGroup.addClass('d-none');
   }
 
-  showDefaultSuppliers() {
+  private showDefaultSuppliers(): void {
     this.$defaultSupplierGroup.removeClass('d-none');
   }
 
   /**
    * @param {int[]} selectedSupplierIds
+   *
+   * @private
    */
-  checkFirstAvailableDefaultSupplier(selectedSupplierIds) {
+  private checkFirstAvailableDefaultSupplier(selectedSupplierIds: Array<number>): void {
     const firstSupplierId = selectedSupplierIds[0];
     this.$defaultSupplierGroup.find(`input[value="${firstSupplierId}"]`).prop('checked', true);
   }
 
-  showTable() {
+  private showTable(): void {
     this.$productsTable.removeClass('d-none');
   }
 
-  hideTable() {
+  private hideTable(): void {
     this.$productsTable.addClass('d-none');
   }
 
   /**
    * Memorize suppliers to be able to re-render them later.
    * Flag `removed` allows identifying whether supplier was removed from list or should be rendered
+   *
+   * @private
    */
-  memorizeCurrentSuppliers() {
+  private memorizeCurrentSuppliers(): void {
     this.getSelectedSuppliers().forEach((supplier) => {
       this.suppliers[supplier.supplierId] = {
         supplierId: supplier.supplierId,
@@ -303,9 +348,11 @@ export default class ProductSuppliersManager {
    * Create a "shadow" prototype just to parse default values set inside the input fields,
    * this allow to build an object with default values set in the FormType
    *
+   * @private
+   *
    * @returns {{reference, removed: boolean, price, currencyId, productSupplierId}}
    */
-  getDefaultDataForSupplier() {
+  private getDefaultDataForSupplier(): Record<string, any> {
     const rowPrototype = new DOMParser().parseFromString(
       this.prototypeTemplate,
       'text/html',
@@ -324,9 +371,11 @@ export default class ProductSuppliersManager {
    * @param selectorGenerator {function}
    * @param rowPrototype {Document}
    *
+   * @private
+   *
    * @returns {*}
    */
-  getDataFromRow(selectorGenerator, rowPrototype) {
-    return rowPrototype.querySelector(selectorGenerator(this.prototypeName)).value;
+  private getDataFromRow(selectorGenerator: (name: string) => string, rowPrototype: Document): any {
+    return (<HTMLInputElement> rowPrototype?.querySelector(selectorGenerator(this.prototypeName)))?.value;
   }
 }

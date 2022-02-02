@@ -27,20 +27,21 @@ import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
-export default function () {
+export default function (): void {
   const $defaultArrowWidth = 35;
   const $arrow = $(ProductMap.jsArrow);
   const $tabs = $(ProductMap.jsTabs);
   const $navTabs = $(ProductMap.jsNavTabs);
 
   let $positions;
-  let $moveTo = 0;
+  let $moveTo = '0';
   let $tabWidth = 0;
   let $navWidth = $defaultArrowWidth;
   let $widthWithTabs = 0;
 
-  $navTabs.find('li').each((index, item) => {
-    $navWidth += $(item).width();
+  $navTabs.find('li').each((index: number, item: HTMLElement): void => {
+    const itemWidth = <number>$(item).width();
+    $navWidth += itemWidth;
   });
 
   $widthWithTabs = $navWidth + $defaultArrowWidth * 2;
@@ -55,7 +56,7 @@ export default function () {
 
   $arrow.on('click', (e) => {
     if ($arrow.is(':visible')) {
-      $tabWidth = $tabs.width();
+      $tabWidth = <number>$tabs.width();
       $positions = $navTabs.position();
 
       $moveTo = '-=0';

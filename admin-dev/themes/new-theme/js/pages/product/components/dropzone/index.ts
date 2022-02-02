@@ -22,25 +22,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import Dropzone from './Dropzone.vue';
 
-export default {
-  methods: {
-    /**
-     * The selected attribute is provided as a parameter instead od using this reference because it helps the
-     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
-     *
-     * @param {Object} attribute
-     * @param {Object} attributeGroup
-     * @param {Object} attributeGroups
-     *
-     * @returns {boolean}
-     */
-    isSelected(attribute, attributeGroup, attributeGroups) {
-      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
-        return false;
-      }
+Vue.use(VueI18n);
 
-      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
+export default function initDropzone(imagesContainerSelector: string): Vue {
+  const container = <HTMLElement>document.querySelector(imagesContainerSelector);
+
+  const translations = JSON.parse(<string>container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  const productId = Number(container.dataset.productId);
+  const locales = JSON.parse(<string>container.dataset.locales);
+
+  return new Vue({
+    el: imagesContainerSelector,
+    template: '<dropzone :productId=productId :locales=locales :token=token :formName=formName />',
+    components: {Dropzone},
+    i18n,
+    data: {
+      locales,
+      productId,
+      token: container.dataset.token,
+      formName: container.dataset.formName,
     },
-  },
-};
+  });
+}

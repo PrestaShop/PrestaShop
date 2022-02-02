@@ -23,30 +23,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Serp from '@app/utils/serp';
+import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
 
 const {$} = window;
 
 export default class ProductSEOManager {
+  eventEmitter: EventEmitter;
+
+  $previewButton: JQuery;
+
   /**
    * @param {EventEmitter} eventEmitter
    *
    * @returns {{}}
    */
-  constructor(eventEmitter) {
+  constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.$previewButton = $(ProductMap.footer.previewUrlButton);
 
     this.init();
-
-    return {};
   }
 
   /**
    * @private
    */
-  init() {
+  private init(): void {
     // Init the product/category search field for redirection target
     new RedirectOptionManager(this.eventEmitter);
 

@@ -32,6 +32,16 @@ const {$} = window;
  * Renders the list of combinations in product edit page
  */
 export default class CombinationsGridRenderer {
+  $combinationsTable: JQuery;
+
+  $combinationsTableBody: JQuery;
+
+  $loadingSpinner: JQuery;
+
+  prototypeTemplate: string;
+
+  prototypeName: string;
+
   /**
    * @returns {{render: (function(*=): void)}}
    */
@@ -41,24 +51,19 @@ export default class CombinationsGridRenderer {
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
-
-    return {
-      render: (data) => this.render(data),
-      toggleLoading: (loading) => this.toggleLoading(loading),
-    };
   }
 
   /**
    * @param {Object} data expected structure: {combinations: [{Object}, {Object}...], total: {Number}}
    */
-  render(data) {
+  render(data: Record<string, any>): void {
     this.renderCombinations(data.combinations);
   }
 
   /**
    * @param {Boolean} loading
    */
-  toggleLoading(loading) {
+  toggleLoading(loading: boolean): void {
     this.$loadingSpinner.toggle(loading);
   }
 
@@ -67,11 +72,11 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  renderCombinations(combinations) {
+  private renderCombinations(combinations: Array<Record<string, any>>): void {
     this.$combinationsTableBody.empty();
 
     let rowIndex = 0;
-    combinations.forEach((combination) => {
+    combinations.forEach((combination: Record<string, any>) => {
       const $row = $(this.getPrototypeRow(rowIndex));
 
       // fill inputs
@@ -79,8 +84,8 @@ export default class CombinationsGridRenderer {
       const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
       const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
       const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
-      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityWrapper, $row);
       const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
+      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityWrapper, $row);
       const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
       // @todo final price should be calculated based on price impact and product price,
       //    so it doesnt need to be in api response
@@ -122,7 +127,7 @@ export default class CombinationsGridRenderer {
    *
    * @private
    */
-  getPrototypeRow(rowIndex) {
-    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex);
+  private getPrototypeRow(rowIndex: number): string {
+    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex.toString());
   }
 }

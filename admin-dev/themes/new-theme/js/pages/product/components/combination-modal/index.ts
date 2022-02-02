@@ -25,6 +25,7 @@
 
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
+import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
 
@@ -38,18 +39,18 @@ Vue.use(VueI18n);
  * @returns {Vue|CombinedVueInstance<Vue, {eventEmitter, productId}, object, object, Record<never, any>>|null}
  */
 export default function initCombinationModal(
-  combinationModalSelector,
-  productId,
-  eventEmitter,
-) {
-  const container = document.querySelector(combinationModalSelector);
+  combinationModalSelector: string,
+  productId: number,
+  eventEmitter: typeof EventEmitter,
+): Vue | null {
+  const container = <HTMLElement> document.querySelector(combinationModalSelector);
   const {emptyImage} = container.dataset;
 
   if (!container) {
     return null;
   }
 
-  const translations = JSON.parse(container.dataset.translations);
+  const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = new VueI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),

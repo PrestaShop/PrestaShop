@@ -23,12 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint-disable max-len */
+
 import Router from '@components/router';
 
 const router = new Router();
 const {$} = window;
 
-export const getProductImages = async (productId) => {
+export const getProductImages = async (productId: number): Promise<JQuery.jqXHR<any>> => {
   const imagesUrl = router.generate('admin_products_v2_get_images', {
     productId,
   });
@@ -36,12 +38,12 @@ export const getProductImages = async (productId) => {
   return $.get(imagesUrl);
 };
 
-export const saveImageInformations = async (selectedFile, token, formName) => {
+export const saveImageInformations = async (selectedFile: Record<string, any>, token: string, formName: string): Promise<JQuery.jqXHR<any>> => {
   const saveUrl = router.generate('admin_products_v2_update_image', {
     productImageId: selectedFile.image_id,
   });
 
-  const data = {};
+  const data: Record<string, any> = {};
   data[`${formName}[is_cover]`] = selectedFile.is_cover ? 1 : 0;
   Object.keys(selectedFile.legends).forEach((langId) => {
     data[`${formName}[legend][${langId}]`] = selectedFile.legends[langId];
@@ -54,7 +56,7 @@ export const saveImageInformations = async (selectedFile, token, formName) => {
   });
 };
 
-export const replaceImage = async (selectedFile, newFile, formName, token) => {
+export const replaceImage = async (selectedFile: Record<string, any>, newFile: Blob, formName: string, token: string): Promise<JQuery.jqXHR<any>> => {
   const replaceUrl = router.generate('admin_products_v2_update_image', {
     productImageId: selectedFile.image_id,
   });
@@ -72,12 +74,12 @@ export const replaceImage = async (selectedFile, newFile, formName, token) => {
   });
 };
 
-export const saveImagePosition = async (productImageId, newPosition, formName, token) => {
+export const saveImagePosition = async (productImageId: number, newPosition: number, formName: string, token: string): Promise<JQuery.jqXHR<any>> => {
   const sortUrl = router.generate('admin_products_v2_update_image', {
     productImageId,
   });
 
-  const data = {};
+  const data: Record<string, any> = {};
   data[`${formName}[position]`] = newPosition;
   data[`${formName}[_token]`] = token;
 
@@ -87,7 +89,7 @@ export const saveImagePosition = async (productImageId, newPosition, formName, t
   });
 };
 
-export const removeProductImage = async (productImageId) => {
+export const removeProductImage = async (productImageId: string): Promise<JQuery.jqXHR<any>> => {
   const deleteUrl = router.generate('admin_products_v2_delete_image', {
     productImageId,
   });

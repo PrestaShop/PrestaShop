@@ -24,6 +24,7 @@
  */
 
 import _ from 'lodash';
+// @ts-ignore
 import Bloodhound from 'typeahead.js';
 
 /**
@@ -32,13 +33,13 @@ import Bloodhound from 'typeahead.js';
  * @param tokenizer
  * @returns {function(*=, ...[*]=): function(*): *[]}
  */
-function getObjTokenizer(tokenizer) {
-  return function setKey(...args) {
+function getObjTokenizer(tokenizer: any) {
+  return function setKey(...args: any) {
     const tokenizerKeys = _.isArray(args[0]) ? args[0] : args;
 
-    return function tokenize(val) {
-      let tokens = [];
-      tokenizerKeys.forEach((key) => {
+    return function tokenize(val: Array<string>) {
+      let tokens: Array<string> = [];
+      tokenizerKeys.forEach((key: number) => {
         tokens = tokens.concat(tokenizer(_.toString(val[key])));
       });
 
@@ -55,9 +56,9 @@ function getObjTokenizer(tokenizer) {
  *
  * @return {array}
  */
-export const letters = (val) => {
+export const letters = (val: any): Array<string> => {
   const tokens = Bloodhound.tokenizers.nonword(val);
-  tokens.forEach((token) => {
+  tokens.forEach((token: string) => {
     let i = 0;
     while (i + 1 < token.length) {
       tokens.push(token.substr(i, token.length));

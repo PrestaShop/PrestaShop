@@ -32,6 +32,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
+import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
@@ -41,11 +42,43 @@ const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
 export default class CombinationsManager {
+  productId: number;
+
+  eventEmitter: EventEmitter;
+
+  $productForm: JQuery;
+
+  $combinationsContainer: JQuery;
+
+  $externalCombinationTab: JQuery;
+
+  $preloader: JQuery;
+
+  $paginatedList: JQuery;
+
+  $emptyState: JQuery;
+
+  paginator?: DynamicPaginator;
+
+  combinationsRenderer?: CombinationsGridRenderer;
+
+  filtersApp?: Record<string, any>;
+
+  combinationModalApp: Record<string, any> | null;
+
+  combinationGeneratorApp!: Record<string, any>;
+
+  initialized: boolean;
+
+  combinationsService: CombinationsService;
+
+  productAttributeGroups: Array<Record<string, any>>;
+
   /**
    * @param {int} productId
    * @returns {{}}
    */
-  constructor(productId) {
+  constructor(productId: number) {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
@@ -56,25 +89,16 @@ export default class CombinationsManager {
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
     this.$emptyState = $(CombinationsMap.emptyState);
 
-    this.paginator = null;
-    this.combinationsRenderer = null;
-    this.filtersApp = null;
     this.combinationModalApp = null;
-    this.combinationGeneratorApp = null;
 
     this.initialized = false;
     this.combinationsService = new CombinationsService(this.productId);
     this.productAttributeGroups = [];
 
     this.init();
-
-    return {};
   }
 
-  /**
-   * @private
-   */
-  init() {
+  private init(): void {
     // Paginate to first page when tab is shown
     this.$productForm
       .find(CombinationsMap.navigationTab)
@@ -90,7 +114,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  showCombinationTab() {
+  private showCombinationTab(): void {
     this.$externalCombinationTab.removeClass('d-none');
     this.firstInit();
   }
@@ -98,14 +122,14 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  hideCombinationTab() {
+  private hideCombinationTab(): void {
     this.$externalCombinationTab.addClass('d-none');
   }
 
   /**
    * @private
    */
-  firstInit() {
+  private firstInit(): void {
     if (this.initialized) {
       return;
     }
@@ -138,7 +162,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async refreshCombinationList(firstTime) {
+  private async refreshCombinationList(firstTime: boolean): Promise<void> {
     // Preloader is only shown on first load
     this.$preloader.toggleClass('d-none', !firstTime);
     this.$paginatedList.toggleClass('d-none', firstTime);
@@ -148,7 +172,10 @@ export default class CombinationsManager {
     this.productAttributeGroups = await getProductAttributeGroups(
       this.productId,
     );
-    this.filtersApp.filters = this.productAttributeGroups;
+
+    if (this.filtersApp) {
+      this.filtersApp.filters = this.productAttributeGroups;
+    }
 
     // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
     // which will itself be caught by this manager which will in turn refresh to first page)
@@ -158,7 +185,7 @@ export default class CombinationsManager {
     const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
     this.$paginatedList.toggleClass('d-none', !hasCombinations);
 
-    if (!hasCombinations) {
+    if (!hasCombinations && this.combinationsRenderer) {
       // Empty list
       this.combinationsRenderer.render({combinations: []});
       this.$emptyState.removeClass('d-none');
@@ -168,14 +195,16 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  refreshPage() {
-    this.paginator.paginate(this.paginator.getCurrentPage());
+  private refreshPage(): void {
+    if (this.paginator) {
+      this.paginator.paginate(this.paginator.getCurrentPage());
+    }
   }
 
   /**
    * @private
    */
-  initPaginatedList() {
+  private initPaginatedList(): void {
     this.combinationsRenderer = new CombinationsGridRenderer();
     // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
@@ -212,7 +241,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  watchEvents() {
+  private watchEvents(): void {
     /* eslint-disable */
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
       this.refreshCombinationList(false)
@@ -229,13 +258,16 @@ export default class CombinationsManager {
         Object.keys(attributeGroups).forEach(attributeGroupId => {
           currentFilters.attributes[attributeGroupId] = [];
           const attributes = attributeGroups[attributeGroupId];
-          attributes.forEach(attribute => {
+          attributes.forEach((attribute: Record<string, any>) => {
             currentFilters.attributes[attributeGroupId].push(attribute.id);
           });
         });
 
         this.combinationsService.setFilters(currentFilters);
-        this.paginator.paginate(1);
+
+        if(this.paginator) {
+          this.paginator.paginate(1);
+        }
       }
     );
 
@@ -304,7 +336,7 @@ export default class CombinationsManager {
   /**
    * @private
    */
-  initSortingColumns() {
+  private initSortingColumns(): void {
     this.$combinationsContainer.on(
       'click',
       CombinationsMap.sortableColumns,
@@ -350,7 +382,10 @@ export default class CombinationsManager {
 
         // Finally update list
         this.combinationsService.setOrderBy(columnName, direction);
-        this.paginator.paginate(1);
+
+        if (this.paginator) {
+          this.paginator.paginate(1);
+        }
       },
     );
   }
@@ -360,10 +395,10 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async deleteCombination(button) {
+  private async deleteCombination(button: HTMLButtonElement): Promise<void> {
     try {
       const $deleteButton = $(button);
-      const modal = new ConfirmModal(
+      const modal = new (ConfirmModal as any)(
         {
           id: 'modal-confirm-delete-combination',
           confirmTitle: $deleteButton.data('modal-title'),
@@ -395,7 +430,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  async updateDefaultCombination(checkedInput) {
+  private async updateDefaultCombination(checkedInput: HTMLInputElement): Promise<void> {
     const checkedInputs = this.$combinationsContainer.find(
       `${CombinationsMap.isDefaultInputsSelector}:checked`,
     );
@@ -416,7 +451,7 @@ export default class CombinationsManager {
   /**
    * @returns {String}
    */
-  getCombinationToken() {
+  getCombinationToken(): string {
     return $(CombinationsMap.combinationsContainer).data('combinationToken');
   }
 
@@ -427,7 +462,7 @@ export default class CombinationsManager {
    *
    * @private
    */
-  findCombinationId(input) {
+  private findCombinationId(input: HTMLElement): any {
     return $(input)
       .closest('tr')
       .find(CombinationsMap.combinationIdInputsSelector)
