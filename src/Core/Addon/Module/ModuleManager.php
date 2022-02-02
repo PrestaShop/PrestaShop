@@ -584,11 +584,11 @@ class ModuleManager implements AddonManagerInterface
      * Register a module on given hook.
      *
      * @param string $name The module name
-     * @param array $hooksName The hooks name
+     * @param array $hooksNames The hooks name
      *
      * @return bool True for success
      */
-    public function registerHook($name, $hooksName)
+    public function registerHook(string $name, array $hooksNames)
     {
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans('You are not allowed to register hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
@@ -600,14 +600,14 @@ class ModuleManager implements AddonManagerInterface
 
         try {
             $result = true;
-            foreach ($hooksName as $hookName) {
+            foreach ($hooksNames as $hookName) {
                 $result &= $module->onRegisterHook($hookName);
             }
         } catch (Exception $e) {
             throw new Exception($this->translator->trans('Error when registering hook on module %module%. %error_details%', ['%module%' => $name, '%error_details%' => $e->getMessage()], 'Admin.Modules.Notification'), 0, $e);
         }
 
-        $this->checkAndClearCache($result);
+        $this->checkAndClearCache((bool) $result);
 
         return $result;
     }
@@ -616,11 +616,11 @@ class ModuleManager implements AddonManagerInterface
      * Unregister a module on given hook.
      *
      * @param string $name The module name
-     * @param array $hooksName The hooks name
+     * @param array $hooksNames The hooks name
      *
      * @return bool True for success
      */
-    public function unregisterHook($name, $hooksName)
+    public function unregisterHook(string $name, array $hooksNames)
     {
         if (!$this->adminModuleProvider->isAllowedAccess(__FUNCTION__, $name)) {
             throw new Exception($this->translator->trans('You are not allowed to unregister hook on the module %module%.', ['%module%' => $name], 'Admin.Modules.Notification'));
@@ -632,7 +632,7 @@ class ModuleManager implements AddonManagerInterface
 
         try {
             $result = true;
-            foreach ($hooksName as $hookName) {
+            foreach ($hooksNames as $hookName) {
                 $result &= $module->onUnregisterHook($hookName);
             }
         } catch (Exception $e) {
