@@ -51,7 +51,7 @@ export default class CombinationsManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
-    this.$combinationsContainer = $(CombinationsMap.combinationsContainer);
+    this.$combinationsContainer = $(CombinationsMap.combinationsListContainer);
     this.$externalCombinationTab = $(CombinationsMap.externalCombinationTab);
 
     this.$preloader = $(CombinationsMap.preloader);
@@ -301,7 +301,7 @@ export default class CombinationsManager {
           [tokenKey]: combinationToken,
         },
       ),
-      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
+      containerSelector: `${CombinationsMap.combinationsListContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
     });
   }
 
@@ -421,7 +421,7 @@ export default class CombinationsManager {
    * @returns {String}
    */
   getCombinationToken() {
-    return $(CombinationsMap.combinationsContainer).data('combinationToken');
+    return $(CombinationsMap.combinationsListContainer).data('combinationToken');
   }
 
   /**

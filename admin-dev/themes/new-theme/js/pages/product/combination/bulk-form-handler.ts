@@ -26,28 +26,26 @@
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import CombinationsService from '@pages/product/services/combinations-service';
-import DisablingToggler from '@components/form/disabling-toggler';
-import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 
 const CombinationMap = ProductMap.combinations;
-const CombinationEvents = ProductEventMap.combinations;
 
 export default class BulkFormHandler {
-  //@todo: actually productId is redundant here, but its necessary for combinationsService (probably its not right)
   private combinationsService: CombinationsService;
 
   private eventEmitter: EventEmitter;
 
+  private tabContainer: HTMLDivElement;
+
   constructor() {
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.tabContainer = document.querySelector(CombinationMap.externalCombinationTab) as HTMLDivElement;
     this.init();
   }
 
   private init() {
-    this.listenSelectAllInPage();
-    this.listenToggleAvailability();
+    this.listenSelections();
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
     const modal = new ConfirmModal(
@@ -58,69 +56,54 @@ export default class BulkFormHandler {
       () => this.submitForm(),
     );
 
-    //@todo: probably this should be wrapped into some public method reachable from outsid
+    //@todo: probably this should be wrapped into some public method reachable from outside
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     btn.addEventListener('click', () => modal.show());
   }
 
-  private listenToggleAvailability() {
-    this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      const idCheckboxes = this.getCombinationsContainer()
-        .querySelectorAll(CombinationMap.combinationIdInputsSelector) as NodeListOf<HTMLInputElement>;
+  private listenSelections() {
+    this.tabContainer.addEventListener('change', (e) => {
+      if (!(e.target instanceof HTMLInputElement)) {
+        return;
+      }
 
-      idCheckboxes.forEach((input) => {
-        input.addEventListener('change', () => {
-          console.log(this.getSelectedIds());
-          console.log('test');
-          //@todo: failing to add event listener to disable the modal button when none selected
-        });
-      });
+      const input = e.target as HTMLInputElement;
+
+      if (input.classList.contains(CombinationMap.tableRow.isSelectedCombinationInputClass)) {
+        this.toggleBulkAvailability(this.getSelectedCheckboxes().length === 0);
+      }
+
+      if (input.id === CombinationMap.bulkSelectAllInPageId) {
+        this.checkAll(input.checked);
+        this.toggleBulkAvailability(!input.checked);
+      }
     });
   }
 
-  private listenSelectAllInPage() {
-    const combinationsContainer = this.getCombinationsContainer();
+  private checkAll(checked: boolean) {
+    const allCheckboxes = this.tabContainer
+      .querySelectorAll(CombinationMap.tableRow.isSelectedCombination) as NodeListOf<HTMLInputElement>;
 
-    combinationsContainer.querySelector(CombinationMap.bulkSelectAllInPage)
-      ?.addEventListener('change', (e) => {
-        const selectAllCheckbox = e.currentTarget as HTMLInputElement;
-        const allCheckboxes = combinationsContainer
-          .querySelectorAll(CombinationMap.tableRow.isSelectedCombination) as NodeListOf<HTMLInputElement>;
+    allCheckboxes.forEach((checkbox) => {
+      // eslint-disable-next-line no-param-reassign
+      checkbox.checked = checked;
+    });
+  }
 
-        allCheckboxes.forEach((checkbox) => {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.checked = selectAllCheckbox.checked;
-        });
-      });
+  private toggleBulkAvailability(disable: boolean) {
+    const btn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    btn.toggleAttribute('disabled', disable);
   }
 
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
-    this.bulkUpdate(form);
-  }
-
-  private bulkUpdate(form: HTMLFormElement): void {
-    this.getSelectedIds().forEach((combinationId) => {
-      this.combinationsService.bulkUpdate(combinationId, $(form).serializeArray());
+    this.getSelectedCheckboxes().forEach((checkbox) => {
+      this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
     });
   }
 
-  private getCombinationsContainer(): HTMLDivElement {
-    return document.querySelector(CombinationMap.combinationsContainer) as HTMLDivElement;
-  }
-
-  private getSelectedIds(): number[] {
-    const checkedBoxes = this.getCombinationsContainer()
+  private getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
+    return this.tabContainer
       .querySelectorAll(`${CombinationMap.tableRow.isSelectedCombination}:checked`) as NodeListOf<HTMLInputElement>;
-
-    const ids: number[] = [];
-    checkedBoxes.forEach((checkbox: Element) => {
-      const idInput = checkbox.closest(CombinationMap.tableRow.tableRowSelector)
-        ?.querySelector(CombinationMap.combinationIdInputsSelector) as HTMLInputElement;
-
-      ids.push(Number(idInput.value));
-    });
-
-    return ids;
   }
 }
