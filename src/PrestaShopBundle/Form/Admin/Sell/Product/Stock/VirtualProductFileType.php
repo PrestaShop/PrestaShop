@@ -90,7 +90,6 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
     public static function getSubscribedEvents(): array
     {
         return [
-            FormEvents::PRE_SET_DATA => 'adaptSelf',
             FormEvents::PRE_SUBMIT => 'adaptSelf',
         ];
     }
