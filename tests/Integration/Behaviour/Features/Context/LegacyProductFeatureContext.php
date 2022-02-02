@@ -46,7 +46,7 @@ use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
-class ProductFeatureContext extends AbstractPrestaShopFeatureContext
+class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
 {
     use CartAwareTrait;
 
