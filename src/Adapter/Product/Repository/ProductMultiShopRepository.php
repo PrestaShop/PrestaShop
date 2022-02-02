@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
@@ -169,6 +170,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function getByShopConstraint(ProductId $productId, ShopConstraint $shopConstraint): Product
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         if ($shopConstraint->forAllShops()) {
             return $this->getProductByDefaultShop($productId);
         }
@@ -210,6 +215,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, ShopConstraint $shopConstraint, int $errorCode): void
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         $this->validateProduct($product, $propertiesToUpdate);
         $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
 
@@ -229,6 +238,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     public function update(Product $product, ShopConstraint $shopConstraint, int $errorCode): void
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         $this->validateProduct($product);
         $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
 
@@ -311,6 +324,10 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      */
     private function getShopIdsByConstraint(Product $product, ShopConstraint $shopConstraint): array
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         $shopIds = [];
         if ($shopConstraint->forAllShops()) {
             $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
