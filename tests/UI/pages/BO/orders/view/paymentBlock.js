@@ -36,7 +36,6 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
   /*
   Methods
    */
-  // Methods for payment block
   /**
    * Get payments number
    * @param page {Page} Browser tab
@@ -44,6 +43,15 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
    */
   getPaymentsNumber(page) {
     return this.getNumberFromText(page, this.orderPaymentsTitle);
+  }
+
+  /**
+   * Get payment input value
+   * @param page {Page} Browser tab
+   * @returns {*}
+   */
+  getPaymentAmountInputValue(page) {
+    return page.$eval(this.paymentAmountInput, el => el.value);
   }
 
   /**

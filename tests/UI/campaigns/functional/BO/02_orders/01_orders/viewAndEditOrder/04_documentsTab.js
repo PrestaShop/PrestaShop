@@ -17,6 +17,7 @@ const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders');
 const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
 const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const paymentBlockViewOrderPage = require('@pages/BO/orders/view/paymentBlock');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -312,7 +313,8 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     it('should click on \'Enter payment\' button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentButton', baseContext);
 
-      const amountValue = await viewOrderPage.clickOnEnterPaymentButton(page);
+      await viewOrderPage.clickOnEnterPaymentButton(page);
+      const amountValue = await paymentBlockViewOrderPage.getPaymentAmountInputValue(page);
       await expect(amountValue).to.not.equal('');
     });
 
