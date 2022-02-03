@@ -33,6 +33,8 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\InvalidAddressTypeException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 class CartAddressFormDataHandler implements FormDataHandlerInterface
 {
@@ -114,7 +116,11 @@ class CartAddressFormDataHandler implements FormDataHandlerInterface
         }
 
         if (isset($data['id_state'])) {
-            $editAddressCommand->setStateId((int) $data['id_state']);
+            if($data['id_state'] === NoStateId::NO_STATE_ID_VALUE) {
+                $editAddressCommand->setStateId(new NoStateId());
+            } else {
+                $editAddressCommand->setStateId(new StateId((int)$data['id_state']));
+            }
         }
 
         if (isset($data['phone'])) {

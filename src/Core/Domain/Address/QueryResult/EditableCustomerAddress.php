@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 
 /**
  * Transfers customer address data for editing
@@ -167,7 +168,7 @@ class EditableCustomerAddress
         string $company,
         string $vatNumber,
         string $address2,
-        StateId $stateId,
+        StateIdInterface $stateId,
         string $homePhone,
         string $mobilePhone,
         string $other,

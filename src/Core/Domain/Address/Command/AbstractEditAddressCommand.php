@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 
 class AbstractEditAddressCommand
 {
@@ -90,7 +91,7 @@ class AbstractEditAddressCommand
     protected $address2;
 
     /**
-     * @var StateId|null
+     * @var StateIdInterface|null
      */
     protected $stateId;
 
@@ -332,23 +333,23 @@ class AbstractEditAddressCommand
     }
 
     /**
-     * @return StateId|null
+     * @return StateIdInterface|null
      */
-    public function getStateId(): ?StateId
+    public function getStateId(): ?StateIdInterface
     {
         return $this->stateId;
     }
 
     /**
-     * @param int $stateId
+     * @param StateIdInterface $stateId
      *
      * @return self
      *
      * @throws StateConstraintException
      */
-    public function setStateId(int $stateId): self
+    public function setStateId(StateIdInterface $stateId): self
     {
-        $this->stateId = new StateId($stateId);
+        $this->stateId = $stateId;
 
         return $this;
     }

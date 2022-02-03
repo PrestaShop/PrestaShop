@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShopException;
 
 /**
@@ -155,7 +156,11 @@ class EditCartAddressHandler implements EditCartAddressHandlerInterface
             $addressCommand->setAddress2($cartCommand->getAddress2());
         }
         if (null !== $cartCommand->getStateId()) {
-            $addressCommand->setStateId($cartCommand->getStateId()->getValue());
+            if($cartCommand->getStateId() === NoStateId::NO_STATE_ID_VALUE) {
+                $addressCommand->setStateId(new NoStateId());
+            } else {
+                $addressCommand->setStateId(new StateId($cartCommand->getStateId()->getValue()));
+            }
         }
         if (null !== $cartCommand->getHomePhone()) {
             $addressCommand->setHomePhone($cartCommand->getHomePhone());

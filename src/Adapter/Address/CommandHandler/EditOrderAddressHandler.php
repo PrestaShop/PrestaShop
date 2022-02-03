@@ -42,6 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderDeliveryAd
 use PrestaShop\PrestaShop\Core\Domain\Order\CommandHandler\ChangeOrderInvoiceAddressHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShopException;
 
 /**
@@ -171,7 +173,11 @@ class EditOrderAddressHandler implements EditOrderAddressHandlerInterface
             $addressCommand->setAddress2($orderCommand->getAddress2());
         }
         if (null !== $orderCommand->getStateId()) {
-            $addressCommand->setStateId($orderCommand->getStateId()->getValue());
+            if($orderCommand->getStateId() === NoStateId::NO_STATE_ID_VALUE) {
+                $addressCommand->setStateId(new NoStateId());
+            } else {
+                $addressCommand->setStateId(new StateId($orderCommand->getStateId()->getValue()));
+            }
         }
         if (null !== $orderCommand->getHomePhone()) {
             $addressCommand->setHomePhone($orderCommand->getHomePhone());

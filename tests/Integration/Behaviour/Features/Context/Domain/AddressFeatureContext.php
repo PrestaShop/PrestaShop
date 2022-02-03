@@ -52,6 +52,8 @@ use PrestaShop\PrestaShop\Core\Domain\Address\QueryResult\EditableManufacturerAd
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Cart\CartAddressType;
 use PrestaShop\PrestaShop\Core\Domain\Order\OrderAddressType;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdChoiceProvider;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -263,7 +265,11 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
             $editAddressCommand->setCountryId($countryId);
             $stateId = $this->getStateId($countryId, $testCaseData);
             if (null !== $stateId) {
-                $editAddressCommand->setStateId($stateId);
+                if($stateId === NoStateId::NO_STATE_ID_VALUE) {
+                    $editAddressCommand->setStateId(new NoStateId());
+                } else {
+                    $editAddressCommand->setStateId(new StateId($stateId));
+                }
             }
         }
     }

@@ -34,6 +34,8 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Address\ValueObject\AddressId;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
  * Handles submitted address form data
@@ -155,7 +157,11 @@ final class AddressFormDataHandler implements FormDataHandlerInterface
         }
 
         if (isset($data['id_state'])) {
-            $editAddressCommand->setStateId((int) $data['id_state']);
+            if($data['id_state'] === NoStateId::NO_STATE_ID_VALUE) {
+                $editAddressCommand->setStateId(new NoStateId());
+            } else {
+                $editAddressCommand->setStateId(new StateId((int)$data['id_state']));
+            }
         }
 
         if (isset($data['phone'])) {
