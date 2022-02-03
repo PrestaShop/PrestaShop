@@ -53,9 +53,14 @@ class AlertsController extends ModuleAbstractController
      */
     public function notificationsCountAction()
     {
-        return new JsonResponse(
-            $this->get('prestashop.module.manager')
-                ->countModulesWithNotificationsDetailed()
-        );
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $toConfigure = count($moduleRepository->getConfigurableModules());
+        $toUpdate = count($moduleRepository->getUpgradableModules());
+
+        return new JsonResponse([
+            'to_update' => $toUpdate,
+            'to_configure' => $toConfigure,
+            'count' => $toConfigure + $toUpdate,
+        ]);
     }
 }
