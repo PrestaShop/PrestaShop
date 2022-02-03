@@ -647,9 +647,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($testCaseData['Description'])) {
             $description = [$this->defaultLanguageId => $testCaseData['Description']];
         }
-        $additional_description = [$this->defaultLanguageId => self::EMPTY_VALUE];
+        $additionalDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Additional description'])) {
-            $additional_description = [$this->defaultLanguageId => $testCaseData['Additional description']];
+            $additionalDescription = [$this->defaultLanguageId => $testCaseData['Additional description']];
         }
         $metaTitle = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta title'])) {
@@ -693,7 +693,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             null,
             $menuThumbNailsImages,
             $subcategories,
-            $additional_description
+            $additionalDescription
         );
     }
 
