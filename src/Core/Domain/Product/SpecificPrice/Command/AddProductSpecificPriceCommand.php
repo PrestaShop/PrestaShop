@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
@@ -338,7 +339,7 @@ class AddProductSpecificPriceCommand
      */
     public function setCountryId(int $countryId): self
     {
-        $this->countryId = NoCountryId::NO_COUNTRY_ID_VALUE === $countryId ? new NoCountryId() : new CountreId($countryId);
+        $this->countryId = NoCountryId::NO_COUNTRY_ID_VALUE === $countryId ? new NoCountryId() : new CountryId($countryId);
 
         return $this;
     }
