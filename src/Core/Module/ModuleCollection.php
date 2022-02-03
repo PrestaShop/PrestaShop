@@ -24,34 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Addon;
+namespace PrestaShop\PrestaShop\Core\Module;
 
 use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
-use PrestaShop\PrestaShop\Adapter\Module\Module as Addon;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.
  */
-class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
+class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
 {
     /**
-     * An array containing the addons of this collection.
+     * An array containing the modules of this collection.
      *
      * @var array
      */
-    private $addons;
+    private $modules;
 
     /**
-     * Initializes a new AddonsCollection.
+     * Initializes a new ModuleCollection.
      *
-     * @param array $addons
+     * @param array $modules
      */
-    public function __construct(array $addons = [])
+    public function __construct(array $modules = [])
     {
-        $this->addons = $addons;
+        $this->modules = $modules;
     }
 
     /**
@@ -60,13 +59,13 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      * This method is provided for derived classes to specify how a new
      * instance should be created when constructor semantics have changed.
      *
-     * @param array $addons elements
+     * @param array $modules elements
      *
      * @return static
      */
-    public static function createFrom(array $addons)
+    public static function createFrom(array $modules)
     {
-        return new static($addons);
+        return new static($modules);
     }
 
     /**
@@ -76,7 +75,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function toArray()
     {
-        return $this->addons;
+        return $this->modules;
     }
 
     /**
@@ -84,7 +83,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->addons);
+        return new ArrayIterator($this->modules);
     }
 
     /**
@@ -108,15 +107,15 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $addon)
+    public function offsetSet($offset, $module)
     {
         if (!isset($offset)) {
-            $this->add($addon);
+            $this->add($module);
 
             return;
         }
 
-        $this->set($offset, $addon);
+        $this->set($offset, $module);
     }
 
     /**
@@ -138,27 +137,27 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function containsKey($key)
     {
-        return isset($this->addons[$key]) || array_key_exists($key, $this->addons);
+        return isset($this->modules[$key]) || array_key_exists($key, $this->modules);
     }
 
     /**
-     * Returns true if the addon is found in the collection.
+     * Returns true if the module is found in the collection.
      *
-     * @param Addon $addon the addon
+     * @param ModuleInterface $module the module
      *
      * @return bool
      */
-    public function contains(Addon $addon)
+    public function contains(ModuleInterface $module)
     {
-        return in_array($addon, $this->addons, true);
+        return in_array($module, $this->modules, true);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function indexOf(Addon $addon)
+    public function indexOf(ModuleInterface $module)
     {
-        return array_search($addon, $this->addons, true);
+        return array_search($module, $this->modules, true);
     }
 
     /**
@@ -166,7 +165,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function get($key)
     {
-        return $this->addons[$key] ? $this->addons[$key] : null;
+        return $this->modules[$key] ?: null;
     }
 
     /**
@@ -174,7 +173,7 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getKeys()
     {
-        return array_keys($this->addons);
+        return array_keys($this->modules);
     }
 
     /**
@@ -182,69 +181,69 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function getValues()
     {
-        return array_values($this->addons);
+        return array_values($this->modules);
     }
 
     /**
-     * Add an Addon with a specified key in the collection.
+     * Add a module with a specified key in the collection.
      *
      * @param mixed $key the key
-     * @param Addon $addon the specified addon
+     * @param ModuleInterface $module the specified module
      */
-    public function set($key, Addon $addon)
+    public function set($key, ModuleInterface $module)
     {
-        $this->addons[$key] = $addon;
+        $this->modules[$key] = $module;
     }
 
     /**
-     * Add an Addon in the collection.
+     * Add a Module in the collection.
      *
-     * @param Addon $addon the specified addon
+     * @param ModuleInterface $module the specified module
      *
      * @return bool
      */
-    public function add(Addon $addon)
+    public function add(ModuleInterface $module)
     {
-        $this->addons[] = $addon;
+        $this->modules[] = $module;
 
         return true;
     }
 
     /**
-     * Remove an addon from the collection by key.
+     * Remove a module from the collection by key.
      *
      * @param int|string $key
      *
-     * @return bool|null true if the addon has been found and removed
+     * @return bool|null true if the module has been found and removed
      */
     public function removeByKey($key)
     {
-        if (!isset($this->addons[$key]) && !array_key_exists($key, $this->addons)) {
+        if (!isset($this->modules[$key]) && !array_key_exists($key, $this->modules)) {
             return null;
         }
 
-        $removed = $this->addons[$key];
-        unset($this->addons[$key]);
+        $removed = $this->modules[$key];
+        unset($this->modules[$key]);
 
         return $removed;
     }
 
     /**
-     * Remove an addon from the collection by key.
+     * Remove a module from the collection by key.
      *
-     * @param Addon $addon the addon to be removed
+     * @param ModuleInterface $module the module to be removed
      *
-     * @return bool true if the addon has been found and removed
+     * @return bool true if the module has been found and removed
      */
-    public function remove(Addon $addon)
+    public function remove(ModuleInterface $module)
     {
-        $key = array_search($addon, $this->addons, true);
+        $key = array_search($module, $this->modules, true);
 
         if ($key === false) {
             return false;
         }
 
-        unset($this->addons[$key]);
+        unset($this->modules[$key]);
 
         return true;
     }
@@ -254,16 +253,16 @@ class AddonsCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function isEmpty()
     {
-        return empty($this->addons);
+        return empty($this->modules);
     }
 
     /**
-     * Gets the sum of addons of the collection.
+     * Gets the sum of modules of the collection.
      *
      * @return int
      */
     public function count()
     {
-        return count($this->addons);
+        return count($this->modules);
     }
 }
