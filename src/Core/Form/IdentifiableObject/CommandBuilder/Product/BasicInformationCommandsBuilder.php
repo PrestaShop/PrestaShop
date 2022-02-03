@@ -30,34 +30,49 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
 /**
  * Builder used to build UpdateProductBasicInformationCommand
  */
-class BasicInformationCommandsBuilder implements ProductCommandsBuilderInterface
+class BasicInformationCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (empty($formData['description']) && empty($formData['header']['name'])) {
             return [];
         }
 
-        $descriptionData = $formData['description'] ?? [];
-        $command = new UpdateProductBasicInformationCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[header][name]', 'setLocalizedNames', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description_short]', 'setLocalizedShortDescriptions', CommandField::TYPE_ARRAY)
+        ;
 
-        if (isset($formData['header']['name'])) {
-            $command->setLocalizedNames($formData['header']['name']);
-        }
-        if (isset($descriptionData['description'])) {
-            $command->setLocalizedDescriptions($descriptionData['description']);
-        }
-        if (isset($descriptionData['description_short'])) {
-            $command->setLocalizedShortDescriptions($descriptionData['description_short']);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductBasicInformationCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductBasicInformationCommand($productId->getValue(), ShopConstraint::allShops());
 
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 }

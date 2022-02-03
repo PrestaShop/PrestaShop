@@ -30,6 +30,8 @@ services:
 
   prestashop.core.form.command_builder.product.basic_information:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.prices:
