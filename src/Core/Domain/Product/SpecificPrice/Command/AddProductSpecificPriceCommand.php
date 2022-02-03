@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
@@ -97,13 +98,13 @@ class AddProductSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var int
+     * @var CountryIdInterface
      *
      * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
      *        but it requires some refactoring as it was already used in many places this primitive way
      *        related reminder issue https://github.com/PrestaShop/PrestaShop/issues/27205
      */
-    private $countryId = 0;
+    private $countryId;
 
     /**
      * @var GroupIdInterface
@@ -322,19 +323,19 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return int
+     * @return CountryIdInterface
      */
-    public function getCountryId(): int
+    public function getCountryId(): CountryIdInterface
     {
         return $this->countryId;
     }
 
     /**
-     * @param int $countryId
+     * @param CountryIdInterface $countryId
      *
      * @return $this
      */
-    public function setCountryId(int $countryId): self
+    public function setCountryId(CountryIdInterface $countryId): self
     {
         $this->countryId = $countryId;
 

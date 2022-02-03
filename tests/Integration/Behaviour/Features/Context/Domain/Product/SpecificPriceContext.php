@@ -34,6 +34,8 @@ use DateTimeInterface;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\GetCustomerForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryResult\EditableCustomer;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
@@ -426,7 +428,11 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $addCommand->setCurrencyId($this->getStoredId($dataRows, 'currency'));
         }
         if (!empty($dataRows['country'])) {
-            $addCommand->setCountryId($this->getStoredId($dataRows, 'country'));
+            if ((int) $dataRows['country'] === NoCountryId::NO_COUNTRY_ID_VALUE) {
+                $addCommand->setCountryId(new NoCountryId());
+            } else {
+                $addCommand->setCountryId(new CountryId($this->getStoredId($dataRows, 'country')));
+            }
         }
         if (!empty($dataRows['group'])) {
             $addCommand->setGroupId($this->getStoredId($dataRows, 'group'));

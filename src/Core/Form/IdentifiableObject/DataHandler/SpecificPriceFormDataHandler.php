@@ -28,6 +28,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
@@ -120,7 +122,11 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             $command->setCombinationId((int) $data['combination_id']);
         }
         if (array_key_exists('country_id', $data)) {
-            $command->setCountryId((int) $data['country_id']);
+            if ((int) $data['country_id'] === NoCountryId::NO_COUNTRY_ID_VALUE) {
+                $command->setCountryId(new NoCountryId());
+            } else {
+                $command->setCountryId(new CountryId((int) $data['country_id']));
+            }
         }
         if (array_key_exists('shop_id', $data)) {
             $command->setShopId((int) $data['shop_id']);
