@@ -31,7 +31,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve\Design;
 use Cache;
 use Hook;
 use Module;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

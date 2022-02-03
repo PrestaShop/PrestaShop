@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
@@ -44,19 +44,28 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
     protected function getNotificationPageData($type)
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $modulesPresenterCallback = function (AddonsCollection &$modules) use ($modulePresenter) {
+        $modulesPresenterCallback = function (ModuleCollection $modules) use ($modulePresenter) {
             return $modulePresenter->presentCollection($modules);
         };
 
-        $moduleManager = $this->get('prestashop.module.manager');
-        $modules = $moduleManager->getModulesWithNotifications($modulesPresenterCallback);
+        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $toConfigure = $moduleRepository->generateActionUrls(new ModuleCollection($moduleRepository->getConfigurableModules()));
+        $toUpgrade = $moduleRepository->generateActionUrls(new ModuleCollection($moduleRepository->getUpgradableModules()));
+
+        $modules = [
+            'to_configure' => $modulesPresenterCallback($toConfigure),
+            'to_update' => $modulesPresenterCallback($toUpgrade),
+        ];
+
+        //$moduleManager = $this->get('prestashop.module.manager');
+        //$modules = [];//$moduleManager->getModulesWithNotifications($modulesPresenterCallback);
 
         return [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
-            'modules' => $modules->{$type},
+            'modules' => $modules[$type],
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),

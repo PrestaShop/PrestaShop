@@ -35,7 +35,7 @@ use Employee;
 use Hook;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase as TestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,6 +96,7 @@ class PositionsControllerTest extends TestCase
 
         /** @var ModuleManager */
         $moduleManager = self::$kernel->getContainer()->get('prestashop.module.manager');
+        $moduleRepository = self::$kernel->getContainer()->get('prestashop.core.admin.module.repository');
         // We use modules present in tests/resources/modules to be independent with the external API
         // We install two modules that are not present in the test db to be sure every step of the install performs correctly
         // And both modules have a common hook displayHome
@@ -108,8 +109,8 @@ class PositionsControllerTest extends TestCase
             $moduleManager->install($module);
         }
 
-        $this->firstModuleId = $moduleManager->getModuleIdByName('ps_banner');
-        $this->secondModuleId = $moduleManager->getModuleIdByName('bankwire');
+        $this->firstModuleId = $moduleRepository->getModule('ps_banner');
+        $this->secondModuleId = $moduleRepository->getModule('bankwire');
         $this->hookId = Hook::getIdByName('displayHome');
 
         $this->client = self::createClient();

@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
@@ -40,6 +39,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -55,7 +55,7 @@ class ModuleManagerBuilder
     /**
      * Singleton of ModuleRepository.
      *
-     * @var ModuleRepository
+     * @var \PrestaShop\PrestaShop\Core\Module\ModuleRepository
      */
     public static $modulesRepository = null;
     /**
@@ -105,14 +105,10 @@ class ModuleManagerBuilder
                 self::$moduleManager = $sfContainer->get('prestashop.module.manager');
             } else {
                 self::$moduleManager = new ModuleManager(
-                    self::$adminModuleDataProvider,
-                    self::$moduleDataProvider,
-                    self::$moduleDataUpdater,
                     $this->buildRepository(),
-                    self::$moduleZipManager,
+                    self::$adminModuleDataProvider,
                     self::$translator,
-                    new NullDispatcher(),
-                    new Clearer\SymfonyCacheClearer()
+                    new NullDispatcher()
                 );
             }
         }
@@ -123,7 +119,7 @@ class ModuleManagerBuilder
     /**
      * Returns an instance of ModuleRepository.
      *
-     * @return ModuleRepository
+     * @return \PrestaShop\PrestaShop\Core\Module\ModuleRepository
      */
     public function buildRepository()
     {
@@ -132,12 +128,11 @@ class ModuleManagerBuilder
             if (null !== $sfContainer) {
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
-                self::$modulesRepository = new ModuleRepository(
+                self::$modulesRepository = new \PrestaShop\PrestaShop\Core\Module\ModuleRepository(
                     self::$moduleDataProvider,
-                    self::$legacyLogger,
-                    self::$translator,
-                    _PS_MODULE_DIR_,
-                    self::$cacheProvider
+                    self::$adminModuleDataProvider,
+                    self::$cacheProvider,
+                    _PS_MODULE_DIR_
                 );
             }
         }

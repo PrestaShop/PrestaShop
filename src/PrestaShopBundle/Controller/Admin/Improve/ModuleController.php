@@ -31,11 +31,9 @@ use Exception;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -68,23 +66,9 @@ class ModuleController extends ModuleAbstractController
     public function manageAction()
     {
         $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $shopService = $this->get('prestashop.adapter.shop.context');
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $themeRepository = $this->get('prestashop.core.addon.theme.repository');
 
-        // Retrieve current shop
-        $shopId = $shopService->getContextShopId();
-        $shops = $shopService->getShops();
-        $modulesTheme = [];
-        if (isset($shops[$shopId]) && is_array($shops[$shopId])) {
-            $shop = $shops[$shopId];
-            $currentTheme = $themeRepository->getInstanceByName($shop['theme_name']);
-            $modulesTheme = $currentTheme->getModulesToEnable();
-        }
-
-        $filters = new AddonListFilter();
-        $filters->setType(AddonListFilterType::MODULE | AddonListFilterType::SERVICE);
-        $installedProducts = $moduleRepository->getFilteredList($filters);
+        $installedProducts = $moduleRepository->getList();
 
         $categories = $this->getCategories($modulesProvider, $installedProducts);
         $bulkActions = [
@@ -212,7 +196,7 @@ class ModuleController extends ModuleAbstractController
 
         $module = $request->get('module_name');
         $moduleManager = $this->container->get('prestashop.module.manager');
-        $moduleManager->setActionParams($request->request->get('actionParams', []));
+        //$moduleManager->setActionParams($request->request->get('actionParams', []));
         $moduleRepository = $this->container->get('prestashop.core.admin.module.repository');
         $modulesProvider = $this->container->get('prestashop.core.admin.data_provider.module_interface');
         $response = [$module => []];
@@ -227,7 +211,14 @@ class ModuleController extends ModuleAbstractController
         $actionTitle = str_replace('_', ' ', $action);
 
         try {
-            $response[$module]['status'] = $moduleManager->{$action}($module);
+            if ($action === 'uninstall') {
+                $response[$module]['status'] = $moduleManager->uninstall(
+                    $module,
+                    (bool) $request->request->get('actionParams', ['deletion' => false])['deletion']
+                );
+            } else {
+                $response[$module]['status'] = $moduleManager->{$action}($module);
+            }
 
             if ($response[$module]['status'] === true) {
                 $response[$module]['msg'] = $this->trans(
@@ -248,14 +239,14 @@ class ModuleController extends ModuleAbstractController
                         ->get('is_configurable');
                 }
             } elseif ($response[$module]['status'] === false) {
-                $error = $moduleManager->getError($module);
+                //$error = $moduleManager->getError($module);
                 $response[$module]['msg'] = $this->trans(
                     'Cannot %action% module %module%. %error_details%',
                     'Admin.Modules.Notification',
                     [
                         '%action%' => $actionTitle,
                         '%module%' => $module,
-                        '%error_details%' => $error,
+                        '%error_details%' => '', //$error,
                     ]
                 );
             } else {
@@ -270,8 +261,8 @@ class ModuleController extends ModuleAbstractController
                 );
             }
         } catch (UnconfirmedModuleActionException $e) {
-            $collection = AddonsCollection::createFrom([$e->getModule()]);
-            $modules = $modulesProvider->generateAddonsUrls($collection);
+            $collection = ModuleCollection::createFrom([$e->getModule()]);
+            $modules = $modulesProvider->generateActionUrls($collection);
             $response[$module] = array_replace(
                 $response[$module],
                 [
@@ -315,12 +306,12 @@ class ModuleController extends ModuleAbstractController
         if ($response[$module]['status'] === true) {
             $moduleInstance = $moduleRepository->getModule($module, false, false);
 
-            $collection = AddonsCollection::createFrom([$moduleInstance]);
+            $collection = ModuleCollection::createFrom([$moduleInstance]);
             $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
-                        ->presentCollection($modulesProvider->generateAddonsUrls($collection))[0],
+                        ->presentCollection($modulesProvider->generateActionUrls($collection))[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
@@ -442,9 +433,9 @@ class ModuleController extends ModuleAbstractController
                 );
             }
         } catch (UnconfirmedModuleActionException $e) {
-            $collection = AddonsCollection::createFrom([$e->getModule()]);
+            $collection = ModuleCollection::createFrom([$e->getModule()]);
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                ->generateAddonsUrls($collection);
+                ->generateActionUrls($collection);
             $installationResponse = [
                 'status' => false,
                 'confirmation_subject' => $e->getSubject(),
@@ -478,14 +469,14 @@ class ModuleController extends ModuleAbstractController
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
         $tabRepository = $this->get('prestashop.core.admin.tab.repository');
 
-        $modulesOnDisk = AddonsCollection::createFrom($moduleRepository->getList());
+        $modulesOnDisk = ModuleCollection::createFrom($moduleRepository->getList());
 
         $modulesList = [
             'installed' => [],
             'not_installed' => [],
         ];
 
-        $modulesOnDisk = $addonsProvider->generateAddonsUrls($modulesOnDisk);
+        $modulesOnDisk = $addonsProvider->generateActionUrls($modulesOnDisk);
         foreach ($modulesOnDisk as $module) {
             if (!isset($modulesSelectList) || in_array($module->get('name'), $modulesSelectList)) {
                 $perm = true;
@@ -667,8 +658,8 @@ class ModuleController extends ModuleAbstractController
         $categories = $categoriesProvider->getCategoriesMenu($modules);
 
         foreach ($categories['categories']->subMenu as $category) {
-            $collection = AddonsCollection::createFrom($category->modules);
-            $modulesProvider->generateAddonsUrls($collection);
+            $collection = ModuleCollection::createFrom($category->modules);
+            $modulesProvider->generateActionUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
                 ->presentCollection($category->modules);
         }
