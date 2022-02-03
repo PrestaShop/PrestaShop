@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use stdClass;
 
 /**
@@ -77,7 +77,7 @@ class CategoriesProvider
     /**
      * Return the list of categories with the associated modules.
      *
-     * @param array|AddonsCollection $modules
+     * @param array|ModuleCollection $modules
      *
      * @return array the list of categories
      */
@@ -219,14 +219,7 @@ class CategoriesProvider
         uasort(
             $categories,
             function ($a, $b) {
-                $a = !isset($a['order']) ? 0 : $a['order'];
-                $b = !isset($b['order']) ? 0 : $b['order'];
-
-                if ($a === $b) {
-                    return 0;
-                }
-
-                return ($a < $b) ? -1 : 1;
+                return ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
             }
         );
 

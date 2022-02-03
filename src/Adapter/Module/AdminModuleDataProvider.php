@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Context;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
@@ -177,33 +177,33 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param AddonsCollection $addons
+     * @param ModuleCollection $modules
      * @param string|null $specific_action
      *
-     * @return AddonsCollection
+     * @return ModuleCollection
      */
-    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
+    public function generateActionUrls(ModuleCollection $modules, $specific_action = null)
     {
-        foreach ($addons as $addon) {
+        foreach ($modules as $module) {
             $urls = [];
             foreach ($this->moduleActions as $action) {
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
-                    'module_name' => $addon->attributes->get('name'),
+                    'module_name' => $module->attributes->get('name'),
                 ]);
             }
             $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $addon->attributes->get('name'),
+                'module_name' => $module->attributes->get('name'),
             ]);
 
-            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
-                if (!$addon->database->getBoolean('active')) {
+            if ($module->database->has('installed') && $module->database->getBoolean('installed')) {
+                if (!$module->database->getBoolean('active')) {
                     $url_active = 'enable';
                     unset(
                         $urls['install'],
                         $urls['disable']
                     );
-                } elseif ($addon->attributes->getBoolean('is_configurable')) {
+                } elseif ($module->attributes->getBoolean('is_configurable')) {
                     $url_active = 'configure';
                     unset(
                         $urls['enable'],
@@ -218,24 +218,24 @@ class AdminModuleDataProvider implements ModuleInterface
                     );
                 }
 
-                if (!$addon->attributes->getBoolean('is_configurable')) {
+                if (!$module->attributes->getBoolean('is_configurable')) {
                     unset($urls['configure']);
                 }
 
-                if (!$addon->database->getBoolean('active_on_mobile')) {
+                if (!$module->database->getBoolean('active_on_mobile')) {
                     unset($urls['disableMobile']);
                 } else {
                     unset($urls['enableMobile']);
                 }
-                if (!$addon->canBeUpgraded()) {
+                if (!$module->canBeUpgraded()) {
                     unset(
                         $urls['upgrade']
                     );
                 }
             } elseif (
-                !$addon->attributes->has('origin') ||
-                $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
+                !$module->attributes->has('origin') ||
+                $module->disk->getBoolean('is_present') ||
+                in_array($module->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
             ) {
                 $url_active = 'install';
                 unset(
@@ -252,22 +252,22 @@ class AdminModuleDataProvider implements ModuleInterface
                 $url_active = 'buy';
             }
 
-            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
-            $addon->attributes->set('urls', $urls);
-            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
+            $urls = $this->filterAllowedActions($urls, $module->attributes->get('name'));
+            $module->attributes->set('urls', $urls);
+            $module->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
-                $addon->attributes->set('url_active', $specific_action);
+                $module->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
-                $addon->attributes->set('url_active', $url_active);
+                $module->attributes->set('url_active', $url_active);
             } else {
-                $addon->attributes->set('url_active', key($urls));
+                $module->attributes->set('url_active', key($urls));
             }
 
-            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
-            $addon->attributes->set('categoryParent', $categoryParent);
+            $categoryParent = $this->categoriesProvider->getParentCategory($module->attributes->get('categoryName'));
+            $module->attributes->set('categoryParent', $categoryParent);
         }
 
-        return $addons;
+        return $modules;
     }
 
     /**

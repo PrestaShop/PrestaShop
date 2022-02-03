@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
@@ -483,13 +483,13 @@ class ModuleRepository implements ModuleRepositoryInterface
     /**
      * Gets all installed modules as a collection.
      *
-     * @return AddonsCollection
+     * @return ModuleCollection
      */
     public function getInstalledModulesCollection()
     {
         $installedModules = $this->getInstalledModules();
 
-        return AddonsCollection::createFrom($installedModules);
+        return ModuleCollection::createFrom($installedModules);
     }
 
     /**

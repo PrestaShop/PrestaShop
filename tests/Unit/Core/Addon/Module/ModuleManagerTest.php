@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
-use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 
 class ModuleManagerTest extends TestCase
@@ -47,21 +47,16 @@ class ModuleManagerTest extends TestCase
     private $translatorS;
     private $dispatcherS;
     private $employeeS;
-    private $cacheClearerS;
 
     protected function setUp(): void
     {
         // Mocks
         $this->initMocks();
         $this->moduleManager = new ModuleManager(
-            $this->adminModuleProviderS,
-            $this->moduleProviderS,
-            $this->moduleUpdaterS,
             $this->moduleRepositoryS,
-            $this->moduleZipManagerS,
+            $this->adminModuleProviderS,
             $this->translatorS,
-            $this->dispatcherS,
-            $this->cacheClearerS
+            $this->dispatcherS
         );
     }
 
@@ -170,7 +165,6 @@ class ModuleManagerTest extends TestCase
         $this->mockTranslator();
         $this->mockDispatcher();
         $this->mockEmployee();
-        $this->mockCacheClearer();
     }
 
     private function mockAdminModuleProvider(): void
@@ -280,7 +274,7 @@ class ModuleManagerTest extends TestCase
             ->method('onMobileEnable')
             ->willReturn(true);
 
-        $this->moduleRepositoryS = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
+        $this->moduleRepositoryS = $this->getMockBuilder(ModuleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -319,12 +313,6 @@ class ModuleManagerTest extends TestCase
         $this->dispatcherS = new NullDispatcher();
     }
 
-    private function mockCacheClearer(): void
-    {
-        $this->cacheClearerS = $this->getMockBuilder(CacheClearerInterface::class)
-            ->getMock();
-    }
-
     private function mockEmployee(): void
     {
         /* this is a super admin */
@@ -341,7 +329,6 @@ class ModuleManagerTest extends TestCase
     {
         $this->adminModuleProviderS = null;
         $this->moduleProviderS = null;
-        $this->moduleUpdaterS = null;
         $this->moduleUpdaterS = null;
         $this->moduleZipManagerS = null;
         $this->translatorS = null;
