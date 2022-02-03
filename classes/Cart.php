@@ -765,13 +765,13 @@ class CartCore extends ObjectModel
         $sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop=' . (int) $this->id_shop);
         $sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = ' . (int) $this->getAssociatedLanguage()->getId());
 
-        /** @var array<string, mixed> $result */
+        /** @var array<string, mixed>|false $products */
         $products = Db::getInstance()->executeS($sql);
 
         // Reset the cache before the following return, or else an empty cart will add dozens of queries
         $products_ids = [];
         $pa_ids = [];
-        if ($products) {
+        if (is_iterable($products)) {
             foreach ($products as $key => $product) {
                 $products_ids[] = $product['id_product'];
                 $pa_ids[] = $product['id_product_attribute'];
