@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
-const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const viewOrderPage = require('@pages/BO/orders/view/productsBlock');
 const customerBlockViewOrderPage = require('@pages/BO/orders/view/customerBlock');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
 
@@ -116,21 +116,21 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);
-      const pageTitle = await productsBlockViewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contain(productsBlockViewOrderPage.pageTitle);
+      const pageTitle = await viewOrderPage.getPageTitle(page);
+      await expect(pageTitle).to.contain(viewOrderPage.pageTitle);
     });
 
     it('should check order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
-      const orderStatus = await productsBlockViewOrderPage.getOrderStatus(page);
+      const orderStatus = await viewOrderPage.getOrderStatus(page);
       await expect(orderStatus).to.equal(orderToMake.orderStatus.status);
     });
 
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderPrice', baseContext);
 
-      const totalPrice = await productsBlockViewOrderPage.getOrderTotalPrice(page);
+      const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
       await expect(totalPrice).to.equal(orderToMake.totalPrice);
     });
 
@@ -164,7 +164,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNames', baseContext);
 
       for (let i = 1; i <= orderToMake.products.length; i++) {
-        const productName = await productsBlockViewOrderPage.getProductNameFromTable(page, i);
+        const productName = await viewOrderPage.getProductNameFromTable(page, i);
         await expect(productName).to.contain(orderToMake.products[i - 1].value.name);
       }
     });

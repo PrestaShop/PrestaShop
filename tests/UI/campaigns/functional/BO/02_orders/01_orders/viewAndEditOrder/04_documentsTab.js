@@ -362,7 +362,7 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
     it('should create \'Partial refund\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createPartialRefund', baseContext);
 
-      await productsBlockViewOrderPage.clickOnPartialRefund(page);
+      await viewOrderPage.clickOnPartialRefund(page);
 
       const textMessage = await productsBlockViewOrderPage.addPartialRefundProduct(page, 1, 1);
       await expect(textMessage).to.contains(productsBlockViewOrderPage.partialRefundValidationMessage);
