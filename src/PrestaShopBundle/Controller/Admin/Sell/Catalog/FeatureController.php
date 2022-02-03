@@ -27,8 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Configuration;
-use Db;
-use DbQuery;
 use HelperList;
 use Media;
 use ObjectModel;
@@ -37,7 +35,6 @@ use PrestaShopBundle\Bridge\AddActionInterface;
 use PrestaShopBundle\Bridge\ControllerConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopException;
 use Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,31 +53,14 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
     private const CONTROLLER_NAME_LEGACY = 'AdminFeatures';
     private const POSITION_IDENTIFIER = 'id_feature';
     private const TABLE = 'feature';
+    private const LIST_ID = 'feature';
+    private const CLASS_NAME = 'Feature';
+    private const IDENTIFIER = 'id_feature';
 
     /**
      * @var string
      */
     public $php_self;
-
-    /**
-     * @var string
-     */
-    private $listId = 'feature';
-
-    /**
-     * @var string
-     */
-    private $shopLinkType;
-
-    /**
-     * @var string
-     */
-    private $identifier = 'id_feature';
-
-    /**
-     * @var bool
-     */
-    protected $deleted = false;
 
     //Filters
     /**
@@ -89,115 +69,10 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
     protected $filterList = [];
 
     /**
-     * @var array
-     */
-    public $deleteLinksVariableTemplate = [];
-
-    //Handle later
-    /**
      * @var bool
      */
     protected $ajax = false;
 
-    //SQL section
-    /**
-     * @var array
-     */
-    protected $_filter;
-
-    /**
-     * @var string
-     */
-    protected $_filterHaving;
-
-    /**
-     * @var string
-     */
-    private $_orderBy = '';
-
-    /**
-     * @var string
-     */
-    private $_orderWay = '';
-
-    /**
-     * @var string
-     */
-    private $_defaultOrderBy = 'position';
-
-    /**
-     * @var string
-     */
-    protected $_defaultOrderWay = 'ASC';
-
-    /**
-     * @var array
-     */
-    protected $_pagination = [20, 50, 100, 300, 1000];
-
-    /**
-     * @var int
-     */
-    protected $_default_pagination = 50;
-
-    /**
-     * @var array
-     */
-    protected array $_list;
-
-    /**
-     * @var string
-     */
-    protected $_listTotal;
-
-    /**
-     * @var string
-     */
-    protected $_list_error;
-
-    /**
-     * @var string
-     */
-    protected $_select;
-
-    /**
-     * @var string
-     */
-    protected $_where;
-
-    /**
-     * @var string
-     */
-    protected $_join;
-
-    /**
-     * @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records
-     */
-    protected $_useFoundRows = true;
-
-    //Contain the query SQL for list
-    /**
-     * @var string
-     */
-    protected $_listsql;
-
-    /**
-     * @var bool Do not automatically select * anymore but select only what is necessary
-     */
-    protected $explicitSelect = false;
-
-    /**
-     * @var bool Automatically join language table if true
-     */
-    //default false
-    public $isJoinLanguageTableAuto = true;
-
-    /**
-     * @var int
-     */
-    private $multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
-
-    //We will keep this
     /**
      * @var ControllerConfiguration
      */
@@ -205,9 +80,11 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
 
     public function initController(Request $request)
     {
+        //Moved this in a listener ????
         //Unmovable
         $this->php_self = get_class($this);
         $this->getContext()->controller = $this;
+        $this->getContext()->smarty->assign('link', $this->getContext()->link);
 
         $this->controllerConfiguration = $this->get('prestashop.core.bridge.controller_configuration_factory')->create([
             'id' => Tab::getIdFromClassName(
@@ -222,11 +99,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
         //Todo handle this later
         if (!Shop::isFeatureActive()) {
             $this->shopLinkType = '';
-        }
-
-        //Todo this will be move when I handle HelperListBridge
-        if (empty($this->_defaultOrderBy)) {
-            $this->_defaultOrderBy = $this->identifier;
         }
 
         //Todo this will be move when I handle SmartyRenderBridge
@@ -246,12 +118,37 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
 
         //build list and page with action
         $this->setListFields();
+        //A gérer
         $this->processFilter();
+
         $this->buildActionList();
-        $this->getList($this->controllerConfiguration->context->language->id);
+        $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create([
+            'table' => self::TABLE,
+            'listId' => self::LIST_ID,
+            'className' => self::CLASS_NAME,
+            'identifier' => self::IDENTIFIER,
+            'isJoinLanguageTableAuto' => true,
+            'defaultOrderBy' => 'position',
+            'fieldsList' => $this->controllerConfiguration->fieldsList,
+        ]);
+        $this->get('prestashop.core.bridge.helper_list_bridge')->getList(
+            $helperListConfiguration,
+            $this->controllerConfiguration->language->id
+        );
+
+        // Empty list is ok
+        //@todo Find a way to handle this. How do this ??????
+        if (!is_array($helperListConfiguration->list)) {
+            $this->displayWarning($this->trans('Bad SQL query', 'Admin.Notifications.Error', []) . '<br />' . htmlspecialchars($helperListConfiguration->listError));
+
+            return false;
+        }
 
         return $this->renderSmarty(
-            $this->renderList(),
+            $this->get('prestashop.core.bridge.helper_list_bridge')->renderList(
+                $this->controllerConfiguration,
+                $helperListConfiguration
+            ),
             $this->controllerConfiguration
         );
     }
@@ -261,306 +158,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
         $this->setMedia();
 
         return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $controllerConfiguration);
-    }
-
-    /**
-     * Render list content
-     *
-     * @return string
-     */
-    public function renderList(): string
-    {
-        $this->getContext()->smarty->assign('link', $this->getContext()->link);
-
-        if (!($this->controllerConfiguration->fieldsList && is_array($this->controllerConfiguration->fieldsList))) {
-            return false;
-        }
-
-        $helper = new HelperList();
-
-        // Empty list is ok
-        if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query', 'Admin.Notifications.Error', []) . '<br />' . htmlspecialchars($this->_list_error));
-
-            return false;
-        }
-
-        $this->setHelperDisplay($helper);
-        $helper->_default_pagination = $this->_default_pagination;
-        $helper->_pagination = $this->_pagination;
-        $helper->tpl_delete_link_vars = $this->deleteLinksVariableTemplate;
-
-        // For compatibility reasons, we have to check standard actions in class attributes
-        foreach ($this->controllerConfiguration->actionsAvailable as $action) {
-            if (!in_array($action, $this->controllerConfiguration->actions) && isset($this->controllerConfiguration->$action) && $this->controllerConfiguration->$action) {
-                $this->controllerConfiguration->actions[] = $action;
-            }
-        }
-
-        /* @phpstan-ignore-next-line */
-        $helper->sql = $this->_listsql;
-
-        return $helper->generateList($this->_list, $this->controllerConfiguration->fieldsList);
-    }
-
-    public function getList(
-        $id_lang,
-        $order_by = null,
-        $order_way = null,
-        $start = 0,
-        $limit = null,
-        $id_lang_shop = false
-    ) {
-        if ($this->controllerConfiguration->table == 'feature_value') {
-            $this->_where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
-        }
-
-        //Dispatch hook not work
-        //Hook::exec('action' . $this->controller_name . 'ListingFieldsModifier', [
-        //    'select' => &$this->_select,
-        //    'join' => &$this->_join,
-        //    'where' => &$this->_where,
-        //    'group_by' => &$this->_group,
-        //    'order_by' => &$this->_orderBy,
-        //    'order_way' => &$this->_orderWay,
-        //    'fields' => &$this->fieldsList,
-        //]);
-
-        if (!isset($this->listId)) {
-            $this->listId = $this->controllerConfiguration->table;
-        }
-
-        if (!Validate::isTableOrIdentifier($this->controllerConfiguration->table)) {
-            throw new PrestaShopException(sprintf('Table name %s is invalid:', $this->controllerConfiguration->table));
-        }
-
-        /* Check params validity */
-        if (!is_numeric($start) || !Validate::isUnsignedId($id_lang)) {
-            throw new PrestaShopException('get list params is not valid');
-        }
-
-        $limit = $this->checkSqlLimit($limit);
-
-        /* Determine offset from current page */
-        $start = 0;
-        if ((int) Tools::getValue('submitFilter' . $this->listId)) {
-            $start = ((int) Tools::getValue('submitFilter' . $this->listId) - 1) * $limit;
-        } elseif (
-            empty($start)
-            && isset($this->getContext()->cookie->{$this->listId . '_start'})
-            && Tools::isSubmit('export' . $this->controllerConfiguration->table)
-        ) {
-            $start = $this->getContext()->cookie->{$this->listId . '_start'};
-        }
-
-        // Either save or reset the offset in the cookie
-        if ($start) {
-            $this->getContext()->cookie->{$this->listId . '_start'} = $start;
-        } elseif (isset($this->getContext()->cookie->{$this->listId . '_start'})) {
-            unset($this->getContext()->cookie->{$this->listId . '_start'});
-        }
-
-        // Add SQL shop restriction
-        //Todo handle this later
-        $select_shop = '';
-        if ($this->shopLinkType) {
-            $select_shop = ', shop.name as shop_name ';
-        }
-
-        if ($this->multishop_context && Shop::isTableAssociated($this->controllerConfiguration->table) && !empty($this->className)) {
-            if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->getUser()->getData()->isSuperAdmin()) {
-                $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->controllerConfiguration->table . '_shop') . '`? *sa#', $this->_join);
-                if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->controllerConfiguration->table)) {
-                    $this->_where .= ' AND EXISTS (
-                            SELECT 1
-                            FROM `' . _DB_PREFIX_ . $this->controllerConfiguration->table . '_shop` sa
-                            WHERE a.`' . bqSQL($this->identifier) . '` = sa.`' . bqSQL($this->identifier) . '`
-                             AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
-                        )';
-                }
-            }
-        }
-
-        $fromClause = $this->getFromClause();
-        $joinClause = $this->getJoinClause($id_lang, $id_lang_shop);
-        $whereClause = $this->getWhereClause();
-        $orderByClause = $this->getOrderByClause($order_by, $order_way);
-
-        $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
-
-        do {
-            $this->_listsql = '';
-
-            if ($this->explicitSelect) {
-                foreach ($this->fieldsList as $key => $array_value) {
-                    // Add it only if it is not already in $this->_select
-                    if (isset($this->_select) && preg_match('/[\s]`?' . preg_quote($key, '/') . '`?\s*,/', $this->_select)) {
-                        continue;
-                    }
-
-                    if (isset($array_value['filter_key'])) {
-                        $this->_listsql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
-                    } elseif ($key == 'id_' . $this->controllerConfiguration->table) {
-                        $this->_listsql .= 'a.`' . bqSQL($key) . '`, ';
-                    } elseif ($key != 'image' && !preg_match('/' . preg_quote($key, '/') . '/i', $this->_select)) {
-                        $this->_listsql .= '`' . bqSQL($key) . '`, ';
-                    }
-                }
-                $this->_listsql = rtrim(trim($this->_listsql), ',');
-            } else {
-                $this->_listsql .= ($this->isJoinLanguageTableAuto ? 'b.*,' : '') . ' a.*';
-            }
-
-            $this->_listsql .= "\n" . (isset($this->_select) ? ', ' . rtrim($this->_select, ', ') : '') . $select_shop;
-
-            $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
-
-            if ($this->_useFoundRows || isset($this->_filterHaving) || isset($this->_having)) {
-                //$this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
-                $this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' .
-                    $this->_listsql .
-                    $fromClause .
-                    $joinClause .
-                    $whereClause .
-                    $orderByClause .
-                    $limitClause;
-
-                $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $this->controllerConfiguration->table . '`';
-            } else {
-                //$this->_listsql = 'SELECT ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
-                $this->_listsql = 'SELECT ' .
-                    $this->_listsql .
-                    $fromClause .
-                    $joinClause .
-                    $whereClause .
-                    $orderByClause .
-                    $limitClause;
-
-                $list_count = 'SELECT COUNT(*) AS `' . _DB_PREFIX_ . $this->controllerConfiguration->table . '` ' .
-                    $fromClause .
-                    $joinClause .
-                    $whereClause;
-            }
-
-            $this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
-
-            if ($this->_list === false) {
-                $this->_list_error = Db::getInstance()->getMsgError();
-
-                break;
-            }
-
-            $this->_listTotal = Db::getInstance()->getValue($list_count, false);
-
-            if ($shouldLimitSqlResults) {
-                $start = (int) $start - (int) $limit;
-                if ($start < 0) {
-                    break;
-                }
-            } else {
-                break;
-            }
-        } while (empty($this->_list));
-
-        if ($this->controllerConfiguration->table == 'feature') {
-            $nb_items = count($this->_list);
-            for ($i = 0; $i < $nb_items; ++$i) {
-                $item = &$this->_list[$i];
-
-                $query = new DbQuery();
-                $query->select('COUNT(fv.id_feature_value) as count_values');
-                $query->from('feature_value', 'fv');
-                $query->where('fv.id_feature =' . (int) $item['id_feature']);
-                $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-                $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-                $item['value'] = (int) $res;
-                unset($query);
-            }
-        }
-
-        //Hook::exec('action' . $this->controller_name . 'ListingResultsModifier', [
-        //    'list' => &$this->_list,
-        //    'list_total' => &$this->_listTotal,
-        //]);
-    }
-
-    /**
-     * This function sets various display options for helper list.
-     *
-     //* @param HelperList|HelperView|HelperOptions $helper
-     */
-    public function setHelperDisplay($helper)
-    {
-        if (empty($this->breadcrumbs)) {
-            $this->get('prestashop.core.bridge.breadcrumbs_and_title_hydrator')->hydrate($this->controllerConfiguration);
-        }
-
-        if (empty($this->controllerConfiguration->toolbarTitle)) {
-            $this->get('prestashop.core.bridge.toolbar_flags_hydrator')->hydrate($this->controllerConfiguration);
-        }
-        //// tocheck
-        //if ($this->object && $this->object->id) {
-        //    $helper->id = $this->object->id;
-        //}
-        //
-        //// @todo : move that in Helper
-        /// Sortons ça d'ici et mettons le en dur => Pas pas mettre en dur car traduit depuis la BDD
-        $helper->title = is_array($this->controllerConfiguration->toolbarTitle) ? implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $this->controllerConfiguration->toolbarTitle) : $this->controllerConfiguration->toolbarTitle;
-        $helper->toolbar_btn = $this->controllerConfiguration->toolbarButton;
-        //$helper->show_toolbar = $this->show_toolbar;
-        $helper->show_toolbar = true;
-        //$helper->toolbar_scroll = $this->toolbar_scroll;
-        //$helper->override_folder = $this->tpl_folder;
-        $helper->actions = $this->controllerConfiguration->actions;
-        //$helper->simple_header = $this->list_simple_header;
-        $helper->bulk_actions = $this->controllerConfiguration->bulkActions;
-        $helper->currentIndex = $this->generateUrl('admin_features_index');
-        //Useless for list
-        //if (isset($helper->className)) {
-        //    $helper->className = $this->className;
-        //}
-        $helper->table = $this->controllerConfiguration->table;
-        if (isset($helper->name_controller)) {
-            $helper->name_controller = $this->controllerConfiguration->controllerNameLegacy;
-        }
-        //Useless for list
-        $helper->orderBy = $this->_orderBy;
-        //Useless for list
-        //$helper->orderWay = $this->_orderWay;
-        $helper->listTotal = $this->_listTotal;
-        //if (isset($helper->shopLink)) {
-        //    $helper->shopLink = $this->shopLink;
-        //}
-        //$helper->shopLinkType = $this->shopLinkType;
-        $helper->identifier = $this->identifier;
-        //$helper->token = $this->controllerConfiguration->token;
-        //// @phpstan-ignore-next-line
-        //$helper->languages = $this->_languages;
-        //$helper->specificConfirmDelete = $this->specificConfirmDelete;
-        //$helper->imageType = $this->imageType;
-        //$helper->no_link = $this->list_no_link;
-        //$helper->colorOnBackground = $this->colorOnBackground;
-        //$helper->ajax_params = isset($this->ajax_params) ? $this->ajax_params : null;
-        //// @phpstan-ignore-next-line
-        //$helper->default_form_language = $this->default_form_language;
-        //if (isset($helper->allow_employee_form_lang)) {
-        //    $helper->allow_employee_form_lang = $this->allow_employee_form_lang;
-        //}
-        //if (isset($helper->multiple_fieldsets)) {
-        //    $helper->multiple_fieldsets = $this->multiple_fieldsets;
-        //}
-        //$helper->row_hover = $this->row_hover;
-        $helper->position_identifier = $this->controllerConfiguration->positionIdentifier;
-        //if (isset($helper->position_group_identifier)) {
-        //    $helper->position_group_identifier = $this->position_group_identifier;
-        //}
-        //// @phpstan-ignore-next-line
-        $helper->controller_name = $this->controllerConfiguration->controllerNameLegacy;
-        $helper->list_id = $this->listId ?? $this->controllerConfiguration->table;
-        $helper->bootstrap = $this->controllerConfiguration->bootstrap;
-        //
-        //// For each action, try to add the corresponding skip elements list
-        //$helper->list_skip_actions = $this->list_skip_actions;
     }
 
     public function setCurrentIndex(): void
@@ -598,7 +195,7 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
                 $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
@@ -922,230 +519,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
                 }
             }
         }
-    }
-
-    /**
-     * @param int $limit
-     *
-     * @return int
-     */
-    protected function checkSqlLimit($limit)
-    {
-        if (empty($limit)) {
-            if (
-                isset($this->getContext()->cookie->{$this->listId . '_pagination'}) &&
-                $this->getContext()->cookie->{$this->listId . '_pagination'}
-            ) {
-                $limit = $this->getContext()->cookie->{$this->listId . '_pagination'};
-            } else {
-                $limit = $this->_default_pagination;
-            }
-        }
-
-        $limit = (int) Tools::getValue($this->listId . '_pagination', $limit);
-        if (in_array($limit, $this->_pagination) && $limit != $this->_default_pagination) {
-            $this->getContext()->cookie->{$this->listId . '_pagination'} = $limit;
-        } else {
-            unset($this->getContext()->cookie->{$this->listId . '_pagination'});
-        }
-
-        if (!is_numeric($limit)) {
-            throw new PrestaShopException('Invalid limit. It should be a numeric.');
-        }
-
-        return $limit;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getFromClause()
-    {
-        $sql_table = $this->controllerConfiguration->table == 'order' ? 'orders' : $this->controllerConfiguration->table;
-
-        return "\n" . 'FROM `' . _DB_PREFIX_ . $sql_table . '` a ';
-    }
-
-    /**
-     * @param int $id_lang
-     * @param int $id_lang_shop
-     *
-     * @return string
-     */
-    protected function getJoinClause($id_lang, $id_lang_shop)
-    {
-        $shopJoinClause = '';
-        if ($this->shopLinkType) {
-            $shopJoinClause = ' LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->shopLinkType) . '` shop
-                            ON a.`id_' . bqSQL($this->shopLinkType) . '` = shop.`id_' . bqSQL($this->shopLinkType) . '`';
-        }
-
-        return "\n" . $this->getLanguageJoinClause($id_lang, $id_lang_shop) .
-            "\n" . (isset($this->_join) ? $this->_join . ' ' : '') .
-            "\n" . $shopJoinClause;
-    }
-
-    /**
-     * @param int $idLang
-     * @param int $idLangShop
-     *
-     * @return string
-     */
-    protected function getLanguageJoinClause($idLang, $idLangShop)
-    {
-        $languageJoinClause = '';
-        if ($this->isJoinLanguageTableAuto) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($this->controllerConfiguration->table) . '_lang` b
-                ON (b.`' . bqSQL($this->identifier) . '` = a.`' . bqSQL($this->identifier) . '` AND b.`id_lang` = ' . (int) $idLang;
-
-            if ($idLangShop) {
-                if (!Shop::isFeatureActive()) {
-                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) Configuration::get('PS_SHOP_DEFAULT');
-                } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) $idLangShop;
-                } else {
-                    $languageJoinClause .= ' AND b.`id_shop` = a.id_shop_default';
-                }
-            }
-            $languageJoinClause .= ')';
-        }
-
-        return $languageJoinClause;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getWhereClause(): string
-    {
-        $whereShop = '';
-        if ($this->shopLinkType) {
-            //$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
-            $whereShop = Shop::addSqlRestriction(false, 'a');
-        }
-
-        return ' WHERE 1 ' . (isset($this->_where) ? $this->_where . ' ' : '') .
-            ($this->deleted ? 'AND a.`deleted` = 0 ' : '') .
-            (isset($this->_filter) ? $this->_filter : '') . $whereShop . "\n" .
-            (isset($this->_group) ? $this->_group . ' ' : '') . "\n" .
-            $this->getHavingClause();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getHavingClause(): string
-    {
-        $havingClause = '';
-        if (isset($this->_filterHaving) || isset($this->_having)) {
-            $havingClause = ' HAVING ';
-            if (isset($this->_filterHaving)) {
-                $havingClause .= ltrim($this->_filterHaving, ' AND ');
-            }
-            if (isset($this->_having)) {
-                $havingClause .= $this->_having . ' ';
-            }
-        }
-
-        return $havingClause;
-    }
-
-    /**
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
-     *
-     * @return string
-     */
-    protected function getOrderByClause($orderBy, $orderDirection)
-    {
-        $this->_orderBy = $this->checkOrderBy($orderBy);
-        $this->_orderWay = $this->checkOrderDirection($orderDirection);
-
-        return ' ORDER BY '
-            . ((str_replace('`', '', $this->_orderBy) == $this->identifier) ? 'a.' : '')
-            . $this->_orderBy
-            . ' '
-            . $this->_orderWay;
-    }
-
-    /**
-     * @param string|null $orderBy
-     *
-     * @return false|string
-     */
-    protected function checkOrderBy($orderBy)
-    {
-        if (empty($orderBy)) {
-            $prefix = $this->getCookieFilterPrefix();
-
-            if ($this->getContext()->cookie->{$prefix . $this->listId . 'Orderby'}) {
-                $orderBy = $this->getContext()->cookie->{$prefix . $this->listId . 'Orderby'};
-            } elseif ($this->_orderBy) {
-                $orderBy = $this->_orderBy;
-            } else {
-                $orderBy = $this->_defaultOrderBy;
-            }
-        }
-
-        /* Check params validity */
-        if (!Validate::isOrderBy($orderBy)) {
-            throw new PrestaShopException('Invalid "order by" clause.');
-        }
-
-        if (!isset($this->fieldsList[$orderBy]['order_key']) && isset($this->fieldsList[$orderBy]['filter_key'])) {
-            $this->fieldsList[$orderBy]['order_key'] = $this->fieldsList[$orderBy]['filter_key'];
-        }
-
-        if (isset($this->fieldsList[$orderBy]['order_key'])) {
-            $orderBy = $this->fieldsList[$orderBy]['order_key'];
-        }
-
-        if (preg_match('/[.!]/', $orderBy)) {
-            $orderBySplit = preg_split('/[.!]/', $orderBy);
-            $orderBy = bqSQL($orderBySplit[0]) . '.`' . bqSQL($orderBySplit[1]) . '`';
-        } elseif ($orderBy) {
-            $orderBy = bqSQL($orderBy);
-        }
-
-        return $orderBy;
-    }
-
-    /**
-     * @param string|null $orderDirection
-     *
-     * @return string
-     */
-    protected function checkOrderDirection($orderDirection)
-    {
-        $prefix = $this->getCookieOrderByPrefix();
-        if (empty($orderDirection)) {
-            if ($this->getContext()->cookie->{$prefix . $this->listId . 'Orderway'}) {
-                $orderDirection = $this->getContext()->cookie->{$prefix . $this->listId . 'Orderway'};
-            } elseif ($this->_orderWay) {
-                $orderDirection = $this->_orderWay;
-            } else {
-                $orderDirection = $this->_defaultOrderWay;
-            }
-        }
-
-        if (!Validate::isOrderWay($orderDirection)) {
-            throw new PrestaShopException('Invalid order direction.');
-        }
-
-        return pSQL(Tools::strtoupper($orderDirection));
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getCookieOrderByPrefix()
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower(get_class($this)));
-    }
-
-    protected function shouldLimitSqlResults($limit): bool
-    {
-        return $limit !== false;
     }
 
     /**

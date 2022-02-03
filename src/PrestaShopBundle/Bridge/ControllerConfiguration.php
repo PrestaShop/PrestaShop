@@ -6,8 +6,8 @@ use \Cookie;
 use \Country;
 use \Language;
 use \Link;
+use PrestaShopBundle\Security\Admin\Employee;
 use \Shop;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ControllerConfiguration
 {
@@ -47,7 +47,7 @@ class ControllerConfiguration
     public $token;
 
     /**
-     * @var UserInterface
+     * @var Employee
      */
     public $user;
 

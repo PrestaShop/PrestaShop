@@ -29,7 +29,6 @@ class ControllerConfigurationFactory
     public function create(array $configuration = []): ControllerConfiguration
     {
         $configuratorController = new ControllerConfiguration();
-        $configuratorController->context = $this->legacyContext->getContext();
 
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
