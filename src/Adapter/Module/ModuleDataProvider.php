@@ -33,7 +33,7 @@ use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 use Validate;
 
@@ -52,7 +52,7 @@ class ModuleDataProvider
     /**
      * Translator.
      *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
