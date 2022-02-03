@@ -183,7 +183,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountInferiorTotal', baseContext);
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountInfTotal);
-      expect(validationMessage, 'Successful message is not correct!').to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+      expect(validationMessage, 'Successful message is not correct!')
+        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
     });
 
     it('should check the warning message', async function () {
@@ -221,7 +222,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountEqualTotal', baseContext);
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountEqualTotal);
-      expect(validationMessage, 'Successful message is not correct!').to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+      expect(validationMessage, 'Successful message is not correct!')
+        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
     });
 
     it('should check that the payments number is equal to 2', async function () {
@@ -251,7 +253,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal', baseContext);
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountSupTotal);
-      expect(validationMessage, 'Successful message is not correct!').to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+      expect(validationMessage, 'Successful message is not correct!')
+        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
     });
 
     it('should check the warning message', async function () {
@@ -391,7 +394,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       await testContext.addContextItem(this, 'testIdentifier', 'paymentWithNewCurrency', baseContext);
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataWithNewCurrency);
-      expect(validationMessage, 'Successful message is not correct!').to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+      expect(validationMessage, 'Successful message is not correct!')
+        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
     });
   });
 
@@ -519,7 +523,8 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
       const invoice = `#IN0000${(invoiceID + 1) >= 10 ? '' : '0'}${invoiceID + 1}`;
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountEqualRest, invoice);
-      expect(validationMessage, 'Successful message is not correct!').to.equal(orderPageMessagesBlock.successfulUpdateMessage);
+      expect(validationMessage, 'Successful message is not correct!')
+        .to.equal(orderPageMessagesBlock.successfulUpdateMessage);
     });
 
     it('should check that payments number is equal to 2', async function () {

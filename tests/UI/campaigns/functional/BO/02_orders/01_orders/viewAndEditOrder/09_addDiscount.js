@@ -311,7 +311,8 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountAmountNegativeValue', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountGoodValue);
-      await expect(errorMessage, 'Validation message is not correct!').to.equal(orderPageProductsBlock.successfulUpdateMessage);
+      await expect(errorMessage, 'Validation message is not correct!')
+        .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
     it('should check the existence of new discount table', async function () {
@@ -462,7 +463,8 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountFreeShipping', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountFreeShipping);
-      await expect(errorMessage, 'Error message is not correct!').to.equal(orderPageProductsBlock.successfulUpdateMessage);
+      await expect(errorMessage, 'Error message is not correct!')
+        .to.equal(orderPageProductsBlock.successfulUpdateMessage);
     });
 
     it('should check the existence of new discount table', async function () {
