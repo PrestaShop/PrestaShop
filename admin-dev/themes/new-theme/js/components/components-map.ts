@@ -92,4 +92,8 @@ export default {
   inputNotCheckbox: ':input:not(.multistore-checkbox)',
   inputContainer: '.input-container',
   formControlLabel: '.form-control-label',
+  tineMceEditor: {
+    selector: '.autoload_rte',
+    selectorClass: 'autoload_rte',
+  },
 };
