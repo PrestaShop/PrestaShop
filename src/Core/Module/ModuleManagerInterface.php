@@ -24,32 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Event;
+namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
-use Symfony\Contracts\EventDispatcher\Event;
-
-class ModuleManagementEvent extends Event
+interface ModuleManagerInterface
 {
-    public const INSTALL = 'module.install';
-    public const POST_INSTALL = 'module.post.install';
-    public const UNINSTALL = 'module.uninstall';
-    public const DISABLE = 'module.disable';
-    public const ENABLE = 'module.enable';
-    public const ENABLE_MOBILE = 'module.enable.mobile';
-    public const DISABLE_MOBILE = 'module.disable.mobile';
-    public const UPGRADE = 'module.upgrade';
-    public const RESET = 'module.reset';
+    public function install(string $name): bool;
 
-    private $module;
+    public function uninstall(string $name, bool $deleteFiles = false): bool;
 
-    public function __construct(ModuleInterface $module)
-    {
-        $this->module = $module;
-    }
+    public function upgrade(string $name): bool;
 
-    public function getModule()
-    {
-        return $this->module;
-    }
+    public function enable(string $name): bool;
+
+    public function disable(string $name): bool;
+
+    public function enableMobile(string $name): bool;
+
+    public function disableMobile(string $name): bool;
+
+    public function reset(string $name, bool $keepData = false): bool;
+
+    public function postInstall(string $name): bool;
+
+    public function isInstalled(string $name): bool;
+
+    public function isEnabled(string $name): bool;
 }

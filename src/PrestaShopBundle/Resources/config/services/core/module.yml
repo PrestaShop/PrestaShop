@@ -9,3 +9,22 @@ services:
       - '%database_prefix%'
       - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
       - '@prestashop.adapter.module.payment_module_provider'
+
+  prestashop.core.admin.module.repository:
+    class: PrestaShop\PrestaShop\Core\Module\ModuleRepository
+    arguments:
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.admin.data_provider.module'
+      - '@doctrine.cache.provider'
+      - '%modules_dir%/'
+    tags:
+      - { name: kernel.event_subscriber }
+
+
+  prestashop.module.manager:
+      class: PrestaShop\PrestaShop\Core\Module\ModuleManager
+      arguments:
+        - '@prestashop.core.admin.module.repository'
+        - '@prestashop.adapter.admin.data_provider.module'
+        - '@translator'
+        - '@event_dispatcher'

@@ -30,7 +30,7 @@ use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
