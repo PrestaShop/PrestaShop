@@ -11,7 +11,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -203,14 +203,14 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageUpdatedOptions', baseContext);
 
       await ordersPage.goToOrder(page, 1);
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateStatusUpdatedOptions', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -218,7 +218,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceUpdatedOptions', baseContext);
 
       // Download invoice
-      filePath = await viewOrderPage.downloadInvoice(page);
+      filePath = await orderPageTabListBlock.downloadInvoice(page);
 
       const exist = await files.doesFileExist(filePath);
       await expect(exist).to.be.true;
@@ -228,7 +228,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedInvoiceNumber', baseContext);
 
       // Get file name
-      fileName = await viewOrderPage.getFileName(page);
+      fileName = await orderPageTabListBlock.getFileName(page);
       expect(fileName).to.contains(invoiceData.invoiceNumber);
     });
 

@@ -11,8 +11,8 @@ const loginCommon = require('@commonTests/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
-const productsBlockViewOrderPage = require('@pages/BO/orders/view/productsBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
+const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 
 // Import FO pages
@@ -165,30 +165,30 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should add a partial refund', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
 
-      await viewOrderPage.clickOnPartialRefund(page);
+      await orderPageTabListBlock.clickOnPartialRefund(page);
 
-      const textMessage = await productsBlockViewOrderPage.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(productsBlockViewOrderPage.partialRefundValidationMessage);
+      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocumentName', baseContext);
 
-      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
       await expect(documentType).to.be.equal(creditSlipDocumentName);
     });
   });
@@ -197,10 +197,10 @@ describe('BO - Orders - Credit slips : Generate Credit slip file by date', async
     it('should go to Credit slips page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPage', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.creditSlipsLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.creditSlipsLink,
       );
 
       await creditSlipsPage.closeSfToolBar(page);

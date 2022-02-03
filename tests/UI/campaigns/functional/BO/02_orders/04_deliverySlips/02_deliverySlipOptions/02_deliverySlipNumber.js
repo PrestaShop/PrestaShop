@@ -10,7 +10,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -201,14 +201,14 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -216,7 +216,7 @@ describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeliverySlipsDocumentName', baseContext);
 
       // Get delivery slips filename
-      fileName = await viewOrderPage.getFileName(page, 3);
+      fileName = await orderPageTabListBlock.getFileName(page, 3);
       expect(fileName).to.contains(deliverySlipData.number);
     });
   });

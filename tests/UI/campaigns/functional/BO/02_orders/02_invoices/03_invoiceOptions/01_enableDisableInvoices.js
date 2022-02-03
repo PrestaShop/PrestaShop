@@ -10,7 +10,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -194,21 +194,21 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
 
         await ordersPage.goToOrder(page, 1);
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${test.args.orderStatus}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `updateStatus${index}`, baseContext);
 
-        const result = await viewOrderPage.modifyOrderStatus(page, test.args.orderStatus);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, test.args.orderStatus);
         await expect(result).to.equal(test.args.orderStatus);
       });
 
       it('should check that there is no invoice document created', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkInvoiceCreation${index}`, baseContext);
 
-        const documentName = await viewOrderPage.getDocumentType(page);
+        const documentName = await orderPageTabListBlock.getDocumentType(page);
 
         if (test.args.status) {
           await expect(documentName).to.be.equal('Invoice');

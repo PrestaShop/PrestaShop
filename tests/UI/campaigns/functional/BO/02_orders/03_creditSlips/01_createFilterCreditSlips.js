@@ -11,8 +11,8 @@ const loginCommon = require('@commonTests/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
-const productsBlockOrderPage = require('@pages/BO/orders/view/productsBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
+const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 
 // Import FO pages
@@ -167,14 +167,14 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -187,21 +187,21 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       it(`should create the partial refund n°${index}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
-        await viewOrderPage.clickOnPartialRefund(page);
+        await orderPageTabListBlock.clickOnPartialRefund(page);
 
-        const textMessage = await productsBlockOrderPage.addPartialRefundProduct(
+        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(
           page,
           test.args.productID,
           test.args.quantity,
         );
-        await expect(textMessage).to.contains(productsBlockOrderPage.partialRefundValidationMessage);
+        await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
       });
 
       it('should check the existence of the Credit slip document', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentType = await viewOrderPage.getDocumentType(page, test.args.documentRow);
+        const documentType = await orderPageTabListBlock.getDocumentType(page, test.args.documentRow);
         await expect(documentType).to.be.equal('Credit slip');
       });
     });

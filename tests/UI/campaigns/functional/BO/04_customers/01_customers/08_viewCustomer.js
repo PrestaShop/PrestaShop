@@ -16,7 +16,7 @@ const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
 const viewCustomerPage = require('@pages/BO/customers/view');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
-const viewOrderPage = require('@pages/BO/orders/view/customerBlock');
+const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
 
 // Import FO pages
@@ -482,27 +482,27 @@ describe('BO - Customers - Customers : View information about customer', async (
   // 6 : Edit order then check customer information page
   describe('Edit order then view customer and check information', async () => {
     it('should go to view order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToViewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToorderPageCustomerBlock', baseContext);
 
       await viewCustomerPage.goToPage(page, 'Orders');
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should modify order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageCustomerBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterEditOrder', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageCustomerBlock.goToSubMenu(
         page,
-        viewOrderPage.customersParentLink,
-        viewOrderPage.customersLink,
+        orderPageCustomerBlock.customersParentLink,
+        orderPageCustomerBlock.customersLink,
       );
 
       const pageTitle = await customersPage.getPageTitle(page);

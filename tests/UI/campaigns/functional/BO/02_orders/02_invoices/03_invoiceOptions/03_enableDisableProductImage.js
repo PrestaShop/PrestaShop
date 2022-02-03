@@ -11,7 +11,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const productPage = require('@pages/FO/product');
@@ -208,14 +208,14 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
           await ordersPage.goToOrder(page, 1);
-          const pageTitle = await viewOrderPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+          await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
         it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+          const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
           await expect(result).to.equal(Statuses.shipped.status);
         });
 
@@ -223,7 +223,7 @@ describe('BO - Orders - Invoices : Enable/Disable product image in invoices', as
           await testContext.addContextItem(this, 'testIdentifier', `downloadInvoice${index}`, baseContext);
 
           // Download invoice
-          filePath = await viewOrderPage.downloadInvoice(page);
+          filePath = await orderPageTabListBlock.downloadInvoice(page);
 
           const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;

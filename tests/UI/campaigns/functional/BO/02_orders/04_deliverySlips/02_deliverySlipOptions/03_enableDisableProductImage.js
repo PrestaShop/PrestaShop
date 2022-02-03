@@ -11,7 +11,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view/tabListBlock');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const productPage = require('@pages/FO/product');
@@ -208,21 +208,21 @@ describe('BO - Orders - Delivery slips : Enable/Disable product image', async ()
           await testContext.addContextItem(this, 'testIdentifier', `goToCreatedOrderPage${index}`, baseContext);
 
           await ordersPage.goToOrder(page, 1);
-          const pageTitle = await viewOrderPage.getPageTitle(page);
-          await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+          const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+          await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
         });
 
         it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus${index}`, baseContext);
 
-          const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+          const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
           await expect(result).to.equal(Statuses.shipped.status);
         });
 
         it('should download the delivery slip', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `downloadDeliverySlips${index}`, baseContext);
 
-          filePath = await viewOrderPage.downloadDeliverySlip(page);
+          filePath = await orderPageTabListBlock.downloadDeliverySlip(page);
 
           const exist = await files.doesFileExist(filePath);
           await expect(exist).to.be.true;
