@@ -26,11 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Entity\Repository\ModuleRepository;
 
 /**
@@ -39,7 +36,7 @@ use PrestaShopBundle\Entity\Repository\ModuleRepository;
 final class PaymentModuleListProvider implements PaymentModuleListProviderInterface
 {
     /**
-     * @var AddonRepositoryInterface
+     * @var ModuleRepositoryInterface
      */
     private $addonRepository;
 
@@ -54,12 +51,12 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     private $shopId;
 
     /**
-     * @param AddonRepositoryInterface $addonRepository
+     * @param ModuleRepositoryInterface $addonRepository
      * @param ModuleRepository $moduleRepository
      * @param int $shopId
      */
     public function __construct(
-        AddonRepositoryInterface $addonRepository,
+        ModuleRepositoryInterface $addonRepository,
         ModuleRepository $moduleRepository,
         $shopId
     ) {
@@ -73,11 +70,7 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
      */
     public function getPaymentModuleList()
     {
-        $filters = (new AddonListFilter())
-            ->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
-
-        $modules = $this->addonRepository->getFilteredList($filters);
+        $modules = $this->addonRepository->getInstalledModules();
         $paymentModules = [];
 
         /** @var Module $module */

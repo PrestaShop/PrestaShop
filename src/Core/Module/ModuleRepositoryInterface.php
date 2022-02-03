@@ -24,32 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Event;
+namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
-use Symfony\Contracts\EventDispatcher\Event;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface as AddonsModuleInteface;
 
-class ModuleManagementEvent extends Event
+interface ModuleRepositoryInterface
 {
-    public const INSTALL = 'module.install';
-    public const POST_INSTALL = 'module.post.install';
-    public const UNINSTALL = 'module.uninstall';
-    public const DISABLE = 'module.disable';
-    public const ENABLE = 'module.enable';
-    public const ENABLE_MOBILE = 'module.enable.mobile';
-    public const DISABLE_MOBILE = 'module.disable.mobile';
-    public const UPGRADE = 'module.upgrade';
-    public const RESET = 'module.reset';
+    /**
+     * @return AddonsModuleInteface[]
+     */
+    public function getList(): array;
 
-    private $module;
+    /**
+     * @return AddonsModuleInteface[]
+     */
+    public function getInstalledModules(): array;
 
-    public function __construct(ModuleInterface $module)
-    {
-        $this->module = $module;
-    }
+    /**
+     * @return AddonsModuleInteface[]
+     */
+    public function getUpgradableModules(): array;
 
-    public function getModule()
-    {
-        return $this->module;
-    }
+    /**
+     * @return AddonsModuleInteface[]
+     */
+    public function getConfigurableModules(): array;
+
+    public function getModule(string $moduleName): AddonsModuleInteface;
+
+    public function getModulePath(string $moduleName): ?string;
+
+    public function isOnDisk(string $moduleName): bool;
 }

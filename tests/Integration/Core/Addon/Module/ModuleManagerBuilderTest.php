@@ -32,8 +32,8 @@ use Context;
 use Employee;
 use Module;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Tools;
 
 class ModuleManagerBuilderTest extends TestCase
