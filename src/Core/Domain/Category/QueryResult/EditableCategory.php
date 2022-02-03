@@ -117,7 +117,7 @@ class EditableCategory
     /**
      * @var string[]
      */
-    private $additional_description;
+    private $additionalDescription;
 
     /**
      * @param CategoryId $id
@@ -136,7 +136,7 @@ class EditableCategory
      * @param mixed $thumbnailImage
      * @param array $menuThumbnailImages
      * @param array $subCategories
-     * @param string[] $additional_description
+     * @param string[] $additionalDescription
      */
     public function __construct(
         CategoryId $id,
@@ -155,7 +155,7 @@ class EditableCategory
         $thumbnailImage = null,
         array $menuThumbnailImages = [],
         array $subCategories = [],
-        array $additional_description = []
+        array $additionalDescription = []
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -173,7 +173,7 @@ class EditableCategory
         $this->menuThumbnailImages = $menuThumbnailImages;
         $this->isRootCategory = $isRootCategory;
         $this->subCategories = $subCategories;
-        $this->additional_description = $additional_description;
+        $this->additionalDescription = $additionalDescription;
     }
 
     /**
@@ -213,7 +213,7 @@ class EditableCategory
      */
     public function getAdditionalDescription()
     {
-        return $this->additional_description;
+        return $this->additionalDescription;
     }
 
     /**
