@@ -127,9 +127,12 @@ class OrderStateType extends TranslatorAwareType
                     new DefaultLanguage(),
                 ],
                 'options' => [
+                    'attr' => [
+                        'autocomplete' => 'off',
+                    ],
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                     ],
                 ],

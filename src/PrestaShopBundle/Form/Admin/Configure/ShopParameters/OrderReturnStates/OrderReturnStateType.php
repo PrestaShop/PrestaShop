@@ -64,7 +64,7 @@ class OrderReturnStateType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new TypedRegex([
-                            'type' => 'generic_name',
+                            'type' => TypedRegex::TYPE_GENERIC_NAME,
                         ]),
                     ],
                 ],
