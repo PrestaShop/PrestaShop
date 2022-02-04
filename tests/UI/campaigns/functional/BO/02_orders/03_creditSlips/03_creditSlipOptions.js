@@ -12,7 +12,8 @@ const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
+const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 
 // Import demo data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -131,31 +132,31 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should create a partial refund', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addPartialRefund', baseContext);
 
-      await viewOrderPage.clickOnPartialRefund(page);
+      await orderPageTabListBlock.clickOnPartialRefund(page);
 
-      const textMessage = await viewOrderPage.addPartialRefundProduct(page, 1, 1);
-      await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+      const textMessage = await orderPageProductsBlock.addPartialRefundProduct(page, 1, 1);
+      await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
     });
 
     it('should check the existence of the Credit slip document', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCreditSlipDocument', baseContext);
 
       // Get document name
-      const documentType = await viewOrderPage.getDocumentType(page, 4);
+      const documentType = await orderPageTabListBlock.getDocumentType(page, 4);
       await expect(documentType).to.be.equal('Credit slip');
     });
 
@@ -163,7 +164,7 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedPrefixOnFileName', baseContext);
 
       // Get file name
-      fileName = await viewOrderPage.getFileName(page, 4);
+      fileName = await orderPageTabListBlock.getFileName(page, 4);
       expect(fileName).to.contains(prefixToEdit);
     });
   });
@@ -172,10 +173,10 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
     it('should go to \'Orders > Credit slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCreditSlipsPageToResetPrefix', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.creditSlipsLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.creditSlipsLink,
       );
 
       const pageTitle = await creditSlipsPage.getPageTitle(page);
@@ -211,14 +212,14 @@ describe('BO - Orders - Credit slips: Credit slip options', async () => {
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it('should check the credit slip file name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDeletedPrefix', baseContext);
 
-      fileName = await viewOrderPage.getFileName(page, 4);
+      fileName = await orderPageTabListBlock.getFileName(page, 4);
       expect(fileName, 'Credit slip file name is not changed to default!').to.not.contains(prefixToEdit);
     });
   });

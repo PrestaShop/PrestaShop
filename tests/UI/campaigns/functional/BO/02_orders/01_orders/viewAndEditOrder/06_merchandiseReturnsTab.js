@@ -16,7 +16,7 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const dashboardPage = require('@pages/BO/dashboard');
 const boMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 const editMerchandiseReturnsPage = require('@pages/BO/customerService/merchandiseReturns/edit');
 
 // Import FO mages
@@ -140,21 +140,21 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check if the button \'Return products\' is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkReturnProductsButton', baseContext);
 
-      const result = await viewOrderPage.isReturnProductsButtonVisible(page);
+      const result = await orderPageTabListBlock.isReturnProductsButtonVisible(page);
       await expect(result).to.be.true;
     });
   });
@@ -164,7 +164,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
       // Click on view my shop
-      page = await viewOrderPage.viewMyShop(page);
+      page = await orderPageTabListBlock.viewMyShop(page);
 
       // Change FO language
       await homePage.changeLanguage(page, 'en');
@@ -231,8 +231,8 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
       page = await orderDetailsPage.closePage(browserContext, page, 0);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
   });
 
@@ -298,28 +298,28 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it('should click on \'Merchandise returns\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-      const isTabOpened = await viewOrderPage.goToMerchandiseReturnsTab(page);
+      const isTabOpened = await orderPageTabListBlock.goToMerchandiseReturnsTab(page);
       await expect(isTabOpened).to.be.true;
     });
 
     it('should check that the merchandise returns number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
-      const carriersNumber = await viewOrderPage.getMerchandiseReturnsNumber(page);
+      const carriersNumber = await orderPageTabListBlock.getMerchandiseReturnsNumber(page);
       await expect(carriersNumber).to.be.equal(1);
     });
 
     it('should check the merchandise returns details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
-      const result = await viewOrderPage.getMerchandiseReturnsDetails(page);
+      const result = await orderPageTabListBlock.getMerchandiseReturnsDetails(page);
       await Promise.all([
         expect(result.date).to.contains(today),
         expect(result.type).to.equal('Return'),
@@ -407,28 +407,28 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         // View order
         await ordersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it('should click on \'Merchandise returns\' tab', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `clickOnMerchandiseReturn${index}`, baseContext);
 
-        const isTabOpened = await viewOrderPage.goToMerchandiseReturnsTab(page);
+        const isTabOpened = await orderPageTabListBlock.goToMerchandiseReturnsTab(page);
         await expect(isTabOpened).to.be.true;
       });
 
       it('should check that the merchandise returns number is equal to 1', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkMerchandiseReturnsNumber${index}`, baseContext);
 
-        const carriersNumber = await viewOrderPage.getMerchandiseReturnsNumber(page);
+        const carriersNumber = await orderPageTabListBlock.getMerchandiseReturnsNumber(page);
         await expect(carriersNumber).to.be.equal(1);
       });
 
       it(`should check the merchandise returns status is '${test.args.status}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
-        const result = await viewOrderPage.getMerchandiseReturnsDetails(page);
+        const result = await orderPageTabListBlock.getMerchandiseReturnsDetails(page);
         await expect(result.status).to.equal(test.args.status);
       });
     });
@@ -438,7 +438,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         await testContext.addContextItem(this, 'testIdentifier', `goToFO${index}`, baseContext);
 
         // Click on view my shop
-        page = await viewOrderPage.viewMyShop(page);
+        page = await orderPageTabListBlock.viewMyShop(page);
 
         // Change FO language
         await homePage.changeLanguage(page, 'en');
@@ -477,8 +477,8 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
         page = await orderDetailsPage.closePage(browserContext, page, 0);
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
     });
   });

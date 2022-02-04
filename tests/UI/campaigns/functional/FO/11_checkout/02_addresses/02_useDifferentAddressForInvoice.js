@@ -10,7 +10,7 @@ const loginCommon = require('@commonTests/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 
 // Import FO pages
 const foHomePage = require('@pages/FO/home');
@@ -177,19 +177,19 @@ describe('FO - Guest checkout: Use different invoice address', async () => {
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'orderPageCustomerBlock', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should check that invoice and delivery addresses are different', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddressesInViewOrder', baseContext);
 
-      const finalDeliveryAddress = await viewOrderPage.getShippingAddress(page);
-      const finalInvoiceAddress = await viewOrderPage.getInvoiceAddress(page);
+      const finalDeliveryAddress = await orderPageCustomerBlock.getShippingAddress(page);
+      const finalInvoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
 
       await expect(
         finalDeliveryAddress.replace('Shipping', ''),

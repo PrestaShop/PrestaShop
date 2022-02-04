@@ -16,7 +16,7 @@ const addTaxRulesPage = require('@pages/BO/international/taxes/taxRules/add');
 const boProductsPage = require('@pages/BO/catalog/products/index');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const foProductPage = require('@pages/FO/product');
@@ -298,14 +298,14 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
 
         await ordersPage.goToOrder(page, 1);
 
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it(`should change the order status to '${Statuses.paymentAccepted.status}' and check it`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'changeOrderStatusTaxBreakdown', baseContext);
 
-        const result = await viewOrderPage.modifyOrderStatus(page, Statuses.paymentAccepted.status);
+        const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.paymentAccepted.status);
         await expect(result).to.equal(Statuses.paymentAccepted.status);
       });
 
@@ -313,7 +313,7 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceTaxBreakdown', baseContext);
 
         // Download invoice
-        firstInvoiceFileName = await viewOrderPage.downloadInvoice(page);
+        firstInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
 
         // Check that file exist
         const exist = await files.doesFileExist(firstInvoiceFileName);
@@ -339,10 +339,10 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       it('should go to \'Orders > Invoices\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageToDisableTaxBreakdown', baseContext);
 
-        await viewOrderPage.goToSubMenu(
+        await orderPageTabListBlock.goToSubMenu(
           page,
-          viewOrderPage.ordersParentLink,
-          viewOrderPage.invoicesLink,
+          orderPageTabListBlock.ordersParentLink,
+          orderPageTabListBlock.invoicesLink,
         );
 
         const pageTitle = await invoicesPage.getPageTitle(page);
@@ -376,15 +376,15 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageNoTaxBreakdown', baseContext);
 
         await ordersPage.goToOrder(page, 1);
-        const pageTitle = await viewOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
       });
 
       it('should download the invoice', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoiceNoTaxBreakdown', baseContext);
 
         // Download invoice and check existence
-        secondInvoiceFileName = await viewOrderPage.downloadInvoice(page);
+        secondInvoiceFileName = await orderPageTabListBlock.downloadInvoice(page);
 
         const exist = await files.doesFileExist(secondInvoiceFileName);
         await expect(exist).to.be.true;

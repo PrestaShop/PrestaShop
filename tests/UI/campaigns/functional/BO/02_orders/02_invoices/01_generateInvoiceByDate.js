@@ -12,7 +12,7 @@ const loginCommon = require('@commonTests/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -76,14 +76,14 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
   });
@@ -92,10 +92,10 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.invoicesLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);

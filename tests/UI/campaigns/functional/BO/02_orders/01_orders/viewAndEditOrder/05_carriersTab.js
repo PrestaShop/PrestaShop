@@ -14,7 +14,7 @@ const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -99,12 +99,12 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrderPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
   });
 
@@ -113,21 +113,21 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     it('should click on \'Carriers\' tab', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-      const isTabOpened = await viewOrderPage.goToCarriersTab(page);
+      const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
       await expect(isTabOpened).to.be.true;
     });
 
     it('should check that the carriers number is equal to 1', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarriersNumber', baseContext);
 
-      const carriersNumber = await viewOrderPage.getCarriersNumber(page);
+      const carriersNumber = await orderPageTabListBlock.getCarriersNumber(page);
       await expect(carriersNumber).to.be.equal(1);
     });
 
     it('should check the carrier details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
-      const result = await viewOrderPage.getCarrierDetails(page);
+      const result = await orderPageTabListBlock.getCarrierDetails(page);
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(Carriers.default.name),
@@ -140,23 +140,23 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     it('should click on \'Edit\' link and check the modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditLink', baseContext);
 
-      const isModalVisible = await viewOrderPage.clickOnEditLink(page);
+      const isModalVisible = await orderPageTabListBlock.clickOnEditLink(page);
       await expect(isModalVisible, 'Edit shipping modal is not visible!').to.be.true;
     });
 
     it('should update the carrier and add a tracking number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateTrackingNumber', baseContext);
 
-      const textResult = await viewOrderPage.setShippingDetails(page, shippingDetailsData);
-      await expect(textResult).to.equal(viewOrderPage.successfulUpdateMessage);
+      const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
+      await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
     });
 
     it('should check the updated carrier details', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
 
-      await viewOrderPage.goToCarriersTab(page);
+      await orderPageTabListBlock.goToCarriersTab(page);
 
-      const result = await viewOrderPage.getCarrierDetails(page);
+      const result = await orderPageTabListBlock.getCarrierDetails(page);
       await Promise.all([
         expect(result.date).to.equal(today),
         expect(result.carrier).to.equal(shippingDetailsData.carrier),
