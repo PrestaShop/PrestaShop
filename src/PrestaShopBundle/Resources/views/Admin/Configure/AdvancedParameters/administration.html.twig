@@ -36,8 +36,8 @@
         <i class="material-icons">settings</i>
         {{ 'General'|trans({}, 'Admin.Global') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {{ form_widget(generalForm) }}
         </div>
       </div>
@@ -57,8 +57,8 @@
         <i class="material-icons">file_upload</i>
         {{ 'Upload quota'|trans }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {{ form_widget(uploadQuotaForm) }}
         </div>
       </div>
@@ -87,11 +87,9 @@
               title="">
         </span>
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          <div class="card-text">
-            {{ form_widget(notificationsForm) }}
-          </div>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(notificationsForm) }}
         </div>
       </div>
       <div class="card-footer">
