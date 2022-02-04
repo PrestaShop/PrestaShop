@@ -29,7 +29,7 @@
       class="d-flex flex-wrap permission-row"
     >
       <div
-        class="col-4"
+        class="col-4 text-nowrap"
         :class="`depth-level-${levelDepth}`"
       >
         &raquo;
@@ -339,6 +339,12 @@
   @for $i from 2 through 5 {
     .depth-level-#{$i} {
       padding-left: #{$i}rem;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .permission-row {
+      font-size: 0.8rem;
     }
   }
 </style>
