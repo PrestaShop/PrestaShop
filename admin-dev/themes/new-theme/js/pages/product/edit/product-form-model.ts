@@ -56,8 +56,8 @@ export default class ProductFormModel {
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    const $priceTaxExcludedInput: JQuery = this.mapper.getInputsFor('price.priceTaxExcluded');
-    this.precision = <number>$priceTaxExcludedInput.data('displayPricePrecision');
+    const $priceTaxExcludedInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.priceTaxExcluded');
+    this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
     this.numberFormatter = NumberFormatter.build($priceTaxExcludedInput?.data('priceSpecification'));
 
@@ -70,8 +70,8 @@ export default class ProductFormModel {
     return this.mapper.getModel();
   }
 
-  getBigNumber(productModelKey: string): BigNumber {
-    return this.mapper.getBigNumber(`product.${productModelKey}`);
+  getBigNumber(modelKey: string): BigNumber {
+    return this.mapper.getBigNumber(`${modelKey}`);
   }
 
   watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
@@ -83,7 +83,7 @@ export default class ProductFormModel {
   }
 
   getTaxRatio(): BigNumber {
-    const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
+    const $taxRulesGroupIdInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
 
     if (!$taxRulesGroupIdInput) {
       console.error('Could not find tax rules input');
@@ -110,7 +110,7 @@ export default class ProductFormModel {
   }
 
   getPriceTaxExcluded(): BigNumber {
-    return this.mapper.getBigNumber('product.price.priceTaxExcluded');
+    return this.mapper.getBigNumber('price.priceTaxExcluded');
   }
 
   displayPrice(price: BigNumber): string {
