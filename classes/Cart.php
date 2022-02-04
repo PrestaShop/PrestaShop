@@ -1631,7 +1631,7 @@ class CartCore extends ObjectModel
                 $result2['quantity'] = Pack::getQuantity($id_product, $id_product_attribute, null, $this);
             }
 
-            if (!Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
+            if (isset($result2['out_of_stock']) && !Product::isAvailableWhenOutOfStock((int) $result2['out_of_stock']) && !$skipAvailabilityCheckOutOfStock) {
                 if ((int) $quantity > $result2['quantity']) {
                     return false;
                 }
