@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4bdc9371b78d68882789a15b8724a46",
+    "content-hash": "a424a472b7cb58a3c3947c0c89ff63a4",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -2537,12 +2537,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "GuzzleHttp\\Psr7\\": "src/"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "GuzzleHttp\\Psr7\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -3939,12 +3939,12 @@
             },
             "type": "library",
             "autoload": {
-                "classmap": [
-                    "Mobile_Detect.php"
-                ],
                 "psr-0": {
                     "Detection": "namespaced/"
-                }
+                },
+                "classmap": [
+                    "Mobile_Detect.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -5036,6 +5036,42 @@
                 "source": "https://github.com/PrestaShop/circuit-breaker/tree/v4.0.0"
             },
             "time": "2021-04-20T14:48:25+00:00"
+        },
+        {
+            "name": "prestashop/classic",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/classic-theme.git",
+                "reference": "f339ecd5fe330bbc0593aab99d572f84922b2359"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/f339ecd5fe330bbc0593aab99d572f84922b2359",
+                "reference": "f339ecd5fe330bbc0593aab99d572f84922b2359",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "prestashop-theme",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                },
+                {
+                    "name": "PrestaShop Community",
+                    "homepage": "https://contributors.prestashop.com/"
+                }
+            ],
+            "description": "Classic theme for PrestaShop 1.7",
+            "support": {
+                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
+            },
+            "time": "2022-02-04T20:16:34+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -6135,9 +6171,9 @@
             "type": "prestashop-module",
             "autoload": {
                 "psr-4": {
-                    "PrestaShop\\Module\\FacetedSearch\\Controller\\": "src/Controller/",
                     "PrestaShop\\Module\\FacetedSearch\\": "src/",
-                    "PrestaShop\\Module\\FacetedSearch\\Tests\\": "tests/php/FacetedSearch"
+                    "PrestaShop\\Module\\FacetedSearch\\Tests\\": "tests/php/FacetedSearch",
+                    "PrestaShop\\Module\\FacetedSearch\\Controller\\": "src/Controller/"
                 },
                 "classmap": [
                     "ps_facetedsearch.php"
@@ -8269,6 +8305,7 @@
                     "type": "tidelift"
                 }
             ],
+            "abandoned": "symfony/mailer",
             "time": "2021-03-09T12:30:35+00:00"
         },
         {
@@ -9629,12 +9666,12 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
-                    "Symfony\\Bridge\\Monolog\\": "src/Symfony/Bridge/Monolog/",
-                    "Symfony\\Bridge\\ProxyManager\\": "src/Symfony/Bridge/ProxyManager/",
-                    "Symfony\\Bridge\\Twig\\": "src/Symfony/Bridge/Twig/",
                     "Symfony\\Bundle\\": "src/Symfony/Bundle/",
-                    "Symfony\\Component\\": "src/Symfony/Component/"
+                    "Symfony\\Component\\": "src/Symfony/Component/",
+                    "Symfony\\Bridge\\Twig\\": "src/Symfony/Bridge/Twig/",
+                    "Symfony\\Bridge\\Monolog\\": "src/Symfony/Bridge/Monolog/",
+                    "Symfony\\Bridge\\Doctrine\\": "src/Symfony/Bridge/Doctrine/",
+                    "Symfony\\Bridge\\ProxyManager\\": "src/Symfony/Bridge/ProxyManager/"
                 },
                 "classmap": [
                     "src/Symfony/Component/Intl/Resources/stubs"
@@ -10653,9 +10690,6 @@
             "require": {
                 "php": "^7.1 || ^8.0"
             },
-            "replace": {
-                "myclabs/deep-copy": "self.version"
-            },
             "require-dev": {
                 "doctrine/collections": "^1.0",
                 "doctrine/common": "^2.6",
@@ -10663,12 +10697,12 @@
             },
             "type": "library",
             "autoload": {
-                "psr-4": {
-                    "DeepCopy\\": "src/DeepCopy/"
-                },
                 "files": [
                     "src/DeepCopy/deep_copy.php"
-                ]
+                ],
+                "psr-4": {
+                    "DeepCopy\\": "src/DeepCopy/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -12462,7 +12496,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "prestashop/classic": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
