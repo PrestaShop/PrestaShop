@@ -113,7 +113,9 @@
           {% if allowMenuThumbnailsUpload %}
             {{ form_widget(categoryForm.menu_thumbnail_images) }}
           {% else %}
-            {{ form_widget(categoryForm.menu_thumbnail_images, {'attr': {'class': 'd-none'}}) }}
+            <div class="d-none">
+              {{ form_widget(categoryForm.menu_thumbnail_images) }}
+            </div>
 
             <div class="alert alert-warning" role="alert">
               <p class="alert-text">
