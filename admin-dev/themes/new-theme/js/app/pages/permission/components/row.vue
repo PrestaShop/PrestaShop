@@ -283,7 +283,9 @@
         }
 
         // Update profile permission to prevent wrong bulk refresh
-        this.profilePermissions[this.permissionId][type] = this.permissionValues.includes(type) ? '1' : '0';
+        this.types.forEach((t) => {
+          this.profilePermissions[this.permissionId][<string>t] = this.permissionValues.includes(<string>t) ? '1' : '0';
+        });
 
         if (this.permissionValues.includes(type)) {
           this.$emit('childUpdated', type);
