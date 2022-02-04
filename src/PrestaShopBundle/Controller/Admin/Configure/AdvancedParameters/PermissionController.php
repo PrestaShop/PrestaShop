@@ -63,6 +63,8 @@ class PermissionController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Permission/index.html.twig',
             [
+                'help_link' => $this->generateSidebarLink('AdminAccess'),
+                'enableSidebar' => true,
                 'configurablePermissions' => $configurablePermissions,
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
