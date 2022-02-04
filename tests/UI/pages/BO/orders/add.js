@@ -43,10 +43,9 @@ class AddOrder extends BOBasePage {
     // Carts table selectors
     this.customerCartsTable = '#customer-carts-table';
     this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
-    this.customerCartsTableRow = `${this.customerCartsTableBody} tr`;
-    this.customerCartsTableColumn = `${this.customerCartsTableRow} td`;
-    this.emptyCartBlock = `${this.customerCartsTableColumn} div.grid-table-empty`;
-    this.cartsTableLoadingListRow = '#js-loading-list-row';
+    this.customerCartsTableRow = row => `${this.customerCartsTableBody} tr:nth-child(${row})`;
+    this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
+    this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -143,14 +142,25 @@ class AddOrder extends BOBasePage {
   /* Carts table methods */
 
   /**
-   * Get text column from carts table
+   * Get text when carts table is empty
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  async getTextColumnFromCartsTable(page) {
-    await page.waitForTimeout(2000);
+  async getTextWhenCartsTableIsEmpty(page) {
+    await page.waitForTimeout(500);
     // await page.waitForSelector(this.cartsTableLoadingListRow);
     return this.getTextContent(page, this.emptyCartBlock, true);
+  }
+
+  /**
+   * Get text column from carts table
+   * @param page {Page} Browser tab
+   * @param column {String} Column name from table
+   * @param row {Number} Row on table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromCartsTable(page, column, row = 1) {
+    return this.getTextContent(page, this.customerCartsTableColumn(column, row));
   }
 
   /* Cart methods */
