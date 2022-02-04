@@ -41,6 +41,7 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
 
   {% block order_states_listing %}
     {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderStatesGrid} %}{% endembed %}
