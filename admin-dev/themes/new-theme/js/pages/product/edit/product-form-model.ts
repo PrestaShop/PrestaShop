@@ -53,8 +53,8 @@ export default class ProductFormModel {
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    const $priceTaxExcludedInput: JQuery = this.mapper.getInputsFor('price.priceTaxExcluded');
-    this.precision = <number>$priceTaxExcludedInput.data('displayPricePrecision');
+    const $priceTaxExcludedInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.priceTaxExcluded');
+    this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
@@ -96,7 +96,7 @@ export default class ProductFormModel {
       return;
     }
 
-    const $taxRulesGroupIdInput: JQuery = this.mapper.getInputsFor('price.taxRulesGroupId');
+    const $taxRulesGroupIdInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
     let taxRate: BigNumber;
