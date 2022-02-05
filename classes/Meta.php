@@ -531,9 +531,9 @@ class MetaCore extends ObjectModel
      */
     public static function paginateMetaTitle(&$meta_title)
     {
-        $page_num = (int)Tools::getValue('page');
+        $page_num = (int) Tools::getValue('page');
         if ($page_num > 1) {
-            $meta_title .= ' ('.$page_num.')';
+            $meta_title .= ' (' . $page_num . ')';
         }
     }
 
