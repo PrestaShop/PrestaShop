@@ -26,27 +26,18 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order\Delivery;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class manages Order delivery slip options configuration.
  */
-final class SlipOptionsConfiguration implements DataConfigurationInterface
+final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     public const PREFIX = 'PS_DELIVERY_PREFIX';
     public const NUMBER = 'PS_DELIVERY_NUMBER';
     public const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
-
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['prefix', 'number', 'enable_product_image'];
 
     /**
      * Returns configuration used to manage slip options in back office.
@@ -56,9 +47,9 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'prefix' => $this->configuration->get(self::PREFIX),
-            'number' => $this->configuration->getInt(self::NUMBER),
-            'enable_product_image' => $this->configuration->getBoolean(self::ENABLE_PRODUCT_IMAGE),
+            'prefix' => (string) $this->configuration->get(self::PREFIX, null, $this->getShopConstraint()),
+            'number' => (int) $this->configuration->get(self::NUMBER, 1, $this->getShopConstraint()),
+            'enable_product_image' => (bool) $this->configuration->get(self::ENABLE_PRODUCT_IMAGE, false, $this->getShopConstraint()),
         ];
     }
 
@@ -77,14 +68,16 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['prefix'],
-            $configuration['number'],
-            $configuration['enable_product_image']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('prefix', 'bool')
+            ->setAllowedTypes('number', 'bool')
+            ->setAllowedTypes('enable_product_image', 'bool');
+
+        return $resolver;
     }
 }
