@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Delivery;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -51,6 +52,7 @@ class SlipOptionsType extends TranslatorAwareType
                     'type' => TextType::class,
                     'label' => $this->trans('Delivery prefix', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help'),
+                    'multistore_configuration_key' => 'PS_DELIVERY_PREFIX',
                 ]
             )
             ->add(
@@ -62,6 +64,7 @@ class SlipOptionsType extends TranslatorAwareType
                         'The next delivery slip will begin with this number and then increase with each additional slip.',
                         'Admin.Orderscustomers.Help'
                     ),
+                    'multistore_configuration_key' => 'PS_DELIVERY_NUMBER',
                 ]
             )
             ->add(
@@ -73,7 +76,8 @@ class SlipOptionsType extends TranslatorAwareType
                         'Add an image before the product name on delivery slips.',
                         'Admin.Orderscustomers.Help'
                     ),
-                ]
+                    'multistore_configuration_key' => 'PS_PDF_IMG_DELIVERY',
+                ] 
             );
     }
 
@@ -83,5 +87,15 @@ class SlipOptionsType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'order_delivery_slip_options';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

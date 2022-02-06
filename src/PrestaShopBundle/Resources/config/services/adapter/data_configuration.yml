@@ -115,11 +115,15 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.order.delivery.slip.pdf.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.order.invoice_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'

@@ -29,4 +29,9 @@ const {$} = window;
 
 $(() => {
   new TranslatableInput();
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });

@@ -47,7 +47,7 @@ final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
     public function getConfiguration()
     {
         return [
-            'prefix' => (string) $this->configuration->get(self::PREFIX, null, $this->getShopConstraint()),
+            'prefix' => (array) $this->configuration->get(self::PREFIX, null, $this->getShopConstraint()),
             'number' => (int) $this->configuration->get(self::NUMBER, 1, $this->getShopConstraint()),
             'enable_product_image' => (bool) $this->configuration->get(self::ENABLE_PRODUCT_IMAGE, false, $this->getShopConstraint()),
         ];
@@ -59,9 +59,9 @@ final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set(self::PREFIX, $configuration['prefix']);
-            $this->configuration->set(self::NUMBER, $configuration['number']);
-            $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
+            $this->updateConfigurationValue(self::PREFIX, 'prefix', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::NUMBER, 'number', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::ENABLE_PRODUCT_IMAGE, 'enable_product_image', $configuration, $this->getShopConstraint());
         }
 
         return [];
