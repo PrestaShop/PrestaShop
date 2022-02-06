@@ -34,6 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * This form class generates the "Options" form in Delivery slips page.
@@ -56,6 +57,18 @@ class SlipOptionsType extends TranslatorAwareType
                     'label' => $this->trans('Delivery prefix', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help'),
                     'multistore_configuration_key' => 'PS_DELIVERY_PREFIX',
+                    'options' => [
+                        'constraints' => [
+                            new Regex([
+                                'pattern' => '[\<]',
+                                'match' => false,
+                                'message' => $this->trans(
+                                    'The "<" character is forbidden.',
+                                    'Admin.Notifications.Error'
+                                ),
+                            ]),
+                        ],
+                    ],
                 ]
             )
             ->add(
@@ -70,7 +83,7 @@ class SlipOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_DELIVERY_NUMBER',
                     'constraints' => [
                         new GreaterThanOrEqual([
-                            'value' => 0,
+                            'value' => self::MIN_DELIVERY_NUMBER,
                             'message' => $this->trans(
                                 'This value should be greater than or equal to %value%',
                                 'Admin.Notifications.Error',
