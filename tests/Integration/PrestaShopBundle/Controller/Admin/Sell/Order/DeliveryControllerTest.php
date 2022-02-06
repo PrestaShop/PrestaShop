@@ -128,7 +128,7 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'number' => (int) 100,
+                    'number' => 100,
                     'enable_product_image' => true,
                     '_token' => $token->getValue(),
                 ],

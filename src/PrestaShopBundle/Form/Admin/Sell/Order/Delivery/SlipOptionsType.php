@@ -40,6 +40,8 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
  */
 class SlipOptionsType extends TranslatorAwareType
 {
+    private const MIN_DELIVERY_NUMBER = 0;
+
     /**
      * {@inheritdoc}
      */
@@ -73,7 +75,7 @@ class SlipOptionsType extends TranslatorAwareType
                                 'This value should be greater than or equal to %value%',
                                 'Admin.Notifications.Error',
                                 [
-                                    '%value%' => 0,
+                                    '%value%' => self::MIN_DELIVERY_NUMBER,
                                 ]
                             ),
                         ]),
