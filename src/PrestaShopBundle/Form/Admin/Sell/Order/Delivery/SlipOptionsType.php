@@ -31,9 +31,9 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * This form class generates the "Options" form in Delivery slips page.
@@ -66,6 +66,18 @@ class SlipOptionsType extends TranslatorAwareType
                         'Admin.Orderscustomers.Help'
                     ),
                     'multistore_configuration_key' => 'PS_DELIVERY_NUMBER',
+                    'constraints' => [
+                        new GreaterThanOrEqual([
+                            'value' => 0,
+                            'message' => $this->trans(
+                                'This value should be greater than or equal to %value%',
+                                'Admin.Notifications.Error',
+                                [
+                                    '%value%' => 0,
+                                ]
+                            ),
+                        ]),
+                    ],
                 ]
             )
             ->add(

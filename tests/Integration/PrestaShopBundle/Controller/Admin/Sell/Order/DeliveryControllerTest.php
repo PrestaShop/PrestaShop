@@ -135,7 +135,7 @@ class DeliveryControllerTest extends WebTestCase
             ]
         );
         $response = $this->client->getResponse();
-        
+
         $this->assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()
