@@ -128,12 +128,14 @@ class DeliveryControllerTest extends WebTestCase
             ),
             [
                 'form' => [
-                    'number' => '100',
+                    'number' => (int) 100,
+                    'enable_product_image' => true,
                     '_token' => $token->getValue(),
                 ],
             ]
         );
         $response = $this->client->getResponse();
+        
         $this->assertEquals(
             Response::HTTP_FOUND,
             $response->getStatusCode()

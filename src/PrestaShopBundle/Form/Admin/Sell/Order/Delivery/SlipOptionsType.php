@@ -30,6 +30,7 @@ use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -57,7 +58,7 @@ class SlipOptionsType extends TranslatorAwareType
             )
             ->add(
                 'number',
-                NumberType::class,
+                IntegerType::class,
                 [
                     'label' => $this->trans('Delivery number', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
@@ -77,7 +78,7 @@ class SlipOptionsType extends TranslatorAwareType
                         'Admin.Orderscustomers.Help'
                     ),
                     'multistore_configuration_key' => 'PS_PDF_IMG_DELIVERY',
-                ] 
+                ]
             );
     }
 

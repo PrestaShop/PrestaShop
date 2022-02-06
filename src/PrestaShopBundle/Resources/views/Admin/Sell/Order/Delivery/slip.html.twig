@@ -56,7 +56,11 @@
     </div>
   {{ form_end(pdfForm) }}
 
-  {{ form_start(optionsForm, {'attr' : {'class': 'form', 'id': 'form-delivery-slips-options'} }) }}
+
+  {{ form_start(optionsForm, {
+    'attr' : {'class': 'form', 'autocomplete': 'off', id: 'form-delivery-slips-options'},
+    'action': path('admin_order_delivery_slip') })
+  }}
     <div class="row justify-content-center">
       {% block admin_form_order_delivery_slip_options %}
         <div class="col-xl-12">

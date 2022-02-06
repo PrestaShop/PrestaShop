@@ -48,7 +48,7 @@ final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
     {
         return [
             'prefix' => (array) $this->configuration->get(self::PREFIX, null, $this->getShopConstraint()),
-            'number' => (int) $this->configuration->get(self::NUMBER, 1, $this->getShopConstraint()),
+            'number' => (int) $this->configuration->get(self::NUMBER, 0, $this->getShopConstraint()),
             'enable_product_image' => (bool) $this->configuration->get(self::ENABLE_PRODUCT_IMAGE, false, $this->getShopConstraint()),
         ];
     }
@@ -74,8 +74,8 @@ final class SlipOptionsConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('prefix', 'bool')
-            ->setAllowedTypes('number', 'bool')
+            ->setAllowedTypes('prefix', 'array')
+            ->setAllowedTypes('number', 'int')
             ->setAllowedTypes('enable_product_image', 'bool');
 
         return $resolver;
