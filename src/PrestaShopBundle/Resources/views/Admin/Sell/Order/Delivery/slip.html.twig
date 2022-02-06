@@ -33,55 +33,43 @@
     'attr' : {'class': 'form', 'autocomplete': 'off', id: 'form-delivery-slips-print-pdf'},
     'action': path('admin_order_delivery_slip_pdf') })
   }}
-    <div class="row justify-content-center">
-      {% block admin_form_order_delivery_slip_pdf %}
-        <div class="col-xl-12">
-          <div class="card" id="delivery_pdf_fieldset">
-            <h3 class="card-header">
-              <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
-            </h3>
-            <div class="card-body">
-              <div class="form-wrapper">
-              {{ form_widget(pdfForm) }}
-              </div>
+    {% block admin_form_order_delivery_slip_pdf %}
+        <div class="card" id="delivery_pdf_fieldset">
+          <h3 class="card-header">
+            <i class="material-icons">print</i> {{ 'Print PDF'|trans }}
+          </h3>
+          <div class="card-body">
+            <div class="form-wrapper">
+            {{ form_widget(pdfForm) }}
             </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" id="generate-delivery-slip-by-date">{{ 'Generate PDF'|trans }}</button>
-              </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary" id="generate-delivery-slip-by-date">{{ 'Generate PDF'|trans }}</button>
             </div>
           </div>
         </div>
-      {% endblock %}
-    </div>
+    {% endblock %}
   {{ form_end(pdfForm) }}
 
-
-  {{ form_start(optionsForm, {
-    'attr' : {'class': 'form', 'autocomplete': 'off', id: 'form-delivery-slips-options'},
-    'action': path('admin_order_delivery_slip') })
-  }}
-    <div class="row justify-content-center">
-      {% block admin_form_order_delivery_slip_options %}
-        <div class="col-xl-12">
-          <div class="card" id="delivery_options_fieldset">
-            <h3 class="card-header">
-              <i class="material-icons">settings</i> {{ 'Delivery slip options'|trans }}
-            </h3>
-            <div class="card-body">
-              <div class="form-wrapper">
-                {{ form_widget(optionsForm) }}
-              </div>
+  {{ form_start(optionsForm, {'attr' : {'class': 'form', 'id': 'form-delivery-slips-options'} }) }}
+    {% block admin_form_order_delivery_slip_options %}
+        <div class="card" id="delivery_options_fieldset">
+          <h3 class="card-header">
+            <i class="material-icons">settings</i> {{ 'Delivery slip options'|trans }}
+          </h3>
+          <div class="card-body">
+            <div class="form-wrapper">
+              {{ form_widget(optionsForm) }}
             </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" id="save-delivery-slip-options-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
+          </div>
+          <div class="card-footer">
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-primary" id="save-delivery-slip-options-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
             </div>
           </div>
         </div>
-      {% endblock %}
-    </div>
+    {% endblock %}
   {{ form_end(optionsForm) }}
 {% endblock %}
 
