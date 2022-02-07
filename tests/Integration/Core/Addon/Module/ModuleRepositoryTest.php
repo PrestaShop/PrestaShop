@@ -86,12 +86,7 @@ class ModuleRepositoryTest extends TestCase
     {
         $all_modules = $this->moduleRepository->getList();
 
-        $filters = new AddonListFilter();
-        $filters
-            ->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
-
-        $installed_modules = $this->moduleRepository->getFilteredList($filters);
+        $installed_modules = $this->moduleRepository->getInstalledModules();
 
         // Each module MUST have its database installed attribute as true
         /** @var Module $module */

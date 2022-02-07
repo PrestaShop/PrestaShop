@@ -16,15 +16,17 @@ services:
       - '@prestashop.adapter.data_provider.module'
       - '@prestashop.adapter.admin.data_provider.module'
       - '@doctrine.cache.provider'
-      - '%modules_dir%/'
+      - '@prestashop.adapter.hook.manager'
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
     tags:
       - { name: kernel.event_subscriber }
 
-
   prestashop.module.manager:
-      class: PrestaShop\PrestaShop\Core\Module\ModuleManager
-      arguments:
-        - '@prestashop.core.admin.module.repository'
-        - '@prestashop.adapter.admin.data_provider.module'
-        - '@translator'
-        - '@event_dispatcher'
+    class: PrestaShop\PrestaShop\Core\Module\ModuleManager
+    arguments:
+      - '@prestashop.core.admin.module.repository'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.admin.data_provider.module'
+      - '@translator'
+      - '@event_dispatcher'
+      - '@prestashop.adapter.hook.manager'
