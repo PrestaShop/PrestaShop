@@ -34,6 +34,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const LicensePlugin = require('webpack-license-plugin');
 
 module.exports = {
   externals: {
@@ -404,5 +405,12 @@ module.exports = {
     new CssoWebpackPlugin({
       forceMediaMerge: true,
     }),
+    new LicensePlugin({ 
+      outputFilename: 'thirdPartyNotice.json',
+      licenseOverrides: {
+        'vazir-font@30.1.0': 'OFL-1.1',
+        'typeahead.js@0.11.1': 'MIT'
+      },
+    })
   ],
 };
