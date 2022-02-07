@@ -26,21 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Store;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Repository;
 
+use Store;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
-use Store;
-use Validate;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
-abstract class AbstractStoreHandler
+/**
+ * Methods to access data source of Store
+ */
+class StoreRepository extends AbstractObjectModelRepository
 {
-    protected function getStore(StoreId $storeId): Store
+    /**
+     * @param StoreId $storeId
+     *
+     * @return Store
+     *
+     * @throws CoreException
+     * @throws StoreNotFoundException
+     */
+    public function get(StoreId $storeId): Store
     {
-        $store = new Store($storeId->getValue());
-        if (!Validate::isLoadedObject($store)) {
-            throw new StoreNotFoundException(sprintf('Store with id "%s" was not found', $storeId->getValue()));
-        }
+        /** @var Store $store */
+        $store = $this->getObjectModel(
+            $storeId->getValue(),
+            Store::class,
+            StoreNotFoundException::class
+        );
 
         return $store;
     }

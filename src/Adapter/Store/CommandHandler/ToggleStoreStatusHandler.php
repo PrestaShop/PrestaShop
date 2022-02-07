@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Store\AbstractStoreHandler;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\ToggleStoreStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
@@ -38,14 +38,21 @@ use PrestaShopException;
 /**
  * Handles command that toggle store status
  */
-class ToggleStoreStatusHandler extends AbstractStoreHandler implements ToggleStoreStatusHandlerInterface
+class ToggleStoreStatusHandler implements ToggleStoreStatusHandlerInterface
 {
+    
+    private $storeRepository;
+    
+    public __construct(StoreRepository $storeRepository): void
+    {
+        $this->storeRepository = $storeRepository;
+    }
     /**
      * {@inheritdoc}
      */
     public function handle(ToggleStoreStatusCommand $command): void
     {
-        $store = $this->getStore($command->getStoreId());
+        $store = $this->storeRepository->get($command->getStoreId());
 
         try {
             if (false === $store->toggleStatus()) {
