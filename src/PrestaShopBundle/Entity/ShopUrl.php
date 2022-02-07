@@ -48,7 +48,7 @@ class ShopUrl
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shop")
+     * @ORM\ManyToOne(targetEntity="PrestaShopBundle\Entity\Shop", inversedBy="shopUrls")
      * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop", nullable=false)
      */
     private $shop;
