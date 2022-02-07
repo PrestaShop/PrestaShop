@@ -213,6 +213,7 @@ class BOBasePage extends CommonPage {
   async quickAccessToPage(page, linkId) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+    await this.waitForPageTitleToLoad(page);
   }
 
   /**
