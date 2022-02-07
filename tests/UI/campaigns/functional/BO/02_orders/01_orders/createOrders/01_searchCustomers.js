@@ -3,15 +3,14 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
-const customersPage = require('@pages/BO/customers');
-const addCustomerPage = require('@pages/BO/customers/add');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -39,6 +38,9 @@ Search for existent customer and check displayed customer card
 Delete created customer
  */
 describe('BO - Orders - Create order : Search for customers from new order page', async () => {
+  // Pre-condition : Create disabled customer
+  createCustomerTest(disabledCustomer, baseContext);
+
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -50,38 +52,6 @@ describe('BO - Orders - Create order : Search for customers from new order page'
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
-  });
-
-  describe('Create disabled customer', async () => {
-    it('should go to \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
-      );
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should go to add new customer page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
-
-      await customersPage.goToAddNewCustomerPage(page);
-      const pageTitle = await addCustomerPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
-    });
-
-    it('should create customer and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
-
-      const textResult = await addCustomerPage.createEditCustomer(page, disabledCustomer);
-      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
-    });
   });
 
   describe('Search for customers', () => {
@@ -140,36 +110,6 @@ describe('BO - Orders - Create order : Search for customers from new order page'
     });
   });
 
-  describe('Delete created Customer', async () => {
-    it('should go to \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
-
-      await addOrderPage.goToSubMenu(
-        page,
-        addOrderPage.customersParentLink,
-        addOrderPage.customersLink,
-      );
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should filter list by email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
-
-      await customersPage.resetFilter(page);
-
-      await customersPage.filterCustomers(page, 'input', 'email', disabledCustomer.email);
-
-      const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(disabledCustomer.email);
-    });
-
-    it('should delete customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
-
-      const textResult = await customersPage.deleteCustomer(page, 1);
-      await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
-    });
-  });
+  // Post-condition : Delete disabled customer
+  deleteCustomerTest(disabledCustomer, baseContext);
 });

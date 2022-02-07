@@ -7,10 +7,10 @@ const helper = require('@utils/helpers');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
-const customersPage = require('@pages/BO/customers');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -77,41 +77,6 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     });
   });
 
-  describe('Delete Customer', async () => {
-    it('should go to \'Customers > Customers\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageToDelete', baseContext);
-
-      await addOrderPage.goToSubMenu(
-        page,
-        addOrderPage.customersParentLink,
-        addOrderPage.customersLink,
-      );
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should filter list by email', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
-
-      await customersPage.resetFilter(page);
-
-      await customersPage.filterCustomers(
-        page,
-        'input',
-        'email',
-        customerData.email,
-      );
-
-      const textEmail = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textEmail).to.contains(customerData.email);
-    });
-
-    it('should delete customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCustomer', baseContext);
-
-      const textResult = await customersPage.deleteCustomer(page, 1);
-      await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
-    });
-  });
+  // Post-condition : Delete created customer
+  deleteCustomerTest(customerData, baseContext);
 });
