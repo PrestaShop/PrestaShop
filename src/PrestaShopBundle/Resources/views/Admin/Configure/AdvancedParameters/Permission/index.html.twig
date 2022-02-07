@@ -41,6 +41,10 @@
   </div>
 {% endblock %}
 
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/permissions' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
+{% endblock %}
+
 {% block javascripts %}
   {{ parent() }}
 

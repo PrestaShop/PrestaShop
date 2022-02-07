@@ -40,7 +40,7 @@
         const classes = [`col-${size}`];
 
         if (left !== 0 && offsetCondition) {
-          classes.push(`offset-sm-${left}`);
+          classes.push(`offset-${left}`);
         }
 
         return classes;

@@ -102,6 +102,7 @@ module.exports = {
     orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
     permission: './js/pages/permission',
+    permissions: './scss/pages/permissions/permissions.scss',
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
     product_edit: './js/pages/product/edit',
