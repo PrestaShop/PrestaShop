@@ -41,7 +41,7 @@ admin_products_combinations_edit_combination:
 
 admin_products_combinations_bulk_edit_combination:
   path: /combinations/{combinationId}/bulk-edit
-  methods: [ POST ]
+  methods: [ PATCH ]
   options:
     expose: true
   defaults:

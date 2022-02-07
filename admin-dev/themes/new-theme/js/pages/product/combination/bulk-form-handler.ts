@@ -41,7 +41,13 @@ export default class BulkFormHandler {
 
   private tabContainer: HTMLDivElement;
 
+  private formModal: ConfirmModal;
+
+  private progressModal: ConfirmModal;
+
   constructor() {
+    this.formModal = this.buildFormModal();
+    this.progressModal = this.buildProgressModal();
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.tabContainer = document.querySelector(CombinationMap.externalCombinationTab) as HTMLDivElement;
@@ -50,23 +56,37 @@ export default class BulkFormHandler {
 
   private init() {
     this.listenSelections();
+    //@todo: probably this should be wrapped into some public method reachable from outside
+    const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    btn.addEventListener('click', () => this.showBulkFormModal());
+  }
+
+  private buildProgressModal() {
+    return new ConfirmModal(
+      {
+        id: 'progress-modal',
+        confirmMessage: 'Updating combinations',
+      },
+      () => null,
+      () => true,
+    );
+  }
+
+  private buildFormModal() {
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
-    const modal = new ConfirmModal(
+
+    return new ConfirmModal(
       {
         id: CombinationMap.bulkCombinationModalId,
         confirmMessage: content,
       },
       () => this.submitForm(),
     );
-
-    //@todo: probably this should be wrapped into some public method reachable from outside
-    const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    btn.addEventListener('click', () => this.showModal(modal));
   }
 
-  private showModal(modal: ConfirmModal) {
-    modal.show();
+  private showBulkFormModal() {
+    this.formModal.show();
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
     const disablingToggles = form.querySelectorAll(ComponentsMap.disablingToggle.wrapper) as NodeListOf<HTMLDivElement>;
 
@@ -116,9 +136,12 @@ export default class BulkFormHandler {
 
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
+    this.formModal.hide();
+    this.progressModal.show();
     this.getSelectedCheckboxes().forEach((checkbox) => {
       this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
     });
+    this.progressModal.hide();
     this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
   }
 
