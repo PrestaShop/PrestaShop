@@ -3,11 +3,20 @@
 
 <head>
   <title> {% block title %}Title{% endblock %} </title>
-  <!--[if !mso]><!-- -->
+  <!--[if !mso]><!-->
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <!--<![endif]-->
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% set direction = 'ltr' %}
+  {% set align_left = 'left' %}
+  {% set align_right = 'right' %}
+  {% if languageIsRTL|default(false) %}
+  {% set direction = 'rtl' %}
+  {% set align_left = 'right' %}
+  {% set align_right = 'left' %}
+  {% endif %}
+  {% block styles %}
   <style type="text/css">
     #outlook a {
       padding: 0;
@@ -42,18 +51,34 @@
     }
   </style>
   <!--[if mso]>
+        <noscript>
         <xml>
         <o:OfficeDocumentSettings>
           <o:AllowPNG/>
           <o:PixelsPerInch>96</o:PixelsPerInch>
         </o:OfficeDocumentSettings>
         </xml>
+        </noscript>
         <![endif]-->
   <!--[if lte mso 11]>
         <style type="text/css">
           .mj-outlook-group-fix { width:100% !important; }
         </style>
         <![endif]-->
+  <style type="text/css">
+    @media only screen and (min-width:480px) {
+      .mj-column-per-100 {
+        width: 100% !important;
+        max-width: 100%;
+      }
+    }
+  </style>
+  <style media="screen and (min-width:480px)">
+    .moz-text-html .mj-column-per-100 {
+      width: 100% !important;
+      max-width: 100%;
+    }
+  </style>
   <style type="text/css">
   </style>
   <style type="text/css">
@@ -89,7 +114,7 @@
     }
 
     .margin {
-      margin-right: 16px
+      margin-{{ align_right }}: 16px
     }
 
     table {
@@ -145,37 +170,42 @@
       }
     }
   </style>
-    {% block styles %}
-    {% endblock %}
+  {% endblock %}
 </head>
 
-<body style="background-color:#eeeeee;">
+<body style="word-spacing:normal;background-color:#eeeeee;">
   <div style="background-color:#eeeeee;">
-    <!--[if mso | IE]>
-    
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td height="40" style="vertical-align:top;height:40px;">
-      
-    <![endif]-->
-    <div style="height:40px;">   </div>
-    <!--[if mso | IE]>
-    
-        </td></tr></table>
-      
-    
-      <table
-         align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook" style="width:604px;" width="604"
-      >
-        <tr>
-          <td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;">
-      <![endif]-->
+    <!--[if mso | IE]><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+    <div style="margin:0px auto;max-width:604px;">
+      <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+        <tbody>
+          <tr>
+            <td style="direction:{{ direction }};font-size:0px;padding:0;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:604px;" ><![endif]-->
+              <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
+                <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
+                  <tbody>
+                    <tr>
+                      <td style="font-size:0px;word-break:break-word;">
+                        <div style="height:40px;line-height:40px;"> </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--[if mso | IE]></td></tr></table><![endif]-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!--[if mso | IE]></td></tr></table><table align="center" border="0" cellpadding="0" cellspacing="0" class="shadow-outlook wrapper-container-outlook" role="presentation" style="width:604px;" width="604" bgcolor="#ffffff" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
     <div class="shadow wrapper-container" style="background:#ffffff;background-color:#ffffff;margin:0px auto;border-radius:4px;max-width:604px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#ffffff;background-color:#ffffff;width:100%;border-radius:4px;">
         <tbody>
           <tr>
-            <td style="direction:ltr;font-size:0px;padding:0 0 30px;text-align:center;">
-              <!--[if mso | IE]>
-                  <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                <![endif]--> 
+            <td style="direction:{{ direction }};font-size:0px;padding:0 0 30px;text-align:center;">
+              <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><![endif]--> 
                   {% block header %}
                       {% include '@MailThemes/modern/components/header.html.twig' %}
                   {% endblock %}
@@ -186,19 +216,13 @@
                   {% block footer_content %}
                   {% endblock %}
 
-              <!--[if mso | IE]>
-                  </table>
-                <![endif]-->
+              <!--[if mso | IE]></table><![endif]-->
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <!--[if mso | IE]>
-          </td>
-        </tr>
-      </table>
-      <![endif]--> 
+    <!--[if mso | IE]></td></tr></table><![endif]--> 
                   {% block footer %}
                       {% include '@MailThemes/modern/components/footer.html.twig' %}
                   {% endblock %}
