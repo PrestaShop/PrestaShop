@@ -24,17 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 
-/**
- * Thrown when cannot toggle store status
- */
-class CannotToggleStoreStatusException extends StoreException
+interface GetStoreForEditingHandlerInterface
 {
     /**
-     * Thrown when cannot toggle single store status.
+     * @param GetStoreForEditing $query
+     *
+     * @return StoreForEditing
      */
-    public const SINGLE_TOGGLE = 10;
+    public function handle(GetStoreForEditing $query): StoreForEditing;
 }

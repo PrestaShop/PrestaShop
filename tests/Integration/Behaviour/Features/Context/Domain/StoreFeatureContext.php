@@ -27,13 +27,15 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit\Framework\Assert as Assert;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
+use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\ToggleStoreStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\StoreId;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
-use Store;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
@@ -59,8 +61,8 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function isStoreToggledWithReference(string $reference, string $status): void
     {
         $isEnabled = $status === 'enabled';
-        $storeQuery = new GetStore(self::DUMMY_STORE_ID);
-        $storeUpdated = $this->getQueryBus()->handle($storeQuery);
-        Assert::assertEquals((bool) $storeUpdated->active, $isEnabled);
+        $storeForEditingQuery = new GetStoreForEditing(self::DUMMY_STORE_ID);
+        $storeUpdated = $this->getQueryBus()->handle($storeForEditingQuery);
+        Assert::assertEquals((bool) $storeUpdated->isActive(), $isEnabled);
     }
 }

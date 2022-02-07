@@ -24,21 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\ToggleStoreStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotToggleStoreStatusException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreForEditingHandlerInterface;
+
 use PrestaShopException;
 
-/**
- * Handles command that toggle store status
- */
-class ToggleStoreStatusHandler implements ToggleStoreStatusHandlerInterface
+class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
 {
     /**
      * @var StoreRepository
@@ -52,15 +49,21 @@ class ToggleStoreStatusHandler implements ToggleStoreStatusHandlerInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws StoreException
      */
-    public function handle(ToggleStoreStatusCommand $command): void
+    public function handle(GetStoreForEditing $query): StoreForEditing
     {
-        $store = $this->storeRepository->get($command->getStoreId());
-        $store->active=!$store->active;
-        $this->storeRepository->partialUpdate(
-            $store,
-            ['active'],
-            CannotToggleStoreStatusException::SINGLE_TOGGLE
-        );
+        try {
+            $store = $this->storeRepository->get($query->getStoreId());
+
+            if (0 >= $store->id) {
+                throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
+            }
+        } catch (PrestaShopException $e) {
+            throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
+        }
+
+        return new StoreForEditing($store->id, $store->active);
     }
 }

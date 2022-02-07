@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\Repository;
 
 use Store;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -57,5 +58,20 @@ class StoreRepository extends AbstractObjectModelRepository
         );
 
         return $store;
+    }
+
+    /**
+     * @param Store $store
+     * @param array $propertiesToUpdate
+     * @param int $errorCode
+     */
+    public function partialUpdate(Store $store, array $propertiesToUpdate, int $errorCode): void
+    {
+        $this->partiallyUpdateObjectModel(
+            $store,
+            $propertiesToUpdate,
+            CannotUpdateStoreException::class,
+            $errorCode
+        );
     }
 }

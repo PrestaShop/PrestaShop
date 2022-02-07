@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\Query;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
-class GetStore
+class GetStoreForEditing
 {
     /** @var StoreId */
     private $storeId;

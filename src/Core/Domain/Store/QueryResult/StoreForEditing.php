@@ -24,35 +24,50 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\Store\QueryHandler;
+declare(strict_types=1);
 
-use Store;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
-use PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler\GetStoreHandlerInterface;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryResult;
 
-use PrestaShopException;
-
-class GetStoreHandler implements GetStoreHandlerInterface
+/**
+ * Store information for editing
+ */
+class StoreForEditing
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws StoreException
+     * @var int
      */
-    public function handle(GetStore $query): Store
+    private $storeId;
+
+    /**
+     * @var bool
+     */
+    private $active;
+
+    /**
+     * @param int $storeId
+     * @param bool $isActive
+     */
+    public function __construct(
+        int $storeId,
+        bool $isActive
+    ) {
+        $this->storeId = $storeId;
+        $this->active = $isActive;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreId(): int
     {
-        try {
-            $store = new Store($query->getStoreId()->getValue());
+        return $this->productId;
+    }
 
-            if (0 >= $store->id) {
-                throw new StoreNotFoundException(sprintf('Store object with id %d was not found', $query->getStoreId()->getValue()));
-            }
-        } catch (PrestaShopException $e) {
-            throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
-        }
-
-        return $store;
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
     }
 }

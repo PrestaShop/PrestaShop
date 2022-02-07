@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStore;
-use Store;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
-interface GetStoreHandlerInterface
+/**
+ * Thrown when cannot toggle store status
+ */
+class CannotUpdateStoreException extends StoreException
 {
-    /**
-     * @param GetStore $query
-     *
-     * @return Store
-     */
-    public function handle(GetStore $query): Store;
 }
