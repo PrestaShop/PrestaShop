@@ -69,3 +69,23 @@ admin_order_states_toggle_send_email:
       id_order_state: orderStateId
   requirements:
     orderStateId: \d+
+
+admin_order_states_delete:
+  path: /{orderStateId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::deleteAction
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:deleteaddress
+    _legacy_parameters:
+      id_address: addressId
+  requirements:
+    addressId: \d+
+
+admin_order_states_delete_bulk:
+  path: /delete-bulk
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderStateController::deleteBulkAction
+    _legacy_controller: AdminAddresses
+    _legacy_link: AdminAddresses:submitBulkdeleteaddress

@@ -27,6 +27,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
@@ -34,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
@@ -42,12 +45,16 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class OrderStatesGridDefinitionFactory defines order_states grid structure.
  */
 final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     public const GRID_ID = 'order_states';
 
     /**
@@ -72,6 +79,12 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
+            ->add(
+                (new BulkActionColumn('order_states_bulk'))
+                    ->setOptions([
+                        'bulk_field' => 'id_order_state',
+                    ])
+            )
             ->add(
                 (new DataColumn('id_order_state'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -137,6 +150,14 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                                 'route_param_field' => 'id_order_state',
                                 'clickable_row' => true,
                             ])
+                    )
+                    ->add(
+                        $this->buildDeleteAction(
+                            'admin_order_states_delete',
+                            'orderStateId',
+                            'id_order_state',
+                            Request::METHOD_DELETE
+                        )
                     ),
             ])
             );
@@ -227,6 +248,17 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                 (new SimpleGridAction('common_export_sql_manager'))
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions(): BulkActionCollectionInterface
+    {
+        return (new BulkActionCollection())
+            ->add(
+                $this->buildBulkDeleteAction('admin_order_states_delete_bulk')
             );
     }
 }
