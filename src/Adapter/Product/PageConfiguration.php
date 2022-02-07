@@ -55,7 +55,7 @@ class PageConfiguration extends AbstractMultistoreConfiguration
 
         return [
             'display_quantities' => (bool) $this->configuration->get('PS_DISPLAY_QTIES', false, $shopConstraint),
-            'display_last_quantities' => (int) $this->configuration->get('PS_LAST_QTIES', null, $shopConstraint),
+            'display_last_quantities' => (int) $this->configuration->get('PS_LAST_QTIES', 0, $shopConstraint),
             'display_unavailable_attributes' => (bool) $this->configuration->get('PS_DISP_UNAVAILABLE_ATTR', false, $shopConstraint),
             'allow_add_variant_to_cart_from_listing' => (bool) $this->configuration->get('PS_ATTRIBUTE_CATEGORY_DISPLAY', false, $shopConstraint),
             'attribute_anchor_separator' => $this->configuration->get('PS_ATTRIBUTE_ANCHOR_SEPARATOR', null, $shopConstraint),
