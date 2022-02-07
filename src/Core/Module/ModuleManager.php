@@ -32,6 +32,7 @@ use Exception;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface as AddonModuleInterface;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -40,11 +41,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleManager implements ModuleManagerInterface
 {
-    /** @var HookManager */
-    private $hookManager;
-
     /** @var ModuleRepository */
     private $moduleRepository;
+
+    /** @var ModuleDataProvider */
+    private $moduleDataProvider;
 
     /** @var AdminModuleDataProvider */
     private $adminModuleDataProvider;
@@ -55,21 +56,27 @@ class ModuleManager implements ModuleManagerInterface
     /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
+    /** @var HookManager */
+    private $hookManager;
+
     /** @var Filesystem */
     private $filesystem;
 
     public function __construct(
         ModuleRepository $moduleRepository,
+        ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         TranslatorInterface $translator,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        HookManager $hookManager
     ) {
-        $this->hookManager = new HookManager();
         $this->filesystem = new Filesystem();
         $this->moduleRepository = $moduleRepository;
+        $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->hookManager = $hookManager;
     }
 
     /**
@@ -105,7 +112,7 @@ class ModuleManager implements ModuleManagerInterface
             return false;
         }
 
-        if (!$this->moduleRepository->isOnDisk($name)) {
+        if (!$this->moduleDataProvider->isOnDisk($name)) {
             return false;
         }
 
@@ -282,31 +289,15 @@ class ModuleManager implements ModuleManagerInterface
 
     public function isInstalled(string $name): bool
     {
-        return true;
+        return $this->moduleDataProvider->isInstalled($name);
     }
 
     public function isEnabled(string $name): bool
     {
-        return true;
+        return $this->moduleDataProvider->isEnabled($name);
     }
 
-    private function assertIsInstalled(string $name)
-    {
-        if (!$this->isInstalled($name)) {
-            throw new Exception($this->translator->trans(
-                'The module %module% must be installed first',
-                ['%module%' => $name],
-                'Admin.Modules.Notification'
-            ));
-        }
-    }
-
-    private function dispatch(string $event, AddonModuleInterface $module): void
-    {
-        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
-    }
-
-    private function upgradeMigration(string $name): bool
+    public function upgradeMigration(string $name): bool
     {
         $module_list = LegacyModule::getModulesOnDisk();
 
@@ -328,5 +319,21 @@ class ModuleManager implements ModuleManagerInterface
         }
 
         return false;
+    }
+
+    private function assertIsInstalled(string $name)
+    {
+        if (!$this->isInstalled($name)) {
+            throw new Exception($this->translator->trans(
+                'The module %module% must be installed first',
+                ['%module%' => $name],
+                'Admin.Modules.Notification'
+            ));
+        }
+    }
+
+    private function dispatch(string $event, AddonModuleInterface $module): void
+    {
+        $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
     }
 }
