@@ -27,8 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\BulkDeleteOrderStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\DeleteOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Command\EditOrderStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\DuplicateOrderStateNameException;
 use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\MissingOrderStateRequiredFieldsException;
@@ -273,6 +277,62 @@ class OrderStateController extends FrameworkBundleAdminController
     }
 
     /**
+     * Deletes order return state
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
+     *
+     * @param int $orderReturnStateId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteOrderReturnStateAction(Request $request, int $orderReturnStateId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteOrderReturnStateCommand($orderReturnStateId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (OrderReturnStateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $request->query->has('redirectUrl') ?
+            $this->redirect($request->query->get('redirectUrl')) :
+            $this->redirectToRoute('admin_order_states');
+    }
+
+    /**
+     * Delete order return states in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_states",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteOrderReturnStateBulkAction(Request $request): RedirectResponse
+    {
+        $orderReturnStateIds = $this->getBulkOrderReturnStatesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteOrderReturnStateCommand($orderReturnStateIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (OrderReturnStateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_order_states');
+    }
+
+    /**
      * Toggle order state delivery option.
      *
      * @AdminSecurity(
@@ -375,6 +435,98 @@ class OrderStateController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_order_states');
+    }
+
+    /**
+     * Deletes order state
+     *
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_order_states")
+     *
+     * @param int $orderStateId
+     *
+     * @return RedirectResponse
+     */
+    public function deleteAction(Request $request, int $orderStateId): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteOrderStateCommand($orderStateId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (OrderStateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $request->query->has('redirectUrl') ?
+            $this->redirect($request->query->get('redirectUrl')) :
+            $this->redirectToRoute('admin_order_states');
+    }
+
+    /**
+     * Delete order states in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_order_states",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function deleteBulkAction(Request $request): RedirectResponse
+    {
+        $orderStateIds = $this->getBulkOrderStatesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteOrderStateCommand($orderStateIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (OrderStateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_order_states');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkOrderStatesFromRequest(Request $request): array
+    {
+        $orderStateIds = $request->request->get('order_states_order_states_bulk');
+
+        if (!is_array($orderStateIds)) {
+            return [];
+        }
+
+        return array_map(static function (string $orderStateId) {
+            return (int) $orderStateId;
+        }, $orderStateIds);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkOrderReturnStatesFromRequest(Request $request): array
+    {
+        $orderReturnStateIds = $request->request->get('order_return_states_order_return_states_bulk ');
+
+        if (!is_array($orderReturnStateIds)) {
+            return [];
+        }
+
+        return array_map(static function (string $orderReturnStateId) {
+            return (int) $orderReturnStateId;
+        }, $orderReturnStateIds);
     }
 
     /**
