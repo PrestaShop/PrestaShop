@@ -78,7 +78,12 @@ final class OrderReturnStatesQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $searchQueryBuilder = $this->getOrderReturnStatesQueryBuilder($searchCriteria)
-            ->select('ors.id_order_return_state, orsl.name, ors.color');
+            ->select(
+                'ors.id_order_return_state',
+                'orsl.name',
+                'ors.color',
+                'IF(ors.id_order_return_state IN (1,2,3,4,5),1,0) AS unremovable'
+            );
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);
 

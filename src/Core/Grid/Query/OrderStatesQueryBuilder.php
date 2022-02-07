@@ -78,7 +78,16 @@ final class OrderStatesQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $searchQueryBuilder = $this->getOrderStatesQueryBuilder($searchCriteria)
-            ->select('os.id_order_state, osl.name, os.send_email, os.delivery, os.invoice, osl.template, os.color');
+            ->select(
+                'os.id_order_state',
+                'osl.name',
+                'os.send_email',
+                'os.delivery',
+                'os.invoice',
+                'osl.template',
+                'os.color',
+                'os.unremovable'
+            );
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);
 
