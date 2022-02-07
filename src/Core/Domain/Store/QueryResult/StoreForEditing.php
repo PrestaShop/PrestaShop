@@ -60,7 +60,7 @@ class StoreForEditing
      */
     public function getStoreId(): int
     {
-        return $this->productId;
+        return $this->storeId;
     }
 
     /**
