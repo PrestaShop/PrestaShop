@@ -33,8 +33,11 @@ const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
+<<<<<<< HEAD
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const LicensePlugin = require('webpack-license-plugin');
+=======
+>>>>>>> Run only on build
 
 module.exports = {
   externals: {
