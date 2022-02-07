@@ -2641,7 +2641,7 @@ class AdminControllerCore extends Controller
     {
         if ($isNewTheme) {
             if ($this->context->language->is_rtl) {
-              $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/rtl.css', 'all', 1);
+                $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/rtl.css', 'all', 1);
             }
 
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
@@ -2654,7 +2654,7 @@ class AdminControllerCore extends Controller
             $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
             if ($this->context->language->is_rtl) {
-              $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css', 'all', 0);
+                $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css', 'all', 0);
             }
 
             //Bootstrap
