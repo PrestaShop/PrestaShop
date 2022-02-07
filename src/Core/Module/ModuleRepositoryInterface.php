@@ -53,6 +53,4 @@ interface ModuleRepositoryInterface
     public function getModule(string $moduleName): AddonsModuleInteface;
 
     public function getModulePath(string $moduleName): ?string;
-
-    public function isOnDisk(string $moduleName): bool;
 }
