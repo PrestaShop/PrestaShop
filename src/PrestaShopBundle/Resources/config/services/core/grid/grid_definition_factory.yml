@@ -253,11 +253,15 @@ services:
   prestashop.core.grid.definition.factory.order_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderStatesGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_states'
     public: true
 
   prestashop.core.grid.definition.factory.order_return_states:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\OrderReturnStatesGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.grid.action.row.accessibility_checker.delete_order_return_states'
     public: true
 
   prestashop.core.grid.definition.factory.outstanding:

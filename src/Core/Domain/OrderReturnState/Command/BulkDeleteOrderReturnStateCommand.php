@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +22,47 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% if column.options.disabled_field is empty or not record[column.options.disabled_field] %}
-<div class="md-checkbox">
-  <label>
-    <input type="checkbox"
-           title="{{ column.name }}"
-           class="js-bulk-action-checkbox"
-           name="{{ grid.id~'_'~column.id }}[]"
-           value="{{ record[column.options.bulk_field] }}"
-    >
-    <i class="md-checkbox-control"></i>
-  </label>
-</div>
-{% endif %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
+
+/**
+ * Deletes order return statuses in bulk action
+ */
+class BulkDeleteOrderReturnStateCommand
+{
+    /**
+     * @var OrderReturnStateId[]
+     */
+    private $orderReturnStateIds;
+
+    /**
+     * @param int[] $orderReturnStateIds
+     */
+    public function __construct(array $orderReturnStateIds)
+    {
+        $this->setOrderReturnStateIds($orderReturnStateIds);
+    }
+
+    /**
+     * @return OrderReturnStateId[]
+     */
+    public function getOrderReturnStateIds(): array
+    {
+        return $this->orderReturnStateIds;
+    }
+
+    /**
+     * @param int[] $orderReturnStateIds
+     */
+    private function setOrderReturnStateIds(array $orderReturnStateIds): void
+    {
+        foreach ($orderReturnStateIds as $orderReturnStateId) {
+            $this->orderReturnStateIds[] = new OrderReturnStateId($orderReturnStateId);
+        }
+    }
+}
