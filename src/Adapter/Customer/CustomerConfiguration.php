@@ -56,7 +56,7 @@ class CustomerConfiguration extends AbstractMultistoreConfiguration
         return [
             'redisplay_cart_at_login' => (bool) $this->configuration->get('PS_CART_FOLLOWING', false, $shopConstraint),
             'send_email_after_registration' => (bool) $this->configuration->get('PS_CUSTOMER_CREATION_EMAIL', false, $shopConstraint),
-            'password_reset_delay' => (int) $this->configuration->get('PS_PASSWD_TIME_FRONT', null, $shopConstraint),
+            'password_reset_delay' => (int) $this->configuration->get('PS_PASSWD_TIME_FRONT', 0, $shopConstraint),
             'enable_b2b_mode' => (bool) $this->configuration->get('PS_B2B_ENABLE', false, $shopConstraint),
             'ask_for_birthday' => (bool) $this->configuration->get('PS_CUSTOMER_BIRTHDATE', false, $shopConstraint),
             'enable_offers' => (bool) $this->configuration->get('PS_CUSTOMER_OPTIN', false, $shopConstraint),
