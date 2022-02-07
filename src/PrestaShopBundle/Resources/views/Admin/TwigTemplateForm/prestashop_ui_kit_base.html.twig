@@ -561,7 +561,8 @@
 
 {% block switch_widget %}
   {% apply spaceless %}
-  <div class="input-group">
+  {% set rowAttributes  = row_attr|default({})%}
+  <div class="input-group {{ rowAttributes.class|default('') }}" {% for key, rowAttr in rowAttributes %} {% if key != 'class' %}{{ key }}="{{ rowAttr }}"{% endif %}{% endfor %}>
     <span class="ps-switch">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
