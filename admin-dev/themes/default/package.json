@@ -51,6 +51,7 @@
   "dependencies": {
     "@openfonts/ubuntu-condensed_latin": "^1.44.2",
     "open-sans-fonts": "^1.6.2",
-    "perfect-scrollbar": "^1.4.0"
+    "perfect-scrollbar": "^1.4.0",
+    "vazir-font": "^30.1.0"
   }
 }

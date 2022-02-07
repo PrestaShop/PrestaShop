@@ -123,6 +123,7 @@ module.exports = {
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     theme: './scss/theme.scss',
+    rtl: './scss/rtl.scss',
     themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',

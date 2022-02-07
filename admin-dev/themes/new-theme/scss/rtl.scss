@@ -1,0 +1,33 @@
+@font-face {
+  font-family: Vazir;
+  src: url('~vazir-font/dist/Vazir-Regular.eot');
+  src: url('~vazir-font/dist/Vazir-Regular.eot?#iefix') format('embedded-opentype'),
+       url('~vazir-font/dist/Vazir-Regular.woff2') format('woff2'),
+       url('~vazir-font/dist/Vazir-Regular.woff') format('woff'),
+       url('~vazir-font/dist/Vazir-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: Vazir;
+  src: url('~vazir-font/dist/Vazir-Bold.eot');
+  src: url('~vazir-font/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
+       url('~vazir-font/dist/Vazir-Bold.woff2') format('woff2'),
+       url('~vazir-font/dist/Vazir-Bold.woff') format('woff'),
+       url('~vazir-font/dist/Vazir-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Vazir;
+  src: url('~vazir-font/dist/Vazir-Light.eot');
+  src: url('~vazir-font/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
+       url('~vazir-font/dist/Vazir-Light.woff2') format('woff2'),
+       url('~vazir-font/dist/Vazir-Light.woff') format('woff'),
+       url('~vazir-font/dist/Vazir-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
