@@ -45,11 +45,11 @@ class BulkCombinationFormDataFormatter
             ],
         ];
 
-        if (isset($formData['disabling_toggle_reference'])) {
+        if (isset($formData['disabling_toggle_reference']) && $formData['disabling_toggle_reference']) {
             $formattedData['references']['reference'] = $formData['reference'] ?? '';
         }
 
-        if (isset($formData['disabling_toggle_price_tax_excluded'])) {
+        if (isset($formData['disabling_toggle_price_tax_excluded']) && $formData['disabling_toggle_reference']) {
             $formattedData['price_impact']['price_tax_excluded'] = $formData['price_tax_excluded'] ?? 0;
         }
 
