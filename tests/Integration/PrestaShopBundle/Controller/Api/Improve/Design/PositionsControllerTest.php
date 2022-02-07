@@ -109,8 +109,8 @@ class PositionsControllerTest extends TestCase
             $moduleManager->install($module);
         }
 
-        $this->firstModuleId = $moduleRepository->getModule('ps_banner');
-        $this->secondModuleId = $moduleRepository->getModule('bankwire');
+        $this->firstModuleId = $moduleRepository->getModule('ps_banner')->database->get('id');
+        $this->secondModuleId = $moduleRepository->getModule('bankwire')->database->get('id');
         $this->hookId = Hook::getIdByName('displayHome');
 
         $this->client = self::createClient();
