@@ -56,16 +56,17 @@ export default class BulkFormHandler {
 
   private init() {
     this.listenSelections();
-    //@todo: probably this should be wrapped into some public method reachable from outside
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     btn.addEventListener('click', () => this.showBulkFormModal());
   }
 
   private buildProgressModal() {
+    //@todo: Replace with real progress modal introduced in #26004.
     return new ConfirmModal(
       {
         id: 'progress-modal',
         confirmMessage: 'Updating combinations',
+        closable: true,
       },
       () => null,
       () => true,
@@ -136,12 +137,11 @@ export default class BulkFormHandler {
 
   private submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
-    this.formModal.hide();
+    //todo: progressModal.show() doesnt work. It only seems to be rendered after everything is done (when list is refreshed)
     this.progressModal.show();
     this.getSelectedCheckboxes().forEach((checkbox) => {
       this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
     });
-    this.progressModal.hide();
     this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
   }
 
