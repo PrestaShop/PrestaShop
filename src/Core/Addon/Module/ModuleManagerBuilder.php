@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use Context;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -106,9 +107,11 @@ class ModuleManagerBuilder
             } else {
                 self::$moduleManager = new ModuleManager(
                     $this->buildRepository(),
+                    self::$moduleDataProvider,
                     self::$adminModuleDataProvider,
                     self::$translator,
-                    new NullDispatcher()
+                    new NullDispatcher(),
+                    new HookManager()
                 );
             }
         }
@@ -132,6 +135,7 @@ class ModuleManagerBuilder
                     self::$moduleDataProvider,
                     self::$adminModuleDataProvider,
                     self::$cacheProvider,
+                    new HookManager(),
                     _PS_MODULE_DIR_
                 );
             }
