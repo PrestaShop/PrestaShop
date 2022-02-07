@@ -25,9 +25,11 @@
 
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
+import ComponentsMap from '@components/components-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
+import DisablingToggler from '@components/form/disabling-toggler';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -60,7 +62,22 @@ export default class BulkFormHandler {
 
     //@todo: probably this should be wrapped into some public method reachable from outside
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    btn.addEventListener('click', () => modal.show());
+    btn.addEventListener('click', () => this.showModal(modal));
+  }
+
+  private showModal(modal: ConfirmModal) {
+    modal.show();
+    const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
+    const disablingToggles = form.querySelectorAll(ComponentsMap.disablingToggle.wrapper) as NodeListOf<HTMLDivElement>;
+
+    disablingToggles.forEach((element) => {
+      const {disablingToggleName} = element.dataset;
+      new DisablingToggler(
+        `${CombinationMap.bulkCombinationForm} [data-disabling-toggle-name="${disablingToggleName}"] input`,
+        '0',
+        `${CombinationMap.bulkCombinationForm} [data-toggled-by="${disablingToggleName}"]`,
+      );
+    });
   }
 
   private listenSelections() {

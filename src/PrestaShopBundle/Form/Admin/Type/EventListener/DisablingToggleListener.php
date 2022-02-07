@@ -64,6 +64,10 @@ class DisablingToggleListener implements EventSubscriberInterface
                 'container_class' => 'disabling-toggle',
                 'data-value-type' => 'boolean',
             ],
+            'row_attr' => [
+                'class' => 'ps-disabling-toggle',
+                'data-disabling-toggle-name' => $fieldName,
+            ],
         ]);
 
         $shouldBeDisabled = !$parent->get($fieldName)->getData();
@@ -74,6 +78,7 @@ class DisablingToggleListener implements EventSubscriberInterface
             'attr' => [
                 'disabled' => $shouldBeDisabled,
                 'class' => $shouldBeDisabled ? 'disabled' : '',
+                'data-toggled-by' => $fieldName,
             ],
         ];
 
