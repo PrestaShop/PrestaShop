@@ -68,14 +68,15 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
         CacheProvider $cacheProvider,
+        HookManager $hookManager,
         string $modulePath
     ) {
         $this->finder = new Finder();
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
+        $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
-        $this->hookManager = new HookManager();
     }
 
     public static function getSubscribedEvents()
@@ -117,7 +118,7 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
             $modules[] = $this->getModule($moduleName);
         }
 
-        return $this->getModules($modules);
+        return $this->mergeWithModulesFromHook($modules);
     }
 
     public function getInstalledModules(): array
@@ -158,8 +159,9 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
             }
         }
 
-        $attributes = $this->getModuleAttributes($moduleName);
-        $disk = $this->getModuleDiskAttributes($moduleName, $filemtime);
+        $isValid = $filemtime > 0 && $this->moduleDataProvider->isModuleMainClassValid($moduleName);
+        $attributes = $this->getModuleAttributes($moduleName, $isValid);
+        $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
         $this->cacheProvider->save($moduleName, new Module($attributes, $disk, $database));
@@ -179,45 +181,38 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         return $path;
     }
 
-    public function isOnDisk(string $moduleName): bool
-    {
-        return $this->moduleDataProvider->isOnDisk($moduleName);
-    }
-
     public function generateActionUrls(ModuleCollection $collection): ModuleCollection
     {
         return $this->adminModuleDataProvider->generateActionUrls($collection);
     }
 
-    private function getModuleAttributes(string $moduleName): array
+    private function getModuleAttributes(string $moduleName, bool $isValid): array
     {
-        $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
-        $attributes = [
-            'name' => $moduleName,
-            'parent_class' => get_parent_class($moduleName),
-            'is_paymentModule' => is_subclass_of($moduleName, 'PaymentModule'),
-            'is_configurable' => method_exists($tmpModule, 'getContent'),
-        ];
-
-        foreach (self::MODULE_ATTRIBUTES as $attribute) {
-            if (isset($tmpModule->{$attribute})) {
-                $attributes[$attribute] = $tmpModule->{$attribute};
+        $attributes = ['name' => $moduleName];
+        if ($isValid) {
+            $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            foreach (self::MODULE_ATTRIBUTES as $attribute) {
+                if (isset($tmpModule->{$attribute})) {
+                    $attributes[$attribute] = $tmpModule->{$attribute};
+                }
             }
+            $attributes['parent_class'] = get_parent_class($tmpModule);
+            $attributes['is_paymentModule'] = is_subclass_of($tmpModule, 'PaymentModule');
+            $attributes['is_configurable'] = method_exists($tmpModule, 'getContent');
         }
 
         return $attributes;
     }
 
-    private function getModuleDiskAttributes(string $moduleName, int $filemtime): array
+    private function getModuleDiskAttributes(string $moduleName, bool $isValid, int $filemtime): array
     {
         $path = $this->modulePath . $moduleName;
-        $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
 
         return [
             'filemtime' => $filemtime,
-            'is_present' => $this->isOnDisk($moduleName),
-            'is_valid' => $this->moduleDataProvider->isModuleMainClassValid($moduleName),
-            'version' => $tmpModule->version,
+            'is_present' => $this->moduleDataProvider->isOnDisk($moduleName),
+            'is_valid' => $isValid,
+            'version' => $isValid ? ModuleLegacy::getInstanceByName($moduleName)->version : null,
             'path' => $path,
         ];
     }
@@ -227,7 +222,7 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         return $this->moduleDataProvider->findByName($moduleName);
     }
 
-    private function getModules(array $modules): array
+    private function mergeWithModulesFromHook(array $modules): array
     {
         $externalModules = array_values($this->hookManager->exec('actionListModules', [], null, true));
         if (empty(reset($externalModules))) {
