@@ -29,22 +29,31 @@ import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sq
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import SortingExtension from '@components/grid/extension/sorting-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 
 const {$} = window;
 
 $(() => {
   const orderStatesGrid = new Grid('order_states');
 
-  orderStatesGrid.addExtension(new ReloadListActionExtension());
-  orderStatesGrid.addExtension(new ExportToSqlManagerExtension());
   orderStatesGrid.addExtension(new FiltersResetExtension());
   orderStatesGrid.addExtension(new SortingExtension());
+  orderStatesGrid.addExtension(new ExportToSqlManagerExtension());
+  orderStatesGrid.addExtension(new ReloadListActionExtension());
+  orderStatesGrid.addExtension(new BulkActionCheckboxExtension());
+  orderStatesGrid.addExtension(new SubmitBulkActionExtension());
+  orderStatesGrid.addExtension(new SubmitRowActionExtension());
   orderStatesGrid.addExtension(new ColumnTogglingExtension());
 
   const orderReturnStatusesGrid = new Grid('order_return_states');
 
-  orderReturnStatusesGrid.addExtension(new ReloadListActionExtension());
-  orderReturnStatusesGrid.addExtension(new ExportToSqlManagerExtension());
   orderReturnStatusesGrid.addExtension(new FiltersResetExtension());
   orderReturnStatusesGrid.addExtension(new SortingExtension());
+  orderReturnStatusesGrid.addExtension(new ExportToSqlManagerExtension());
+  orderReturnStatusesGrid.addExtension(new ReloadListActionExtension());
+  orderReturnStatusesGrid.addExtension(new BulkActionCheckboxExtension());
+  orderReturnStatusesGrid.addExtension(new SubmitBulkActionExtension());
+  orderReturnStatusesGrid.addExtension(new SubmitRowActionExtension());
 });
