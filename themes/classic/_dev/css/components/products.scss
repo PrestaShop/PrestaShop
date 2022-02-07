@@ -450,6 +450,11 @@
     width: 100%;
     max-width: 9.375rem;
     margin: 0 0 0 auto;
+
+    @include media-breakpoint-down(md) {
+      max-width: 70%;
+      margin: 0 auto 1rem;
+    }
   }
 
   .modal-title {
@@ -481,7 +486,9 @@
   }
 
   .cart-content {
-    padding-left: $extra-large-space;
+    @include media-breakpoint-up(md) {
+      padding-left: $extra-large-space;
+    }
 
     .btn {
       margin-bottom: $small-space;
@@ -517,6 +524,7 @@
 
     .cart-content-btn {
       display: inline-flex;
+      justify-content: space-between;
 
       button {
         margin-right: 0.9rem;
