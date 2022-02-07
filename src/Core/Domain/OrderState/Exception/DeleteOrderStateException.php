@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +22,24 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% if column.options.disabled_field is empty or not record[column.options.disabled_field] %}
-<div class="md-checkbox">
-  <label>
-    <input type="checkbox"
-           title="{{ column.name }}"
-           class="js-bulk-action-checkbox"
-           name="{{ grid.id~'_'~column.id }}[]"
-           value="{{ record[column.options.bulk_field] }}"
-    >
-    <i class="md-checkbox-control"></i>
-  </label>
-</div>
-{% endif %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\OrderState\Exception;
+
+/**
+ * Is thrown when order state cannot be deleted
+ */
+class DeleteOrderStateException extends OrderStateException
+{
+    /**
+     * When fails to delete single order state
+     */
+    public const FAILED_DELETE = 10;
+
+    /**
+     * When fails to delete order states in bulk action
+     */
+    public const FAILED_BULK_DELETE = 20;
+}
