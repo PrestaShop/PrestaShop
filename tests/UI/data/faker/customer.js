@@ -23,7 +23,7 @@ class CustomerData {
     this.firstName = customerToCreate.firstName || faker.name.firstName();
 
     /** @type {string} Lastname of the customer */
-    this.lastName = customerToCreate.lastName || faker.name.lastName();
+    this.lastName = customerToCreate.lastName || `guest${faker.name.lastName()}`;
 
     /** @type {string} Email for the customer account */
     this.email = customerToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
