@@ -251,7 +251,7 @@ export default class CombinationsManager {
         }
       );
     });
-    //@todo: after page refresh, bulk modal button stays active (I should re-init the disabler somehow)
+    
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 

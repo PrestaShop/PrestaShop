@@ -48,7 +48,7 @@ export default class BulkFormHandler {
     this.init();
   }
 
-  private init() {
+  private init(): void {
     this.listenSelections();
     this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkAvailability());
 
@@ -56,8 +56,8 @@ export default class BulkFormHandler {
     bulkFormBtn.addEventListener('click', () => this.showFormModal());
   }
 
-  private showProgressModal() {
-    //@todo: Replace with new progress modal introduced in #26004.
+  private showProgressModal(): ConfirmModal {
+    //@todo: Replace with new progress modal when introduced in #26004.
     const modal = new ConfirmModal(
       {
         id: CombinationMap.bulkProgressModalId,
@@ -72,7 +72,7 @@ export default class BulkFormHandler {
     return modal;
   }
 
-  private showFormModal() {
+  private showFormModal(): ConfirmModal {
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
 
@@ -96,9 +96,12 @@ export default class BulkFormHandler {
         `${CombinationMap.bulkCombinationForm} [data-toggled-by="${disablingToggleName}"]`,
       );
     });
+
+    return modal;
   }
 
   private listenSelections(): void {
+    // delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
     this.tabContainer.addEventListener('change', (e) => {
       if (!(e.target instanceof HTMLInputElement)) {
         return;
@@ -121,7 +124,7 @@ export default class BulkFormHandler {
     });
   }
 
-  private toggleBulkAvailability() {
+  private toggleBulkAvailability(): void {
     const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
     const btn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     const enable = (selectAllCheckbox instanceof HTMLInputElement && selectAllCheckbox.checked)
@@ -130,7 +133,8 @@ export default class BulkFormHandler {
     btn.toggleAttribute('disabled', !enable);
   }
 
-  private async submitForm() {
+  private async submitForm(): Promise<void> {
+    //@todo: form errors should be handled in dedicated PR
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
     const progressModal = this.showProgressModal();
 
@@ -144,9 +148,9 @@ export default class BulkFormHandler {
       // eslint-disable-next-line no-await-in-loop
       await this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
 
+      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
       const progressContent = progressModalElement?.querySelector('.progress-increment') as HTMLParagraphElement;
       progressContent.innerHTML = String(progress);
-      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged
       progress += 1;
     }
 
