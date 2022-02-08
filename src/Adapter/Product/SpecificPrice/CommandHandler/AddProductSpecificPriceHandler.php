@@ -88,7 +88,7 @@ class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerIn
         $specificPrice->id_shop = $command->getShopId()->getValue();
         $specificPrice->id_product_attribute = $command->getCombinationId()->getValue();
         $specificPrice->id_currency = $command->getCurrencyId()->getValue();
-        $specificPrice->id_country = $command->getCountryId();
+        $specificPrice->id_country = $command->getCountryId()->getValue();
         $specificPrice->id_group = $command->getGroupId()->getValue();
         $specificPrice->id_customer = $command->getCustomerId();
         $specificPrice->from = $command->getDateTimeFrom()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT);

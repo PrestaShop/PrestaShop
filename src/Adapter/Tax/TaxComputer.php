@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 class TaxComputer
@@ -89,7 +90,7 @@ class TaxComputer
      *
      * @return DecimalNumber
      */
-    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryIdInterface $countryId): DecimalNumber
     {
         $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails($taxRulesGroupId);
         if (!empty($taxRulesGroup['rates'])) {
