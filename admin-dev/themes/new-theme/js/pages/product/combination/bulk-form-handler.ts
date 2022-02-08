@@ -49,6 +49,7 @@ export default class BulkFormHandler {
   }
 
   private init() {
+    this.toggleBulkAvailability();
     this.listenSelections();
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     btn.addEventListener('click', () => this.showFormModal());
@@ -102,16 +103,10 @@ export default class BulkFormHandler {
         return;
       }
 
-      const input = e.target as HTMLInputElement;
-
-      if (input.classList.contains(CombinationMap.tableRow.isSelectedCombinationInputClass)) {
-        this.toggleBulkAvailability(this.getSelectedCheckboxes().length === 0);
+      if (e.target.id === CombinationMap.bulkSelectAllInPageId) {
+        this.checkAll(e.target.checked);
       }
-
-      if (input.id === CombinationMap.bulkSelectAllInPageId) {
-        this.checkAll(input.checked);
-        this.toggleBulkAvailability(!input.checked);
-      }
+      this.toggleBulkAvailability();
     });
   }
 
@@ -125,9 +120,13 @@ export default class BulkFormHandler {
     });
   }
 
-  private toggleBulkAvailability(disable: boolean) {
+  private toggleBulkAvailability() {
+    const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
     const btn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    btn.toggleAttribute('disabled', disable);
+    const enable = (selectAllCheckbox instanceof HTMLInputElement && selectAllCheckbox.checked)
+      || this.getSelectedCheckboxes().length !== 0;
+
+    btn.toggleAttribute('disabled', !enable);
   }
 
   private async submitForm() {
