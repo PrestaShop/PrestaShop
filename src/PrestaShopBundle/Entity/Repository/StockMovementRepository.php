@@ -202,7 +202,7 @@ class StockMovementRepository extends StockManagementRepository
     {
         foreach ($rows as &$row) {
             if ($row['id_order']) {
-                $row['order_link'] = $this->contextAdapter->getContext()->link->getAdminLink(
+                $row['order_link'] = $this->getCurrentContext()->link->getAdminLink(
                     'AdminOrders',
                     true,
                     [],
@@ -235,7 +235,7 @@ class StockMovementRepository extends StockManagementRepository
         );
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
+        $statement->bindValue('shop_id', $this->getCurrentShopId(), PDO::PARAM_INT);
         $statement->execute();
 
         $rows = $statement->fetchAll();
@@ -278,8 +278,8 @@ class StockMovementRepository extends StockManagementRepository
         );
 
         $statement = $this->connection->prepare($query);
-        $statement->bindValue('language_id', $this->languageId, PDO::PARAM_INT);
-        $statement->bindValue('shop_id', $this->shopId, PDO::PARAM_INT);
+        $statement->bindValue('language_id', $this->getCurrentLanguageId(), PDO::PARAM_INT);
+        $statement->bindValue('shop_id', $this->getCurrentShopId(), PDO::PARAM_INT);
         $statement->execute();
 
         $rows = $statement->fetchAll();
