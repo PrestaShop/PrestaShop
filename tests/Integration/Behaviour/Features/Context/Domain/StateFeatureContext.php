@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 use RuntimeException;
 use State;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;

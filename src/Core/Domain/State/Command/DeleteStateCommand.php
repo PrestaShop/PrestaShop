@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 
 /**
  * Deletes state
@@ -36,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 class DeleteStateCommand
 {
     /**
-     * @var StateId
+     * @var StateIdInterface
      */
     private $stateId;
 
@@ -45,13 +47,13 @@ class DeleteStateCommand
      */
     public function __construct(int $stateId)
     {
-        $this->stateId = new StateId($stateId);
+        $this->stateId = $stateId !== NoStateId::NO_STATE_ID_VALUE ? new StateId($stateId) : new NoStateId();
     }
 
     /**
      * @return StateId
      */
-    public function getStateId(): StateId
+    public function getStateId(): StateIdInterface
     {
         return $this->stateId;
     }
