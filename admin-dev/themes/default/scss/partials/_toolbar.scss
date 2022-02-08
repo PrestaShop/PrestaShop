@@ -13,7 +13,6 @@
   transition: padding-left 0.5s ease-out;
 
   .mobile & {
-    top: $size-header-height;
     top: 2.5rem;
     padding-top: 1rem;
   }
