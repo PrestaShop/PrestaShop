@@ -62,7 +62,7 @@ function enableEcoTaxTest(baseContext = 'commonTests-enableEcoTaxTest') {
  * Function to disable eco tax
  * @param baseContext {string} String to identify the test
  */
-function disableEcoTaxTest(baseContext = 'commonTests-disableEcotaxTest') {
+function disableEcoTaxTest(baseContext = 'commonTests-disableEcoTaxTest') {
   describe('POST-TEST: Disable Ecotax', async () => {
     // before and after functions
     before(async function () {
