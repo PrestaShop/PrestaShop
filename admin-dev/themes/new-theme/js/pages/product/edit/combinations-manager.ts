@@ -97,7 +97,7 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
-    this.bulkCombinationFormHandler = new BulkFormHandler();
+    new BulkFormHandler();
 
     this.init();
   }
@@ -173,9 +173,7 @@ export default class CombinationsManager {
     this.$emptyState.addClass('d-none');
 
     // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(
-      this.productId,
-    );
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
 
     if (this.filtersApp) {
       this.filtersApp.filters = this.productAttributeGroups;
@@ -242,17 +240,9 @@ export default class CombinationsManager {
     this.initSortingColumns();
   }
 
-  /**
-   * @private
-   */
   private watchEvents(): void {
-    /* eslint-disable */
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
-      this.refreshCombinationList(false)
-    );
-    this.eventEmitter.on(CombinationEvents.refreshPage, () =>
-      this.refreshPage()
-    );
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     /* eslint-disable */
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,
@@ -293,10 +283,7 @@ export default class CombinationsManager {
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 
-  /**
-   * @private
-   */
-  initSubmittableInputs() {
+  private initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
     const {impactOnPriceKey, referenceKey, tokenKey, deltaQuantityKey} = CombinationsMap.combinationItemForm;
 
@@ -452,10 +439,7 @@ export default class CombinationsManager {
     });
   }
 
-  /**
-   * @returns {String}
-   */
-  getCombinationToken(): string {
+  private getCombinationToken(): string {
     return $(CombinationsMap.combinationsListContainer).data('combinationToken');
   }
 
