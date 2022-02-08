@@ -6,20 +6,13 @@ const files = require('@utils/files');
 
 // Import login steps
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -41,14 +34,25 @@ let page;
 const invoiceData = new InvoiceOptionFaker();
 let fileName;
 let filePath;
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
 
 /*
-Edit Invoice number, Footer text
-Create order
-Change the Order status to Shipped
-Check the invoice file name
+Pre-condition:
+- Create order on FO
+Scenario:
+- Edit Invoice number and Footer text
+- Change the create order status to Shipped
+- Check the invoice file name
  */
 describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', async () => {
+  // Pre-condition: Create order on FO
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -86,102 +90,6 @@ describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', a
       await invoicesPage.setInputOptions(page, invoiceData);
       const textMessage = await invoicesPage.saveInvoiceOptions(page);
       await expect(textMessage).to.contains(invoicesPage.successfulUpdateMessage);
-    });
-  });
-
-  describe('Create new order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      // Click on view my shop
-      page = await invoicesPage.viewMyShop(page);
-
-      // Change language on FO
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      // Go to home page
-      await foLoginPage.goToHomePage(page);
-
-      // Go to the first product page
-      await homePage.goToProductPage(page, 1);
-
-      // Add the product to the cart
-      await productPage.addProductToTheCart(page);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
-
-      await orderConfirmationPage.logout(page);
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-    });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBo', baseContext);
-
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
-
-      const pageTitle = await invoicesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(invoicesPage.pageTitle);
     });
   });
 
