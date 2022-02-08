@@ -11,6 +11,7 @@ const files = require('@utils/files');
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {createProductTest, deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
+const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -476,4 +477,7 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
 
   // Post-condition - Delete the second created products
   deleteProductTest(secondProduct, baseContext);
+
+  // Post-condition - Delete 'Free shipping' cart rule
+  deleteCartRuleTest(baseContext);
 });

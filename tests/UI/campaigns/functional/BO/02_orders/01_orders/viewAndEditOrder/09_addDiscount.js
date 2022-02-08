@@ -9,6 +9,7 @@ const testContext = require('@utils/testContext');
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
+const {bulkDeleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -131,30 +132,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  // 1 - Get cart rules number
-  describe('Get cart rules number', async () => {
-    it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    it('should reset and get number of cart rules', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRules).to.be.at.least(0);
-    });
-  });
-
-  // 2 - Go to view order page
+  // 1 - Go to view order page
   describe('Go to view order page', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
@@ -204,7 +182,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
   });
 
-  // 3 - Create discount
+  // 2 - Create discount
   describe('Create discount and check it', async () => {
     it('should add a discount with invalid value and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountInvalidValue', baseContext);
@@ -353,7 +331,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
   });
 
-  // 4 - Check cart rules created
+  // 3 - Check cart rules created
   describe('Check created cart rules on \'Catalog > Discount\' page', async () => {
     it('should go to \'Catalog > Discounts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage2', baseContext);
@@ -413,7 +391,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
   });
 
-  // 5 - Go back to view order page
+  // 4 - Go back to view order page
   describe('Go back to view order page and delete discount', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
@@ -457,7 +435,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
   });
 
-  // 6 - Create discount
+  // 5 - Create discount
   describe('Create free shipping cart rule and check it', async () => {
     it('should add cart rule free shipping and check validation message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addDiscountFreeShipping', baseContext);
@@ -540,32 +518,5 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
   });
 
   // Post-Condition - Bulk delete cart rules
-  describe('POST-TEST: Bulk delete cart rules', async () => {
-    it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    it('should bulk delete cart rules', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCartRules', baseContext);
-
-      const deleteTextResult = await cartRulesPage.bulkDeleteCartRules(page);
-      await expect(deleteTextResult).to.be.contains(cartRulesPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
-
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules);
-    });
-  });
+  bulkDeleteCartRuleTest(baseContext);
 });

@@ -4,8 +4,9 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -16,10 +17,6 @@ const homePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foOrderHistoryPage = require('@pages/FO/myAccount/orderHistory');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -38,14 +35,26 @@ let browserContext;
 let page;
 let filePath;
 
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 1,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
+
 /*
-Create order in FO with bank wire payment
-Go to BO orders page and change order status to 'shipped'
-Check delivery slip creation
-Download delivery slip from list and check pdf text
-Go to FO and check the new order status
+Pre-condition:
+- Create order in FO with bank wire payment
+Scenario:
+- Go to BO orders page and change order status to 'shipped'
+- Check delivery slip creation
+- Download delivery slip from list and check pdf text
+- Go to FO and check the new order status
  */
 describe('BO - Orders : Check delivery slip downloaded from list', async () => {
+  // Pre-condition: Create order on FO
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -56,89 +65,7 @@ describe('BO - Orders : Check delivery slip downloaded from list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFoToOrder', baseContext);
-
-      await homePage.goToFo(page);
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFoToOrder', baseContext);
-
-      await homePage.goToLoginPage(page);
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFoToOrder', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      // Go to home page
-      await foLoginPage.goToHomePage(page);
-
-      // Go to the first product page
-      await homePage.goToProductPage(page, 1);
-
-      // Add the product to the cart
-      await productPage.addProductToTheCart(page, 5);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(5);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
-
-      await orderConfirmationPage.logout(page);
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-    });
-  });
-
-  describe('Check delivery slip file in BO', async () => {
+  describe('Check delivery slip file on BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -214,7 +141,7 @@ describe('BO - Orders : Check delivery slip downloaded from list', async () => {
     });
   });
 
-  describe('Check order status in FO ', async () => {
+  describe('Check order status on FO ', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckStatus', baseContext);
 
@@ -250,7 +177,7 @@ describe('BO - Orders : Check delivery slip downloaded from list', async () => {
       await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
     });
 
-    it('should check last order status in FO', async function () {
+    it('should check last order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLastOrderStatus', baseContext);
 
       const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
