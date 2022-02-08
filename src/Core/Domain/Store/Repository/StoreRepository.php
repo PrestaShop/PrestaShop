@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Repository;
 
-use Store;
-use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use Store;
 
 /**
  * Methods to access data source of Store

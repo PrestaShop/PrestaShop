@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 
 interface GetStoreForEditingHandlerInterface
 {
