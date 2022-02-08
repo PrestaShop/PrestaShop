@@ -41,13 +41,7 @@ export default class BulkFormHandler {
 
   private tabContainer: HTMLDivElement;
 
-  private formModal: ConfirmModal;
-
-  private progressModal: ConfirmModal;
-
   constructor() {
-    this.formModal = this.buildFormModal();
-    this.progressModal = this.buildProgressModal();
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.tabContainer = document.querySelector(CombinationMap.externalCombinationTab) as HTMLDivElement;
@@ -57,37 +51,38 @@ export default class BulkFormHandler {
   private init() {
     this.listenSelections();
     const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    btn.addEventListener('click', () => this.showBulkFormModal());
+    btn.addEventListener('click', () => this.showFormModal());
   }
 
-  private buildProgressModal() {
-    //@todo: Replace with real progress modal introduced in #26004.
-    return new ConfirmModal(
+  private showProgressModal() {
+    //@todo: Replace with new progress modal introduced in #26004.
+    const modal = new ConfirmModal(
       {
-        id: 'progress-modal',
-        confirmMessage: 'Updating combinations',
+        id: CombinationMap.bulkProgressModalId,
+        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
         closable: true,
       },
       () => null,
-      () => true,
     );
+
+    modal.show();
+
+    return modal;
   }
 
-  private buildFormModal() {
+  private showFormModal() {
     const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
     const content = template.innerHTML;
 
-    return new ConfirmModal(
+    const modal = new ConfirmModal(
       {
         id: CombinationMap.bulkCombinationModalId,
         confirmMessage: content,
       },
       () => this.submitForm(),
     );
-  }
 
-  private showBulkFormModal() {
-    this.formModal.show();
+    modal.show();
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
     const disablingToggles = form.querySelectorAll(ComponentsMap.disablingToggle.wrapper) as NodeListOf<HTMLDivElement>;
 
@@ -135,13 +130,28 @@ export default class BulkFormHandler {
     btn.toggleAttribute('disabled', disable);
   }
 
-  private submitForm() {
+  private async submitForm() {
     const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
-    //todo: progressModal.show() doesnt work. It only seems to be rendered after everything is done (when list is refreshed)
-    this.progressModal.show();
-    this.getSelectedCheckboxes().forEach((checkbox) => {
-      this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
-    });
+    const progressModal = this.showProgressModal();
+
+    const checkboxes = this.getSelectedCheckboxes();
+    const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
+
+    let progress = 1;
+
+    for (let i = 0; i < checkboxes.length; i += 1) {
+      const checkbox = checkboxes[i];
+      // eslint-disable-next-line no-await-in-loop
+      await this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
+
+      const progressContent = progressModalElement?.querySelector('.progress-increment') as HTMLParagraphElement;
+      progressContent.innerHTML = String(progress);
+      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged
+      progress += 1;
+    }
+
+    progressModal.hide();
+
     this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
   }
 
