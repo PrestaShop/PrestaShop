@@ -29,6 +29,7 @@ const attachmentsBlockId = '#product_specifications_attachments';
 const bulkCombinationModalId = 'bulk-combination-modal';
 const isSelectedCombinationInputClass = 'combination-is-selected';
 const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
+const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
   productForm: 'form[name=product]',
@@ -137,6 +138,7 @@ export default {
     bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
+    bulkProgressModalId: progressModalId,
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
