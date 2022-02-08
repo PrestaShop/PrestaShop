@@ -63,7 +63,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN (
-            SELECT `id_guest`
+            SELECT DISTINCT `id_guest`
             FROM `' . _DB_PREFIX_ . 'connections`
             WHERE
                 TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
