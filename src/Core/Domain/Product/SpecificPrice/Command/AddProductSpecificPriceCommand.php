@@ -30,6 +30,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
 use DateTime;
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\NoCountryId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NoCurrencyId;
@@ -97,13 +101,13 @@ class AddProductSpecificPriceCommand
     private $currencyId;
 
     /**
-     * @var int
+     * @var CountryIdInterface
      *
      * @todo: countryId & customerId should also use the same convention of {Foo}IdInterface,
      *        but it requires some refactoring as it was already used in many places this primitive way
      *        related reminder issue https://github.com/PrestaShop/PrestaShop/issues/27205
      */
-    private $countryId = 0;
+    private $countryId;
 
     /**
      * @var GroupIdInterface
@@ -161,6 +165,7 @@ class AddProductSpecificPriceCommand
         $this->groupId = new NoGroupId();
         $this->dateTimeFrom = new NullDateTime();
         $this->dateTimeTo = new NullDateTime();
+        $this->countryId = new NoCountryId();
     }
 
     /**
@@ -322,21 +327,27 @@ class AddProductSpecificPriceCommand
     }
 
     /**
-     * @return int
+     * @return CountryIdInterface
      */
-    public function getCountryId(): int
+    public function getCountryId(): CountryIdInterface
     {
         return $this->countryId;
     }
 
     /**
-     * @param int $countryId
+     * @param int|null $countryId
      *
      * @return $this
+     *
+     * @throws CountryConstraintException
      */
-    public function setCountryId(int $countryId): self
+    public function setCountryId(?int $countryId): self
     {
-        $this->countryId = $countryId;
+        if (NoCountryId::NO_COUNTRY_ID_VALUE === $countryId || $countryId === null) {
+            $this->countryId = new NoCountryId();
+        } else {
+            $this->countryId = new CountryId($countryId);
+        }
 
         return $this;
     }
