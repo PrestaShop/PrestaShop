@@ -68,7 +68,7 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
-    this.bulkCombinationFormHandler = new BulkFormHandler();
+    new BulkFormHandler();
 
     this.init();
 
@@ -149,9 +149,7 @@ export default class CombinationsManager {
     this.$emptyState.addClass('d-none');
 
     // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(
-      this.productId,
-    );
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
     this.filtersApp.filters = this.productAttributeGroups;
 
     // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
@@ -217,13 +215,8 @@ export default class CombinationsManager {
    * @private
    */
   watchEvents() {
-    /* eslint-disable */
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
-      this.refreshCombinationList(false)
-    );
-    this.eventEmitter.on(CombinationEvents.refreshPage, () =>
-      this.refreshPage()
-    );
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     /* eslint-disable */
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,

@@ -49,10 +49,11 @@ export default class BulkFormHandler {
   }
 
   private init() {
-    this.toggleBulkAvailability();
     this.listenSelections();
-    const btn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    btn.addEventListener('click', () => this.showFormModal());
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkAvailability());
+
+    const bulkFormBtn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    bulkFormBtn.addEventListener('click', () => this.showFormModal());
   }
 
   private showProgressModal() {
@@ -97,7 +98,7 @@ export default class BulkFormHandler {
     });
   }
 
-  private listenSelections() {
+  private listenSelections(): void {
     this.tabContainer.addEventListener('change', (e) => {
       if (!(e.target instanceof HTMLInputElement)) {
         return;
