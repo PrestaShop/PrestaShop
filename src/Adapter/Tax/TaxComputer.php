@@ -30,7 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 class TaxComputer
@@ -52,14 +52,14 @@ class TaxComputer
     /**
      * @param DecimalNumber $priceTaxExcluded
      * @param TaxRulesGroupId $taxRulesGroupId
-     * @param CountryId $countryId
+     * @param CountryIdInterface $countryId
      *
      * @return DecimalNumber
      */
     public function computePriceWithTaxes(
         DecimalNumber $priceTaxExcluded,
         TaxRulesGroupId $taxRulesGroupId,
-        CountryId $countryId
+        CountryIdInterface $countryId
     ): DecimalNumber {
         $taxRatio = $this->getTaxRatio($taxRulesGroupId, $countryId);
 
@@ -69,14 +69,14 @@ class TaxComputer
     /**
      * @param DecimalNumber $priceTaxIncluded
      * @param TaxRulesGroupId $taxRulesGroupId
-     * @param CountryId $countryId
+     * @param CountryIdInterface $countryId
      *
      * @return DecimalNumber
      */
     public function computePriceWithoutTaxes(
         DecimalNumber $priceTaxIncluded,
         TaxRulesGroupId $taxRulesGroupId,
-        CountryId $countryId
+        CountryIdInterface $countryId
     ): DecimalNumber {
         $taxRatio = $this->getTaxRatio($taxRulesGroupId, $countryId);
 
@@ -85,11 +85,11 @@ class TaxComputer
 
     /**
      * @param TaxRulesGroupId $taxRulesGroupId
-     * @param CountryId $countryId
+     * @param CountryIdInterface $countryId
      *
      * @return DecimalNumber
      */
-    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryIdInterface $countryId): DecimalNumber
     {
         $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails($taxRulesGroupId);
         if (!empty($taxRulesGroup['rates'])) {
