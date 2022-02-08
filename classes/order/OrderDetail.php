@@ -536,25 +536,38 @@ class OrderDetailCore extends ObjectModel
      * Check the order status.
      *
      * @param array $product
-     * @param int $id_order_state
+     * @param int $orderStateId
      */
-    protected function checkProductStock($product, $id_order_state)
+    protected function checkProductStock($product, $orderStateId)
     {
-        if ($id_order_state != Configuration::get('PS_OS_CANCELED') && $id_order_state != Configuration::get('PS_OS_ERROR')) {
-            $update_quantity = true;
-            if (!StockAvailable::dependsOnStock($product['id_product'])) {
-                $update_quantity = StockAvailable::updateQuantity($product['id_product'], $product['id_product_attribute'], -(int) $product['cart_quantity'], $product['id_shop'], true);
-            }
-
-            if ($update_quantity) {
-                $product['stock_quantity'] -= $product['cart_quantity'];
-            }
-
-            if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT')) {
-                $this->outOfStock = true;
-            }
-            Product::updateDefaultAttribute($product['id_product']);
+        $dismissOrderStateIds = Configuration::getMultiple([
+            'PS_OS_CANCELED',
+            'PS_OS_ERROR',
+        ]);
+        if (in_array($orderStateId, $dismissOrderStateIds)) {
+            return;
         }
+        $quantityUpdated = true;
+
+        if (!StockAvailable::dependsOnStock($product['id_product'])) {
+            $quantityUpdated = StockAvailable::updateQuantity(
+                $product['id_product'],
+                $product['id_product_attribute'],
+                -(int) $product['cart_quantity'],
+                $product['id_shop'],
+                $orderStateId == Configuration::get('PS_OS_DELIVERED'),
+                [
+                    'id_order' => $this->id_order,
+                ]
+            );
+        }
+        if ($quantityUpdated) {
+            $product['stock_quantity'] -= $product['cart_quantity'];
+        }
+        if ($product['stock_quantity'] < 0 && Configuration::get('PS_STOCK_MANAGEMENT')) {
+            $this->outOfStock = true;
+        }
+        Product::updateDefaultAttribute($product['id_product']);
     }
 
     /**
