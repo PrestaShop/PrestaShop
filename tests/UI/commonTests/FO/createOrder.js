@@ -79,7 +79,7 @@ function createOrderByCustomerTest(orderData, baseContext = 'commonTests-createO
       await productPage.addProductToTheCart(page, orderData.productQuantity);
 
       const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(1);
+      await expect(notificationsNumber).to.be.equal(orderData.productQuantity);
     });
 
     it('should go to delivery step', async function () {

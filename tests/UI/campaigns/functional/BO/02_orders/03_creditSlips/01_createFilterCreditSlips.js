@@ -38,15 +38,17 @@ const todayDateToCheck = getDateFormat('mm/dd/yyyy');
 const orderByCustomerData = {
   customer: DefaultCustomer,
   product: 1,
-  productQuantity: 1,
+  productQuantity: 5,
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
 /*
-Create order
-Create 2 credit slips for the same order
-Filter Credit slips table( by ID, Order ID, Date issued From and To)
-Download the 2 credit slip files and check them
+Pre-condition:
+- Create order
+Scenario:
+- Create 2 credit slips for the same order
+- Filter Credit slips table( by ID, Order ID, Date issued From and To)
+- Download the 2 credit slip files and check them
  */
 describe('BO - Orders - Credit slips : Create, filter and check credit slips file', async () => {
   // Pre-condition: Create order on FO
@@ -102,7 +104,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
     ];
 
     tests.forEach((test, index) => {
-      it(`should create the partial refund n°${index}`, async function () {
+      it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
         await orderPageTabListBlock.clickOnPartialRefund(page);
