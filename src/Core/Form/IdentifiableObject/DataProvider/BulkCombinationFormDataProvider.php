@@ -32,8 +32,8 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getDefaultData()
     {
         return [
-            'disabling_toggle_reference' => true,
-            'disabling_toggle_price_tax_excluded' => true,
+            'disabling_toggle_reference' => false,
+            'disabling_toggle_price_tax_excluded' => false,
         ];
     }
 
@@ -43,8 +43,8 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         return [
-            'disabling_toggle_reference' => true,
-            'disabling_toggle_price_tax_excluded' => true,
+            'disabling_toggle_reference' => false,
+            'disabling_toggle_price_tax_excluded' => false,
         ];
     }
 }
