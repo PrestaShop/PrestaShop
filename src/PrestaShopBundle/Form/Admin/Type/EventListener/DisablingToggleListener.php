@@ -76,8 +76,6 @@ class DisablingToggleListener implements EventSubscriberInterface
         $newOptions = [
             'disabled' => $shouldBeDisabled,
             'attr' => [
-                'disabled' => $shouldBeDisabled,
-                'class' => $shouldBeDisabled ? 'disabled' : '',
                 'data-toggled-by' => $fieldName,
             ],
         ];
