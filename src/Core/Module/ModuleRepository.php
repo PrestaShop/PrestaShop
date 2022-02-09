@@ -224,7 +224,8 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
 
     private function mergeWithModulesFromHook(array $modules): array
     {
-        $externalModules = array_values($this->hookManager->exec('actionListModules', [], null, true));
+        $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
+        $externalModules = array_values($actionListModules ?? []);
         if (empty(reset($externalModules))) {
             return $modules;
         }
