@@ -137,6 +137,7 @@ export default {
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormTemplate: '#bulk-combination-form-template',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkActionsBtn: '#combination-bulk-actions-btn',
     bulkCombinationModalId,
     bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,

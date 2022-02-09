@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {# Combination filters for paginated list #}
 <div id="combinations_filters"
      data-translations="{{ {
@@ -31,10 +31,23 @@
 ></div>
 
 <div id="combination-actions">
-{# button disabled by default, because js toggles its availability based on selected combonations #}
-  <button id="combination-bulk-form-btn" class="btn btn-outline-primary" type="button" disabled>
-    {{ 'Apply bulk action'|trans({}, 'Admin.Actions') }}
-  </button>
+  <div class="btn-group">
+    {# button disabled by default, because js toggles its availability based on selected combonations #}
+    <button class="btn btn-outline-secondary dropdown-toggle"
+      id="combination-bulk-actions-btn"
+      data-toggle="dropdown"
+      aria-expanded="false"
+      disabled
+    >
+      Bulk actions
+      <i class="icon-caret-up"></i>
+    </button>
+    <div class="dropdown-menu" style="">
+      <button id="combination-bulk-form-btn" class="dropdown-item" type="button">
+        {{ 'Edit combinations'|trans({}, 'Admin.Actions') }}
+      </button>
+    </div>
+  </div>
 </div>
 
 <div id="combination-edit-modal"
@@ -54,7 +67,7 @@
      }|json_encode }}"
 ></div>
 
-{#@todo: need to implement dedicated theme for this form later#}
+{# @todo: need to implement dedicated theme for this form later #}
 {% form_theme bulkCombinationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 <div id="bulk-combination-form-template" class="d-none">
   {{ form_start(bulkCombinationForm) }}
