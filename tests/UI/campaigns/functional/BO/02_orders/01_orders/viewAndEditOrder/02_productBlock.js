@@ -12,6 +12,7 @@ const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
 const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/enableDisableEcoTax');
 const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/createDeleteProduct');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -36,6 +37,8 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_productBlock';
 
 let browserContext;
 let page;
+// Prefix for the new products to simply delete them by bulk actions
+const prefixNewProduct = 'TOTEST';
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
@@ -49,26 +52,26 @@ const orderData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 const productOutOfStockAllowed = new ProductFaker({
-  name: 'Out of stock allowed',
+  name: `Out of stock allowed ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -12,
   minimumQuantity: 1,
   lowStockLevel: 3,
-  behaviourOutOfStock: 'Allow orders',
+  behaviourOutOfStock: 'Allow catalog',
 });
 const productOutOfStockNotAllowed = new ProductFaker({
-  name: 'Out of stock not allowed',
+  name: `Out of stock not allowed ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -36,
   minimumQuantity: 3,
   stockLocation: 'stock 3',
   lowStockLevel: 3,
-  behaviourOutOfStock: 'Deny orders',
+  behaviourOutOfStock: 'Deny catalog',
 });
 const packOfProducts = new ProductFaker({
-  name: 'Pack of products',
+  name: `Pack of products ${prefixNewProduct}`,
   type: 'Pack of products',
   pack: {demo_13: 1, demo_7: 1},
   taxRule: 'No tax',
@@ -79,13 +82,13 @@ const packOfProducts = new ProductFaker({
   behaviourOutOfStock: 'Default behavior',
 });
 const virtualProduct = new ProductFaker({
-  name: 'Virtual product',
+  name: `Virtual product ${prefixNewProduct}`,
   type: 'Virtual product',
   taxRule: 'No tax',
   quantity: 20,
 });
 const combinationProduct = new ProductFaker({
-  name: 'Product with combination',
+  name: `Product with combination ${prefixNewProduct}`,
   type: 'Standard product',
   productHasCombinations: true,
   taxRule: 'No tax',
@@ -95,7 +98,7 @@ const combinationProduct = new ProductFaker({
   behaviourOutOfStock: 'Default behavior',
 });
 const simpleProduct = new ProductFaker({
-  name: 'Simple product',
+  name: `Simple product ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -107,7 +110,7 @@ const simpleProduct = new ProductFaker({
 });
 
 const productWithSpecificPrice = new ProductFaker({
-  name: 'Product with specific price',
+  name: `Product with specific price ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -119,7 +122,7 @@ const productWithSpecificPrice = new ProductFaker({
 });
 
 const productWithEcoTax = new ProductFaker({
-  name: 'Product with ecotax',
+  name: `Product with ecotax ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -128,7 +131,7 @@ const productWithEcoTax = new ProductFaker({
 });
 
 const productWithCartRule = new ProductFaker({
-  name: 'Product with cart rule',
+  name: `Product with cart rule ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -815,41 +818,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   deleteCustomerTest(customerData, baseContext);
 
   // Post-condition: Delete the created products
-  describe('POST-TEST: Delete the created products', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
-
-      await addProductPage.goToSubMenu(page, addProductPage.catalogParentLink, addProductPage.productsLink);
-
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
-
-    [productOutOfStockAllowed,
-      productOutOfStockNotAllowed,
-      packOfProducts,
-      virtualProduct,
-      combinationProduct,
-      simpleProduct,
-      productWithSpecificPrice,
-      productWithEcoTax,
-      productWithCartRule,
-    ].forEach((product, index) => {
-      it(`should delete product '${product.name}' from DropDown Menu`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
-
-        const deleteTextResult = await productsPage.deleteProduct(page, product);
-        await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-      });
-
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFiltersAfterDelete${index}`, baseContext);
-
-        const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
-      });
-    });
-  });
+  bulkDeleteProductsTest(prefixNewProduct, baseContext);
 
   // Post-condition: Delete cart rule
   deleteCartRuleTest(newCartRuleData.name, baseContext);

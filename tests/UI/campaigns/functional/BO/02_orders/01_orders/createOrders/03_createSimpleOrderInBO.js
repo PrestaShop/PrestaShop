@@ -9,7 +9,6 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
 
 // Import common tests
 const loginCommon = require('@commonTests/loginBO');
@@ -61,18 +60,20 @@ let browserContext;
 let page;
 
 /*
-Go to create order page
-Search and choose a customer
-Add products to cart
-Choose addresses for delivery and invoice
-Choose payment status
-Set order status and save the order
-From view order page check these details :
-- Order status
-- Total price
-- Shipping address
-- Invoice address
-- Products names
+Scenario:
+- Choose the default customer from Create order page
+- Add products to cart
+- Choose addresses for delivery and invoice
+- Choose payment status
+- Set order status and save the order
+- From view order page check these details :
+  - Order status
+  - Total price
+  - Shipping address
+  - Invoice address
+  - Products names
+Post-condition:
+- Delete Free shipping cart rule
  */
 describe('BO - Orders - Create order : Create simple order in BO', async () => {
   before(async function () {
@@ -170,6 +171,6 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     });
   });
 
-  // Post-Condition : delete cart rules
+  // Post-Condition: delete cart rules
   deleteCartRuleTest('Free Shipping', baseContext);
 });

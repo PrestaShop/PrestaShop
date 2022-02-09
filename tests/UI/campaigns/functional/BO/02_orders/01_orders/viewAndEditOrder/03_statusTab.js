@@ -1,4 +1,3 @@
-/*
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -76,7 +75,7 @@ let newMail;
 // mailListener
 let mailListener;
 
-/!*
+/*
 Pre-condition :
 - Setup smtp parameters
 - Create new employee
@@ -97,19 +96,19 @@ Post-condition :
 - Delete employee
 - Delete guest account
 - Reset default email parameters
- *!/
+ */
 
 describe('BO - Orders - View and edit order : Check order status tab', async () => {
-  // Pre-Condition : Setup config SMTP
+  // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(baseContext);
 
-  // Pre-condition - Create new employee
+  // Pre-condition: Create new employee
   createEmployeeTest(createEmployeeData, baseContext);
 
-  // Pre-condition - Create order by guest
+  // Pre-condition: Create order by guest
   createOrderByGuestTest(orderByGuestData, baseContext);
 
-  // Pre-condition - Create order by default customer
+  // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
@@ -539,13 +538,12 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     });
   });
 
-  // Post-condition - Delete employee
+  // Post-condition: Delete employee
   deleteEmployeeTest(createEmployeeData, baseContext);
 
-  // Post-condition - Delete guest account
+  // Post-condition: Delete guest account
   deleteCustomerTest(customerData, baseContext);
 
-  // Post-Condition : Reset SMTP config
+  // Post-Condition: Reset SMTP config
   resetSmtpConfigTest(baseContext);
 });
-*/

@@ -85,7 +85,7 @@ const discountAmountGoodValue = {
   value: 10.55,
 };
 
-let numberOfCartRules = 0;
+const numberOfCartRules = 0;
 
 // Discount amount good value
 const discountFreeShipping = {
