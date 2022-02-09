@@ -43,8 +43,11 @@
       <i class="icon-caret-up"></i>
     </button>
     <div class="dropdown-menu" style="">
-      <button id="combination-bulk-form-btn" class="dropdown-item" type="button">
-        {{ 'Edit combinations'|trans({}, 'Admin.Actions') }}
+      <button
+        id="combination-bulk-form-btn" class="dropdown-item" type="button"
+        data-btn-label="{{ 'Edit %s combinations'|trans({}, 'Admin.Actions') }}"
+      >
+      {{ 'Edit %s combinations'|trans({'%s': ''}, 'Admin.Actions') }}
       </button>
     </div>
   </div>
