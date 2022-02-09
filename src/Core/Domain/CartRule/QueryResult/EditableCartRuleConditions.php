@@ -30,11 +30,12 @@ namespace PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult;
 
 use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerIdInterface;
 
 class EditableCartRuleConditions
 {
     /**
-     * @var CustomerId|null
+     * @var CustomerIdInterface|null
      */
     private $customerId;
 
@@ -69,7 +70,7 @@ class EditableCartRuleConditions
     private $restrictions;
 
     public function __construct(
-        ?CustomerId $customerId,
+        ?CustomerIdInterface $customerId,
         ?DateTime $dateFrom,
         ?DateTime $dateTo,
         int $quantity,
@@ -87,7 +88,7 @@ class EditableCartRuleConditions
     }
 
     /**
-     * @return CustomerId|null
+     * @return CustomerIdInterface|null
      */
     public function getCustomerId(): ?CustomerId
     {
