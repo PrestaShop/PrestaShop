@@ -648,6 +648,8 @@
       <!--QUICK ACCESS-->
       <tab id="Quick_Access" id_parent="-1" active="1" enabled="1">
         <class_name>AdminQuickAccesses</class_name>
+        <wording>Quick Access</wording>
+        <wording_domain>Admin.Navigation.Menu</wording_domain>
       </tab>
 
       <!--DEFAULT-->
@@ -659,8 +661,8 @@
 
       <tab id="Patterns" id_parent="-1" active="1" enabled="1">
         <class_name>AdminPatterns</class_name>
-        <wording>Quick Access</wording>
-        <wording_domain>Admin.Navigation.Menu</wording_domain>
+        <wording/>
+        <wording_domain/>
       </tab>
     </entities>
 </entity_tab>
