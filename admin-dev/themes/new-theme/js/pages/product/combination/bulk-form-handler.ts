@@ -62,7 +62,6 @@ export default class BulkFormHandler {
       {
         id: CombinationMap.bulkProgressModalId,
         confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
-        closable: true,
       },
       () => null,
     );
