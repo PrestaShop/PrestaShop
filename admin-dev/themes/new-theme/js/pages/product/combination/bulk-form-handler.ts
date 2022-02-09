@@ -50,7 +50,7 @@ export default class BulkFormHandler {
 
   private init(): void {
     this.listenSelections();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkAvailability());
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
 
     const bulkFormBtn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     bulkFormBtn.addEventListener('click', () => this.showFormModal());
@@ -110,7 +110,7 @@ export default class BulkFormHandler {
       if (e.target.id === CombinationMap.bulkSelectAllInPageId) {
         this.checkAll(e.target.checked);
       }
-      this.toggleBulkAvailability();
+      this.toggleBulkActions();
     });
   }
 
@@ -124,11 +124,16 @@ export default class BulkFormHandler {
     });
   }
 
-  private toggleBulkAvailability(): void {
+  private toggleBulkActions(): void {
     const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
     const btn = this.tabContainer.querySelector(CombinationMap.bulkActionsBtn) as HTMLButtonElement;
+    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
     const enable = (selectAllCheckbox instanceof HTMLInputElement && selectAllCheckbox.checked)
-      || this.getSelectedCheckboxes().length !== 0;
+      || selectedCombinationsCount !== 0;
+
+    const bulkCombinationsBtn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    const bulkCombinationsLabel = bulkCombinationsBtn.dataset.btnLabel as string;
+    bulkCombinationsBtn.innerHTML = bulkCombinationsLabel.replace(/%s/, String(selectedCombinationsCount));
 
     btn.toggleAttribute('disabled', !enable);
   }
