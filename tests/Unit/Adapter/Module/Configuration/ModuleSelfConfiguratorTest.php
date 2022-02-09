@@ -34,8 +34,8 @@ use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends TestCase
@@ -303,7 +303,7 @@ class ModuleSelfConfiguratorTest extends TestCase
             ->method('hasValidInstance')
             ->willReturn(true);
 
-        $this->moduleRepository = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
+        $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 

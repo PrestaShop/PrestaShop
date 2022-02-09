@@ -79,14 +79,6 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager = $hookManager;
     }
 
-    /**
-     * @TODO: Remove this method
-     */
-    public function getError(string $name)
-    {
-        return [];
-    }
-
     public function install(string $name): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
@@ -295,6 +287,30 @@ class ModuleManager implements ModuleManagerInterface
     public function isEnabled(string $name): bool
     {
         return $this->moduleDataProvider->isEnabled($name);
+    }
+
+    public function getError(string $name): string
+    {
+        $module = $this->moduleRepository->getModule($name);
+        if ($module->hasValidInstance()) {
+            $errors = $module->getInstance()->getErrors();
+            $error = array_pop($errors);
+            if (empty($error)) {
+                $error = $this->translator->trans(
+                    'Unfortunately, the module did not return additional details.',
+                    [],
+                    'Admin.Modules.Notification'
+                );
+            }
+        } else {
+            $error = $this->translator->trans(
+                'The module is invalid and cannot be loaded.',
+                [],
+                'Admin.Modules.Notification'
+            );
+        }
+
+        return $error;
     }
 
     public function upgradeMigration(string $name): bool
