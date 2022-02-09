@@ -222,7 +222,10 @@ export class Modal implements ModalType {
   hide(): void {
     this.$modal.modal('hide');
     // Sometimes modal animation is still in progress and hiding fails, so we attach event listener for that case.
-    this.$modal.on('shown.bs.modal', () => this.$modal.modal('hide'));
+    this.$modal.on('shown.bs.modal', () => {
+      this.$modal.modal('hide');
+      this.$modal.off('shown.bs.modal');
+    });
   }
 }
 
