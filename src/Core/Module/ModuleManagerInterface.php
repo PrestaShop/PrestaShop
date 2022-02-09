@@ -49,4 +49,6 @@ interface ModuleManagerInterface
     public function isInstalled(string $name): bool;
 
     public function isEnabled(string $name): bool;
+
+    public function getError(string $name): string;
 }
