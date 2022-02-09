@@ -45,6 +45,7 @@ use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleReduc
 use PrestaShop\PrestaShop\Core\Domain\CartRule\QueryResult\EditableCartRuleRestrictions;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\NoCustomerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtils;
@@ -98,7 +99,7 @@ final class GetCartRuleForEditingHandler extends AbstractCartRuleHandler impleme
 
     private function getCartRuleConditions(CartRule $cartRule): EditableCartRuleConditions
     {
-        $customerId = new CustomerId((int) $cartRule->id_customer);
+        $customerId = (int) $cartRule->id_customer !== NoCustomerId::NO_CUSTOMER_ID_VALUE ? new CustomerId((int) $cartRule->id_customer) : new NoCustomerId();
         $dateFrom = $cartRule->date_from;
         $dateTo = $cartRule->date_to;
         $minimumAmountCurrencyId = $cartRule->minimum_amount_currency ? new CurrencyId((int) $cartRule->minimum_amount_currency) : null;

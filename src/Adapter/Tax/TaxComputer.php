@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 class TaxComputer
@@ -53,14 +52,14 @@ class TaxComputer
     /**
      * @param DecimalNumber $priceTaxExcluded
      * @param TaxRulesGroupId $taxRulesGroupId
-     * @param CountryIdInterface $countryId
+     * @param CountryId $countryId
      *
      * @return DecimalNumber
      */
     public function computePriceWithTaxes(
         DecimalNumber $priceTaxExcluded,
         TaxRulesGroupId $taxRulesGroupId,
-        CountryIdInterface $countryId
+        CountryId $countryId
     ): DecimalNumber {
         $taxRatio = $this->getTaxRatio($taxRulesGroupId, $countryId);
 
