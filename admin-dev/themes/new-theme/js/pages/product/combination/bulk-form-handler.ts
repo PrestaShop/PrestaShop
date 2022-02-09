@@ -126,7 +126,7 @@ export default class BulkFormHandler {
 
   private toggleBulkAvailability(): void {
     const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
-    const btn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+    const btn = this.tabContainer.querySelector(CombinationMap.bulkActionsBtn) as HTMLButtonElement;
     const enable = (selectAllCheckbox instanceof HTMLInputElement && selectAllCheckbox.checked)
       || this.getSelectedCheckboxes().length !== 0;
 
