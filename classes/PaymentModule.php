@@ -330,7 +330,7 @@ abstract class PaymentModuleCore extends Module
         // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
         // We use number_format in order to compare two string
-        if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+        if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, Context::getContext()->getComputingPrecision())) {
             $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
@@ -1157,7 +1157,7 @@ abstract class PaymentModuleCore extends Module
                 );
             }
             $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
-            $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
+            $remainingValue = Tools::ps_round($remainingValue, Context::getContext()->getComputingPrecision());
             if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
