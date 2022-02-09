@@ -12,7 +12,7 @@ const {getDateFormat} = require('@utils/date');
 const loginCommon = require('@commonTests/loginBO');
 const {createOrderByCustomerTest, createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/enableDisableEcoTax');
-const {deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/createDeleteProduct');
 const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
 
 // Import BO pages
@@ -43,6 +43,8 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_checkInvoice';
 let browserContext;
 let page;
 const today = getDateFormat('mm/dd/yyyy');
+// Prefix for the new products to simply delete them by bulk actions
+const prefixNewProduct = 'TOTEST';
 
 // First order by customer data
 const firstOrderByCustomer = {
@@ -54,7 +56,7 @@ const firstOrderByCustomer = {
 
 // Customized product data
 const customizedProduct = new ProductFaker({
-  name: 'Customized product',
+  name: `Customized product ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   customization: {
@@ -74,7 +76,7 @@ const secondOrderByCustomer = {
 
 // Virtual product data
 const virtualProduct = new ProductFaker({
-  name: 'Virtual product',
+  name: `Virtual product ${prefixNewProduct}`,
   type: 'Virtual product',
   quantity: 20,
   tax: 20,
@@ -84,7 +86,7 @@ const virtualProduct = new ProductFaker({
 
 // Product with specific price data
 const productWithSpecificPrice = new ProductFaker({
-  name: 'Product with specific price',
+  name: `Product with specific price ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -97,7 +99,7 @@ const productWithSpecificPrice = new ProductFaker({
 
 // Product with ecoTax data
 const productWithEcoTax = new ProductFaker({
-  name: 'Product with ecotax',
+  name: `Product with ecotax ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -143,10 +145,7 @@ Scenario:
 - Add note then check invoice
 - Add payment method then check invoice
 Post-conditions:
-- Delete virtual product
-- Delete customized product
-- Delete product with specific price
-- Delete product with ecotax
+- Delete created products
 - Disable EcoTax
 - Delete discount
 */
@@ -1483,18 +1482,12 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
     });
   });
 
-  // Post-condition - Delete the created products
-  [virtualProduct,
-    customizedProduct,
-    productWithSpecificPrice,
-    productWithEcoTax,
-  ].forEach((productData) => {
-    deleteProductTest(productData, baseContext);
-  });
+  // Post-condition: Delete the created products
+  bulkDeleteProductsTest(prefixNewProduct, baseContext);
 
-  // Post-condition - Disable EcoTax
+  // Post-condition: Disable EcoTax
   disableEcoTaxTest(baseContext);
 
-  // Post-condition - Delete discount
+  // Post-condition: Delete discount
   deleteCartRuleTest(discountData.name, baseContext);
 });

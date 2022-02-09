@@ -51,7 +51,7 @@ Id, Order ID, Customer, carrier, date and Online
 Delete customers
 */
 describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', async () => {
-  // Pre-condition: Create 16 orders
+  // Pre-condition: Create 16 catalog
   const creationTests = new Array(16).fill(0, 0, 16);
   creationTests.forEach(() => {
     createOrderByGuestTest(orderByGuestData, baseContext);

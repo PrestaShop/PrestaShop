@@ -22,10 +22,10 @@ let page;
 
 /**
  * Function to create currency
- * @param currencyData {CustomerData} Data to set to create currency
+ * @param currencyData {CurrencyData} Data to set to create currency
  * @param baseContext {string} String to identify the test
  */
-function createCurrencyTest(currencyName, baseContext = 'commonTests-createCurrencyTest') {
+function createCurrencyTest(currencyData, baseContext = 'commonTests-createCurrencyTest') {
   describe('PRE-TEST: Create currency', async () => {
     // before and after functions
     before(async function () {
@@ -76,7 +76,7 @@ function createCurrencyTest(currencyName, baseContext = 'commonTests-createCurre
       await testContext.addContextItem(this, 'testIdentifier', 'createOfficialCurrency', baseContext);
 
       // Create and check successful message
-      const textResult = await addCurrencyPage.addOfficialCurrency(page, currencyName);
+      const textResult = await addCurrencyPage.addOfficialCurrency(page, currencyData);
       await expect(textResult).to.contains(currenciesPage.successfulCreationMessage);
     });
   });
@@ -84,10 +84,10 @@ function createCurrencyTest(currencyName, baseContext = 'commonTests-createCurre
 
 /**
  * Function to delete currency
- * @param currencyData {CustomerData} Data to set to delete currency
+ * @param currencyData {CurrencyData} Data to set to delete currency
  * @param baseContext {string} String to identify the test
  */
-function deleteCurrencyTest(currencyData, baseContext = 'commonTests-deleteCurrencyTest'){
+function deleteCurrencyTest(currencyData, baseContext = 'commonTests-deleteCurrencyTest') {
   describe('POST-TEST: Delete currency', async () => {
     // before and after functions
     before(async function () {
@@ -103,49 +103,46 @@ function deleteCurrencyTest(currencyData, baseContext = 'commonTests-deleteCurre
       await loginCommon.loginBO(this, page);
     });
 
-    describe('POST-TEST: Delete created currency ', async () => {
-      it('should go to \'International > Localization\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
+    it('should go to \'International > Localization\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
 
-        await dashboardPage.goToSubMenu(
-          page,
-          dashboardPage.internationalParentLink,
-          dashboardPage.localizationLink,
-        );
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.internationalParentLink,
+        dashboardPage.localizationLink,
+      );
 
-        await localizationPage.closeSfToolBar(page);
+      await localizationPage.closeSfToolBar(page);
 
-        const pageTitle = await localizationPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(localizationPage.pageTitle);
-      });
-
-      it('should go to \'Currencies\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage2', baseContext);
-
-        await localizationPage.goToSubTabCurrencies(page);
-        const pageTitle = await currenciesPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(currenciesPage.pageTitle);
-      });
-
-      it(`should filter by iso code of currency '${currencyData.isoCode}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
-
-        // Filter
-        await currenciesPage.filterTable(page, 'input', 'iso_code', currencyData.isoCode);
-
-        // Check currency to delete
-        const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
-        await expect(textColumn).to.contains(currencyData.isoCode);
-      });
-
-      it('should delete currency', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
-
-        const result = await currenciesPage.deleteCurrency(page, 1);
-        await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
-      });
+      const pageTitle = await localizationPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(localizationPage.pageTitle);
     });
 
+    it('should go to \'Currencies\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCurrenciesPage2', baseContext);
+
+      await localizationPage.goToSubTabCurrencies(page);
+      const pageTitle = await currenciesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(currenciesPage.pageTitle);
+    });
+
+    it(`should filter by iso code of currency '${currencyData.isoCode}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
+
+      // Filter
+      await currenciesPage.filterTable(page, 'input', 'iso_code', currencyData.isoCode);
+
+      // Check currency to delete
+      const textColumn = await currenciesPage.getTextColumnFromTableCurrency(page, 1, 'iso_code');
+      await expect(textColumn).to.contains(currencyData.isoCode);
+    });
+
+    it('should delete currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteCurrency', baseContext);
+
+      const result = await currenciesPage.deleteCurrency(page, 1);
+      await expect(result).to.be.equal(currenciesPage.successfulDeleteMessage);
+    });
   });
 }
 

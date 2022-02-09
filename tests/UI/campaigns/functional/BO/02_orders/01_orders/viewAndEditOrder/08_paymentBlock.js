@@ -19,9 +19,6 @@ const ordersPage = require('@pages/BO/orders');
 const orderPageMessagesBlock = require('@pages/BO/orders/view/paymentBlock');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
-const localizationPage = require('@pages/BO/international/localization');
-const currenciesPage = require('@pages/BO/international/currencies');
-const addCurrencyPage = require('@pages/BO/international/currencies/add');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');

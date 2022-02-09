@@ -55,22 +55,26 @@ const orderByCustomerData = {
 };
 
 /*
-Create order in FO
-Enable merchandise returns and check 'Return products' button
-Change order status to 'Shipped'
-Create merchandise returns on FO then check it on BO
-Update status of merchandise return
+Pre-condition:
+- Create order on FO
+- Enable merchandise returns
+Scenario:
+- Change order status to 'Shipped'
+- Check 'Return products' button
+- Create merchandise returns on FO then check it on BO
+- Update status of merchandise return
 - Waiting for package
 - Package received
 - Return complete
-Check the new status on BO and FO
-Disable merchandise returns
+- Check the new status on BO and FO
+Post-condition:
+- Disable merchandise returns
  */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
-  // Pre-condition - Create order by default customer
+  // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
-  // Pre-condition - Enable merchandise returns
+  // Pre-condition: Enable merchandise returns
   enableMerchandiseReturns(baseContext);
 
   // before and after functions
@@ -466,6 +470,6 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
   });
 
-  // Post-condition - Disable merchandise returns
+  // Post-condition: Disable merchandise returns
   disableMerchandiseReturns(baseContext);
 });
