@@ -3555,5 +3555,55 @@
       <title>Show custom content before checkout confirmation</title>
       <description>This hook allows you to display custom content at the end of checkout process</description>
     </hook>
+    <hook id="actionListModules">
+      <name>actionListModules</name>
+      <title>Add modules to the module manager list</title>
+      <description>This hook allows you to add modules to the list of modules displayed in the module manager page</description>
+    </hook>
+    <hook id="actionBeforeInstallModule">
+      <name>actionBeforeInstallModule</name>
+      <title>Before a module is installed</title>
+      <description>This hook is called just before a module is installed</description>
+    </hook>
+    <hook id="actionBeforePostInstallModule">
+      <name>actionBeforePostInstallModule</name>
+      <title>Before method `postInstall()` is called</title>
+      <description>This hook is called juste before a module execute its `postInstall()` method</description>
+    </hook>
+    <hook id="actionBeforeUninstallModule">
+      <name>actionBeforeUninstallModule</name>
+      <title>Before a module is uninstalled</title>
+      <description>This hook is called just before a module is uninstalled</description>
+    </hook>
+    <hook id="actionBeforeUpgradeModule">
+      <name>actionBeforeUpgradeModule</name>
+      <title>Before a module is upgraded</title>
+      <description>This hook is called just before a module is upgraded</description>
+    </hook>
+    <hook id="actionBeforeEnableModule">
+      <name>actionBeforeEnableModule</name>
+      <title>Before a module is enabled</title>
+      <description>This hook is called just before a module is enabled</description>
+    </hook>
+    <hook id="actionBeforeDisableModule">
+      <name>actionBeforeDisableModule</name>
+      <title>Before a module is disabled</title>
+      <description>This hook is called just before a module is disabled</description>
+    </hook>
+    <hook id="actionBeforeEnableMobileModule">
+      <name>actionBeforeEnableMobileModule</name>
+      <title>Before a module is enabled for mobile</title>
+      <description>This hook is called just before a module is enabled for mobile</description>
+    </hook>
+    <hook id="actionBeforeDisableMobileModule">
+      <name>actionBeforeDisableMobileModule</name>
+      <title>Before a module is disabled for mobile</title>
+      <description>This hook is called just before a module is disabled for mobile</description>
+    </hook>
+    <hook id="actionBeforeResetModule">
+      <name>actionBeforeResetModule</name>
+      <title>Before a module is reset</title>
+      <description>This hook is called just before a module is reset</description>
+    </hook>
   </entities>
 </entity_hook>
