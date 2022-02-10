@@ -21,7 +21,7 @@ const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 const addressData = new AddressFaker();
-const customerData = new CustomerFaker({password: ''});
+const customerData = new CustomerFaker({password: '', lastName: 'guest'});
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -44,17 +44,21 @@ const orderByGuestData = {
 };
 
 /*
-Create 16 shopping carts
-Pagination
-Sort shopping cart table by :
-Id, Order ID, Customer, carrier, date and Online
-Delete customers
+Pre-condition:
+- Create 16 shopping carts by guest
+Scenario:
+- Pagination
+- Sort shopping cart table by Id, Order ID, Customer, carrier, date and Online
+Post-condition:
+-Delete customers
 */
 describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', async () => {
-  // Pre-condition: Create 16 catalog
-  const creationTests = new Array(16).fill(0, 0, 16);
-  creationTests.forEach(() => {
-    createOrderByGuestTest(orderByGuestData, baseContext);
+  // Pre-condition: Create 16 orders
+  describe('PRE-TEST: Create 16 orders by guest in FO', async () => {
+    const creationTests = new Array(16).fill(0, 0, 16);
+    creationTests.forEach(() => {
+      createOrderByGuestTest(orderByGuestData, baseContext);
+    });
   });
 
   // before and after functions
