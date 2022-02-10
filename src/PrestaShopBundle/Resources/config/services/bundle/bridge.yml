@@ -77,6 +77,7 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.core.bridge.controller_configuration_factory"
+      - "@prestashop.core.localization.locale.repository"
 
 
 
