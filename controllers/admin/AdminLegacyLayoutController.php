@@ -96,6 +96,9 @@ class AdminLegacyLayoutControllerCore extends AdminController
             'AdminProfiles',
             'AdminSpecificPriceRule',
             'AdminStatuses',
+            'AdminSecurity',
+            'AdminSecuritySessionEmployee',
+            'AdminSecuritySessionCustomer',
             'AdminTranslations',
         ];
 

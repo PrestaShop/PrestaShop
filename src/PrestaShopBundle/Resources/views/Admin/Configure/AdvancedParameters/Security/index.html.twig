@@ -28,6 +28,8 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block content %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+
   {{ form_start(generalForm, {attr : {class: 'form'}, action: path('admin_security_general_save') }) }}
     {% block administration_form_general %}
       <div class="card" id="configuration_fieldset_general">

@@ -75,6 +75,12 @@ class SecurityController extends FrameworkBundleAdminController
                 'layoutHeaderToolbarBtn' => [],
                 'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
                 'generalForm' => $generalForm->createView(),
+                'multistoreInfoTip' => $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                ),
+                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
         );
     }
@@ -153,6 +159,12 @@ class SecurityController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
+                'multistoreInfoTip' => $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                ),
+                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
         );
     }
@@ -176,6 +188,12 @@ class SecurityController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
+                'multistoreInfoTip' => $this->trans(
+                    'Note that this page is available in all shops context only, this is why your context has just switched.',
+                    'Admin.Notifications.Info'
+                ),
+                'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
+                                       && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
         );
     }
