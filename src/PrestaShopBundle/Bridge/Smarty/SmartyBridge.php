@@ -24,11 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
 
 use \Configuration;
+use \Cookie;
+use \Link;
 use \Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use \Smarty;
 use Symfony\Component\HttpFoundation\Response;
 use \Tools;
@@ -44,6 +47,16 @@ class SmartyBridge
      * @var Smarty
      */
     private $smarty;
+
+    /**
+     * @var Link
+     */
+    private $link;
+
+    /**
+     * @var Cookie
+     */
+    private $cookie;
 
     /**
      * @var BreadcrumbsAndTitleHydrator
@@ -86,6 +99,8 @@ class SmartyBridge
     )
     {
         $this->smarty = $legacyContext->getSmarty();
+        $this->link = $legacyContext->getContext()->link;
+        $this->cookie = $legacyContext->getContext()->cookie;
         $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
         $this->footerHydrator = $footerHydrator;
         $this->headerHydrator = $headerHydrator;
@@ -99,8 +114,6 @@ class SmartyBridge
         $this->breadcrumbsAndTitleHydrator->hydrate($controllerConfiguration);
         $this->notificationHydrator->hydrate($controllerConfiguration);
         $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
-        //@Todo handle this later
-        //$this->setMedia();
         $this->headerHydrator->hydrate($controllerConfiguration);
         $this->footerHydrator->hydrate($controllerConfiguration);
         $this->smartyVarsAssigner->assign($controllerConfiguration->templatesVars);
@@ -116,12 +129,11 @@ class SmartyBridge
             'display_header_javascript' => $controllerConfiguration->displayHeaderJavascript,
             'display_footer' => $controllerConfiguration->displayFooter,
             'js_def' => Media::getJsDef(),
-            'toggle_navigation_url' => $controllerConfiguration->link->getAdminLink('AdminEmployees', true, [], [
+            'toggle_navigation_url' => $this->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
         ]);
 
-        // Use page title from metaTitle if it has been set else from the breadcrumbs array
         if (!$controllerConfiguration->metaTitle) {
             $controllerConfiguration->metaTitle = $controllerConfiguration->toolbarTitle;
         }
@@ -140,7 +152,6 @@ class SmartyBridge
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
         $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
-        //@Todo later handle different view now just handle list
         $tpl_action = $controllerConfiguration->folderTemplate . $controllerConfiguration->display . '.tpl';
 
         // Check if action template has been overridden
@@ -155,23 +166,8 @@ class SmartyBridge
             }
         }
 
-        //if (!$this->ajax) {
         $template = $this->createTemplate($controllerConfiguration, $controllerConfiguration->template);
         $page = $template->fetch();
-
-        //} else {
-        //    $page = $this->content;
-        //}
-
-        //@Todo Handle later
-        //if ($conf = Tools::getValue('conf')) {
-        //    $this->smarty->assign('conf', $this->json ? json_encode($this->_conf[(int) $conf]) : $this->_conf[(int) $conf]);
-        //}
-
-        //@Todo Handle later
-        //if ($error = Tools::getValue('error')) {
-        //    $this->smarty->assign('error', $this->json ? json_encode($this->_error[(int) $error]) : $this->_error[(int) $error]);
-        //}
 
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
             if (!is_array($controllerConfiguration->$type)) {
@@ -205,7 +201,7 @@ class SmartyBridge
             ]
         );
 
-        return $this->smartyOutputContent($controllerConfiguration, $templateName);
+        return $this->smartyOutputContent($templateName);
     }
 
     /**
@@ -233,9 +229,9 @@ class SmartyBridge
      *
      * @param array|string $templates Template file(s) to be rendered
      */
-    private function smartyOutputContent(ControllerConfiguration $controllerConfiguration, $templates): string
+    private function smartyOutputContent($templates): string
     {
-        $controllerConfiguration->cookie->write();
+        $this->cookie->write();
 
         $js_tag = 'js_def';
         $this->smarty->assign($js_tag, $js_tag);

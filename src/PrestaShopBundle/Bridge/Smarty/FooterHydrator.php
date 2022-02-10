@@ -24,7 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
+
+use \Language;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 
 /**
  * Hydrate template variables for footer
@@ -32,20 +36,26 @@ namespace PrestaShopBundle\Bridge;
 class FooterHydrator implements HydratorInterface
 {
     /**
+     * @var Language
+     */
+    private $language;
+
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->language = $legacyContext->getLanguage();
+    }
+
+    /**
      * @param ControllerConfiguration $controllerConfiguration
      *
      * @return void
      */
     public function hydrate(ControllerConfiguration $controllerConfiguration)
     {
-        //RTL Support
-        //rtl.js overrides inline styles
-        //iso_code.css overrides default fonts for every language (optional)
-
         $controllerConfiguration->templatesVars['css_files'] = $controllerConfiguration->cssFiles;
         $controllerConfiguration->templatesVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
         $controllerConfiguration->templatesVars['ps_version'] = _PS_VERSION_;
-        $controllerConfiguration->templatesVars['iso_is_fr'] = strtoupper($controllerConfiguration->language->iso_code) == 'FR';
+        $controllerConfiguration->templatesVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
 
         //'modals' => $this->renderModal(),
     }

@@ -24,9 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
 
 use \Configuration;
+use \Cookie;
+use \Country;
+use \Language;
+use \Link;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use \QuickAccess;
 use \Shop;
@@ -41,18 +47,48 @@ use \Tools;
 class HeaderHydrator implements HydratorInterface
 {
     /**
+     * @var Cookie
+     */
+    private $cookie;
+
+    /**
+     * @var Country
+     */
+    private $country;
+
+    /**
+     * @var Language
+     */
+    private $language;
+
+    /**
+     * @var Link
+     */
+    private $link;
+
+    /**
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var Shop
+     */
+    private $shop;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(RouterInterface $router, TranslatorInterface $translator)
+    public function __construct(RouterInterface $router, TranslatorInterface $translator, LegacyContext $legacyContext)
     {
+        $this->cookie = $legacyContext->getContext()->cookie;
+        $this->country = $legacyContext->getContext()->country;
+        $this->link = $legacyContext->getContext()->link;
+        $this->language = $legacyContext->getLanguage();
         $this->router = $router;
+        $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
     }
     /**
@@ -71,16 +107,16 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['token'] = $controllerConfiguration->token;
         $controllerConfiguration->templatesVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
         $controllerConfiguration->templatesVars['stock_management'] = (int) Configuration::get('PS_STOCK_MANAGEMENT');
-        $controllerConfiguration->templatesVars['no_order_tip'] = $this->getNotificationTip($controllerConfiguration, 'order');
-        $controllerConfiguration->templatesVars['no_customer_tip'] = $this->getNotificationTip($controllerConfiguration, 'customer');
-        $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip($controllerConfiguration, 'customer_message');
+        $controllerConfiguration->templatesVars['no_order_tip'] = $this->getNotificationTip('order');
+        $controllerConfiguration->templatesVars['no_customer_tip'] = $this->getNotificationTip('customer');
+        $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
 
         if ($controllerConfiguration->displayHeader) {
             $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = \Hook::exec('displayBackOfficeHeader');
         }
 
-        // Fetch Employee Menu
         $menuLinksCollections = new ActionsBarButtonsCollection();
+
         //Hook::exec(
         //    'displayBackOfficeEmployeeMenu',
         //    [
@@ -93,72 +129,45 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['displayBackOfficeTop'] = \Hook::exec('displayBackOfficeTop');
         $controllerConfiguration->templatesVars['displayBackOfficeEmployeeMenu'] = $menuLinksCollections;
         $controllerConfiguration->templatesVars['submit_form_ajax'] = (int) Tools::getValue('submitFormAjax');
-        //
-        //// Multishop
 
         $tabs = $this->getTabs($controllerConfiguration);
         $currentTabLevel = 0;
         foreach ($tabs as $tab) {
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
-        //
-        //    $helperShop = new HelperShop();
-        //    /* Hooks are voluntary out the initialize array (need those variables already assigned) */
+
         $controllerConfiguration->templatesVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
-        $controllerConfiguration->templatesVars['collapse_menu'] = isset($controllerConfiguration->cookie->collapse_menu) ? (int) $controllerConfiguration->cookie->collapse_menu : 0;
-        //$controllerConfiguration->templatesVars['current_shop_name'] = $helperShop->getCurrentShopName();
-        $controllerConfiguration->templatesVars['default_tab_link'] = $controllerConfiguration->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
+        $controllerConfiguration->templatesVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
+        $controllerConfiguration->templatesVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
         $controllerConfiguration->templatesVars['employee'] = $controllerConfiguration->user->getData();
         $controllerConfiguration->templatesVars['help_box'] = Configuration::get('PS_HELPBOX');
         $controllerConfiguration->templatesVars['is_multishop'] = Shop::isFeatureActive();
-        $controllerConfiguration->templatesVars['login_link'] = $controllerConfiguration->link->getAdminLink('AdminLogin');
-        $controllerConfiguration->templatesVars['logout_link'] = $controllerConfiguration->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
+        $controllerConfiguration->templatesVars['login_link'] = $this->link->getAdminLink('AdminLogin');
+        $controllerConfiguration->templatesVars['logout_link'] = $this->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
         $controllerConfiguration->templatesVars['multi_shop'] = Shop::isFeatureActive();
-        $controllerConfiguration->templatesVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($controllerConfiguration->language->id, (int) $controllerConfiguration->user->getData()->id);
+        $controllerConfiguration->templatesVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->user->getData()->id);
         $controllerConfiguration->templatesVars['round_mode'] = Configuration::get('PS_PRICE_ROUND_MODE');
-        //$controllerConfiguration->context->smarty->assign([
-            //'multishop_context' => $this->multishop_context,
-            //'search_type' => Tools::getValue('bo_search_type'),
-            //'shop' => $this->context->shop,
-            //'shop_group' => new ShopGroup((int) Shop::getContextShopGroupID()),
-            //'shop_list' => $helperShop->getRenderedShopList(),
-        //]);
-        //} else {
-        //    $controllerConfiguration->context->smarty->assign('default_tab_link', $controllerConfiguration->context->link->getAdminLink('AdminDashboard'));
-        //}
-        //
-        //// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
-        //$this->context->shop = new Shop((int) $this->context->shop->id);
-        $controllerConfiguration->templatesVars['base_url'] = $controllerConfiguration->shop->getBaseURL(true);
+        $controllerConfiguration->templatesVars['base_url'] = $this->shop->getBaseURL(true);
         $controllerConfiguration->templatesVars['bootstrap'] = $controllerConfiguration->bootstrap;
         $controllerConfiguration->templatesVars['controller_name'] = $controllerConfiguration->controllerNameLegacy;
-        $controllerConfiguration->templatesVars['country_iso_code'] = $controllerConfiguration->country->iso_code;
+        $controllerConfiguration->templatesVars['country_iso_code'] = $this->country->iso_code;
         $controllerConfiguration->templatesVars['currentIndex'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templatesVars['current_tab_level'] = $currentTabLevel;
         $controllerConfiguration->templatesVars['default_language'] = (int) Configuration::get('PS_LANG_DEFAULT');
-        $controllerConfiguration->templatesVars['full_language_code'] = $controllerConfiguration->language->language_code;
+        $controllerConfiguration->templatesVars['full_language_code'] = $this->language->language_code;
         $controllerConfiguration->templatesVars['full_cldr_language_code'] = 'fr';
         $controllerConfiguration->templatesVars['img_dir'] = _PS_IMG_;
         $controllerConfiguration->templatesVars['install_dir_exists'] = file_exists(_PS_ADMIN_DIR_ . '/../install');
-        $controllerConfiguration->templatesVars['iso'] = $controllerConfiguration->language->iso_code;
-        $controllerConfiguration->templatesVars['iso_user'] = $controllerConfiguration->language->iso_code;
-        $controllerConfiguration->templatesVars['lang_is_rtl'] = $controllerConfiguration->language->is_rtl;
-        $controllerConfiguration->templatesVars['link'] = $controllerConfiguration->link;
+        $controllerConfiguration->templatesVars['iso'] = $this->language->iso_code;
+        $controllerConfiguration->templatesVars['iso_user'] = $this->language->iso_code;
+        $controllerConfiguration->templatesVars['lang_is_rtl'] = $this->language->is_rtl;
+        $controllerConfiguration->templatesVars['link'] = $this->link;
         $controllerConfiguration->templatesVars['shop_name'] = Configuration::get('PS_SHOP_NAME');
         $controllerConfiguration->templatesVars['tabs'] = $tabs;
         $controllerConfiguration->templatesVars['version'] = _PS_VERSION_;
-
-        //$controllerConfiguration->context->smarty->assign([
-        //    //'class_name' => $controllerConfiguration->className,
-        //    //'current_parent_id' => (int) Tab::getCurrentParentId(),
-        //    //@Todo handle this
-        //    //'full_cldr_language_code' => $this->getContextLocale()->getCode(),
-        //    //'lang_iso' => $this->context->language->iso_code,
-        //    //'pic_dir' => _THEME_PROD_PIC_DIR_,
-        //]);
     }
 
-    private function getNotificationTip(ControllerConfiguration $controllerConfiguration, $type)
+    private function getNotificationTip($type)
     {
         $tips = [
             'order' => [
@@ -167,7 +176,7 @@ class HeaderHydrator implements HydratorInterface
                     [
                         '[1]' => '<strong>',
                         '[/1]' => '</strong>',
-                        '[2]' => '<a href="' . $controllerConfiguration->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
+                        '[2]' => '<a href="' . $this->link->getAdminLink('AdminCarts', true, [], ['action' => 'filterOnlyAbandonedCarts']) . '">',
                         '[/2]' => '</a>',
                         '[3]' => '<br>',
                     ],
@@ -191,7 +200,7 @@ class HeaderHydrator implements HydratorInterface
 
     private function getTabs(ControllerConfiguration $controllerConfiguration, $parentId = 0, $level = 0): array
     {
-        $tabs = Tab::getTabs($controllerConfiguration->language->id, $parentId);
+        $tabs = Tab::getTabs($this->language->id, $parentId);
         $current_id = Tab::getCurrentParentId();
 
         foreach ($tabs as $index => $tab) {
@@ -212,7 +221,7 @@ class HeaderHydrator implements HydratorInterface
                 $tabs[$index]['current'] = false;
             }
             $tabs[$index]['img'] = null;
-            $tabs[$index]['href'] = $controllerConfiguration->link->getTabLink($tab);
+            $tabs[$index]['href'] = $this->link->getTabLink($tab);
             $tabs[$index]['sub_tabs'] = array_values($this->getTabs($controllerConfiguration, $tab['id_tab'], $level + 1));
 
             $subTabHref = $this->getTabLinkFromSubTabs($tabs[$index]['sub_tabs']);

@@ -24,18 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
 
 use \Configuration;
 use \Language;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use \Tools;
 
 /**
- * Class ToolbarFlagsHydrator hydrate toolbar flags in the DTO
- *
- * Little of assign and dto
+ * Class ToolbarFlagsHydrator hydrate toolbar flags in the Controller configuration
  */
 class ToolbarFlagsHydrator implements HydratorInterface
 {
@@ -82,66 +81,12 @@ class ToolbarFlagsHydrator implements HydratorInterface
      * assign default action in toolbar_btn smarty var, if they are not set.
      * uses override to specifically add, modify or remove items.
      *
+     * This method will be used in add, edit...
+     *
      * @param ControllerConfiguration $controllerConfiguration
      */
     public function initToolbar(ControllerConfiguration $controllerConfiguration)
     {
-        //switch ($configurationDTO->display) {
-            //case 'add':
-            //case 'edit':
-            //    // Default save button - action dynamically handled in javascript
-            //    $configurationDTO->toolbarButton['save'] = [
-            //        'href' => '#',
-            //        'desc' => $this->translator->trans('Save', [], 'Admin.Actions'),
-            //    ];
-            //    $back = Tools::safeOutput(Tools::getValue('back', ''));
-            //    if (empty($back)) {
-            //        $back = $this->router->generate('admin_features_index');
-            //    }
-            //    if (!Validate::isCleanHtml($back)) {
-            //        die(Tools::displayError());
-            //    }
-            //    if (!$configurationDTO->liteDisplay) {
-            //        $configurationDTO->toolbarButton['cancel'] = [
-            //            'href' => $back,
-            //            'desc' => $this->translator->trans('Cancel', [], 'Admin.Actions'),
-            //        ];
-            //    }
-            //
-            //    break;
-            //case 'view':
-            //    // Default cancel button - like old back link
-            //    $back = Tools::safeOutput(Tools::getValue('back', ''));
-            //    if (empty($back)) {
-            //        $back = $this->router->generate('admin_features_index');
-            //    }
-            //    if (!Validate::isCleanHtml($back)) {
-            //        die(Tools::displayError());
-            //    }
-            //    if (!$configurationDTO->liteDisplay) {
-            //        $configurationDTO->toolbarButton['back'] = [
-            //            'href' => $back,
-            //            'desc' => $this->translator->trans('Back to list', [], 'Admin.Actions'),
-            //        ];
-            //    }
-            //
-            //    break;
-            //case 'options':
-            //    $configurationDTO->toolbarButton['save'] = [
-            //        'href' => '#',
-            //        'desc' => $this->translator->trans('Save', [], 'Admin.Actions'),
-            //    ];
-            //
-            //    break;
-            //default:
-                // list
-                //if ($this->allow_export) {
-                //    $this->toolbar_btn['export'] = [
-                //        'href' => self::$currentIndex . '&export' . $this->table . '&token=' . $this->token,
-                //        'desc' => $this->translator->trans('Export', 'Admin.Actions'),
-                //    ];
-                //}
-        //}
     }
 
     public function initPageHeaderToolbar(ControllerConfiguration $controllerConfiguration)
@@ -149,53 +94,6 @@ class ToolbarFlagsHydrator implements HydratorInterface
         if (empty($this->toolbarTitle)) {
             $this->initToolbarTitle($controllerConfiguration);
         }
-
-        //Todo pas encore fait l'edition
-        //switch ($this->display) {
-        //    case 'view':
-        //        // Default cancel button - like old back link
-        //        $back = Tools::safeOutput(Tools::getValue('back', ''));
-        //        if (empty($back)) {
-        //            $back = self::$currentIndex . '&token=' . $this->token;
-        //        }
-        //        if (!Validate::isCleanHtml($back)) {
-        //            die(Tools::displayError());
-        //        }
-        //        if (!$this->lite_display) {
-        //            $this->page_header_toolbar_btn['back'] = [
-        //                'href' => $back,
-        //                'desc' => $this->translator->trans('Back to list'),
-        //            ];
-        //        }
-        //        $obj = $this->loadObject(true);
-        //        if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name})) {
-        //            array_pop($this->toolbarTitle);
-        //            array_pop($this->meta_title);
-        //            $this->toolbarTitle[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
-        //            $this->addMetaTitle($this->toolbarTitle[count($this->toolbarTitle) - 1]);
-        //        }
-        //
-        //        break;
-        //    case 'edit':
-        //        $obj = $this->loadObject(true);
-        //        if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name})) {
-        //            array_pop($this->toolbarTitle);
-        //            array_pop($this->meta_title);
-        //            $this->toolbarTitle[] = $this->translator->trans(
-        //                'Edit: %s',
-        //                [
-        //                    (is_array($obj->{$this->identifier_name})
-        //                        && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])
-        //                    )
-        //                        ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
-        //                        : $obj->{$this->identifier_name},
-        //                ]
-        //            );
-        //            $this->addMetaTitle($this->toolbarTitle[count($this->toolbarTitle) - 1]);
-        //        }
-        //
-        //        break;
-        //}
 
         if (count($controllerConfiguration->toolbarTitle)) {
             $controllerConfiguration->showPageHeaderToolbar = true;
@@ -212,26 +110,6 @@ class ToolbarFlagsHydrator implements HydratorInterface
     public function initToolbarTitle(ControllerConfiguration $controllerConfiguration)
     {
         $controllerConfiguration->toolbarTitle = array_unique($controllerConfiguration->breadcrumbs);
-
-        //switch ($this->display) {
-        //    case 'edit':
-        //        $this->toolbarTitle[] = $this->translator->trans('Edit');
-        //        $this->addMetaTitle($this->translator->trans('Edit'));
-        //
-        //        break;
-        //
-        //    case 'add':
-        //        $this->toolbarTitle[] = $this->translator->trans('Add new');
-        //        $this->addMetaTitle($this->translator->trans('Add new'));
-        //
-        //        break;
-        //
-        //    case 'view':
-        //        $this->toolbarTitle[] = $this->translator->trans('View');
-        //        $this->addMetaTitle($this->translator->trans('View'));
-        //
-        //        break;
-        //}
 
         if ($filter = $this->addFiltersToBreadcrumbs($controllerConfiguration)) {
             $controllerConfiguration->toolbarTitle[] = $filter;
