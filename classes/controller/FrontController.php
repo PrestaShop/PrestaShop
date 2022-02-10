@@ -76,18 +76,6 @@ class FrontControllerCore extends Controller
     /** @var string Language ISO code */
     public $iso;
 
-    /** @var string ORDER BY field */
-    public $orderBy;
-
-    /** @var string Order way string ('ASC', 'DESC') */
-    public $orderWay;
-
-    /** @var int Current page number */
-    public $p;
-
-    /** @var int Items (products) per page */
-    public $n;
-
     /** @var bool If set to true, will redirected user to login page during init function. */
     public $auth = false;
 
@@ -133,11 +121,6 @@ class FrontControllerCore extends Controller
      * @var array Holds current customer's groups
      */
     protected static $currentCustomerGroups;
-
-    /**
-     * @var int
-     */
-    public $nb_items_per_page;
 
     /**
      * @var ObjectPresenter
