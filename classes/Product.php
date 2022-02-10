@@ -1851,7 +1851,7 @@ class ProductCore extends ObjectModel
                 $obj->$field = $value;
             }
 
-            $obj->default_on = 0;
+            $obj->default_on = false;
             $this->setAvailableDate();
 
             $obj->save();
@@ -1980,7 +1980,7 @@ class ProductCore extends ObjectModel
     {
         Tools::displayAsDeprecated();
         $return = [];
-        $default_value = 1;
+        $default_value = true;
         foreach ($attributes as $attribute) {
             $obj = new Combination();
             foreach ($attribute as $key => $value) {
@@ -1989,7 +1989,7 @@ class ProductCore extends ObjectModel
 
             if ($set_default) {
                 $obj->default_on = $default_value;
-                $default_value = 0;
+                $default_value = false;
                 // if we add a combination for this shop and this product does not use the combination feature in other shop,
                 // we clone the default combination in every shop linked to this product
                 if (!$this->hasAttributesInOtherShops()) {
@@ -2265,7 +2265,7 @@ class ProductCore extends ObjectModel
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
         $combination->mpn = pSQL($mpn);
-        $combination->default_on = (int) $default;
+        $combination->default_on = (bool) $default;
         $combination->minimal_quantity = (int) $minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
@@ -2367,7 +2367,7 @@ class ProductCore extends ObjectModel
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
         $combination->mpn = pSQL($mpn);
-        $combination->default_on = (int) $default;
+        $combination->default_on = (bool) $default;
         $combination->minimal_quantity = (int) $minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);

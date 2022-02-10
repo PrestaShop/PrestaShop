@@ -23,7 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-@ini_set('max_execution_time', 3600);
+@ini_set('max_execution_time', '3600');
 
 /**
  * @property Product $object

@@ -2309,7 +2309,7 @@ class CategoryCore extends ObjectModel
      * Update Categories for a shop.
      *
      * @param array $categories Categories list to associate a shop
-     * @param string $idShop Categories list to associate a shop
+     * @param int|null $idShop Categories list to associate a shop
      *
      * @return bool Update/insertion result (`false` if not successfully inserted/updated)
      */

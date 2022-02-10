@@ -81,9 +81,6 @@ jobs:
       - name: Run phpstan on classes directory
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 classes/
 
-      - name: Run phpstan on controllers directory
-        run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist -l 4 controllers/
-
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest

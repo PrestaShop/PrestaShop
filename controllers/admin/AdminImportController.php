@@ -26,7 +26,7 @@
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
-@ini_set('max_execution_time', 0);
+@ini_set('max_execution_time', '0');
 /* No max line limit since the lines can be more than 4096. Performance impact is not significant. */
 define('MAX_LINE_SIZE', 0);
 
@@ -479,7 +479,7 @@ class AdminImportControllerCore extends AdminController
                 ];
 
                 self::$default_values = [
-                    'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
+                    'shop' => Shop::getGroupFromShop((int) Configuration::get('PS_SHOP_DEFAULT')),
                 ];
 
                 break;
@@ -963,10 +963,11 @@ class AdminImportControllerCore extends AdminController
 
     protected static function getPrice($field)
     {
-        $field = ((float) str_replace(',', '.', $field));
-        $field = ((float) str_replace('%', '', $field));
-
-        return $field;
+        return (float) str_replace(
+            [',', '%'],
+            ['.', ''],
+            $field
+        );
     }
 
     protected static function split($field)
@@ -1585,7 +1586,7 @@ class AdminImportControllerCore extends AdminController
                     if (!empty($shop) && !is_numeric($shop)) {
                         $category->addShop(Shop::getIdByName($shop));
                     } elseif (!empty($shop)) {
-                        $category->addShop($shop);
+                        $category->addShop((int) $shop);
                     }
                 }
             }
@@ -2164,16 +2165,15 @@ class AdminImportControllerCore extends AdminController
                 if (isset($product->id) && $product->id) {
                     $tags = Tag::getProductTags($product->id);
                     if (is_array($tags) && count($tags)) {
-                        if (!empty($product->tags)) {
-                            $product->tags = explode($this->multiple_value_separator, $product->tags);
-                        }
-                        if (is_array($product->tags) && count($product->tags)) {
-                            foreach ($product->tags as $key => $tag) {
+                        /** @phpstan-ignore-next-line $product->tags is filled with a string at line 1986 */
+                        $productTags = explode($this->multiple_value_separator, $product->tags);
+                        if (count($productTags)) {
+                            foreach ($productTags as $key => $tag) {
                                 if (!empty($tag)) {
-                                    $product->tags[$key] = trim($tag);
+                                    $productTags[$key] = trim($tag);
                                 }
                             }
-                            $tags[$id_lang] = $product->tags;
+                            $tags[$id_lang] = $productTags;
                             $product->tags = $tags;
                         }
                     }
@@ -2322,7 +2322,7 @@ class AdminImportControllerCore extends AdminController
                 }
                 // automaticly disable depends on stock, if a_s_m set to disabled
                 if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, 0);
+                    StockAvailable::setProductDependsOnStock($product->id, false);
                 }
             }
 
@@ -2393,7 +2393,7 @@ class AdminImportControllerCore extends AdminController
                     // if depends on stock and quantity, add quantity to stock
                     if ($product->depends_on_stock == 1) {
                         $stock_manager = StockManagerFactory::getManager();
-                        $price = str_replace(',', '.', $product->wholesale_price);
+                        $price = str_replace(',', '.', (string) $product->wholesale_price);
                         if ($price == '0') {
                             $price = 0.000001;
                         }
@@ -2462,7 +2462,7 @@ class AdminImportControllerCore extends AdminController
 
     public function attributeImport($offset = false, $limit = false, &$crossStepsVariables = false, $validateOnly = false)
     {
-        $default_language = Configuration::get('PS_LANG_DEFAULT');
+        $default_language = (int) Configuration::get('PS_LANG_DEFAULT');
 
         $groups = [];
         if ($crossStepsVariables !== false && array_key_exists('groups', $crossStepsVariables)) {
@@ -2805,12 +2805,12 @@ class AdminImportControllerCore extends AdminController
                                         $id_image,
                                         (string) $info['reference'],
                                         (string) $info['ean13'],
-                                        ((int) $info['default_on'] ? (int) $info['default_on'] : null),
-                                        0,
+                                        ((bool) $info['default_on'] ? (bool) $info['default_on'] : null),
+                                        '',
                                         (string) $info['upc'],
                                         (int) $info['minimal_quantity'],
                                         $info['available_date'],
-                                        null,
+                                        false,
                                         $id_shop_list,
                                         '',
                                         $info['low_stock_threshold'],
@@ -2839,8 +2839,8 @@ class AdminImportControllerCore extends AdminController
                             (string) $info['reference'],
                             0,
                             (string) $info['ean13'],
-                            ((int) $info['default_on'] ? (int) $info['default_on'] : null),
-                            0,
+                            ((bool) $info['default_on'] ? (bool) $info['default_on'] : null),
+                            '',
                             (string) $info['upc'],
                             (int) $info['minimal_quantity'],
                             $id_shop_list,
@@ -2913,7 +2913,7 @@ class AdminImportControllerCore extends AdminController
                 }
                 // automaticly disable depends on stock, if a_s_m set to disabled
                 if (!$validateOnly && StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0) {
-                    StockAvailable::setProductDependsOnStock($product->id, 0, null, $id_product_attribute);
+                    StockAvailable::setProductDependsOnStock($product->id, false, null, $id_product_attribute);
                 }
             }
 
@@ -3333,7 +3333,7 @@ class AdminImportControllerCore extends AdminController
 
         /** @var Address $address */
         if (isset($address->country) && is_numeric($address->country)) {
-            if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int) $address->country)) {
+            if (Country::getNameById((int) Configuration::get('PS_LANG_DEFAULT'), (int) $address->country)) {
                 $address->id_country = (int) $address->country;
             }
         } elseif (isset($address->country) && is_string($address->country) && !empty($address->country)) {
@@ -3968,7 +3968,7 @@ class AdminImportControllerCore extends AdminController
         }
 
         if (isset($store->country) && is_numeric($store->country)) {
-            if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int) $store->country)) {
+            if (Country::getNameById((int) Configuration::get('PS_LANG_DEFAULT'), (int) $store->country)) {
                 $store->id_country = (int) $store->country;
             }
         } elseif (isset($store->country) && is_string($store->country) && !empty($store->country)) {

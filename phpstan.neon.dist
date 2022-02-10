@@ -9,7 +9,7 @@ parameters:
     - cache
     # - classes
     - config
-    # - controllers
+    - controllers
     - docs
     - download
     - img

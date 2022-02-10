@@ -1428,7 +1428,7 @@ class AdminControllerCore extends Controller
     /**
      * Cancel all filters for this tab.
      *
-     * @param int|null $list_id
+     * @param string|null $list_id
      */
     public function processResetFilters($list_id = null)
     {
