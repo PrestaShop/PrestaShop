@@ -9,6 +9,7 @@ services:
       - "@prestashop.core.bridge.breadcrumbs_and_title_hydrator"
       - "@prestashop.core.bridge.footer_hydrator"
       - "@prestashop.core.bridge.header_hydrator"
+      - "@prestashop.core.bridge.modal_hydrator"
       - "@prestashop.core.bridge.notification_hydrator"
       - "@prestashop.core.bridge.toolbar_flags_hydrator"
       - "@prestashop.core.bridge.smarty_vars_assigner"
@@ -34,6 +35,9 @@ services:
       - "@prestashop.router"
       - "@translator"
       - "@prestashop.adapter.legacy.context"
+
+  prestashop.core.bridge.modal_hydrator:
+    class: PrestaShopBundle\Bridge\Smarty\ModalHydrator
 
   prestashop.core.bridge.notification_hydrator:
     class: PrestaShopBundle\Bridge\Smarty\NotificationsHydrator
