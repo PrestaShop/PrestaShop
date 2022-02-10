@@ -79,11 +79,6 @@ class InitControllerListener
             'table' => get_class($controller)::TABLE,
         ]);
 
-        //Todo handle this later
-        if (!Shop::isFeatureActive()) {
-            $controller->shopLinkType = '';
-        }
-
         $this->setCurrentIndex($controller);
         $this->initToken($controller, $event->getRequest());
     }

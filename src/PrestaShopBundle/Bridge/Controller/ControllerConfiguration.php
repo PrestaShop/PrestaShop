@@ -217,4 +217,9 @@ class ControllerConfiguration
      * @var array
      */
     public $templatesVars = [];
+
+    /**
+     * @var array
+     */
+    public $modals = [];
 }

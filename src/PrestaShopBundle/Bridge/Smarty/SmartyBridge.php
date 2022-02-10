@@ -74,6 +74,11 @@ class SmartyBridge
     private $headerHydrator;
 
     /**
+     * @var ModalHydrator
+     */
+    private $modalHydrator;
+
+    /**
      * @var NotificationsHydrator
      */
     private $notificationHydrator;
@@ -93,6 +98,7 @@ class SmartyBridge
         BreadcrumbsAndTitleHydrator $breadcrumbsAndTitleHydrator,
         FooterHydrator $footerHydrator,
         HeaderHydrator $headerHydrator,
+        ModalHydrator $modalHydrator,
         NotificationsHydrator $notificationHydrator,
         ToolbarFlagsHydrator $toolbarFlagsHydrator,
         SmartyVarsAssigner $smartyVarsAssigner
@@ -104,6 +110,7 @@ class SmartyBridge
         $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
         $this->footerHydrator = $footerHydrator;
         $this->headerHydrator = $headerHydrator;
+        $this->modalHydrator = $modalHydrator;
         $this->notificationHydrator = $notificationHydrator;
         $this->toolbarFlagsHydrator = $toolbarFlagsHydrator;
         $this->smartyVarsAssigner = $smartyVarsAssigner;
@@ -112,6 +119,7 @@ class SmartyBridge
     public function render(string $content, ControllerConfiguration $controllerConfiguration, $template = self::LAYOUT): Response
     {
         $this->breadcrumbsAndTitleHydrator->hydrate($controllerConfiguration);
+        $this->modalHydrator->hydrate($controllerConfiguration);
         $this->notificationHydrator->hydrate($controllerConfiguration);
         $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
         $this->headerHydrator->hydrate($controllerConfiguration);
@@ -198,6 +206,7 @@ class SmartyBridge
                 'page' => $controllerConfiguration->json ? json_encode($page) : $page,
                 'header' => $this->smarty->fetch($header_tpl),
                 'footer' => $this->smarty->fetch($footer_tpl),
+                'modal' => $this->renderModal($controllerConfiguration),
             ]
         );
 
@@ -246,5 +255,18 @@ class SmartyBridge
         }
 
         return trim($html);
+    }
+
+    private function renderModal(ControllerConfiguration $controllerConfiguration): string
+    {
+        $modalRender = '';
+        if (is_array($controllerConfiguration->modals) && count($controllerConfiguration->modals)) {
+            foreach ($controllerConfiguration->modals as $modal) {
+                $this->smarty->assign($modal);
+                $modalRender .= $this->smarty->fetch('modal.tpl');
+            }
+        }
+
+        return $modalRender;
     }
 }

@@ -83,7 +83,7 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
         //build list and page with action
         $this->setListFields();
         //A gérer
-        $this->processFilter();
+        $this->processFilter($request);
 
         $this->buildActionList();
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create([
