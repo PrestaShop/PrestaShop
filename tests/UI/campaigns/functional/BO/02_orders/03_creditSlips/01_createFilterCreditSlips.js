@@ -51,7 +51,7 @@ Scenario:
 - Download the 2 credit slip files and check them
  */
 describe('BO - Orders - Credit slips : Create, filter and check credit slips file', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions

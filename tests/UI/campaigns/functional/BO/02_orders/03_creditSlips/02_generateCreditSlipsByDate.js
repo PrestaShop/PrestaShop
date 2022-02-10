@@ -43,13 +43,13 @@ const orderByCustomerData = {
 
 /*
 Pre-condition:
-- Create order on FO
+- Create order in FO
 Scenario:
 - Create credit slip on the created order
 - Generate credit slip file by date
  */
 describe('BO - Orders - Credit slips : Generate Credit slip file by date', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions

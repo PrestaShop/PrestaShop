@@ -35,8 +35,14 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
+/*
+Pre-condition:
+- Create order in FO
+Scenario:
+- Enable/Disable invoices then check the invoice in view order page
+ */
 describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions

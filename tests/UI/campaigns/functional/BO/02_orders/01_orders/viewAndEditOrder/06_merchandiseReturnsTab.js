@@ -56,17 +56,17 @@ const orderByCustomerData = {
 
 /*
 Pre-condition:
-- Create order on FO
+- Create order in FO
 - Enable merchandise returns
 Scenario:
 - Change order status to 'Shipped'
 - Check 'Return products' button
-- Create merchandise returns on FO then check it on BO
+- Create merchandise returns in FO then check it in BO
 - Update status of merchandise return
 - Waiting for package
 - Package received
 - Return complete
-- Check the new status on BO and FO
+- Check the new status in BO and FO
 Post-condition:
 - Disable merchandise returns
  */

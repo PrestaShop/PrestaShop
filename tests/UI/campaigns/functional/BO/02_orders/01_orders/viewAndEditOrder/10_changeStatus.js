@@ -38,7 +38,7 @@ const orderByCustomerData = {
 
 /*
 Pre-condition :
-- Create order on FO
+- Create order in FO
 Scenario :
 - View first order page
 - Select same status and check result
