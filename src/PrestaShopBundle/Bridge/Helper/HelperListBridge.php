@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Helper;
 
 use \Configuration;
 use \Context;
@@ -32,6 +32,7 @@ use \Db;
 use \DbQuery;
 use \HelperList;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Security\Admin\Employee;
 use \PrestaShopException;
 use \Shop;
@@ -39,6 +40,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use \Tools;
 use \Validate;
 
+/**
+ * A bridge to use helper list to render list in Controller migrate horizontally
+ */
 class HelperListBridge
 {
     /**
@@ -185,7 +189,6 @@ class HelperListBridge
 
             if ($helperListConfiguration->explicitSelect) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {
-                    // Add it only if it is not already in $this->_select
                     if (isset($helperListConfiguration->select) && preg_match('/[\s]`?' . preg_quote($key, '/') . '`?\s*,/', $helperListConfiguration->select)) {
                         continue;
                     }
@@ -208,7 +211,6 @@ class HelperListBridge
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
 
             if ($helperListConfiguration->useFoundRows || isset($helperListConfiguration->filterHaving) || isset($helperListConfiguration->having)) {
-                //$this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
                 $helperListConfiguration->listsql = 'SELECT SQL_CALC_FOUND_ROWS ' .
                     $helperListConfiguration->listsql .
                     $fromClause .
@@ -219,7 +221,6 @@ class HelperListBridge
 
                 $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $helperListConfiguration->table . '`';
             } else {
-                //$this->_listsql = 'SELECT ' . ($this->_tmpTableFilter ? ' * FROM (SELECT ' : '') .
                 $helperListConfiguration->listsql = 'SELECT ' .
                     $helperListConfiguration->listsql .
                     $fromClause .
@@ -254,7 +255,6 @@ class HelperListBridge
             }
         } while (empty($this->_list));
 
-        //todo moved this in a decorator
         if ($helperListConfiguration->table == 'feature') {
             $nbItems = count($helperListConfiguration->list);
             for ($i = 0; $i < $nbItems; ++$i) {
@@ -498,8 +498,6 @@ class HelperListBridge
 
     /**
      * Set the filters used for the list display.
-     *
-     * @Todo mooved in a bridge
      */
     private function getCookieFilterPrefix()
     {

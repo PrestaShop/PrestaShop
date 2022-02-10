@@ -24,19 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
 
 use \Configuration;
+use \Link;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use \Tab;
 use \Tools;
 
 /**
  * Class BreadcrumbsAndTitleHydrator hydrate breadcrumbs in ControllerConfiguration
- *
- * Only set variable
  */
 class BreadcrumbsAndTitleHydrator implements HydratorInterface
 {
+    /**
+     * @var Link
+     */
+    private $link;
+
+    public function __construct(LegacyContext $legacyContext)
+    {
+        $this->link = $legacyContext->getContext()->link;
+    }
+
     /**
      * Set breadcrumbs array for the controller page.
      *
@@ -59,52 +70,17 @@ class BreadcrumbsAndTitleHydrator implements HydratorInterface
         if (!empty($tabs[0])) {
             $this->addMetaTitle($controllerConfiguration, $tabs[0]['name']);
             $breadcrumbs2['tab']['name'] = $tabs[0]['name'];
-            $breadcrumbs2['tab']['href'] = $controllerConfiguration->link->getTabLink($tabs[0]);
+            $breadcrumbs2['tab']['href'] = $this->link->getTabLink($tabs[0]);
             if (!isset($tabs[1])) {
                 $breadcrumbs2['tab']['icon'] = 'icon-' . $tabs[0]['class_name'];
             }
         }
         if (!empty($tabs[1])) {
             $breadcrumbs2['container']['name'] = $tabs[1]['name'];
-            $breadcrumbs2['container']['href'] = $controllerConfiguration->link->getTabLink($tabs[1]);
+            $breadcrumbs2['container']['href'] = $this->link->getTabLink($tabs[1]);
             $breadcrumbs2['container']['icon'] = 'icon-' . $tabs[1]['class_name'];
         }
 
-        /* content, edit, list, add, details, options, view */
-        //switch ($this->display) {
-        //    case 'add':
-        //        $breadcrumbs2['action']['name'] = $this->trans('Add', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-plus';
-        //
-        //        break;
-        //    case 'edit':
-        //        $breadcrumbs2['action']['name'] = $this->trans('Edit', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-pencil';
-        //
-        //        break;
-        //    case '':
-        //    case 'list':
-        //        $breadcrumbs2['action']['name'] = $this->trans('List', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-th-list';
-        //
-        //        break;
-        //    case 'details':
-        //    case 'view':
-        //        $breadcrumbs2['action']['name'] = $this->trans('View details', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-zoom-in';
-        //
-        //        break;
-        //    case 'options':
-        //        $breadcrumbs2['action']['name'] = $this->trans('Options', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-cogs';
-        //
-        //        break;
-        //    case 'generator':
-        //        $breadcrumbs2['action']['name'] = $this->trans('Generator', 'Admin.Actions');
-        //        $breadcrumbs2['action']['icon'] = 'icon-flask';
-        //
-        //        break;
-        //}
         $controllerConfiguration->breadcrumbs[] = $tabs[0]['name'] ?? '';
 
         $controllerConfiguration->templatesVars['breadcrumbs2'] = $breadcrumbs2;
@@ -120,8 +96,6 @@ class BreadcrumbsAndTitleHydrator implements HydratorInterface
      *
      * @param ControllerConfiguration $controllerConfiguration
      * @param string $entry new entry
-     *
-     * @Todo moved it
      */
     public function addMetaTitle(ControllerConfiguration $controllerConfiguration, $entry)
     {

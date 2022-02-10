@@ -26,41 +26,43 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use Configuration;
-use HelperList;
 use Media;
 use ObjectModel;
 use PrestaShopBundle\Bridge\AddActionTrait;
 use PrestaShopBundle\Bridge\AddActionInterface;
-use PrestaShopBundle\Bridge\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Controller\ControllerBridgeInterface;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tab;
 use Tools;
 use Validate;
 
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements AddActionInterface
+class FeatureController extends FrameworkBundleAdminController implements ControllerBridgeInterface, AddActionInterface
 {
     use AddActionTrait;
 
-    private const DEFAULT_THEME = 'default';
-    private const CONTROLLER_NAME_LEGACY = 'AdminFeatures';
-    private const POSITION_IDENTIFIER = 'id_feature';
-    private const TABLE = 'feature';
-    private const LIST_ID = 'feature';
-    private const CLASS_NAME = 'Feature';
-    private const IDENTIFIER = 'id_feature';
+    public const DEFAULT_THEME = 'default';
+    public const CONTROLLER_NAME_LEGACY = 'AdminFeatures';
+    public const POSITION_IDENTIFIER = 'id_feature';
+    public const TABLE = 'feature';
+    public const LIST_ID = 'feature';
+    public const CLASS_NAME = 'Feature';
+    public const IDENTIFIER = 'id_feature';
 
     /**
      * @var string
      */
     public $php_self;
+
+    /**
+     * @var ControllerConfiguration
+     */
+    public $controllerConfiguration;
 
     //Filters
     /**
@@ -74,48 +76,10 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
     protected $ajax = false;
 
     /**
-     * @var ControllerConfiguration
-     */
-    private $controllerConfiguration;
-
-    public function initController(Request $request)
-    {
-        //Moved this in a listener ????
-        //Unmovable
-        $this->php_self = get_class($this);
-        $this->getContext()->controller = $this;
-        $this->getContext()->smarty->assign('link', $this->getContext()->link);
-
-        $this->controllerConfiguration = $this->get('prestashop.core.bridge.controller_configuration_factory')->create([
-            'id' => Tab::getIdFromClassName(
-                self::CONTROLLER_NAME_LEGACY
-            ),
-            'controllerName' => get_class($this),
-            'controllerNameLegacy' => self::CONTROLLER_NAME_LEGACY,
-            'positionIdentifier' => self::POSITION_IDENTIFIER,
-            'table' => self::TABLE,
-        ]);
-
-        //Todo handle this later
-        if (!Shop::isFeatureActive()) {
-            $this->shopLinkType = '';
-        }
-
-        //Todo this will be move when I handle SmartyRenderBridge
-        $this->controllerConfiguration->folderTemplate = Tools::toUnderscoreCase(substr($this->controllerConfiguration->controllerNameLegacy, 5)) . '/';
-
-        $this->setCurrentIndex();
-        $this->initToken($request);
-    }
-
-    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request)
     {
-        //Moved in other way
-        $this->initController($request);
-
         //build list and page with action
         $this->setListFields();
         //A gérer
@@ -133,16 +97,8 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
         ]);
         $this->get('prestashop.core.bridge.helper_list_bridge')->getList(
             $helperListConfiguration,
-            $this->controllerConfiguration->language->id
+            $this->getContext()->language->id
         );
-
-        // Empty list is ok
-        //@todo Find a way to handle this. How do this ??????
-        if (!is_array($helperListConfiguration->list)) {
-            $this->displayWarning($this->trans('Bad SQL query', 'Admin.Notifications.Error', []) . '<br />' . htmlspecialchars($helperListConfiguration->listError));
-
-            return false;
-        }
 
         return $this->renderSmarty(
             $this->get('prestashop.core.bridge.helper_list_bridge')->renderList(
@@ -158,17 +114,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
         $this->setMedia();
 
         return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $controllerConfiguration);
-    }
-
-    public function setCurrentIndex(): void
-    {
-        // Set current index
-        $currentIndex = 'index.php' . (($controller = Tools::getValue('controller')) ? '?controller=' . $controller : '');
-        if ($back = Tools::getValue('back')) {
-            $currentIndex .= '&back=' . urlencode($back);
-        }
-
-        $this->controllerConfiguration->currentIndex = $currentIndex;
     }
 
     /**
@@ -261,7 +206,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
             'name' => $this->getContext()->currency->name,
             'format' => $this->getContext()->currency->format,
         ]]);
-        //Todo Handle this later
         //Media::addJsDef(
         //    [
         //        'currency_specifications' => $this->preparePriceSpecifications($this->getContext()),
@@ -396,15 +340,8 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
         }
     }
 
-    /**
-     * Sets the smarty variables and js defs used to show / hide some notifications.
-     */
-    public function initToken(Request $request)
-    {
-        $this->controllerConfiguration->token = $request->query->get('_token');
-    }
-
-    public function processFilter()
+    //Rework fully this todo
+    public function processFilter(Request $request)
     {
         //Hook::exec('action' . $this->controller_name . 'ListingFieldsModifier', [
         //    'fields' => &$this->fields_list,
@@ -427,7 +364,6 @@ class FeatureController extends FrameworkBundleAdminController implements AddAct
                 }
             }
 
-            //todo not used this but use Request
             foreach ($_GET as $key => $value) {
                 if (stripos($key, $this->listId . 'Filter_') === 0) {
                     $this->getContext()->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);

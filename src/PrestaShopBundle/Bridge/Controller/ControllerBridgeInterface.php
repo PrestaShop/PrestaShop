@@ -24,31 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
-
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use \Smarty;
+namespace PrestaShopBundle\Bridge\Controller;
 
 /**
- * Assign variable to smarty
+ * Define a Controller interface which can be shared with legacy
  */
-class SmartyVarsAssigner
+interface ControllerBridgeInterface
 {
-    /**
-     * @var Smarty
-     */
-    private $smarty;
 
-    public function __construct(LegacyContext $legacyContext)
-    {
-        $this->smarty = $legacyContext->getSmarty();
-    }
-
-    public function assign(array $templatesVars)
-    {
-        foreach ($templatesVars as $name => $value)
-        {
-            $this->smarty->assign($name, $value);
-        }
-    }
 }

@@ -24,34 +24,31 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\Smarty;
+
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use \Smarty;
 
 /**
- * Define method to add action on page
+ * Assign variable to smarty
  */
-trait AddActionTrait
+class SmartyVarsAssigner
 {
-    public function addAction(string $type, string $action, array $config = []): void
+    /**
+     * @var Smarty
+     */
+    private $smarty;
+
+    public function __construct(LegacyContext $legacyContext)
     {
-        switch ($type) {
-            case self::ACTION_TYPE_BULK:
-                $this->controllerConfiguration->bulkActions[$action] = $config;
-                break;
+        $this->smarty = $legacyContext->getSmarty();
+    }
 
-            case self::ACTION_TYPE_ROW:
-                $this->controllerConfiguration->actions[] = $action;
-                break;
-
-            case self::ACTION_TYPE_HEADER_TOOLBAR:
-                $this->controllerConfiguration->pageHeaderToolbarButton[$action] = $config;
-                break;
-
-            case self::ACTION_TYPE_LIST_HEADER_TOOLBAR:
-                $this->controllerConfiguration->toolbarButton[$action] = $config;
-                break;
-
-            default:
-                throw new \Exception('This type doesn\'t exist');
+    public function assign(array $templatesVars)
+    {
+        foreach ($templatesVars as $name => $value)
+        {
+            $this->smarty->assign($name, $value);
         }
     }
 }
