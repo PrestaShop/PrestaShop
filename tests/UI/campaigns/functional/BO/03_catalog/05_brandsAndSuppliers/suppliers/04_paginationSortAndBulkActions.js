@@ -10,7 +10,7 @@ const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const SupplierFaker = require('@data/faker/supplier');

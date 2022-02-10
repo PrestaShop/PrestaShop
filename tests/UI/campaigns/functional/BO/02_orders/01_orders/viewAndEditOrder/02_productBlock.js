@@ -6,13 +6,15 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-// Import common tests
-const loginCommon = require('@commonTests/loginBO');
+// Import BO common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+
+// Import FO common tests
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
-const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/enableDisableEcoTax');
-const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/createDeleteProduct');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -58,7 +60,7 @@ const productOutOfStockAllowed = new ProductFaker({
   quantity: -12,
   minimumQuantity: 1,
   lowStockLevel: 3,
-  behaviourOutOfStock: 'Allow catalog',
+  behaviourOutOfStock: 'Allow orders',
 });
 const productOutOfStockNotAllowed = new ProductFaker({
   name: `Out of stock not allowed ${prefixNewProduct}`,
@@ -68,7 +70,7 @@ const productOutOfStockNotAllowed = new ProductFaker({
   minimumQuantity: 3,
   stockLocation: 'stock 3',
   lowStockLevel: 3,
-  behaviourOutOfStock: 'Deny catalog',
+  behaviourOutOfStock: 'Deny orders',
 });
 const packOfProducts = new ProductFaker({
   name: `Pack of products ${prefixNewProduct}`,

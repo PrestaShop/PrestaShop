@@ -9,11 +9,11 @@ const basicHelper = require('@utils/basicHelper');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest, createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
-const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/enableDisableEcoTax');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/createDeleteProduct');
-const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
+const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

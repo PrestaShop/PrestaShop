@@ -7,9 +7,9 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-const {bulkDeleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
+const {bulkDeleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

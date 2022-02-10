@@ -8,7 +8,7 @@ const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

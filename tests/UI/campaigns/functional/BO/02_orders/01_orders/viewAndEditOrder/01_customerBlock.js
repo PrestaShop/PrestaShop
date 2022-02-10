@@ -3,11 +3,13 @@ require('module-alias/register');
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
 
-// Import common tests
-const loginCommon = require('@commonTests/loginBO');
+// Import BO common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+
+// Import FO common tests
 const {createAccountTest, createAddressTest} = require('@commonTests/FO/createAccount');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -262,7 +264,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
       await expect(result).to.be.false;
     });
 
-    it('should click on \'View full details\' and check if the page is redirected to  '
+    it('should click on \'View full details\' and check if the page is redirected to '
       + '\'Customer\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewFullDetails', baseContext);
 

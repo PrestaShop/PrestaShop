@@ -5,8 +5,8 @@ const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 
 // Import common tests
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
 
 // Import pages
 const loginPage = require('@pages/BO/login/index');
