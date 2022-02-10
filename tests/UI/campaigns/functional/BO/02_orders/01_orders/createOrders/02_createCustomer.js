@@ -6,8 +6,8 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

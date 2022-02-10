@@ -126,7 +126,12 @@ function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCusto
   });
 }
 
-function bulkDeleteCustomersTest(customerdata, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
+/**
+ * Function to bulk delete customers
+ * @param customerData {CustomerData} Data to set to delete customers
+ * @param baseContext {string} String to identify the test
+ */
+function bulkDeleteCustomersTest(customerData, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
   describe('POST-TEST: Delete customers by bulk actions', async () => {
     // before and after functions
     before(async function () {
@@ -163,10 +168,10 @@ function bulkDeleteCustomersTest(customerdata, baseContext = 'commonTests-delete
     it('should filter list by lastName', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'lastname', customerdata.lastName);
+      await customersPage.filterCustomers(page, 'input', 'lastname', customerData.lastName);
 
       const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'lastname');
-      await expect(textResult).to.contains(customerdata.lastName);
+      await expect(textResult).to.contains(customerData.lastName);
     });
 
     it('should delete customers with Bulk Actions and check result', async function () {

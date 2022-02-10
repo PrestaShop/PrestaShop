@@ -86,7 +86,7 @@ const virtualProduct = new ProductFaker({
 
 // Product with specific price data
 const productWithSpecificPrice = new ProductFaker({
-  name: `Product with specific price ${prefixNewProduct}`,
+  name: `Product with sp price ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
