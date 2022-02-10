@@ -72,6 +72,7 @@ class SecurityController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig',
             [
+                'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => [],
                 'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
                 'generalForm' => $generalForm->createView(),
