@@ -243,7 +243,8 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans('Available from', [], 'Admin.Catalog.Feature'),
-                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'attr' => ['placeholder' => 'YYYY-MM-DD HH:mm:ss'],
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ]
             )
             ->add(
@@ -252,7 +253,8 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans('to', [], 'Admin.Global'),
-                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
+                    'attr' => ['placeholder' => 'YYYY-MM-DD HH:mm:ss'],
+                    'date_format' => 'YYYY-MM-DD HH:mm:ss',
                 ]
             )
             ->add(
