@@ -30,6 +30,7 @@ use \Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfigurationFactory;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use \Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -51,10 +52,16 @@ class InitControllerListener
      */
     private $configurationFactory;
 
-    public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory)
+    /**
+     * @var Repository
+     */
+    private $localeRepository;
+
+    public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory, Repository $localeRepository)
     {
         $this->context = $legacyContext->getContext();
         $this->configurationFactory = $configurationFactory;
+        $this->localeRepository = $localeRepository;
     }
 
     public function onKernelController(ControllerEvent $event)
@@ -68,6 +75,10 @@ class InitControllerListener
         $controller->php_self = get_class($controller);
         $this->context->controller = $controller;
         $this->context->smarty->assign('link', $this->context->link);
+
+        $this->context->currentLocale = $this->localeRepository->getLocale(
+            $this->context->language->getLocale()
+        );
 
         $controller->controllerConfiguration = $this->configurationFactory->create([
             'id' => Tab::getIdFromClassName(

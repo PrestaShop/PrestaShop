@@ -29,11 +29,16 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use \Configuration;
 use \Cookie;
 use \Country;
+use \Currency;
 use \Language;
 use \Link;
+use \Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
 use \QuickAccess;
 use \Shop;
 use Symfony\Component\Routing\RouterInterface;
@@ -55,6 +60,16 @@ class HeaderHydrator implements HydratorInterface
      * @var Country
      */
     private $country;
+
+    /**
+     * @var Currency
+     */
+    private $currency;
+
+    /**
+     * @var Locale
+     */
+    private $currentLocale;
 
     /**
      * @var Language
@@ -87,6 +102,8 @@ class HeaderHydrator implements HydratorInterface
         $this->country = $legacyContext->getContext()->country;
         $this->link = $legacyContext->getContext()->link;
         $this->language = $legacyContext->getLanguage();
+        $this->currency = $legacyContext->getContext()->currency;
+        $this->currentLocale = $legacyContext->getContext()->getCurrentLocale();
         $this->router = $router;
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
@@ -165,6 +182,13 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['shop_name'] = Configuration::get('PS_SHOP_NAME');
         $controllerConfiguration->templatesVars['tabs'] = $tabs;
         $controllerConfiguration->templatesVars['version'] = _PS_VERSION_;
+
+        Media::addJsDef(
+            [
+                'currency_specifications' => $this->preparePriceSpecifications(),
+                'number_specifications' => $this->prepareNumberSpecifications(),
+            ]
+        );
     }
 
     private function getNotificationTip($type)
@@ -262,5 +286,39 @@ class HeaderHydrator implements HydratorInterface
         }
 
         return '';
+    }
+
+    /**
+     * Prepare price specifications to display cldr prices in javascript context.
+     */
+    private function preparePriceSpecifications(): array
+    {
+        /* @var PriceSpecification */
+        $priceSpecification = $this->currentLocale->getPriceSpecification($this->currency->iso_code);
+        if (empty($priceSpecification)) {
+            return [];
+        }
+
+        return array_merge(
+            ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            $priceSpecification->toArray()
+        );
+    }
+
+    /**
+     * Prepare number specifications to display cldr numbers in javascript context.
+     */
+    private function prepareNumberSpecifications()
+    {
+        /* @var NumberSpecification */
+        $numberSpecification = $this->currentLocale->getNumberSpecification();
+        if (empty($numberSpecification)) {
+            return [];
+        }
+
+        return array_merge(
+            ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
+            $numberSpecification->toArray()
+        );
     }
 }
