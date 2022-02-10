@@ -31,7 +31,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 
 /**
- * Class ProfilesQueryBuilder is responsible for building queries for profiles grid data.
+ * Responsible for building queries for profiles grid data.
  */
 final class ProfileQueryBuilder extends AbstractDoctrineQueryBuilder
 {
