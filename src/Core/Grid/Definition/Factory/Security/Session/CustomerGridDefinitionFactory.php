@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
@@ -45,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -56,6 +58,19 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
+
+    /**
+     * @var string Date format for the current user
+     */
+    private $contextDateFormat;
+
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        string $contextDateFormat
+    ) {
+        parent::__construct($hookDispatcher);
+        $this->contextDateFormat = $contextDateFormat;
+    }
 
     /**
      * @var string
@@ -126,10 +141,11 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new DataColumn('date_upd'))
+                (new DateTimeColumn('date_upd'))
                     ->setName($this->trans('Last update', [], 'Admin.Advparameters.Feature'))
                     ->setOptions([
                         'field' => 'date_upd',
+                        'format' => $this->contextDateFormat,
                     ])
             )
             ->add(
