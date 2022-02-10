@@ -44,7 +44,7 @@ const orderByCustomerData = {
 
 /*
 Pre-condition:
-- Create order on FO, choose payment method bank wire payment
+- Create order in FO, choose payment method bank wire payment
 Scenario:
 - Go to BO orders page and change order status to 'payment accepted'
 - Check invoice creation
@@ -52,7 +52,7 @@ Scenario:
 - Go to FO and check the new order status
  */
 describe('BO - orders : Check invoice downloaded from list', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
@@ -65,7 +65,7 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Check invoice file on BO', async () => {
+  describe('Check invoice file in BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -125,7 +125,7 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
     });
   });
 
-  describe('Check order status on FO ', async () => {
+  describe('Check order status in FO ', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckStatus', baseContext);
 

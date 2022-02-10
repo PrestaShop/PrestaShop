@@ -52,7 +52,7 @@ Scenario:
 - Go to FO and check the new order status
  */
 describe('BO - Orders : Check delivery slip downloaded from list', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
@@ -65,7 +65,7 @@ describe('BO - Orders : Check delivery slip downloaded from list', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Check delivery slip file on BO', async () => {
+  describe('Check delivery slip file in BO', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -141,7 +141,7 @@ describe('BO - Orders : Check delivery slip downloaded from list', async () => {
     });
   });
 
-  describe('Check order status on FO ', async () => {
+  describe('Check order status in FO ', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFoToCheckStatus', baseContext);
 

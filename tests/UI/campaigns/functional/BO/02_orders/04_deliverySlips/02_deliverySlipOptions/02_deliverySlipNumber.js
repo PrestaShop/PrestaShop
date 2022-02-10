@@ -41,7 +41,7 @@ const deliverySlipData = new DeliverySlipOptionsFaker();
 
 /*
 Pre-condition:
-- Create order on FO
+- Create order in FO
 Scenario:
 - Edit Delivery slip number
 - Change the Order status to Shipped
@@ -49,7 +49,7 @@ Scenario:
  */
 
 describe('BO - Orders - Delivery slips : Update \'Delivery slip number\'', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions

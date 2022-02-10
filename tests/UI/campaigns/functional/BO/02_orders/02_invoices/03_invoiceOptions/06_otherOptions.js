@@ -43,14 +43,14 @@ const orderByCustomerData = {
 
 /*
 Pre-condition:
-- Create order on FO
+- Create order in FO
 Scenario:
 - Edit Invoice number and Footer text
 - Change the create order status to Shipped
 - Check the invoice file name
  */
 describe('BO - Orders - Invoices : Update \'Invoice number and Footer text\'', async () => {
-  // Pre-condition: Create order on FO
+  // Pre-condition: Create order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions

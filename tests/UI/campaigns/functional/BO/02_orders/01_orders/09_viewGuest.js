@@ -52,7 +52,7 @@ Scenario:
 - Check that View customer(guest) page is displayed
  */
 describe('BO - Orders : View guest from orders page', async () => {
-  // Pre-condition: Create order by guest on FO
+  // Pre-condition: Create order by guest in FO
   createOrderByGuestTest(orderByGuestData, baseContext);
 
   before(async function () {

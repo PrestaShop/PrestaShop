@@ -34,15 +34,17 @@ const orderByCustomerData = {
 };
 
 /*
-Create 2 orders in FO
-Go to BO and update orders created status by bulk actions
-Check orders new status
+Pre-condition:
+- Create 2 orders in FO
+Scenario:
+- Go to BO and update orders created status by bulk actions
+- Check orders new status
  */
 describe('BO - Orders : Bulk update orders status', async () => {
-  // Pre-condition: Create first order on FO
+  // Pre-condition: Create first order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
-  // Pre-condition: Create second order on FO
+  // Pre-condition: Create second order in FO
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
