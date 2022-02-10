@@ -215,7 +215,7 @@ class SpecificPriceFormHandler {
    * @private
    */
   private reinitializeDatePickers() {
-    $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD'});
+    $('.datepicker input').datetimepicker({format: 'YYYY-MM-DD HH:mm:ss'});
   }
 
   /**
