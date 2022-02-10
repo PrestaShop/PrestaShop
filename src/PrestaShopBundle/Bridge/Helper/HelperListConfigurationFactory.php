@@ -45,6 +45,7 @@ class HelperListConfigurationFactory
         $helperListConfiguration->table = $configuration['table'];
         $helperListConfiguration->listId = $configuration['listId'];
         $helperListConfiguration->className = $configuration['className'];
+        $helperListConfiguration->controllerNameLegacy = $configuration['controllerNameLegacy'];
         $helperListConfiguration->identifier = $configuration['identifier'];
         $helperListConfiguration->isJoinLanguageTableAuto = $configuration['isJoinLanguageTableAuto'];
         $helperListConfiguration->deleted = $configuration['deleted'];
@@ -74,6 +75,7 @@ class HelperListConfigurationFactory
             'table',
             'listId',
             'className',
+            'controllerNameLegacy',
             'identifier',
             'fieldsList',
         ]);

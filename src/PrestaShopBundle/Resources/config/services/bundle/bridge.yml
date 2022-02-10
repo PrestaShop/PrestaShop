@@ -70,6 +70,11 @@ services:
       - "@prestashop.core.bridge.toolbar_flags_hydrator"
       - "@prestashop.router"
 
+  prestashop.core.bridge.processor.process_filter:
+    class: PrestaShopBundle\Bridge\Processor\ProccessFilter
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+
   PrestaShopBundle\Bridge\Listener\InitControllerListener:
     class: PrestaShopBundle\Bridge\Listener\InitControllerListener
     tags:

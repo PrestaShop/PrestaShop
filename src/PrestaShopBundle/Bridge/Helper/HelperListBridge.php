@@ -429,7 +429,7 @@ class HelperListBridge
     private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
-            $prefix = $this->getCookieFilterPrefix();
+            $prefix = $this->getCookieFilterPrefix($helperListConfiguration);
 
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'}) {
                 $orderBy = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'};
@@ -470,7 +470,7 @@ class HelperListBridge
      */
     private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
-        $prefix = $this->getCookieOrderByPrefix();
+        $prefix = $this->getCookieOrderByPrefix($helperListConfiguration);
         if (empty($orderDirection)) {
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'}) {
                 $orderDirection = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'};
@@ -491,17 +491,17 @@ class HelperListBridge
     /**
      * @return mixed
      */
-    private function getCookieOrderByPrefix()
+    private function getCookieOrderByPrefix(HelperListConfiguration $helperListConfiguration)
     {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower(get_class($this)));
+        return str_replace(['admin', 'controller'], '', Tools::strtolower($helperListConfiguration->controllerNameLegacy));
     }
 
     /**
      * Set the filters used for the list display.
      */
-    private function getCookieFilterPrefix()
+    private function getCookieFilterPrefix(HelperListConfiguration $helperListConfiguration)
     {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower(get_class($this)));
+        return str_replace(['admin', 'controller'], '', Tools::strtolower($helperListConfiguration->controllerNameLegacy));
     }
 
     private function shouldLimitSqlResults($limit): bool
