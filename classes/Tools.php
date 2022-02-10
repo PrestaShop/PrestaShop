@@ -1502,10 +1502,10 @@ class ToolsCore
         static $transliterator;
 
         if (!$transliterator) {
-            $transliterator = transliterator_create('Any-Latin; Latin-ASCII');
+            $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
         }
 
-        return transliterator_transliterate($transliterator, $str);
+        return $transliterator->transliterate($str);
     }
 
     /**
