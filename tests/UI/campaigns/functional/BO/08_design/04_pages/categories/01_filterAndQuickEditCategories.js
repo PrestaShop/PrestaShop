@@ -8,7 +8,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import expect from chai
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const CategoryPageFaker = require('@data/faker/CMScategory');

@@ -4,8 +4,8 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
-const {createProductTest, deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {createProductTest, deleteProductTest} = require('@commonTests/BO/catalog/createDeleteProduct');
 const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
 
 // Import pages

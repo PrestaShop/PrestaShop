@@ -8,10 +8,10 @@ const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
-const {createProductTest, bulkDeleteProductsTest} = require('@commonTests/BO/createDeleteProduct');
-const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
+const {createProductTest, bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

@@ -9,9 +9,9 @@ const files = require('@utils/files');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
-const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/createDeleteCurrency');
+const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/international/createDeleteCurrency');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');

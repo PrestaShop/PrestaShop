@@ -11,8 +11,8 @@ const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
-const {deleteCartRuleTest} = require('@commonTests/BO/createDeleteCartRule');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import data
 // Customer

@@ -9,8 +9,8 @@ const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import data
 const CustomerFaker = require('@data/faker/customer');
@@ -29,9 +29,11 @@ let browserContext;
 let page;
 
 /*
-Go to create order page
-Create customer
-Delete the created customer
+Scenario:
+- Go to create order page
+- Create customer
+Pots-condition:
+- Delete the created customer
  */
 describe('BO - Orders - Create order : Create customer from new order page', async () => {
   before(async function () {
@@ -47,36 +49,34 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     await loginCommon.loginBO(this, page);
   });
 
-  describe('Create customer', () => {
-    it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+  it('should go to \'Orders > Orders\' page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.ordersLink,
-      );
+    await dashboardPage.goToSubMenu(
+      page,
+      dashboardPage.ordersParentLink,
+      dashboardPage.ordersLink,
+    );
 
-      const pageTitle = await ordersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(ordersPage.pageTitle);
-    });
-
-    it('should go to create order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
-
-      await ordersPage.goToCreateOrderPage(page);
-      const pageTitle = await addOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addOrderPage.pageTitle);
-    });
-
-    it('should create customer and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
-
-      const customerName = await addOrderPage.addNewCustomer(page, customerData);
-      await expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
-    });
+    const pageTitle = await ordersPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(ordersPage.pageTitle);
   });
 
-  // Post-condition : Delete created customer
+  it('should go to create order page', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage', baseContext);
+
+    await ordersPage.goToCreateOrderPage(page);
+    const pageTitle = await addOrderPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+  });
+
+  it('should create customer and check result', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
+
+    const customerName = await addOrderPage.addNewCustomer(page, customerData);
+    await expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
+  });
+
+  // Post-condition: Delete created customer
   deleteCustomerTest(customerData, baseContext);
 });

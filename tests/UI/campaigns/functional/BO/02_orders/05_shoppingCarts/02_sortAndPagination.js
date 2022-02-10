@@ -5,9 +5,9 @@ const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
-const {bulkDeleteCustomersTest} = require('@commonTests/BO/createDeleteCustomer');
+const {bulkDeleteCustomersTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

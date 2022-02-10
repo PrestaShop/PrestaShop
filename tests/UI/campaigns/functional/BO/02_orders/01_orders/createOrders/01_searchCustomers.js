@@ -4,8 +4,8 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
-const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
+const loginCommon = require('@commonTests/BO/loginBO');
+const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -31,14 +31,17 @@ const nonExistentCustomer = new CustomerFaker();
 const disabledCustomer = new CustomerFaker({enabled: false});
 
 /*
-Create disabled customer
-Search for non existent customer and check error message
-Search for disabled customer and check error message
-Search for existent customer and check displayed customer card
-Delete created customer
+Pre-condition:
+- Create disabled customer
+Scenario:
+- Search for non existent customer and check error message
+- Search for disabled customer and check error message
+- Search for existent customer and check displayed customer card
+Pre-condition:
+- Delete created customer
  */
 describe('BO - Orders - Create order : Search for customers from new order page', async () => {
-  // Pre-condition : Create disabled customer
+  // Pre-condition: Create disabled customer
   createCustomerTest(disabledCustomer, baseContext);
 
   before(async function () {
@@ -110,6 +113,6 @@ describe('BO - Orders - Create order : Search for customers from new order page'
     });
   });
 
-  // Post-condition : Delete disabled customer
+  // Post-condition: Delete disabled customer
   deleteCustomerTest(disabledCustomer, baseContext);
 });

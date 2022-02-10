@@ -9,12 +9,12 @@ const testContext = require('@utils/testContext');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 const {
   enableMerchandiseReturns,
   disableMerchandiseReturns,
-} = require('@commonTests/BO/enableDisableMerchandiseReturns');
+} = require('@commonTests/BO/customerService/enableDisableMerchandiseReturns');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
