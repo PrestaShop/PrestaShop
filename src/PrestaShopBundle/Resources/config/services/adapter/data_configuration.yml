@@ -76,10 +76,13 @@ services:
       - '%ps_caching%'
 
   prestashop.adapter.general.configuration:
-    class: 'PrestaShop\PrestaShop\Adapter\GeneralConfiguration'
+    class: 'PrestaShop\PrestaShop\Adapter\Configure\AdvancedParameters\Administration\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
       - '@=service("prestashop.adapter.legacy.context").getContext().cookie'
+      - '@=service("prestashop.adapter.environment").isDebug()'
 
   prestashop.adapter.maintenance.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration'

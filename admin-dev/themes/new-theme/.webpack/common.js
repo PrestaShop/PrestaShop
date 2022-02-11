@@ -40,6 +40,7 @@ module.exports = {
   },
   entry: {
     address: './js/pages/address',
+    administration: './js/pages/administration',
     attachment: './js/pages/attachment',
     attribute: './js/pages/attribute',
     attribute_group: './js/pages/attribute-group',

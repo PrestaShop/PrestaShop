@@ -27,15 +27,18 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use Cookie;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GeneralType extends TranslatorAwareType
 {
+    public const FIELD_CHECK_MODULES_UPDATE = 'check_modules_update';
+    public const FIELD_CHECK_IP_ADDRESS = 'check_ip_address';
     public const FIELD_FRONT_COOKIE_LIFETIME = 'front_cookie_lifetime';
     public const FIELD_BACK_COOKIE_LIFETIME = 'back_cookie_lifetime';
     public const FIELD_COOKIE_SAMESITE = 'cookie_samesite';
@@ -46,26 +49,48 @@ class GeneralType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('check_modules_update', SwitchType::class, [
+            ->add(self::FIELD_CHECK_MODULES_UPDATE, SwitchType::class, [
                 'label' => $this->trans('Automatically check for module updates', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Choose a stability level for the modules downloaded from the Addons Marketplace. All zips pushed on Addons are in stable state unless stated otherwise.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans(
+                    'Choose a stability level for the modules downloaded from the Addons Marketplace.'
+                        . ' All zips pushed on Addons are in stable state unless stated otherwise.',
+                    'Admin.Advparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PRESTASTORE_LIVE',
             ])
-            ->add('check_ip_address', SwitchType::class, [
+            ->add(self::FIELD_CHECK_IP_ADDRESS, SwitchType::class, [
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans(
+                    'Check the IP address of the cookie in order to prevent your cookie from being stolen.',
+                    'Admin.Advparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_COOKIE_CHECKIP',
             ])
-            ->add(self::FIELD_FRONT_COOKIE_LIFETIME, TextType::class, [
+            ->add(self::FIELD_FRONT_COOKIE_LIFETIME, IntegerType::class, [
                 'label' => $this->trans('Lifetime of front office cookies', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans(
+                    'Set the amount of hours during which the front office cookies are valid.'
+                        . ' After that amount of time, the customer will have to log in again.',
+                    'Admin.Advparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_COOKIE_LIFETIME_FO',
             ])
-            ->add(self::FIELD_BACK_COOKIE_LIFETIME, TextType::class, [
+            ->add(self::FIELD_BACK_COOKIE_LIFETIME, IntegerType::class, [
                 'label' => $this->trans('Lifetime of back office cookies', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session.'
+                    . ' Set here the number of hours during which you want them valid before logging in again.',
+                    'Admin.Advparameters.Help'
+                ),
+                'multistore_configuration_key' => 'PS_COOKIE_LIFETIME_BO',
             ])
             ->add(self::FIELD_COOKIE_SAMESITE, ChoiceType::class, [
                 'label' => $this->trans('Cookie SameSite', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Allows you to declare if your cookie should be restricted to a first-party or same-site context.', 'Admin.Advparameters.Help'),
+                'help' => $this->trans(
+                    'Allows you to declare if your cookie should be restricted to a first-party or same-site context.',
+                    'Admin.Advparameters.Help'
+                ),
                 'choices' => Cookie::SAMESITE_AVAILABLE_VALUES,
+                'multistore_configuration_key' => 'PS_COOKIE_SAMESITE',
             ]);
     }
 
@@ -85,5 +110,15 @@ class GeneralType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_general_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
