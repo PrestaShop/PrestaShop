@@ -38,18 +38,6 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-#  prestashop.module.manager:
-#    class: PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager
-#    arguments:
-#      - "@prestashop.adapter.admin.data_provider.module"
-#      - "@prestashop.adapter.data_provider.module"
-#      - "@prestashop.core.module.updater"
-#      - "@prestashop.core.admin.module.repository"
-#      - "@prestashop.module.zip.manager"
-#      - "@translator"
-#      - "@event_dispatcher"
-#      - "@prestashop.adapter.cache.clearer.symfony_cache_clearer"
-
   prestashop.module.zip.manager:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
     arguments:
