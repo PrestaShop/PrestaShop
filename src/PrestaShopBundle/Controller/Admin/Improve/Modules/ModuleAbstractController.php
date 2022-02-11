@@ -49,16 +49,13 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         };
 
         $moduleRepository = $this->get('prestashop.core.admin.module.repository');
-        $toConfigure = $moduleRepository->generateActionUrls(new ModuleCollection($moduleRepository->getConfigurableModules()));
-        $toUpgrade = $moduleRepository->generateActionUrls(new ModuleCollection($moduleRepository->getUpgradableModules()));
+        $toConfigure = $moduleRepository->setActionUrls(new ModuleCollection($moduleRepository->getConfigurableModules()));
+        $toUpgrade = $moduleRepository->setActionUrls(new ModuleCollection($moduleRepository->getUpgradableModules()));
 
         $modules = [
             'to_configure' => $modulesPresenterCallback($toConfigure),
             'to_update' => $modulesPresenterCallback($toUpgrade),
         ];
-
-        //$moduleManager = $this->get('prestashop.module.manager');
-        //$modules = [];//$moduleManager->getModulesWithNotifications($modulesPresenterCallback);
 
         return [
             'enableSidebar' => true,

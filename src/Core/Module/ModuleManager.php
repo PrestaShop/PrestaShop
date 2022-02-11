@@ -293,7 +293,7 @@ class ModuleManager implements ModuleManagerInterface
     {
         $module = $this->moduleRepository->getModule($name);
         if ($module->hasValidInstance()) {
-            $errors = $module->getInstance()->getErrors();
+            $errors = array_filter($module->getInstance()->getErrors());
             $error = array_pop($errors);
             if (empty($error)) {
                 $error = $this->translator->trans(
@@ -337,7 +337,7 @@ class ModuleManager implements ModuleManagerInterface
         return false;
     }
 
-    private function assertIsInstalled(string $name)
+    private function assertIsInstalled(string $name): void
     {
         if (!$this->isInstalled($name)) {
             throw new Exception($this->translator->trans(
