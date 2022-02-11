@@ -108,7 +108,7 @@ services:
   prestashop.adapter.administration.general.form_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider'
     arguments:
-      - '@prestashop.adapter.general.configuration'
+      - '@prestashop.adapter.administration.general.configuration'
       - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED")'
       - '@=service("prestashop.adapter.legacy.configuration").getBoolean("PS_SSL_ENABLED_EVERYWHERE")'
 

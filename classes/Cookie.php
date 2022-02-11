@@ -44,6 +44,9 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
  */
 class CookieCore
 {
+    const BACK_LIFETIME = 480;
+    const FRONT_LIFETIME = 480;
+
     const SAMESITE_NONE = 'None';
     const SAMESITE_LAX = 'Lax';
     const SAMESITE_STRICT = 'Strict';
