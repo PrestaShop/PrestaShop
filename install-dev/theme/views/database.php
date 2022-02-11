@@ -29,7 +29,7 @@
 <div id="dbPart">
 	<h2><?php echo $this->translator->trans('Configure your database by filling out the following fields', array(), 'Install'); ?></h2>
 	<p>
-		<?php echo $this->translator->trans('To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store\'s data-related activities.', array(), 'Install'); ?>
+		<?php echo $this->translator->trans('To use PrestaShop, you must <a href="https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store\'s data-related activities.', array(), 'Install'); ?>
 		<br />
 		<?php echo $this->translator->trans('Please complete the fields below in order for PrestaShop to connect to your database.', array(), 'Install'); ?>
 	</p>

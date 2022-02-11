@@ -132,12 +132,12 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [download]: https://www.prestashop.com/en/download
 [forums]: https://www.prestashop.com/forums/
 [chat]: https://github.com/PrestaShop/open-source/blob/master/slack/readme.md
-[user-doc]: https://doc.prestashop.com
+[user-doc]: https://docs.prestashop-project.org
 [contributing-md]: CONTRIBUTING.md
 [contributing-tutorial]: https://devdocs.prestashop.com/1.7/contribute/
 [crowdin]: https://crowdin.net/project/prestashop-official
-[getting-started]: https://doc.prestashop.com/display/PS17/Getting+Started
-[user-guide]: https://doc.prestashop.com/display/PS17/User+Guide
+[getting-started]: https://docs.prestashop-project.org/1.7-documentation/getting-started
+[user-guide]: https://docs.prestashop-project.org/1.7-documentation/user-guide
 [updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
 [merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
 [faq-17]: https://devdocs.prestashop.com/1.7/faq/
@@ -149,7 +149,7 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [docker-compose]: https://docs.docker.com/compose/
 [install-guide-dev]: https://devdocs.prestashop.com/1.7/basics/installation/
 [system-requirements]: https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/
-[install-guide]: https://doc.prestashop.com/display/PS17/Installing+PrestaShop
+[install-guide]: https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop
 [devdocs]: https://devdocs.prestashop.com/
 [create-issue]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [reporting-issues]: https://devdocs.prestashop.com/1.7/contribute/contribute-reporting-issues/
