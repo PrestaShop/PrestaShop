@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -56,7 +57,7 @@ class ModuleManagerBuilder
     /**
      * Singleton of ModuleRepository.
      *
-     * @var \PrestaShop\PrestaShop\Core\Module\ModuleRepository
+     * @var ModuleRepository
      */
     public static $modulesRepository = null;
     /**
@@ -122,7 +123,7 @@ class ModuleManagerBuilder
     /**
      * Returns an instance of ModuleRepository.
      *
-     * @return \PrestaShop\PrestaShop\Core\Module\ModuleRepository
+     * @return ModuleRepository
      */
     public function buildRepository()
     {
@@ -131,7 +132,7 @@ class ModuleManagerBuilder
             if (null !== $sfContainer) {
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
-                self::$modulesRepository = new \PrestaShop\PrestaShop\Core\Module\ModuleRepository(
+                self::$modulesRepository = new ModuleRepository(
                     self::$moduleDataProvider,
                     self::$adminModuleDataProvider,
                     self::$cacheProvider,

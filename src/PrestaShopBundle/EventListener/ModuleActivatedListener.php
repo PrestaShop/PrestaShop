@@ -117,6 +117,7 @@ class ModuleActivatedListener
             return;
         }
 
+        /** @var Module $module */
         $module = $this->moduleRepository->getModule($moduleActivated->getModuleName());
         if (!$module->isActive()) {
             $this->showNotificationMessage($moduleActivated);
