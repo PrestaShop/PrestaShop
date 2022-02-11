@@ -89,6 +89,16 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                 $totalProducts,
                 Currency::getCurrencyInstance((int) $this->order->id_currency)
             ),
+            'amount_excl_tax' => $this->order->total_products,
+            'amount_incl_tax' => $this->order->total_products_wt,
+            'value_excl_tax' => $this->priceFormatter->format(
+                $this->order->total_products,
+                Currency::getCurrencyInstance((int) $this->order->id_currency)
+            ),
+            'value_incl_tax' => $this->priceFormatter->format(
+                $this->order->total_products_wt,
+                Currency::getCurrencyInstance((int) $this->order->id_currency)
+            ),
         ];
     }
 
@@ -143,6 +153,16 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                     Currency::getCurrencyInstance((int) $this->order->id_currency)
                 )
                     : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
+                'amount_excl_tax' => $this->order->total_shipping_tax_excl,
+                'amount_incl_tax' => $this->order->total_shipping_tax_incl,
+                'value_excl_tax' => $shippingCost != 0 ? $this->priceFormatter->format(
+                    $this->order->total_shipping_tax_excl,
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
+                ) : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
+                'value_incl_tax' => $shippingCost != 0 ? $this->priceFormatter->format(
+                    $this->order->total_shipping_tax_incl,
+                    Currency::getCurrencyInstance((int) $this->order->id_currency)
+                ) : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
             ];
         }
 
