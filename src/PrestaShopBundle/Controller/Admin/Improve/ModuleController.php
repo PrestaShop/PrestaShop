@@ -199,7 +199,7 @@ class ModuleController extends ModuleAbstractController
         $response = [$module => []];
 
         $camelCaseAction = ['enable_mobile' => 'enableMobile', 'disable_mobile' => 'disableMobile'];
-        if (in_array($action, array_keys($camelCaseAction))) {
+        if (array_key_exists($action, $camelCaseAction)) {
             $action = $camelCaseAction[$action];
         }
 
@@ -253,7 +253,7 @@ class ModuleController extends ModuleAbstractController
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
                     'module' => $this->container->get('prestashop.adapter.presenter.module')
-                        ->presentCollection($modulesProvider->generateActionUrls($collection))[0],
+                        ->presentCollection($modulesProvider->setActionUrls($collection))[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
@@ -387,7 +387,7 @@ class ModuleController extends ModuleAbstractController
         } catch (UnconfirmedModuleActionException $e) {
             $collection = ModuleCollection::createFrom([$e->getModule()]);
             $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                ->generateActionUrls($collection);
+                ->setActionUrls($collection);
             $installationResponse = [
                 'status' => false,
                 'confirmation_subject' => $e->getSubject(),
@@ -503,7 +503,7 @@ class ModuleController extends ModuleAbstractController
 
         foreach ($categories['categories']->subMenu as $category) {
             $collection = ModuleCollection::createFrom($category->modules);
-            $modulesProvider->generateActionUrls($collection);
+            $modulesProvider->setActionUrls($collection);
             $category->modules = $this->get('prestashop.adapter.presenter.module')
                 ->presentCollection($category->modules);
         }

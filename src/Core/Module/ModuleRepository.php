@@ -42,8 +42,16 @@ use Symfony\Component\Finder\Finder;
 class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInterface
 {
     private const MODULE_ATTRIBUTES = [
-        'warning', 'name', 'tab', 'displayName', 'description', 'author',
-        'author_address', 'limited_countries', 'need_instance', 'confirmUninstall',
+        'warning',
+        'name',
+        'tab',
+        'displayName',
+        'description',
+        'author',
+        'author_address',
+        'limited_countries',
+        'need_instance',
+        'confirmUninstall',
     ];
 
     /** @var Finder */
@@ -111,7 +119,7 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
 
         foreach ($modulesDirsList as $moduleDir) {
             $moduleName = $moduleDir->getFilename();
-            if (!file_exists($this->modulePath . $moduleName . '/' . $moduleName . '.php')) {
+            if (null === $this->getModulePath($moduleName)) {
                 continue;
             }
 
@@ -142,15 +150,13 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         });
     }
 
-    /**
-     * @return Module
-     */
     public function getModule(string $moduleName): ModuleInterface
     {
-        $path = $this->modulePath . '/' . $moduleName;
-        $filePath = $path . '/' . $moduleName . '.php';
+        $filePath = $this->getModulePath($moduleName);
 
-        $filemtime = (int) @filemtime($filePath);
+        $filemtime = $filePath === null
+            ? 0
+            : (int) @filemtime($filePath);
 
         if ($this->cacheProvider->contains($moduleName)) {
             $module = $this->cacheProvider->fetch($moduleName);
@@ -181,9 +187,9 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         return $path;
     }
 
-    public function generateActionUrls(ModuleCollection $collection): ModuleCollection
+    public function setActionUrls(ModuleCollection $collection): ModuleCollection
     {
-        return $this->adminModuleDataProvider->generateActionUrls($collection);
+        return $this->adminModuleDataProvider->setActionUrls($collection);
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array

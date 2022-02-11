@@ -30,6 +30,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * An ArrayCollection is a Collection implementation that wraps a regular PHP array.
@@ -39,14 +40,14 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * An array containing the modules of this collection.
      *
-     * @var array
+     * @var ModuleInterface[]
      */
     private $modules;
 
     /**
      * Initializes a new ModuleCollection.
      *
-     * @param array $modules
+     * @param ModuleInterface[] $modules
      */
     public function __construct(array $modules = [])
     {
@@ -73,15 +74,15 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->modules;
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return ArrayIterator|Traversable
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->modules);
     }
@@ -147,7 +148,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return bool
      */
-    public function contains(ModuleInterface $module)
+    public function contains(ModuleInterface $module): bool
     {
         return in_array($module, $this->modules, true);
     }
@@ -165,7 +166,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      */
     public function get($key)
     {
-        return $this->modules[$key] ?: null;
+        return $this->modules[$key] ?? null;
     }
 
     /**
@@ -214,11 +215,11 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param int|string $key
      *
-     * @return bool|null true if the module has been found and removed
+     * @return ModuleInterface|null returns the removed module or null if not found
      */
     public function removeByKey($key)
     {
-        if (!isset($this->modules[$key]) && !array_key_exists($key, $this->modules)) {
+        if (!isset($this->modules[$key])) {
             return null;
         }
 
@@ -229,7 +230,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Remove a module from the collection by key.
+     * Remove a module from the collection.
      *
      * @param ModuleInterface $module the module to be removed
      *
