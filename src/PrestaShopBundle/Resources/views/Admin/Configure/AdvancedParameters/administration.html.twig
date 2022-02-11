@@ -101,3 +101,9 @@
   {% endblock %}
   {{ form_end(notificationsForm) }}
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/administration.bundle.js') }}"></script>
+{% endblock %}
