@@ -182,7 +182,7 @@ class AdminModuleDataProvider implements ModuleInterface
      *
      * @return ModuleCollection
      */
-    public function generateActionUrls(ModuleCollection $modules, $specific_action = null)
+    public function setActionUrls(ModuleCollection $modules, ?string $specific_action = null)
     {
         foreach ($modules as $module) {
             $urls = [];

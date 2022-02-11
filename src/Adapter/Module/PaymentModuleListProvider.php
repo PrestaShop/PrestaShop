@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
-use PrestaShopBundle\Entity\Repository\ModuleRepository;
+use PrestaShopBundle\Entity\Repository\ModuleRepository as ModuleEntityRepository;
 
 /**
  * Class PaymentModuleListProvider is responsible for providing payment module list.
@@ -38,12 +38,12 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     /**
      * @var ModuleRepositoryInterface
      */
-    private $addonRepository;
+    private $moduleRepository;
 
     /**
-     * @var ModuleRepository
+     * @var ModuleEntityRepository
      */
-    private $moduleRepository;
+    private $moduleEntityRepository;
 
     /**
      * @var int
@@ -51,17 +51,17 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     private $shopId;
 
     /**
-     * @param ModuleRepositoryInterface $addonRepository
-     * @param ModuleRepository $moduleRepository
+     * @param ModuleRepositoryInterface $moduleRepository
+     * @param ModuleEntityRepository $moduleEntityRepository
      * @param int $shopId
      */
     public function __construct(
-        ModuleRepositoryInterface $addonRepository,
-        ModuleRepository $moduleRepository,
+        ModuleRepositoryInterface $moduleRepository,
+        ModuleEntityRepository $moduleEntityRepository,
         $shopId
     ) {
-        $this->addonRepository = $addonRepository;
         $this->moduleRepository = $moduleRepository;
+        $this->moduleEntityRepository = $moduleEntityRepository;
         $this->shopId = $shopId;
     }
 
@@ -70,25 +70,25 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
      */
     public function getPaymentModuleList()
     {
-        $modules = $this->addonRepository->getInstalledModules();
+        $modules = $this->moduleRepository->getInstalledModules();
         $paymentModules = [];
 
         /** @var Module $module */
         foreach ($modules as $module) {
             if ($module->attributes->get('is_paymentModule')) {
-                $restrictedCountries = $this->moduleRepository->findRestrictedCountryIds(
+                $restrictedCountries = $this->moduleEntityRepository->findRestrictedCountryIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedCurrencies = $this->moduleRepository->findRestrictedCurrencyIds(
+                $restrictedCurrencies = $this->moduleEntityRepository->findRestrictedCurrencyIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedGroups = $this->moduleRepository->findRestrictedGroupIds(
+                $restrictedGroups = $this->moduleEntityRepository->findRestrictedGroupIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedCarriers = $this->moduleRepository->findRestrictedCarrierReferenceIds(
+                $restrictedCarriers = $this->moduleEntityRepository->findRestrictedCarrierReferenceIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
