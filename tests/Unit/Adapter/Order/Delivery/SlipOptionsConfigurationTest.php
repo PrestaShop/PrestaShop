@@ -36,6 +36,8 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 
 class SlipOptionsConfigurationTest extends AbstractConfigurationTestCase
 {
+    private const DELIVERY_NUMBER = 55;
+    private const PREFIX = '#MyPrefix';
     private const SHOP_ID = 42;
 
     /**
@@ -55,8 +57,8 @@ class SlipOptionsConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_DELIVERY_PREFIX', null, $shopConstraint, ['fr' => '#MyPrefix']],
-                    ['PS_DELIVERY_NUMBER', 0, $shopConstraint, 55],
+                    ['PS_DELIVERY_PREFIX', null, $shopConstraint, ['fr' => self::PREFIX]],
+                    ['PS_DELIVERY_NUMBER', 0, $shopConstraint, self::DELIVERY_NUMBER],
                     ['PS_PDF_IMG_DELIVERY', false, $shopConstraint, true],
                 ]
             );
@@ -64,8 +66,8 @@ class SlipOptionsConfigurationTest extends AbstractConfigurationTestCase
         $result = $SlipOptionsConfiguration->getConfiguration();
         $this->assertSame(
             [
-                'prefix' => ['fr' => '#MyPrefix'],
-                'number' => 55,
+                'prefix' => ['fr' => self::PREFIX],
+                'number' => self::DELIVERY_NUMBER,
                 'enable_product_image' => true,
             ],
             $result
@@ -93,9 +95,9 @@ class SlipOptionsConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['prefix' => false, 'number' => 55, 'enable_product_image' => true]],
-            [InvalidOptionsException::class, ['prefix' => ['fr' => '#MyPrefix'], 'number' => ['wrong_type'], 'enable_product_image' => true]],
-            [InvalidOptionsException::class, ['prefix' => ['fr' => '#MyPrefix'], 'number' => 'test', 'enable_product_image' => 'wrong_type']],
+            [InvalidOptionsException::class, ['prefix' => false, 'number' => self::DELIVERY_NUMBER, 'enable_product_image' => true]],
+            [InvalidOptionsException::class, ['prefix' => ['fr' => self::PREFIX], 'number' => ['wrong_type'], 'enable_product_image' => true]],
+            [InvalidOptionsException::class, ['prefix' => ['fr' => self::PREFIX], 'number' => self::DELIVERY_NUMBER, 'enable_product_image' => 'wrong_type']],
         ];
     }
 
@@ -104,8 +106,8 @@ class SlipOptionsConfigurationTest extends AbstractConfigurationTestCase
         $slipOptionsConfiguration = new SlipOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $res = $slipOptionsConfiguration->updateConfiguration([
-            'prefix' => ['fr' => '#MyPrefix'],
-            'number' => 55,
+            'prefix' => ['fr' => self::PREFIX],
+            'number' => self::DELIVERY_NUMBER,
             'enable_product_image' => true,
         ]);
 

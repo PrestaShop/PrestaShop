@@ -55,8 +55,8 @@ class SlipOptionsType extends TranslatorAwareType
                 [
                     'type' => TextType::class,
                     'label' => $this->trans('Delivery prefix', 'Admin.Orderscustomers.Feature'),
-                    'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help') . ' ' . 
-                        $this->trans('Invalid characters:', 'Admin.Notifications.Info') .' <',
+                    'help' => $this->trans('Prefix used for delivery slips.', 'Admin.Orderscustomers.Help') . ' ' .
+                        $this->trans('Invalid characters:', 'Admin.Notifications.Info') . ' <',
                     'multistore_configuration_key' => 'PS_DELIVERY_PREFIX',
                     'options' => [
                         'constraints' => [
@@ -66,7 +66,7 @@ class SlipOptionsType extends TranslatorAwareType
                                 'message' => $this->trans(
                                     'The %s character is invalid',
                                     'Admin.Notifications.Error',
-                                    ['>'],
+                                    ['<']
                                 ),
                             ]),
                         ],
