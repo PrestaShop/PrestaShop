@@ -31,16 +31,16 @@ class CharacterCleaner
     /**
      * Delete unicode class from regular expression patterns.
      *
+     * @deprecated since version 8.0.0, to be removed.
+     *
      * @param string $pattern
      *
      * @return string pattern
      */
     public function cleanNonUnicodeSupport($pattern)
     {
-        if (!defined('PREG_BAD_UTF8_OFFSET')) {
-            return $pattern;
-        }
+        \Tools::displayAsDeprecated('The use of cleanNonUnicodeSupport is not required');
 
-        return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
+        return $pattern;
     }
 }

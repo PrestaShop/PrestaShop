@@ -248,6 +248,8 @@ class Tools
     /**
      * Delete unicode class from regular expression patterns.
      *
+     * @deprecated since version 8.0.0, to be removed.
+     *
      * @param string $pattern
      *
      * @return string pattern

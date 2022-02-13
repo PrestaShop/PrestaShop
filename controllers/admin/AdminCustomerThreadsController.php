@@ -1078,7 +1078,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         // parse from attribute and fix it if needed
                         $from_parsed = [];
                         if (!isset($overview->from)
-                            || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
+                            || (!preg_match('/<([a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+)>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification');
 
