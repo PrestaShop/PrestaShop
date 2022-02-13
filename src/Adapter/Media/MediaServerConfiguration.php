@@ -61,27 +61,23 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
-        $isValid = $this->validateConfiguration($configuration);
-        if (true === $isValid) {
-            $serverOne = $configuration['media_server_one'];
-            $serverTwo = $configuration['media_server_two'];
-            $serverThree = $configuration['media_server_three'];
-
-            $this->configuration->set('PS_MEDIA_SERVER_1', $serverOne);
-            $this->configuration->set('PS_MEDIA_SERVER_2', $serverTwo);
-            $this->configuration->set('PS_MEDIA_SERVER_3', $serverThree);
-
-            if (!empty($serverOne) || !empty($serverTwo) || !empty($serverThree)) {
-                $this->configuration->set('PS_MEDIA_SERVERS', 1);
-            } else {
-                $this->configuration->set('PS_MEDIA_SERVERS', 0);
-            }
-        } else {
-            $errors = $isValid;
+        $validateResult = $this->validateConfiguration($configuration);
+        if ($validateResult !== true) {
+            return $validateResult;
         }
 
-        return $errors;
+        $serverOne = $configuration['media_server_one'];
+        $serverTwo = $configuration['media_server_two'];
+        $serverThree = $configuration['media_server_three'];
+
+        $this->configuration->set('PS_MEDIA_SERVER_1', $serverOne);
+        $this->configuration->set('PS_MEDIA_SERVER_2', $serverTwo);
+        $this->configuration->set('PS_MEDIA_SERVER_3', $serverThree);
+
+        $hasMediaServer = !empty($serverOne) || !empty($serverTwo) || !empty($serverThree);
+        $this->configuration->set('PS_MEDIA_SERVERS', $hasMediaServer ? 1 : 0);
+
+        return [];
     }
 
     /**
@@ -134,10 +130,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
      */
     private function isValidDomain($domainName)
     {
-        if (false !== filter_var($domainName, FILTER_VALIDATE_DOMAIN)) {
-            return false !== filter_var(gethostbyname($domainName), FILTER_VALIDATE_IP);
-        }
-
-        return false;
+        return false !== filter_var($domainName, FILTER_VALIDATE_DOMAIN)
+            && false !== filter_var(gethostbyname($domainName), FILTER_VALIDATE_IP);
     }
 }
