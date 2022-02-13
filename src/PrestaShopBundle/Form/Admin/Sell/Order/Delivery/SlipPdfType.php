@@ -51,7 +51,7 @@ class SlipPdfType extends TranslatorAwareType
                     'data' => $now,
                     'empty_data' => $now,
                     'label' => $this->trans('From', 'Admin.Global'),
-                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans('Format: %s (inclusive).', 'Admin.Orderscustomers.Help', [date('Y-m-d')]),
                 ]
             )
             ->add(
@@ -62,7 +62,7 @@ class SlipPdfType extends TranslatorAwareType
                     'data' => $now,
                     'empty_data' => $now,
                     'label' => $this->trans('To', 'Admin.Global'),
-                    'help' => $this->trans('Format: 2011-12-31 (inclusive).', 'Admin.Orderscustomers.Help'),
+                    'help' => $this->trans('Format: %s (inclusive).', 'Admin.Orderscustomers.Help', [date('Y-m-d')]),
                 ]
             );
     }
