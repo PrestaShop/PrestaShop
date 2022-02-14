@@ -98,6 +98,27 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getColumns(): ColumnCollectionInterface
     {
+        $deleteAction = $this->buildDeleteAction(
+            'admin_security_sessions_employee_delete',
+            'sessionId',
+            'id_employee_session',
+            'DELETE'
+        );
+        $deleteActionOptions = $deleteAction->getOptions();
+        $deleteActionOptions['confirm_message'] = $this->trans(
+            'The user will be signed out from this session.',
+            [],
+            'Admin.Advparameters.Feature'
+        );
+        $deleteActionModalOptions = $deleteActionOptions['modal_options']->getOptions();
+        $deleteActionModalOptions['title'] = $this->trans(
+            'Delete session?',
+            [],
+            'Admin.Advparameters.Feature'
+        );
+        $deleteActionOptions['modal_options']->setOptions($deleteActionModalOptions);
+        $deleteAction->setOptions($deleteActionOptions);
+
         return (new ColumnCollection())
             ->add(
                 (new BulkActionColumn('bulk'))
@@ -153,14 +174,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
-                            ->add(
-                            $this->buildDeleteAction(
-                                'admin_security_sessions_employee_delete',
-                                'sessionId',
-                                'id_employee_session',
-                                'DELETE'
-                            )
-                        ),
+                            ->add($deleteAction),
                     ])
             );
     }
@@ -271,9 +285,23 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
+        $bulkDeleteAction = $this->buildBulkDeleteAction('admin_security_sessions_employee_bulk_delete');
+        $bulkDeleteActionOptions = $bulkDeleteAction->getOptions();
+        $bulkDeleteActionOptions['confirm_message'] = $this->trans(
+            'Users will be signed out from all selected sessions.',
+            [],
+            'Admin.Advparameters.Feature'
+        );
+        $bulkDeleteActionModalOptions = $bulkDeleteActionOptions['modal_options']->getOptions();
+        $bulkDeleteActionModalOptions['title'] = $this->trans(
+            'Delete selected sessions?',
+            [],
+            'Admin.Advparameters.Feature'
+        );
+        $bulkDeleteActionOptions['modal_options']->setOptions($bulkDeleteActionModalOptions);
+        $bulkDeleteAction->setOptions($bulkDeleteActionOptions);
+
         return (new BulkActionCollection())
-            ->add(
-                $this->buildBulkDeleteAction('admin_security_sessions_employee_bulk_delete')
-            );
+            ->add($bulkDeleteAction);
     }
 }
