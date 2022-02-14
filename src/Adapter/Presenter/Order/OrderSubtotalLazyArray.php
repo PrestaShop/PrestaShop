@@ -164,11 +164,7 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
                     'type' => 'shipping_including_tax',
                     'label' => $this->translator->trans('Shipping and handling (tax incl.)', [], 'Shop.Theme.Checkout'),
                     'amount' => $this->order->total_shipping_tax_incl,
-                    'value' => $this->priceFormatter->format(
-                        $this->order->total_products_wt,
-                        Currency::getCurrencyInstance((int) $this->order->id_currency)
-                    ),
-                    'value_incl_tax' => $shippingCost != 0 ? $this->priceFormatter->format(
+                    'value' => $shippingCost != 0 ? $this->priceFormatter->format(
                         $this->order->total_shipping_tax_incl,
                         Currency::getCurrencyInstance((int) $this->order->id_currency)
                     ) : $this->translator->trans('Free', [], 'Shop.Theme.Checkout'),
