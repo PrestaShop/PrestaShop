@@ -79,12 +79,12 @@ class DetailsCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = new UpdateProductDetailsCommand($this->getProductId()->getValue());
-        $command->setIsbn('1234');
+        $command->setIsbn('0-8044-2957-X');
         yield [
             [
                 'specifications' => [
                     'references' => [
-                        'isbn' => '1234',
+                        'isbn' => '0-8044-2957-X',
                     ],
                 ],
             ],
