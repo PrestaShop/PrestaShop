@@ -507,12 +507,12 @@ class CartPresenter implements PresenterInterface
             'vouchers' => $vouchers,
             'discounts' => $discounts,
             'minimalPurchase' => $minimalPurchase,
-            'minimalPurchaseRequired' => ($products_total_including_tax < $minimalPurchase) ?
+            'minimalPurchaseRequired' => ($products_total_excluding_tax < $minimalPurchase) ?
                 $this->translator->trans(
                     'A minimum shopping cart total of %amount% (tax excl.) is required to validate your order. Current cart total is %total% (tax excl.).',
                     [
                         '%amount%' => $this->priceFormatter->format($minimalPurchase),
-                        '%total%' => $this->priceFormatter->format($products_total_including_tax),
+                        '%total%' => $this->priceFormatter->format($products_total_excluding_tax),
                     ],
                     'Shop.Theme.Checkout'
                 ) :
