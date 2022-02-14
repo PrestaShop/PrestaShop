@@ -88,8 +88,9 @@ class DisablingToggleExtension extends AbstractTypeExtension
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'disabling_toggle' => false,
-        ]);
+        $resolver
+            ->setDefaults(['disabling_toggle' => false])
+            ->setAllowedTypes('disabling_toggle', ['array', 'bool'])
+        ;
     }
 }
