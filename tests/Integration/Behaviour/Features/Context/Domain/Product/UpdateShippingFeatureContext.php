@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingComma
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -54,7 +55,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductShippingCommand($productId);
+            $command = new UpdateProductShippingCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
             $unhandledData = $this->setUpdateShippingCommandData($data, $command);
 
             Assert::assertEmpty(
