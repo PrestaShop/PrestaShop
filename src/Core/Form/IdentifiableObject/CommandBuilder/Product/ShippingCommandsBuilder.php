@@ -30,58 +30,54 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
-final class ShippingCommandsBuilder implements ProductCommandsBuilderInterface
+final class ShippingCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(
+        string $modifyAllNamePrefix
+    ) {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['shipping'])) {
             return [];
         }
 
         $shippingData = $formData['shipping'];
-        $dimensionsData = $shippingData['dimensions'] ?? [];
-        $command = new UpdateProductShippingCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[dimensions][width]', 'setWidth', CommandField::TYPE_STRING)
+            ->addMultiShopField('[dimensions][height]', 'setHeight', CommandField::TYPE_STRING)
+            ->addMultiShopField('[dimensions][depth]', 'setDepth', CommandField::TYPE_STRING)
+            ->addMultiShopField('[dimensions][weight]', 'setWeight', CommandField::TYPE_STRING)
+            ->addMultiShopField('[delivery_time_note_type]', 'setDeliveryTimeNoteType', CommandField::TYPE_INT)
+            ->addMultiShopField('[delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[additional_shipping_cost]', 'setAdditionalShippingCost', CommandField::TYPE_STRING)
+            ->addMultiShopField('[carriers]', 'setCarrierReferences', CommandField::TYPE_ARRAY)
+        ;
 
-        if (isset($dimensionsData['width'])) {
-            $command->setWidth((string) $dimensionsData['width']);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $singleShopCommand = new UpdateProductShippingCommand($productId->getValue(), $singleShopConstraint);
+        $allShopCommand = new UpdateProductShippingCommand($productId->getValue(), ShopConstraint::allShops());
 
-        if (isset($dimensionsData['height'])) {
-            $command->setHeight((string) $dimensionsData['height']);
-        }
-
-        if (isset($dimensionsData['depth'])) {
-            $command->setDepth((string) $dimensionsData['depth']);
-        }
-
-        if (isset($dimensionsData['weight'])) {
-            $command->setWeight((string) $dimensionsData['weight']);
-        }
-
-        if (isset($shippingData['delivery_time_note_type'])) {
-            $command->setDeliveryTimeNoteType((int) $shippingData['delivery_time_note_type']);
-        }
-
-        if (isset($shippingData['delivery_time_notes']['in_stock'])) {
-            $command->setLocalizedDeliveryTimeInStockNotes($shippingData['delivery_time_notes']['in_stock']);
-        }
-
-        if (isset($shippingData['delivery_time_notes']['out_of_stock'])) {
-            $command->setLocalizedDeliveryTimeOutOfStockNotes($shippingData['delivery_time_notes']['out_of_stock']);
-        }
-
-        if (isset($shippingData['additional_shipping_cost'])) {
-            $command->setAdditionalShippingCost((string) $shippingData['additional_shipping_cost']);
-        }
-
-        if (isset($shippingData['carriers'])) {
-            $command->setCarrierReferences($shippingData['carriers']);
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands($shippingData, $singleShopCommand, $allShopCommand);
     }
 }

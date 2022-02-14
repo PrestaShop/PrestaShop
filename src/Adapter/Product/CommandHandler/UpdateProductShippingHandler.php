@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -40,17 +40,17 @@ use Product;
 final class UpdateProductShippingHandler implements UpdateProductShippingHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
-    private $productRepository;
+    private $productMultiShopRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productMultiShopRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductMultiShopRepository $productMultiShopRepository
     ) {
-        $this->productRepository = $productRepository;
+        $this->productMultiShopRepository = $productMultiShopRepository;
     }
 
     /**
@@ -58,12 +58,14 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
      */
     public function handle(UpdateProductShippingCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $shopConstraint = $command->getShopConstraint();
+        $product = $this->productMultiShopRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->productRepository->partialUpdate(
+        $this->productMultiShopRepository->partialUpdate(
             $product,
             $updatableProperties,
+            $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS
         );
     }
