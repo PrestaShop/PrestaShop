@@ -74,7 +74,6 @@ class Isbn
      */
     private function assertIsbnIsValid(string $value): void
     {
-
         if ((strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) || !$value) {
             return;
         }
