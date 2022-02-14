@@ -196,7 +196,6 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
           testIdentifier: 'sortByOrderIDDesc', sortBy: 'status', sortDirection: 'down', isFloat: true,
         },
       },
-      /* Sort by carrier not working, skipping it
       {
         args: {
           testIdentifier: 'sortByCarrierAsc', sortBy: 'ca!name', sortDirection: 'up',
@@ -207,7 +206,6 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
           testIdentifier: 'sortByCarrierDesc', sortBy: 'ca!name', sortDirection: 'down',
         },
       },
-      */
       {
         args: {
           testIdentifier: 'sortByDateAsc', sortBy: 'date', sortDirection: 'up',
