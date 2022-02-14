@@ -33,6 +33,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DisablingToggleType extends SwitchType
 {
+    /**
+     * {@inheritDoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
@@ -55,13 +58,16 @@ class DisablingToggleType extends SwitchType
         ;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
         $view->vars['row_attr']['data-disabling-toggle-name'] = $form->getName();
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return SwitchType::class;
     }
