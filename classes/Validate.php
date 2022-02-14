@@ -696,7 +696,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
+        return !$isbn || preg_match('/^[0-9][0-9-]{1,30}[0-9X]$/i', $isbn);
     }
 
     /**

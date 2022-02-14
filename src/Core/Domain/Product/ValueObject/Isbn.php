@@ -38,7 +38,7 @@ class Isbn
     /**
      * Valid ISBN regex pattern
      */
-    public const VALID_PATTERN = '/^[0-9-]{0,32}$/';
+    public const VALID_PATTERN = '/^[0-9][0-9-]{1,30}[0-9X]$/i';
 
     /**
      * Maximum allowed symbols
@@ -74,7 +74,8 @@ class Isbn
      */
     private function assertIsbnIsValid(string $value): void
     {
-        if (strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) {
+
+        if ((strlen($value) <= self::MAX_LENGTH && preg_match(self::VALID_PATTERN, $value)) || !$value) {
             return;
         }
 
