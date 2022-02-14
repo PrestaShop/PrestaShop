@@ -32,6 +32,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Updates product shipping options
@@ -89,11 +90,21 @@ class UpdateProductShippingCommand
     private $localizedDeliveryTimeOutOfStockNotes;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
-    {
+    private $shopConstraint;
+
+    /**
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     * @throws ProductConstraintException
+     */
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -319,5 +330,13 @@ class UpdateProductShippingCommand
             sprintf('Invalid product %s, it must be positive number or zero', $dimensionName),
             $codeByDimension[$dimensionName]
         );
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
