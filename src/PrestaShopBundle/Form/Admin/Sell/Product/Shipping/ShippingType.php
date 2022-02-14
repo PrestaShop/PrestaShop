@@ -93,6 +93,7 @@ class ShippingType extends TranslatorAwareType
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
             ->add('delivery_time_notes', DeliveryTimeNotesType::class)
             ->add('additional_shipping_cost', MoneyType::class, [
@@ -107,6 +108,7 @@ class ShippingType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_shops' => true,
             ])
             ->add('carriers', ChoiceType::class, [
                 'choices' => $this->carrierChoiceProvider->getChoices(),
@@ -117,6 +119,7 @@ class ShippingType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
                 'alert_message' => $this->trans('If no carrier is selected then all the carriers will be available for customers orders.', 'Admin.Catalog.Notification'),
                 'alert_type' => 'warning',
+                'modify_all_shops' => true,
             ])
         ;
     }
