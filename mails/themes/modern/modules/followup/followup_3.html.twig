@@ -1,6 +1,6 @@
 {% extends '@MailThemes/modern/components/layout.html.twig' %}
         
-{% block title %}{{ 'Payment'|trans({}, 'Emails.Body', locale) }}{% endblock %}
+{% block title %}{{ 'Follow up 3'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
 <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
@@ -24,7 +24,13 @@
                                         </td>
                                       </tr>
                                       <!-- TITLE ENDING -->
-                                      <!-- BORDER BEGINING -->
+                                      <!-- SUBTITLE BEGINING -->
+                                      <tr>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:25px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Thanks for your trust.'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                        </td>
+                                      </tr>
+                                      <!-- SUBTITLE ENDING -->
                                     </tbody>
                                   </table>
                                 </td>
@@ -38,7 +44,9 @@
                   </tbody>
                 </table>
               </div>
-              <!--[if mso | IE]></td></tr></table></td></tr><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
+              <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
+              <!-- BORDER BEGINING -->
+              <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
               <div style="margin:0px auto;max-width:604px;">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
@@ -67,41 +75,6 @@
               </div>
               <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
               <!-- BORDER ENDING -->
-              <!-- SUBTITLE BEGINING -->
-              <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-              <div style="margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px 0;text-align:center;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
-                            <tbody>
-                              <tr>
-                                <td style="vertical-align:top;padding:0;">
-                                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
-                                    <tbody>
-                                      <tr>
-                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'Emails.Body', locale)|raw }}</div>
-                                        </td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
-              <!-- SUBTITLE ENDING -->
               <!-- BOX BEGINING -->
               <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
               <div style="margin:0px auto;max-width:604px;">
@@ -114,12 +87,22 @@
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
-                                <td style="background-color:#fefefe;border:1px solid #DFDFDF;vertical-align:top;padding-top:10px;padding-bottom:10px;">
+                                <td style="background-color:#fefefe;border:1px solid #DFDFDF;vertical-align:top;padding:20px 0;">
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tbody>
                                       <tr>
                                         <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Your payment for order with the reference [1]{order_name}[/1] was successfully processed.'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'We are pleased to offer you a discount of [1]{amount}%[/1] off your next order. And this offer is valid for [1]{days}[/1] days, so do not wait any longer!'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;"><span style="font-weight:700">{{ 'Here is your VOUCHER CODE:'|trans({}, 'Emails.Body', locale)|raw }}</span> {voucher_num}</div>
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Enter this code in your shopping cart to get the discount.'|trans({}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -137,60 +120,6 @@
               </div>
               <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
               <!-- BOX ENDING -->
-              <!-- FIRST TEXT BEGINING -->
-              <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-              <div style="margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px 20px;text-align:center;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.'|trans({'%order_history_label%': 'Order history and details'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
-              <!-- FIRST TEXT ENDING -->
-              <!-- SECOND TEXT BEGINING -->
-              <!--[if mso | IE]><tr><td class="" width="604px" ><table align="center" border="0" cellpadding="0" cellspacing="0" class="" role="presentation" style="width:604px;" width="604" ><tr><td style="line-height:0px;font-size:0px;mso-line-height-rule:exactly;"><![endif]-->
-              <div style="margin:0px auto;max-width:604px;">
-                <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
-                  <tbody>
-                    <tr>
-                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px;text-align:center;">
-                        <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
-                          <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
-                            <tbody>
-                              <tr>
-                                <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.'|trans({'%guest_tracking_label%': 'Guest Tracking'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <!--[if mso | IE]></td></tr></table><![endif]-->
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
-              <!-- SECOND TEXT ENDING -->
               
 
 {% endblock %}
