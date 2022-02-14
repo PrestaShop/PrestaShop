@@ -4699,23 +4699,20 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "c08d1ded67f75bde9dc06109748d0fd2e74d8c65"
+                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/c08d1ded67f75bde9dc06109748d0fd2e74d8c65",
-                "reference": "c08d1ded67f75bde9dc06109748d0fd2e74d8c65",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/b2586beb1283ee037273a6cab2a911d0379f00a8",
+                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8",
                 "shasum": ""
             },
             "require": {
-                "doctrine/cache": "^1.6",
-                "guzzlehttp/cache-subscriber": "^0.2.0",
-                "php": ">=5.6.0",
-                "symfony/css-selector": "^3.4 || ^4.4 || ^5.0"
+                "php": ">=5.6.0"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^3.4"
@@ -4743,9 +4740,9 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.0"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.1"
             },
-            "time": "2021-11-29T09:55:29+00:00"
+            "time": "2022-02-10T15:06:39+00:00"
         },
         {
             "name": "prestashop/ps_banner",
