@@ -30,9 +30,12 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -41,8 +44,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\DateTimeColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFactory;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\BulkDeleteActionTrait;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\DeleteActionTrait;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollectionInterface;
@@ -56,9 +57,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
-    use BulkDeleteActionTrait;
-    use DeleteActionTrait;
-
     /**
      * @var string Date format for the current user
      */
@@ -154,13 +152,24 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add(
-                            $this->buildDeleteAction(
-                                'admin_security_sessions_customer_delete',
-                                'sessionId',
-                                'id_customer_session',
-                                'DELETE'
-                            )
-                        ),
+                                (new SubmitRowAction('delete'))
+                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                                    ->setIcon('delete')
+                                    ->setOptions([
+                                        'route' => 'admin_security_sessions_customer_delete',
+                                        'route_param_name' => 'sessionId',
+                                        'route_param_field' => 'id_customer_session',
+                                        'extra_route_params' => [],
+                                        'confirm_message' => $this->trans('The user will be signed out from this session.', [], 'Admin.Global'),
+                                        'method' => 'DELETE',
+                                        'modal_options' => new ModalOptions([
+                                            'title' => $this->trans('Delete session?', [], 'Admin.Actions'),
+                                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                                            'close_button_label' => $this->trans('Cancel', [], 'Admin.Actions'),
+                                            'confirm_button_class' => 'btn-danger',
+                                        ]),
+                                    ])
+                            ),
                     ])
             );
     }
@@ -273,7 +282,17 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_sessions_customer_bulk_delete')
+                (new SubmitBulkAction('delete_selection'))
+                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_security_sessions_customer_bulk_delete',
+                        'confirm_message' => $this->trans('Users will be signed out from all selected sessions.', [], 'Admin.Global'),
+                        'modal_options' => new ModalOptions([
+                            'title' => $this->trans('Delete selected sessions?', [], 'Admin.Actions'),
+                            'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                            'confirm_button_class' => 'btn-danger',
+                        ]),
+                    ])
             );
     }
 }
