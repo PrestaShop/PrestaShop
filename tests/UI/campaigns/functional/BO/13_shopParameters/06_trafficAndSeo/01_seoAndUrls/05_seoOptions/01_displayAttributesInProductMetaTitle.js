@@ -26,7 +26,7 @@ const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_displ
 let browserContext;
 let page;
 
-describe('Enable/Disable display attributes in product meta title', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable display attributes in product meta title', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
