@@ -37,22 +37,32 @@ trait BulkDeleteActionTrait
 {
     /**
      * @param string $bulkDeleteRouteName
+     * @param array $options
+     * @param array $modalOptions
      *
      * @return BulkActionInterface
      */
-    protected function buildBulkDeleteAction(string $bulkDeleteRouteName)
+    protected function buildBulkDeleteAction(string $bulkDeleteRouteName, array $options = [], array $modalOptions = [])
     {
         return (new SubmitBulkAction('delete_selection'))
             ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-            ->setOptions([
-                'submit_route' => $bulkDeleteRouteName,
-                'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
-                'modal_options' => new ModalOptions([
-                    'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
-                    'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
-                    'confirm_button_class' => 'btn-danger',
-                ]),
-            ])
+            ->setOptions(
+                array_merge(
+                    [
+                        'submit_route' => $bulkDeleteRouteName,
+                        'confirm_message' => $this->trans('Are you sure you want to delete the selected item(s)?', [], 'Admin.Global'),
+                        'modal_options' => new ModalOptions(array_merge(
+                            [
+                                'title' => $this->trans('Delete selection', [], 'Admin.Actions'),
+                                'confirm_button_label' => $this->trans('Delete', [], 'Admin.Actions'),
+                                'confirm_button_class' => 'btn-danger',
+                            ],
+                            $modalOptions
+                        )),
+                    ],
+                    $options
+                )
+            )
         ;
     }
 

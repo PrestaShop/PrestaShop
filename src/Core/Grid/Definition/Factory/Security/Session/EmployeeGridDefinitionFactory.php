@@ -153,14 +153,26 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Actions', [], 'Admin.Global'))
                     ->setOptions([
                         'actions' => (new RowActionCollection())
-                            ->add(
-                            $this->buildDeleteAction(
+                            ->add($this->buildDeleteAction(
                                 'admin_security_sessions_employee_delete',
                                 'sessionId',
                                 'id_employee_session',
-                                'DELETE'
-                            )
-                        ),
+                                'DELETE',
+                                [
+                                    'confirm_message' => $this->trans(
+                                        'The user will be signed out from this session.',
+                                        [],
+                                        'Admin.Advparameters.Feature'
+                                    ),
+                                ],
+                                [
+                                    'title' => $this->trans(
+                                        'Delete session?',
+                                        [],
+                                        'Admin.Advparameters.Feature'
+                                    ),
+                                ]
+                            )),
                     ])
             );
     }
@@ -273,7 +285,25 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_sessions_employee_bulk_delete')
+                $this->buildBulkDeleteAction(
+                    'admin_security_sessions_employee_bulk_delete',
+                    [
+                        'confirm_message' => $this->trans(
+                            'Users will be signed out from all selected sessions.',
+                            [],
+                            'Admin.Advparameters.Feature'
+                        ),
+                    ],
+                    [
+                        'modal_options' => [
+                            'title' => $this->trans(
+                                'Delete selected sessions?',
+                                [],
+                                'Admin.Advparameters.Feature'
+                            ),
+                        ],
+                    ]
+                )
             );
     }
 }
