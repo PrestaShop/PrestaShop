@@ -82,7 +82,7 @@ describe('Header : Quick access links', async () => {
 
     await newVoucherPage.reloadPage(page);
 
-    await newVoucherPage.manageQuickAccess(page);
+    await newVoucherPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
     await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
@@ -116,7 +116,7 @@ describe('Header : Quick access links', async () => {
   it('should go to \'Manage quick access\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToManageQuickAccessPageToDeleteLink', baseContext);
 
-    await newCustomerPage.manageQuickAccess(page);
+    await newCustomerPage.goToManageQuickAccessPage(page);
 
     const pageTitle = await quickAccessPage.getPageTitle(page);
     await expect(pageTitle).to.contains(quickAccessPage.pageTitle);
