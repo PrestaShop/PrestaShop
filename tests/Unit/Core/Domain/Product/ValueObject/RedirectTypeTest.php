@@ -46,11 +46,7 @@ class RedirectTypeTest extends TestCase
      *
      * @throws ProductConstraintException
      */
-    public function testItSuccessfullyCreatesRedirectType(string $type, 
-        bool $isProductType, 
-        bool $isCategoryType, 
-        bool $isTypeNotFound,
-        bool $isTypeGone): void
+    public function testItSuccessfullyCreatesRedirectType(string $type, bool $isProductType, bool $isCategoryType, bool $isTypeNotFound): void
     {
         $redirectType = new RedirectType($type);
 
@@ -58,7 +54,6 @@ class RedirectTypeTest extends TestCase
         Assert::assertEquals($isProductType, $redirectType->isProductType());
         Assert::assertEquals($isCategoryType, $redirectType->isCategoryType());
         Assert::assertEquals($isTypeNotFound, $redirectType->isTypeNotFound());
-        Assert::assertEquals($isTypeGone, $redirectType->isTypeNotFound());
     }
 
     /**
@@ -66,12 +61,11 @@ class RedirectTypeTest extends TestCase
      */
     public function getValidDataForCreation(): Generator
     {
-        yield ['404', false, false, true, false];
-        yield ['410', false, false, false, true];
-        yield ['301-category', false, true, false, false];
-        yield ['302-category', false, true, false, false];
-        yield ['301-product', true, false, false, false];
-        yield ['302-product', true, false, false, false];
+        yield ['404', false, false, true];
+        yield ['301-category', false, true, false];
+        yield ['302-category', false, true, false];
+        yield ['301-product', true, false, false];
+        yield ['302-product', true, false, false];
     }
 
     /**

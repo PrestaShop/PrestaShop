@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -189,7 +190,7 @@ class ProductOptions extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex('/^[0-9-]{0,32}$/'),
+                    new Assert\Regex(Isbn::VALID_PATTERN),
                 ],
                 'empty_data' => '',
             ])
