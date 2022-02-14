@@ -57,7 +57,7 @@ const checkUndefined = (jsonFile) => {
     .filter(test => (test.context === undefined || !test.context) && !test.pending)
     .map(test => test.fullTitle);
 
-  if (allTests.length !== 0) {
+  if (undefinedContextsSteps.length !== 0) {
     throw new Error(`Some steps are missing contexts on these scenarios: \n ${undefinedContextsSteps}`);
   }
 };

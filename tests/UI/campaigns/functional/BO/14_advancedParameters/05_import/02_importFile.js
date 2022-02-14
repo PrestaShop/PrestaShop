@@ -40,7 +40,7 @@ Go to attributes and features page
 Check import success
  */
 // Skipping the test until creating a good scenario
-describe('BO - Advanced Parameters - Import : Import combinations', async () => {
+describe.skip('BO - Advanced Parameters - Import : Import combinations', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -52,11 +52,11 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
     await files.deleteFile(renamedSampleFilePath);
   });
 
-  it.skip('should login in BO', async function () {
+  it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
   });
 
-  it.skip('should go to \'Advanced Parameters > Import\' page', async function () {
+  it('should go to \'Advanced Parameters > Import\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -71,7 +71,7 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
     await expect(pageTitle).to.contains(importPage.pageTitle);
   });
 
-  it.skip(`should download ${SampleFiles.combinations.name} sample file`, async function () {
+  it(`should download ${SampleFiles.combinations.name} sample file`, async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
 
     sampleFilePath = await importPage.downloadSampleFile(page, SampleFiles.combinations.name);
@@ -81,7 +81,7 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
   });
 
   describe('Import file', async () => {
-    it.skip(`should upload ${SampleFiles.combinations.name} sample text file`, async function () {
+    it(`should upload ${SampleFiles.combinations.name} sample text file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
       // Rename the file and add file extension to be able to upload it
@@ -95,21 +95,21 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
       await expect(uploadSuccessText).contain(SampleFiles.combinations.name);
     });
 
-    it.skip('should go to next import file step', async function () {
+    it('should go to next import file step', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'nextStep', baseContext);
 
       const panelTitle = await importPage.goToImportNextStep(page);
       await expect(panelTitle).contain(importPage.importPanelTitle);
     });
 
-    it.skip('should start import file', async function () {
+    it('should start import file', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'confirmImport', baseContext);
 
       const modalTitle = await importPage.startFileImport(page);
       await expect(modalTitle).contain(importPage.importModalTitle);
     });
 
-    it.skip('should close import progress modal', async function () {
+    it('should close import progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
       const isModalClosed = await importPage.closeImportModal(page);
@@ -118,7 +118,7 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
   });
 
   describe('Check import success', async () => {
-    it.skip('should go to \'Catalog > Attributes & Features\' page', async function () {
+    it('should go to \'Catalog > Attributes & Features\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCombinationsPage', baseContext);
 
       await importPage.goToSubMenu(
@@ -133,7 +133,7 @@ describe('BO - Advanced Parameters - Import : Import combinations', async () => 
       await expect(pageTitle).to.contains(attributesPage.pageTitle);
     });
 
-    it.skip('should reset all filters and get number of attributes in BO', async function () {
+    it('should reset all filters and get number of attributes in BO', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
 
       numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
