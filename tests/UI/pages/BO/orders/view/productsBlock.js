@@ -239,7 +239,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<number>}
    */
   getOrderTotalPrice(page) {
-    return this.getPriceFromText(page, this.orderTotalPriceSpan);
+    return this.getPriceFromText(page, this.orderTotalPriceSpan, 1000);
   }
 
   /**
