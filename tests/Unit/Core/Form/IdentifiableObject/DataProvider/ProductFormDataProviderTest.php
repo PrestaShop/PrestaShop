@@ -80,7 +80,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -1595,9 +1594,6 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock, bool $activation): ProductFormDataProvider
     {
-        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
-        $urlGeneratorMock->method('generate')->willReturnArgument(0);
-
         return new ProductFormDataProvider(
             $queryBusMock,
             $activation,

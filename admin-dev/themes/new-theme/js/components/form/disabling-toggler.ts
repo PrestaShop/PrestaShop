@@ -38,7 +38,7 @@ export default class DisablingToggler {
   /**
    * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
    *                 which on change enables/disables the element selected by elementToToggleSelector.
-   * @param {matchingValue} matchingValue - value which should match with disablingInput value to enable/disable related element
+   * @param {string} matchingValue - value which should match with disablingInput value to enable/disable related element
    * @param {string} elementToToggleSelector - selector of element which is toggled by the disablingInput.
    * @param {boolean} disableOnMatch - once disablingInput & matchingValue values match, then
    *                  if true - related element is disabled
