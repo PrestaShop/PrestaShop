@@ -43,8 +43,11 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         return [
-            'disabling_toggle_reference' => false,
-            'disabling_toggle_price_tax_excluded' => false,
+            //@todo: all of this smells :(
+            // This form is not handled before submit as usually, so data is always empty in PRE_SUBMIT event
+            // That is why these values must be truthy or else PRE_SUBMIT event will always disable the related inputs
+            'disabling_toggle_reference' => true,
+            'disabling_toggle_price_tax_excluded' => true,
         ];
     }
 }
