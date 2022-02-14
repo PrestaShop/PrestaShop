@@ -28,7 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type\EventListener;
 
 use PrestaShopBundle\Form\Admin\Extension\DisablingToggleExtension;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\Admin\Type\DisablingToggleType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -58,18 +58,8 @@ class DisablingToggleListener implements EventSubscriberInterface
         if ($parent->has($fieldName)) {
             return;
         }
-        $parent->add($fieldName, SwitchType::class, [
-            'label' => false,
-            'attr' => [
-                'container_class' => 'disabling-toggle',
-                'data-value-type' => 'boolean',
-            ],
-            'row_attr' => [
-                'class' => 'ps-disabling-toggle',
-                'data-disabling-toggle-name' => $fieldName,
-            ],
-        ]);
 
+        $parent->add($fieldName, DisablingToggleType::class);
         $shouldBeDisabled = !$parent->get($fieldName)->getData();
 
         $formCloner = new FormCloner();

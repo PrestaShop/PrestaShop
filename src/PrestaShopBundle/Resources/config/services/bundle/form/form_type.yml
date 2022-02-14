@@ -1867,3 +1867,10 @@ services:
   form.event_listener.disabling_toggle_listener:
     class: 'PrestaShopBundle\Form\Admin\Type\EventListener\DisablingToggleListener'
     public: true
+
+  form.type.disabling_toggle_type:
+    class: 'PrestaShopBundle\Form\Admin\Type\DisablingToggleType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
