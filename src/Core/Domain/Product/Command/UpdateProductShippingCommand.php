@@ -97,6 +97,7 @@ class UpdateProductShippingCommand
     /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
+     *
      * @throws ProductConstraintException
      */
     public function __construct(
