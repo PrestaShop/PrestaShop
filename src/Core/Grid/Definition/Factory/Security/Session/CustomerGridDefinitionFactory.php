@@ -154,13 +154,28 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'actions' => (new RowActionCollection())
                             ->add(
-                            $this->buildDeleteAction(
-                                'admin_security_sessions_customer_delete',
-                                'sessionId',
-                                'id_customer_session',
-                                'DELETE'
-                            )
-                        ),
+                                $this->buildDeleteAction(
+                                    'admin_security_sessions_customer_delete',
+                                    'sessionId',
+                                    'id_customer_session',
+                                    'DELETE',
+                                    [],
+                                    [
+                                        'confirm_message' => $this->trans(
+                                            'The user will be signed out from this session.',
+                                            [],
+                                            'Admin.Advparameters.Feature'
+                                        ),
+                                        'modal_options' => [
+                                            'title' => $this->trans(
+                                                'Delete session?',
+                                                [],
+                                                'Admin.Advparameters.Feature'
+                                            ),
+                                        ],
+                                    ]
+                                )
+                            ),
                     ])
             );
     }
@@ -273,7 +288,23 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         return (new BulkActionCollection())
             ->add(
-                $this->buildBulkDeleteAction('admin_security_sessions_customer_bulk_delete')
+                $this->buildBulkDeleteAction(
+                    'admin_security_sessions_customer_bulk_delete',
+                    [
+                        'confirm_message' => $this->trans(
+                            'Users will be signed out from all selected sessions.',
+                            [],
+                            'Admin.Advparameters.Feature'
+                        ),
+                        'modal_options' => [
+                            'title' => $this->trans(
+                                'Delete selected sessions?',
+                                [],
+                                'Admin.Advparameters.Feature'
+                            ),
+                        ],
+                    ]
+                )
             );
     }
 }
