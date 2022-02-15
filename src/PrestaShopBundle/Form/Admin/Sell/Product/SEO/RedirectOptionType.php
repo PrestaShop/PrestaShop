@@ -126,6 +126,7 @@ class RedirectOptionType extends TranslatorAwareType
                 'placeholder' => false, // Guaranties that no empty value is added in options
                 'choices' => [
                     $this->trans('No redirection (404)', 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
+                    $this->trans('No redirection (410)', 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
                     $this->trans('Permanent redirection to a category (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_PERMANENT,
                     $this->trans('Temporary redirection to a category (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_TEMPORARY,
                     $this->trans('Permanent redirection to a product (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_PERMANENT,
@@ -194,6 +195,7 @@ class RedirectOptionType extends TranslatorAwareType
     {
         return [
             $this->trans('No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.', 'Admin.Catalog.Help'),
+            $this->trans('No redirection (410) = Do not redirect anywhere and display a 410 "Gone" page.', 'Admin.Catalog.Help'),
             $this->trans('Permanent redirection (301) = Permanently display another product or category instead.', 'Admin.Catalog.Help'),
             $this->trans('Temporary redirection (302) = Temporarily display another product or category instead.', 'Admin.Catalog.Help'),
         ];

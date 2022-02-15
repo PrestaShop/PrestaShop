@@ -535,7 +535,8 @@ function showRedirectProductOptions(show)
 
 function redirectSelectChange()
 {
-  if ($('#redirect_type :selected').val() == '404')
+  redirectTypeValue = $('#redirect_type :selected').val();
+  if (redirectTypeValue == '404' || redirectTypeValue == '410' )
     showRedirectProductSelectOptions(false);
   else
     showRedirectProductSelectOptions(true);
