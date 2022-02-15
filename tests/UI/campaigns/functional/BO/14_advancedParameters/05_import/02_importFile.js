@@ -39,7 +39,8 @@ Import the combinations sample file
 Go to attributes and features page
 Check import success
  */
-describe('BO - Advanced Parameters - Import : Import combinations', async () => {
+// Skipping the test until creating a good scenario
+describe.skip('BO - Advanced Parameters - Import : Import combinations', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

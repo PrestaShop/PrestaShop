@@ -28,10 +28,11 @@ const duplicates = dict => Object.keys(dict)
   );
 
 /**
- * Check for doubles in mochawesome report
+ * Get all tests from json file
  * @param jsonFile
+ * @returns {[]}
  */
-const checkDoubles = (jsonFile) => {
+const getAllTests = (jsonFile) => {
   // Parse json report
   const jsonReport = JSON.parse(jsonFile);
 
@@ -43,7 +44,34 @@ const checkDoubles = (jsonFile) => {
     allTests = allTests.concat(testsInSuites[i]);
   }
 
-  const reportContexts = Object.values(allTests).map(test => JSON.parse(test.context).value);
+  return allTests;
+};
+
+/**
+ * Check for undefined context
+ * @param jsonFile
+ */
+const checkUndefined = (jsonFile) => {
+  const allTests = getAllTests(jsonFile);
+  const undefinedContextsSteps = allTests
+    .filter(test => (test.context === undefined || !test.context) && !test.pending)
+    .map(test => test.fullTitle);
+
+  if (undefinedContextsSteps.length !== 0) {
+    throw new Error(`Some steps are missing contexts on these scenarios: \n ${undefinedContextsSteps}`);
+  }
+};
+
+/**
+ * Check for doubles in mochawesome report
+ * @param jsonFile
+ */
+const checkDoubles = (jsonFile) => {
+  const allTests = getAllTests(jsonFile);
+
+  const reportContexts = Object.values(allTests)
+    .filter(test => test.context)
+    .map(test => JSON.parse(test.context).value);
 
   const contextDoubles = duplicates(count(reportContexts));
 
@@ -55,4 +83,6 @@ const checkDoubles = (jsonFile) => {
 };
 
 // Run file
+checkUndefined(jsonFile);
+
 checkDoubles(jsonFile);
