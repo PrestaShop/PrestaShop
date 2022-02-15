@@ -35,11 +35,9 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
-use PrestaShopBundle\Event\ModuleManagementEvent;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Finder\Finder;
 
-class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInterface
+class ModuleRepository implements ModuleRepositoryInterface
 {
     private const MODULE_ATTRIBUTES = [
         'warning',
@@ -85,27 +83,6 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
         $this->cacheProvider = $cacheProvider;
         $this->hookManager = $hookManager;
         $this->modulePath = $modulePath;
-    }
-
-    public static function getSubscribedEvents()
-    {
-        return [
-            ModuleManagementEvent::INSTALL => 'onModuleStateChanged',
-            ModuleManagementEvent::UNINSTALL => 'onModuleStateChanged',
-            ModuleManagementEvent::ENABLE => 'onModuleStateChanged',
-            ModuleManagementEvent::DISABLE => 'onModuleStateChanged',
-            ModuleManagementEvent::UPGRADE => 'onModuleStateChanged',
-            ModuleManagementEvent::ENABLE_MOBILE => 'onModuleStateChanged',
-            ModuleManagementEvent::DISABLE_MOBILE => 'onModuleStateChanged',
-        ];
-    }
-
-    public function onModuleStateChanged(ModuleManagementEvent $event)
-    {
-        $moduleName = $event->getModule()->get('name');
-        if ($this->cacheProvider->contains($moduleName)) {
-            $this->cacheProvider->delete($moduleName);
-        }
     }
 
     public function getList(): array
@@ -190,6 +167,15 @@ class ModuleRepository implements ModuleRepositoryInterface, EventSubscriberInte
     public function setActionUrls(ModuleCollection $collection): ModuleCollection
     {
         return $this->adminModuleDataProvider->setActionUrls($collection);
+    }
+
+    public function clearCache(?string $moduleName = null): bool
+    {
+        if ($moduleName !== null && $this->cacheProvider->contains($moduleName)) {
+            return $this->cacheProvider->delete($moduleName);
+        }
+
+        return $this->cacheProvider->deleteAll();
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
