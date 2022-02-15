@@ -290,12 +290,15 @@ class EditEmployeeCommand
 
     /**
      * @param string $plainPassword
+     * @param int $minLength
+     * @param int $maxLength
+     * @param int $minScore
      *
      * @return EditEmployeeCommand
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword($plainPassword, int $minLength, int $maxLength, int $minScore)
     {
-        $this->plainPassword = new Password($plainPassword);
+        $this->plainPassword = new Password($plainPassword, $minLength, $maxLength, $minScore);
 
         return $this;
     }

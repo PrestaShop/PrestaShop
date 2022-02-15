@@ -280,3 +280,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
     arguments:
       - '@prestashop.adapter.security.general.configuration'
+
+  prestashop.adapter.security.password_policy.form_provider:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\FormDataProvider'
+    arguments:
+      - '@prestashop.adapter.security.password_policy.configuration'

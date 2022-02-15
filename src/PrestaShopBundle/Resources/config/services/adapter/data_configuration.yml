@@ -286,3 +286,8 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.security.password_policy.configuration:
+    class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
