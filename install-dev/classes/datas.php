@@ -162,7 +162,7 @@ class Datas
         ],
         'admin_password' => [
             'name' => 'password',
-            'validate' => 'isPlaintextPassword',
+            'validate' => 'isAcceptablePasswordLength',
             'default' => '0123456789',
         ],
         'admin_email' => [

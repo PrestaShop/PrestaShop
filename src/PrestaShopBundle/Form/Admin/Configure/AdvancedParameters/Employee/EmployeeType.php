@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\Password;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Email as EmployeeEmail;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\ChangePasswordType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
@@ -81,24 +83,32 @@ final class EmployeeType extends AbstractType
     private $defaultAvatarUrl;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param array $languagesChoices
      * @param array $tabChoices
      * @param array $profilesChoices
      * @param bool $isMultistoreFeatureActive
      * @param string $defaultAvatarUrl
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         array $languagesChoices,
         array $tabChoices,
         array $profilesChoices,
         $isMultistoreFeatureActive,
-        $defaultAvatarUrl
+        $defaultAvatarUrl,
+        ConfigurationInterface $configuration
     ) {
         $this->languagesChoices = $languagesChoices;
         $this->tabChoices = $tabChoices;
         $this->profilesChoices = $profilesChoices;
         $this->isMultistoreFeatureActive = $isMultistoreFeatureActive;
         $this->defaultAvatarUrl = $defaultAvatarUrl;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -106,6 +116,9 @@ final class EmployeeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
+        $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+
         $builder
             ->add('firstname', TextType::class, [
                 'constraints' => [
@@ -145,7 +158,14 @@ final class EmployeeType extends AbstractType
             $builder->add('password', PasswordType::class, [
                 'required' => !$options['is_for_editing'],
                 'constraints' => [
-                    $this->getLengthConstraint(Password::MAX_LENGTH, Password::MIN_LENGTH),
+                    new Length(
+                        [
+                            'max' => $maxLength,
+                            'maxMessage' => $this->getMaxLengthValidationMessage($maxLength),
+                            'min' => $minLength,
+                            'minMessage' => $this->getMinLengthValidationMessage($minLength),
+                        ]
+                    ),
                 ],
             ]);
         }
@@ -242,6 +262,34 @@ final class EmployeeType extends AbstractType
         }
 
         return new Length($options);
+    }
+
+    /**
+     * @param int $minLength
+     *
+     * @return string
+     */
+    private function getMinLengthValidationMessage($minLength)
+    {
+        return $this->trans(
+            'This field cannot be shorter than %limit% characters',
+            ['%limit%' => $minLength],
+            'Admin.Notifications.Error'
+        );
+    }
+
+    /**
+     * @param int $maxLength
+     *
+     * @return string
+     */
+    private function getMaxLengthValidationMessage($maxLength)
+    {
+        return $this->trans(
+            'This field cannot be longer than %limit% characters',
+            ['%limit%' => $maxLength],
+            'Admin.Notifications.Error'
+        );
     }
 
     /**

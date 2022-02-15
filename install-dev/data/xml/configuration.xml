@@ -883,5 +883,14 @@ Country</value>
     <configuration id="PS_SECURITY_TOKEN" name="PS_SECURITY_TOKEN">
       <value>1</value>
     </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH" name="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH">
+      <value>72</value>
+    </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH" name="PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH">
+      <value>8</value>
+    </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE" name="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE">
+      <value>3</value>
+    </configuration>
   </entities>
 </entity_configuration>

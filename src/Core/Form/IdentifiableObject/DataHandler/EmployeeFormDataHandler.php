@@ -79,6 +79,21 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
     private $imageUploader;
 
     /**
+     * @var int
+     */
+    private $minScore;
+
+    /**
+     * @var int
+     */
+    private $minLength;
+
+    /**
+     * @var int
+     */
+    private $maxLength;
+
+    /**
      * @param CommandBusInterface $bus
      * @param array $defaultShopAssociation
      * @param int $superAdminProfileId
@@ -86,6 +101,9 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      * @param EmployeeDataProviderInterface $employeeDataProvider
      * @param Hashing $hashing
      * @param ImageUploaderInterface|null $imageUploader
+     * @param int $minLength
+     * @param int $maxLength
+     * @param int $minScore
      */
     public function __construct(
         CommandBusInterface $bus,
@@ -94,7 +112,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         EmployeeFormAccessCheckerInterface $employeeFormAccessChecker,
         EmployeeDataProviderInterface $employeeDataProvider,
         Hashing $hashing,
-        ImageUploaderInterface $imageUploader = null
+        ImageUploaderInterface $imageUploader = null,
+        int $minLength,
+        int $maxLength,
+        int $minScore
     ) {
         $this->bus = $bus;
         $this->defaultShopAssociation = $defaultShopAssociation;
@@ -103,6 +124,9 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         $this->employeeDataProvider = $employeeDataProvider;
         $this->hashing = $hashing;
         $this->imageUploader = $imageUploader ?? new EmployeeImageUploader();
+        $this->minLength = $minLength;
+        $this->maxLength = $maxLength;
+        $this->minScore = $minScore;
     }
 
     /**
@@ -126,7 +150,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['active'],
             $data['profile'],
             isset($data['shop_association']) ? $data['shop_association'] : $this->defaultShopAssociation,
-            $data['has_enabled_gravatar'] ?? false
+            $data['has_enabled_gravatar'] ?? false,
+            $this->minLength,
+            $this->maxLength,
+            $this->minScore
         ));
 
         /** @var UploadedFile|null $uploadedAvatar */
@@ -167,10 +194,10 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
                     $id
                 );
 
-                $command->setPlainPassword($data['change_password']['new_password']);
+                $command->setPlainPassword($data['change_password']['new_password'], $this->minLength, $this->maxLength, $this->minScore);
             }
         } elseif (isset($data['password'])) {
-            $command->setPlainPassword($data['password']);
+            $command->setPlainPassword($data['password'], $this->minLength, $this->maxLength, $this->minScore);
         }
 
         if (isset($data['shop_association'])) {
