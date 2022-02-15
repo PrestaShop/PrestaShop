@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 
 class GuestTrackingControllerCore extends FrontController
 {
@@ -91,10 +92,16 @@ class GuestTrackingControllerCore extends FrontController
                     [],
                     'Shop.Forms.Help'
                 );
-            } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
+            } elseif (!Validate::isAcceptablePasswordLength($password)) {
                 $this->errors[] = $this->trans(
-                    'Your password must be at least %min% characters long.',
-                    ['%min%' => Validate::PASSWORD_LENGTH],
+                    'Customer password length must be between %s and %s',
+                    [Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH), Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH)],
+                    'Shop.Forms.Help'
+                );
+            } elseif (!Validate::isAcceptablePasswordScore($password)) {
+                $this->errors[] = $this->trans(
+                    'Employee password is too weak',
+                    [],
                     'Shop.Forms.Help'
                 );
             // Prevent error

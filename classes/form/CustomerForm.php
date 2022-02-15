@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -146,13 +147,25 @@ class CustomerFormCore extends AbstractForm
         }
 
         $passwordField = $this->getField('password');
-        if ((!empty($passwordField->getValue()) || $this->passwordRequired)
-            && Validate::isPlaintextPassword($passwordField->getValue()) === false) {
-            $passwordField->addError($this->translator->trans(
-                'Password must be between 5 and 72 characters long',
-                [],
-                'Shop.Notifications.Error'
-            ));
+        if (!empty($passwordField->getValue()) || $this->passwordRequired) {
+            if (Validate::isAcceptablePasswordLength($passwordField->getValue()) === false) {
+                $passwordField->addError($this->translator->trans(
+                    'Password must be between %d and %d characters long',
+                    [
+                        Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
+                        Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
+                    ],
+                    'Shop.Notifications.Error'
+                ));
+            }
+
+            if (Validate::isAcceptablePasswordScore($passwordField->getValue()) === false) {
+                $passwordField->addError($this->translator->trans(
+                    'Password score must be higher',
+                    [],
+                    'Shop.Notifications.Error'
+                ));
+            }
         }
         $this->validateFieldsLengths();
         $this->validateByModules();
