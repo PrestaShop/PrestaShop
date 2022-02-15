@@ -73,7 +73,7 @@ describe('BO - Orders - Create order : Create customer from new order page', asy
     await expect(customerName).to.contains(`${customerData.firstName} ${customerData.lastName}`);
   });
 
-  it('should search for the new customer and check for the result', async function () {
+  it('should search for the new customer and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'searchCustomer', baseContext);
 
     await addOrderPage.searchCustomer(page, customerData.email);
