@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Adapter\ContainerBuilder;
 use PrestaShop\PrestaShop\Adapter\Image\ImageRetriever;
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\IpUtils;
 
@@ -1526,6 +1527,11 @@ class FrontControllerCore extends Controller
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
             'number_of_days_for_return' => (int) Configuration::get('PS_ORDER_RETURN_NB_DAYS'),
+            'password_policy' => [
+                'minimum_length' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
+                'maximum_length' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
+                'minimum_score' => (int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE),
+            ],
         ];
     }
 
@@ -1669,11 +1675,8 @@ class FrontControllerCore extends Controller
             $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
             'page-' . $this->php_self => true,
             'tax-display-' . ($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
+            'page-customer-account' => false,
         ];
-
-        if (in_array($this->php_self, $my_account_controllers)) {
-            $body_classes['page-customer-account'] = true;
-        }
 
         $page = [
             'title' => '',
@@ -1687,7 +1690,47 @@ class FrontControllerCore extends Controller
             'page_name' => $page_name,
             'body_classes' => $body_classes,
             'admin_notifications' => [],
+            'password-policy' => [
+                'feedbacks' => [
+                    0 => $this->getTranslator()->trans('Very weak', [], 'Shop.Theme.Global'),
+                    1 => $this->getTranslator()->trans('Weak', [], 'Shop.Theme.Global'),
+                    2 => $this->getTranslator()->trans('Average', [], 'Shop.Theme.Global'),
+                    3 => $this->getTranslator()->trans('Strong', [], 'Shop.Theme.Global'),
+                    4 => $this->getTranslator()->trans('Very strong', [], 'Shop.Theme.Global'),
+                    'Straight rows of keys are easy to guess' => $this->getTranslator()->trans('Straight rows of keys are easy to guess', [], 'Shop.Theme.Global'),
+                    'Short keyboard patterns are easy to guess' => $this->getTranslator()->trans('Short keyboard patterns are easy to guess', [], 'Shop.Theme.Global'),
+                    'Use a longer keyboard pattern with more turns' => $this->getTranslator()->trans('Use a longer keyboard pattern with more turns', [], 'Shop.Theme.Global'),
+                    'Repeats like "aaa" are easy to guess' => $this->getTranslator()->trans('Repeats like "aaa" are easy to guess', [], 'Shop.Theme.Global'),
+                    'Repeats like "abcabcabc" are only slightly harder to guess than "abc"' => $this->getTranslator()->trans('Repeats like "abcabcabc" are only slightly harder to guess than "abc"', [], 'Shop.Theme.Global'),
+                    'Sequences like abc or 6543 are easy to guess' => $this->getTranslator()->trans('Sequences like abc or 6543 are easy to guess', [], 'Shop.Theme.Global'),
+                    'Recent years are easy to guess' => $this->getTranslator()->trans('Recent years are easy to guess', [], 'Shop.Theme.Global'),
+                    'Dates are often easy to guess' => $this->getTranslator()->trans('Dates are often easy to guess', [], 'Shop.Theme.Global'),
+                    'This is a top-10 common password' => $this->getTranslator()->trans('This is a top-10 common password', [], 'Shop.Theme.Global'),
+                    'This is a top-100 common password' => $this->getTranslator()->trans('This is a top-100 common password', [], 'Shop.Theme.Global'),
+                    'This is a very common password' => $this->getTranslator()->trans('This is a very common password', [], 'Shop.Theme.Global'),
+                    'This is similar to a commonly used password' => $this->getTranslator()->trans('This is similar to a commonly used password', [], 'Shop.Theme.Global'),
+                    'A word by itself is easy to guess' => $this->getTranslator()->trans('A word by itself is easy to guess', [], 'Shop.Theme.Global'),
+                    'Names and surnames by themselves are easy to guess' => $this->getTranslator()->trans('Names and surnames by themselves are easy to guess', [], 'Shop.Theme.Global'),
+                    'Common names and surnames are easy to guess' => $this->getTranslator()->trans('Common names and surnames are easy to guess', [], 'Shop.Theme.Global'),
+                    'Use a few words, avoid common phrases' => $this->getTranslator()->trans('Use a few words, avoid common phrases', [], 'Shop.Theme.Global'),
+                    'No need for symbols, digits, or uppercase letters' => $this->getTranslator()->trans('No need for symbols, digits, or uppercase letters', [], 'Shop.Theme.Global'),
+                    'Avoid repeated words and characters' => $this->getTranslator()->trans('Avoid repeated words and characters', [], 'Shop.Theme.Global'),
+                    'Avoid sequences' => $this->getTranslator()->trans('Avoid sequences', [], 'Shop.Theme.Global'),
+                    'Avoid recent years' => $this->getTranslator()->trans('Avoid recent years', [], 'Shop.Theme.Global'),
+                    'Avoid years that are associated with you' => $this->getTranslator()->trans('Avoid years that are associated with you', [], 'Shop.Theme.Global'),
+                    'Avoid dates and years that are associated with you' => $this->getTranslator()->trans('Avoid dates and years that are associated with you', [], 'Shop.Theme.Global'),
+                    'Capitalization doesn\'t help very much' => $this->getTranslator()->trans('Capitalization doesn\'t help very much', [], 'Shop.Theme.Global'),
+                    'All-uppercase is almost as easy to guess as all-lowercase' => $this->getTranslator()->trans('All-uppercase is almost as easy to guess as all-lowercase', [], 'Shop.Theme.Global'),
+                    'Reversed words aren\'t much harder to guess' => $this->getTranslator()->trans('Reversed words aren\'t much harder to guess', [], 'Shop.Theme.Global'),
+                    'Predictable substitutions like \'@\' instead of \'a\' don\'t help very much' => $this->getTranslator()->trans('Predictable substitutions like \'@\' instead of \'a\' don\'t help very much', [], 'Shop.Theme.Global'),
+                    'Add another word or two. Uncommon words are better.' => $this->getTranslator()->trans('Add another word or two. Uncommon words are better.', [], 'Shop.Theme.Global'),
+                ],
+            ],
         ];
+
+        if (in_array($this->php_self, $my_account_controllers)) {
+            $page['body_classes']['page-customer-account'] = true;
+        }
 
         return $page;
     }

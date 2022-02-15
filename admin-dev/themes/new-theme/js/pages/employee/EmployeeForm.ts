@@ -57,7 +57,6 @@ export default class EmployeeForm {
       employeeFormMap.changePasswordInputsBlock,
       employeeFormMap.showChangePasswordBlockButton,
       employeeFormMap.hideChangePasswordBlockButton,
-      employeeFormMap.generatePasswordButton,
       employeeFormMap.oldPasswordInput,
       employeeFormMap.newPasswordInput,
       employeeFormMap.confirmNewPasswordInput,

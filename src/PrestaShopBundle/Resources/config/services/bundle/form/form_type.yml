@@ -951,6 +951,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+      - "@=service('prestashop.adapter.legacy.configuration')"
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
     tags:
@@ -960,6 +961,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration')"
     tags:
       - { name: form.type }
 
@@ -1858,6 +1861,13 @@ services:
 
   form.type.admin.security.general:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.admin.security.password_policy:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
