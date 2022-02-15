@@ -88,7 +88,6 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0,
-                'modify_all_shops' => true,
             ])
             ->add('height', TextWithUnitType::class, [
                 'required' => false,
@@ -106,7 +105,6 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0,
-                'modify_all_shops' => true,
             ])
             ->add('depth', TextWithUnitType::class, [
                 'required' => false,
@@ -124,7 +122,6 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0,
-                'modify_all_shops' => true,
             ])
             ->add('weight', TextWithUnitType::class, [
                 'required' => false,
@@ -142,7 +139,6 @@ class DimensionsType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0,
-                'modify_all_shops' => true,
             ])
         ;
     }
