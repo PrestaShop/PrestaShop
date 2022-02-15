@@ -167,7 +167,6 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           testIdentifier: 'sortByIdDesc', sortBy: 'id_carrier', sortDirection: 'down', isFloat: true,
         },
       },
-      /* Sort by name not working, skipping it https://github.com/PrestaShop/PrestaShop/issues/21640
       {
         args: {
           testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
@@ -177,7 +176,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
         args: {
           testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
         },
-      }, */
+      },
       {
         args: {
           testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,

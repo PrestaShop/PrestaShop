@@ -214,15 +214,14 @@ describe('BO - Orders - View and edit order : Check messages block', async () =>
       await expect(isMessageRowVisible, 'Message is not visible!').to.be.true;
     });
 
-    // Issue https://github.com/PrestaShop/PrestaShop/issues/26532
-    it.skip('should check the message text', async function () {
+    it('should check the message text', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessageBlock2', baseContext);
 
       const message = await foOrderHistoryPage.getMessageRow(page);
       await expect(message)
         .to.contain(today)
         .and.to.contain(`${DefaultEmployee.firstName} ${DefaultEmployee.lastName}`)
-        .and.to.contain(textMessage);
+        .and.to.contain(textMessage.substring(0, textMessage.indexOf('Me') - 1));
     });
 
     it('should sign out from FO', async function () {

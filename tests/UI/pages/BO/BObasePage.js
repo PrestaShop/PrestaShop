@@ -247,9 +247,9 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async manageQuickAccess(page) {
+  async goToManageQuickAccessPage(page) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
+    await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
   }
 
   /**
