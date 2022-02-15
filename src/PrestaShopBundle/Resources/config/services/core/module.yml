@@ -18,6 +18,11 @@ services:
       - '@doctrine.cache.provider'
       - '@prestashop.adapter.hook.manager'
       - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+
+  prestashop.core.admin.module.repository.eventsubscriber:
+    class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
+    arguments:
+      - '@prestashop.core.admin.module.repository'
     tags:
       - { name: kernel.event_subscriber }
 
