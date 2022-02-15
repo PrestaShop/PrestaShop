@@ -331,6 +331,7 @@ class MetaCore extends ObjectModel
         $ret['meta_description'] = (isset($metas['description']) && $metas['description']) ? $metas['description'] : '';
         $ret['meta_keywords'] = (isset($metas['keywords']) && $metas['keywords']) ? $metas['keywords'] : '';
         $ret = Meta::completeMetaTags($ret, $ret['meta_title']);
+
         return $ret;
     }
 
