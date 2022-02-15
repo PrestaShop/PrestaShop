@@ -43,12 +43,13 @@ class RedirectTypeTest extends TestCase
      * @param bool $isProductType
      * @param bool $isCategoryType
      * @param bool $isTypeNotFound
+     * @param bool $isTypeGone
      *
      * @throws ProductConstraintException
      */
-    public function testItSuccessfullyCreatesRedirectType(string $type, 
-        bool $isProductType, 
-        bool $isCategoryType, 
+    public function testItSuccessfullyCreatesRedirectType(string $type,
+        bool $isProductType,
+        bool $isCategoryType,
         bool $isTypeNotFound,
         bool $isTypeGone): void
     {
@@ -58,7 +59,7 @@ class RedirectTypeTest extends TestCase
         Assert::assertEquals($isProductType, $redirectType->isProductType());
         Assert::assertEquals($isCategoryType, $redirectType->isCategoryType());
         Assert::assertEquals($isTypeNotFound, $redirectType->isTypeNotFound());
-        Assert::assertEquals($isTypeGone, $redirectType->isTypeNotFound());
+        Assert::assertEquals($isTypeGone, $redirectType->isTypeGone());
     }
 
     /**
