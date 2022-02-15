@@ -38,6 +38,8 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
 
+    private const PASSWORD_TIME_FRONT = 260;
+
     /**
      * @dataProvider provideShopConstraints
      *
@@ -57,7 +59,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     ['PS_CART_FOLLOWING', false, $shopConstraint, true],
                     ['PS_CUSTOMER_CREATION_EMAIL', false, $shopConstraint, true],
-                    ['PS_PASSWD_TIME_FRONT', 0, $shopConstraint, 260],
+                    ['PS_PASSWD_TIME_FRONT', 0, $shopConstraint, self::PASSWORD_TIME_FRONT],
                     ['PS_B2B_ENABLE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_BIRTHDATE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_OPTIN', false, $shopConstraint, true],
@@ -69,7 +71,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
             [
                 'redisplay_cart_at_login' => true,
                 'send_email_after_registration' => true,
-                'password_reset_delay' => 260,
+                'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                 'enable_b2b_mode' => true,
                 'ask_for_birthday' => true,
                 'enable_offers' => true,
@@ -109,7 +111,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     'redisplay_cart_at_login' => 'wrong_type',
                     'send_email_after_registration' => true,
-                    'password_reset_delay' => 120,
+                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                     'enable_b2b_mode' => true,
                     'ask_for_birthday' => true,
                     'enable_offers' => true,
@@ -120,7 +122,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     'redisplay_cart_at_login' => true,
                     'send_email_after_registration' => 'wrong_type',
-                    'password_reset_delay' => 120,
+                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                     'enable_b2b_mode' => true,
                     'ask_for_birthday' => true,
                     'enable_offers' => true,
@@ -142,7 +144,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     'redisplay_cart_at_login' => true,
                     'send_email_after_registration' => true,
-                    'password_reset_delay' => 120,
+                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                     'enable_b2b_mode' => 'wrong_type',
                     'ask_for_birthday' => true,
                     'enable_offers' => true,
@@ -153,7 +155,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     'redisplay_cart_at_login' => true,
                     'send_email_after_registration' => true,
-                    'password_reset_delay' => 120,
+                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                     'enable_b2b_mode' => true,
                     'ask_for_birthday' => 'wrong_type',
                     'enable_offers' => true,
@@ -164,7 +166,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     'redisplay_cart_at_login' => true,
                     'send_email_after_registration' => true,
-                    'password_reset_delay' => 120,
+                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
                     'enable_b2b_mode' => true,
                     'ask_for_birthday' => true,
                     'enable_offers' => 'wrong_type',
@@ -180,7 +182,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
         $res = $maintenanceConfiguration->updateConfiguration([
             'redisplay_cart_at_login' => true,
             'send_email_after_registration' => true,
-            'password_reset_delay' => 120,
+            'password_reset_delay' => self::PASSWORD_TIME_FRONT,
             'enable_b2b_mode' => true,
             'ask_for_birthday' => true,
             'enable_offers' => true,
