@@ -63,14 +63,14 @@ final class ShippingCommandsBuilder implements MultiShopProductCommandsBuilderIn
         $shippingData = $formData['shipping'];
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiShopField('[dimensions][width]', 'setWidth', CommandField::TYPE_STRING)
-            ->addMultiShopField('[dimensions][height]', 'setHeight', CommandField::TYPE_STRING)
-            ->addMultiShopField('[dimensions][depth]', 'setDepth', CommandField::TYPE_STRING)
-            ->addMultiShopField('[dimensions][weight]', 'setWeight', CommandField::TYPE_STRING)
-            ->addMultiShopField('[delivery_time_note_type]', 'setDeliveryTimeNoteType', CommandField::TYPE_INT)
+            ->addField('[dimensions][width]', 'setWidth', CommandField::TYPE_STRING)
+            ->addField('[dimensions][height]', 'setHeight', CommandField::TYPE_STRING)
+            ->addField('[dimensions][depth]', 'setDepth', CommandField::TYPE_STRING)
+            ->addField('[dimensions][weight]', 'setWeight', CommandField::TYPE_STRING)
+            ->addField('[delivery_time_note_type]', 'setDeliveryTimeNoteType', CommandField::TYPE_INT)
+            ->addField('[additional_shipping_cost]', 'setAdditionalShippingCost', CommandField::TYPE_STRING)
             ->addMultiShopField('[delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', CommandField::TYPE_ARRAY)
             ->addMultiShopField('[delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[additional_shipping_cost]', 'setAdditionalShippingCost', CommandField::TYPE_STRING)
             ->addMultiShopField('[carriers]', 'setCarrierReferences', CommandField::TYPE_ARRAY)
         ;
 
