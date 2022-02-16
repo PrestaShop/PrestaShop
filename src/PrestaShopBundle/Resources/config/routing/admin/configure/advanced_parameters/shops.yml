@@ -5,3 +5,11 @@ admin_shops_search:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::searchAction'
   options:
     expose: true
+
+admin_list_shops:
+  path: /list_shops
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ShopController::listShopsAction'
+  options:
+    expose: true

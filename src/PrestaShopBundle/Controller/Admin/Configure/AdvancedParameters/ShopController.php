@@ -29,8 +29,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Query\ListShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -60,6 +63,23 @@ class ShopController extends FrameworkBundleAdminController
         }
 
         return $this->json($result['shops'], $statusCode);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function listShopsAction(): JsonResponse
+    {
+        try {
+            $shops = $this->getQueryBus()->handle(new ListShops());
+        } catch (ShopNotFoundException $e) {
+            return $this->json(
+                ['message' => $this->getErrorMessage($e)],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        return $this->json($shops);
     }
 
     /**
