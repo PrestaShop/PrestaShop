@@ -138,12 +138,16 @@ class ProductStockUpdater
      */
     public function resetStock(ProductId $productId): void
     {
-        $product = $this->productRepository->get($productId);
         $stockAvailable = $this->getStockAvailable($productId);
+        if ((int) $stockAvailable->quantity === 0) {
+            return;
+        }
+
         $employeeEditionReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($stockAvailable->quantity > 0);
         $stockModification = new StockModification(-$stockAvailable->quantity, $employeeEditionReasonId);
 
         // Update product
+        $product = $this->productRepository->get($productId);
         $product->quantity = 0;
         $this->productRepository->partialUpdate($product, ['quantity'], CannotUpdateProductException::FAILED_UPDATE_STOCK);
 
