@@ -93,35 +93,40 @@ export default class ProductTypeSwitcher {
   }
 
   private confirmTypeSubmit(newType: string) {
-    let confirmMessage = this.$typeSelector.data('confirm-message');
-    let confirmWarning = '';
+    const confirmWarnings = [];
 
+    // eslint-disable-next-line default-case
     switch (this.initialType) {
       case ProductConst.PRODUCT_TYPE.COMBINATIONS:
-        confirmWarning = this.$typeSelector.data('combinations-warning');
+        confirmWarnings.push(this.$typeSelector.data('combinations-warning'));
         break;
       case ProductConst.PRODUCT_TYPE.PACK:
-        confirmWarning = this.$typeSelector.data('pack-warning');
+        confirmWarnings.push(this.$typeSelector.data('pack-warning'));
         break;
       case ProductConst.PRODUCT_TYPE.VIRTUAL:
-        confirmWarning = this.$typeSelector.data('virtual-warning');
-        break;
-      case ProductConst.PRODUCT_TYPE.STANDARD:
-      default:
-        confirmWarning = '';
+        confirmWarnings.push(this.$typeSelector.data('virtual-warning'));
         break;
     }
 
-    if (confirmWarning) {
-      confirmWarning = `<div class="alert alert-warning">${confirmWarning}</div>`;
+    // Switching to combination resets the stock
+    if (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
+      confirmWarnings.push(this.$typeSelector.data('stock-warning'));
     }
-    confirmMessage = `<div class="alert alert-info">${confirmMessage}</div>`;
+
+    let confirmMessage: string = `<div class="alert alert-info">${this.$typeSelector.data('confirm-message')}</div>`;
+
+    // Add warnings to confirmation message
+    if (confirmWarnings && confirmWarnings.length > 0) {
+      confirmWarnings.forEach((confirmWarning: string) => {
+        confirmMessage += `<div class="alert alert-warning">${confirmWarning}</div>`;
+      });
+    }
 
     const modal = new ConfirmModal(
       {
         id: 'modal-confirm-product-type',
         confirmTitle: this.$typeSelector.data('modal-title'),
-        confirmMessage: `${confirmMessage} ${confirmWarning}`,
+        confirmMessage: `${confirmMessage}`,
         confirmButtonLabel: this.$typeSelector.data('modal-apply'),
         closeButtonLabel: this.$typeSelector.data('modal-cancel'),
         closable: false,

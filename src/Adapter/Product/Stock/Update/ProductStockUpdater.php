@@ -132,6 +132,7 @@ class ProductStockUpdater
      * the employee from context is generated.
      *
      * @param ProductId $productId
+     *
      * @throws CoreException
      * @throws ProductStockException
      */
