@@ -42,6 +42,25 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" should have following stock information:
       | quantity | 0 |
 
+  Scenario: I update product type to combinations (if stock was zero no problem occurs)
+    When I add product "product1" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "product1" should be disabled
+    And product "product1" type should be standard
+    And product "product1" localized "name" should be:
+      | locale | value          |
+      | en-US  | bottle of beer |
+    And product "product1" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
+    And product "product1" should have following stock information:
+      | quantity | 0 |
+    When I update product "product1" type to combinations
+    Then product "product1" type should be combinations
+    And product "product1" should have following stock information:
+      | quantity | 0 |
+
   Scenario: I update product type to virtual
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer |
