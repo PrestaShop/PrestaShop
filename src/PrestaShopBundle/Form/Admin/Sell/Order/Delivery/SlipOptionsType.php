@@ -64,7 +64,7 @@ class SlipOptionsType extends TranslatorAwareType
                                 'pattern' => '[\<]',
                                 'match' => false,
                                 'message' => $this->trans(
-                                    'The %s character is invalid',
+                                    'The %s character is invalid.',
                                     'Admin.Notifications.Error',
                                     ['<']
                                 ),
