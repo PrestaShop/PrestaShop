@@ -105,14 +105,5 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
             ]);
-
-        $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(
-            function ($countriesAsString) {
-                return explode(';', $countriesAsString);
-            },
-            function ($countriesAsArray) {
-                return implode(';', $countriesAsArray);
-            }
-        ));
     }
 }
