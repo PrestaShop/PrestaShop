@@ -101,7 +101,7 @@
 					<div>{l s='Manage hooks' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
-			{hook h="displayModuleConfigureExtraButtons"}
+			{hook h="displayModuleConfigureExtraButtons" name={$module_name}}
 		</ul>
 	</div>
 </div>
