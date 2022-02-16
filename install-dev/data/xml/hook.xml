@@ -3555,5 +3555,15 @@
       <title>Show custom content before checkout confirmation</title>
       <description>This hook allows you to display custom content at the end of checkout process</description>
     </hook>
+    <hook id="actionAdminModuleInstallRetrieveSource">
+      <name>actionAdminModuleInstallRetrieveSource</name>
+      <title>Module Install - Get source from other module</title>
+      <description>This hook retrieves a module zip on install process in the BackOffice</description>
+    </hook>
+    <hook id="actionAdminModuleUpgradeRetrieveSource">
+      <name>actionAdminModuleUpgradeRetrieveSource</name>
+      <title>Module Upgrade - Get source from other module</title>
+      <description>This hook retrieves a module zip on upgrade process in the BackOffice</description>
+    </hook>
   </entities>
 </entity_hook>

@@ -286,12 +286,27 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if ($this->moduleProvider->isInstalled($name)) {
-            if ($source !== null) {
-                return $this->upgrade($name, 'latest', $source);
-            }
+            return $this->upgrade($name, 'latest', $source);
+        }
 
-            // Module is already installed
-            return true;
+        // The module is not in PS modules folder and no ZIP is given as source
+        // We try to retrieve the module's zip from another module (marketplace)
+        if (!$this->moduleProvider->isOnDisk($name) && empty($source)) {
+            // Give a chance to the other modules (like marketplace) to download the module
+            $sourceZip = \Hook::exec(
+                'actionAdminModuleInstallRetrieveSource',
+                [
+                    'name' => $name,
+                ]
+            );
+
+            // We need to check that the file is actually a module's ZIP and the same module as the one expected
+            if (is_file($sourceZip)) {
+                $moduleInZipName = $this->moduleZipManager->getName($sourceZip);
+                if ($name === $moduleInZipName) {
+                    $source = $sourceZip;
+                }
+            }
         }
 
         if (!empty($source)) {
@@ -299,6 +314,9 @@ class ModuleManager implements AddonManagerInterface
         }
 
         $module = $this->moduleRepository->getModule($name);
+        // If module is not installed and external providers cannot retrieve the module, $module will be null here
+        // we should handle the error
+
         $result = $module->onInstall();
 
         $this->checkAndClearCache($result);
@@ -386,11 +404,23 @@ class ModuleManager implements AddonManagerInterface
         $this->checkIsInstalled($name);
         $module = $this->moduleRepository->getModule($name);
 
-        // Get new module
-        // 1- From source
-        if ($source != null) {
-            $this->moduleZipManager->storeInModulesFolder($source);
+        if ($source === null) {
+            // Give a chance to the other modules (like marketplace) to retrieve the module source
+            $source = \Hook::exec(
+                'actionAdminModuleUpgradeRetrieveSource',
+                [
+                    'name' => $name,
+                    'current_version' => $module->get('version'),
+                ]
+            );
         }
+
+        if (empty($source)) {
+            // if source is still null, upgrade fails
+            return false;
+        }
+
+        $this->moduleZipManager->storeInModulesFolder($source);
 
         // Load and execute upgrade files
         $result = $this->moduleUpdater->upgrade($name) && $module->onUpgrade($version);
