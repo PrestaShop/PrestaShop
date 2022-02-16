@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -61,21 +62,29 @@ class ProductTypeUpdater
     private $virtualProductUpdater;
 
     /**
+     * @var ProductStockUpdater
+     */
+    private $productStockUpdater;
+
+    /**
      * @param ProductRepository $productRepository
      * @param ProductPackUpdater $productPackUpdater
      * @param CombinationDeleter $combinationDeleter
      * @param VirtualProductUpdater $virtualProductUpdater
+     * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
         ProductPackUpdater $productPackUpdater,
         CombinationDeleter $combinationDeleter,
-        VirtualProductUpdater $virtualProductUpdater
+        VirtualProductUpdater $virtualProductUpdater,
+        ProductStockUpdater $productStockUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->productPackUpdater = $productPackUpdater;
         $this->combinationDeleter = $combinationDeleter;
         $this->virtualProductUpdater = $virtualProductUpdater;
+        $this->productStockUpdater = $productStockUpdater;
     }
 
     /**
@@ -99,13 +108,15 @@ class ProductTypeUpdater
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);
         }
-
-        // Finally update product type
+        // Finally, update product type
         $updatedProperties = [
             'product_type',
             'is_virtual',
             'cache_is_pack',
         ];
+
+        // When a product is converted to product with combinations the stock is reset
+        $resetProductStock = $product->product_type !== ProductType::TYPE_COMBINATIONS && $productType->getValue() === ProductType::TYPE_COMBINATIONS;
 
         $product->product_type = $productType->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType->getValue();
@@ -116,5 +127,9 @@ class ProductTypeUpdater
         }
 
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
+
+        if ($resetProductStock) {
+            $this->productStockUpdater->resetStock($productId);
+        }
     }
 }

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -67,6 +68,11 @@ class ProductStockUpdater
     private $stockAvailableRepository;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @var Configuration
      */
     private $configuration;
@@ -80,17 +86,20 @@ class ProductStockUpdater
      * @param StockManager $stockManager
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
      */
     public function __construct(
         StockManager $stockManager,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
+        MovementReasonRepository $movementReasonRepository,
         Configuration $configuration
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->movementReasonRepository = $movementReasonRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
     }
@@ -115,6 +124,37 @@ class ProductStockUpdater
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
+        }
+    }
+
+    /**
+     * Resets product stock to zero, both Product and associated StockAvailable are reset, and a stock movement linked to
+     * the employee from context is generated.
+     *
+     * @param ProductId $productId
+     * @throws CoreException
+     * @throws ProductStockException
+     */
+    public function resetStock(ProductId $productId): void
+    {
+        $product = $this->productRepository->get($productId);
+        $stockAvailable = $this->getStockAvailable($productId);
+        $employeeEditionReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($stockAvailable->quantity > 0);
+        $stockModification = new StockModification(-$stockAvailable->quantity, $employeeEditionReasonId);
+
+        // Update product
+        $product->quantity = 0;
+        $this->productRepository->partialUpdate($product, ['quantity'], CannotUpdateProductException::FAILED_UPDATE_STOCK);
+
+        // Update stock
+        $stockAvailable->quantity = 0;
+        $this->stockAvailableRepository->update($stockAvailable);
+
+        // Generate stock movement related to the employee
+        $this->saveMovement($stockAvailable, $stockModification);
+
+        if ($this->advancedStockEnabled) {
+            StockAvailable::synchronize($productId->getValue());
         }
     }
 
