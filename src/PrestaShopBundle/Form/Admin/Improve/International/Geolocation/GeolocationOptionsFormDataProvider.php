@@ -72,7 +72,13 @@ final class GeolocationOptionsFormDataProvider implements FormDataProviderInterf
      */
     public function getData()
     {
-        return $this->dataConfiguration->getConfiguration();
+        $configuration = $this->dataConfiguration->getConfiguration();
+
+        if (!empty($configuration['geolocation_countries'])) {
+            $configuration['geolocation_countries'] = explode(';', $configuration['geolocation_countries']);
+        }
+
+        return $configuration;
     }
 
     /**
@@ -93,6 +99,8 @@ final class GeolocationOptionsFormDataProvider implements FormDataProviderInterf
         if (!empty($errors)) {
             return $errors;
         }
+
+        $data['geolocation_countries'] = implode(';', $data['geolocation_countries']);
 
         return $this->dataConfiguration->updateConfiguration($data);
     }
