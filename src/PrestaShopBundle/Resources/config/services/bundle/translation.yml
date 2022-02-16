@@ -164,11 +164,6 @@ services:
             - "@prestashop.core.admin.lang.repository"
             - "@prestashop.core.admin.translation.repository"
 
-    prestashop.translation.sql_loader:
-        class: PrestaShopBundle\Translation\Loader\SqlTranslationLoader
-        tags:
-            - {name: translation.loader, alias: db}
-
     prestashop.translation.reader.legacy_file:
         class: PrestaShop\PrestaShop\Core\Translation\Storage\Loader\LegacyFileReader
         arguments:
