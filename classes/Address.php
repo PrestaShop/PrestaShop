@@ -442,9 +442,13 @@ class AddressCore extends ObjectModel
      */
     public static function addressExists($id_address)
     {
+        if ($id_address <= 0) {
+            return false;
+        }
+
         return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            'SELECT `id_address` 
-            FROM ' . _DB_PREFIX_ . 'address a 
+            'SELECT `id_address`
+            FROM ' . _DB_PREFIX_ . 'address a
             WHERE a.`id_address` = ' . (int) $id_address,
             false
         );
