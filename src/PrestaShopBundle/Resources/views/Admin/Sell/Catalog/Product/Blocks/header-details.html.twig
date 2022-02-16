@@ -56,7 +56,7 @@
         {% if taxRate %}
           {{ 'tax incl. (tax rule: %taxRate%%)'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
         {% else %}
-          {{ '(tax rule: %taxRate%%)'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
+          {{ 'tax incl.'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
         {% endif %}
       </div>
     </div>
