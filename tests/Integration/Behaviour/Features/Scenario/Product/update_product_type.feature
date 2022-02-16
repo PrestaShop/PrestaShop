@@ -21,7 +21,7 @@ Feature: Add basic product from Back Office (BO)
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
-  Scenario: I update product type to combinations
+  Scenario: I update product type to combinations (stock is reset to zero)
     When I add product "product1" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
@@ -33,8 +33,14 @@ Feature: Add basic product from Back Office (BO)
     And product "product1" should be assigned to following categories:
       | id reference | name[en-US] | is default |
       | home         | Home        | true       |
+    When I update product "product1" stock with following information:
+      | delta_quantity | 51 |
+    And product "product1" should have following stock information:
+      | quantity | 51 |
     When I update product "product1" type to combinations
     Then product "product1" type should be combinations
+    And product "product1" should have following stock information:
+      | quantity | 0 |
 
   Scenario: I update product type to virtual
     When I add product "product1" with following information:
