@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Command;
 
 use PrestaShop\PrestaShop\Adapter\Debug\DebugMode;
-use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\Command\SwitchDebugModeCommand;
 use Symfony\Component\Console\Command\Command;
@@ -61,12 +60,11 @@ class DebugCommand extends Command
      */
     private $debugConfiguration;
 
-    public function __construct(CommandBusInterface $commandBus, DebugMode $debugConfiguration, LegacyContextLoader $legacyContextLoader)
+    public function __construct(CommandBusInterface $commandBus, DebugMode $debugConfiguration)
     {
         parent::__construct();
         $this->commandBus = $commandBus;
         $this->debugConfiguration = $debugConfiguration;
-        $legacyContextLoader->loadGenericContext();
     }
 
     protected function configure()
