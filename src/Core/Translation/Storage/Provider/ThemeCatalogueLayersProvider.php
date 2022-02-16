@@ -137,12 +137,23 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
      *
      * @return MessageCatalogue
      *
-     * @throws TranslationFilesNotFoundException
+     * The **file** translated catalogue for a theme other than classic corresponds
+     * to the core files, overwrite by the user-translated core wordings (if any), overwrite
+     * by the theme files (if any)
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
     {
         // load front office catalogue
-        $catalogue = $this->coreFrontProvider->getFileTranslatedCatalogue($locale);
+        $coreCatalogue = $this->coreFrontProvider->getFileTranslatedCatalogue($locale);
+
+        // load core user-translated catalogue
+        $coreUserTranslatedCalalogue = (new UserTranslatedCatalogueFinder(
+            $this->databaseTranslationLoader,
+            ['*']
+        ))
+            ->getCatalogue($locale);
+
+        $coreCatalogue->addCatalogue($coreUserTranslatedCalalogue);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueFinder(
@@ -152,13 +163,12 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
                 ->getCatalogue($locale);
 
             // overwrite with the theme's own catalogue
-            $catalogue->addCatalogue($fileTranslatedCatalogue);
+            $coreCatalogue->addCatalogue($fileTranslatedCatalogue);
         } catch (TranslationFilesNotFoundException $e) {
-            // there are no translation files, ignore them
-            return new MessageCatalogue($locale);
+            // No translation file was found in the theme, we keep using those from the core
         }
 
-        return $catalogue;
+        return $coreCatalogue;
     }
 
     /**
