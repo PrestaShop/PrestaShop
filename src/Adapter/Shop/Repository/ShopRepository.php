@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Shop\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -36,6 +37,28 @@ use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
  */
 class ShopRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
     /**
      * @param ShopId $shopId
      *
@@ -48,5 +71,20 @@ class ShopRepository extends AbstractObjectModelRepository
             'shop',
             ShopNotFoundException::class
         );
+    }
+
+    public function listShops(): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('s.*, sg.name AS group_name, sg.color AS group_color')
+            ->from($this->dbPrefix . 'shop', 's')
+            ->leftJoin('s', $this->dbPrefix . 'shop_group', 'sg', 's.id_shop_group = sg.id_shop_group')
+            ->addOrderBy('sg.id_shop_group')
+            ->addOrderBy('s.id_shop')
+            ->where('s.active = 1 AND s.deleted = 0 AND sg.active = 1 AND sg.deleted = 0')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
     }
 }

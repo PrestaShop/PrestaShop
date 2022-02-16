@@ -49,6 +49,14 @@ services:
       - name: 'tactician.handler'
         command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops
 
+  prestashop.adapter.shop.query_handler.list_shops:
+    class: 'PrestaShop\PrestaShop\Adapter\Shop\QueryHandler\ListShopsHandler'
+    arguments:
+      - '@prestashop.adapter.shop.repository.shop_repository'
+    tags:
+      - name: 'tactician.handler'
+        command: PrestaShop\PrestaShop\Core\Domain\Shop\Query\ListShops
+
   prestashop.adapter.shop.url.product_image_folder_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\ImageFolderProvider'
     arguments:
@@ -66,3 +74,6 @@ services:
 
   prestashop.adapter.shop.repository.shop_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository'
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
