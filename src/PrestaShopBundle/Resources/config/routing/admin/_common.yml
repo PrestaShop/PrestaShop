@@ -29,17 +29,6 @@ admin_common_pagination:
     total: \d+
     view: full|quicknav
 
-admin_common_recommended_modules:
-  path: /recommended_modules/{domain}/{limit}/{randomize}
-  methods: [ GET ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\CommonController::recommendedModulesAction'
-    limit: 0
-    randomize: 0
-  requirements:
-    limit: \d+
-    randomize: 0|1
-
 admin_common_sidebar:
   path: /sidebar/{url}/{title}/{footer}
   methods: [ GET ]
