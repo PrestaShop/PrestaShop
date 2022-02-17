@@ -29,13 +29,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -53,12 +54,12 @@ class ProductStockUpdater
     private $stockManager;
 
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
@@ -74,14 +75,14 @@ class ProductStockUpdater
 
     /**
      * @param StockManager $stockManager
-     * @param ProductRepository $productRepository
-     * @param StockAvailableRepository $stockAvailableRepository
+     * @param ProductMultiShopRepository $productRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param Configuration $configuration
      */
     public function __construct(
         StockManager $stockManager,
-        ProductRepository $productRepository,
-        StockAvailableRepository $stockAvailableRepository,
+        ProductMultiShopRepository $productRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         Configuration $configuration
     ) {
         $this->stockManager = $stockManager;
@@ -95,18 +96,19 @@ class ProductStockUpdater
      * @param ProductId $productId
      * @param ProductStockProperties $properties
      */
-    public function update(ProductId $productId, ProductStockProperties $properties)
+    public function update(ProductId $productId, ProductStockProperties $properties, ShopConstraint $shopConstraint): void
     {
-        $product = $this->productRepository->get($productId);
+        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
         $stockAvailable = $this->getStockAvailable($product);
 
         $this->productRepository->partialUpdate(
             $product,
             $this->fillUpdatableProperties($product, $stockAvailable, $properties),
+            $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_STOCK
         );
 
-        $this->updateStockAvailable($stockAvailable, $properties);
+        $this->updateStockAvailable($stockAvailable, $properties, $shopConstraint);
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
@@ -177,7 +179,7 @@ class ProductStockUpdater
      * @param StockAvailable $stockAvailable
      * @param ProductStockProperties $properties
      */
-    private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties)
+    private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties, ShopConstraint $shopConstraint)
     {
         $stockUpdateRequired = false;
 
@@ -199,7 +201,7 @@ class ProductStockUpdater
             return;
         }
 
-        $this->stockAvailableRepository->update($stockAvailable);
+        $this->stockAvailableRepository->update($stockAvailable, $shopConstraint);
 
         if ($properties->getStockModification()) {
             //Save movement only after stock has been updated
@@ -234,10 +236,9 @@ class ProductStockUpdater
     private function getStockAvailable(Product $product): StockAvailable
     {
         $productId = new ProductId($product->id);
-        try {
-            return $this->stockAvailableRepository->getForProduct($productId);
-        } catch (StockAvailableNotFoundException $e) {
-            return $this->stockAvailableRepository->create($productId);
-        }
+        // Use the shop matching the Product instance
+        $shopId = new ShopId($product->getShopId());
+
+        return $this->stockAvailableRepository->getForProduct($productId, $shopId);
     }
 }
