@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
+use PrestaShop\PrestaShop\Core\Domain\State\StateSettings;
 use ReflectionClass;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -115,6 +116,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return '/^[a-zA-Z0-9_.-]+$/';
             case TypedRegex::TYPE_DNI_LITE:
                 return AddressConstraint::DNI_LITE_PATTERN;
+            case TypedRegex::TYPE_STATE_ISO_CODE:
+                return StateSettings::STATE_ISO_CODE_PATTERN;
             case TypedRegex::TYPE_UPC:
                 return Upc::VALID_PATTERN;
             case TypedRegex::TYPE_EAN_13:

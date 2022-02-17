@@ -26,19 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context;
+namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
-use State;
-
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
+/**
+ * Thrown on failure to add state
+ */
+class CannotAddStateException extends StateException
 {
-    /**
-     * @When I define an uncreated state :stateReference
-     *
-     * @param string $stateReference
-     */
-    public function defineUnCreatedState(string $stateReference): void
-    {
-        SharedStorage::getStorage()->set($stateReference, 0);
-    }
 }
