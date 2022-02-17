@@ -42,6 +42,8 @@ class ZoneId
 
     /**
      * @param int $zoneId
+     *
+     * @throws ZoneException
      */
     public function __construct(int $zoneId)
     {
@@ -59,6 +61,8 @@ class ZoneId
 
     /**
      * @param int $zoneId
+     *
+     * @throws ZoneException
      */
     private function assertIntegerIsGreaterThanZero(int $zoneId): void
     {
