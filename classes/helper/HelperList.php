@@ -597,6 +597,7 @@ class HelperListCore extends Helper
             $this->identifier => $id,
             'href' => $href,
             'action' => self::$cache_lang['Delete'],
+            'confirm' => '',
         ];
 
         if ($this->specificConfirmDelete !== false) {
