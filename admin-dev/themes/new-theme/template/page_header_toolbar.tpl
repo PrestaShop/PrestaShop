@@ -44,6 +44,7 @@
                   data-toggle="modal"{/if}{if isset($btn.help)}
                   data-toggle="pstooltip"
                   data-placement="bottom"{/if}
+                  {if isset($btn.data_attributes) && $btn.data_attributes}{foreach from=$btn.data_attributes item=attribute_value key=attribute_name}data-{$attribute_name}="{$attribute_value}"{/foreach}{/if}
                 >
                   {if !empty($btn.icon)}<i class="material-icons">{$btn.icon}</i>{/if}
                   {$btn.desc|escape}
