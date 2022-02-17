@@ -92,6 +92,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
             'product_tag',
             // Related products
             'accessory',
+            // Packs
+            'pack',
             // Customizations
             'customization',
             'customization_field',
