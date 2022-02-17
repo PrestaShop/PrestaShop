@@ -13,3 +13,6 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Hook\Query\GetHookStatus
+
+  prestashop.adapter.hook.manager:
+    class: PrestaShop\PrestaShop\Adapter\HookManager
