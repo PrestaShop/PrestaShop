@@ -27,7 +27,6 @@ import prestashop from 'prestashop';
 
 prestashop.checkout = prestashop.checkout || {};
 
-// eslint-disable-next-line no-unused-vars
 prestashop.checkout.onCheckOrderableCartResponse = (resp, paymentObject) => {
   if (resp.errors === true) {
     prestashop.emit('orderConfirmationErrors', {
@@ -50,12 +49,12 @@ class Payment {
   }
 
   init() {
-
+    // eslint-disable-next-line no-unused-vars
     prestashop.on('orderConfirmationErrors', ({resp, paymentObject}) => {
       if (resp.cartUrl !== '') {
         location.href = resp.cartUrl;
       }
-    })
+    });
 
     const $body = $('body');
 
@@ -172,11 +171,11 @@ class Payment {
     const resp = await $.post(window.prestashop.urls.pages.order, {
       ajax: 1,
       action: 'checkCartStillOrderable',
-    })
-    
+    });
+
     // We process the information and allow other modules to intercept this
     const isRedirected = prestashop.checkout.onCheckOrderableCartResponse(resp, this);
-    
+
     // If there is a redirect, we deny the form submit below, to allow the redirect to complete
     if (isRedirected) return;
 
