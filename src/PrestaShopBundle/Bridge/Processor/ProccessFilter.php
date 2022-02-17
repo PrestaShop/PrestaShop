@@ -5,6 +5,7 @@ namespace PrestaShopBundle\Bridge\Processor;
 use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +19,15 @@ class ProccessFilter
      */
     private $context;
 
-    public function __construct(LegacyContext $legacyContext)
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    public function __construct(LegacyContext $legacyContext, HookDispatcherInterface $hookDispatcher)
     {
         $this->context = $legacyContext->getContext();
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     public function processFilter(
@@ -28,9 +35,9 @@ class ProccessFilter
         HelperListConfiguration $helperListConfiguration,
         ControllerConfiguration $controllerConfiguration
     ): void {
-        //Hook::exec('action' . $this->controller_name . 'ListingFieldsModifier', [
-        //    'fields' => &$this->fields_list,
-        //]);
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
+            'fields' => $helperListConfiguration->fieldsList,
+        ]);
 
         $prefix = $this->getCookieFilterPrefix($controllerConfiguration);
 

@@ -34,6 +34,7 @@ use Language;
 use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
@@ -96,8 +97,17 @@ class HeaderHydrator implements HydratorInterface
      */
     private $translator;
 
-    public function __construct(RouterInterface $router, TranslatorInterface $translator, LegacyContext $legacyContext)
-    {
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    public function __construct(
+        RouterInterface $router,
+        TranslatorInterface $translator,
+        LegacyContext $legacyContext,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->cookie = $legacyContext->getContext()->cookie;
         $this->country = $legacyContext->getContext()->country;
         $this->link = $legacyContext->getContext()->link;
@@ -107,6 +117,7 @@ class HeaderHydrator implements HydratorInterface
         $this->router = $router;
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -130,21 +141,19 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
 
         if ($controllerConfiguration->displayHeader) {
-            $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = \Hook::exec('displayBackOfficeHeader');
+            $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = $this->hookDispatcher->dispatchWithParameters('displayBackOfficeHeader', []);
         }
 
         $menuLinksCollections = new ActionsBarButtonsCollection();
 
-        //Hook::exec(
-        //    'displayBackOfficeEmployeeMenu',
-        //    [
-        //        'links' => $menuLinksCollections,
-        //    ],
-        //    null,
-        //    true
-        //);
-        //
-        $controllerConfiguration->templatesVars['displayBackOfficeTop'] = \Hook::exec('displayBackOfficeTop');
+        $this->hookDispatcher->dispatchWithParameters(
+            'displayBackOfficeEmployeeMenu',
+            [
+                'links' => $menuLinksCollections,
+            ]
+        );
+
+        $controllerConfiguration->templatesVars['displayBackOfficeTop'] = $this->hookDispatcher->dispatchWithParameters('displayBackOfficeTop', []);
         $controllerConfiguration->templatesVars['displayBackOfficeEmployeeMenu'] = $menuLinksCollections;
         $controllerConfiguration->templatesVars['submit_form_ajax'] = (int) Tools::getValue('submitFormAjax');
 
