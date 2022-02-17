@@ -76,6 +76,8 @@ final class GeolocationOptionsFormDataProvider implements FormDataProviderInterf
 
         if (!empty($configuration['geolocation_countries'])) {
             $configuration['geolocation_countries'] = explode(';', $configuration['geolocation_countries']);
+        } else {
+            $configuration['geolocation_countries'] = [];
         }
 
         return $configuration;
