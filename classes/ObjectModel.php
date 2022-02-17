@@ -1882,6 +1882,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     }
 
     /**
+     * Returns the shop ID used to fetch initial object data.
+     *
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return (int) $this->id_shop;
+    }
+
+    /**
      * Delete images associated with the object.
      *
      * @param bool $force_delete

@@ -101,7 +101,7 @@ services:
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.category.repository.category_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.attachment.attachment_repository'
@@ -442,4 +442,5 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'

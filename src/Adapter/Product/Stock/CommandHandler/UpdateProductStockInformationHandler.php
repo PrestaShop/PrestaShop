@@ -74,6 +74,7 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
         }
+
         $this->productStockUpdater->update(
             $command->getProductId(),
             new ProductStockProperties(
@@ -87,7 +88,8 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
                 $command->getLocalizedAvailableNowLabels(),
                 $command->getLocalizedAvailableLaterLabels(),
                 $command->getAvailableDate()
-            )
+            ),
+            $command->getShopConstraint()
         );
     }
 }
