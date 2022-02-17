@@ -63,3 +63,8 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_ALLOW_HTML_IFRAME')"
     tags:
       - { name: validator.constraint_validator }
+
+  prestashop.validator.constraint.unique_state_iso_code:
+    class: 'PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator'
+    tags:
+      - { name: validator.constraint_validator }

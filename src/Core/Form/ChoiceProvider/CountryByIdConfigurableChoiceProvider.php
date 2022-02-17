@@ -74,8 +74,8 @@ final class CountryByIdConfigurableChoiceProvider implements ConfigurableFormCho
             $options['contains_states'],
             $options['list_states']
         );
-        $choices = [];
 
+        $choices = [];
         foreach ($countries as $country) {
             $choices[$country['name']] = (int) $country['id_country'];
         }
