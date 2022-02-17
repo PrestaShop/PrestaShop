@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMov
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Api\QueryStockMovementParamsCollection;
 use PrestaShopBundle\Entity\Repository\StockMovementRepository;
 use RuntimeException;
@@ -56,13 +57,46 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductStock(string $productReference, TableNode $table): void
+    public function updateProductStockForDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->updateProductStock($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When I update product :productReference stock for shop :shopReference with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductStockForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->updateProductStock($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product :productReference stock for all shops with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductStockForAllShops(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $this->updateProductStock($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    private function updateProductStock(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductStockInformationCommand($productId);
+            $command = new UpdateProductStockInformationCommand($productId, $shopConstraint);
             $unhandledData = $this->setUpdateStockCommandData($data, $command);
             Assert::assertEmpty(
                 $unhandledData,
@@ -109,9 +143,34 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertStockInformation(string $productReference, TableNode $table): void
+    public function assertStockInformationForDefaultShop(string $productReference, TableNode $table): void
     {
-        $productForEditing = $this->getProductForEditing($productReference);
+        $this->assertStockInformation($productReference, $table, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have following stock information for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function assertStockInformationForShops(string $productReference, string $shopReferences, TableNode $table): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $this->assertStockInformation($productReference, $table, $shopId);
+        }
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    private function assertStockInformation(string $productReference, TableNode $table, int $shopId): void
+    {
+        $shopErrorMessage = !empty($shopId) ? sprintf(' for shop %s', $shopId) : '';
+        $productForEditing = $this->getProductForEditing($productReference, $shopId);
         $data = $table->getRowsHash();
 
         if (isset($data['out_of_stock_type'])) {
@@ -121,14 +180,14 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
             $data['pack_stock_type'] = $this->convertPackStockTypeToInt($data['pack_stock_type']);
         }
 
-        $this->assertStringProperty($productForEditing, $data, 'pack_stock_type');
-        $this->assertIntegerProperty($productForEditing, $data, 'out_of_stock_type');
-        $this->assertIntegerProperty($productForEditing, $data, 'quantity');
-        $this->assertIntegerProperty($productForEditing, $data, 'minimal_quantity');
-        $this->assertStringProperty($productForEditing, $data, 'location');
-        $this->assertIntegerProperty($productForEditing, $data, 'low_stock_threshold');
-        $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert');
-        $this->assertDateTimeProperty($productForEditing, $data, 'available_date');
+        $this->assertStringProperty($productForEditing, $data, 'pack_stock_type', $shopErrorMessage);
+        $this->assertIntegerProperty($productForEditing, $data, 'out_of_stock_type', $shopErrorMessage);
+        $this->assertIntegerProperty($productForEditing, $data, 'quantity', $shopErrorMessage);
+        $this->assertIntegerProperty($productForEditing, $data, 'minimal_quantity', $shopErrorMessage);
+        $this->assertStringProperty($productForEditing, $data, 'location', $shopErrorMessage);
+        $this->assertIntegerProperty($productForEditing, $data, 'low_stock_threshold', $shopErrorMessage);
+        $this->assertBoolProperty($productForEditing, $data, 'low_stock_alert', $shopErrorMessage);
+        $this->assertDateTimeProperty($productForEditing, $data, 'available_date', $shopErrorMessage);
 
         // Assertions checking isset() can hide some errors if it doesn't find array key,
         // to make sure all provided fields were checked we need to unset every asserted field
