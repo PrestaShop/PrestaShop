@@ -47,6 +47,7 @@ services:
     arguments:
       - "@prestashop.router"
       - "@translator"
+      - "@prestashop.adapter.legacy.context"
 
   prestashop.core.bridge.smarty_vars_assigner:
     class: PrestaShopBundle\Bridge\Smarty\SmartyVarsAssigner

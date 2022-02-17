@@ -26,15 +26,15 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Configuration;
-use \Cookie;
-use \Link;
-use \Media;
+use Configuration;
+use Cookie;
+use Link;
+use Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use \Smarty;
+use Smarty;
 use Symfony\Component\HttpFoundation\Response;
-use \Tools;
+use Tools;
 
 /**
  * This class is used to render smarty as a symfony response
@@ -102,8 +102,7 @@ class SmartyBridge
         NotificationsHydrator $notificationHydrator,
         ToolbarFlagsHydrator $toolbarFlagsHydrator,
         SmartyVarsAssigner $smartyVarsAssigner
-    )
-    {
+    ) {
         $this->smarty = $legacyContext->getSmarty();
         $this->link = $legacyContext->getContext()->link;
         $this->cookie = $legacyContext->getContext()->cookie;

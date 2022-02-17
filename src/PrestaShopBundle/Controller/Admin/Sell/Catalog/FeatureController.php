@@ -26,9 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
-use ObjectModel;
-use PrestaShopBundle\Bridge\AddActionTrait;
 use PrestaShopBundle\Bridge\AddActionInterface;
+use PrestaShopBundle\Bridge\AddActionTrait;
 use PrestaShopBundle\Bridge\Controller\ControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
@@ -36,7 +35,6 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
-use Validate;
 
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page

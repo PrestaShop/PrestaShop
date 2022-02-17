@@ -60,8 +60,8 @@ class HelperListConfigurationFactory
     private function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('defaultOrderBy', function (Options $options) {
-                return $options['identifier'];
-            }
+            return $options['identifier'];
+        }
         );
 
         $resolver->setDefaults([

@@ -2,14 +2,14 @@
 
 namespace PrestaShopBundle\Bridge\Processor;
 
-use \Context;
-use \ObjectModel;
+use Context;
+use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use Symfony\Component\HttpFoundation\Request;
-use \Tools;
-use \Validate;
+use Tools;
+use Validate;
 
 class ProccessFilter
 {

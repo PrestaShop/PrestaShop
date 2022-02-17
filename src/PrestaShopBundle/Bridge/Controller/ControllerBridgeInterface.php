@@ -31,5 +31,4 @@ namespace PrestaShopBundle\Bridge\Controller;
  */
 interface ControllerBridgeInterface
 {
-
 }

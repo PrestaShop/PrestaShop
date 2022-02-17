@@ -26,12 +26,10 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Configuration;
-use \Media;
+use Configuration;
+use Media;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use \Profile;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Profile;
 
 /**
  * Class NotificationsHydrator hydrate notifications in the ControllerConfiguration

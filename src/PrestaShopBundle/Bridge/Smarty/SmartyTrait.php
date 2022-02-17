@@ -2,10 +2,10 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Media;
+use Media;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use Symfony\Component\HttpFoundation\Response;
-use \Tools;
+use Tools;
 
 trait SmartyTrait
 {
