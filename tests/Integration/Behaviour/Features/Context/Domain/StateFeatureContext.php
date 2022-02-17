@@ -24,17 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Country;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use RuntimeException;
 use State;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -54,6 +64,71 @@ class StateFeatureContext extends AbstractDomainFeatureContext
     {
         $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
         $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+    }
+
+    /**
+     * @When I add new state :stateReference with following properties:
+     *
+     * @param string $stateReference
+     * @param TableNode $table
+     */
+    public function createState(string $stateReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+
+        try {
+            /** @var StateId $stateId */
+            $stateId = $this->getCommandBus()->handle(new AddStateCommand(
+                (int) Country::getIdByName($this->defaultLangId, $data['country']),
+                Zone::getIdByName($data['zone']),
+                $data['name'],
+                $data['iso_code'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled'])
+            ));
+
+            SharedStorage::getStorage()->set($stateReference, new State($stateId->getValue()));
+        } catch (CannotAddStateException | StateConstraintException | StateException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit state :stateReference with following properties:
+     *
+     * @param string $stateReference
+     * @param TableNode $table
+     */
+    public function editState(string $stateReference, TableNode $table): void
+    {
+        /** @var State $state */
+        $state = SharedStorage::getStorage()->get($stateReference);
+
+        $command = new EditStateCommand($state->id);
+
+        $data = $table->getRowsHash();
+        if (isset($data['name'])) {
+            $command->setName((string) $data['name']);
+        }
+        if (isset($data['iso_code'])) {
+            $command->setIsoCode((string) $data['iso_code']);
+        }
+        if (isset($data['enabled'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
+        }
+        if (isset($data['country'])) {
+            $command->setCountryId((int) Country::getIdByName($this->defaultLangId, $data['country']));
+        }
+        if (isset($data['zone'])) {
+            $command->setZoneId((int) Zone::getIdByName($data['zone']));
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+
+            SharedStorage::getStorage()->set($stateReference, new State($command->getStateId()->getValue()));
+        } catch (CannotUpdateStateException | StateConstraintException | StateException | StateNotFoundException $e) {
+            $this->setLastException($e);
+        }
     }
 
     /**

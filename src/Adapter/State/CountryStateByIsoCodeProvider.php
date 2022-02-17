@@ -26,19 +26,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context;
+namespace PrestaShop\PrestaShop\Adapter\State;
 
 use State;
 
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
+class CountryStateByIsoCodeProvider
 {
     /**
-     * @When I define an uncreated state :stateReference
+     * @param string $isoCode
      *
-     * @param string $stateReference
+     * @return int
      */
-    public function defineUnCreatedState(string $stateReference): void
+    public function getStateIdByIsoCode(string $isoCode): int
     {
-        SharedStorage::getStorage()->set($stateReference, new State(0));
+        return (int) State::getIdByIso($isoCode);
     }
 }

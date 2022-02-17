@@ -26,19 +26,26 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
 
-use State;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\UniqueStateIsoCodeValidator;
+use Symfony\Component\Validator\Constraint;
 
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
+/**
+ * Unique state iso code validator constraint
+ */
+class UniqueStateIsoCode extends Constraint
 {
     /**
-     * @When I define an uncreated state :stateReference
-     *
-     * @param string $stateReference
+     * @var int|null
      */
-    public function defineUnCreatedState(string $stateReference): void
+    public $excludeId = null;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function validatedBy()
     {
-        SharedStorage::getStorage()->set($stateReference, new State(0));
+        return UniqueStateIsoCodeValidator::class;
     }
 }
