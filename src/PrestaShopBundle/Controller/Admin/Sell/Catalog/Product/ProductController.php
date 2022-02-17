@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -150,11 +151,18 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+        /** @var Context $shopContext */
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        if (!$shopContext->isSingleShopContext()) {
             return $this->renderDisableMultistorePage();
         }
 
-        $productForm = $this->getCreateProductFormBuilder()->getForm();
+        if ($request->query->has('shopId')) {
+            $data['shop_id'] = $request->query->get('shopId');
+        } else {
+            $data['shop_id'] = $shopContext->getContextShopID();
+        }
+        $productForm = $this->getCreateProductFormBuilder()->getForm($data);
 
         try {
             $productForm->handleRequest($request);
@@ -164,7 +172,12 @@ class ProductController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
-                return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
+                $redirectParams = ['productId' => $result->getIdentifiableObjectId()];
+                if ($request->query->has('shopId')) {
+                    $redirectParams['setShopContext'] = 's-' . $request->query->get('shopId');
+                }
+
+                return $this->redirectToRoute('admin_products_v2_edit', $redirectParams);
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -523,6 +536,9 @@ class ProductController extends FrameworkBundleAdminController
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product-button',
             'floating_class' => 'new-product-button',
+            'data_attributes' => [
+                'modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
+            ],
         ];
 
         return $toolbarButtons;

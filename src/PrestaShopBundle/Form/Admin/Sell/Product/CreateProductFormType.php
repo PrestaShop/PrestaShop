@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,6 +43,7 @@ class CreateProductFormType extends TranslatorAwareType
     {
         $builder
             ->add('type', ProductTypeType::class)
+            ->add('shop_id', HiddenType::class)
             ->add('create', SubmitType::class, [
                 'label' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
                 'row_attr' => [
