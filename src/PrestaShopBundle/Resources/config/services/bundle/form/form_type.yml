@@ -1811,3 +1811,10 @@ services:
     public: true
     tags:
       - { name: form.type }
+
+  form.type.sell.customer_service.merchandise_return.merchandise_return_options_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
