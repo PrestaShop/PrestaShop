@@ -31,6 +31,7 @@ use Context;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -112,7 +113,8 @@ class ModuleManagerBuilder
                     self::$moduleZipManager,
                     self::$translator,
                     new NullDispatcher(),
-                    new Clearer\SymfonyCacheClearer()
+                    new Clearer\SymfonyCacheClearer(),
+                    new HookManager()
                 );
             }
         }

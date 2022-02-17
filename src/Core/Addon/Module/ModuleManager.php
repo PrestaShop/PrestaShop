@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
@@ -104,6 +105,10 @@ class ModuleManager implements AddonManagerInterface
      * @var bool
      */
     private $cacheCleared = false;
+    /**
+     * @var HookManager
+     */
+    private $hookManager;
 
     /**
      * @param AdminModuleDataProvider $adminModuleProvider
@@ -123,7 +128,8 @@ class ModuleManager implements AddonManagerInterface
         ModuleZipManager $moduleZipManager,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher,
-        CacheClearerInterface $symfonyCacheClearer
+        CacheClearerInterface $symfonyCacheClearer,
+        HookManager $hookManager
     ) {
         $this->adminModuleProvider = $adminModuleProvider;
         $this->moduleProvider = $modulesProvider;
@@ -134,6 +140,7 @@ class ModuleManager implements AddonManagerInterface
         $this->eventDispatcher = $eventDispatcher;
         $this->symfonyCacheClearer = $symfonyCacheClearer;
         $this->actionParams = new ParameterBag();
+        $this->hookManager = $hookManager;
     }
 
     /**
@@ -293,7 +300,7 @@ class ModuleManager implements AddonManagerInterface
         // We try to retrieve the module's zip from another module (marketplace)
         if (!$this->moduleProvider->isOnDisk($name) && empty($source)) {
             // Give a chance to the other modules (like marketplace) to download the module
-            $sourceZip = \Hook::exec(
+            $sourceZip = $this->hookManager->exec(
                 'actionAdminModuleInstallRetrieveSource',
                 [
                     'name' => $name,
@@ -406,7 +413,7 @@ class ModuleManager implements AddonManagerInterface
 
         if ($source === null) {
             // Give a chance to the other modules (like marketplace) to retrieve the module source
-            $source = \Hook::exec(
+            $source = $this->hookManager->exec(
                 'actionAdminModuleUpgradeRetrieveSource',
                 [
                     'name' => $name,
@@ -416,8 +423,8 @@ class ModuleManager implements AddonManagerInterface
         }
 
         if (empty($source)) {
-            // if source is still null, upgrade fails
-            return false;
+            // if source is still null, upgrade is marked successful because there is nothing to do
+            return true;
         }
 
         $this->moduleZipManager->storeInModulesFolder($source);

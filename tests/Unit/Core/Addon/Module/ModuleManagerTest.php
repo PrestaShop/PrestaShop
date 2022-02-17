@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Addon\Module;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
@@ -48,6 +49,7 @@ class ModuleManagerTest extends TestCase
     private $dispatcherS;
     private $employeeS;
     private $cacheClearerS;
+    private $hookManagerS;
 
     protected function setUp(): void
     {
@@ -61,7 +63,8 @@ class ModuleManagerTest extends TestCase
             $this->moduleZipManagerS,
             $this->translatorS,
             $this->dispatcherS,
-            $this->cacheClearerS
+            $this->cacheClearerS,
+            $this->hookManagerS
         );
     }
 
@@ -171,6 +174,7 @@ class ModuleManagerTest extends TestCase
         $this->mockDispatcher();
         $this->mockEmployee();
         $this->mockCacheClearer();
+        $this->mockHookManager();
     }
 
     private function mockAdminModuleProvider(): void
@@ -322,6 +326,12 @@ class ModuleManagerTest extends TestCase
     private function mockCacheClearer(): void
     {
         $this->cacheClearerS = $this->getMockBuilder(CacheClearerInterface::class)
+            ->getMock();
+    }
+
+    private function mockHookManager(): void
+    {
+        $this->hookManagerS = $this->getMockBuilder(HookManager::class)
             ->getMock();
     }
 
