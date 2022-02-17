@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Bridge\Helper;
 
-use Configuration;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleHydrator;
 use PrestaShopBundle\Bridge\Smarty\ToolbarFlagsHydrator;
