@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use State;
 
 /**
@@ -55,7 +57,10 @@ class GetStateForEditingHandler implements GetStateForEditingHandlerInterface
 
         return new EditableState(
             $stateId,
+            new CountryId((int) $state->id_country),
+            new ZoneId((int) $state->id_zone),
             (string) $state->name,
+            $state->iso_code,
             (bool) $state->active,
             $state->getAssociatedShops()
         );
