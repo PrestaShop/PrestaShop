@@ -29,6 +29,10 @@
 {% endblock %}
 
 {% block content %}
+  <div class="d-none">
+    {{ getShopSelector() }}
+  </div>
+
   {% block products_listing %}
     {% include '@PrestaShop/Admin/Sell/Catalog/Product/Grid/grid_panel.html.twig' with {'grid': productGrid} %}
   {% endblock %}
