@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Language;
+use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 

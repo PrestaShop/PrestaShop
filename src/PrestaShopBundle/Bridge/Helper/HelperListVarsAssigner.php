@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Bridge\Helper;
 
-use \Configuration;
+use Configuration;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleHydrator;
 use PrestaShopBundle\Bridge\Smarty\ToolbarFlagsHydrator;
@@ -80,7 +80,7 @@ class HelperListVarsAssigner
             $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
         }
 
-        $helper->title = is_array($controllerConfiguration->toolbarTitle) ? implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->toolbarTitle) : $controllerConfiguration->toolbarTitle;
+        $helper->title = $controllerConfiguration->toolbarTitle;
         $helper->toolbar_btn = $controllerConfiguration->toolbarButton;
         $helper->show_toolbar = true;
         $helper->actions = $controllerConfiguration->actions;

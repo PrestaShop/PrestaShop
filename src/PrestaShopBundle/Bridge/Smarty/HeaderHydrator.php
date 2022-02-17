@@ -26,25 +26,25 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Configuration;
-use \Cookie;
-use \Country;
-use \Currency;
-use \Language;
-use \Link;
-use \Media;
+use Configuration;
+use Cookie;
+use Country;
+use Currency;
+use Language;
+use Link;
+use Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use \QuickAccess;
-use \Shop;
+use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use QuickAccess;
+use Shop;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use \Tab;
-use \Tools;
+use Tab;
+use Tools;
 
 /**
  * Hydrate template variables for header
@@ -108,6 +108,7 @@ class HeaderHydrator implements HydratorInterface
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
     }
+
     /**
      * Assign smarty variables for the header.
      *

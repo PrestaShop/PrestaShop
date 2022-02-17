@@ -26,12 +26,7 @@
 
 namespace PrestaShopBundle\Bridge\Controller;
 
-use \Cookie;
-use \Country;
-use \Language;
-use \Link;
 use PrestaShopBundle\Security\Admin\Employee;
-use \Shop;
 
 /**
  * Define configuration for Controller migrate horizontally

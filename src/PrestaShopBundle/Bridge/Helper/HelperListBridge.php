@@ -26,19 +26,20 @@
 
 namespace PrestaShopBundle\Bridge\Helper;
 
-use \Configuration;
-use \Context;
-use \Db;
-use \DbQuery;
-use \HelperList;
+use Configuration;
+use Context;
+use Db;
+use DbQuery;
+use HelperList;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Security\Admin\Employee;
-use \PrestaShopException;
-use \Shop;
+use PrestaShopException;
+use Shop;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use \Tools;
-use \Validate;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Tools;
+use Validate;
 
 /**
  * A bridge to use helper list to render list in Controller migrate horizontally
@@ -63,23 +64,23 @@ class HelperListBridge
     public function __construct(LegacyContext $legacyContext, TokenStorage $tokenStorage, HelperListVarsAssigner $helperListVarsAssigner)
     {
         $this->context = $legacyContext->getContext();
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $this->getUser($tokenStorage);
         $this->helperListVarsAssigner = $helperListVarsAssigner;
     }
 
     /**
      * Render list content
      *
-     * @var HelperListConfiguration $helperListConfiguration
+     * @var HelperListConfiguration
      *
      * @return string
      */
     public function renderList(
         ControllerConfiguration $controllerConfiguration,
         HelperListConfiguration $helperListConfiguration
-    ): string {
+    ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
-            return false;
+            return null;
         }
 
         $helper = new HelperList();
@@ -103,16 +104,16 @@ class HelperListBridge
     }
 
     public function getList(
-        $helperListConfiguration,
-        $id_lang,
-        $order_by = null,
-        $order_way = null,
+        HelperListConfiguration $helperListConfiguration,
+        int $id_lang,
+        $orderBy = null,
+        $orderWay = null,
         $start = 0,
         $limit = null,
-        $id_lang_shop = false
+        $idLangShop = false
     ) {
         if ($helperListConfiguration->table == 'feature_value') {
-            $this->_where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
+            $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
         }
 
         //Dispatch hook not work
@@ -167,7 +168,7 @@ class HelperListBridge
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->user->getData()->isSuperAdmin()) {
                 $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $helperListConfiguration->table . '_shop') . '`? *sa#', $helperListConfiguration->join);
                 if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($helperListConfiguration->table)) {
-                    $this->_where .= ' AND EXISTS (
+                    $helperListConfiguration->where .= ' AND EXISTS (
                             SELECT 1
                             FROM `' . _DB_PREFIX_ . $helperListConfiguration->table . '_shop` sa
                             WHERE a.`' . bqSQL($helperListConfiguration->identifier) . '` = sa.`' . bqSQL($helperListConfiguration->identifier) . '`
@@ -178,9 +179,9 @@ class HelperListBridge
         }
 
         $fromClause = $this->getFromClause($helperListConfiguration);
-        $joinClause = $this->getJoinClause($helperListConfiguration, $id_lang, $id_lang_shop);
+        $joinClause = $this->getJoinClause($helperListConfiguration, $id_lang, $idLangShop);
         $whereClause = $this->getWhereClause($helperListConfiguration);
-        $orderByClause = $this->getOrderByClause($helperListConfiguration, $order_by, $order_way);
+        $orderByClause = $this->getOrderByClause($helperListConfiguration, $orderBy, $orderWay);
 
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
@@ -275,6 +276,23 @@ class HelperListBridge
         //    'list' => &$this->_list,
         //    'list_total' => &$this->_listTotal,
         //]);
+    }
+
+    private function getUser(TokenStorageInterface $tokenStorage)
+    {
+        if (null === $token = $tokenStorage->getToken()) {
+            return null;
+        }
+
+        if (!\is_object($user = $token->getUser())) {
+            return null;
+        }
+
+        if (!$user instanceof Employee) {
+            return null;
+        }
+
+        return $user;
     }
 
     /**

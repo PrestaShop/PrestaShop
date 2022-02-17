@@ -26,18 +26,25 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Configuration;
-use \Language;
+use Configuration;
+use Cookie;
+use Language;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use \Tools;
+use Tools;
 
 /**
  * Class ToolbarFlagsHydrator hydrate toolbar flags in the Controller configuration
  */
 class ToolbarFlagsHydrator implements HydratorInterface
 {
+    /**
+     * @var Cookie
+     */
+    private $cookie;
+
     /**
      * @var RouterInterface
      */
@@ -48,10 +55,11 @@ class ToolbarFlagsHydrator implements HydratorInterface
      */
     private $translator;
 
-    public function __construct(RouterInterface $router, TranslatorInterface $translator)
+    public function __construct(RouterInterface $router, TranslatorInterface $translator, LegacyContext $legacyContext)
     {
         $this->router = $router;
         $this->translator = $translator;
+        $this->cookie = $legacyContext->getContext()->cookie;
     }
 
     /**
@@ -129,11 +137,11 @@ class ToolbarFlagsHydrator implements HydratorInterface
                     $field = $t['filter_key'];
                 }
 
-                if (($val = Tools::getValue($controllerConfiguration->table . 'Filter_' . $field)) || $val = $controllerConfiguration->context->cookie->{$this->getCookieFilterPrefix() . $controllerConfiguration->table . 'Filter_' . $field}) {
+                if (($val = Tools::getValue($controllerConfiguration->table . 'Filter_' . $field)) || $val = $this->cookie->{$this->getCookieFilterPrefix() . $controllerConfiguration->table . 'Filter_' . $field}) {
                     if (!is_array($val)) {
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
-                            $filter_value = ((bool) $val) ? $this->translator->trans('yes', [], 'Admin.Actions') : $this->translator->trans('no', [], 'Admin.Actions');
+                            $filter_value = $val == 1 ? $this->translator->trans('yes', [], 'Admin.Actions') : $this->translator->trans('no', [], 'Admin.Actions');
                         } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
                             $date = json_decode($val, true);
                             if (isset($date[0])) {

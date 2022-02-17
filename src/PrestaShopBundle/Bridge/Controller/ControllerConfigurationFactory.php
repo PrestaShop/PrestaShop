@@ -26,10 +26,9 @@
 
 namespace PrestaShopBundle\Bridge\Controller;
 
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use \Tools;
+use Tools;
 
 /**
  * Create configuration for controller migrate horizontally

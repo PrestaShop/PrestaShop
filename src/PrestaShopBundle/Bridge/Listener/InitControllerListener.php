@@ -26,16 +26,15 @@
 
 namespace PrestaShopBundle\Bridge\Listener;
 
-use \Context;
+use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 use PrestaShopBundle\Bridge\Controller\ControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfigurationFactory;
-use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use \Shop;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use \Tab;
-use \Tools;
+use Tab;
+use Tools;
 
 /**
  * Init Controller by configuring something needs in all Controller migrate horizontally
@@ -109,7 +108,10 @@ class InitControllerListener
 
     private function setCurrentIndex(ControllerBridgeInterface $controller): void
     {
-        // Set current index
+        if (!property_exists($controller, 'controllerConfiguration')) {
+            throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
+        }
+
         $currentIndex = 'index.php' . (($controllerName = Tools::getValue('controller')) ? '?controller=' . $controllerName : '');
         if ($back = Tools::getValue('back')) {
             $currentIndex .= '&back=' . urlencode($back);
@@ -123,6 +125,10 @@ class InitControllerListener
      */
     private function initToken(ControllerBridgeInterface $controller, Request $request)
     {
+        if (!property_exists($controller, 'controllerConfiguration')) {
+            throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
+        }
+
         $controller->controllerConfiguration->token = $request->query->get('_token');
     }
 }

@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Bridge\Smarty;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use \Smarty;
+use Smarty;
 
 /**
  * Assign variable to smarty
@@ -46,8 +46,7 @@ class SmartyVarsAssigner
 
     public function assign(array $templatesVars)
     {
-        foreach ($templatesVars as $name => $value)
-        {
+        foreach ($templatesVars as $name => $value) {
             $this->smarty->assign($name, $value);
         }
     }

@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Bridge\Helper;
 
-use \Shop;
+use Shop;
 
 /**
  * Configuration for helper list bridge

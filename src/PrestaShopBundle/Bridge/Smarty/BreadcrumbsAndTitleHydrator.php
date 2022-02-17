@@ -26,12 +26,12 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use \Configuration;
-use \Link;
+use Configuration;
+use Link;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use \Tab;
-use \Tools;
+use Tab;
+use Tools;
 
 /**
  * Class BreadcrumbsAndTitleHydrator hydrate breadcrumbs in ControllerConfiguration
