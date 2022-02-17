@@ -6,8 +6,8 @@ use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Utils\CookieFilterUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Validate;
@@ -32,14 +32,13 @@ class ProccessFilter
 
     public function processFilter(
         Request $request,
-        HelperListConfiguration $helperListConfiguration,
-        ControllerConfiguration $controllerConfiguration
+        HelperListConfiguration $helperListConfiguration
     ): void {
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
             'fields' => $helperListConfiguration->fieldsList,
         ]);
 
-        $prefix = $this->getCookieFilterPrefix($controllerConfiguration);
+        $prefix = CookieFilterUtils::getCookieByPrefix($helperListConfiguration->controllerNameLegacy);
 
         if (isset($helperListConfiguration->listId)) {
             foreach ($request->request->all() as $key => $value) {
@@ -88,7 +87,7 @@ class ProccessFilter
                 $tmp_tab = explode('!', $key);
                 $filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
 
-                if ($field = $this->filterToField($key, $filter)) {
+                if ($field = $this->filterToField($helperListConfiguration, $key, $filter)) {
                     $type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
                     if (($type == 'date' || $type == 'datetime') && is_string($value)) {
                         $value = json_decode($value, true);
@@ -101,6 +100,8 @@ class ProccessFilter
                     } else {
                         $sql_filter = &$helperListConfiguration->filter;
                     }
+                    dump($sql_filter);
+                    dump($sql_filter);
 
                     /* Only for date filtering (from, to) */
                     if (is_array($value)) {
@@ -138,35 +139,21 @@ class ProccessFilter
         }
     }
 
-    /**
-     * @param string $key
-     * @param string $filter
-     *
-     * @return array|false
-     */
-    private function filterToField($key, $filter)
+    private function filterToField(HelperListConfiguration $helperListConfiguration, $key, $filter)
     {
-        if (!isset($this->fields_list)) {
+        if (!isset($helperListConfiguration->fieldsList)) {
             return false;
         }
 
-        foreach ($this->fields_list as $field) {
+        foreach ($helperListConfiguration->fieldsList as $field) {
             if (array_key_exists('filter_key', $field) && $field['filter_key'] == $key) {
                 return $field;
             }
         }
-        if (array_key_exists($filter, $this->fields_list)) {
-            return $this->fields_list[$filter];
+        if (array_key_exists($filter, $helperListConfiguration->fieldsList)) {
+            return $helperListConfiguration->fieldsList[$filter];
         }
 
         return false;
-    }
-
-    /**
-     * Set the filters used for the list display.
-     */
-    private function getCookieFilterPrefix(ControllerConfiguration $controllerConfiguration)
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower($controllerConfiguration->controllerNameLegacy));
     }
 }

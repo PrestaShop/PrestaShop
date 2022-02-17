@@ -34,6 +34,7 @@ use HelperList;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Utils\CookieFilterUtils;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopException;
 use Shop;
@@ -456,7 +457,7 @@ class HelperListBridge
     private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
-            $prefix = $this->getCookieFilterPrefix($helperListConfiguration);
+            $prefix = CookieFilterUtils::getCookieByPrefix($helperListConfiguration->controllerNameLegacy);
 
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'}) {
                 $orderBy = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'};
@@ -497,7 +498,7 @@ class HelperListBridge
      */
     private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
-        $prefix = $this->getCookieOrderByPrefix($helperListConfiguration);
+        $prefix = CookieFilterUtils::getCookieByPrefix($helperListConfiguration->controllerNameLegacy);
         if (empty($orderDirection)) {
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'}) {
                 $orderDirection = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'};
@@ -513,22 +514,6 @@ class HelperListBridge
         }
 
         return pSQL(Tools::strtoupper($orderDirection));
-    }
-
-    /**
-     * @return mixed
-     */
-    private function getCookieOrderByPrefix(HelperListConfiguration $helperListConfiguration)
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower($helperListConfiguration->controllerNameLegacy));
-    }
-
-    /**
-     * Set the filters used for the list display.
-     */
-    private function getCookieFilterPrefix(HelperListConfiguration $helperListConfiguration)
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower($helperListConfiguration->controllerNameLegacy));
     }
 
     private function shouldLimitSqlResults($limit): bool
