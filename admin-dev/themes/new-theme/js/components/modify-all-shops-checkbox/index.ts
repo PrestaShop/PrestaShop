@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {EventEmitter} from '@components/event-emitter';
+import ComponentsMap from '@components/components-map';
 import MultiShopModifyAllMap from './component-map';
 
 const {$} = window;
@@ -34,6 +36,8 @@ const {$} = window;
 export default class ModifyAllShopsCheckbox {
   private modifyAllNamePrefix: string;
 
+  private richTextAreas: Record<string, Element>;
+
   /**
    * @param {string} modifyAllNamePrefix
    */
@@ -43,6 +47,7 @@ export default class ModifyAllShopsCheckbox {
     } else {
       this.modifyAllNamePrefix = modifyAllNamePrefix;
     }
+    this.richTextAreas = {};
 
     this.init();
   }
@@ -62,11 +67,24 @@ export default class ModifyAllShopsCheckbox {
         const multiShopField: HTMLInputElement = <HTMLInputElement>document.getElementById(multiShopFieldId);
 
         if (multiShopField) {
-          // Toggle element when field is focused/unfocused
-          multiShopField.addEventListener('focus', () => {
+          const $multiShopField = $(multiShopField);
+          // Toggle element when field (or its children inputs) is focused/unfocused
+          $multiShopField.on('focus', () => {
             widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
           });
-          multiShopField.addEventListener('blur', () => {
+          $multiShopField.on('focus', ':input', () => {
+            widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
+          });
+
+          // Search tiny mce editors and store them, we need to wait for the component to be initialized to listen to its events
+          $(ComponentsMap.tineMceEditor.selector, $multiShopField).each((index, textarea) => {
+            this.richTextAreas[textarea.id] = widget;
+          });
+
+          $multiShopField.on('blur', () => {
+            widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
+          });
+          $multiShopField.on('blur', ':input', () => {
             widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
           });
 
@@ -83,8 +101,8 @@ export default class ModifyAllShopsCheckbox {
             widget.classList.add(MultiShopModifyAllMap.updatedClass);
           });
           // We check the event via JQuery as well because some components use internal JQuery event instead of native
-          // ones (like select2)
-          $(multiShopField).on('change', () => {
+          // ones (like select2) And it allows to check all children changes easily
+          $multiShopField.on('change', () => {
             widget.classList.add(MultiShopModifyAllMap.updatedClass);
           });
           // Check for checkbox change also, in case it is modified programmatically
@@ -94,5 +112,26 @@ export default class ModifyAllShopsCheckbox {
         }
       }
     });
+
+    if (Object.keys(this.richTextAreas).length > 0) {
+      // We wait for editor setup event to register events on tinymce editors
+      EventEmitter.on('tinymceEditorSetup', (event) => {
+        const {editor} = event;
+
+        if (Object.prototype.hasOwnProperty.call(this.richTextAreas, editor.id)) {
+          const widget: Element = this.richTextAreas[editor.id];
+
+          editor.on('Focus', () => {
+            widget.classList.add(MultiShopModifyAllMap.fieldFocusedClass);
+          });
+          editor.on('Blur', () => {
+            widget.classList.remove(MultiShopModifyAllMap.fieldFocusedClass);
+          });
+          editor.on('Change', () => {
+            widget.classList.add(MultiShopModifyAllMap.updatedClass);
+          });
+        }
+      });
+    }
   }
 }

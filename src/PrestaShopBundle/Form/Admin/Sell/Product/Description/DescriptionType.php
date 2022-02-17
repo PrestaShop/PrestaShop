@@ -111,6 +111,7 @@ class DescriptionType extends TranslatorAwareType
                     ],
                 ],
                 'label_tag_name' => 'h2',
+                'modify_all_shops' => true,
             ])
             ->add('description', TranslatableType::class, [
                 'required' => false,
@@ -132,6 +133,7 @@ class DescriptionType extends TranslatorAwareType
                     ],
                 ],
                 'label_tag_name' => 'h2',
+                'modify_all_shops' => true,
             ])
             ->add('categories', CategoriesType::class, [
                 'label' => $this->trans('Categories', 'Admin.Global'),
