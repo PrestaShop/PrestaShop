@@ -25,12 +25,16 @@
 import Router from '@components/router';
 import ProductMap from '@pages/product/product-map';
 import {FormIframeModal} from '@components/modal';
+import ShopSelector from '@components/shop-selector/shop-selector';
 
 export default class CreateProductModal {
   private router: Router;
 
+  private shopSelector: ShopSelector;
+
   constructor() {
     this.router = new Router();
+    this.shopSelector = new ShopSelector();
     this.init();
   }
 
@@ -40,29 +44,39 @@ export default class CreateProductModal {
       const $link = $(event.target);
       const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
 
-      const iframeModal = new FormIframeModal({
-        id: 'modal-create-product',
-        formSelector: ProductMap.create.form,
-        formUrl: linkUrl,
-        closable: true,
-        // We override the body selector so that the modal keeps the size of the initial create form even after submit
-        autoSizeContainer: '.create-product-form',
-        onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
-          if (dataAttributes) {
-            if (dataAttributes.modalTitle) {
-              iframeModal.setTitle(dataAttributes.modalTitle);
-            }
-
-            if (dataAttributes.productId) {
-              const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
-              // Keep showing loading until the page is refreshed
-              iframeModal.showLoading();
-              window.location.href = editUrl;
-            }
-          }
-        },
-      });
-      iframeModal.show();
+      if (this.shopSelector.isAvailable()) {
+        this.shopSelector.show($link.data('modalTitle'), (shopId: number) => {
+          this.openCreationModal(`${linkUrl}&shopId=${shopId}`);
+        });
+      } else {
+        this.openCreationModal(linkUrl);
+      }
     });
+  }
+
+  private openCreationModal(linkUrl: string): void {
+    const iframeModal = new FormIframeModal({
+      id: 'modal-create-product',
+      formSelector: ProductMap.create.form,
+      formUrl: linkUrl,
+      closable: true,
+      // We override the body selector so that the modal keeps the size of the initial create form even after submit
+      autoSizeContainer: '.create-product-form',
+      onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
+        if (dataAttributes) {
+          if (dataAttributes.modalTitle) {
+            iframeModal.setTitle(dataAttributes.modalTitle);
+          }
+
+          if (dataAttributes.productId) {
+            const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
+            // Keep showing loading until the page is refreshed
+            iframeModal.showLoading();
+            window.location.href = editUrl;
+          }
+        }
+      },
+    });
+    iframeModal.show();
   }
 }
