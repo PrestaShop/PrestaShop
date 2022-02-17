@@ -37,6 +37,11 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class GeolocationOptionsConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
+    private const VALID_CONFIGURATION = [
+        GeolocationOptionsConfiguration::FIELD_GEOLOCATION_BEHAVIOR => 1,
+        GeolocationOptionsConfiguration::FIELD_GEOLOCATION_NA_BEHAVIOR => 1,
+        GeolocationOptionsConfiguration::FIELD_ALLOWED_COUNTRIES => 'FR;BE;DE',
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -55,19 +60,15 @@ class GeolocationOptionsConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_GEOLOCATION_BEHAVIOR', 0, $shopConstraint, 1],
-                    ['PS_GEOLOCATION_NA_BEHAVIOR', 0, $shopConstraint, 1],
-                    ['PS_ALLOWED_COUNTRIES', null, $shopConstraint, 'fr;be;de'],
+                    [GeolocationOptionsConfiguration::KEY_GEOLOCATION_BEHAVIOR, 0, $shopConstraint, 1],
+                    [GeolocationOptionsConfiguration::KEY_GEOLOCATION_NA_BEHAVIOR, 0, $shopConstraint, 1],
+                    [GeolocationOptionsConfiguration::KEY_ALLOWED_COUNTRIES, null, $shopConstraint, 'FR;BE;DE'],
                 ]
             );
 
         $result = $geolocationOptionsConfiguration->getConfiguration();
         $this->assertSame(
-            [
-                'geolocation_behaviour' => 1,
-                'geolocation_na_behaviour' => 1,
-                'geolocation_countries' => 'fr;be;de',
-            ],
+            self::VALID_CONFIGURATION,
             $result
         );
     }
@@ -93,9 +94,9 @@ class GeolocationOptionsConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['geolocation_behaviour' => 'wrong_type','geolocation_na_behaviour' => 1, 'geolocation_countries' => 'fr;be;de']],
-            [InvalidOptionsException::class, ['geolocation_behaviour' => 1, 'geolocation_na_behaviour' => 'wrong_type','geolocation_countries' => 'fr;be;de']],
-            [InvalidOptionsException::class, ['geolocation_behaviour' => 1, 'geolocation_na_behaviour' => 1, 'geolocation_countries' => 1]],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, [GeolocationOptionsConfiguration::FIELD_GEOLOCATION_BEHAVIOR => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, [GeolocationOptionsConfiguration::FIELD_GEOLOCATION_NA_BEHAVIOR => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, [GeolocationOptionsConfiguration::FIELD_ALLOWED_COUNTRIES => 1])],
         ];
     }
 
@@ -103,11 +104,7 @@ class GeolocationOptionsConfigurationTest extends AbstractConfigurationTestCase
     {
         $geolocationOptionsConfiguration = new GeolocationOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
-        $res = $geolocationOptionsConfiguration->updateConfiguration([
-            'geolocation_behaviour' => 1,
-            'geolocation_na_behaviour' => 1,
-            'geolocation_countries' => 'fr;be;de',
-        ]);
+        $res = $geolocationOptionsConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

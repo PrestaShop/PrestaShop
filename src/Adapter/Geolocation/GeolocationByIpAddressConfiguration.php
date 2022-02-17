@@ -34,7 +34,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class GeolocationByIpAddressConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['geolocation_enabled'];
+    public const FIELD_GEOLOCATION_ENABLED = 'geolocation_enabled';
+    public const KEY_GEOLOCATION_ENABLED = 'PS_GEOLOCATION_ENABLED';
+    private const CONFIGURATION_FIELDS = [self::FIELD_GEOLOCATION_ENABLED];
 
     /**
      * {@inheritdoc}
@@ -42,7 +44,7 @@ final class GeolocationByIpAddressConfiguration extends AbstractMultistoreConfig
     public function getConfiguration()
     {
         return [
-            'geolocation_enabled' => (bool) $this->configuration->get('PS_GEOLOCATION_ENABLED', false, $this->getShopConstraint()),
+            self::FIELD_GEOLOCATION_ENABLED => (bool) $this->configuration->get(self::KEY_GEOLOCATION_ENABLED, false, $this->getShopConstraint()),
         ];
     }
 
@@ -52,7 +54,7 @@ final class GeolocationByIpAddressConfiguration extends AbstractMultistoreConfig
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->updateConfigurationValue('PS_GEOLOCATION_ENABLED', 'geolocation_enabled', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::KEY_GEOLOCATION_ENABLED, self::FIELD_GEOLOCATION_ENABLED, $configuration, $this->getShopConstraint());
         }
 
         return [];
@@ -65,7 +67,7 @@ final class GeolocationByIpAddressConfiguration extends AbstractMultistoreConfig
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('geolocation_enabled', 'bool');
+            ->setAllowedTypes(self::FIELD_GEOLOCATION_ENABLED, 'bool');
 
         return $resolver;
     }

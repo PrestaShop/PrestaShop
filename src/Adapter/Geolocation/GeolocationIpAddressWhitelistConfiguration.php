@@ -34,7 +34,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class GeolocationIpAddressWhitelistConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['geolocation_whitelist'];
+    public const FIELD_GEOLOCATION_WHITELIST = 'geolocation_whitelist';
+    public const KEY_GEOLOCATION_WHITELIST = 'PS_GEOLOCATION_WHITELIST';
+    private const CONFIGURATION_FIELDS = [self::FIELD_GEOLOCATION_WHITELIST];
 
     /**
      * {@inheritdoc}
@@ -42,7 +44,7 @@ final class GeolocationIpAddressWhitelistConfiguration extends AbstractMultistor
     public function getConfiguration()
     {
         return [
-            'geolocation_whitelist' => $this->configuration->get('PS_GEOLOCATION_WHITELIST', null, $this->getShopConstraint()),
+            self::FIELD_GEOLOCATION_WHITELIST => $this->configuration->get(self::KEY_GEOLOCATION_WHITELIST, null, $this->getShopConstraint()),
         ];
     }
 
@@ -52,7 +54,7 @@ final class GeolocationIpAddressWhitelistConfiguration extends AbstractMultistor
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->updateConfigurationValue('PS_GEOLOCATION_WHITELIST', 'geolocation_whitelist', $configuration, $this->getShopConstraint());
+            $this->updateConfigurationValue(self::KEY_GEOLOCATION_WHITELIST, self::FIELD_GEOLOCATION_WHITELIST, $configuration, $this->getShopConstraint());
         }
 
         return [];
@@ -65,7 +67,7 @@ final class GeolocationIpAddressWhitelistConfiguration extends AbstractMultistor
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('geolocation_whitelist', 'string');
+            ->setAllowedTypes(self::FIELD_GEOLOCATION_WHITELIST, 'string');
 
         return $resolver;
     }

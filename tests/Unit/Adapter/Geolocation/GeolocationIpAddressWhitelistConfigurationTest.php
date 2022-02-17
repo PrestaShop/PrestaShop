@@ -37,6 +37,7 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class GeolocationIpAddressWhitelistConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
+    private const VALID_CONFIGURATION = [GeolocationIpAddressWhitelistConfiguration::FIELD_GEOLOCATION_WHITELIST => '127.0.0.1'];
 
     /**
      * @dataProvider provideShopConstraints
@@ -55,15 +56,13 @@ class GeolocationIpAddressWhitelistConfigurationTest extends AbstractConfigurati
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_GEOLOCATION_WHITELIST', null, $shopConstraint, '127.0.0.1'],
+                    [GeolocationIpAddressWhitelistConfiguration::KEY_GEOLOCATION_WHITELIST, null, $shopConstraint, '127.0.0.1'],
                 ]
             );
 
         $result = $geolocationIpAddressWhitelistConfiguration->getConfiguration();
         $this->assertSame(
-            [
-                'geolocation_whitelist' => '127.0.0.1',
-            ],
+            self::VALID_CONFIGURATION,
             $result
         );
     }
@@ -97,9 +96,7 @@ class GeolocationIpAddressWhitelistConfigurationTest extends AbstractConfigurati
     {
         $geolocationIpAddressWhitelistConfiguration = new GeolocationIpAddressWhitelistConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
-        $res = $geolocationIpAddressWhitelistConfiguration->updateConfiguration([
-            'geolocation_whitelist' => '127.0.0.1',
-        ]);
+        $res = $geolocationIpAddressWhitelistConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

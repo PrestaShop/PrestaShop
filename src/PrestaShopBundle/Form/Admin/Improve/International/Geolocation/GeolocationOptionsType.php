@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 
+use PrestaShop\PrestaShop\Adapter\Geolocation\GeolocationOptionsConfiguration;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
@@ -74,7 +75,7 @@ class GeolocationOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('geolocation_behaviour', ChoiceType::class, [
+            ->add(GeolocationOptionsConfiguration::FIELD_GEOLOCATION_BEHAVIOR, ChoiceType::class, [
                 'label' => $this->trans(
                     'Geolocation behavior for restricted countries',
                     'Admin.International.Feature'
@@ -84,9 +85,9 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
                 'choice_translation_domain' => false,
-                'multistore_configuration_key' => 'PS_GEOLOCATION_BEHAVIOR',
+                'multistore_configuration_key' => GeolocationOptionsConfiguration::KEY_GEOLOCATION_BEHAVIOR,
             ])
-            ->add('geolocation_na_behaviour', ChoiceType::class, [
+            ->add(GeolocationOptionsConfiguration::FIELD_GEOLOCATION_NA_BEHAVIOR, ChoiceType::class, [
                 'label' => $this->trans(
                     'Geolocation behavior for other countries',
                     'Admin.International.Feature'
@@ -97,16 +98,16 @@ class GeolocationOptionsType extends TranslatorAwareType
                     $this->trans('Visitors can see your catalog but cannot place an order.', 'Admin.International.Feature') => $this->configuration->get('_PS_GEOLOCATION_NO_ORDER_'),
                 ],
                 'choice_translation_domain' => false,
-                'multistore_configuration_key' => 'PS_GEOLOCATION_NA_BEHAVIORD',
+                'multistore_configuration_key' => GeolocationOptionsConfiguration::KEY_GEOLOCATION_NA_BEHAVIOR,
             ])
-            ->add('geolocation_countries', MaterialChoiceTableType::class, [
+            ->add(GeolocationOptionsConfiguration::FIELD_ALLOWED_COUNTRIES, MaterialChoiceTableType::class, [
                 'label' => $this->trans(
                     'Select the countries from which your store is accessible',
                     'Admin.International.Feature'
                 ),
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
-                'multistore_configuration_key' => 'PS_ALLOWED_COUNTRIES',
+                'multistore_configuration_key' => GeolocationOptionsConfiguration::KEY_ALLOWED_COUNTRIES,
             ]);
     }
 

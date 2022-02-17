@@ -37,6 +37,7 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class GeolocationByIpAddressConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
+    private const VALID_CONFIGURATION = [GeolocationByIpAddressConfiguration::FIELD_GEOLOCATION_ENABLED => true];
 
     /**
      * @dataProvider provideShopConstraints
@@ -55,15 +56,13 @@ class GeolocationByIpAddressConfigurationTest extends AbstractConfigurationTestC
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_GEOLOCATION_ENABLED', false, $shopConstraint, true],
+                    [GeolocationByIpAddressConfiguration::KEY_GEOLOCATION_ENABLED, false, $shopConstraint, true],
                 ]
             );
 
         $result = $geolocationByIpAddressConfiguration->getConfiguration();
         $this->assertSame(
-            [
-                'geolocation_enabled' => true,
-            ],
+            self::VALID_CONFIGURATION,
             $result
         );
     }
@@ -89,7 +88,7 @@ class GeolocationByIpAddressConfigurationTest extends AbstractConfigurationTestC
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['geolocation_enabled' => 'wrong_type']],
+            [InvalidOptionsException::class, [GeolocationByIpAddressConfiguration::FIELD_GEOLOCATION_ENABLED => 'wrong_type']],
         ];
     }
 
@@ -97,9 +96,7 @@ class GeolocationByIpAddressConfigurationTest extends AbstractConfigurationTestC
     {
         $geolocationByIpAddressConfiguration = new GeolocationByIpAddressConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
-        $res = $geolocationByIpAddressConfiguration->updateConfiguration([
-            'geolocation_enabled' => true,
-        ]);
+        $res = $geolocationByIpAddressConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

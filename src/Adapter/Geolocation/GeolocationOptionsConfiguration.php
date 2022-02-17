@@ -34,7 +34,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class GeolocationOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['geolocation_behaviour', 'geolocation_na_behaviour', 'geolocation_countries'];
+    public const FIELD_GEOLOCATION_BEHAVIOR = 'geolocation_behaviour';
+    public const FIELD_GEOLOCATION_NA_BEHAVIOR = 'geolocation_na_behaviour';
+    public const FIELD_ALLOWED_COUNTRIES = 'geolocation_countries';
+    public const KEY_GEOLOCATION_BEHAVIOR = 'PS_GEOLOCATION_BEHAVIOR';
+    public const KEY_GEOLOCATION_NA_BEHAVIOR = 'PS_GEOLOCATION_NA_BEHAVIOR';
+    public const KEY_ALLOWED_COUNTRIES = 'PS_ALLOWED_COUNTRIES';
+
+    private const CONFIGURATION_FIELDS = [self::FIELD_GEOLOCATION_BEHAVIOR,
+        self::FIELD_GEOLOCATION_NA_BEHAVIOR,
+        self::FIELD_ALLOWED_COUNTRIES,
+    ];
 
     /**
      * {@inheritdoc}
@@ -44,9 +54,9 @@ final class GeolocationOptionsConfiguration extends AbstractMultistoreConfigurat
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'geolocation_behaviour' => (int) $this->configuration->get('PS_GEOLOCATION_BEHAVIOR', 0, $shopConstraint),
-            'geolocation_na_behaviour' => (int) $this->configuration->get('PS_GEOLOCATION_NA_BEHAVIOR', 0, $shopConstraint),
-            'geolocation_countries' => (string) $this->configuration->get('PS_ALLOWED_COUNTRIES', null, $shopConstraint),
+            self::FIELD_GEOLOCATION_BEHAVIOR => (int) $this->configuration->get(self::KEY_GEOLOCATION_BEHAVIOR, 0, $shopConstraint),
+            self::FIELD_GEOLOCATION_NA_BEHAVIOR => (int) $this->configuration->get(self::KEY_GEOLOCATION_NA_BEHAVIOR, 0, $shopConstraint),
+            self::FIELD_ALLOWED_COUNTRIES => (string) $this->configuration->get(self::KEY_ALLOWED_COUNTRIES, null, $shopConstraint),
         ];
     }
 
@@ -57,9 +67,9 @@ final class GeolocationOptionsConfiguration extends AbstractMultistoreConfigurat
     {
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
-            $this->updateConfigurationValue('PS_GEOLOCATION_BEHAVIOR', 'geolocation_behaviour', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_GEOLOCATION_NA_BEHAVIOR', 'geolocation_na_behaviour', $configuration, $shopConstraint);
-            $this->updateConfigurationValue('PS_ALLOWED_COUNTRIES', 'geolocation_countries', $configuration, $shopConstraint);
+            $this->updateConfigurationValue(self::KEY_GEOLOCATION_BEHAVIOR, self::FIELD_GEOLOCATION_BEHAVIOR, $configuration, $shopConstraint);
+            $this->updateConfigurationValue(self::KEY_GEOLOCATION_NA_BEHAVIOR, self::FIELD_GEOLOCATION_NA_BEHAVIOR, $configuration, $shopConstraint);
+            $this->updateConfigurationValue(self::KEY_ALLOWED_COUNTRIES, self::FIELD_ALLOWED_COUNTRIES, $configuration, $shopConstraint);
         }
 
         return [];
@@ -72,9 +82,9 @@ final class GeolocationOptionsConfiguration extends AbstractMultistoreConfigurat
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('geolocation_behaviour', 'int')
-            ->setAllowedTypes('geolocation_na_behaviour', 'int')
-            ->setAllowedTypes('geolocation_countries', 'string');
+            ->setAllowedTypes(self::FIELD_GEOLOCATION_BEHAVIOR, 'int')
+            ->setAllowedTypes(self::FIELD_GEOLOCATION_NA_BEHAVIOR, 'int')
+            ->setAllowedTypes(self::FIELD_ALLOWED_COUNTRIES, 'string');
 
         return $resolver;
     }
