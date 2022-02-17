@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
 use PrestaShopBundle\Form\Admin\Extension\MultistoreExtension;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
+use PrestaShopBundle\Form\FormCloner;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
@@ -60,7 +61,8 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
             $this->createMultistoreFeatureMock($isMultistoreUsed),
             $this->mockedShopConfiguration,
             $this->createMultistoreContextMock($isAllShopContext),
-            $this->createMultistoreControllerMock()
+            $this->createMultistoreControllerMock(),
+            new FormCloner()
         );
 
         $this->assertEquals($expectedValue, $checkboxEnabler->shouldAddMultistoreElements());
@@ -89,7 +91,8 @@ class MultistoreCheckboxEnablerTest extends TypeTestCase
             $this->createMultistoreFeatureMock(),
             $this->mockedShopConfiguration,
             $this->createMultistoreContextMock(),
-            $this->createMultistoreControllerMock()
+            $this->createMultistoreControllerMock(),
+            new FormCloner()
         );
 
         $checkboxEnabler->addMultistoreElements($form);
