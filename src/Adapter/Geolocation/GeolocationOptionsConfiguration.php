@@ -44,9 +44,9 @@ final class GeolocationOptionsConfiguration extends AbstractMultistoreConfigurat
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'geolocation_behaviour' => $this->configuration->get('PS_GEOLOCATION_BEHAVIOR', false, $shopConstraint),
-            'geolocation_na_behaviour' => $this->configuration->get('PS_GEOLOCATION_NA_BEHAVIOR', false, $shopConstraint),
-            'geolocation_countries' => (int) $this->configuration->get('PS_ALLOWED_COUNTRIES', false, $shopConstraint),
+            'geolocation_behaviour' => (int) $this->configuration->get('PS_GEOLOCATION_BEHAVIOR', 0, $shopConstraint),
+            'geolocation_na_behaviour' => (int) $this->configuration->get('PS_GEOLOCATION_NA_BEHAVIOR', 0, $shopConstraint),
+            'geolocation_countries' => (string) $this->configuration->get('PS_ALLOWED_COUNTRIES', null, $shopConstraint),
         ];
     }
 
@@ -74,11 +74,7 @@ final class GeolocationOptionsConfiguration extends AbstractMultistoreConfigurat
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('geolocation_behaviour', 'int')
             ->setAllowedTypes('geolocation_na_behaviour', 'int')
-            ->setAllowedTypes('geolocation_behaviour', 'int')
-            ->setAllowedTypes('log_emails', 'bool')
-            ->setAllowedTypes('dkim_enable', 'bool')
-            ->setAllowedTypes('smtp_config', 'array')
-            ->setAllowedTypes('dkim_config', 'array');
+            ->setAllowedTypes('geolocation_countries', 'string');
 
         return $resolver;
     }
