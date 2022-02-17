@@ -28,10 +28,15 @@ import prestashop from 'prestashop';
 prestashop.checkout = prestashop.checkout || {};
 
 // eslint-disable-next-line no-unused-vars
-prestashop.checkout.onCheckOrderableCartError = (resp, paymentObject) => {
-  if (resp.errors === true && resp.cartUrl !== '') {
-    location.href = resp.cartUrl;
+prestashop.checkout.onCheckOrderableCartResponse = (resp, paymentObject) => {
+  if (resp.errors === true) {
+    prestashop.emit('orderConfirmationErrors', {
+      resp,
+      paymentObject,
+    });
+    return true;
   }
+  return false;
 };
 
 class Payment {
@@ -45,6 +50,13 @@ class Payment {
   }
 
   init() {
+
+    prestashop.on('orderConfirmationErrors', ({resp, paymentObject}) => {
+      if (resp.cartUrl !== '') {
+        location.href = resp.cartUrl;
+      }
+    })
+
     const $body = $('body');
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
@@ -147,23 +159,26 @@ class Payment {
     });
   }
 
-  confirm() {
+  async confirm() {
     const option = this.getSelectedOption();
     const termsAccepted = this.haveTermsBeenAccepted();
 
     if (option === undefined || termsAccepted === false) {
       this.showNativeFormErrors();
-
       return;
     }
 
-    $.post(window.prestashop.urls.pages.order, {
+    // We ask cart controller, if everything in the cart is still orderable
+    const resp = await $.post(window.prestashop.urls.pages.order, {
       ajax: 1,
       action: 'checkCartStillOrderable',
     })
-      .then((resp) => {
-        prestashop.checkout.onCheckOrderableCartError(resp, this);
-      });
+    
+    // We process the information and allow other modules to intercept this
+    const isRedirected = prestashop.checkout.onCheckOrderableCartResponse(resp, this);
+    
+    // If there is a redirect, we deny the form submit below, to allow the redirect to complete
+    if (isRedirected) return;
 
     $(`${this.confirmationSelector} button`).addClass('disabled');
     $(`#pay-with-${option}-form form`).submit();
