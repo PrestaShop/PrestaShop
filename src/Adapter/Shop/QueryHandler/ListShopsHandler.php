@@ -50,7 +50,7 @@ class ListShopsHandler implements ListShopsHandlerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function handle(ListShops $query): array
     {
