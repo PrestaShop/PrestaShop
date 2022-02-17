@@ -1884,6 +1884,16 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.improve.international.locations.state_type:
+    class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\StateType'
+    public: true
+    arguments:
+      - '@translator'
+      - '@prestashop.core.form.choice_provider.configurable_country_by_id'
+      - '@prestashop.core.form.choice_provider.zone_by_id'
+    tags:
+      - name: form.type
+
   form.event_listener.add_disabling_switch_listener:
     class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
     public: true

@@ -1,5 +1,4 @@
-<?php
-/**
+{#**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -22,23 +21,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- */
+ *#}
 
-declare(strict_types=1);
+{% trans_default_domain 'Admin.International.Feature' %}
+{% form_theme stateForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-namespace Tests\Integration\Behaviour\Features\Context;
-
-use State;
-
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
-{
-    /**
-     * @When I define an uncreated state :stateReference
-     *
-     * @param string $stateReference
-     */
-    public function defineUnCreatedState(string $stateReference): void
-    {
-        SharedStorage::getStorage()->set($stateReference, 0);
-    }
-}
+{{ form_start(stateForm) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">public</i>
+      {{ 'States'|trans({}, 'Admin.International.Feature') }}
+    </h3>
+    <div class="card-body">
+      <div class="form-wrapper">
+        {{ form_widget(stateForm) }}
+      </div>
+    </div>
+    <div class="card-footer d-flex align-items-center justify-content-between">
+      <a href="{{ path('admin_states_index') }}" class="btn btn-outline-secondary">
+        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+      </a>
+      <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+    </div>
+  </div>
+{{ form_end(stateForm) }}
