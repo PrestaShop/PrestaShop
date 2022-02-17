@@ -110,7 +110,6 @@ trait SmartyTrait
             ],
         ]);
 
-        // Execute Hook AdminController SetMedia
         $this->dispatchHook('actionAdminControllerSetMedia', []);
     }
 

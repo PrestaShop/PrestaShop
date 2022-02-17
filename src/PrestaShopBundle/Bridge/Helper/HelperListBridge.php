@@ -32,6 +32,7 @@ use Db;
 use DbQuery;
 use HelperList;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopException;
@@ -61,11 +62,21 @@ class HelperListBridge
      */
     private $helperListVarsAssigner;
 
-    public function __construct(LegacyContext $legacyContext, TokenStorage $tokenStorage, HelperListVarsAssigner $helperListVarsAssigner)
-    {
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    public function __construct(
+        LegacyContext $legacyContext,
+        TokenStorage $tokenStorage,
+        HelperListVarsAssigner $helperListVarsAssigner,
+        HookDispatcherInterface $hookDispatcher
+    ) {
         $this->context = $legacyContext->getContext();
         $this->user = $this->getUser($tokenStorage);
         $this->helperListVarsAssigner = $helperListVarsAssigner;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -116,16 +127,15 @@ class HelperListBridge
             $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
         }
 
-        //Dispatch hook not work
-        //Hook::exec('action' . $this->controller_name . 'ListingFieldsModifier', [
-        //    'select' => &$this->_select,
-        //    'join' => &$this->_join,
-        //    'where' => &$this->_where,
-        //    'group_by' => &$this->_group,
-        //    'order_by' => &$this->_orderBy,
-        //    'order_way' => &$this->_orderWay,
-        //    'fields' => &$this->fieldsList,
-        //]);
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
+            'select' => &$helperListConfiguration->select,
+            'join' => &$helperListConfiguration->join,
+            'where' => &$helperListConfiguration->where,
+            'group_by' => &$helperListConfiguration->group,
+            'order_by' => &$helperListConfiguration->orderBy,
+            'order_way' => &$helperListConfiguration->orderWay,
+            'fields' => &$helperListConfiguration->fieldsList,
+        ]);
 
         if (!Validate::isTableOrIdentifier($helperListConfiguration->table)) {
             throw new PrestaShopException(sprintf('Table name %s is invalid:', $helperListConfiguration->table));
@@ -158,7 +168,6 @@ class HelperListBridge
         }
 
         // Add SQL shop restriction
-        //Todo handle this later
         $select_shop = '';
         if ($helperListConfiguration->shopLinkType) {
             $select_shop = ', shop.name as shop_name ';
@@ -272,10 +281,10 @@ class HelperListBridge
             }
         }
 
-        //Hook::exec('action' . $this->controller_name . 'ListingResultsModifier', [
-        //    'list' => &$this->_list,
-        //    'list_total' => &$this->_listTotal,
-        //]);
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingResultsModifier', [
+            'list' => &$helperListConfiguration->list,
+            'list_total' => &$helperListConfiguration->listTotal,
+        ]);
     }
 
     private function getUser(TokenStorageInterface $tokenStorage)
