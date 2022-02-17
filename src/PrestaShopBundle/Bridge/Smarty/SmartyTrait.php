@@ -165,13 +165,13 @@ trait SmartyTrait
             if (isset($jsFile[1]) && $jsFile[1]) {
                 $version = $jsFile[1];
             }
-            $js_path = $jsFile = $jsFile[0];
+            $jsPath = $jsFile = $jsFile[0];
             if ($checkPath) {
-                $js_path = Media::getJSPath($jsFile);
+                $jsPath = Media::getJSPath($jsFile);
             }
 
-            if ($js_path && !in_array($js_path, $this->controllerConfiguration->jsFiles)) {
-                $this->controllerConfiguration->jsFiles[] = $js_path . ($version ? '?' . $version : '');
+            if ($jsPath && !in_array($jsPath, $this->controllerConfiguration->jsFiles)) {
+                $this->controllerConfiguration->jsFiles[] = $jsPath . ($version ? '?' . $version : '');
             }
         }
     }
@@ -186,13 +186,17 @@ trait SmartyTrait
         }
 
         foreach ($name as $plugin) {
-            $plugin_path = Media::getJqueryPluginPath($plugin, $folder);
+            $pluginPath = Media::getJqueryPluginPath($plugin, $folder);
 
-            if (!empty($plugin_path['js'])) {
-                $this->addJS($plugin_path['js'], false);
+            if (!empty($pluginPath['js'])) {
+                $this->addJS($pluginPath['js'], false);
             }
-            if ($css && !empty($plugin_path['css'])) {
-                $this->addCSS(key($plugin_path['css']), 'all', null, false);
+            if ($css && !empty($pluginPath['css'])) {
+                if (is_array($pluginPath['css'])) {
+                    $this->addCSS(key($pluginPath['css']), 'all', null, false);
+                } else {
+                    $this->addCSS($pluginPath['css'], 'all', null, false);
+                }
             }
         }
     }
@@ -200,16 +204,16 @@ trait SmartyTrait
     /**
      * Adds jQuery UI component(s) to queued JS file list.
      */
-    public function addJqueryUI($component, $theme = 'base', $check_dependencies = true): void
+    public function addJqueryUI($component, $theme = 'base', $checkDependencies = true): void
     {
         if (!is_array($component)) {
             $component = [$component];
         }
 
         foreach ($component as $ui) {
-            $ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-            $this->addCSS($ui_path['css'], 'all');
-            $this->addJS($ui_path['js'], false);
+            $uiPath = Media::getJqueryUIPath($ui, $theme, $checkDependencies);
+            $this->addCSS($uiPath['css'], 'all');
+            $this->addJS($uiPath['js'], false);
         }
     }
 }
