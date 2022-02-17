@@ -33,9 +33,9 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * Class MultistoreHeaderExtension provides helper function to get the multistore header's html in a template
+ * Class MultistoreComponentsExtension provides helper function to get the multistore components' html in a template
  */
-class MultistoreHeaderExtension extends AbstractExtension
+class MultistoreComponentsExtension extends AbstractExtension
 {
     /**
      * @var MultistoreController
@@ -57,18 +57,10 @@ class MultistoreHeaderExtension extends AbstractExtension
      */
     public function getFunctions(): array
     {
-        return [new TwigFunction(
-            'multistoreHeader',
-            [
-                $this,
-                'getMultistoreHeader',
-            ],
-            [
-                'is_safe' => [
-                    'html',
-                ],
-            ]
-        )];
+        return [
+            new TwigFunction('multistoreHeader', [$this, 'getMultistoreHeader'], ['is_safe' => ['html']]),
+            new TwigFunction('getShopSelector', [$this, 'getShopSelector'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
@@ -79,5 +71,13 @@ class MultistoreHeaderExtension extends AbstractExtension
     public function getMultistoreHeader(bool $lockedToAllShopContext = false): string
     {
         return $this->multistoreController->header($lockedToAllShopContext)->getContent();
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopSelector(): string
+    {
+        return $this->multistoreController->shopSelector()->getContent();
     }
 }
