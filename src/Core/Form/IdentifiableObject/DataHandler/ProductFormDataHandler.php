@@ -84,8 +84,8 @@ class ProductFormDataHandler implements FormDataHandlerInterface
     {
         // If a shop is selected in the context the product is added to it, if not use the default shop as a fallback
         $createCommand = new AddProductCommand(
-            $data['header']['type'],
-            $this->contextShopId ?: $this->defaultShopId
+            $data['type'],
+            (int) ($data['shop_id'] ?? ($this->contextShopId ?: $this->defaultShopId))
         );
 
         /** @var ProductId $productId */
