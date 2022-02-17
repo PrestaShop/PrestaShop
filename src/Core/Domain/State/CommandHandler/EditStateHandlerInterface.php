@@ -24,21 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\State\CommandHandler;
 
-namespace Tests\Integration\Behaviour\Features\Context;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 
-use State;
-
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
+interface EditStateHandlerInterface
 {
     /**
-     * @When I define an uncreated state :stateReference
+     * @param EditStateCommand $command
      *
-     * @param string $stateReference
+     * @return void
      */
-    public function defineUnCreatedState(string $stateReference): void
-    {
-        SharedStorage::getStorage()->set($stateReference, new State(0));
-    }
+    public function handle(EditStateCommand $command): void;
 }
