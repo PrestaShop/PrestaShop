@@ -56,6 +56,7 @@ class TypedRegex extends Constraint
     public const TYPE_REFERENCE = 'reference';
     public const TYPE_URL = 'url';
     public const TYPE_MODULE_NAME = 'module_name';
+    public const TYPE_STATE_ISO_CODE = 'state_iso_code';
 
     /**
      * @var string

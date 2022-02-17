@@ -26,43 +26,41 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\State\QueryHandler;
+namespace PrestaShop\PrestaShop\Adapter\State\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryHandler\GetStateForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
-use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShopException;
 use State;
 
 /**
- * Handles command that gets state for editing
- *
- * @internal
+ * Abstract state handler for common state handler methods
  */
-class GetStateForEditingHandler implements GetStateForEditingHandlerInterface
+abstract class AbstractStateHandler
 {
     /**
-     * {@inheritdoc}
+     * @param StateId $stateId
+     *
+     * @return State
+     *
+     * @throws StateNotFoundException
+     * @throws StateException
      */
-    public function handle(GetStateForEditing $query): EditableState
+    protected function getState(StateId $stateId): State
     {
-        $stateId = $query->getStateId();
-        $state = new State($stateId->getValue());
+        $stateIdValue = $stateId->getValue();
 
-        if ($state->id !== $stateId->getValue()) {
-            throw new StateNotFoundException(sprintf('State with id "%d" not found', $stateId->getValue()));
+        try {
+            $state = new State($stateIdValue);
+        } catch (PrestaShopException $e) {
+            throw new StateException(sprintf('Failed to get state with id: "%s"', $stateIdValue), 0, $e);
         }
 
-        return new EditableState(
-            $stateId,
-            new CountryId((int) $state->id_country),
-            new ZoneId((int) $state->id_zone),
-            (string) $state->name,
-            $state->iso_code,
-            (bool) $state->active,
-            $state->getAssociatedShops()
-        );
+        if ($state->id !== $stateIdValue) {
+            throw new StateNotFoundException(sprintf('State with id "%s" was not found.', $stateIdValue));
+        }
+
+        return $state;
     }
 }

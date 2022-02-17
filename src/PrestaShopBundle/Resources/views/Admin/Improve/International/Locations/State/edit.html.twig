@@ -24,14 +24,8 @@
  *#}
 
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
+{% trans_default_domain 'Admin.International.Feature' %}
 
 {% block content %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
+  {{ include('@PrestaShop/Admin/Improve/International/Locations/State/Blocks/form.html.twig', {'stateForm': stateForm}) }}
 {% endblock %}

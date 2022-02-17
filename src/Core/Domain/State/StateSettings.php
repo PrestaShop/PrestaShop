@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,17 +22,33 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+declare(strict_types=1);
 
-{% block content %}
-  {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': stateGrid} %}
-{% endblock %}
+namespace PrestaShop\PrestaShop\Core\Domain\State;
 
-{% block javascripts %}
-  {{ parent() }}
+class StateSettings
+{
+    /**
+     * Maximum length for state name
+     */
+    public const MAX_NAME_LENGTH = 64;
 
-  <script src="{{ asset('themes/new-theme/public/state.bundle.js') }}"></script>
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-{% endblock %}
+    /**
+     * Maximum length for iso code (value is constrained by database)
+     */
+    public const MAX_ISO_CODE_LENGTH = 7;
+
+    /**
+     * State iso code field value regexp validation pattern
+     */
+    public const STATE_ISO_CODE_PATTERN = '/^[a-zA-Z0-9]{1,4}((-)[a-zA-Z0-9]{1,4})?$/';
+
+    /**
+     * Prevents class to be instantiated
+     */
+    private function __construct()
+    {
+    }
+}
