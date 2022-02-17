@@ -29,8 +29,10 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -47,19 +49,27 @@ class ProductShopUpdater
     private $productRepository;
 
     /**
+     * @var StockAvailableMultiShopRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @var ShopRepository
      */
     private $shopRepository;
 
     /**
      * @param ProductMultiShopRepository $productRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param ShopRepository $shopRepository
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         ShopRepository $shopRepository
     ) {
         $this->productRepository = $productRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
         $this->shopRepository = $shopRepository;
     }
 
@@ -79,6 +89,36 @@ class ProductShopUpdater
             $sourceProduct,
             ShopConstraint::shop($targetShopId->getValue()),
             CannotUpdateProductException::FAILED_SHOP_COPY
+        );
+
+        $this->copyStockToShop($productId, $sourceShopId, $targetShopId);
+    }
+
+    private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
+    {
+        // First get the source stock
+        $sourceStock = $this->stockAvailableRepository->getForProduct($productId, $sourceShopId);
+
+        // Then try to get the target stock, if it doesn't exist create it
+        try {
+            $targetStock = $this->stockAvailableRepository->getForProduct($productId, $targetShopId);
+        } catch (StockAvailableNotFoundException $e) {
+            $targetStock = $this->stockAvailableRepository->createProductStock($productId, $targetShopId);
+        }
+
+        // Copy source data to target
+        $targetStock->quantity = (int) $sourceStock->quantity;
+        $targetStock->location = $sourceStock->location;
+        $targetStock->out_of_stock = (int) $sourceStock->out_of_stock;
+        $targetStock->depends_on_stock = (bool) $sourceStock->depends_on_stock;
+
+        // These fields are not accessible via the Object but they probably should once we clean this part
+        // $targetStock->physical_quantity = $sourceStock->physical_quantity;
+        // $targetStock->reserved_quantity = $sourceStock->reserved_quantity;
+
+        $this->stockAvailableRepository->update(
+            $targetStock,
+            ShopConstraint::shop($targetShopId->getValue())
         );
     }
 }
