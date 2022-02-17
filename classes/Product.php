@@ -788,6 +788,10 @@ class ProductCore extends ObjectModel
         }
 
         $id_shop_list = Shop::getContextListShopID();
+        if (count($this->id_shop_list)) {
+            $id_shop_list = $this->id_shop_list;
+        }
+
         if ($this->getType() == Product::PTYPE_VIRTUAL) {
             foreach ($id_shop_list as $value) {
                 StockAvailable::setProductOutOfStock((int) $this->id, OutOfStockType::OUT_OF_STOCK_AVAILABLE, $value);
