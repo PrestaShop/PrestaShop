@@ -4,6 +4,9 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addCustomerPage = require('@pages/BO/customers/add');
 
+// Needed to check cart Iframe
+const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
+
 /**
  * Add order page, contains functions that can be used on create order page
  * @class
@@ -52,6 +55,11 @@ class AddOrder extends BOBasePage {
     this.customerCartsTableRow = row => `${this.customerCartsTableBody} tr:nth-child(${row})`;
     this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
     this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
+    this.customerCartsTableDetailsButton = row => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
+
+    // View Carts iframe
+    this.cartsIframe = 'iframe.fancybox-iframe';
+
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -207,6 +215,54 @@ class AddOrder extends BOBasePage {
    */
   async getTextColumnFromCartsTable(page, column, row = 1) {
     return this.getTextContent(page, this.customerCartsTableColumn(column, row));
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param row {Number} Row on table
+   * @returns {Promise<Boolean>}
+   */
+  async clickOnCartDetailsButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.customerCartsTableDetailsButton(row));
+
+    return this.elementVisible(page, this.cartsIframe, 1000);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param cartId {Number} Cart Id
+   * @returns {Promise<*|string>}
+   */
+  async getCartId(page, cartId) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getCartId(cartIframe);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param cartId {Number} Cart Id
+   * @returns {Promise<*|number>}
+   */
+  async getCartTotal(page, cartId) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getCartTotal(cartIframe);
+  }
+
+  /**
+   *
+   * @param page
+   * @param cartId {Number} Cart Id
+   * @returns {Promise<*|string>}
+   */
+  async getCustomerInformation(page, cartId) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getCustomerInformation(cartIframe);
   }
 
   /* Cart methods */

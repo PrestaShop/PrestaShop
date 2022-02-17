@@ -41,6 +41,7 @@ let numberOfNonOrderedShoppingCarts;
 let lastShoppingCartId;
 const today = getDateFormat('yyyy-mm-dd');
 const myCarrierCost = 8.40;
+const todayCartFormat = getDateFormat('mm/dd/yyyy');
 
 /*
 Go to create Order page
@@ -311,6 +312,9 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+
+      await shoppingCartsPage.reloadPage(page);
+      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'status');
     });
   });
 
@@ -356,7 +360,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartId', baseContext);
 
       const cartId = await addOrderPage.getTextColumnFromCartsTable(page, 'id');
-      await expect(parseInt(cartId, 10)).to.be.above(parseInt(lastShoppingCartId, 10));
+      await expect(parseInt(cartId, 10)).to.be.equal(parseInt(lastShoppingCartId, 10));
     });
 
     it('should check the shopping cart date', async function () {
@@ -372,6 +376,39 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       const cartTotal = await addOrderPage.getTextColumnFromCartsTable(page, 'total');
       await expect(cartTotal)
         .to.be.equal(`€${(Products.demo_1.finalPrice + myCarrierCost).toFixed(2)}`);
+    });
+
+
+    it('should click on details button and check the Cart Iframe is well displayed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnDetailsButton', baseContext);
+
+      const isIframeVisible = await addOrderPage.clickOnCartDetailsButton(page, 1);
+      await expect(isIframeVisible).to.be.true;
+    });
+
+    it('should check the cart Id', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCardId', baseContext);
+
+      const cartId = await addOrderPage.getCartId(page, lastShoppingCartId);
+      await expect(cartId).to.be.equal(`Cart #${lastShoppingCartId}`);
+    });
+
+    it('should check the cart total', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCardTotal', baseContext);
+
+      const cartTotal = await addOrderPage.getCartTotal(page, lastShoppingCartId);
+      await expect(cartTotal.toString())
+        .to.be.equal((Products.demo_1.finalPrice + myCarrierCost).toFixed(2));
+    });
+
+    it('should check the customer Information Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCustomerInformationBlock', baseContext);
+
+      const customerInformation = await addOrderPage.getCustomerInformation(page, lastShoppingCartId);
+      await expect(customerInformation)
+        .to.contains(`${DefaultCustomer.socialTitle} ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`)
+        .and.to.contains(DefaultCustomer.email)
+        .and.to.contains(todayCartFormat);
     });
   });
 });
