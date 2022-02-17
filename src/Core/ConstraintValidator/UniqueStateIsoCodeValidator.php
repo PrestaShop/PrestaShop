@@ -24,21 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-namespace Tests\Integration\Behaviour\Features\Context;
+use PrestaShop\PrestaShop\Adapter\State\CountryStateByIsoCodeProvider;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\UniqueStateIsoCode;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
-use State;
-
-class StateFeatureContext extends AbstractPrestaShopFeatureContext
+/**
+ * Validator for checking if state with ISO Code doesn't exist in current shop context
+ */
+class UniqueStateIsoCodeValidator extends ConstraintValidator
 {
     /**
-     * @When I define an uncreated state :stateReference
-     *
-     * @param string $stateReference
+     * {@inheritdoc}
      */
-    public function defineUnCreatedState(string $stateReference): void
+    public function validate($value, Constraint $constraint)
     {
-        SharedStorage::getStorage()->set($stateReference, 0);
+        if (!($constraint instanceof UniqueStateIsoCode)) {
+            return;
+        }
+        $countrySTateByIsoCodeProvider = new CountryStateByIsoCodeProvider();
+        $stateId = $countrySTateByIsoCodeProvider->getStateIdByIsoCode($value);
+
+        if ($stateId && ($constraint->excludeId === null || $stateId !== $constraint->excludeId)) {
+            $this->context
+                ->buildViolation($constraint->message)
+                ->setTranslationDomain('Admin.International.Notification')
+                ->addViolation();
+        }
     }
 }
