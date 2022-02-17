@@ -31,6 +31,7 @@ use Cookie;
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Utils\CookieFilterUtils;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
@@ -137,7 +138,7 @@ class ToolbarFlagsHydrator implements HydratorInterface
                     $field = $t['filter_key'];
                 }
 
-                if (($val = Tools::getValue($controllerConfiguration->table . 'Filter_' . $field)) || $val = $this->cookie->{$this->getCookieFilterPrefix() . $controllerConfiguration->table . 'Filter_' . $field}) {
+                if (($val = Tools::getValue($controllerConfiguration->table . 'Filter_' . $field)) || $val = $this->cookie->{CookieFilterUtils::getCookieByPrefix($controllerConfiguration->controllerNameLegacy) . $controllerConfiguration->table . 'Filter_' . $field}) {
                     if (!is_array($val)) {
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
@@ -175,13 +176,5 @@ class ToolbarFlagsHydrator implements HydratorInterface
                 return $this->translator->trans('filter by %s', [implode(', ', $filters)], 'Admin.Actions');
             }
         }
-    }
-
-    /**
-     * Set the filters used for the list display.
-     */
-    private function getCookieFilterPrefix()
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower(get_class($this)));
     }
 }

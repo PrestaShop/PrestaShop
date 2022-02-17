@@ -62,17 +62,6 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
      */
     public $controllerConfiguration;
 
-    //Filters
-    /**
-     * @var array
-     */
-    protected $filterList = [];
-
-    /**
-     * @var bool
-     */
-    protected $ajax = false;
-
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
@@ -92,10 +81,13 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
             'fieldsList' => $this->controllerConfiguration->fieldsList,
         ]);
 
+        if ($request->request->has('submitResetfeature')) {
+            $this->get('prestashop.core.bridge.processor.reset_filter')->resetFilters($helperListConfiguration, $request);
+        }
+
         $this->get('prestashop.core.bridge.processor.process_filter')->processFilter(
             $request,
-            $helperListConfiguration,
-            $this->controllerConfiguration
+            $helperListConfiguration
         );
 
         $this->get('prestashop.core.bridge.helper_list_bridge')->getList(
@@ -110,16 +102,6 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
             ),
             $this->controllerConfiguration
         );
-    }
-
-    /**
-     * Add a warning message to display at the top of the page.
-     *
-     * @param string $msg
-     */
-    protected function displayWarning($msg)
-    {
-        $this->controllerConfiguration->warnings[] = $msg;
     }
 
     /**

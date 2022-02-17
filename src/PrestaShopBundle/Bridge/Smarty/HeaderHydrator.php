@@ -35,6 +35,7 @@ use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
@@ -141,7 +142,9 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
 
         if ($controllerConfiguration->displayHeader) {
-            $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = $this->hookDispatcher->dispatchWithParameters('displayBackOfficeHeader', []);
+            $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = $this->getDisplayHookRender(
+                $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeHeader', [])
+            );
         }
 
         $menuLinksCollections = new ActionsBarButtonsCollection();
@@ -153,7 +156,9 @@ class HeaderHydrator implements HydratorInterface
             ]
         );
 
-        $controllerConfiguration->templatesVars['displayBackOfficeTop'] = $this->hookDispatcher->dispatchWithParameters('displayBackOfficeTop', []);
+        $controllerConfiguration->templatesVars['displayBackOfficeTop'] = $this->getDisplayHookRender(
+            $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeTop', [])
+        );
         $controllerConfiguration->templatesVars['displayBackOfficeEmployeeMenu'] = $menuLinksCollections;
         $controllerConfiguration->templatesVars['submit_form_ajax'] = (int) Tools::getValue('submitFormAjax');
 
@@ -230,6 +235,21 @@ class HeaderHydrator implements HydratorInterface
         }
 
         return $tips[$type][array_rand($tips[$type])];
+    }
+
+    private function getDisplayHookRender(RenderedHookInterface $renderedHook): ?string
+    {
+        if (!$content = $renderedHook->getContent()) {
+            return null;
+        }
+
+        $result = '';
+
+        foreach ($content as $hookContent) {
+            $result .= implode($hookContent);
+        }
+
+        return $result;
     }
 
     private function getTabs(ControllerConfiguration $controllerConfiguration, $parentId = 0, $level = 0): array
