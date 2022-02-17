@@ -1737,7 +1737,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @return array
+     * @return array<int, int>
      *
      * @throws PrestaShopDatabaseException
      */

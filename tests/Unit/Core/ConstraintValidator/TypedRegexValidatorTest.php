@@ -336,6 +336,23 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]), $invalidChar);
     }
 
+    public function testItSucceedsForStateIsoCodeTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('FRA', new TypedRegex(['type' => TypedRegex::TYPE_STATE_ISO_CODE]));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForStateIsoCode
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForStateIsoCodeTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_STATE_ISO_CODE]), $invalidChar);
+    }
+
     /**
      * @return string[][]
      */
@@ -580,6 +597,42 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function getInvalidCharactersForModuleName(): Generator
     {
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['@'];
+        yield ['#'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['?'];
+        yield ['`'];
+        yield ['\\'];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ["'"];
+        yield ['*'];
+        yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
+    }
+
+    public function getInvalidCharactersForStateIsoCode(): Generator
+    {
+        yield ['FRANC'];
         yield ['~'];
         yield ['ˇ'];
         yield ['"'];

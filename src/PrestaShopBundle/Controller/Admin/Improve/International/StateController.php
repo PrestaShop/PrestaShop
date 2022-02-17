@@ -27,12 +27,23 @@
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneNotFoundException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\StateFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -138,13 +149,40 @@ class StateController extends FrameworkBundleAdminController
      */
     public function editAction(int $stateId, Request $request): Response
     {
-        return $this->redirect(
-            $this->getAdminLink(
-                'AdminStates',
-                ['updatestate' => '', 'id_state' => $stateId],
-                true
-            )
-        );
+        try {
+            /** @var EditableState $editableState */
+            $editableState = $this->getQueryBus()->handle(new GetStateForEditing((int) $stateId));
+        } catch (StateException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_states_index');
+        }
+
+        $stateForm = null;
+
+        try {
+            $stateForm = $this->getFormBuilder()->getFormFor((int) $stateId);
+            $stateForm->handleRequest($request);
+            $result = $this->getFormHandler()->handleFor((int) $stateId, $stateForm);
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_states_index');
+            }
+        } catch (StateNotFoundException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_states_index');
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/edit.html.twig', [
+            'enableSidebar' => true,
+            'layoutTitle' => $this->trans('Edit: %value%', 'Admin.Actions', ['%value%' => $editableState->getName()]),
+            'stateForm' => $stateForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+        ]);
     }
 
     /**
@@ -162,13 +200,30 @@ class StateController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        return $this->redirect(
-            $this->getAdminLink(
-                'AdminStates',
-                ['addstate' => ''],
-                true
-            )
-        );
+        $stateForm = $this->getFormBuilder()->getForm();
+        $stateForm->handleRequest($request);
+
+        try {
+            $handlerResult = $this->getFormHandler()->handle($stateForm);
+            if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_states_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Locations/State/add.html.twig', [
+            'enableSidebar' => true,
+            'stateForm' => $stateForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'multistoreInfoTip' => $this->trans(
+                'Note that this feature is available in all shops context only. It will be added to all your stores.',
+                'Admin.Notifications.Info'
+            ),
+            'multistoreIsUsed' => $this->get('prestashop.adapter.multistore_feature')->isUsed(),
+        ]);
     }
 
     /**
@@ -334,10 +389,62 @@ class StateController extends FrameworkBundleAdminController
     private function getErrorMessages(?Throwable $e = null): array
     {
         return [
+            StateException::class => $this->trans(
+                'Unexpected error occurred.',
+                'Admin.Notifications.Error'
+            ),
             StateNotFoundException::class => $this->trans(
                 'The object cannot be loaded (or found).',
                 'Admin.Notifications.Error'
             ),
+            StateConstraintException::class => [
+                StateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            CannotUpdateStateException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            CannotAddStateException::class => $this->trans(
+                'An error occurred while attempting to save.',
+                'Admin.Notifications.Error'
+            ),
+            ZoneNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+            CountryNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+            ZoneException::class => $this->trans(
+                'The object cannot be loaded (the identifier is missing or invalid)',
+                'Admin.Notifications.Error'
+            ),
+            CountryConstraintException::class => [
+                CountryConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.handler.state_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.state_form_builder');
     }
 }

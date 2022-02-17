@@ -23,24 +23,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\State\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 
 /**
- * Transfers state data for editing
+ * Creates state with provided data
  */
-class EditableState
+class AddStateCommand
 {
-    /**
-     * @var StateId
-     */
-    private $stateId;
-
     /**
      * @var CountryId
      */
@@ -64,46 +59,27 @@ class EditableState
     /**
      * @var bool
      */
-    private $enabled;
+    private $active;
 
     /**
-     * @var array<int, int>
-     */
-    private $associatedShops;
-
-    /**
-     * @param StateId $stateId
-     * @param CountryId $countryId
-     * @param ZoneId $zoneId
+     * @param int $countryId
+     * @param int $zoneId
      * @param string $name
      * @param string $isoCode
-     * @param bool $enabled
-     * @param array<int, int> $associatedShops
+     * @param bool $active
      */
     public function __construct(
-        StateId $stateId,
-        CountryId $countryId,
-        ZoneId $zoneId,
+        int $countryId,
+        int $zoneId,
         string $name,
         string $isoCode,
-        bool $enabled,
-        array $associatedShops
+        bool $active
     ) {
-        $this->stateId = $stateId;
-        $this->countryId = $countryId;
-        $this->zoneId = $zoneId;
+        $this->countryId = new CountryId($countryId);
+        $this->zoneId = new ZoneId($zoneId);
         $this->name = $name;
         $this->isoCode = $isoCode;
-        $this->enabled = $enabled;
-        $this->associatedShops = $associatedShops;
-    }
-
-    /**
-     * @return StateId
-     */
-    public function getStateId(): StateId
-    {
-        return $this->stateId;
+        $this->active = $active;
     }
 
     /**
@@ -141,16 +117,8 @@ class EditableState
     /**
      * @return bool
      */
-    public function isEnabled(): bool
+    public function isActive(): bool
     {
-        return $this->enabled;
-    }
-
-    /**
-     * @return array<int, int>
-     */
-    public function getAssociatedShops(): array
-    {
-        return $this->associatedShops;
+        return $this->active;
     }
 }
