@@ -18,8 +18,9 @@ class AddContact extends BOBasePage {
     this.pageTitleEdit = 'Contacts •';
 
     // Selectors
-    this.pageTitleLangButton = '#contact_title';
-    this.pageTitleLangSpan = lang => `div.dropdown-menu[aria-labelledby='contact_title'] span[data-locale='${lang}']`;
+    this.pageTitleLangButton = '#contact_title_dropdown';
+    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'contact_title_dropdown\']'
+      + ` span[data-locale='${lang}']`;
     this.titleInputEN = '#contact_title_1';
     this.titleInputFR = '#contact_title_2';
     this.emailAddressInput = '#contact_email';

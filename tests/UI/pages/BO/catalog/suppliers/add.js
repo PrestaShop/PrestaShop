@@ -31,8 +31,8 @@ class AddSupplier extends BOBasePage {
     this.countryInput = '#supplier_id_country';
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
-    this.metaTitleLangButton = '#supplier_meta_title';
-    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\']'
+    this.metaTitleLangButton = '#supplier_meta_title_dropdown';
+    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.metaTitleInput = id => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;

@@ -40,7 +40,7 @@ class CreditSlips extends BOBasePage {
     this.creditSlipOptionsForm = '#form-credit-slips-options';
     this.invoicePrefixENInput = '#form_slip_prefix_1';
     this.invoicePrefixFRInput = '#form_slip_prefix_2';
-    this.languageDropDownButton = '#form_slip_prefix';
+    this.languageDropDownButton = '#form_slip_prefix_dropdown';
     this.invoicePrefixFrenchSelect = 'div.dropdown.show span[data-locale="fr"]';
     this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} #save-credit-slip-options-button`;
   }

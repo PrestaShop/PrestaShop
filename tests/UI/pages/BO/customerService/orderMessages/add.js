@@ -18,7 +18,7 @@ class AddOrderMessage extends BOBasePage {
     this.pageTitleEdit = 'Edit:';
 
     // Selectors
-    this.nameLangButton = '#order_message_name';
+    this.nameLangButton = '#order_message_name_dropdown';
     this.langDropdownDiv = 'div.locale-dropdown-menu';
     this.nameLangSpan = lang => `${this.langDropdownDiv} span[data-locale='${lang}']`;
     this.nameInput = id => `#order_message_name_${id}`;
