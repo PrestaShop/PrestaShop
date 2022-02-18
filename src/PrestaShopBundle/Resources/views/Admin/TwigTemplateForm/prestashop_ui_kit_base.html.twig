@@ -374,7 +374,7 @@
             {{ child.name }}
           {% endif %}
           {% if defaultCategory is defined %}
-            <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
+            <input type="checkbox" value="{{ child.id_category }}" name="ignore" class="default-category" />
           {% endif %}
         </label>
       </div>

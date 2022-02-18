@@ -320,7 +320,7 @@ const formCategory = (function () {
             <label>
               <input type="checkbox" name="form[step1][categories][tree][]" checked value="${response.category.id}">
               ${response.category.name[1]}
-              <input type="radio" value="${response.category.id}" name="ignore" class="default-category">
+              <input type="checkbox" value="${response.category.id}" name="ignore" class="default-category">
             </label>
           </div>
           </li>`;
