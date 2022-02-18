@@ -78,9 +78,11 @@ export default class VirtualProductManager {
     this.$fileContentContainer.removeClass('d-none');
   }
 
-  fillVirtualProductNameField() {
+  private fillVirtualProductNameField(): void {
     $(ProductMap.virtualProduct.fileUploadField).on('change', () => {
-      const fullPath = $(ProductMap.virtualProduct.fileUploadField).val();
+      const fullPath = $(ProductMap.virtualProduct.fileUploadField).val()!;
+
+      if (typeof fullPath === 'undefined') return;
 
       // get file name from full path
       const startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
