@@ -32,28 +32,28 @@ class PackCore extends Product
     /**
      * Only decrement pack quantity.
      *
-     * @var string
+     * @var int
      */
     const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
 
     /**
      * Only decrement pack products quantities.
      *
-     * @var string
+     * @var int
      */
     const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
 
     /**
      * Decrement pack quantity and pack products quantities.
      *
-     * @var string
+     * @var int
      */
     const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
 
     /**
      * Use pack quantity default setting.
      *
-     * @var string
+     * @var int
      */
     const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
 

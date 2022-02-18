@@ -31,7 +31,7 @@ class UploaderCore
 {
     const DEFAULT_MAX_SIZE = 10485760;
 
-    /** @var bool */
+    /** @var bool|null */
     private $_check_file_size;
     /** @var array<string> */
     private $_accept_types = [];
@@ -41,7 +41,7 @@ class UploaderCore
     private $_max_size;
     /** @var string|null */
     private $_name;
-    /** @var string */
+    /** @var string|null */
     private $_save_path;
 
     /**
@@ -111,10 +111,6 @@ class UploaderCore
      */
     public function getFiles()
     {
-        if (!isset($this->_files)) {
-            $this->_files = [];
-        }
-
         return $this->_files;
     }
 
@@ -135,7 +131,7 @@ class UploaderCore
      */
     public function getMaxSize()
     {
-        if (!isset($this->_max_size) || empty($this->_max_size)) {
+        if (empty($this->_max_size)) {
             $this->setMaxSize(self::DEFAULT_MAX_SIZE);
         }
 

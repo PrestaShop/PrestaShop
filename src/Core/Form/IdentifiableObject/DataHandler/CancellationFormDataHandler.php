@@ -40,18 +40,11 @@ final class CancellationFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param CommandBusInterface $queryBus
      */
-    public function __construct(CommandBusInterface $commandBus, CommandBusInterface $queryBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
-        $this->queryBus = $queryBus;
     }
 
     /**

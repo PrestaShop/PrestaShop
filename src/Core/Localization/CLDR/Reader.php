@@ -64,7 +64,7 @@ class Reader implements ReaderInterface
      * Supplemental data for all locales.
      * Contains data about parent locales, currencies, languages...
      *
-     * @var SimpleXMLElement
+     * @var SimpleXMLElement|null
      */
     protected $supplementalXml;
 
@@ -72,7 +72,7 @@ class Reader implements ReaderInterface
      * Additional data about numbering systems
      * Mainly used for digits (they depend on numbering system).
      *
-     * @var SimpleXMLElement
+     * @var SimpleXMLElement|null
      */
     protected $numberingSystemsXml;
 

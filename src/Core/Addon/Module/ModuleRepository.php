@@ -372,8 +372,17 @@ class ModuleRepository implements ModuleRepositoryInterface
             if (!$skip_main_class_attributes && $this->moduleProvider->isModuleMainClassValid($name)) {
                 // We load the main class of the module, and get its properties
                 $tmp_module = LegacyModule::getInstanceByName($name);
-                foreach (['warning', 'name', 'tab', 'displayName', 'description', 'author', 'author_address',
-                    'limited_countries', 'need_instance', 'confirmUninstall', ] as $data_to_get) {
+                foreach ([
+                    'warning',
+                    'name',
+                    'tab',
+                    'displayName',
+                    'description',
+                    'author',
+                    'limited_countries',
+                    'need_instance',
+                    'confirmUninstall',
+                ] as $data_to_get) {
                     if (isset($tmp_module->{$data_to_get})) {
                         $main_class_attributes[$data_to_get] = $tmp_module->{$data_to_get};
                     }

@@ -25,6 +25,7 @@
  */
 class SitemapControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'sitemap';
 
     /**

@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 
@@ -332,7 +333,7 @@ class Lang implements LanguageInterface
     /**
      * Add shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      *
      * @return Lang
      */
@@ -346,7 +347,7 @@ class Lang implements LanguageInterface
     /**
      * Remove shop.
      *
-     * @param \PrestaShopBundle\Entity\Shop $shop
+     * @param Shop $shop
      */
     public function removeShop(Shop $shop)
     {
@@ -356,10 +357,20 @@ class Lang implements LanguageInterface
     /**
      * Get shops.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getShops()
     {
         return $this->shops;
+    }
+
+    /**
+     * Get translations.
+     *
+     * @return Collection
+     */
+    public function getTranslations()
+    {
+        return $this->translations;
     }
 }

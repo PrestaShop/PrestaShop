@@ -287,7 +287,7 @@ final class SearchProductsHandler extends AbstractOrderHandler implements Search
      * @param int $computingPrecision
      * @param Order|null $order
      *
-     * @return float
+     * @return float|null
      */
     private function getProductPriceForOrder(
         int $productId,

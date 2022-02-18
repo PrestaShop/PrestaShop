@@ -60,7 +60,6 @@ final class AdaptThemeToRTLLanguagesHandler implements AdaptThemeToRTLLanguagesH
             $this->stylesheetProcessorFactory
                 ->create()
                 ->setProcessFOThemes([$plainThemeName])
-                ->setRegenerate(true)
                 ->process()
             ;
         } catch (GenerationException $e) {

@@ -78,10 +78,7 @@ class ThemeManagerBuilder
                 )
             ),
             $this->buildRepository($this->context->shop),
-            new ImageTypeRepository(
-                $this->context->shop,
-                $this->db
-            )
+            new ImageTypeRepository($this->db)
         );
     }
 

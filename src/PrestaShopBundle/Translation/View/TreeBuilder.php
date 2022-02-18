@@ -295,7 +295,7 @@ class TreeBuilder
      * @param string $name
      * @param string $fullName
      * @param string|bool $theme
-     * @param null $search
+     * @param string|null $search
      * @param string|bool $module
      *
      * @return mixed

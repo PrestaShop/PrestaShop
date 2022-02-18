@@ -89,6 +89,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
+            /** @var AdminFilter|null $filter */
             $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shop->id ?: 0,
@@ -96,7 +97,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'action' => 'catalogAction',
             ]);
 
-            /** @var $filter AdminFilter */
             if (null === $filter) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
@@ -142,6 +142,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $employee = Context::getContext()->employee;
         $shop = Context::getContext()->shop;
+        /** @var AdminFilter|null $filter */
         $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,

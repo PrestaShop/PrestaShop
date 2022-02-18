@@ -38,7 +38,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\Virtu
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\ValueObject\VirtualProductFileId;
 use ProductDownload as VirtualProductFile;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Provides update methods specific to virtual product
@@ -62,34 +61,18 @@ class VirtualProductUpdater
     private $virtualProductFileRepository;
 
     /**
-     * @var string
-     */
-    private $virtualProductFileDir;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @param ProductRepository $productRepository
      * @param VirtualProductFileUploader $virtualProductFileUploader
      * @param VirtualProductFileRepository $virtualProductFileRepository
-     * @param Filesystem $filesystem
-     * @param string $virtualProductFileDir
      */
     public function __construct(
         ProductRepository $productRepository,
         VirtualProductFileUploader $virtualProductFileUploader,
-        VirtualProductFileRepository $virtualProductFileRepository,
-        Filesystem $filesystem,
-        string $virtualProductFileDir
+        VirtualProductFileRepository $virtualProductFileRepository
     ) {
         $this->productRepository = $productRepository;
         $this->virtualProductFileUploader = $virtualProductFileUploader;
         $this->virtualProductFileRepository = $virtualProductFileRepository;
-        $this->virtualProductFileDir = $virtualProductFileDir;
-        $this->filesystem = $filesystem;
     }
 
     /**

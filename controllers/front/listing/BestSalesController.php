@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class BestSalesControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'best-sales';
 
     /**

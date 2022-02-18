@@ -32,8 +32,11 @@ use PrestaShopBundle\Translation\TranslatorComponent;
 
 class OrderControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'order';
+    /** @var string */
     public $page_name = 'checkout';
     public $checkoutWarning = false;
 

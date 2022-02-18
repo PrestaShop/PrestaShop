@@ -39,7 +39,7 @@ class NumberSymbolList
      *
      * Separates the integer and fractional part of the number.
      *
-     * @var string
+     * @var string|null
      */
     protected $decimal;
 
@@ -49,7 +49,7 @@ class NumberSymbolList
      * separates clusters of integer digits to make large numbers more legible; commonly used for thousands(grouping
      * size 3, e.g. "100,000,000") or in some locales, ten-thousands (grouping size 4, e.g. "1,0000,0000").
      *
-     * @var string
+     * @var string|null
      */
     protected $group;
 
@@ -58,7 +58,7 @@ class NumberSymbolList
      *
      * Symbol used to separate numbers in a list intended to represent structured data such as an array.
      *
-     * @var string
+     * @var string|null
      */
     protected $list;
 
@@ -67,7 +67,7 @@ class NumberSymbolList
      *
      * Used to indicate a percentage (1/100th) amount.
      *
-     * @var string
+     * @var string|null
      */
     protected $percentSign;
 
@@ -76,7 +76,7 @@ class NumberSymbolList
      *
      * Symbol used to denote negative value.
      *
-     * @var string
+     * @var string|null
      */
     protected $minusSign;
 
@@ -86,7 +86,7 @@ class NumberSymbolList
      * Symbol used to denote positive value.
      * It can be used to produce modified patterns, so that 3.12 is formatted as "+3.12", for example.
      *
-     * @var string
+     * @var string|null
      */
     protected $plusSign;
 
@@ -95,7 +95,7 @@ class NumberSymbolList
      *
      * Symbol separating the mantissa and exponent values.
      *
-     * @var string
+     * @var string|null
      */
     protected $exponential;
 
@@ -105,7 +105,7 @@ class NumberSymbolList
      * Used in numbers to show a format like "1.23 × 10^4"
      * (exponential character is a shortcut for "× 10^n" notation)
      *
-     * @var string
+     * @var string|null
      */
     protected $superscriptingExponent;
 
@@ -114,49 +114,38 @@ class NumberSymbolList
      *
      * Used to define them as a per-mille (1/1000th) amount.
      *
-     * @var string
+     * @var string|null
      */
     protected $perMille;
 
     /**
      * The infinity sign. Corresponds to the IEEE infinity bit pattern.
      *
-     * @var string
+     * @var string|null
      */
     protected $infinity;
 
     /**
      * The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
-     * @var string
+     * @var string|null
      */
     protected $nan;
 
     /**
      * NumberSymbolList constructor.
      *
-     * @param string $decimal
-     *                        Decimal separator character
-     * @param string $group
-     *                      Digits group separator character
-     * @param string $list
-     *                     List elements separator character
-     * @param string $percentSign
-     *                            Percent sign character
-     * @param string $minusSign
-     *                          Minus sign character
-     * @param string $plusSign
-     *                         Plus sign character
-     * @param string $exponential
-     *                            Exponential character
-     * @param string $superscriptingExponent
-     *                                       Superscripting exponent character
-     * @param string $perMille
-     *                         Permille sign character
-     * @param string $infinity
-     *                         The infinity sign. Corresponds to the IEEE infinity bit pattern.
-     * @param string $nan
-     *                    The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
+     * @param string $decimal Decimal separator character
+     * @param string $group Digits group separator character
+     * @param string $list List elements separator character
+     * @param string $percentSign Percent sign character
+     * @param string $minusSign Minus sign character
+     * @param string $plusSign Plus sign character
+     * @param string $exponential Exponential character
+     * @param string $superscriptingExponent Superscripting exponent character
+     * @param string $perMille Permille sign character
+     * @param string $infinity The infinity sign. Corresponds to the IEEE infinity bit pattern.
+     * @param string $nan The NaN (Not A Number) sign. Corresponds to the IEEE NaN bit pattern.
      *
      * @throws LocalizationException
      */

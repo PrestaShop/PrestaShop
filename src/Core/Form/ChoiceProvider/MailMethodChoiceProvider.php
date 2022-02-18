@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Email\MailOption;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,24 +36,15 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class MailMethodChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
 
     /**
-     * @param ConfigurationInterface $configuration
      * @param TranslatorInterface $translator
      */
-    public function __construct(
-        ConfigurationInterface $configuration,
-        TranslatorInterface $translator
-    ) {
-        $this->configuration = $configuration;
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
     }
 

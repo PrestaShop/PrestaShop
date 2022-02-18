@@ -132,7 +132,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     protected static $kernel;
 
     /**
-     * @var ContextMocker
+     * @var ContextMocker|null
      */
     protected static $contextMocker;
 
@@ -167,7 +167,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
             E_USER_DEPRECATED
         );
 
-        static::restoreTestDB();
+        self::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -301,7 +301,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareScenario()
     {
-        static::restoreTestDB();
+        self::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 

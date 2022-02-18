@@ -32,7 +32,7 @@ use Tests\Integration\Utility\ContextMocker;
 class ContextFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @var ContextMocker
+     * @var ContextMocker|null
      */
     protected $contextMocker;
 

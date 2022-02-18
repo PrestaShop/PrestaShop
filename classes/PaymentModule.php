@@ -222,9 +222,6 @@ abstract class PaymentModuleCore extends Module
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
 
-        if (!isset($this->context)) {
-            $this->context = Context::getContext();
-        }
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method

@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\Common\Team\ProfileChoiceType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
@@ -55,31 +54,6 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
     use DeleteActionTrait;
 
     public const GRID_ID = 'employee';
-
-    /**
-     * @var string
-     */
-    private $resetUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectUrl;
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetUrl
-     * @param string $redirectUrl
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetUrl,
-        $redirectUrl
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetUrl = $resetUrl;
-        $this->redirectUrl = $redirectUrl;
-    }
 
     /**
      * {@inheritdoc}

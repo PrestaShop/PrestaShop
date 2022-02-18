@@ -195,7 +195,7 @@ class WebserviceRequestCore
     /**
      * The object to build the output.
      *
-     * @var WebserviceOutputBuilder
+     * @var WebserviceOutputBuilder|null
      */
     protected $objOutput;
 
@@ -1132,7 +1132,7 @@ class WebserviceRequestCore
         }
 
         // Date feature : date=1
-        if (!empty($this->urlFragments['date']) && $this->urlFragments['date']) {
+        if (!empty($this->urlFragments['date'])) {
             if (!in_array('date_add', $available_filters)) {
                 $available_filters[] = 'date_add';
             }
@@ -1854,9 +1854,7 @@ class WebserviceRequestCore
         // if the output is not enable, delete the content
         // the type content too
         if (!$this->_outputEnabled) {
-            if (isset($return['type'])) {
-                unset($return['type']);
-            }
+            unset($return['type']);
             if (isset($return['content'])) {
                 unset($return['content']);
             }

@@ -45,12 +45,12 @@ class TreeCore
     protected $_node_item_template;
     protected $_template;
 
-    /** @var string */
+    /** @var string|array|null */
     private $_template_directory;
     private $_title;
     private $_no_js;
 
-    /** @var TreeToolbar|ITreeToolbarCore */
+    /** @var TreeToolbar|ITreeToolbarCore|null */
     private $_toolbar;
 
     /** @var TranslatorComponent */

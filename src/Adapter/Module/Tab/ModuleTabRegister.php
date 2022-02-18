@@ -197,10 +197,8 @@ class ModuleTabRegister
         $legacyControllers = array_map(function ($legacyControllersFilename) {
             return str_replace('Controller.php', '', $legacyControllersFilename);
         }, $legacyControllersFilenames);
-        $legacyControllers = $legacyControllers ?? [];
 
         $routingControllers = $this->getModuleControllersFromRouting($moduleName);
-        $routingControllers = $routingControllers ?? [];
 
         return array_merge($legacyControllers, $routingControllers);
     }

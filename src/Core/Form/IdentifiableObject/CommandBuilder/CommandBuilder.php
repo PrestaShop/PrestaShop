@@ -257,6 +257,7 @@ class CommandBuilder
      * @return array<int, mixed>
      *
      * @throws DataFieldException
+     * @throws NoSuchIndexException
      */
     private function fetchDataValues(CommandField $commandField, array $data): array
     {

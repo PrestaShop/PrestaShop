@@ -59,7 +59,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public static function restoreProductTablesAfterSuite(): void
     {
-        static::restoreProductTables();
+        self::restoreProductTables();
         LanguageFeatureContext::restoreLanguagesTablesAfterFeature();
     }
 
@@ -68,7 +68,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public static function restoreProductTablesBeforeFeature(): void
     {
-        static::restoreProductTables();
+        self::restoreProductTables();
     }
 
     private static function restoreProductTables(): void
