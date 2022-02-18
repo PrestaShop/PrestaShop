@@ -63,7 +63,17 @@ class AdminModuleDataProvider implements ModuleInterface
     /**
      * @var array of defined and callable module actions
      */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enableMobile', 'disableMobile', 'reset', 'upgrade'];
+    protected $moduleActions = [
+        'install',
+        'upgrade',
+        'enable',
+        'configure',
+        'disable',
+        'uninstall',
+        'enableMobile',
+        'disableMobile',
+        'reset',
+    ];
 
     /**
      * @var Router|null
@@ -182,87 +192,63 @@ class AdminModuleDataProvider implements ModuleInterface
      *
      * @return ModuleCollection
      */
-    public function setActionUrls(ModuleCollection $modules, ?string $specific_action = null)
+    public function setActionUrls(ModuleCollection $modules, ?string $specific_action = null): ModuleCollection
     {
         foreach ($modules as $module) {
             $urls = [];
             foreach ($this->moduleActions as $action) {
+                if ($action === 'configure') {
+                    $urls[$action] = $this->router->generate('admin_module_configure_action', [
+                        'module_name' => $module->attributes->get('name'),
+                    ]);
+                    continue;
+                }
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
                     'module_name' => $module->attributes->get('name'),
                 ]);
             }
-            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $module->attributes->get('name'),
-            ]);
 
-            if ($module->database->has('installed') && $module->database->getBoolean('installed')) {
+            if ($module->database->getBoolean('installed')) {
+                unset($urls['install']);
                 if (!$module->database->getBoolean('active')) {
-                    $url_active = 'enable';
                     unset(
-                        $urls['install'],
-                        $urls['disable']
+                        $urls['disable'],
+                        $urls['enableMobile'],
+                        $urls['disableMobile']
                     );
-                } elseif ($module->attributes->getBoolean('is_configurable')) {
-                    $url_active = 'configure';
-                    unset(
-                        $urls['enable'],
-                        $urls['install']
-                    );
+                    if ($module->database->get('active') === null) {
+                        unset($urls['enable']);
+                    }
                 } else {
-                    $url_active = 'disable';
                     unset(
-                        $urls['install'],
                         $urls['enable'],
-                        $urls['configure']
+                        $urls[$module->database->getBoolean('active_on_mobile') ? 'enableMobile' : 'disableMobile']
                     );
+                }
+
+                if (!$module->canBeUpgraded()) {
+                    unset($urls['upgrade']);
                 }
 
                 if (!$module->attributes->getBoolean('is_configurable')) {
                     unset($urls['configure']);
                 }
-
-                if (!$module->database->getBoolean('active_on_mobile')) {
-                    unset($urls['disableMobile']);
-                } else {
-                    unset($urls['enableMobile']);
-                }
-                if (!$module->canBeUpgraded()) {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-            } elseif (
-                !$module->attributes->has('origin') ||
-                $module->disk->getBoolean('is_present') ||
-                in_array($module->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
-            ) {
-                $url_active = 'install';
-                unset(
-                    $urls['uninstall'],
-                    $urls['enable'],
-                    $urls['disable'],
-                    $urls['enableMobile'],
-                    $urls['disableMobile'],
-                    $urls['reset'],
-                    $urls['upgrade'],
-                    $urls['configure']
-                );
             } else {
-                $url_active = 'buy';
+                $urls = ['install' => $urls['install']];
             }
 
-            $urls = $this->filterAllowedActions($urls, $module->attributes->get('name'));
-            $module->attributes->set('urls', $urls);
+            $filteredUrls = $this->filterAllowedActions($urls, $module->attributes->get('name'));
+
+            if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {
+                $urlActive = $specific_action;
+            } else {
+                $urlActive = key($filteredUrls);
+            }
+
+            $module->attributes->set('urls', $filteredUrls);
+            $module->attributes->set('url_active', $urlActive);
             $module->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            if ($specific_action && array_key_exists($specific_action, $urls)) {
-                $module->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
-                $module->attributes->set('url_active', $url_active);
-            } else {
-                $module->attributes->set('url_active', key($urls));
-            }
-
             $categoryParent = $this->categoriesProvider->getParentCategory($module->attributes->get('categoryName'));
             $module->attributes->set('categoryParent', $categoryParent);
         }
