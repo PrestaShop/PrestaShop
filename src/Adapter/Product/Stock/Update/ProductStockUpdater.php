@@ -31,8 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
@@ -108,7 +111,7 @@ class ProductStockUpdater
             CannotUpdateProductException::FAILED_UPDATE_STOCK
         );
 
-        $this->updateStockAvailable($stockAvailable, $properties, $shopConstraint);
+        $this->updateStockByShopConstraint($stockAvailable, $properties, $shopConstraint);
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
@@ -175,11 +178,27 @@ class ProductStockUpdater
         return $updatableProperties;
     }
 
-    /**
-     * @param StockAvailable $stockAvailable
-     * @param ProductStockProperties $properties
-     */
-    private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties, ShopConstraint $shopConstraint)
+    private function updateStockByShopConstraint(StockAvailable $stockAvailable, ProductStockProperties $properties, ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->forAllShops()) {
+            // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
+            // so we manually loop to update each associated stocks
+            $shops = $this->stockAvailableRepository->getAssociatedShopIds(new StockId((int) $stockAvailable->id));
+            foreach ($shops as $shopId) {
+                if ((int) $stockAvailable->id_product_attribute === NoCombinationId::NO_COMBINATION_ID) {
+                    $shopStockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId((int) $stockAvailable->id_product), $shopId);
+                } else {
+                    $shopStockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $stockAvailable->id_product_attribute), $shopId);
+                }
+
+                $this->updateStockAvailable($shopStockAvailable, $properties);
+            }
+        } else {
+            $this->updateStockAvailable($stockAvailable, $properties);
+        }
+    }
+
+    private function updateStockAvailable(StockAvailable $stockAvailable, ProductStockProperties $properties)
     {
         $stockUpdateRequired = false;
 
@@ -201,7 +220,7 @@ class ProductStockUpdater
             return;
         }
 
-        $this->stockAvailableRepository->update($stockAvailable, $shopConstraint);
+        $this->stockAvailableRepository->update($stockAvailable);
 
         if ($properties->getStockModification()) {
             //Save movement only after stock has been updated

@@ -37,8 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockA
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractMultiShopObjectModelRepository;
@@ -84,48 +82,13 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
 
     /**
      * @param StockAvailable $stockAvailable
-     * @param ShopConstraint $shopConstraint
      *
      * @throws CoreException
      */
-    public function update(StockAvailable $stockAvailable, ShopConstraint $shopConstraint): void
+    public function update(StockAvailable $stockAvailable): void
     {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
         $this->stockAvailableValidator->validate($stockAvailable);
-
-        if ($shopConstraint->forAllShops()) {
-            // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
-            // so we manually loop to update each associated stocks
-            $shops = $this->getAssociatedShopIds(new StockId((int) $stockAvailable->id));
-            foreach ($shops as $shopId) {
-                if ((int) $stockAvailable->id_product_attribute === NoCombinationId::NO_COMBINATION_ID) {
-                    $shopStockAvailable = $this->getForProduct(new ProductId((int) $stockAvailable->id_product), $shopId);
-                } else {
-                    $shopStockAvailable = $this->getForCombination(new CombinationId((int) $stockAvailable->id_product_attribute), $shopId);
-                }
-
-                // Copy source data to target
-                $shopStockAvailable->quantity = (int) $stockAvailable->quantity;
-                $shopStockAvailable->location = $stockAvailable->location;
-                $shopStockAvailable->out_of_stock = (int) $stockAvailable->out_of_stock;
-                $shopStockAvailable->depends_on_stock = (bool) $stockAvailable->depends_on_stock;
-
-                $this->updateObjectModelForShops(
-                    $shopStockAvailable,
-                    [$shopId->getValue()],
-                    CannotUpdateStockAvailableException::class
-                );
-            }
-        } else {
-            $this->updateObjectModelForShops(
-                $stockAvailable,
-                [$shopConstraint->getShopId()->getValue()],
-                CannotUpdateStockAvailableException::class
-            );
-        }
+        $this->updateObjectModel($stockAvailable, CannotUpdateStockAvailableException::class);
     }
 
     /**

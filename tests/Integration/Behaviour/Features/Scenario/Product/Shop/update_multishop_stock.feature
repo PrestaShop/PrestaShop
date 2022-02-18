@@ -225,3 +225,43 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | fr-FR  |          |
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
+
+  Scenario: I can update stock quantity independently for each shop
+    When I update product "product1" stock for shop shop2 with following information:
+      | delta_quantity | 69 |
+    And I update product "product1" stock for shop shop1 with following information:
+      | delta_quantity | 51 |
+    Then product "product1" should have following stock information for shops "shop2":
+      | quantity | 111 |
+    And product "product1" should have following stock information for shops "shop1":
+      | quantity | 93 |
+
+  Scenario: I can update stock quantity independently for all shops at once
+    When I update product "product1" stock for all shops with following information:
+      | delta_quantity | 69 |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | quantity | 111 |
+
+  Scenario: I can update stock quantity for single and/or al shops but since it's a delta modification their values are not necessarily synced
+    When I update product "product1" stock for shop shop2 with following information:
+      | delta_quantity | 69 |
+    And I update product "product1" stock for shop shop1 with following information:
+      | delta_quantity | 51 |
+    When I update product "product1" stock for all shops with following information:
+      | delta_quantity | -10 |
+    Then product "product1" should have following stock information for shops "shop2":
+      | quantity | 101 |
+    And product "product1" should have following stock information for shops "shop1":
+      | quantity | 83 |
+
+  Scenario: I can update stock quantity for single and/or al shops but since it's a delta modification their values are not necessarily synced
+    When I update product "product1" stock for all shops with following information:
+      | delta_quantity | -10 |
+    And I update product "product1" stock for shop shop2 with following information:
+      | delta_quantity | 69 |
+    And I update product "product1" stock for shop shop1 with following information:
+      | delta_quantity | 51 |
+    Then product "product1" should have following stock information for shops "shop2":
+      | quantity | 101 |
+    And product "product1" should have following stock information for shops "shop1":
+      | quantity | 83 |
