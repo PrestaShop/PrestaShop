@@ -240,6 +240,7 @@ class ProductStockUpdater
             $stockModification->getDeltaQuantity(),
             [
                 'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+                'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );
     }
