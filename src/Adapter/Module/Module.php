@@ -137,8 +137,8 @@ class Module implements ModuleInterface
      */
     private $database_default = [
         'installed' => 0,
-        'active' => 0,
-        'active_on_mobile' => true,
+        'active' => null,
+        'active_on_mobile' => null,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
