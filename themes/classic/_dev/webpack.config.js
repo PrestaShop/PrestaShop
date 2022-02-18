@@ -26,6 +26,7 @@ const webpack = require('webpack');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 let config = {
   entry: {
@@ -78,6 +79,9 @@ let config = {
   },
   plugins: [
     new MiniCssExtractPlugin({filename: path.join('..', 'css', '[name].css')}),
+    new CssoWebpackPlugin({
+      forceMediaMerge: true,
+    }),
   ]
 };
 

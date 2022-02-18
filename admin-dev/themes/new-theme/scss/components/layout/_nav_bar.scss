@@ -397,10 +397,6 @@
         color: $sidebar-primary-link-color;
         background: $sidebar-active-background-color;
         @include transition(background 300ms ease);
-
-        @include media-breakpoint-down(md) {
-          background: $gray-dark;
-        }
       }
 
       &.has_submenu {
