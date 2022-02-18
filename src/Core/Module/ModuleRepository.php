@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Module as ModuleLegacy;
+use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
@@ -70,6 +71,9 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var string */
     private $modulePath;
 
+    /** @var array */
+    private $installedModules;
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
@@ -109,7 +113,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getInstalledModules(): array
     {
         return array_filter($this->getList(), function ($module) {
-            return $module->database->get('installed') === 1;
+            return $module->database->get('installed') === true;
         });
     }
 
@@ -135,8 +139,10 @@ class ModuleRepository implements ModuleRepositoryInterface
             ? 0
             : (int) @filemtime($filePath);
 
-        if ($this->cacheProvider->contains($moduleName)) {
-            $module = $this->cacheProvider->fetch($moduleName);
+        $cacheKey = $moduleName . implode('-', Shop::getContextListShopID());
+
+        if ($this->cacheProvider->contains($cacheKey)) {
+            $module = $this->cacheProvider->fetch($cacheKey);
             if ($module->disk->get('filemtime') === $filemtime) {
                 return $module;
             }
@@ -147,9 +153,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
-        $this->cacheProvider->save($moduleName, new Module($attributes, $disk, $database));
+        $this->cacheProvider->save($cacheKey, new Module($attributes, $disk, $database));
 
-        return $this->cacheProvider->fetch($moduleName);
+        return $this->cacheProvider->fetch($cacheKey);
     }
 
     public function getModulePath(string $moduleName): ?string
@@ -211,7 +217,11 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     private function getModuleDatabaseAttributes(string $moduleName): array
     {
-        return $this->moduleDataProvider->findByName($moduleName);
+        if ($this->installedModules === null) {
+            $this->installedModules = $this->moduleDataProvider->getInstalled();
+        }
+
+        return $this->installedModules[$moduleName] ?? [];
     }
 
     private function mergeWithModulesFromHook(array $modules): array
