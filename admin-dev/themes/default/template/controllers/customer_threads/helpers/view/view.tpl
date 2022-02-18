@@ -80,13 +80,9 @@
 						</div>
 					{/if}
 				</div>
-				<div class="row">
-					<div class="col-sm-12">
-						{if !$first_message.id_employee}
-							{include file="./message.tpl" message=$first_message initial=true}
-						{/if}
-					</div>
-				</div>
+				{if !$first_message.id_employee}
+					{include file="./message.tpl" message=$first_message initial=true}
+				{/if}
 			</div>
 		</div>
 	</div>

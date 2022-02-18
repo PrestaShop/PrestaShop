@@ -65,16 +65,12 @@
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-sm-12">
-							<p class="checkbox">
-								<label class="control-label" for="hook_position">
-									<input type="checkbox" id="hook_position"/>
-									{l s='Display non-positionable hooks' d='Admin.Design.Feature'}
-								</label>
-							</p>
-					</div>
-				</div>
+				<p class="checkbox">
+					<label class="control-label" for="hook_position">
+						<input type="checkbox" id="hook_position"/>
+						{l s='Display non-positionable hooks' d='Admin.Design.Feature'}
+					</label>
+				</p>
 			</form>
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit|escape:'html':'UTF-8'}" >
