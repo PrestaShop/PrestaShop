@@ -26,8 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Exception\CustomizationConstraintException;
-
 /**
  * Holds product customization identification data
  */
@@ -52,17 +50,5 @@ class CustomizationId
     public function getValue(): int
     {
         return $this->customizationId;
-    }
-
-    /**
-     * @param int $value
-     *
-     * @throws CustomizationConstraintException
-     */
-    private function assertValueIsPositive(int $value)
-    {
-        if (0 >= $value) {
-            throw new CustomizationConstraintException(sprintf('Customization id must be positive integer. "%s" given', $value), CustomizationConstraintException::INVALID_ID);
-        }
     }
 }

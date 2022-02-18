@@ -54,7 +54,7 @@ class CategoryCore extends ObjectModel
     /** @var int default Category id */
     public $id_category_default;
 
-    /** @var int Parents number */
+    /** @var int|null Parents number */
     public $level_depth;
 
     /** @var int Nested tree model "left" value */

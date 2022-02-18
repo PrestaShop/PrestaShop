@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintExcep
 class LastName
 {
     /**
-     * @var string Maximum allowed length for last name
+     * @var int Maximum allowed length for last name
      */
     public const MAX_LENGTH = 255;
 

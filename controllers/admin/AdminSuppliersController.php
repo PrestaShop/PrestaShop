@@ -29,6 +29,7 @@
  */
 class AdminSuppliersControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
 
     public function __construct()

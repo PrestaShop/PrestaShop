@@ -113,7 +113,7 @@ abstract class Db extends DbCore
                 $stack_light[] = [
                     'file' => $call['file'] ?? 'undefined',
                     'line' => $call['line'] ?? 'undefined',
-                    'function' => $call['function'] ?? 'undefined',
+                    'function' => $call['function'],
                 ];
             }
 

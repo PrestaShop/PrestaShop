@@ -343,10 +343,10 @@ class ObjectModelTest extends TestCase
 
         // Define the shop associated to the entity based on the parameter
         $initialShopIds = [];
-        if (in_array(static::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
+        if (in_array(self::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
             $initialShopIds[] = $this->defaultShopId;
         }
-        if (in_array(static::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
+        if (in_array(self::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
             $initialShopIds[] = $this->secondShopId;
         }
         $newObject->id_shop_list = $initialShopIds;
@@ -359,7 +359,7 @@ class ObjectModelTest extends TestCase
 
         // Now we update the values for different shops
         foreach ($multiShopValues as $shopId => $updateValues) {
-            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $shopId = $shopId === self::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
             // Fetch the object with specified shopId, then apply modifications
             $objectToUpdate = new TestableObjectModel($createdId, null, $shopId);
             // We force this field so that only one shop is updated
@@ -370,7 +370,7 @@ class ObjectModelTest extends TestCase
 
         // Finally, we fetch the object for each shop separately and check that the values match the expected data
         foreach ($expectedMultiShopValues as $shopId => $expectedValues) {
-            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $shopId = $shopId === self::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
             $updatedObject = new TestableObjectModel($createdId, null, $shopId);
             $this->checkObjectFields($updatedObject, $expectedValues);
         }
@@ -466,10 +466,10 @@ class ObjectModelTest extends TestCase
 
         // Define the shop associated to the entity based on the parameter
         $initialShopIds = [];
-        if (in_array(static::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
+        if (in_array(self::DEFAULT_SHOP_PLACEHOLDER, $initialShops)) {
             $initialShopIds[] = $this->defaultShopId;
         }
-        if (in_array(static::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
+        if (in_array(self::SECOND_SHOP_PLACEHOLDER, $initialShops)) {
             $initialShopIds[] = $this->secondShopId;
         }
         $newObject->id_shop_list = $initialShopIds;
@@ -483,7 +483,7 @@ class ObjectModelTest extends TestCase
         // Now we update the values for different shops
         foreach ($multiShopValues as $shopId => $updateValues) {
             $fieldsToUpdate = $multiShopFieldsToUpdate[$shopId];
-            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $shopId = $shopId === self::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
             // Fetch the object with specified shopId
             $objectToUpdate = new TestableObjectModel($createdId, null, $shopId);
             // We force this field so that only one shop is updated
@@ -502,7 +502,7 @@ class ObjectModelTest extends TestCase
 
         // Finally, we fetch the object for each shop separately and check that the values match the expected data
         foreach ($expectedMultiShopValues as $shopId => $expectedValues) {
-            $shopId = $shopId === static::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
+            $shopId = $shopId === self::DEFAULT_SHOP_PLACEHOLDER ? $this->defaultShopId : $this->secondShopId;
             $updatedObject = new TestableObjectModel($createdId, null, $shopId);
             $this->checkObjectFields($updatedObject, $expectedValues);
         }

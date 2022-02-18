@@ -55,35 +55,19 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     public const GRID_ID = 'email_logs';
 
     /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string the URL for redirection
-     */
-    private $redirectionUrl;
-
-    /**
      * @var ConfigurableFormChoiceProviderInterface
      */
     private $languageChoiceProvider;
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
      * @param ConfigurableFormChoiceProviderInterface $languageChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl,
         ConfigurableFormChoiceProviderInterface $languageChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
         $this->languageChoiceProvider = $languageChoiceProvider;
     }
 

@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class CategoryControllerCore extends ProductListingFrontController
 {
-    /** string Internal controller name */
+    /** @var string Internal controller name */
     public $php_self = 'category';
 
     /** @var bool If set to false, customer cannot view the current category. */

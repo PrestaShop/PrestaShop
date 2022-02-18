@@ -61,9 +61,6 @@ class FrontControllerCore extends Controller
      */
     protected static $cart;
 
-    /** @var array Controller errors */
-    public $errors = [];
-
     /** @var array Controller warning notifications */
     public $warning = [];
 
@@ -325,7 +322,7 @@ class FrontControllerCore extends Controller
         ob_start();
 
         $protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
-        $useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
+        $useSSL = ($this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode();
         $protocol_content = ($useSSL) ? 'https://' : 'http://';
         $link = new Link($protocol_link, $protocol_content);
         $this->context->link = $link;
@@ -362,9 +359,11 @@ class FrontControllerCore extends Controller
             if ((!$has_currency || $has_country) && !$has_address_type) {
                 if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
                     $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
-                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
-                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
-                        && Validate::isLanguageIsoCode($array[0])) {
+                } elseif (
+                    isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                    && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                    && Validate::isLanguageIsoCode($array[0])
+                ) {
                     $id_country = (int) Country::getByIso($array[0], true);
                 } else {
                     $id_country = Tools::getCountry();
@@ -1024,11 +1023,9 @@ class FrontControllerCore extends Controller
         }
 
         $ips = array_map('trim', $ips);
-        if (is_array($ips) && count($ips)) {
-            foreach ($ips as $ip) {
-                if (!empty($ip) && preg_match('/^' . $ip . '.*/', $user_ip)) {
-                    $allowed = true;
-                }
+        foreach ($ips as $ip) {
+            if (!empty($ip) && preg_match('/^' . $ip . '.*/', $user_ip)) {
+                $allowed = true;
             }
         }
 

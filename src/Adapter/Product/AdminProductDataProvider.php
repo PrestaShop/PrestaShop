@@ -96,7 +96,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'action' => 'catalogAction',
             ]);
 
-            /** @var $filter AdminFilter */
+            /** @var AdminFilter|null $filter */
             if (null === $filter) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
@@ -149,6 +149,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'action' => 'catalogAction',
         ]);
 
+        /** @var AdminFilter|null $filter */
         if (!$filter) {
             $filter = new AdminFilter();
             $filter->setEmployee($employee->id ?: 0)->setShop($shop->id ?: 0)->setController('ProductController')->setAction('catalogAction');

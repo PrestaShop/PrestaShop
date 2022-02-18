@@ -87,7 +87,7 @@ class TaxRuleDataProvider
                 'computation_method' => (int) $tax_calculator->computation_method,
             ];
 
-            if (isset($tax_calculator->taxes) && count($tax_calculator->taxes)) {
+            if (!empty($tax_calculator->taxes)) {
                 foreach ($tax_calculator->taxes as $tax) {
                     $tax_rates[$id_tax_rules_group]['rates'][] = (float) $tax->rate;
                 }

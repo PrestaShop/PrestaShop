@@ -25,12 +25,15 @@
  */
 class PdfInvoiceControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'pdf-invoice';
+    /** @var bool */
     protected $display_header = false;
+    /** @var bool */
     protected $display_footer = false;
-
+    /** @var bool */
     public $content_only = true;
-
+    /** @var string */
     protected $template;
     public $filename;
 

@@ -612,8 +612,7 @@ class StockManagerCore implements StockManagerInterface
         $product = new Product((int) $id_product);
         if (!Pack::isPack($id_product)
             || (
-                Pack::isPack($id_product)
-                && Validate::isLoadedObject($product)
+                Validate::isLoadedObject($product)
                 && $product->pack_stock_type == Pack::STOCK_TYPE_PACK_ONLY
                 || $product->pack_stock_type == Pack::STOCK_TYPE_PACK_BOTH
                 || (
@@ -761,7 +760,7 @@ class StockManagerCore implements StockManagerInterface
             $id_product_attribute = 0;
         }
 
-        if ($coverage == 0 || !$coverage) {
+        if ($coverage == 0) {
             $coverage = 7;
         } // Week by default
 
@@ -785,7 +784,7 @@ class StockManagerCore implements StockManagerInterface
 				GROUP BY sm.`id_stock_mvt`
 			) as view';
 
-        $quantity_out = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        $quantity_out = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
         if (!$quantity_out) {
             return -1;
         }

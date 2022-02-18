@@ -45,6 +45,8 @@ parameters:
     - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
+    ## Doctrine Entities
+    - '#Property PrestaShopBundle\\Entity\\[A-Za-z]+\:\:\$[A-Za-z]+ is never written, only read.#'
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie

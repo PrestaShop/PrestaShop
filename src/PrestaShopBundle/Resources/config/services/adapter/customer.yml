@@ -87,7 +87,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\SearchCustomersHandler'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-      - '@translator'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
       - name: tactician.handler

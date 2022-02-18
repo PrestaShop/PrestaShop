@@ -28,12 +28,14 @@ class CmsControllerCore extends FrontController
     public const CMS_CASE_PAGE = 1;
     public const CMS_CASE_CATEGORY = 2;
 
+    /** @var string */
     public $php_self = 'cms';
     public $assignCase;
     public $cms;
 
     /** @var CMSCategory */
     public $cms_category;
+    /** @var bool */
     public $ssl = false;
 
     public function canonicalRedirection($canonicalURL = '')

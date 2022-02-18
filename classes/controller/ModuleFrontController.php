@@ -92,7 +92,7 @@ class ModuleFrontControllerCore extends FrontController
      */
     protected function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
     {
-        if (isset($this->module) && is_a($this->module, 'Module')) {
+        if (is_a($this->module, 'Module')) {
             return $this->module->l($string, $specific);
         } else {
             return $string;

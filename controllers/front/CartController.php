@@ -28,6 +28,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 class CartControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'cart';
 
     protected $id_product;
@@ -41,6 +42,7 @@ class CartControllerCore extends FrontController
      * @var bool
      */
     protected $preview;
+    /** @var bool */
     public $ssl = true;
     /**
      * An array of errors, in case the update action of product is wrong.

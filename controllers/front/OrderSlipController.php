@@ -25,9 +25,13 @@
  */
 class OrderSlipControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'order-slip';
+    /** @var string */
     public $authRedirection = 'order-slip';
+    /** @var bool */
     public $ssl = true;
 
     /**

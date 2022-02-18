@@ -40,23 +40,15 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
 {
     /**
-     * @var int
-     */
-    private $contextLangId;
-    /**
      * @var Customer
      */
     private $customer;
 
     /**
-     * @param int $contextLangId
      * @param Customer $customer
      */
-    public function __construct(
-        int $contextLangId,
-        Customer $customer
-    ) {
-        $this->contextLangId = $contextLangId;
+    public function __construct(Customer $customer)
+    {
         $this->customer = $customer;
     }
 

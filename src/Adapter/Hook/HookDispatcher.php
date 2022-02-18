@@ -52,17 +52,12 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
     private $renderingContent = [];
 
     /**
-     * @var bool|callable
-     */
-    private $propagationStoppedCalledBy = false;
-
-    /**
      * @var RequestStack
      */
     private $requestStack;
 
     /**
-     * @param RequestStack $requestStack (nullable to preserve backward compatibility)
+     * @param RequestStack|null $requestStack (nullable to preserve backward compatibility)
      */
     public function __construct(RequestStack $requestStack = null)
     {
@@ -134,7 +129,6 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
      */
     protected function doDispatch($listeners, $eventName, Event $event)
     {
-        $this->propagationStoppedCalledBy = false;
         foreach ($listeners as $listener) {
             // removes $this to parameters. Hooks should not have access to dispatcher
             ob_start();
@@ -145,9 +139,6 @@ class HookDispatcher extends EventDispatcher implements HookDispatcherInterface
                 $listenerName = $event->popListener() ?: $listener[1];
 
                 $this->renderingContent[$listenerName] = $event->popContent();
-            }
-            if ($event->isPropagationStopped()) {
-                $this->propagationStoppedCalledBy = $listener;
             }
         }
         if ($event instanceof RenderingHookEvent) {

@@ -52,7 +52,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public static function restoreShopTablesAfterFeature(): void
     {
-        static::restoreShopTables();
+        self::restoreShopTables();
     }
 
     private static function restoreShopTables(): void

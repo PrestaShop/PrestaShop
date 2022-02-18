@@ -38,19 +38,6 @@ class FakeModule extends Module
 
 class ModuleCoreTest extends TestCase
 {
-    private $error_string_res = '<div class="bootstrap">
-										<div class="module_error alert alert-danger" >
-											<button  type="button" class="close" data-dismiss="alert">&times;</button>This is an error!
-										</div>
-									</div>';
-
-    private $error_array_res = '<div class="bootstrap">
-									<div class="module_error alert alert-danger" >
-										<button type="button" class="close" data-dismiss="alert">&times;</button>
-										<ul><li>Error 1</li><li>Error 2</li><li>Error 3</li></ul>
-									</div>
-								</div>';
-
     protected function setUp(): void
     {
         if (!defined('_PS_VERSION_')) {

@@ -1147,14 +1147,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
-                        if (!$message || strlen($message) == 0) {
+                        if (empty($message)) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
 
                             continue;
                         }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        if (empty($message) || !Validate::isCleanHtml($message)) {
+                        if (!Validate::isCleanHtml($message)) {
                             $str_errors .= $this->trans('Invalid message content for subject: %s', [$subject], 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
@@ -1174,7 +1174,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         imap_expunge($mbox);
         imap_close($mbox);
         if (count($message_errors) > 0) {
-            if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
+            $more_error = $str_errors . $str_error_delete;
+            if (strlen($more_error) > 0) {
                 $message_errors = array_merge([$more_error], $message_errors);
             }
 

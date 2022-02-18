@@ -58,6 +58,7 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
+    /** @phpstan-ignore-next-line */
     if (empty($creationDate)) {
         Tools::redirectToInstall();
     }

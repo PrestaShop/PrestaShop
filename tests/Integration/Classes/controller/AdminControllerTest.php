@@ -39,6 +39,9 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShopBundle\Controller\Admin\MultistoreController;
 use Shop;
 use Smarty;
@@ -291,7 +294,17 @@ class AdminControllerTest extends TestCase
 
     private function getMockLocale(): Locale
     {
-        return $this->getMockBuilder(Locale::class)->disableOriginalConstructor()->getMock();
+        $mockLocale = $this->getMockBuilder(Locale::class)->disableOriginalConstructor()->getMock();
+        $mockLocale
+            ->method('getPriceSpecification')
+            ->withAnyParameters()
+            ->willReturn($this->getMockNumberInterface());
+        $mockLocale
+            ->method('getNumberSpecification')
+            ->withAnyParameters()
+            ->willReturn($this->getMockNumberSpecification());
+
+        return $mockLocale;
     }
 
     private function getMockLocaleRepository(): LocaleRepository
@@ -314,6 +327,39 @@ class AdminControllerTest extends TestCase
         $mockMultistoreController->method('header')->withAnyParameters()->willReturn($mockResponse);
 
         return $mockMultistoreController;
+    }
+
+    private function getMockNumberSpecification(): NumberSpecification
+    {
+        $mockNumberSpecification = $this->getMockBuilder(NumberSpecification::class)->disableOriginalConstructor()->getMock();
+        $mockNumberSpecification
+            ->method('getSymbolsByNumberingSystem')
+            ->withAnyParameters()
+            ->willReturn($this->getMockNumberSymbolList());
+
+        return $mockNumberSpecification;
+    }
+
+    private function getMockNumberSymbolList(): NumberSymbolList
+    {
+        $mockNumberSymbolList = $this->getMockBuilder(NumberSymbolList::class)->disableOriginalConstructor()->getMock();
+        $mockNumberSymbolList
+            ->method('toArray')
+            ->withAnyParameters()
+            ->willReturn([]);
+
+        return $mockNumberSymbolList;
+    }
+
+    private function getMockNumberInterface(): NumberInterface
+    {
+        $mockNumberInterface = $this->getMockBuilder(NumberInterface::class)->disableOriginalConstructor()->getMock();
+        $mockNumberInterface
+            ->method('getSymbolsByNumberingSystem')
+            ->withAnyParameters()
+            ->willReturn($this->getMockNumberSymbolList());
+
+        return $mockNumberInterface;
     }
 
     private function getMockFeatureInterface(): FeatureInterface

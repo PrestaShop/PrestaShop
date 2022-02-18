@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 class Password
 {
     /**
-     * @var string Minimum required password length for customer
+     * @var int Minimum required password length for customer
      */
     public const MIN_LENGTH = 5;
 
     /**
-     * @var string Maximum allowed password length for customer.
+     * @var int Maximum allowed password length for customer.
      *
      * It's limited to 72 chars because of PASSWORD_BCRYPT algorithm
      * used in password_hash() function.

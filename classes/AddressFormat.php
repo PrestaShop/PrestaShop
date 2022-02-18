@@ -184,7 +184,7 @@ class AddressFormatCore extends ObjectModel
                 $this->_errorFormatList[] = $this->trans('This name is not allowed.', [], 'Admin.Notifications.Error') . ': ' .
                 $associationName[0];
             }
-        } elseif ($totalNameUsed == 2) {
+        } else {
             if (empty($associationName[0]) || empty($associationName[1])) {
                 $this->_errorFormatList[] = $this->trans('Syntax error with this pattern.', [], 'Admin.Notifications.Error') . ': ' . $patternName;
             } else {
@@ -399,12 +399,13 @@ class AddressFormatCore extends ObjectModel
                                 if (!isset($temporyObject[$associateName[0]])) {
                                     $temporyObject[$associateName[0]] = new $associateName[0]($address->{$idFieldName});
                                 }
-                                if ($temporyObject[$associateName[0]]) {
-                                    $tab[$pattern] = (is_array($temporyObject[$associateName[0]]->{$associateName[1]})) ?
-                                        ((isset($temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang])) ?
-                                        $temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang] : '') :
-                                        $temporyObject[$associateName[0]]->{$associateName[1]};
-                                }
+                                $tab[$pattern] = is_array($temporyObject[$associateName[0]]->{$associateName[1]}) ?
+                                    (
+                                        isset($temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang]) ?
+                                        $temporyObject[$associateName[0]]->{$associateName[1]}[$id_lang] :
+                                        ''
+                                    ) :
+                                    $temporyObject[$associateName[0]]->{$associateName[1]};
                             }
                         }
                     }

@@ -25,7 +25,13 @@
  */
 class HelperKpiRowCore extends Helper
 {
+    /**
+     * @var string
+     */
     public $base_folder = 'helpers/kpi/';
+    /**
+     * @var string
+     */
     public $base_tpl = 'row.tpl';
 
     public $kpis = [];

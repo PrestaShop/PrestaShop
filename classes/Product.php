@@ -104,7 +104,7 @@ class ProductCore extends ObjectModel
     /** @var string|array Text when not in stock but available to order or array of text by id_lang */
     public $available_later;
 
-    /** @var float Price */
+    /** @var float|null Price */
     public $price = 0;
 
     /** @var array|int|null Will be filled by reference by priceCalculation() */
@@ -125,7 +125,7 @@ class ProductCore extends ObjectModel
     /** @var string unity */
     public $unity = null;
 
-    /** @var float price for product's unity */
+    /** @var float|null price for product's unity */
     public $unit_price = 0;
 
     /** @var float price for product's unity ratio */
@@ -265,7 +265,7 @@ class ProductCore extends ObjectModel
     public $base_price;
 
     /**
-     * @var int TaxRulesGroup identifier
+     * @var int|null TaxRulesGroup identifier
      */
     public $id_tax_rules_group;
 
@@ -300,7 +300,7 @@ class ProductCore extends ObjectModel
      * @deprecated since 1.7.8
      * This property was only relevant to advanced stock management and that feature is not maintained anymore
      *
-     * @var bool
+     * @var bool|null
      */
     public $depends_on_stock;
 
@@ -855,8 +855,8 @@ class ProductCore extends ObjectModel
     private function updateUnitRatio(): void
     {
         // Update instance field
-        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
+        $unitPrice = new DecimalNumber((string) $this->unit_price);
+        $price = new DecimalNumber((string) $this->price);
         if ($unitPrice->isGreaterThanZero()) {
             $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
         }
@@ -1713,7 +1713,7 @@ class ProductCore extends ObjectModel
         );
 
         /* If something's wrong */
-        if (!$result || empty($result)) {
+        if (empty($result)) {
             return false;
         }
         /* Product attributes simulation */
@@ -2770,7 +2770,7 @@ class ProductCore extends ObjectModel
                 $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
             }
 
-            $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
+            $ecotax = (float) $combinations[$key]['ecotax'] ?: 0;
             $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
             $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
@@ -2874,7 +2874,7 @@ class ProductCore extends ObjectModel
                 $res[$key]['quantity'] = Cache::retrieve($cache_key);
             }
 
-            $ecotax = (float) $res[$key]['ecotax'] ?? 0;
+            $ecotax = (float) $res[$key]['ecotax'] ?: 0;
             $res[$key]['ecotax_tax_excluded'] = $ecotax;
             $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
@@ -4299,7 +4299,7 @@ class ProductCore extends ObjectModel
 
         // we don't substract products in cart if the cart is already attached to an order, since stock quantity
         // has already been updated, this is only useful when the order has not yet been created
-        if (!empty($cart) && empty(Order::getByCartId($cart->id))) {
+        if ($cart && empty(Order::getByCartId($cart->id))) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
@@ -5791,7 +5791,7 @@ class ProductCore extends ObjectModel
         ]);
 
         // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
-        $unitPriceRatio = static::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
+        $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
         $row['unit_price_ratio'] = $unitPriceRatio;
         $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
         $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;

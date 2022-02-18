@@ -25,9 +25,13 @@
  */
 class IdentityControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'identity';
+    /** @var string */
     public $authRedirection = 'identity';
+    /** @var bool */
     public $ssl = true;
 
     public $passwordRequired = true;
