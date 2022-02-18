@@ -78,10 +78,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     /**
      * @When I update product :productReference stock for all shops with following information:
      *
-     * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductStockForAllShops(string $productReference, string $shopReference, TableNode $table): void
+    public function updateProductStockForAllShops(string $productReference, TableNode $table): void
     {
         $this->updateProductStock($productReference, $table, ShopConstraint::allShops());
     }

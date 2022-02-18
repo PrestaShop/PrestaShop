@@ -90,15 +90,42 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
      */
     public function update(StockAvailable $stockAvailable, ShopConstraint $shopConstraint): void
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         $this->stockAvailableValidator->validate($stockAvailable);
 
-        $shopIds = $this->getShopIdsByConstraint($stockAvailable, $shopConstraint);
+        if ($shopConstraint->forAllShops()) {
+            // Since each stock has a distinct ID we can't use the ObjectModel multi shop feature based on id_shop_list,
+            // so we manually loop to update each associated stocks
+            $shops = $this->getAssociatedShopIds(new StockId((int) $stockAvailable->id));
+            foreach ($shops as $shopId) {
+                if ((int) $stockAvailable->id_product_attribute === NoCombinationId::NO_COMBINATION_ID) {
+                    $shopStockAvailable = $this->getForProduct(new ProductId((int) $stockAvailable->id_product), $shopId);
+                } else {
+                    $shopStockAvailable = $this->getForCombination(new CombinationId((int) $stockAvailable->id_product_attribute), $shopId);
+                }
 
-        $this->updateObjectModelForShops(
-            $stockAvailable,
-            $shopIds,
-            CannotUpdateStockAvailableException::class
-        );
+                // Copy source data to target
+                $shopStockAvailable->quantity = (int) $stockAvailable->quantity;
+                $shopStockAvailable->location = $stockAvailable->location;
+                $shopStockAvailable->out_of_stock = (int) $stockAvailable->out_of_stock;
+                $shopStockAvailable->depends_on_stock = (bool) $stockAvailable->depends_on_stock;
+
+                $this->updateObjectModelForShops(
+                    $shopStockAvailable,
+                    [$shopId->getValue()],
+                    CannotUpdateStockAvailableException::class
+                );
+            }
+        } else {
+            $this->updateObjectModelForShops(
+                $stockAvailable,
+                [$shopConstraint->getShopId()->getValue()],
+                CannotUpdateStockAvailableException::class
+            );
+        }
     }
 
     /**
@@ -214,20 +241,20 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
     {
         $subQb = $this->connection->createQueryBuilder();
         $subQb
-            ->select('CONCAT(sa.id_product, "-", sa.id_product_attribute)')
-            ->from($this->dbPrefix . 'stock_available', 'sa')
-            ->where('sa.id_stock_available = :stockId')
-            ->setParameter('stockId', $stockId->getValue())
+            ->select('CONCAT(sa2.id_product, \'-\', sa2.id_product_attribute)')
+            ->from($this->dbPrefix . 'stock_available', 'sa2')
+            ->where('sa2.id_stock_available = :stockId')
         ;
 
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->select('id_shop')
-            ->from($this->dbPrefix . 'stock_available')
+            ->from($this->dbPrefix . 'stock_available', 'sa')
             ->where($qb->expr()->eq(
-                'CONCAT(sa.id_product, "-", sa.id_product_attribute)',
-                $subQb->getSQL()
+                'CONCAT(sa.id_product, \'-\', sa.id_product_attribute)',
+                sprintf('(%s)', $subQb->getSQL())
             ))
+            ->setParameter('stockId', $stockId->getValue())
         ;
 
         $result = $qb->execute()->fetchAll();
@@ -241,31 +268,6 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
         }
 
         return $shops;
-    }
-
-    /**
-     * @param StockAvailable $stockAvailable
-     * @param ShopConstraint $shopConstraint
-     *
-     * @return int[]
-     */
-    private function getShopIdsByConstraint(StockAvailable $stockAvailable, ShopConstraint $shopConstraint): array
-    {
-        if ($shopConstraint->getShopGroupId()) {
-            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
-        }
-
-        $shopIds = [];
-        if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds(new StockId((int) $stockAvailable->id));
-            foreach ($shops as $shopId) {
-                $shopIds[] = $shopId->getValue();
-            }
-        } else {
-            $shopIds = [$shopConstraint->getShopId()->getValue()];
-        }
-
-        return $shopIds;
     }
 
     /**

@@ -1,0 +1,227 @@
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-multi-shop-stock
+@restore-products-before-feature
+@clear-cache-before-feature
+@restore-shops-after-feature
+@clear-cache-after-feature
+@product-multi-shop
+@update-multi-shop-stock
+Feature: Update product price fields from Back Office (BO) for multiple shops.
+  As a BO user I want to be able to update product fields associated with price for multiple shops.
+
+  Background:
+    Given shop "shop1" with name "test_shop" exists
+    And shop group "default_shop_group" with name "Default" exists
+    And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
+    And I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
+    And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
+    And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
+    And single shop context is loaded
+    And language "french" with locale "fr-FR" exists
+    Given I add product "product1" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    When I update product "product1" stock with following information:
+      | pack_stock_type               | pack_only    |
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
+    And I copy product product1 from shop shop1 to shop shop2
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" for shops "shop1,shop2" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" for shops "shop1,shop2" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+
+  Scenario: I update product stock for specific shop (not default one)
+    When I update product "product1" stock for shop shop2 with following information:
+      | pack_stock_type               | products_only |
+      | out_of_stock_type             | not_available |
+      | delta_quantity                | 69            |
+      | minimal_quantity              | 24            |
+      | location                      | upa           |
+      | low_stock_threshold           | 51            |
+      | low_stock_alert               | false         |
+      | available_now_labels[en-US]   | hurry up      |
+      | available_later_labels[en-US] | too slow...   |
+      | available_date                | 1969-09-16    |
+    Then product "product1" should have following stock information for shops "shop2":
+      | pack_stock_type     | products_only |
+      | out_of_stock_type   | not_available |
+      | quantity            | 111           |
+      | minimal_quantity    | 24            |
+      | location            | upa           |
+      | low_stock_threshold | 51            |
+      | low_stock_alert     | false         |
+      | available_date      | 1969-09-16    |
+    And product "product1" localized "available_now_labels" for shops "shop2" should be:
+      | locale | value    |
+      | en-US  | hurry up |
+      | fr-FR  |          |
+    And product "product1" localized "available_later_labels" for shops "shop2" should be:
+      | locale | value       |
+      | en-US  | too slow... |
+      | fr-FR  |             |
+    But product "product1" should have following stock information for shops "shop1":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_now_labels" for shops "shop1" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "product1" localized "available_later_labels" for shops "shop1" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+
+  Scenario: I update product stock for all associated shop (except quantity)
+    When I update product "product1" stock for all shops with following information:
+      | pack_stock_type               | products_only |
+      | out_of_stock_type             | not_available |
+      | minimal_quantity              | 24            |
+      | location                      | upa           |
+      | low_stock_threshold           | 51            |
+      | low_stock_alert               | false         |
+      | available_now_labels[en-US]   | hurry up      |
+      | available_later_labels[en-US] | too slow...   |
+      | available_date                | 1969-09-16    |
+    Then product "product1" should have following stock information for shops "shop1,shop2":
+      | pack_stock_type               | products_only |
+      | out_of_stock_type             | not_available |
+      | minimal_quantity              | 24            |
+      | location                      | upa           |
+      | low_stock_threshold           | 51            |
+      | low_stock_alert               | false         |
+      | available_date                | 1969-09-16    |
+    And product "product1" localized "available_now_labels" for shops "shop1,shop2" should be:
+      | locale | value    |
+      | en-US  | hurry up |
+      | fr-FR  |          |
+    And product "product1" localized "available_later_labels" for shops "shop1,shop2" should be:
+      | locale | value       |
+      | en-US  | too slow... |
+      | fr-FR  |             |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+
+  Scenario: I update some fields for single shop and after for all shops
+    When I update product "product1" stock for shop shop2 with following information:
+      | pack_stock_type               | products_only |
+      | out_of_stock_type             | not_available |
+      | minimal_quantity              | 24            |
+      | location                      | upa           |
+      | low_stock_threshold           | 51            |
+      | low_stock_alert               | false         |
+      | available_now_labels[en-US]   | hurry up      |
+      | available_later_labels[en-US] | too slow...   |
+      | available_date                | 1969-09-16    |
+    When I update product "product1" stock for all shops with following information:
+      | pack_stock_type               | default  |
+      | out_of_stock_type             | default  |
+      | location                      | surprise |
+      | minimal_quantity              | 51       |
+      | available_now_labels[en-US]   | it is on |
+    Then product "product1" should have following stock information for shops "shop2":
+      | pack_stock_type     | default    |
+      | out_of_stock_type   | default    |
+      | quantity            | 42         |
+      | minimal_quantity    | 51         |
+      | location            | surprise   |
+      | low_stock_threshold | 51         |
+      | low_stock_alert     | false      |
+      | available_date      | 1969-09-16 |
+    And product "product1" localized "available_later_labels" for shops "shop2" should be:
+      | locale | value       |
+      | en-US  | too slow... |
+      | fr-FR  |             |
+    But product "product1" should have following stock information for shops "shop1":
+      | pack_stock_type     | default    |
+      | out_of_stock_type   | default    |
+      | quantity            | 42         |
+      | minimal_quantity    | 51         |
+      | location            | surprise   |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_later_labels" for shops "shop1" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product "product1" localized "available_now_labels" for shops "shop1,shop2" should be:
+      | locale | value    |
+      | en-US  | it is on |
+      | fr-FR  |          |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
+
+  Scenario: I update some fields for all shops and after for single shop
+    When I update product "product1" stock for all shops with following information:
+      | pack_stock_type               | default  |
+      | out_of_stock_type             | default  |
+      | location                      | surprise |
+      | minimal_quantity              | 51       |
+      | available_now_labels[en-US]   | it is on |
+    When I update product "product1" stock for shop shop2 with following information:
+      | pack_stock_type               | products_only |
+      | out_of_stock_type             | not_available |
+      | low_stock_alert               | false         |
+      | available_later_labels[en-US] | too slow...   |
+    Then product "product1" should have following stock information for shops "shop2":
+      | pack_stock_type     | products_only |
+      | out_of_stock_type   | not_available |
+      | quantity            | 42            |
+      | minimal_quantity    | 51            |
+      | location            | surprise      |
+      | low_stock_threshold | 42            |
+      | low_stock_alert     | false         |
+      | available_date      | 1969-07-16    |
+    And product "product1" localized "available_later_labels" for shops "shop2" should be:
+      | locale | value       |
+      | en-US  | too slow... |
+      | fr-FR  |             |
+    But product "product1" should have following stock information for shops "shop1":
+      | pack_stock_type     | default    |
+      | out_of_stock_type   | default    |
+      | quantity            | 42         |
+      | minimal_quantity    | 51         |
+      | location            | surprise   |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "product1" localized "available_later_labels" for shops "shop1" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product "product1" localized "available_now_labels" for shops "shop1,shop2" should be:
+      | locale | value    |
+      | en-US  | it is on |
+      | fr-FR  |          |
+    And product product1 is not associated to shop shop3
+    And product product1 is not associated to shop shop4
