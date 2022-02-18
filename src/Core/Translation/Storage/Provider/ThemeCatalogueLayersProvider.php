@@ -147,13 +147,13 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
         $coreCatalogue = $this->coreFrontProvider->getFileTranslatedCatalogue($locale);
 
         // load core user-translated catalogue
-        $coreUserTranslatedCalalogue = (new UserTranslatedCatalogueFinder(
+        $coreUserTranslatedCatalogue = (new UserTranslatedCatalogueFinder(
             $this->databaseTranslationLoader,
             ['*']
         ))
             ->getCatalogue($locale);
 
-        $coreCatalogue->addCatalogue($coreUserTranslatedCalalogue);
+        $coreCatalogue->addCatalogue($coreUserTranslatedCatalogue);
 
         try {
             $fileTranslatedCatalogue = (new FileTranslatedCatalogueFinder(
