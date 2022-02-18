@@ -20,6 +20,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     Given I add product "product1" with following information:
       | name[en-US] | magic staff |
       | type        | standard    |
+    Then product "product1" should have no stock movements
     When I update product "product1" stock with following information:
       | pack_stock_type               | pack_only    |
       | out_of_stock_type             | available    |
@@ -49,6 +50,11 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
+    And product "product1" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement increased by 42
+    And product "product1" should have no stock movements for shop "shop2"
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
@@ -81,6 +87,10 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value       |
       | en-US  | too slow... |
       | fr-FR  |             |
+    And product "product1" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+    And product "product1" last stock movement for shop "shop2" increased by 69
     But product "product1" should have following stock information for shops "shop1":
       | pack_stock_type     | pack_only  |
       | out_of_stock_type   | available  |
@@ -98,10 +108,14 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | locale | value        |
       | en-US  | too late bro |
       | fr-FR  |              |
+    And product "product1" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement for shop "shop1" increased by 42
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
-  Scenario: I update product stock for all associated shop (except quantity)
+  Scenario: I update product stock for all associated shop (quantity not handled)
     When I update product "product1" stock for all shops with following information:
       | pack_stock_type               | products_only |
       | out_of_stock_type             | not_available |
@@ -131,7 +145,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
-  Scenario: I update some fields for single shop and after for all shops
+  Scenario: I update some fields for single shop and after for all shops (quantity not handled)
     When I update product "product1" stock for shop shop2 with following information:
       | pack_stock_type               | products_only |
       | out_of_stock_type             | not_available |
@@ -181,7 +195,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
-  Scenario: I update some fields for all shops and after for single shop
+  Scenario: I update some fields for all shops and after for single shop (quantity not handled)
     When I update product "product1" stock for all shops with following information:
       | pack_stock_type               | default  |
       | out_of_stock_type             | default  |
@@ -233,14 +247,32 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | delta_quantity | 51 |
     Then product "product1" should have following stock information for shops "shop2":
       | quantity | 111 |
+    And product "product1" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+    And product "product1" last stock movement for shop "shop2" increased by 69
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 93 |
+    And product "product1" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 51             |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement for shop "shop1" increased by 51
 
   Scenario: I can update stock quantity independently for all shops at once
     When I update product "product1" stock for all shops with following information:
       | delta_quantity | 69 |
     Then product "product1" should have following stock information for shops "shop1,shop2":
       | quantity | 111 |
+    And product "product1" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+    And product "product1" last stock movement for shop "shop2" increased by 69
+    And product "product1" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement for shop "shop1" increased by 69
 
   Scenario: I can update stock quantity for single and/or al shops but since it's a delta modification their values are not necessarily synced
     When I update product "product1" stock for shop shop2 with following information:
@@ -251,8 +283,19 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | delta_quantity | -10 |
     Then product "product1" should have following stock information for shops "shop2":
       | quantity | 101 |
+    And product "product1" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -10            |
+      | Puff       | Daddy     | 69             |
+    And product "product1" last stock movement for shop "shop2" decreased by 10
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 83 |
+    And product "product1" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -10            |
+      | Puff       | Daddy     | 51             |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement for shop "shop1" decreased by 10
 
   Scenario: I can update stock quantity for single and/or al shops but since it's a delta modification their values are not necessarily synced
     When I update product "product1" stock for all shops with following information:
@@ -263,5 +306,16 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | delta_quantity | 51 |
     Then product "product1" should have following stock information for shops "shop2":
       | quantity | 101 |
+    And product "product1" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+      | Puff       | Daddy     | -10            |
+    And product "product1" last stock movement for shop "shop2" increased by 69
     And product "product1" should have following stock information for shops "shop1":
       | quantity | 83 |
+    And product "product1" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 51             |
+      | Puff       | Daddy     | -10            |
+      | Puff       | Daddy     | 42             |
+    And product "product1" last stock movement for shop "shop1" increased by 51

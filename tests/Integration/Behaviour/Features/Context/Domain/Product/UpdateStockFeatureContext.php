@@ -115,7 +115,10 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      */
     public function updateLocationWithTooLongName(string $productReference, int $length): void
     {
-        $command = new UpdateProductStockInformationCommand($this->getSharedStorage()->get($productReference));
+        $command = new UpdateProductStockInformationCommand(
+            $this->getSharedStorage()->get($productReference),
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
         $command->setLocation(PrimitiveUtils::generateRandomString($length));
 
         try {
@@ -199,13 +202,35 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $productReference
      */
-    public function assertNoEmployeesStockMovement(string $productReference): void
+    public function assertNoEmployeesStockMovementForDefaultShop(string $productReference): void
+    {
+        $this->assertNoEmployeesStockMovement($productReference, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have no stock movements for shop :shopReference
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function assertNoEmployeesStockMovementForSpecificShop(string $productReference, string $shopReference): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $this->assertNoEmployeesStockMovement($productReference, $shopId);
+    }
+
+    /**
+     * @param string $productReference
+     * @param int $shopId
+     */
+    private function assertNoEmployeesStockMovement(string $productReference, int $shopId): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
         /** @var StockMovement[] $stockMovements */
         $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
+            $productId,
+            $shopId
         ));
         Assert::assertEmpty($stockMovements, 'Expected to find no stock movements');
     }
@@ -216,13 +241,36 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function assertLastEmployeesStockMovementForProduct(string $productReference, TableNode $table): void
+    public function assertLastEmployeesStockMovementForProductAndDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->assertLastEmployeesStockMovementForProduct($productReference, $table, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference last employees stock movements for shop :shopReference should be:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function assertLastEmployeesStockMovementForProductAndSpecificShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $this->assertLastEmployeesStockMovementForProduct($productReference, $table, $shopId);
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    private function assertLastEmployeesStockMovementForProduct(string $productReference, TableNode $table, int $shopId): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
         /** @var EmployeeStockMovement[] $stockMovements */
         $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
+            $productId,
+            $shopId
         ));
         $this->assertStockMovements($stockMovements, $table);
     }
@@ -247,13 +295,38 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
      * @param string $movementType
      * @param int $movementQuantity
      */
-    public function assertProductLastStockMovement(string $productReference, string $movementType, int $movementQuantity): void
+    public function assertProductLastStockMovementForDefaultShop(string $productReference, string $movementType, int $movementQuantity): void
+    {
+        $this->assertProductLastStockMovement($productReference, $movementType, $movementQuantity, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then /^product "(.*)" last stock movement for shop "(.*)" (increased|decreased) by (\d+)$/
+     *
+     * @param string $productReference
+     * @param string $movementType
+     * @param int $movementQuantity
+     */
+    public function assertProductLastStockMovementForSpecificShop(string $productReference, string $shopReference, string $movementType, int $movementQuantity): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $this->assertProductLastStockMovement($productReference, $movementType, $movementQuantity, $shopId);
+    }
+
+    /**
+     * @param string $productReference
+     * @param string $movementType
+     * @param int $movementQuantity
+     * @param int $shopId
+     */
+    private function assertProductLastStockMovement(string $productReference, string $movementType, int $movementQuantity, int $shopId): void
     {
         $productId = (int) $this->getSharedStorage()->get($productReference);
 
         /** @var EmployeeStockMovement[] $stockMovements */
         $stockMovements = $this->getQueryBus()->handle(new GetEmployeesStockMovements(
-            $productId
+            $productId,
+            $shopId
         ));
         $this->assertLastStockMovement($stockMovements[0], $movementType, $movementQuantity);
     }
