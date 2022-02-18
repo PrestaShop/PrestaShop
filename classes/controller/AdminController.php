@@ -953,7 +953,7 @@ class AdminControllerCore extends Controller
                         } elseif ($type == 'select') {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = \'' . pSQL($value) . '\' ';
                         } elseif ($type == 'price') {
-                            $value = (float) str_replace(',', '.', $value);
+                            $value = str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . pSQL(trim($value)) . ' ';
                         } else {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' LIKE \'%' . pSQL(trim($value)) . '%\' ';
@@ -1058,7 +1058,7 @@ class AdminControllerCore extends Controller
         if (ob_get_level() && ob_get_length() > 0) {
             ob_clean();
         }
-        $this->getList($this->context->language->id, null, null, 0, false);
+        $this->getList($this->context->language->id);
         if (!count($this->_list)) {
             return;
         }
@@ -2576,7 +2576,7 @@ class AdminControllerCore extends Controller
     /**
      * This function sets various display options for helper list.
      *
-     * @param HelperList|HelperView|HelperOptions $helper
+     * @param HelperList|HelperView|HelperOptions|HelperForm $helper
      */
     public function setHelperDisplay(Helper $helper)
     {
@@ -2904,7 +2904,7 @@ class AdminControllerCore extends Controller
                         $shop_id = (int) $this->context->employee->getDefaultShopID();
                         Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                     }
-                } elseif (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1])) {
+                } elseif (Shop::getShop((int) $split[1]) && $this->context->employee->hasAuthOnShop((int) $split[1])) {
                     $shop_id = (int) $split[1];
                     Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                 } else {
@@ -2933,7 +2933,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $this->context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
     }
 
     /**
@@ -4119,7 +4119,7 @@ class AdminControllerCore extends Controller
      */
     protected function processBulkEnableSelection()
     {
-        return $this->processBulkStatusSelection(1);
+        return $this->processBulkStatusSelection(true);
     }
 
     /**
@@ -4129,7 +4129,7 @@ class AdminControllerCore extends Controller
      */
     protected function processBulkDisableSelection()
     {
-        return $this->processBulkStatusSelection(0);
+        return $this->processBulkStatusSelection(false);
     }
 
     /**

@@ -62,7 +62,7 @@ class MetaCore extends ObjectModel
      * Get pages.
      *
      * @param bool $excludeFilled
-     * @param bool $addPage
+     * @param bool|string $addPage
      *
      * @return array
      */

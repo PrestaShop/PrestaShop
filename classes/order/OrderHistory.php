@@ -77,7 +77,7 @@ class OrderHistoryCore extends ObjectModel
      * Sets the new state of the given order.
      *
      * @param int $new_order_state
-     * @param int|Order $id_order
+     * @param int|OrderCore $id_order
      * @param bool $use_existing_payment
      */
     public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
@@ -262,7 +262,7 @@ class OrderHistoryCore extends ObjectModel
                         $product['product_attribute_id'],
                         $warehouse,
                         ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
-                        Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+                        (int) Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
                         true,
                         (int) $order->id
                     );
@@ -450,7 +450,7 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // else, returns an OrderState object
-        return new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
+        return new OrderState((int) $id_order_state, (int) Configuration::get('PS_LANG_DEFAULT'));
     }
 
     /**

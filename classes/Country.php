@@ -29,6 +29,7 @@
  */
 class CountryCore extends ObjectModel
 {
+    /** @var int */
     public $id;
 
     /** @var int Zone id which country belongs */

@@ -244,7 +244,7 @@ class CustomerCore extends ObjectModel
         $this->id_shop_group = ($this->id_shop_group) ? $this->id_shop_group : Context::getContext()->shop->id_shop_group;
         $this->id_lang = ($this->id_lang) ? $this->id_lang : Context::getContext()->language->id;
         $this->birthday = (empty($this->years) ? $this->birthday : (int) $this->years . '-' . (int) $this->months . '-' . (int) $this->days);
-        $this->secure_key = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+        $this->secure_key = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
         $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-' . Configuration::get('PS_PASSWD_TIME_FRONT') . 'minutes'));
 
         if ($this->newsletter && !Validate::isDate($this->newsletter_date_add)) {
@@ -867,8 +867,8 @@ class CustomerCore extends ObjectModel
      */
     public static function searchByName($query, $limit = null)
     {
-        $sql = 'SELECT c.*, 
-                GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids 
+        $sql = 'SELECT c.*,
+                GROUP_CONCAT(cg.id_group SEPARATOR \',\') AS group_ids
                 FROM `' . _DB_PREFIX_ . 'customer` c
                 LEFT JOIN `' . _DB_PREFIX_ . 'customer_group` cg ON c.id_customer = cg.id_customer
                 WHERE 1';

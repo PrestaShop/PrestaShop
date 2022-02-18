@@ -387,7 +387,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $language = new Language($this->id_lang);
         if (null === $language->id) {
-            $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
         return $language;

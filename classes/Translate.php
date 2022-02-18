@@ -100,7 +100,7 @@ class TranslateCore
     /**
      * Get a translation for a module.
      *
-     * @param string|Module $module
+     * @param string|ModuleCore $module
      * @param string $originalString
      * @param string $source
      * @param string|array|null $sprintf
@@ -129,7 +129,7 @@ class TranslateCore
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
         static $translationsMerged = [];
 
-        $name = $module instanceof Module ? $module->name : $module;
+        $name = $module instanceof ModuleCore ? $module->name : $module;
 
         if (null !== $locale) {
             $iso = Language::getIsoByLocale($locale);

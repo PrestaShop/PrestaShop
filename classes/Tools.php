@@ -111,7 +111,7 @@ class ToolsCore
 
                 break;
             case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = ceil($length * 0.75);
+                $num_bytes = (int) ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
@@ -706,7 +706,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -938,11 +938,11 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
@@ -1766,7 +1766,7 @@ class ToolsCore
     {
         $tab = [];
         for ($i = 1; $i != 13; ++$i) {
-            $tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
+            $tab[$i] = date('F', mktime(0, 0, 0, $i, (int) date('m'), (int) date('Y')));
         }
 
         return $tab;
@@ -3430,7 +3430,7 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
-     * @param bool $tpl
+     * @param bool|string $tpl
      * @param string $cache_id
      * @param string $compile_id
      *

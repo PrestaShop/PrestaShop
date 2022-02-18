@@ -61,9 +61,10 @@ class DbMySQLiCore extends Db
         }
 
         if ($socket) {
-            $this->link = @new mysqli(null, $this->user, $this->password, $this->database, null, $socket);
+            /* @phpstan-ignore-next-line */
+            $this->link = @new mysqli(null, $this->user, $this->password, $this->database, 0, $socket);
         } elseif ($port) {
-            $this->link = @new mysqli($server, $this->user, $this->password, $this->database, $port);
+            $this->link = @new mysqli($server, $this->user, $this->password, $this->database, (int) $port);
         } else {
             $this->link = @new mysqli($this->server, $this->user, $this->password, $this->database);
         }
@@ -98,7 +99,7 @@ class DbMySQLiCore extends Db
     {
         if (strpos($host, ':') !== false) {
             list($host, $port) = explode(':', $host);
-            $link = @new mysqli($host, $user, $password, null, $port);
+            $link = @new mysqli($host, $user, $password, '', (int) $port);
         } else {
             $link = @new mysqli($host, $user, $password);
         }

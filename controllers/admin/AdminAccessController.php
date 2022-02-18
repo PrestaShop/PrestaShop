@@ -152,7 +152,7 @@ class AdminAccessControllerCore extends AdminController
                 throw new PrestaShopException('permission does not exist');
             }
 
-            $enabled = (int) Tools::getValue('enabled');
+            $enabled = (bool) Tools::getValue('enabled');
             $id_tab = (int) Tools::getValue('id_tab');
             $id_profile = (int) Tools::getValue('id_profile');
             $addFromParent = (int) Tools::getValue('addFromParent');
