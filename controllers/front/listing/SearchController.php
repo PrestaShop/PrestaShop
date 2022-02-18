@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class SearchControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'search';
     public $instant_search;
     public $ajax_search;

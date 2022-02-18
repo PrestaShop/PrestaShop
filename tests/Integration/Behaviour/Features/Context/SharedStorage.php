@@ -34,7 +34,7 @@ use RuntimeException;
 class SharedStorage
 {
     /**
-     * @var self
+     * @var self|null
      */
     protected static $instance;
 

@@ -42,10 +42,8 @@ class ProductOptions extends CommonAbstractType
     private $translator;
     private $suppliers;
     private $context;
-    private $productAdapter;
     private $router;
     private $locales;
-    private $currencyDataprovider;
     private $fullAttachmentList;
     private $attachmentList;
 
@@ -54,25 +52,19 @@ class ProductOptions extends CommonAbstractType
      *
      * @param object $translator
      * @param object $legacyContext
-     * @param object $productDataProvider
      * @param object $supplierDataProvider
-     * @param object $currencyDataprovider
      * @param object $attachmentDataprovider
      * @param object $router
      */
     public function __construct(
         $translator,
         $legacyContext,
-        $productDataProvider,
         $supplierDataProvider,
-        $currencyDataprovider,
         $attachmentDataprovider,
         $router
     ) {
         $this->context = $legacyContext;
         $this->translator = $translator;
-        $this->productAdapter = $productDataProvider;
-        $this->currencyDataprovider = $currencyDataprovider;
         $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
 

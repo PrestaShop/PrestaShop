@@ -353,6 +353,7 @@ class Install extends AbstractInstall
         $instance->execute('SET FOREIGN_KEY_CHECKS=0');
         foreach ($instance->executeS('SHOW TABLES') as $row) {
             $table = current($row);
+            /* @phpstan-ignore-next-line */
             if (empty(_DB_PREFIX_) || preg_match('#^' . _DB_PREFIX_ . '#i', $table)) {
                 $instance->execute(($truncate ? 'TRUNCATE TABLE ' : 'DROP TABLE ') . '`' . $table . '`');
             }
@@ -482,7 +483,7 @@ class Install extends AbstractInstall
         $xml_loader->setTranslator($this->translator);
         $xml_loader->setLanguages($languages);
 
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
@@ -710,14 +711,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
+        if (self::$_cache_localization_pack_content === null || array_key_exists($country, self::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            static::$_cache_localization_pack_content[$country] = $localization_file_content;
+            self::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
+        return self::$_cache_localization_pack_content[$country] ?? false;
     }
 
     /**
@@ -1085,7 +1086,7 @@ class Install extends AbstractInstall
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 

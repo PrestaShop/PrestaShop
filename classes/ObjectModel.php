@@ -59,7 +59,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int|null Language ID */
     protected $id_lang = null;
 
-    /** @var int Shop ID */
+    /** @var int|null Shop ID */
     protected $id_shop = null;
 
     /**

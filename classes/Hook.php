@@ -212,7 +212,7 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        $hook_ids = static::getAllHookIds($withAliases, $refreshCache);
+        $hook_ids = self::getAllHookIds($withAliases, $refreshCache);
 
         return $hook_ids[$hookName] ?? false;
     }
@@ -256,7 +256,7 @@ class HookCore extends ObjectModel
      */
     public static function isAlias(string $hookName): bool
     {
-        $aliases = static::getCanonicalHookNames();
+        $aliases = self::getCanonicalHookNames();
 
         return isset($aliases[strtolower($hookName)]);
     }
@@ -353,7 +353,7 @@ class HookCore extends ObjectModel
         return array_unique(
             array_merge(
                 [$canonical],
-                static::getHookAliasesFor($canonical)
+                self::getHookAliasesFor($canonical)
             )
         );
     }
@@ -374,7 +374,7 @@ class HookCore extends ObjectModel
         $hooksToCheck = (!$strict) ? static::getAllKnownNames($hookName) : [$hookName];
 
         foreach ($hooksToCheck as $currentHookName) {
-            if (is_callable([$module, static::getMethodName($currentHookName)])) {
+            if (is_callable([$module, self::getMethodName($currentHookName)])) {
                 return true;
             }
         }
@@ -401,14 +401,14 @@ class HookCore extends ObjectModel
             // Since is_callable() will always return true when __call() is available,
             // if the module was expecting an aliased hook name to be invoked, but we send
             // the canonical hook name instead, the hook will never be acknowledged by the module.
-            $methodName = static::getMethodName($hookName);
+            $methodName = self::getMethodName($hookName);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
             }
 
             // fall back to all other names
             foreach (static::getAllKnownNames($hookName) as $hook) {
-                $methodName = static::getMethodName($hook);
+                $methodName = self::getMethodName($hook);
                 if (is_callable([$module, $methodName])) {
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
@@ -665,7 +665,7 @@ class HookCore extends ObjectModel
      */
     public static function getHookModuleExecList($hookName = null)
     {
-        $allHookRegistrations = static::getAllHookRegistrations(Context::getContext(), $hookName);
+        $allHookRegistrations = self::getAllHookRegistrations(Context::getContext(), $hookName);
 
         // If no hook_name is given, return all registered hooks
         if (null === $hookName) {
@@ -731,7 +731,7 @@ class HookCore extends ObjectModel
             return $array_return ? [] : null;
         }
 
-        $hookRegistry = static::getHookRegistry();
+        $hookRegistry = self::getHookRegistry();
         $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {

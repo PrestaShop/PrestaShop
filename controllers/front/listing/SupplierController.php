@@ -29,6 +29,9 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class SupplierControllerCore extends ProductListingFrontController
 {
+    /**
+     * @var string
+     */
     public $php_self = 'supplier';
 
     /** @var Supplier */

@@ -96,7 +96,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processPopulateDatabase();
             } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
                 Language::getRtlStylesheetProcessor()
-                    ->setIsInstall(true)
                     ->setLanguageCode($this->session->lang)
                     ->setProcessFOThemes(['classic'])
                     ->process();

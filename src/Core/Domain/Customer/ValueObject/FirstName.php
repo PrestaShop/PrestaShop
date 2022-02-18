@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 class FirstName
 {
     /**
-     * @var string Maximum allowed length for first name
+     * @var int Maximum allowed length for first name
      */
     public const MAX_LENGTH = 255;
 

@@ -25,8 +25,11 @@
  */
 class AuthControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'authentication';
+    /** @var bool */
     public $auth = false;
 
     public function checkAccess()

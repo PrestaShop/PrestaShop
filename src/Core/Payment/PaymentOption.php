@@ -95,14 +95,6 @@ class PaymentOption implements HookContentClassInterface
     private $form;
 
     /**
-     * Custom HTML containing an iframe with the
-     * payment confirmation widget for modules like ATOS.
-     *
-     * @var string
-     */
-    private $iframe;
-
-    /**
      * For internal reasons, the name of the module
      * that provided this option.
      * Is this still necessary?

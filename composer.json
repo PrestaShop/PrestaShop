@@ -66,6 +66,7 @@
         "prestashop/gridhtml": "^2",
         "prestashop/gsitemap": "^4",
         "prestashop/pagesnotfound": "^2",
+        "prestashop/phpstan-prestashop": "^2.0",
         "prestashop/productcomments": "^5.0",
         "prestashop/ps_banner": "^2",
         "prestashop/ps_bestsellers": "^1.0",
@@ -137,9 +138,8 @@
         "friendsofphp/php-cs-fixer": "^2.16.1",
         "johnkary/phpunit-speedtrap": "^3",
         "mikey179/vfsstream": "^1.6",
-        "phpstan/phpstan": "^0.12.48",
+        "phpstan/phpstan": "^1",
         "phpunit/phpunit": "~8.5.16",
-        "prestashop/phpstan-prestashop": "^1.0",
         "symfony/phpunit-bridge": "^3.4"
     },
     "config": {

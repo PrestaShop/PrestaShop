@@ -38,18 +38,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TypeaheadProductPackCollectionType extends CommonAbstractType
 {
-    private $productAdapter;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param object $productAdapter
-     */
-    public function __construct($productAdapter)
-    {
-        $this->productAdapter = $productAdapter;
-    }
-
     /**
      * {@inheritdoc}
      *

@@ -68,7 +68,7 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
     public static function setUpBeforeClass(): void
     {
-        static::restoreTestDB();
+        self::restoreTestDB();
         require_once __DIR__ . '/../../config/config.inc.php';
     }
 

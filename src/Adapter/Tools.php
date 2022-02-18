@@ -120,24 +120,6 @@ class Tools
     /**
      * @see HtaccessFileGenerator::generateFile()
      *
-     * @param bool $disableMultiView enable/disable Multiviews option
-     *
-     * @return bool
-     */
-    private function generateHtaccessOnMultiViews($disableMultiView = false)
-    {
-        return LegacyTools::generateHtaccess(
-            null,
-            null,
-            null,
-            '',
-            $disableMultiView
-        );
-    }
-
-    /**
-     * @see HtaccessFileGenerator::generateFile()
-     *
      * @return bool
      */
     public function generateHtaccessWithMultiViews()

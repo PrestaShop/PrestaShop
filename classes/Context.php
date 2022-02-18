@@ -64,7 +64,7 @@ class ContextCore
     /** @var Link|null */
     public $link;
 
-    /** @var Country */
+    /** @var Country|null */
     public $country;
 
     /** @var Employee|null */
@@ -76,7 +76,7 @@ class ContextCore
     /** @var string */
     public $override_controller_name_for_translations;
 
-    /** @var Language|InstallLanguage */
+    /** @var Language|InstallLanguage|null */
     public $language;
 
     /** @var Currency|null */
@@ -92,7 +92,7 @@ class ContextCore
     /** @var Tab */
     public $tab;
 
-    /** @var Shop */
+    /** @var Shop|null */
     public $shop;
 
     /** @var Shop */
@@ -107,7 +107,7 @@ class ContextCore
     /** @var int */
     public $mode;
 
-    /** @var ContainerBuilder|ContainerInterface */
+    /** @var ContainerBuilder|ContainerInterface|null */
     public $container;
 
     /** @var float */

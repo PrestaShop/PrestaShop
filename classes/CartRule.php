@@ -49,7 +49,13 @@ class CartRuleCore extends ObjectModel
     public $id;
     public $name;
     public $id_customer;
+    /**
+     * @var string|null
+     */
     public $date_from;
+    /**
+     * @var string|null
+     */
     public $date_to;
     public $description;
     public $quantity = 1;

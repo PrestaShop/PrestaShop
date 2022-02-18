@@ -29,7 +29,7 @@
  */
 class CMSCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var int|null */
     public $id;
     public $id_cms;
     public $head_seo_title;
@@ -163,7 +163,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param null $idLang
+     * @param int|null $idLang
      * @param bool $idBlock
      * @param bool $active
      *

@@ -439,7 +439,7 @@ class OrderCore extends ObjectModel
                 $this->{$field} = 0;
             }
 
-            $this->{$field} = number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
+            $this->{$field} = (float) number_format($this->{$field}, Context::getContext()->getComputingPrecision(), '.', '');
         }
 
         /* Update order detail */
@@ -1169,7 +1169,7 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_cart Cart id
      *
-     * @return OrderCore
+     * @return OrderCore|null
      */
     public static function getByCartId($id_cart)
     {
@@ -1878,7 +1878,7 @@ class OrderCore extends ObjectModel
         // if payment_method is define, we used this
         $order_payment->payment_method = ($payment_method ? $payment_method : $this->payment);
         $order_payment->transaction_id = $payment_transaction_id;
-        $order_payment->amount = $amount_paid;
+        $order_payment->amount = (float) $amount_paid;
         $order_payment->date_add = ($date ? $date : null);
 
         // Add time to the date if needed

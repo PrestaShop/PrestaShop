@@ -48,7 +48,6 @@ services:
   prestashop.adapter.optional_features.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\OptionalFeatures\OptionalFeaturesConfiguration'
     arguments:
-      - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.combination_feature'
       - '@prestashop.adapter.feature.feature'
       - '@prestashop.adapter.group.feature'
@@ -118,8 +117,6 @@ services:
 
   prestashop.adapter.order.delivery.slip.pdf.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\Delivery\SlipPdfConfiguration'
-    arguments:
-      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.order.invoice_options.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
@@ -145,7 +142,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageCopier'
     arguments:
       - '@prestashop.adapter.data_provider.language'
-      - '@translator'
       - '@filesystem'
       - '@=service("prestashop.core.addon.theme.repository").getListAsCollection()'
 
@@ -158,7 +154,6 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.language.activator'
       - '@prestashop.adapter.manager.currency'
-      - '@prestashop.adapter.admin.data_provider.module'
 
   prestashop.adapter.local_units.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Localization\LocalUnitsConfiguration'
@@ -281,7 +276,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
     arguments:
       - '@doctrine.orm.entity_manager'
-      - '@translator'
 
   prestashop.adapter.security.general.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'

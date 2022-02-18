@@ -96,7 +96,6 @@ services:
   prestashop.core.grid.data_provider.customer_discount:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerDiscountGridDataFactory'
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().customer"
 
   prestashop.core.grid.data_provider.customer_address:

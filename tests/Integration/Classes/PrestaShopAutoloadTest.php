@@ -38,17 +38,12 @@ class PrestaShopAutoloadTest extends TestCase
     /**
      * @var string|null
      */
-    private $file_index_content = null;
-    /**
-     * @var string|null
-     */
     private $file_index = null;
 
     protected function setUp(): void
     {
         $this->file_index = PrestaShopAutoload::getCacheFileIndex();
         PrestaShopAutoload::getInstance()->generateIndex();
-        $this->file_index_content = md5(file_get_contents($this->file_index));
     }
 
     public static function tearDownAfterClass(): void

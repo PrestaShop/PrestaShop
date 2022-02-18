@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb25b604a0c46230289d8a7b09a4c704",
+    "content-hash": "0e0c8113b6a72be85785363fcc65f932",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4883,6 +4883,65 @@
             "time": "2021-03-02T17:54:11+00:00"
         },
         {
+            "name": "phpstan/phpstan",
+            "version": "1.4.10",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpstan/phpstan.git",
+                "reference": "898c479c39caa727bedf4311dd294a8f4e250e72"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/898c479c39caa727bedf4311dd294a8f4e250e72",
+                "reference": "898c479c39caa727bedf4311dd294a8f4e250e72",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1|^8.0"
+            },
+            "conflict": {
+                "phpstan/phpstan-shim": "*"
+            },
+            "bin": [
+                "phpstan",
+                "phpstan.phar"
+            ],
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHPStan - PHP Static Analysis Tool",
+            "support": {
+                "issues": "https://github.com/phpstan/phpstan/issues",
+                "source": "https://github.com/phpstan/phpstan/tree/1.4.10"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/ondrejmirtes",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/phpstan",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/phpstan",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2022-03-14T10:25:45+00:00"
+        },
+        {
             "name": "pimple/pimple",
             "version": "v3.4.0",
             "source": {
@@ -5552,6 +5611,65 @@
                 "source": "https://github.com/PrestaShop/php-dev-tools/tree/v4.0.1"
             },
             "time": "2021-05-10T09:33:33+00:00"
+        },
+        {
+            "name": "prestashop/phpstan-prestashop",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/phpstan-prestashop.git",
+                "reference": "8e915210f8071f517fcbcbcc2fde6078ce7fbc36"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/phpstan-prestashop/zipball/8e915210f8071f517fcbcbcc2fde6078ce7fbc36",
+                "reference": "8e915210f8071f517fcbcbcc2fde6078ce7fbc36",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2|^8.0",
+                "phpstan/phpstan": "^1.2.0"
+            },
+            "require-dev": {
+                "nikic/php-parser": "^4.10",
+                "phpstan/phpstan-phpunit": "^1.0.0",
+                "phpstan/phpstan-strict-rules": "^1.1.0",
+                "phpunit/phpunit": "^8.5",
+                "symfony/console": "^5.2"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.12-dev"
+                },
+                "phpstan": {
+                    "includes": [
+                        "extension.neon",
+                        "rules.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PHPStanForPrestaShop\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop extension for PHPStan",
+            "support": {
+                "issues": "https://github.com/PrestaShop/phpstan-prestashop/issues",
+                "source": "https://github.com/PrestaShop/phpstan-prestashop/tree/2.0.0"
+            },
+            "time": "2021-11-23T09:22:24+00:00"
         },
         {
             "name": "prestashop/productcomments",
@@ -11117,66 +11235,6 @@
             "time": "2021-03-17T13:42:18+00:00"
         },
         {
-            "name": "phpstan/phpstan",
-            "version": "0.12.88",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "464d1a81af49409c41074aa6640ed0c4cbd9bb68"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/464d1a81af49409c41074aa6640ed0c4cbd9bb68",
-                "reference": "464d1a81af49409c41074aa6640ed0c4cbd9bb68",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1|^8.0"
-            },
-            "conflict": {
-                "phpstan/phpstan-shim": "*"
-            },
-            "bin": [
-                "phpstan",
-                "phpstan.phar"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.12-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "bootstrap.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHPStan - PHP Static Analysis Tool",
-            "support": {
-                "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.88"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/ondrejmirtes",
-                    "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/phpstan",
-                    "type": "patreon"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/phpstan/phpstan",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2021-05-17T12:24:49+00:00"
-        },
-        {
             "name": "phpunit/php-code-coverage",
             "version": "7.0.14",
             "source": {
@@ -11569,65 +11627,6 @@
                 }
             ],
             "time": "2021-06-05T04:46:20+00:00"
-        },
-        {
-            "name": "prestashop/phpstan-prestashop",
-            "version": "1.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PrestaShop/phpstan-prestashop.git",
-                "reference": "8935c0702980ed05ff9faf2f646d1df5be9effef"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/phpstan-prestashop/zipball/8935c0702980ed05ff9faf2f646d1df5be9effef",
-                "reference": "8935c0702980ed05ff9faf2f646d1df5be9effef",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1",
-                "phpstan/phpstan": "^0.12.48"
-            },
-            "require-dev": {
-                "nikic/php-parser": "^4.10",
-                "phpstan/phpstan-phpunit": "^0.12.16",
-                "phpstan/phpstan-strict-rules": "^0.12.5",
-                "phpunit/phpunit": "^7.5.20",
-                "symfony/console": "^5.2"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.12-dev"
-                },
-                "phpstan": {
-                    "includes": [
-                        "extension.neon",
-                        "rules.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "PHPStanForPrestaShop\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "PrestaShop SA",
-                    "email": "contact@prestashop.com"
-                }
-            ],
-            "description": "PrestaShop extension for PHPStan",
-            "support": {
-                "issues": "https://github.com/PrestaShop/phpstan-prestashop/issues",
-                "source": "https://github.com/PrestaShop/phpstan-prestashop/tree/1.1.1"
-            },
-            "time": "2021-03-09T21:54:31+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",

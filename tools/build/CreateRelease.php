@@ -69,7 +69,7 @@ $helpMessage = "Usage: php {prestashop_root_path}/tools/build/CreateRelease.php 
 
 foreach ($releaseOptions as $optionName => $option) {
     $required = isset($option['required']) ? var_export($option['required'], true) : 'false';
-    $description = isset($releaseOptions[$optionName]['description']) ? $releaseOptions[$optionName]['description'] : '';
+    $description = $releaseOptions[$optionName]['description'];
     $padding = str_pad('', 24, ' ', STR_PAD_LEFT);
     $requiredLabel = str_pad('required:', 13);
     $descriptionLabel = str_pad('description:', 13);

@@ -61,7 +61,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
-        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+        if (empty($this->order_invoice->shop_address)) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
             if (!$bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
@@ -166,7 +166,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $delivery_address = null;
         $formatted_delivery_address = '';
-        if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
+        if (!empty($this->order->id_address_delivery)) {
             $delivery_address = new Address((int) $this->order->id_address_delivery);
             $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         }

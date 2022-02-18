@@ -255,7 +255,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if ($this->is_rtl) {
             static::getRtlStylesheetProcessor()
-                ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
                 ->process();
@@ -794,7 +793,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_all_language_json === null) {
             static::$_cache_all_language_json = [];
-            $allLanguages = static::loadAllLanguagesDetails();
+            $allLanguages = self::loadAllLanguagesDetails();
 
             foreach ($allLanguages as $isoCode => $langDetails) {
                 static::$_cache_all_language_json[$langDetails['locale']] = $langDetails;
@@ -873,7 +872,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
 
-        $allLanguages = static::loadAllLanguagesDetails();
+        $allLanguages = self::loadAllLanguagesDetails();
 
         return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
     }
@@ -1233,7 +1232,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
-        $file = static::getPathToCachedTranslationPack($locale, $type);
+        $file = self::getPathToCachedTranslationPack($locale, $type);
         $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
         $url = str_replace(
             [
@@ -1283,7 +1282,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         $zipArchive = new ZipArchive();
-        $zipArchive->open(static::getPathToCachedTranslationPack($locale));
+        $zipArchive->open(self::getPathToCachedTranslationPack($locale));
         $zipArchive->extractTo(self::SF_TRANSLATIONS_DIR);
         $zipArchive->close();
 
@@ -1369,10 +1368,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         static::updateMultilangTable($iso);
 
         // update localized information in currencies
-        static::updateCurrenciesCldr(new static($langId));
+        self::updateCurrenciesCldr(new static($langId));
 
         // generate mail templates in the installed language
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return true;
     }
@@ -1405,7 +1404,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // generate mail templates in the installed language
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return true;
     }
@@ -1454,7 +1453,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             Language::updateMultilangTable($iso);
-            static::generateEmailsLanguagePack($lang_pack, $errors, false);
+            self::generateEmailsLanguagePack($lang_pack, $errors, false);
         }
 
         return true;
@@ -1615,7 +1614,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $shops = Shop::getShopsCollection(false);
             /** @var array<Shop> $shops */
             foreach ($shops as $shop) {
-                static::updateMultilangFromClassForShop($classObject, $lang, $shop);
+                self::updateMultilangFromClassForShop($classObject, $lang, $shop);
             }
         }
     }
@@ -1683,7 +1682,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function translationPackIsInCache(string $locale, string $type = self::PACK_TYPE_SYMFONY): bool
     {
-        return file_exists(static::getPathToCachedTranslationPack($locale, $type));
+        return file_exists(self::getPathToCachedTranslationPack($locale, $type));
     }
 
     /**

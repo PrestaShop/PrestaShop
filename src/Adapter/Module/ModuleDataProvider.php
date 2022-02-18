@@ -93,7 +93,14 @@ class ModuleDataProvider
      */
     public function findByName($name)
     {
-        $result = Db::getInstance()->getRow('SELECT `id_module` as `id`, `active`, `version` FROM `' . _DB_PREFIX_ . 'module` WHERE `name` = "' . pSQL($name) . '"');
+        $result = Db::getInstance()->getRow(
+            sprintf(
+                'SELECT `id_module` as `id`, `active`, `version` FROM `%smodule` WHERE `name` = "%s"',
+                _DB_PREFIX_,
+                pSQL($name)
+            )
+        );
+        /** @var array{id: string, active: string, version: string}|false|null $result */
         if ($result) {
             $result['installed'] = 1;
             $result['active'] = $this->isEnabled($name);
@@ -101,7 +108,7 @@ class ModuleDataProvider
             $lastAccessDate = '0000-00-00 00:00:00';
 
             if (!Tools::isPHPCLI() && null !== $this->entityManager && $this->employeeID) {
-                $moduleID = isset($result['id']) ? (int) $result['id'] : 0;
+                $moduleID = (int) $result['id'];
 
                 $qb = $this->entityManager->createQueryBuilder();
                 $qb->select('mh')
@@ -121,7 +128,9 @@ class ModuleDataProvider
             return $result;
         }
 
-        return ['installed' => 0];
+        return [
+            'installed' => 0,
+        ];
     }
 
     /**
