@@ -116,9 +116,6 @@ class ProductShopUpdater
         // $targetStock->physical_quantity = $sourceStock->physical_quantity;
         // $targetStock->reserved_quantity = $sourceStock->reserved_quantity;
 
-        $this->stockAvailableRepository->update(
-            $targetStock,
-            ShopConstraint::shop($targetShopId->getValue())
-        );
+        $this->stockAvailableRepository->update($targetStock);
     }
 }
