@@ -80,7 +80,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function add($interval)
     {
-        throw $this::buildUnusableMethodException('add');
+        return $this;
     }
 
     /**
@@ -152,7 +152,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setTimezone($timezone)
     {
-        throw $this::buildUnusableMethodException('setTimezone');
+        return $this;
     }
 
     /**
@@ -164,7 +164,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function sub($interval)
     {
-        throw $this::buildUnusableMethodException('sub');
+        return $this;
     }
 
     /**
