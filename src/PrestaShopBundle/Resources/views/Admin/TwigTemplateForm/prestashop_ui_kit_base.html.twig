@@ -566,7 +566,7 @@
 {% block switch_widget %}
   {% apply spaceless %}
   <div class="input-group">
-    <span class="ps-switch">
+    <span class="ps-switch" id="{{ form.vars.id }}">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
           <input id="{{inputId}}"
@@ -1294,6 +1294,7 @@
       {{- block('form_append_external_link') -}}
     </div>
     {{- form_errors(form) -}}
+    {{- block('form_modify_all_shops') -}}
   </div>
 {% endblock %}
 

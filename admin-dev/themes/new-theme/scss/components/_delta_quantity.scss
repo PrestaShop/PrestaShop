@@ -42,4 +42,12 @@ $component-name: delta-quantity;
     margin: 0 0.3125rem;
     line-height: 39px;
   }
+
+  .modify-all-shops {
+    text-align: right;
+
+    label {
+      line-height: normal;
+    }
+  }
 }
