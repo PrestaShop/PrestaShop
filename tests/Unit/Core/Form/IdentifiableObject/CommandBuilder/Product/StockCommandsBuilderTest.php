@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockIn
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -194,6 +195,32 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'stock' => [
                     'availability' => [
                         'available_date' => '2022-10-10',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => '',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => null,
                     ],
                 ],
             ],
