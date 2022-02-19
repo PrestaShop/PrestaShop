@@ -36,12 +36,14 @@ class CommandField
     public const TYPE_BOOL = 'bool';
     public const TYPE_INT = 'int';
     public const TYPE_ARRAY = 'array';
+    public const TYPE_DATETIME = 'datetime';
 
     public const ACCEPTED_TYPES = [
         self::TYPE_STRING,
         self::TYPE_BOOL,
         self::TYPE_INT,
         self::TYPE_ARRAY,
+        self::TYPE_DATETIME,
     ];
 
     /**

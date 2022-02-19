@@ -75,6 +75,20 @@ class CommandFieldTest extends TestCase
             CommandField::TYPE_INT,
             true,
         ];
+
+        yield [
+            'localized_field',
+            'setLocalizedField',
+            CommandField::TYPE_ARRAY,
+            true,
+        ];
+
+        yield [
+            'date_time',
+            'setDate',
+            CommandField::TYPE_DATETIME,
+            true,
+        ];
     }
 
     /**
