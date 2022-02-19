@@ -39,26 +39,30 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class DkimConfigurationType extends TranslatorAwareType
 {
+    public const FIELD_MAIL_DKIM_DOMAIN = 'domain';
+    public const FIELD_MAIL_DKIM_SELECTOR = 'selector';
+    public const FIELD_MAIL_DKIM_KEY = 'key';
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('domain', TextType::class, [
+            ->add(self::FIELD_MAIL_DKIM_DOMAIN, TextType::class, [
                 'label' => $this->trans('DKIM domain', 'Admin.Advparameters.Feature'),
                 'required' => false,
                 'empty_data' => '',
                 'multistore_configuration_key' => 'PS_MAIL_DKIM_DOMAIN',
             ])
-            ->add('selector', TextType::class, [
+            ->add(self::FIELD_MAIL_DKIM_SELECTOR, TextType::class, [
                 'label' => $this->trans('DKIM selector', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('A DKIM selector usually looks like 12345.domain. It must match the name of your DNS record.', 'Admin.Advparameters.Help'),
                 'required' => false,
                 'empty_data' => '',
                 'multistore_configuration_key' => 'PS_MAIL_DKIM_SELECTOR',
             ])
-            ->add('key', TextareaType::class, [
+            ->add(self::FIELD_MAIL_DKIM_KEY, TextareaType::class, [
                 'label' => $this->trans('DKIM private key', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('The private key starts with -----BEGIN RSA PRIVATE KEY-----.', 'Admin.Advparameters.Help'),
                 'required' => false,

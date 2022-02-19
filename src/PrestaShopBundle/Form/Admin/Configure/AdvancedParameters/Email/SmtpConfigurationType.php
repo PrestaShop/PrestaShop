@@ -38,34 +38,40 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class SmtpConfigurationType extends TranslatorAwareType
 {
+    public const FIELD_MAIL_DOMAIN = 'domain';
+    public const FIELD_MAIL_SERVER = 'server';
+    public const FIELD_MAIL_USER = 'username';
+    public const FIELD_MAIL_PASSWD = 'password';
+    public const FIELD_MAIL_SMTP_ENCRYPTION = 'encryption';
+    public const FIELD_MAIL_SMTP_PORT = 'port';
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('domain', TextType::class, [
+            ->add(self::FIELD_MAIL_DOMAIN, TextType::class, [
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('Email domain name', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_DOMAIN',
                 'help' => $this->trans('Fully qualified domain name (keep this field empty if you don\'t know).', 'Admin.Advparameters.Help'),
             ])
-            ->add('server', TextType::class, [
+            ->add(self::FIELD_MAIL_SERVER, TextType::class, [
                 'required' => false,
                 'label' => $this->trans('SMTP server', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_SERVER',
                 'help' => $this->trans('IP address or server name (e.g. smtp.mydomain.com).', 'Admin.Advparameters.Help'),
             ])
-            ->add('username', TextType::class, [
+            ->add(self::FIELD_MAIL_USER, TextType::class, [
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('SMTP username', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_USER',
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
-                'attr' => ['autocomplete' => 'new-password'],
             ])
-            ->add('password', PasswordType::class, [
+            ->add(self::FIELD_MAIL_PASSWD, PasswordType::class, [
                 'required' => false,
                 'empty_data' => '',
                 'label' => $this->trans('SMTP password', 'Admin.Advparameters.Feature'),
@@ -73,7 +79,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'help' => $this->trans('Leave blank if not applicable.', 'Admin.Advparameters.Help'),
                 'attr' => ['autocomplete' => 'new-password'],
             ])
-            ->add('encryption', ChoiceType::class, [
+            ->add(self::FIELD_MAIL_SMTP_ENCRYPTION, ChoiceType::class, [
                 'choices' => [
                     'None' => 'off',
                     'TLS' => 'tls',
@@ -84,7 +90,7 @@ class SmtpConfigurationType extends TranslatorAwareType
                 'multistore_configuration_key' => 'PS_MAIL_SMTP_ENCRYPTION',
                 'help' => $this->trans('SSL does not seem to be available on your server.', 'Admin.Advparameters.Help'),
             ])
-            ->add('port', TextType::class, [
+            ->add(self::FIELD_MAIL_SMTP_PORT, TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Port', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_MAIL_SMTP_PORT',

@@ -30,6 +30,9 @@ namespace Tests\Unit\Adapter\Email;
 
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Email\EmailDataConfigurator;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\DkimConfigurationType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
@@ -37,6 +40,26 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
+    private const VALID_CONFIGURATION = [
+        EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE => 1,
+        EmailConfigurationType::FIELD_MAIL_METHOD => 1,
+        EmailConfigurationType::FIELD_MAIL_TYPE => 1,
+        EmailConfigurationType::FIELD_LOG_EMAILS => true,
+        'smtp_config' => [
+            SmtpConfigurationType::FIELD_MAIL_DOMAIN => 'domain.com',
+            SmtpConfigurationType::FIELD_MAIL_SERVER => 'smtp.domain.com',
+            SmtpConfigurationType::FIELD_MAIL_USER => 'myusername',
+            SmtpConfigurationType::FIELD_MAIL_PASSWD => 'password',
+            SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION => 'ssl',
+            SmtpConfigurationType::FIELD_MAIL_SMTP_PORT => '21',
+        ],
+        EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE => true,
+        'dkim_config' => [
+            DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN => 'smtp.domain.com',
+            DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR => 'selector.domain.com',
+            DkimConfigurationType::FIELD_MAIL_DKIM_KEY => '-----BEGIN RSA PRIVATE KEY-----.',
+        ],
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -74,26 +97,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
 
         $result = $EmailDataConfigurator->getConfiguration();
         $this->assertSame(
-            [
-                'send_emails_to' => 1,
-                'mail_method' => 1,
-                'mail_type' => 1,
-                'log_emails' => true,
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'password',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
-                'dkim_enable' => true,
-                'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ],
+            self::VALID_CONFIGURATION,
             $result
         );
     }
@@ -118,87 +122,30 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, [
-                'send_emails_to' => 'wrong type', // Wrong Type
-                'mail_method' => 1,
-                'mail_type' => 1,
-                'log_emails' => true,
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'password',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
-                'dkim_enable' => true,
-                'dkim_config' => [
-                    'domain' => 'domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ]],
-            [InvalidOptionsException::class, [
-                'send_emails_to' => 1,
-                'mail_method' => 'wrong type', // Wrong Type
-                'mail_type' => 1,
-                'log_emails' => true,
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'password',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
-                'dkim_enable' => true,
-                'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ]],
-            [InvalidOptionsException::class, [
-                'send_emails_to' => 1,
-                'mail_method' => 1,
-                'mail_type' => 'wrong type', // Wrong Type
-                'log_emails' => true,
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'password',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
-                'dkim_enable' => true,
-                'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ]],
-            [InvalidOptionsException::class, [
-                'send_emails_to' => 1,
-                'mail_method' => 1,
-                'mail_type' => 1,
-                'log_emails' => 'wrong type', // Wrong Type
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'password',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
-                'dkim_enable' => true,
-                'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ]],
+            [
+                UndefinedOptionsException::class,
+                ['does_not_exist' => 'does_not_exist'],
+            ],
+            [
+                InvalidOptionsException::class,
+                array_merge(self::VALID_CONFIGURATION, [EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE => 'wrong_type']),
+            ],
+            [
+                InvalidOptionsException::class,
+                array_merge(self::VALID_CONFIGURATION, [EmailConfigurationType::FIELD_MAIL_METHOD => 'wrong_type']),
+            ],
+            [
+                InvalidOptionsException::class,
+                array_merge(self::VALID_CONFIGURATION, [EmailConfigurationType::FIELD_MAIL_TYPE => 'wrong_type']),
+            ],
+            [
+                InvalidOptionsException::class,
+                array_merge(self::VALID_CONFIGURATION, [EmailConfigurationType::FIELD_LOG_EMAILS => 'wrong_type']),
+            ],
+            [
+                InvalidOptionsException::class,
+                array_merge(self::VALID_CONFIGURATION, [EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE => 'wrong_type']),
+            ],
             [InvalidOptionsException::class, [
                 'send_emails_to' => 1,
                 'mail_method' => 1,
@@ -332,26 +279,6 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
                     'encryption' => 'ssl',
                     'port' => '21',
                 ],
-                'dkim_enable' => 'wrong type', // Wrong Type
-                'dkim_config' => [
-                    'domain' => 'smtp.domain.com',
-                    'selector' => 'selector.domain.com',
-                    'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-                ],
-            ]],
-            [InvalidOptionsException::class, [
-                'send_emails_to' => 1,
-                'mail_method' => 1,
-                'mail_type' => 1,
-                'log_emails' => 1,
-                'smtp_config' => [
-                    'domain' => 'domain.com',
-                    'server' => 'smtp.domain.com',
-                    'username' => 'myusername',
-                    'password' => 'test',
-                    'encryption' => 'ssl',
-                    'port' => '21',
-                ],
                 'dkim_enable' => true,
                 'dkim_config' => [
                     'domain' => false, // Wrong type
@@ -406,26 +333,7 @@ class EmailDataConfiguratorTest extends AbstractConfigurationTestCase
     {
         $EmailDataConfigurator = new EmailDataConfigurator($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
-        $res = $EmailDataConfigurator->updateConfiguration([
-            'send_emails_to' => 1,
-            'mail_method' => 1,
-            'mail_type' => 1,
-            'log_emails' => true,
-            'smtp_config' => [
-                'domain' => 'domain.com',
-                'server' => 'smtp.domain.com',
-                'username' => 'myusername',
-                'password' => 'password',
-                'encryption' => 'ssl',
-                'port' => '21',
-            ],
-            'dkim_enable' => true,
-            'dkim_config' => [
-                'domain' => 'smtp.domain.com',
-                'selector' => 'selector.domain.com',
-                'key' => '-----BEGIN RSA PRIVATE KEY-----.',
-            ],
-        ]);
+        $res = $EmailDataConfigurator->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

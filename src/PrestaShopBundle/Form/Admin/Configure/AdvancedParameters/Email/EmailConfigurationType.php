@@ -40,6 +40,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class EmailConfigurationType extends TranslatorAwareType
 {
+    public const FIELD_MAIL_EMAIL_MESSAGE = 'send_emails_to';
+    public const FIELD_MAIL_METHOD = 'mail_method';
+    public const FIELD_MAIL_TYPE = 'mail_type';
+    public const FIELD_LOG_EMAILS = 'log_emails';
+    public const FIELD_MAIL_DKIM_ENABLE = 'dkim_enable';
+
     /**
      * @var FormChoiceProviderInterface
      */
@@ -74,14 +80,14 @@ class EmailConfigurationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('send_emails_to', ChoiceType::class, [
+            ->add(self::FIELD_MAIL_EMAIL_MESSAGE, ChoiceType::class, [
                 'label' => $this->trans('Send emails to', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
                 'multistore_configuration_key' => 'PS_MAIL_EMAIL_MESSAGE',
             ])
-            ->add('mail_method', ChoiceType::class, [
+            ->add(self::FIELD_MAIL_METHOD, ChoiceType::class, [
                 'label' => $this->trans('Method', 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'class' => 'js-email-method',
@@ -92,7 +98,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
                 'multistore_configuration_key' => 'PS_MAIL_METHOD',
             ])
-            ->add('mail_type', ChoiceType::class, [
+            ->add(self::FIELD_MAIL_TYPE, ChoiceType::class, [
                 'label' => $this->trans('Format', 'Admin.Advparameters.Feature'),
                 'expanded' => true,
                 'multiple' => false,
@@ -103,11 +109,11 @@ class EmailConfigurationType extends TranslatorAwareType
                 ],
                 'multistore_configuration_key' => 'PS_MAIL_TYPE',
             ])
-            ->add('log_emails', SwitchType::class, [
+            ->add(self::FIELD_LOG_EMAILS, SwitchType::class, [
                 'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_LOG_EMAILS',
             ])
-            ->add('dkim_enable', SwitchType::class, [
+            ->add(self::FIELD_MAIL_DKIM_ENABLE, SwitchType::class, [
                 'attr' => ['class' => 'js-dkim-enable'],
                 'choices' => [
                     'Disabled' => false,

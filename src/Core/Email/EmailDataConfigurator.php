@@ -27,6 +27,9 @@
 namespace PrestaShop\PrestaShop\Core\Email;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\DkimConfigurationType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\EmailConfigurationType;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Email\SmtpConfigurationType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,7 +38,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 final class EmailDataConfigurator extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = ['send_emails_to', 'mail_method', 'mail_type', 'log_emails', 'dkim_enable', 'smtp_config', 'dkim_config'];
+    private const CONFIGURATION_FIELDS =
+    [
+        EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE,
+        EmailConfigurationType::FIELD_MAIL_METHOD,
+        EmailConfigurationType::FIELD_MAIL_TYPE,
+        EmailConfigurationType::FIELD_LOG_EMAILS,
+        EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE,
+        'smtp_config',
+        'dkim_config',
+    ];
+
+    private const CONFIGURATION_FIELDS_DKIM =
+    [
+        DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN,
+        DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR,
+        DkimConfigurationType::FIELD_MAIL_DKIM_KEY,
+    ];
+
+    private const CONFIGURATION_FIELDS_SMTP =
+    [
+        SmtpConfigurationType::FIELD_MAIL_DOMAIN,
+        SmtpConfigurationType::FIELD_MAIL_SERVER,
+        SmtpConfigurationType::FIELD_MAIL_USER,
+        SmtpConfigurationType::FIELD_MAIL_PASSWD,
+        SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION,
+        SmtpConfigurationType::FIELD_MAIL_SMTP_PORT,
+    ];
 
     /**
      * {@inheritdoc}
@@ -45,23 +74,23 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'send_emails_to' => (int) $this->configuration->get('PS_MAIL_EMAIL_MESSAGE', 0, $shopConstraint),
-            'mail_method' => (int) $this->configuration->get('PS_MAIL_METHOD', 0, $shopConstraint),
-            'mail_type' => (int) $this->configuration->get('PS_MAIL_TYPE', 0, $shopConstraint),
-            'log_emails' => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
+            EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE => (int) $this->configuration->get('PS_MAIL_EMAIL_MESSAGE', 0, $shopConstraint),
+            EmailConfigurationType::FIELD_MAIL_METHOD => (int) $this->configuration->get('PS_MAIL_METHOD', 0, $shopConstraint),
+            EmailConfigurationType::FIELD_MAIL_TYPE => (int) $this->configuration->get('PS_MAIL_TYPE', 0, $shopConstraint),
+            EmailConfigurationType::FIELD_LOG_EMAILS => (bool) $this->configuration->get('PS_LOG_EMAILS', false, $shopConstraint),
             'smtp_config' => [
-                'domain' => $this->configuration->get('PS_MAIL_DOMAIN', null, $shopConstraint),
-                'server' => $this->configuration->get('PS_MAIL_SERVER', null, $shopConstraint),
-                'username' => $this->configuration->get('PS_MAIL_USER', null, $shopConstraint),
-                'password' => $this->configuration->get('PS_MAIL_PASSWD', null, $shopConstraint),
-                'encryption' => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', null, $shopConstraint),
-                'port' => $this->configuration->get('PS_MAIL_SMTP_PORT', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_DOMAIN => $this->configuration->get('PS_MAIL_DOMAIN', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_SERVER => $this->configuration->get('PS_MAIL_SERVER', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_USER => $this->configuration->get('PS_MAIL_USER', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_PASSWD => $this->configuration->get('PS_MAIL_PASSWD', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION => $this->configuration->get('PS_MAIL_SMTP_ENCRYPTION', null, $shopConstraint),
+                SmtpConfigurationType::FIELD_MAIL_SMTP_PORT => $this->configuration->get('PS_MAIL_SMTP_PORT', null, $shopConstraint),
             ],
-            'dkim_enable' => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE', false, $shopConstraint),
+            EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE => (bool) $this->configuration->get('PS_MAIL_DKIM_ENABLE', false, $shopConstraint),
             'dkim_config' => [
-                'domain' => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN', null, $shopConstraint),
-                'selector' => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR', null, $shopConstraint),
-                'key' => (string) $this->configuration->get('PS_MAIL_DKIM_KEY', null, $shopConstraint),
+                DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN => (string) $this->configuration->get('PS_MAIL_DKIM_DOMAIN', null, $shopConstraint),
+                DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR => (string) $this->configuration->get('PS_MAIL_DKIM_SELECTOR', null, $shopConstraint),
+                DkimConfigurationType::FIELD_MAIL_DKIM_KEY => (string) $this->configuration->get('PS_MAIL_DKIM_KEY', null, $shopConstraint),
             ],
         ];
     }
@@ -73,23 +102,22 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         if ($this->validateConfiguration($config)) {
             $shopConstraint = $this->getShopConstraint();
-            $this->updateConfigurationValue('PS_MAIL_EMAIL_MESSAGE', 'send_emails_to', $config, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_METHOD', 'mail_method', $config, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_TYPE', 'mail_type', $config, $shopConstraint);
-            $this->updateConfigurationValue('PS_LOG_EMAILS', 'log_emails', $config, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_DKIM_ENABLE', 'dkim_enable', $config, $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_DKIM_DOMAIN', 'domain', $config['dkim_config'], $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_DKIM_SELECTOR', 'selector', $config['dkim_config'], $shopConstraint);
-            $this->updateConfigurationValue('PS_MAIL_DKIM_KEY', 'key', $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_EMAIL_MESSAGE', EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE, $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_METHOD', EmailConfigurationType::FIELD_MAIL_METHOD, $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_TYPE', EmailConfigurationType::FIELD_MAIL_TYPE, $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_LOG_EMAILS', EmailConfigurationType::FIELD_LOG_EMAILS, $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_ENABLE', EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE, $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_DOMAIN', DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN, $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_SELECTOR', DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR, $config['dkim_config'], $shopConstraint);
+            $this->updateConfigurationValue('PS_MAIL_DKIM_KEY', DkimConfigurationType::FIELD_MAIL_DKIM_KEY, $config['dkim_config'], $shopConstraint);
             $this->updateConfigurationValue('PS_MAIL_DOMAIN', 'domain', $config['smtp_config'], $shopConstraint);
             $this->updateConfigurationValue('PS_MAIL_SERVER', 'server', $config['smtp_config'], $shopConstraint);
             $this->updateConfigurationValue('PS_MAIL_USER', 'username', $config['smtp_config'], $shopConstraint);
             $this->updateConfigurationValue('PS_MAIL_SMTP_ENCRYPTION', 'encryption', $config['smtp_config'], $shopConstraint);
             $this->updateConfigurationValue('PS_MAIL_SMTP_PORT', 'port', $config['smtp_config'], $shopConstraint);
             $smtpPassword = (string) $config['smtp_config']['password'];
-
             if ('' !== $smtpPassword || !$this->configuration->get('PS_MAIL_PASSWD')) {
-                $this->updateConfigurationValue('PS_MAIL_PASSWD', 'password', $config['smtp_config'], $shopConstraint);
+                $this->updateConfigurationValue('PS_MAIL_PASSWD', SmtpConfigurationType::FIELD_MAIL_PASSWD, $config['smtp_config'], $shopConstraint);
             }
         }
 
@@ -103,11 +131,11 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes('send_emails_to', 'int')
-            ->setAllowedTypes('mail_method', 'int')
-            ->setAllowedTypes('mail_type', 'int')
-            ->setAllowedTypes('log_emails', 'bool')
-            ->setAllowedTypes('dkim_enable', 'bool')
+            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_EMAIL_MESSAGE, 'int')
+            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_METHOD, 'int')
+            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_TYPE, 'int')
+            ->setAllowedTypes(EmailConfigurationType::FIELD_LOG_EMAILS, 'bool')
+            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE, 'bool')
             ->setAllowedTypes('smtp_config', 'array')
             ->setAllowedTypes('dkim_config', 'array');
 
@@ -129,10 +157,10 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         $dkimResolver = new OptionsResolver();
         $dkimResolver
-            ->setRequired(['domain', 'selector', 'key'])
-            ->setAllowedTypes('domain', 'string')
-            ->setAllowedTypes('selector', 'string')
-            ->setAllowedTypes('key', 'string');
+            ->setRequired(self::CONFIGURATION_FIELDS_DKIM)
+            ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN, 'string')
+            ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR, 'string')
+            ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_KEY, 'string');
 
         return $dkimResolver;
     }
@@ -144,7 +172,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         $smtpResolver = new OptionsResolver();
         $smtpResolver
-            ->setRequired(['domain', 'server', 'username', 'encryption', 'port', 'password'])
+            ->setRequired(self::CONFIGURATION_FIELDS_SMTP)
             ->setAllowedTypes('domain', 'string')
             ->setAllowedTypes('server', 'string')
             ->setAllowedTypes('username', 'string')
