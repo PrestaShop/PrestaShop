@@ -3037,7 +3037,7 @@ class ProductCore extends ObjectModel
                     "' . $now . '",
                     INTERVAL ' . $nb_days_new_product . ' DAY
                 )
-            ) > 0) as new'
+            ) >= 0) as new'
         );
 
         $sql->from('product', 'p');
