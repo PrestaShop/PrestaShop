@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class CommandBuilderTest extends TestCase
 {
@@ -179,6 +180,35 @@ class CommandBuilderTest extends TestCase
                 '_number' => 42,
                 'unknown' => 45,
                 'date_time' => '2022-10-10 15:34:45',
+            ],
+            [$command],
+        ];
+
+        // Handle empty date time
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config
+            ->addField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
+        ;
+
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command
+            ->setDate(new NullDateTime())
+        ;
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => '',
+            ],
+            [$command],
+        ];
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => null,
             ],
             [$command],
         ];

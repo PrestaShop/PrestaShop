@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
-use DateTimeImmutable;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -222,7 +222,7 @@ class CommandBuilder
             case CommandField::TYPE_ARRAY:
                 return (array) $value;
             case CommandField::TYPE_DATETIME:
-                return new DateTimeImmutable($value);
+                return DateTime::buildNullableDateTime($value);
             default:
                 return $value;
         }
