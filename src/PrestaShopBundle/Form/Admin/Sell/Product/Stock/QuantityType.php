@@ -111,6 +111,7 @@ class QuantityType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'default_empty_data' => 0,
+                'modify_all_shops' => true,
             ])
         ;
     }
