@@ -1790,7 +1790,6 @@ class WebserviceRequestCore
         $this->objOutput
             ->setHeaderParams('Access-Time', (string) time())
             ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
-            ->setHeaderParams('PSWS-Version', _PS_VERSION_)
             ->setHeaderParams('Execution-Time', (string) round(microtime(true) - $this->_startTime, 3))
         ;
 
