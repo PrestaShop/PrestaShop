@@ -24,14 +24,22 @@
  */
 
 import Router from '@components/router';
+import PaginationServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-export default class PaginatedCombinationsService {
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId) {
+export default class PaginatedCombinationsService implements PaginationServiceType {
+  productId: number;
+
+  router: Router;
+
+  filters: Record<string, any>;
+
+  orderBy: string | null;
+
+  orderWay: string | null;
+
+  constructor(productId: number) {
     this.productId = productId;
     this.router = new Router();
     this.filters = {};
@@ -39,15 +47,9 @@ export default class PaginatedCombinationsService {
     this.orderWay = null;
   }
 
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset, limit) {
+  fetch(offset: number, limit: number): JQuery.jqXHR<any> {
     const filterId = `product_combinations_${this.productId}`;
-    const requestParams = {};
+    const requestParams: Record<string, any> = {};
     // Required for route generation
     requestParams.productId = this.productId;
 
@@ -62,29 +64,20 @@ export default class PaginatedCombinationsService {
     if (this.orderWay !== null) {
       requestParams[filterId].sortOrder = this.orderWay;
     }
+
     return $.get(this.router.generate('admin_products_combinations', requestParams));
   }
 
-  /**
-   * @param {string} orderBy
-   * @param {string} orderWay
-   */
-  setOrderBy(orderBy, orderWay) {
+  setOrderBy(orderBy: string, orderWay: string): void {
     this.orderBy = orderBy;
     this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
   }
 
-  /**
-   * @returns {Object}
-   */
-  getFilters() {
+  getFilters(): Record<string, any> {
     return this.filters;
   }
 
-  /**
-   * @param {Object} filters
-   */
-  setFilters(filters) {
+  setFilters(filters: Record<string, any>): void {
     this.filters = filters;
   }
 }
