@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
 use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
 use PrestaShopBundle\Entity\ModuleHistory;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -301,7 +302,7 @@ class ModuleController extends ModuleAbstractController
         }
 
         $moduleManager = $this->get('prestashop.module.manager');
-        $moduleZipManager = $this->get('prestashop.module.zip.manager');
+        $zipSource = $this->get('prestashop.module.sourcehandler.zip');
         $serverParams = new ServerParams();
         $moduleName = '';
 
@@ -347,11 +348,11 @@ class ModuleController extends ModuleAbstractController
                 throw new Exception(implode(PHP_EOL, $violationsMessages));
             }
 
-            $moduleName = $moduleZipManager->getName($fileUploaded->getPathname());
+            $moduleName = $zipSource->getModuleName($fileUploaded->getPathname());
 
             // Install the module
             $installationResponse = [
-                'status' => $moduleManager->install($fileUploaded->getPathname()),
+                'status' => $moduleManager->install($moduleName, $fileUploaded->getPathname()),
                 'msg' => '',
                 'module_name' => $moduleName,
             ];
@@ -384,31 +385,34 @@ class ModuleController extends ModuleAbstractController
                     ]
                 );
             }
-        } catch (UnconfirmedModuleActionException $e) {
-            $collection = ModuleCollection::createFrom([$e->getModule()]);
-            $modules = $this->get('prestashop.core.admin.data_provider.module_interface')
-                ->setActionUrls($collection);
-            $installationResponse = [
-                'status' => false,
-                'confirmation_subject' => $e->getSubject(),
-                'module' => $this->get('prestashop.adapter.presenter.module')->presentCollection($modules)[0],
-                'msg' => $this->trans(
-                    'Confirmation needed by module %module% on %action% (%subject%).',
-                    'Admin.Modules.Notification',
-                    [
-                        '%subject%' => $e->getSubject(),
-                        '%action%' => $e->getAction(),
-                        '%module%' => $moduleName,
-                    ]
-                ),
-            ];
+        } catch (SourceHandlerNotFoundException $e) {
+            $installationResponse['status'] = false;
+            $installationResponse['msg'] = $this->trans(
+                'Installation of module %module% failed. %error%',
+                'Admin.Modules.Notification',
+                [
+                    '%module%' => $moduleName,
+                    '%error%' => $this->trans(
+                        'Impossible to install form source',
+                        'Admin.Modules.Notification'
+                    ),
+                ]
+            );
         } catch (Exception $e) {
             try {
                 $moduleManager->disable($moduleName);
             } catch (Exception $subE) {
-            }
 
-            throw $e;
+            }
+            $installationResponse['status'] = false;
+            $installationResponse['msg'] = $this->trans(
+                'Installation of module %module% failed. %error%',
+                'Admin.Modules.Notification',
+                [
+                    '%module%' => $moduleName,
+                    '%error%' => $e->getMessage(),
+                ]
+            );
         }
 
         return new JsonResponse($installationResponse);
