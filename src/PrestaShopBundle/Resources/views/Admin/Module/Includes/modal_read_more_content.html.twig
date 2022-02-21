@@ -179,7 +179,7 @@
             </p>
           </div>
 
-          <div id="changelog-{{ name }}" class="tab-pane fade">
+          <div id="changelog-{{ name }}" class="tab-pane fade changelog-tab">
             {% if changeLog %}
               <ul class="module-readmore-tab-content">
                 {% for version, lines in changeLog|arrayCast|reverse %}

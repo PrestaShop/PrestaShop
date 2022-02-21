@@ -166,6 +166,12 @@
 .module-modal-content {
   border: none;
   box-shadow: none;
+
+  .changelog-tab {
+    max-height: 300px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .module-modal-close {
