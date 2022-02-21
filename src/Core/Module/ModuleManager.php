@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface as AddonModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -49,6 +50,9 @@ class ModuleManager implements ModuleManagerInterface
 
     /** @var AdminModuleDataProvider */
     private $adminModuleDataProvider;
+
+    /** @var SourceHandlerFactory */
+    private $sourceFactory;
 
     /** @var TranslatorInterface */
     private $translator;
@@ -66,6 +70,7 @@ class ModuleManager implements ModuleManagerInterface
         ModuleRepository $moduleRepository,
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
+        SourceHandlerFactory $sourceFactory,
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher,
         HookManager $hookManager
@@ -74,12 +79,13 @@ class ModuleManager implements ModuleManagerInterface
         $this->moduleRepository = $moduleRepository;
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
+        $this->sourceFactory = $sourceFactory;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
         $this->hookManager = $hookManager;
     }
 
-    public function install(string $name): bool
+    public function install(string $name, ?string $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
             throw new Exception($this->translator->trans(
@@ -87,6 +93,11 @@ class ModuleManager implements ModuleManagerInterface
                 [],
                 'Admin.Modules.Notification'
             ));
+        }
+
+        if ($source !== null) {
+            $handler = $this->sourceFactory->getHandler($source);
+            $handler->handle($source);
         }
 
         $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name]);
