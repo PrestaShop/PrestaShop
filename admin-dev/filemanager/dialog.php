@@ -212,21 +212,6 @@ if (isset($_POST['submit'])) {
 		<script type="text/javascript" src="jPlayer/jquery.jplayer.min.js"></script>
 		<script type="text/javascript" src="js/imagesloaded.pkgd.min.js"></script>
 		<script type="text/javascript" src="js/jquery.queryloader2.min.js"></script>
-		<?php
-        if ($aviary_active) {
-            if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) {
-                ?>
-				<script type="text/javascript" src="https://dme0ih8comzn4.cloudfront.net/js/feather.js"></script>
-			<?php
-            } else {
-                ?>
-				<script type="text/javascript" src="http://feather.aviary.com/js/feather.js "></script>
-			<?php
-
-            }
-        }
-    ?>
-
 		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 		<!--[if lt IE 9]>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
@@ -238,8 +223,6 @@ if (isset($_POST['submit'])) {
 			var ext_img = new Array('<?php echo implode("','", $ext_img)?>');
 			var allowed_ext = new Array('<?php echo implode("','", $ext)?>');
 			var loading_bar =<?php echo $loading_bar?"true":"false";
-    ?>;
-			var image_editor =<?php echo $aviary_active?"true":"false";
     ?>;
 			//dropzone config
 			Dropzone.options.myAwesomeDropzone = {
@@ -264,43 +247,6 @@ if (isset($_POST['submit'])) {
 					}
 				}
 			};
-			if (image_editor) {
-				var featherEditor = new Aviary.Feather({
-					apiKey: "<?php echo $aviary_key;
-    ?>",
-					apiVersion: <?php echo $aviary_version;
-    ?>,
-					language: "<?php echo $aviary_language;
-    ?>",
-					theme: 'light',
-					tools: 'all',
-					onSave: function (imageID, newURL) {
-						show_animation();
-						var img = document.getElementById(imageID);
-						img.src = newURL;
-						$.ajax({
-							type: "POST",
-							url: "ajax_calls.php?action=save_img",
-							data: { url: newURL, path: $('#sub_folder').val() + $('#fldr_value').val(), name: $('#aviary_img').data('name') }
-						}).done(function (msg) {
-							featherEditor.close();
-							d = new Date();
-							$("figure[data-name='" + $('#aviary_img').data('name') + "']").find('img').each(function () {
-								$(this).attr('src', $(this).attr('src') + "?" + d.getTime());
-							});
-							$("figure[data-name='" + $('#aviary_img').data('name') + "']").find('figcaption a.preview').each(function () {
-								$(this).data('url', $(this).data('url') + "?" + d.getTime());
-							});
-							hide_animation();
-						});
-						return false;
-					},
-					onError: function (errorObj) {
-						bootbox.alert(errorObj.message);
-					}
-
-				});
-			}
 		</script>
 		<script type="text/javascript" src="js/include.min.js"></script>
 	</head>
