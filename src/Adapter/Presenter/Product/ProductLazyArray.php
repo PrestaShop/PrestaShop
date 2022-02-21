@@ -386,16 +386,13 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getSeoAvailability()
     {
-        $seoAvailability = 'https://schema.org/';
-        if ($this->product['quantity'] > 0) {
-            $seoAvailability .= 'InStock';
-        } elseif ($this->product['quantity'] <= 0 && $this->product['allow_oosp']) {
-            $seoAvailability .= 'PreOrder';
+        if ($this->product['active'] === 0) {
+            return 'https://schema.org/Discontinued';
+        } elseif ($this->product['quantity'] > 0 || !$this->configuration->get('PS_STOCK_MANAGEMENT')) {
+            return 'https://schema.org/InStock';
         } else {
-            $seoAvailability .= 'OutOfStock';
+            return 'https://schema.org/OutOfStock';
         }
-
-        return $seoAvailability;
     }
 
     /**
