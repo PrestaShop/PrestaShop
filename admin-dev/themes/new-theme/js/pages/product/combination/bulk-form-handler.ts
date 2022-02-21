@@ -41,10 +41,14 @@ export default class BulkFormHandler {
 
   private tabContainer: HTMLDivElement;
 
+  private formModalContent: string;
+
   constructor() {
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.tabContainer = document.querySelector(CombinationMap.externalCombinationTab) as HTMLDivElement;
+    const formTemplate = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
+    this.formModalContent = formTemplate.innerHTML;
     this.init();
   }
 
@@ -72,13 +76,10 @@ export default class BulkFormHandler {
   }
 
   private showFormModal(): ConfirmModal {
-    const template = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
-    const content = template.innerHTML;
-
     const modal = new ConfirmModal(
       {
         id: CombinationMap.bulkCombinationModalId,
-        confirmMessage: content,
+        confirmMessage: this.formModalContent,
       },
       () => this.submitForm(),
     );
