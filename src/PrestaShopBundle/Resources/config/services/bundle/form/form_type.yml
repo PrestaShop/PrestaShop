@@ -453,8 +453,10 @@ services:
 
   form.type.import.import:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
-    parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getLanguages(false)'
     tags:
       - { name: form.type }
 
