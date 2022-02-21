@@ -2869,7 +2869,7 @@ FileETag none
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
             'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics', 'attachment', 'guest-tracking',
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'registration', 'search', 'statistics', 'attachment', 'guest-tracking',
         ];
 
         // Rewrite files
