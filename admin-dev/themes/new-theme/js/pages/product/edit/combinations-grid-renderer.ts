@@ -26,6 +26,7 @@
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
+import {EventEmitter} from 'events';
 
 const {$} = window;
 
@@ -33,6 +34,8 @@ const {$} = window;
  * Renders the list of combinations in product edit page
  */
 export default class CombinationsGridRenderer {
+  eventEmitter: EventEmitter;
+
   $combinationsTable: JQuery;
 
   $combinationsTableBody: JQuery;
