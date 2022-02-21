@@ -49,7 +49,7 @@ class BulkCombinationFormDataFormatter
             $formattedData['references']['reference'] = $formData['reference'] ?? '';
         }
 
-        if (isset($formData['disabling_toggle_price_tax_excluded']) && $formData['disabling_toggle_reference']) {
+        if (isset($formData['disabling_toggle_price_tax_excluded']) && $formData['disabling_toggle_price_tax_excluded']) {
             $formattedData['price_impact']['price_tax_excluded'] = $formData['price_tax_excluded'] ?? 0;
         }
 
