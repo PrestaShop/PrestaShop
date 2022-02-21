@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
-
     /** @var array Controller errors */
     public $errors = [];
 
