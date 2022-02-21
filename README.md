@@ -138,11 +138,11 @@ Thank you for downloading and using the PrestaShop Open Source e-commerce soluti
 [crowdin]: https://crowdin.net/project/prestashop-official
 [getting-started]: https://docs.prestashop-project.org/1.7-documentation/getting-started
 [user-guide]: https://docs.prestashop-project.org/1.7-documentation/user-guide
-[updating-guide]: https://doc.prestashop.com/display/PS16/Updating+PrestaShop
-[merchant-guide]: https://doc.prestashop.com/display/PS16/Merchant%27s+Guide
+[updating-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/updating-prestashop
+[merchant-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/merchants-guide
 [faq-17]: https://devdocs.prestashop.com/1.7/faq/
-[troubleshooting]: https://doc.prestashop.com/display/PS16/Troubleshooting
-[sysadmin-guide]: https://doc.prestashop.com/display/PS16/System+Administrator+Guide
+[troubleshooting]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/troubleshooting
+[sysadmin-guide]: https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide
 [addons]: https://addons.prestashop.com/
 [contributors-md]: CONTRIBUTORS.md
 [example-nginx]: https://devdocs.prestashop.com/1.7/basics/installation/nginx/

@@ -48,7 +48,7 @@
 
 To install PrestaShop 1.7, you need a web server running PHP 7.1.3+ and any flavor of MySQL 5.5+ (MySQL, MariaDB, Percona Server, etc.).
 
-You can find more information on our System requirements (https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/) page and on the System Administrator Guide (https://doc.prestashop.com/display/PS16/System+Administrator+Guide).
+You can find more information on our System requirements (https://devdocs.prestashop.com/1.7/basics/installation/system-requirements/) page and on the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
 
 === Installing PrestaShop
 
