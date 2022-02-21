@@ -70,7 +70,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var string */
     private $modulePath;
 
-    /** @var array */
+    /** @var array|null */
     private $installedModules;
 
     public function __construct(
@@ -138,7 +138,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             ? 0
             : (int) @filemtime($filePath);
 
-        $cacheKey = $moduleName . implode('-', Shop::getContextListShopID());
+        $cacheKey = $this->getCacheKey($moduleName);
 
         if ($this->cacheProvider->contains($cacheKey)) {
             $module = $this->cacheProvider->fetch($cacheKey);
@@ -176,11 +176,17 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function clearCache(?string $moduleName = null): bool
     {
-        if ($moduleName !== null && $this->cacheProvider->contains($moduleName)) {
-            return $this->cacheProvider->delete($moduleName);
+        $this->installedModules = null;
+        if ($moduleName !== null && $this->cacheProvider->contains($this->getCacheKey($moduleName))) {
+            return $this->cacheProvider->delete($this->getCacheKey($moduleName));
         }
 
         return $this->cacheProvider->deleteAll();
+    }
+
+    private function getCacheKey(string $moduleName): string
+    {
+        return $moduleName . implode('-', Shop::getContextListShopID());
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
