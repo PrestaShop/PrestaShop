@@ -33,33 +33,6 @@ use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->smarty instead
-     *
-     * @var Smarty
-     */
-    protected static $smarty;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cookie instead
-     *
-     * @var Cookie
-     */
-    protected static $cookie;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->link instead
-     *
-     * @var Link
-     */
-    protected static $link;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cart instead
-     *
-     * @var Cart
-     */
-    protected static $cart;
 
     /** @var array Controller errors */
     public $errors = [];
@@ -286,13 +259,6 @@ class FrontControllerCore extends Controller
             ]
         );
 
-        /*
-         * Globals are DEPRECATED as of version 1.5.0.1
-         * Use the Context object to access objects instead.
-         * Example: $this->context->cart
-         */
-        global $useSSL, $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
-
         if (self::$initialized) {
             return;
         }
@@ -305,10 +271,6 @@ class FrontControllerCore extends Controller
         if (Tools::usingSecureMode()) {
             $useSSL = true;
         }
-
-        // For compatibility with globals, DEPRECATED as of version 1.5.0.1
-        $css_files = $this->css_files;
-        $js_files = $this->js_files;
 
         $this->sslRedirection();
 
@@ -478,24 +440,12 @@ class FrontControllerCore extends Controller
             $this->context->country = $country;
         }
 
-        /*
-         * These shortcuts are DEPRECATED as of version 1.5.0.1
-         * Use the Context to access objects instead.
-         * Example: $this->context->cart
-         */
-        self::$cookie = $this->context->cookie;
-        self::$cart = $cart;
-        self::$smarty = $this->context->smarty;
-        self::$link = $link;
-        $defaultCountry = $this->context->country;
-
         $this->displayMaintenancePage();
 
         if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
         }
 
-        $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
 
