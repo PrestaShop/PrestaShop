@@ -24,11 +24,10 @@
  */
 
 import Router from '@components/router';
-import ServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-export default class CombinationsService implements ServiceType {
+export default class CombinationsService {
   router: Router;
 
   filters: Record<string, any>;
@@ -44,9 +43,6 @@ export default class CombinationsService implements ServiceType {
     this.orderWay = null;
   }
 
-  /**
-   * @returns {Promise}
-   */
   deleteCombination(combinationId: number): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
@@ -56,12 +52,6 @@ export default class CombinationsService implements ServiceType {
     });
   }
 
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
   updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
@@ -73,10 +63,10 @@ export default class CombinationsService implements ServiceType {
   }
 
   /**
-   * @param {Number} productId
-   * @param {Object} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
+   * @param {number} productId
+   * @param {Record<number, number[]>} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
    */
-  generateCombinations(productId: number, data: Record<string, any>) {
+  generateCombinations(productId: number, data: Record<number, number[]>): JQuery.jqXHR {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_generate', {
         productId,
@@ -86,56 +76,19 @@ export default class CombinationsService implements ServiceType {
     });
   }
 
-  /**
-   * It actually updates one combination at a time, but calls api designed for bulk update purpose
-   *  (same form applied to multiple combinations one by one)
-   *
-   * @param {number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
-  bulkUpdate(combinationId, data) {
+  bulkUpdate(combinationId: number, data: Record<string, any>): JQuery.jqXHR {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}),
       data,
-      method: 'POST',
+      method: 'PATCH',
     });
   }
 
-  /**
-   * @param {Number} productId
-   *
-   * @returns {Promise}
-   */
   getCombinationIds(productId: number): JQuery.jqXHR<any> {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {
         productId,
       }),
     );
-  }
-
-  /**
-   * @param {string} orderBy
-   * @param {string} orderWay
-   */
-  setOrderBy(orderBy: string, orderWay: string): void {
-    this.orderBy = orderBy;
-    this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
-  }
-
-  /**
-   * @returns {Object}
-   */
-  getFilters(): Record<string, any> {
-    return this.filters;
-  }
-
-  /**
-   * @param {Object} filters
-   */
-  setFilters(filters: Record<string, any>): void {
-    this.filters = filters;
   }
 }

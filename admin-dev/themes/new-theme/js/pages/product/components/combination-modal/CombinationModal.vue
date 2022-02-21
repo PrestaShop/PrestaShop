@@ -188,7 +188,7 @@
         editCombinationUrl: '',
         loadingCombinationForm: false,
         submittingCombinationForm: false,
-        combinationList: <JQuery>$(ProductMap.combinations.combinationsContainer),
+        combinationList: <JQuery>$(ProductMap.combinations.combinationsListContainer),
         hasSubmittedCombinations: false,
         combinationsHistory: [],
         showConfirm: false,

@@ -38,6 +38,7 @@ import {getProductAttributeGroups} from '@pages/product/services/attribute-group
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+import PaginationServiceType from "@PSTypes/services";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -73,6 +74,8 @@ export default class CombinationsManager {
   initialized: boolean;
 
   combinationsService: CombinationsService;
+
+  paginatedCombinationsService: PaginatedCombinationsService;
 
   productAttributeGroups: Array<Record<string, any>>;
 
