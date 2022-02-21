@@ -24,31 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Module;
+declare(strict_types=1);
 
-interface ModuleManagerInterface
+namespace PrestaShop\PrestaShop\Core\Module\SourceHandler;
+
+interface SourceHandlerInterface
 {
-    public function install(string $name, ?string $source = null): bool;
+    public function canHandle(string $source): bool;
 
-    public function uninstall(string $name, bool $deleteFiles = false): bool;
+    public function getModuleName(string $source): ?string;
 
-    public function upgrade(string $name): bool;
-
-    public function enable(string $name): bool;
-
-    public function disable(string $name): bool;
-
-    public function enableMobile(string $name): bool;
-
-    public function disableMobile(string $name): bool;
-
-    public function reset(string $name, bool $keepData = false): bool;
-
-    public function postInstall(string $name): bool;
-
-    public function isInstalled(string $name): bool;
-
-    public function isEnabled(string $name): bool;
-
-    public function getError(string $name): string;
+    public function handle(string $source): void;
 }
