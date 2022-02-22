@@ -410,5 +410,25 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
         .and.to.contains(DefaultCustomer.email)
         .and.to.contains(todayCartFormat);
     });
+
+    it('should check the order Information Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderInformationBlock', baseContext);
+
+      const orderInformation = await addOrderPage.getOrderInformation(page, lastShoppingCartId);
+      await expect(orderInformation)
+        .to.contains('No order was created from this cart.')
+        .and.to.contains(' Create an order from this cart.');
+    });
+
+    it('should check the cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 2, 1);
+      await expect(cartSummary)
+        .to.contains(`${Products.demo_1.name}`);
+    });
+
+    // à voir avec Nesrine: le td est vide => je dois ajouter manuellement data-role?
+    // est ce que on peut ajouter dans le demo data image d'un produit pour le revérifier?
   });
 });

@@ -255,7 +255,7 @@ class AddOrder extends BOBasePage {
 
   /**
    *
-   * @param page
+   * @param page {Page} Browser tab
    * @param cartId {Number} Cart Id
    * @returns {Promise<*|string>}
    */
@@ -263,6 +263,32 @@ class AddOrder extends BOBasePage {
     const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
 
     return viewCartPage.getCustomerInformation(cartIframe);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param cartId {Number} Card Id
+   * @returns {Promise<string>}
+   */
+  async getOrderInformation(page, cartId) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getOrderInformation(cartIframe);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param cartId {Number} Card Id
+   * @param column {Number} Row on table
+   * @param row {Number} column on table
+   * @returns {Promise<*|string>}
+   */
+  async getCartSummary(page, cartId, column, row) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getCartSummary(cartIframe, column, row);
   }
 
   /* Cart methods */
