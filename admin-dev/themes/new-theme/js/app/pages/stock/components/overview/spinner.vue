@@ -82,7 +82,7 @@
       getQuantity() {
         if (!this.product.qty) {
           this.isEnabled = false;
-          this.value = 0;
+          this.value = '';
         }
         return parseInt(this.value, 10);
       },
