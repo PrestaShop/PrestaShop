@@ -38,7 +38,14 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
 
-    private const PASSWORD_TIME_FRONT = 260;
+    private const VALID_CONFIGURATION = [
+        'redisplay_cart_at_login' => true,
+        'send_email_after_registration' => true,
+        'password_reset_delay' => 260,
+        'enable_b2b_mode' => true,
+        'ask_for_birthday' => true,
+        'enable_offers' => true,
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -47,7 +54,11 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
-        $maintenanceConfiguration = new CustomerConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $maintenanceConfiguration = new CustomerConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->mockShopConfiguration
             ->method('getShopConstraint')
@@ -59,7 +70,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
                 [
                     ['PS_CART_FOLLOWING', false, $shopConstraint, true],
                     ['PS_CUSTOMER_CREATION_EMAIL', false, $shopConstraint, true],
-                    ['PS_PASSWD_TIME_FRONT', 0, $shopConstraint, self::PASSWORD_TIME_FRONT],
+                    ['PS_PASSWD_TIME_FRONT', 0, $shopConstraint, 260],
                     ['PS_B2B_ENABLE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_BIRTHDATE', false, $shopConstraint, true],
                     ['PS_CUSTOMER_OPTIN', false, $shopConstraint, true],
@@ -67,17 +78,7 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
             );
 
         $result = $maintenanceConfiguration->getConfiguration();
-        $this->assertSame(
-            [
-                'redisplay_cart_at_login' => true,
-                'send_email_after_registration' => true,
-                'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                'enable_b2b_mode' => true,
-                'ask_for_birthday' => true,
-                'enable_offers' => true,
-            ],
-            $result
-        );
+        $this->assertSame(self::VALID_CONFIGURATION, $result);
     }
 
     /**
@@ -88,7 +89,11 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $maintenanceConfiguration = new CustomerConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $maintenanceConfiguration = new CustomerConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->expectException($exception);
         $maintenanceConfiguration->updateConfiguration($values);
@@ -100,93 +105,25 @@ class CustomerConfigurationTest extends AbstractConfigurationTestCase
     public function provideInvalidConfiguration(): array
     {
         return [
-            [
-                UndefinedOptionsException::class,
-                [
-                    'does_not_exist' => 'does_not_exist',
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => 'wrong_type',
-                    'send_email_after_registration' => true,
-                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                    'enable_b2b_mode' => true,
-                    'ask_for_birthday' => true,
-                    'enable_offers' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => true,
-                    'send_email_after_registration' => 'wrong_type',
-                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                    'enable_b2b_mode' => true,
-                    'ask_for_birthday' => true,
-                    'enable_offers' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => true,
-                    'send_email_after_registration' => true,
-                    'password_reset_delay' => 'wrong_type',
-                    'enable_b2b_mode' => true,
-                    'ask_for_birthday' => true,
-                    'enable_offers' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => true,
-                    'send_email_after_registration' => true,
-                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                    'enable_b2b_mode' => 'wrong_type',
-                    'ask_for_birthday' => true,
-                    'enable_offers' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => true,
-                    'send_email_after_registration' => true,
-                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                    'enable_b2b_mode' => true,
-                    'ask_for_birthday' => 'wrong_type',
-                    'enable_offers' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'redisplay_cart_at_login' => true,
-                    'send_email_after_registration' => true,
-                    'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-                    'enable_b2b_mode' => true,
-                    'ask_for_birthday' => true,
-                    'enable_offers' => 'wrong_type',
-                ],
-            ],
+            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['redisplay_cart_at_login' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['send_email_after_registration' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['password_reset_delay' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_b2b_mode' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['ask_for_birthday' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_offers' => 'wrong_type'])],
         ];
     }
 
     public function testSuccessfulUpdate(): void
     {
-        $maintenanceConfiguration = new CustomerConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $maintenanceConfiguration = new CustomerConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
-        $res = $maintenanceConfiguration->updateConfiguration([
-            'redisplay_cart_at_login' => true,
-            'send_email_after_registration' => true,
-            'password_reset_delay' => self::PASSWORD_TIME_FRONT,
-            'enable_b2b_mode' => true,
-            'ask_for_birthday' => true,
-            'enable_offers' => true,
-        ]);
+        $res = $maintenanceConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }
