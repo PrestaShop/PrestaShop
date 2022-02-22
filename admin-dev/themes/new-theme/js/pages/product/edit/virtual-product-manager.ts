@@ -83,11 +83,11 @@ export default class VirtualProductManager {
       const fullPath = $(ProductMap.virtualProduct.fileUploadField).val()!;
 
       if (Array.isArray(fullPath)) {
-          // Handle the error with the most appropriate way, here an error is just thrown
-          throw new Error('Full path of the file is not supposed to be an array');
+        // Handle the error with the most appropriate way, here an error is just thrown
+        throw new Error('Full path of the file is not supposed to be an array');
       } else {
-          // Convert to string in any other case
-          fullPath = fullPath.toString();
+        // Convert to string in any other case
+        fullPath = fullPath.toString();
       }
 
       // get file name from full path
