@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
@@ -108,11 +107,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->isProductPageV2Enabled()) {
-            $this->addFlashMessageProductV2IsDisabled();
-
-            return $this->redirectToRoute('admin_product_new');
-        }
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage();
         }
@@ -146,12 +140,6 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        if (!$this->isProductPageV2Enabled()) {
-            $this->addFlashMessageProductV2IsDisabled();
-
-            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
-        }
-
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
@@ -452,36 +440,6 @@ class ProductController extends FrameworkBundleAdminController
                 'Admin.Notifications.Error'
             ),
         ];
-    }
-
-    /**
-     * @return bool
-     */
-    private function isProductPageV2Enabled(): bool
-    {
-        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
-            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-
-        if (null === $productPageV2FeatureFlag) {
-            return false;
-        }
-
-        return $productPageV2FeatureFlag->isEnabled();
-    }
-
-    private function addFlashMessageProductV2IsDisabled(): void
-    {
-        $this->addFlash(
-            'warning',
-            $this->trans(
-                'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
-                'Admin.Catalog.Notification',
-                [
-                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
-                    '</a>',
-                ]
-            )
-        );
     }
 
     /**
