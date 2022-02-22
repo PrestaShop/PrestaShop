@@ -26,31 +26,29 @@
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface as AddonsModuleInteface;
-
 interface ModuleRepositoryInterface
 {
     /**
-     * @return AddonsModuleInteface[]
+     * @return ModuleInterface[]
      */
     public function getList(): array;
 
     /**
-     * @return AddonsModuleInteface[]
+     * @return ModuleInterface[]
      */
     public function getInstalledModules(): array;
 
     /**
-     * @return AddonsModuleInteface[]
+     * @return ModuleInterface[]
      */
     public function getUpgradableModules(): array;
 
     /**
-     * @return AddonsModuleInteface[]
+     * @return ModuleInterface[]
      */
     public function getConfigurableModules(): array;
 
-    public function getModule(string $moduleName): AddonsModuleInteface;
+    public function getModule(string $moduleName): ModuleInterface;
 
     public function getModulePath(string $moduleName): ?string;
 }

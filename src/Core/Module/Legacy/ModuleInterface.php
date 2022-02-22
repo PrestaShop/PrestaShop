@@ -24,27 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Event;
+namespace PrestaShop\PrestaShop\Core\Module\Legacy;
 
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZip;
-use Symfony\Contracts\EventDispatcher\Event;
-
-class ModuleZipManagementEvent extends Event
+/**
+ * Define what should be a module.
+ * Note:We don't typeHint on old Module class to not create hard dependency with Legacy.
+ */
+interface ModuleInterface
 {
-    public const DOWNLOAD = 'module.download'; // Module download from addons or employee disk
-
-    /**
-     * @var ModuleZip Module Zip related to the triggered event
-     */
-    private $moduleZip;
-
-    public function __construct(ModuleZip $zip)
-    {
-        $this->moduleZip = $zip;
-    }
-
-    public function getModuleZip()
-    {
-        return $this->moduleZip;
-    }
 }
