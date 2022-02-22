@@ -35,6 +35,7 @@ use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -456,17 +457,23 @@ class ContextCore
         if ($this instanceof Context) {
             try {
                 $containerFinder = new ContainerFinder($this);
-                $containerFinder->getContainer()->get('prestashop.translation.translator_language_loader')
-                    ->setIsAdminContext($adminContext)
-                    ->loadLanguage($translator, $locale, $withDB, $theme);
-            } catch (ContainerNotFoundException $exception) {
+                $container = $containerFinder->getContainer();
+                $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
+            } catch (ContainerNotFoundException | ServiceNotFoundException $exception) {
+                $translatorLoader = null;
+            }
+
+            if (null === $translatorLoader) {
                 // If a container is still not found, instantiate manually the translator loader
                 // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
                 // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-                (new TranslatorLanguageLoader(new ModuleRepository()))
-                    ->setIsAdminContext($adminContext)
-                    ->loadLanguage($translator, $locale, $withDB, $theme);
+                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository()));
             }
+
+            $translatorLoader
+                ->setIsAdminContext($adminContext)
+                ->loadLanguage($translator, $locale, $withDB, $theme)
+            ;
         }
 
         return $translator;
