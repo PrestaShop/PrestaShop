@@ -45,10 +45,6 @@ class DisablingToggleType extends SwitchType
                 'disable_on_match' => true,
                 'matching_value' => 0,
                 'label' => false,
-                'attr' => [
-                    'container_class' => 'disabling-toggle',
-                    'data-value-type' => 'boolean',
-                ],
                 'row_attr' => [
                     'class' => 'ps-disabling-toggle',
                 ],
