@@ -30,6 +30,7 @@ use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use PrestaShopException;
 use Traversable;
 
 /**
@@ -42,16 +43,25 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @var ModuleInterface[]
      */
-    private $modules;
+    private $modules = [];
 
     /**
      * Initializes a new ModuleCollection.
      *
      * @param ModuleInterface[] $modules
+     *
+     * @throws PrestaShopException
      */
     public function __construct(array $modules = [])
     {
-        $this->modules = $modules;
+        foreach ($modules as $module) {
+            if (!$module instanceof ModuleInterface) {
+                throw new PrestaShopException(
+                    sprintf('%s only accept %s elements.', self::class, ModuleInterface::class)
+                );
+            }
+            $this->modules[] = $module;
+        }
     }
 
     /**
