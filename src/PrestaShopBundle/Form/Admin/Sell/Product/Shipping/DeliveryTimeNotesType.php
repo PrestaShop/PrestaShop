@@ -67,6 +67,7 @@ class DeliveryTimeNotesType extends TranslatorAwareType
                     ],
                 ],
                 'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
         ;
     }
