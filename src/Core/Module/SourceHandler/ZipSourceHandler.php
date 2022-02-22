@@ -68,7 +68,7 @@ class ZipSourceHandler implements SourceHandlerInterface
     {
         $zip = new ZipArchive();
         $zip->open($source);
-        for ($i = 0; $i < $zip->numFiles; $i++) {
+        for ($i = 0; $i < $zip->numFiles; ++$i) {
             if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {
                 $zip->close();
 

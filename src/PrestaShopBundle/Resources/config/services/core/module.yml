@@ -35,7 +35,7 @@ services:
   prestashop.module.factory.sourcehandler:
     class: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
     calls:
-      - ['addHandler', [ '@prestashop.module.sourcehandler.zip' ]]
+      - [ 'addHandler', [ '@prestashop.module.sourcehandler.zip' ] ]
 
   prestashop.module.manager:
     class: PrestaShop\PrestaShop\Core\Module\ModuleManager
