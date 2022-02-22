@@ -31,7 +31,6 @@ use Exception;
 use Module;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
-use PrestaShop\PrestaShop\Core\Addon\Module\Exception\UnconfirmedModuleActionException;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
 use PrestaShopBundle\Controller\Admin\Improve\Modules\ModuleAbstractController;
@@ -402,7 +401,6 @@ class ModuleController extends ModuleAbstractController
             try {
                 $moduleManager->disable($moduleName);
             } catch (Exception $subE) {
-
             }
             $installationResponse['status'] = false;
             $installationResponse['msg'] = $this->trans(
