@@ -101,7 +101,7 @@ class GeneralConfiguration implements DataConfigurationInterface
                 }
 
                 $errors[] = [
-                    'key' => 'Specific price priorities cannot duplicate',
+                    'key' => 'The selected condition must be different in each field to set an order of priority.',
                     'domain' => 'Admin.Notifications.Error',
                     'parameters' => [],
                 ];
