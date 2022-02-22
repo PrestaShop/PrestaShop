@@ -41,7 +41,7 @@ parameters:
     - '#^Unsafe usage of new static\(\)\.$#'
     - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
-    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
     ## Doctrine Entities

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**

@@ -35,7 +35,6 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use Symfony\Component\Finder\Finder;
 
 class ModuleRepository implements ModuleRepositoryInterface
