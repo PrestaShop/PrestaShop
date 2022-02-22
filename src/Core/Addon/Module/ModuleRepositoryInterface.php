@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 interface ModuleRepositoryInterface extends AddonRepositoryInterface
 {

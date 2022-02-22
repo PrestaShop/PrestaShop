@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
@@ -50,7 +49,6 @@ class ModuleManagerTest extends TestCase
     private $moduleProviderS; // S means "Stub"
     private $moduleUpdaterS;
     private $moduleRepositoryS;
-    private $moduleZipManagerS;
     private $sourceHandlerFactoryS;
     private $translatorS;
     private $dispatcherS;
@@ -168,7 +166,6 @@ class ModuleManagerTest extends TestCase
         $this->mockAdminModuleProvider();
         $this->mockModuleUpdater();
         $this->mockModuleRepository();
-        $this->mockModuleZipManager();
         $this->mockSourceHandlerFactory();
         $this->mockTranslator();
         $this->mockDispatcher();
@@ -291,20 +288,6 @@ class ModuleManagerTest extends TestCase
             ->willReturn($moduleS);
     }
 
-    private function mockModuleZipManager(): void
-    {
-        $this->moduleZipManagerS = $this->getMockBuilder(ModuleZipManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->moduleZipManagerS
-            ->method('getName')
-            ->will($this->returnArgument(0));
-
-        $this->moduleZipManagerS
-            ->method('storeInModulesFolder');
-    }
-
     private function mockSourceHandlerFactory(): void
     {
         $this->sourceHandlerFactoryS = $this->createMock(SourceHandlerFactory::class);
@@ -338,7 +321,6 @@ class ModuleManagerTest extends TestCase
         $this->adminModuleProviderS = null;
         $this->moduleProviderS = null;
         $this->moduleUpdaterS = null;
-        $this->moduleZipManagerS = null;
         $this->translatorS = null;
         $this->dispatcherS = null;
         $this->hookManagerS = null;

@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
@@ -49,7 +48,6 @@ use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
 
@@ -72,7 +70,6 @@ class ModuleManagerBuilder
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
-    public static $moduleZipManager = null;
     public static $translator = null;
     public static $categoriesProvider = null;
     public static $instance = null;
@@ -170,8 +167,6 @@ class ModuleManagerBuilder
         $tools->refreshCaCertFile();
 
         self::$translator = Context::getContext()->getTranslator();
-
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
