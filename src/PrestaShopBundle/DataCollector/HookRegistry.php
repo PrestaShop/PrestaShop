@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\DataCollector;
 
 use ModuleCore;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 
 /**
  * Collect all hooks information dispatched during a request.

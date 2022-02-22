@@ -33,7 +33,6 @@ use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface as AddonModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -359,7 +358,7 @@ class ModuleManager implements ModuleManagerInterface
         }
     }
 
-    private function dispatch(string $event, AddonModuleInterface $module): void
+    private function dispatch(string $event, ModuleInterface $module): void
     {
         $this->eventDispatcher->dispatch(new ModuleManagementEvent($module), $event);
     }
