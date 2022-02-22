@@ -37,8 +37,13 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
-    private const GIFT_WRAPPING_PRICE = 3.0;
-    private const GIFT_WRAPPING_TAX_RULE_GROUP = 3;
+
+    private const VALID_CONFIGURATION = [
+        'enable_gift_wrapping' => true,
+        'gift_wrapping_price' => 3.0,
+        'gift_wrapping_tax_rules_group' => 3,
+        'offer_recyclable_pack' => true,
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -47,7 +52,11 @@ class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
-        $giftOptionsConfiguration = new GiftOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $giftOptionsConfiguration = new GiftOptionsConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->mockShopConfiguration
             ->method('getShopConstraint')
@@ -58,23 +67,14 @@ class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
             ->willReturnMap(
                 [
                     ['PS_GIFT_WRAPPING', false, $shopConstraint, true],
-                    ['PS_GIFT_WRAPPING_PRICE', null, $shopConstraint, self::GIFT_WRAPPING_PRICE],
-                    ['PS_GIFT_WRAPPING_TAX_RULES_GROUP', null, $shopConstraint, self::GIFT_WRAPPING_TAX_RULE_GROUP],
+                    ['PS_GIFT_WRAPPING_PRICE', 0, $shopConstraint, 3.0],
+                    ['PS_GIFT_WRAPPING_TAX_RULES_GROUP', 0, $shopConstraint, 3],
                     ['PS_RECYCLABLE_PACK', false, $shopConstraint, true],
                 ]
             );
 
         $result = $giftOptionsConfiguration->getConfiguration();
-
-        $this->assertSame(
-            [
-                'enable_gift_wrapping' => true,
-                'gift_wrapping_price' => self::GIFT_WRAPPING_PRICE,
-                'gift_wrapping_tax_rules_group' => self::GIFT_WRAPPING_TAX_RULE_GROUP,
-                'offer_recyclable_pack' => true,
-            ],
-            $result
-        );
+        $this->assertSame(self::VALID_CONFIGURATION, $result);
     }
 
     /**
@@ -85,7 +85,11 @@ class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $giftOptionsConfiguration = new GiftOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $giftOptionsConfiguration = new GiftOptionsConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->expectException($exception);
         $giftOptionsConfiguration->updateConfiguration($values);
@@ -98,55 +102,22 @@ class GiftOptionsConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [
-                InvalidOptionsException::class,
-                [
-                    'enable_gift_wrapping' => 'wrong_type',
-                    'gift_wrapping_price' => self::GIFT_WRAPPING_PRICE,
-                    'gift_wrapping_tax_rules_group' => self::GIFT_WRAPPING_TAX_RULE_GROUP,
-                    'offer_recyclable_pack' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'enable_gift_wrapping' => true,
-                    'gift_wrapping_price' => 'wrong_type',
-                    'gift_wrapping_tax_rules_group' => self::GIFT_WRAPPING_TAX_RULE_GROUP,
-                    'offer_recyclable_pack' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'enable_gift_wrapping' => true,
-                    'gift_wrapping_price' => self::GIFT_WRAPPING_PRICE,
-                    'gift_wrapping_tax_rules_group' => 'wrong_type',
-                    'offer_recyclable_pack' => true,
-                ],
-            ],
-            [
-                InvalidOptionsException::class,
-                [
-                    'enable_gift_wrapping' => true,
-                    'gift_wrapping_price' => self::GIFT_WRAPPING_PRICE,
-                    'gift_wrapping_tax_rules_group' => self::GIFT_WRAPPING_TAX_RULE_GROUP,
-                    'offer_recyclable_pack' => 'wrong_type',
-                ],
-            ],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_gift_wrapping' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['gift_wrapping_price' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['gift_wrapping_tax_rules_group' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['offer_recyclable_pack' => 'wrong_type'])],
         ];
     }
 
     public function testSuccessfulUpdate(): void
     {
-        $giftOptionsConfiguration = new GiftOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $giftOptionsConfiguration = new GiftOptionsConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
-        $res = $giftOptionsConfiguration->updateConfiguration([
-            'enable_gift_wrapping' => true,
-            'gift_wrapping_price' => self::GIFT_WRAPPING_PRICE,
-            'gift_wrapping_tax_rules_group' => self::GIFT_WRAPPING_TAX_RULE_GROUP,
-            'offer_recyclable_pack' => true,
-        ]);
+        $res = $giftOptionsConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

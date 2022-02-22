@@ -37,8 +37,18 @@ use Tests\TestCase\AbstractConfigurationTestCase;
 class GeneralConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
-    private const MINIMUM_PURCHASE_VALUE = 3.0;
-    private const TOS_CMS_ID = 3;
+
+    private const VALID_CONFIGURATION = [
+        'enable_final_summary' => true,
+        'enable_guest_checkout' => true,
+        'disable_reordering_option' => true,
+        'purchase_minimum_value' => 3.0,
+        'recalculate_shipping_cost' => true,
+        'allow_multishipping' => true,
+        'allow_delayed_shipping' => true,
+        'enable_tos' => true,
+        'tos_cms_id' => 3,
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -47,7 +57,11 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
-        $generalConfiguration = new GeneralConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $generalConfiguration = new GeneralConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->mockShopConfiguration
             ->method('getShopConstraint')
@@ -60,30 +74,17 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
                     ['PS_FINAL_SUMMARY_ENABLED', false, $shopConstraint, true],
                     ['PS_GUEST_CHECKOUT_ENABLED', false, $shopConstraint, true],
                     ['PS_DISALLOW_HISTORY_REORDERING', false, $shopConstraint, true],
-                    ['PS_PURCHASE_MINIMUM', null, $shopConstraint, self::MINIMUM_PURCHASE_VALUE],
+                    ['PS_PURCHASE_MINIMUM', 0, $shopConstraint, 3.0],
                     ['PS_ORDER_RECALCULATE_SHIPPING', false, $shopConstraint, true],
                     ['PS_ALLOW_MULTISHIPPING', false, $shopConstraint, true],
                     ['PS_SHIP_WHEN_AVAILABLE', false, $shopConstraint, true],
                     ['PS_CONDITIONS', false, $shopConstraint, true],
-                    ['PS_CONDITIONS_CMS_ID', null, $shopConstraint, self::TOS_CMS_ID],
+                    ['PS_CONDITIONS_CMS_ID', 0, $shopConstraint, 3],
                 ]
             );
 
         $result = $generalConfiguration->getConfiguration();
-        $this->assertSame(
-            [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ],
-            $result
-        );
+        $this->assertSame(self::VALID_CONFIGURATION, $result);
     }
 
     /**
@@ -94,7 +95,11 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $generalConfiguration = new GeneralConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $generalConfiguration = new GeneralConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->expectException($exception);
         $generalConfiguration->updateConfiguration($values);
@@ -107,123 +112,27 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => 'wrong_type',
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => 'wrong_type',
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => 'wrong_type',
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => 'wrong_type',
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => 'wrong_type',
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => 'wrong_type',
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => 'wrong_type',
-                'enable_tos' => true,
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => 'wrong_type',
-                'tos_cms_id' => self::TOS_CMS_ID,
-            ]],
-            [InvalidOptionsException::class, [
-                'enable_final_summary' => true,
-                'enable_guest_checkout' => true,
-                'disable_reordering_option' => true,
-                'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-                'recalculate_shipping_cost' => true,
-                'allow_multishipping' => true,
-                'allow_delayed_shipping' => true,
-                'enable_tos' => true,
-                'tos_cms_id' => 'wrong_type',
-            ]],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_final_summary' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_guest_checkout' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_reordering_option' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['purchase_minimum_value' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['recalculate_shipping_cost' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['allow_multishipping' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['allow_delayed_shipping' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['enable_tos' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['tos_cms_id' => 'wrong_type'])],
         ];
     }
 
     public function testSuccessfulUpdate(): void
     {
-        $generalConfiguration = new GeneralConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $generalConfiguration = new GeneralConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
-        $res = $generalConfiguration->updateConfiguration([
-            'enable_final_summary' => true,
-            'enable_guest_checkout' => true,
-            'disable_reordering_option' => true,
-            'purchase_minimum_value' => self::MINIMUM_PURCHASE_VALUE,
-            'recalculate_shipping_cost' => true,
-            'allow_multishipping' => true,
-            'allow_delayed_shipping' => true,
-            'enable_tos' => true,
-            'tos_cms_id' => self::TOS_CMS_ID,
-        ]);
+        $res = $generalConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }
