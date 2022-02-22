@@ -58,7 +58,7 @@
   export default {
     props: {
       value: {
-        type: Number,
+        type: [Number, String],
         default: 0,
       },
       danger: {
@@ -85,7 +85,7 @@
         this.$emit('blur', $event);
       },
       increment() {
-        const value = parseInt(this.value === '' ? 0 : this.value, 10);
+        const value = parseInt(this.value === '' || isNaN(this.value) ? 0 : this.value, 10);
         this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
       },
       decrement() {
