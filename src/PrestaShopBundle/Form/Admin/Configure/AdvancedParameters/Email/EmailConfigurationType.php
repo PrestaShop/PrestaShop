@@ -80,14 +80,14 @@ class EmailConfigurationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add(self::FIELD_MAIL_EMAIL_MESSAGE, ChoiceType::class, [
+            ->add(static::FIELD_MAIL_EMAIL_MESSAGE, ChoiceType::class, [
                 'label' => $this->trans('Send emails to', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Where customers send messages from the order page.', 'Admin.Advparameters.Help'),
                 'choices' => $this->contactsChoiceProvider->getChoices(),
                 'choice_translation_domain' => false,
                 'multistore_configuration_key' => 'PS_MAIL_EMAIL_MESSAGE',
             ])
-            ->add(self::FIELD_MAIL_METHOD, ChoiceType::class, [
+            ->add(static::FIELD_MAIL_METHOD, ChoiceType::class, [
                 'label' => $this->trans('Method', 'Admin.Advparameters.Feature'),
                 'attr' => [
                     'class' => 'js-email-method',
@@ -98,7 +98,7 @@ class EmailConfigurationType extends TranslatorAwareType
                 'choices' => $this->mailMethodChoiceProvider->getChoices(),
                 'multistore_configuration_key' => 'PS_MAIL_METHOD',
             ])
-            ->add(self::FIELD_MAIL_TYPE, ChoiceType::class, [
+            ->add(static::FIELD_MAIL_TYPE, ChoiceType::class, [
                 'label' => $this->trans('Format', 'Admin.Advparameters.Feature'),
                 'expanded' => true,
                 'multiple' => false,
@@ -109,11 +109,11 @@ class EmailConfigurationType extends TranslatorAwareType
                 ],
                 'multistore_configuration_key' => 'PS_MAIL_TYPE',
             ])
-            ->add(self::FIELD_LOG_EMAILS, SwitchType::class, [
+            ->add(static::FIELD_LOG_EMAILS, SwitchType::class, [
                 'label' => $this->trans('Log Emails', 'Admin.Advparameters.Feature'),
                 'multistore_configuration_key' => 'PS_LOG_EMAILS',
             ])
-            ->add(self::FIELD_MAIL_DKIM_ENABLE, SwitchType::class, [
+            ->add(static::FIELD_MAIL_DKIM_ENABLE, SwitchType::class, [
                 'attr' => ['class' => 'js-dkim-enable'],
                 'choices' => [
                     'Disabled' => false,
