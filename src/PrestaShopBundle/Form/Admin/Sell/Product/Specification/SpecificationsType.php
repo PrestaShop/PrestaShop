@@ -83,7 +83,6 @@ class SpecificationsType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'label' => false,
-                'label_help_box' => $this->trans('Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.', 'Admin.Catalog.Help'),
             ])
             ->add('customizations', CustomizationsType::class)
         ;
