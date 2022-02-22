@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Improve\International\Tax;
 
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -95,6 +96,7 @@ class TaxOptionsType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'js-enable-tax',
                 ],
+                'multistore_configuration_key' => 'PS_USE_ECOTAX',
             ]
         )
             ->add('display_tax_in_cart', SwitchType::class, [
@@ -110,12 +112,14 @@ class TaxOptionsType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'js-display-in-cart',
                 ],
+                'multistore_configuration_key' => 'PS_TAX_DISPLAY',
             ])
             ->add('tax_address_type', ChoiceType::class, [
                 'label' => $this->trans('Based on', 'Admin.International.Feature'),
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->taxAddressTypeChoiceProvider->getChoices(),
+                'multistore_configuration_key' => 'PS_TAX_ADDRESS_TYPE',
             ])
             ->add('use_eco_tax', SwitchType::class, [
                 'label' => $this->trans('Use ecotax', 'Admin.International.Feature'),
@@ -123,6 +127,7 @@ class TaxOptionsType extends TranslatorAwareType
                 'help' => $this->trans(
                     'If you disable the ecotax, the ecotax for all your products will be set to 0.',
                     'Admin.International.Help'),
+                'multistore_configuration_key' => 'PS_USE_ECOTAX',
             ])
         ;
 
@@ -135,7 +140,18 @@ class TaxOptionsType extends TranslatorAwareType
                     'Define the ecotax (e.g. French ecotax: 20%).',
                     'Admin.International.Help'),
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
+                'multistore_configuration_key' => 'PS_ECOTAX_TAX_RULES_GROUP_ID',
             ]);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }
