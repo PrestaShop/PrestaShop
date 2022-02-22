@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -43,6 +44,8 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
@@ -88,6 +91,11 @@ class CustomerType extends TranslatorAwareType
     private $configuration;
 
     /**
+     * @var FormCloner
+     */
+    protected $formCloner;
+
+    /**
      * @param array $genderChoices
      * @param array $groupChoices
      * @param array $riskChoices
@@ -103,7 +111,8 @@ class CustomerType extends TranslatorAwareType
         array $riskChoices,
         $isB2bFeatureEnabled,
         $isPartnerOffersEnabled,
-        ConfigurationInterface $configuration
+        ConfigurationInterface $configuration,
+        FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
         $this->genderChoices = $genderChoices;
@@ -112,6 +121,7 @@ class CustomerType extends TranslatorAwareType
         $this->riskChoices = $riskChoices;
         $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
         $this->configuration = $configuration;
+        $this->formCloner = $formCloner;
     }
 
     /**
@@ -123,6 +133,17 @@ class CustomerType extends TranslatorAwareType
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
 
+        if ($options['show_guest_field'] === true) {
+            $builder
+                ->add('is_guest', SwitchType::class, [
+                    'label' => $this->trans('Register as guest', 'Admin.Global'),
+                    'help' => $this->trans(
+                        'Adds a one-time guest customer with no password.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                    'required' => false,
+                ]);
+        }
         $builder
             ->add('gender_id', ChoiceType::class, [
                 'choices' => $this->genderChoices,
@@ -202,6 +223,7 @@ class CustomerType extends TranslatorAwareType
                     'data-minscore' => $minScore,
                     'data-minlength' => $minLength,
                     'data-maxlength' => $maxLength,
+                    'autocomplete' => 'new-password',
                 ],
                 'help' => $this->trans(
                     'Password should be at least %length% characters long.',
@@ -224,6 +246,9 @@ class CustomerType extends TranslatorAwareType
                             'Admin.Notifications.Error',
                             ['%limit%' => Password::MIN_LENGTH]
                         ),
+                    ]),
+                    new NotBlank([
+                        'message' => $this->trans('Password is required.', 'Admin.Notifications.Error'),
                     ]),
                 ],
                 'required' => $options['is_password_required'],
@@ -358,6 +383,21 @@ class CustomerType extends TranslatorAwareType
                 ])
             ;
         }
+
+        // A listener that will make password field not required, if we want to create a guest
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $formData = $event->getData();
+
+            // If is_guest was provided and it's Yes, we change the field to NOT required
+            // and remove the validation constraints
+            if (isset($formData['is_guest']) && $formData['is_guest'] == 1) {
+                $form->add($this->formCloner->cloneForm($form->get('password'), [
+                    'required' => false,
+                    'constraints' => [],
+                ]));
+            }
+        });
     }
 
     /**
@@ -370,8 +410,10 @@ class CustomerType extends TranslatorAwareType
                 // password is configurable
                 // so it may be optional when editing customer
                 'is_password_required' => true,
+                'show_guest_field' => false,
             ])
             ->setAllowedTypes('is_password_required', 'bool')
+            ->setAllowedTypes('show_guest_field', 'bool')
         ;
     }
 }
