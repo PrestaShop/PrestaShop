@@ -3,7 +3,7 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 
 // Import login test
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -18,6 +18,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
+let numberOfCustomers;
 
 /**
  * Function to create customer
@@ -125,4 +126,68 @@ function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCusto
   });
 }
 
-module.exports = {createCustomerTest, deleteCustomerTest};
+/**
+ * Function to bulk delete customers
+ * @param customerData {CustomerData} Data to set to delete customers
+ * @param baseContext {string} String to identify the test
+ */
+function bulkDeleteCustomersTest(customerData, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
+  describe('POST-TEST: Delete customers by bulk actions', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go \'Customers > Customers\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+
+      await customersPage.closeSfToolBar(page);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetCustomerFilterFirst', baseContext);
+
+      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomers).to.be.above(0);
+    });
+
+    it('should filter list by lastName', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
+
+      await customersPage.filterCustomers(page, 'input', 'lastname', customerData.lastName);
+
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'lastname');
+      await expect(textResult).to.contains(customerData.lastName);
+    });
+
+    it('should delete customers with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCustomers', baseContext);
+
+      const deleteTextResult = await customersPage.deleteCustomersBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(customersPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
+
+      const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomersAfterReset).to.be.above(0);
+    });
+  });
+}
+
+module.exports = {deleteCustomerTest, createCustomerTest, bulkDeleteCustomersTest};

@@ -1,3 +1,4 @@
+/*
 require('module-alias/register');
 
 const {expect} = require('chai');
@@ -7,12 +8,14 @@ const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 const {getDateFormat} = require('@utils/date');
 
-// Import common tests
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
+// Import BO common tests
+const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
+const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/advancedParameters/createDeleteEmployee');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import FO common tests
 const {createOrderByCustomerTest, createOrderByGuestTest} = require('@commonTests/FO/createOrder');
-const {createEmployeeTest, deleteEmployeeTest} = require('@commonTests/BO/createDeleteEmployee');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
-const loginCommon = require('@commonTests/loginBO');
 
 // Import BO pages
 const loginPage = require('@pages/BO/login/index');
@@ -75,7 +78,7 @@ let newMail;
 // mailListener
 let mailListener;
 
-/*
+/!*
 Pre-condition :
 - Setup smtp parameters
 - Create new employee
@@ -96,19 +99,19 @@ Post-condition :
 - Delete employee
 - Delete guest account
 - Reset default email parameters
- */
+ *!/
 
 describe('BO - Orders - View and edit order : Check order status tab', async () => {
-  // Pre-Condition : Setup config SMTP
+  // Pre-Condition: Setup config SMTP
   setupSmtpConfigTest(baseContext);
 
-  // Pre-condition - Create new employee
+  // Pre-condition: Create new employee
   createEmployeeTest(createEmployeeData, baseContext);
 
-  // Pre-condition - Create order by guest
+  // Pre-condition: Create order by guest
   createOrderByGuestTest(orderByGuestData, baseContext);
 
-  // Pre-condition - Create order by default customer
+  // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
 
   // before and after functions
@@ -538,12 +541,13 @@ describe('BO - Orders - View and edit order : Check order status tab', async () 
     });
   });
 
-  // Post-condition - Delete employee
+  // Post-condition: Delete employee
   deleteEmployeeTest(createEmployeeData, baseContext);
 
-  // Post-condition - Delete guest account
+  // Post-condition: Delete guest account
   deleteCustomerTest(customerData, baseContext);
 
-  // Post-Condition : Reset SMTP config
+  // Post-Condition: Reset SMTP config
   resetSmtpConfigTest(baseContext);
 });
+*/

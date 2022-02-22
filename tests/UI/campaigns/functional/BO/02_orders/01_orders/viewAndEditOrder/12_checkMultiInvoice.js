@@ -8,9 +8,10 @@ const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderSpecificProductTest} = require('@commonTests/FO/createOrder');
-const {createProductTest, deleteProductTest} = require('@commonTests/BO/createDeleteProduct');
+const {createProductTest, bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -38,9 +39,12 @@ let secondFileName = '';
 const newProductPrice = 35.50;
 const secondNewProductPrice = 25.55;
 
+// Prefix for the new products to simply delete them by bulk actions
+const prefixNewProduct = 'TOTEST';
+
 // First product to create
 const firstProduct = new ProductFaker({
-  name: 'First product',
+  name: `First product ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -48,7 +52,7 @@ const firstProduct = new ProductFaker({
 
 // Second product to create
 const secondProduct = new ProductFaker({
-  name: 'second product',
+  name: `second product ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -65,17 +69,18 @@ const orderByCustomerData = {
 const carrierDataToSelect = {trackingNumber: '', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
 
 /*
-Pre-condition :
+Pre-condition:
 - Create 2 products
 - Create order by default customer
-Scenario :
+Scenario:
 - Try to add same product to the cart => check error message
 - Edit the product price and create new invoice
 - Check the 2 invoices
 - Add another product, create new invoice with free shipping
 - Check the invoice
-Post-condition
+Post-condition:
 - Delete the created products
+- Delete 'Free shipping' cart rule
  */
 
 describe('BO - Orders - View and edit order: Check multi invoice', async () => {
@@ -471,9 +476,9 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       });
   });
 
-  // Post-condition - Delete the first created products
-  deleteProductTest(firstProduct, baseContext);
+  // Post-condition: Delete created products
+  bulkDeleteProductsTest(prefixNewProduct, baseContext);
 
-  // Post-condition - Delete the second created products
-  deleteProductTest(secondProduct, baseContext);
+  // Post-condition: Delete 'Free shipping' cart rule
+  deleteCartRuleTest(baseContext);
 });

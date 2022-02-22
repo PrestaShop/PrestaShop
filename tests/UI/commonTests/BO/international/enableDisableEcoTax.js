@@ -3,7 +3,7 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 
 // Import login test
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -62,7 +62,7 @@ function enableEcoTaxTest(baseContext = 'commonTests-enableEcoTaxTest') {
  * Function to disable eco tax
  * @param baseContext {string} String to identify the test
  */
-function disableEcoTaxTest(baseContext = 'commonTests-disableEcotaxTest') {
+function disableEcoTaxTest(baseContext = 'commonTests-disableEcoTaxTest') {
   describe('POST-TEST: Disable Ecotax', async () => {
     // before and after functions
     before(async function () {
