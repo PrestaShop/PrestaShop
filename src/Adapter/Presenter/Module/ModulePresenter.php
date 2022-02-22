@@ -32,8 +32,8 @@ use Hook;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 class ModulePresenter implements PresenterInterface
 {

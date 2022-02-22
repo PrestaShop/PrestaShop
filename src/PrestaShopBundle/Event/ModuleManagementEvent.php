@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Event;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ModuleManagementEvent extends Event

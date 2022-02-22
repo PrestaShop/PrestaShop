@@ -25,7 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 class MyComplexModuleConfiguration implements ModuleComplexConfigurationInterface
 {
