@@ -88,7 +88,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
         return [
             'friendly_url' => (bool) $this->configuration->get('PS_REWRITING_SETTINGS', false, $shopConstraint),
             'accented_url' => (bool) $this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint),
-            'canonical_url_redirection' => $this->configuration->get('PS_CANONICAL_REDIRECT', null, $shopConstraint),
+            'canonical_url_redirection' => (int) $this->configuration->get('PS_CANONICAL_REDIRECT', 0, $shopConstraint),
             'disable_apache_multiview' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint),
             'disable_apache_mod_security' => (bool) $this->configuration->get('PS_HTACCESS_DISABLE_MODSEC', false, $shopConstraint),
         ];
@@ -152,7 +152,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('friendly_url', 'bool')
             ->setAllowedTypes('accented_url', 'bool')
-            ->setAllowedTypes('canonical_url_redirection', 'string')
+            ->setAllowedTypes('canonical_url_redirection', 'int')
             ->setAllowedTypes('disable_apache_multiview', 'bool')
             ->setAllowedTypes('disable_apache_mod_security', 'bool');
 
