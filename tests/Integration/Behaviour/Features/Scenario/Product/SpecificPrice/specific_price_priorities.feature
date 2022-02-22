@@ -10,10 +10,10 @@ Feature: Set Specific Price priorities from Back Office (BO).
   Scenario: I set specific price priorities to single product
     Given default specific price priorities are set to following:
       | priorities  |
-      | id_shop     |
+      | id_group    |
       | id_currency |
       | id_country  |
-      | id_group    |
+      | id_shop     |
     And I add product "product1" with following information:
       | name[en-US] | pocket watch |
       | type        | standard     |
@@ -43,10 +43,10 @@ Feature: Set Specific Price priorities from Back Office (BO).
   Scenario: Default specific price priorities should be applied for products that has no custom priorities set
     Given default specific price priorities are set to following:
       | priorities  |
-      | id_shop     |
+      | id_group    |
       | id_currency |
       | id_country  |
-      | id_group    |
+      | id_shop     |
     And I add product "product2" with following information:
       | name[en-US] | golden wrist watch |
       | type        | standard           |
@@ -67,14 +67,14 @@ Feature: Set Specific Price priorities from Back Office (BO).
       | priorities  |
       | id_group    |
       | id_currency |
-      | id_country  |
       | id_shop     |
+      | id_country  |
     Then default specific price priorities should be the following:
       | priorities  |
       | id_group    |
       | id_currency |
-      | id_country  |
       | id_shop     |
+      | id_country  |
     And product "product2" should not have custom specific price priorities
     And default specific price priorities should be used for product "product2"
     And product "product3" should not have custom specific price priorities
@@ -98,5 +98,5 @@ Feature: Set Specific Price priorities from Back Office (BO).
       | priorities  |
       | id_group    |
       | id_currency |
-      | id_country  |
       | id_shop     |
+      | id_country  |

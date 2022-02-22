@@ -94,9 +94,9 @@ class ProductFormDataProviderTest extends TestCase
     private const DEFAULT_SHOP_ID = 99;
     private const COVER_URL = 'http://localhost/cover.jpg';
     private const DEFAULT_PRIORITY_LIST = [
-        PriorityList::PRIORITY_COUNTRY,
         PriorityList::PRIORITY_GROUP,
         PriorityList::PRIORITY_CURRENCY,
+        PriorityList::PRIORITY_COUNTRY,
         PriorityList::PRIORITY_SHOP,
     ];
 
