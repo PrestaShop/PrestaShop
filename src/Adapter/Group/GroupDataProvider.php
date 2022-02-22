@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Group;
 
 use Db;
-use DbQuery;
 use Group;
 
 /**
@@ -61,14 +60,6 @@ class GroupDataProvider
 
     public function getAllGroupIds(): array
     {
-        $query = new DbQuery();
-        $query
-            ->select('g.`id_group`')
-            ->from('group', 'g')
-            ->orderby('g.`id_group` ASC')
-        ;
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-        return array_column($result, 'id_group');
+        return Group::getAllGroupIds();
     }
 }

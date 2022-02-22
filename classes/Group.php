@@ -407,6 +407,19 @@ class GroupCore extends ObjectModel
         return self::$groups[$id_group];
     }
 
+    public static function getAllGroupIds(): array
+    {
+        $query = new DbQuery();
+        $query
+            ->select('g.`id_group`')
+            ->from('group', 'g')
+            ->orderby('g.`id_group` ASC')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_column($result, 'id_group');
+    }
+
     /**
      * Light back office search for Group.
      *
