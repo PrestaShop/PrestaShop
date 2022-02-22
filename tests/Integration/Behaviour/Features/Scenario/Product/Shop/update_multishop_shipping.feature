@@ -86,13 +86,13 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time in stock notes[en-US]     | available   |
       | delivery time out of stock notes[en-US] | unavailable |
       | carriers                                | [carrier1]  |
-    But product product1 should have following shipping information for shops "shop1":
-      | width                                   | 10.5                 |
-      | height                                  | 6                    |
-      | depth                                   | 7                    |
+    And product product1 should have following shipping information for shops "shop1":
+      | width                                   | 1                    |
+      | height                                  | 2                    |
+      | depth                                   | 3                    |
       | weight                                  | 0.5                  |
       | additional_shipping_cost                | 12                   |
-      | delivery time notes type                | specific             |
+      | delivery time notes type                | none                 |
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
       | carriers                                | [carrier1,carrier2]  |
