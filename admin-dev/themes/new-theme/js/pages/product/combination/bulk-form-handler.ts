@@ -90,10 +90,15 @@ export default class BulkFormHandler {
 
     disablingToggles.forEach((element) => {
       const {disablingToggleName} = element.dataset;
+      //@todo: could these be set by default inside component?
+      const matchingValue = element.dataset.disablingToggleMatchingValue as string;
+      const disableOnMatch = !!element.dataset.disablingToggleDisableOnMatch;
+
       new DisablingToggler(
         `${CombinationMap.bulkCombinationForm} [data-disabling-toggle-name="${disablingToggleName}"] input`,
-        '0',
+        matchingValue,
         `${CombinationMap.bulkCombinationForm} [data-toggled-by="${disablingToggleName}"]`,
+        disableOnMatch,
       );
     });
 
