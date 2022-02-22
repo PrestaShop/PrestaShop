@@ -89,7 +89,7 @@ class SEOOptionsDataConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, ['product_attributes_in_title' => 'wrong_type',]],
+            [InvalidOptionsException::class, ['product_attributes_in_title' => 'wrong_type']],
         ];
     }
 

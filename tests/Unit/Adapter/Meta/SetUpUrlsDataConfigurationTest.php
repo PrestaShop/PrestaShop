@@ -115,7 +115,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
                     ['PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint, true],
                     ['PS_CANONICAL_REDIRECT', 0, $shopConstraint, 1],
                     ['PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint, true],
-                    ['PS_HTACCESS_DISABLE_MODSEC', false, $shopConstraint, true],                    
+                    ['PS_HTACCESS_DISABLE_MODSEC', false, $shopConstraint, true],
                 ]
             );
 
