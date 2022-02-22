@@ -28,69 +28,38 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Meta;
 
-use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
-use PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration;
+use PrestaShop\PrestaShop\Adapter\Meta\UrlSchemaDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-use Symfony\Component\Translation\TranslatorInterface;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
-class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
+class UrlSchemaDataConfigurationTest extends AbstractConfigurationTestCase
 {
     private const SHOP_ID = 42;
 
     private const VALID_CONFIGURATION = [
-        'friendly_url' => true,
-        'accented_url' => true,
-        'canonical_url_redirection' => 2,
-        'disable_apache_multiview' => true,
-        'disable_apache_mod_security' => true,
+        'category_rule' => '{id}-{rewrite}{id}',
+        'supplier_rule' => 'supplier/{id}-{rewrite}{id}',
+        'manufacturer_rule' => 'brand/{id}-{rewrite}{id}',
+        'cms_rule' => 'content/{id}-{rewrite}{id}',
+        'cms_category_rule' => 'content/category/{id}-{rewrite}{id}',
+        'module' => 'module/{module}{/:controller}{id}',
+        'product_rule' => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html',
     ];
 
     /**
-     * @var HtaccessFileGenerator
+     * @var array
      */
-    private $mockHtaccessFileGenerator;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $mockTranslator;
-
-    protected function setUp(): void
-    {
-        $this->mockConfiguration = $this->createConfigurationMock();
-        $this->mockShopConfiguration = $this->createShopContextMock();
-        $this->mockMultistoreFeature = $this->createMultistoreFeatureMock();
-        $this->mockHtaccessFileGenerator = $this->createHtaccessFileGeneratorMock();
-        $this->mockTranslator = $this->createTranslatorMock();
-    }
-
-    /**
-     * @return HtaccessFileGenerator
-     */
-    protected function createHtaccessFileGeneratorMock()
-    {
-        $stub = $this->getMockBuilder(HtaccessFileGenerator::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $stub->method('generateFile')
-            ->willReturn(true);
-
-        return $stub;
-    }
-
-    /**
-     * @return TranslatorInterface
-     */
-    protected function createTranslatorMock()
-    {
-        return $this->getMockBuilder(TranslatorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-    }
+    private const RULES = [
+        'category_rule' => '{id}-{rewrite}',
+        'supplier_rule' => 'supplier/{id}-{rewrite}',
+        'manufacturer_rule' => 'brand/{id}-{rewrite}',
+        'cms_rule' => 'content/{id}-{rewrite}',
+        'cms_category_rule' => 'content/category/{id}-{rewrite}',
+        'module' => 'module/{module}{/:controller}',
+        'product_rule' => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}.html',
+    ];
 
     /**
      * @dataProvider provideShopConstraints
@@ -99,12 +68,11 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
-        $setUpUrlsDataConfiguration = new SetUpUrlsDataConfiguration(
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->mockHtaccessFileGenerator,
-            $this->mockTranslator
+            self::RULES
         );
 
         $this->mockShopConfiguration
@@ -115,15 +83,18 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_REWRITING_SETTINGS', false, $shopConstraint, true],
-                    ['PS_ALLOW_ACCENTED_CHARS_URL', false, $shopConstraint, true],
-                    ['PS_CANONICAL_REDIRECT', 0, $shopConstraint, 2],
-                    ['PS_HTACCESS_DISABLE_MULTIVIEWS', false, $shopConstraint, true],
-                    ['PS_HTACCESS_DISABLE_MODSEC', false, $shopConstraint, true],
+                    ['PS_ROUTE_product_rule', null, $shopConstraint, '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}{id}.html'],
+                    ['PS_ROUTE_category_rule', null, $shopConstraint, '{id}-{rewrite}{id}'],
+                    ['PS_ROUTE_supplier_rule', null, $shopConstraint, 'supplier/{id}-{rewrite}{id}'],
+                    ['PS_ROUTE_manufacturer_rule', null, $shopConstraint, 'brand/{id}-{rewrite}{id}'],
+                    ['PS_ROUTE_cms_rule', null, $shopConstraint, 'content/{id}-{rewrite}{id}'],
+                    ['PS_ROUTE_cms_category_rule', null, $shopConstraint, 'content/category/{id}-{rewrite}{id}'],
+                    ['PS_ROUTE_module', null, $shopConstraint, 'module/{module}{/:controller}{id}'],
                 ]
             );
 
-        $result = $setUpUrlsDataConfiguration->getConfiguration();
+        $result = $urlSchemaDataConfiguration->getConfiguration();
+
         $this->assertSame(self::VALID_CONFIGURATION, $result);
     }
 
@@ -135,16 +106,15 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $setUpUrlsDataConfiguration = new SetUpUrlsDataConfiguration(
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->mockHtaccessFileGenerator,
-            $this->mockTranslator
+            self::RULES
         );
 
         $this->expectException($exception);
-        $setUpUrlsDataConfiguration->updateConfiguration($values);
+        $urlSchemaDataConfiguration->updateConfiguration($values);
     }
 
     /**
@@ -154,25 +124,25 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
     {
         return [
             [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
-            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['friendly_url' => 'wrong_type'])],
-            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['accented_url' => 'wrong_type'])],
-            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['canonical_url_redirection' => 'wrong_type'])],
-            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_apache_multiview' => 'wrong_type'])],
-            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['disable_apache_mod_security' => 'wrong_type'])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['category_rule' => false])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['supplier_rule' => false])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['manufacturer_rule' => false])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['cms_rule' => false])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['module' => false])],
+            [InvalidOptionsException::class, array_merge(self::VALID_CONFIGURATION, ['product_rule' => false])],
         ];
     }
 
     public function testSuccessfulUpdate(): void
     {
-        $setUpUrlsDataConfiguration = new SetUpUrlsDataConfiguration(
+        $urlSchemaDataConfiguration = new UrlSchemaDataConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->mockHtaccessFileGenerator,
-            $this->mockTranslator
+            self::RULES
         );
 
-        $res = $setUpUrlsDataConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
+        $res = $urlSchemaDataConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }
