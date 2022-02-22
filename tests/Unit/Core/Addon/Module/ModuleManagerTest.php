@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -50,6 +51,7 @@ class ModuleManagerTest extends TestCase
     private $moduleUpdaterS;
     private $moduleRepositoryS;
     private $moduleZipManagerS;
+    private $sourceHandlerFactoryS;
     private $translatorS;
     private $dispatcherS;
     private $hookManagerS;
@@ -63,6 +65,7 @@ class ModuleManagerTest extends TestCase
                 $this->moduleRepositoryS,
                 $this->moduleProviderS,
                 $this->adminModuleProviderS,
+                $this->sourceHandlerFactoryS,
                 $this->translatorS,
                 $this->dispatcherS,
                 $this->hookManagerS,
@@ -166,6 +169,7 @@ class ModuleManagerTest extends TestCase
         $this->mockModuleUpdater();
         $this->mockModuleRepository();
         $this->mockModuleZipManager();
+        $this->mockSourceHandlerFactory();
         $this->mockTranslator();
         $this->mockDispatcher();
         $this->mockHookManager();
@@ -299,6 +303,11 @@ class ModuleManagerTest extends TestCase
 
         $this->moduleZipManagerS
             ->method('storeInModulesFolder');
+    }
+
+    private function mockSourceHandlerFactory(): void
+    {
+        $this->sourceHandlerFactoryS = $this->createMock(SourceHandlerFactory::class);
     }
 
     private function mockTranslator(): void
