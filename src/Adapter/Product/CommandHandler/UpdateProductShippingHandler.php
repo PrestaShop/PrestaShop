@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductShippingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
@@ -68,6 +69,14 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
             $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS
         );
+
+        if (null !== $command->getCarrierReferences()) {
+            $this->productMultiShopRepository->setCarrierReferences(
+                new ProductId((int) $product->id),
+                $command->getCarrierReferences(),
+                $shopConstraint
+            );
+        }
     }
 
     /**
@@ -103,10 +112,6 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
         if (null !== $command->getAdditionalShippingCost()) {
             $product->additional_shipping_cost = (float) (string) $command->getAdditionalShippingCost();
             $updatableProperties[] = 'additional_shipping_cost';
-        }
-
-        if (null !== $command->getCarrierReferences()) {
-            $product->setCarriers($command->getCarrierReferences());
         }
 
         if (null !== $command->getDeliveryTimeNoteType()) {
