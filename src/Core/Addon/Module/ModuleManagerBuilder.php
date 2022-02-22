@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
@@ -110,6 +111,7 @@ class ModuleManagerBuilder
                     $this->buildRepository(),
                     self::$moduleDataProvider,
                     self::$adminModuleDataProvider,
+                    new SourceHandlerFactory(),
                     self::$translator,
                     new NullDispatcher(),
                     new HookManager()
