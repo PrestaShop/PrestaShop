@@ -1259,21 +1259,6 @@ function ajaxStates(id_state_selected)
       }
     }
   });
-
-  if (module_dir && vat_number)
-  {
-    $.ajax({
-      type: "GET",
-      url: window.location.origin + module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
-      success: function(isApplicable)
-      {
-        if(isApplicable == 1)
-          $('#vat_area').show();
-        else
-          $('#vat_area').hide();
-      }
-    });
-  }
 }
 
 function dniRequired() {
