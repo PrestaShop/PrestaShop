@@ -347,14 +347,14 @@
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
