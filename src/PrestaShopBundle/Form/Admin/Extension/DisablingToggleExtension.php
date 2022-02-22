@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Extension;
 
+use PrestaShopBundle\Form\Admin\Type\DisablingToggleType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -89,8 +90,13 @@ class DisablingToggleExtension extends AbstractTypeExtension
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
-            ->setDefaults(['disabling_toggle' => false])
+            ->setDefaults([
+                /** @see DisablingToggleType */
+                'disabling_toggle_options' => DisablingToggleType::DEFAULT_OPTIONS,
+                'disabling_toggle' => false,
+            ])
             ->setAllowedTypes('disabling_toggle', 'bool')
+            ->setAllowedTypes('disabling_toggle_options', ['array'])
         ;
     }
 }

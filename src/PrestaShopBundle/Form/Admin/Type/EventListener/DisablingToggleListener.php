@@ -59,8 +59,16 @@ class DisablingToggleListener implements EventSubscriberInterface
             return;
         }
 
-        $parent->add($fieldName, DisablingToggleType::class);
-        $shouldBeDisabled = !$parent->get($fieldName)->getData();
+        $disablingToggleOptions = $form->getConfig()->getOption('disabling_toggle_options');
+
+        $parent->add(
+            $fieldName,
+            DisablingToggleType::class,
+            $disablingToggleOptions
+        );
+        $shouldBeDisabled = $disablingToggleOptions['disable_on_match'] &&
+            $disablingToggleOptions['matching_value'] == (string) $parent->get($fieldName)->getData()
+        ;
 
         $formCloner = new FormCloner();
         $newOptions = [
@@ -79,7 +87,6 @@ class DisablingToggleListener implements EventSubscriberInterface
             $form->add($newChildForm);
         }
 
-        //@todo; need configurable (e.g. it should be possible to change if input is disabled when checkbox is checked or when unchecked
         $newForm = $formCloner->cloneForm($form, array_merge($form->getConfig()->getOptions(), $newOptions));
         $parent->add($newForm);
     }
