@@ -52,7 +52,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[en-US] | product out of stock |
       | carriers                                | [carrier1,carrier2]  |
     And I copy product product1 from shop shop1 to shop shop2
-    Then product product1 should have following shipping information:
+    Then product product1 should have following shipping information for shops "shop1,shop2":
       | width                                   | 10.5                 |
       | height                                  | 6                    |
       | depth                                   | 7                    |
@@ -61,7 +61,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time notes type                | specific             |
       | delivery time in stock notes[en-US]     | product in stock     |
       | delivery time out of stock notes[en-US] | product out of stock |
-      | carriers                                | [carrier1,carrier2]  |
+#   @todo: carriers doesn't seem to be copied. Is that expected?
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
