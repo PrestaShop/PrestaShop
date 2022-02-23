@@ -12,6 +12,7 @@ const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
 const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
+const stocksPage = require('@pages/BO/catalog/stocks');
 
 // Import FO pages
 const homePage = require('@pages/FO/home');
@@ -42,6 +43,7 @@ let lastShoppingCartId;
 const today = getDateFormat('yyyy-mm-dd');
 const myCarrierCost = 8.40;
 const todayCartFormat = getDateFormat('mm/dd/yyyy');
+let availableStockOfOrderedProduct;
 
 /*
 Go to create Order page
@@ -318,6 +320,28 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
+  describe('Check the Available stock of the ordered product', async () => {
+    it('should go to \'Catalog > Stocks\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.stocksLink,
+      );
+
+      const pageTitle = await stocksPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(stocksPage.pageTitle);
+    });
+
+    it('should get the Available stock of the ordered product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
+
+      availableStockOfOrderedProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
+      await expect(availableStockOfOrderedProduct).to.be.above(0);
+    });
+  });
+
   describe('Check that the Carts table is not empty', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage2', baseContext);
@@ -420,15 +444,74 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
         .and.to.contains(' Create an order from this cart.');
     });
 
-    it('should check the cart Summary Block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCartSummaryBlock', baseContext);
+    it('should check the product\'s title in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductTitleInCartSummaryBlock', baseContext);
 
-      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 2, 1);
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 'product_title', 1);
       await expect(cartSummary)
-        .to.contains(`${Products.demo_1.name}`);
+        .to.contains(`${Products.demo_1.name}`)
+        .and.to.contains(`${Products.demo_1.reference}`);
     });
 
-    // à voir avec Nesrine: le td est vide => je dois ajouter manuellement data-role?
+    it('should check the product\'s unit price in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductUnitPriceInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 'product_unit_price', 1);
+      await expect(cartSummary)
+        .to.be.equal(`€${Products.demo_1.finalPrice}`);
+    });
+
+    it('should check the product\'s quantity in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductQuantityInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 'product_quantity', 1);
+      await expect(parseInt(cartSummary, 2))
+        .to.be.equal(1);
+    });
+
+    it('should check the product\'s stock available in cart Summary Block', async function () {
+      await testContext
+        .addContextItem(this, 'testIdentifier', 'checkProductStockAvailableInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 'product_stock_available', 1);
+      await expect(parseInt(cartSummary, 10)).to.be.equal(availableStockOfOrderedProduct);
+    });
+
+    it('should check the product\'s total in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductTotalInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage.getCartSummary(page, lastShoppingCartId, 'product_total', 1);
+      await expect(cartSummary)
+        .to.be.equal(`€${Products.demo_1.finalPrice}`);
+    });
+
+    it('should check the total cost of products in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalCostProductsInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage
+        .getPriceColumnTotalFromCartSummary(page, lastShoppingCartId, 'total_cost_products');
+      await expect(cartSummary)
+        .to.be.equal(Products.demo_1.finalPrice);
+    });
+
+    it('should check the total cost of shipping in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalCostShippingInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage
+        .getPriceColumnTotalFromCartSummary(page, lastShoppingCartId, 'total_cost_shipping');
+      await expect(cartSummary)
+        .to.be.equal(myCarrierCost);
+    });
+
+    it('should check the total in cart Summary Block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalInCartSummaryBlock', baseContext);
+
+      const cartSummary = await addOrderPage
+        .getPriceColumnTotalFromCartSummary(page, lastShoppingCartId, 'total_cart');
+      await expect(cartSummary.toFixed(2))
+        .to.be.equal((Products.demo_1.finalPrice + myCarrierCost).toFixed(2));
+    });
+
     // est ce que on peut ajouter dans le demo data image d'un produit pour le revérifier?
   });
 });

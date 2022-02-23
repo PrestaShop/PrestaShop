@@ -35,7 +35,18 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
     this.cartSummaryTableRow = row => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
-    this.cartSummaryTableColumn = (column, row) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
+    // this.cartSummaryTableColumn = (column, row) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
+    this.cartSummaryTableColumn = row => `${this.cartSummaryTableRow(row)} td`;
+
+    // Columns selectors:
+    this.cartSummaryTableColumnProductTitle = row => `${this.cartSummaryTableColumn(row)}:nth-child(2)`;
+    this.cartSummaryTableColumnProductUnitPrice = row => `${this.cartSummaryTableColumn(row)}:nth-child(3)`;
+    this.cartSummaryTableColumnProductQuantity = row => `${this.cartSummaryTableColumn(row)}:nth-child(4)`;
+    this.cartSummaryTableColumnProductStockAvailable = row => `${this.cartSummaryTableColumn(row)}:nth-child(5)`;
+    this.cartSummaryTableColumnProductTotal = row => `${this.cartSummaryTableColumn(row)}:nth-child(6)`;
+    this.cartSummaryTableColumnCostTotalProducts = `${this.cartSummaryTableColumn(2)}:nth-child(2)`;
+    this.cartSummaryTableColumnCostTotalShipping = `${this.cartSummaryTableColumn(3)}:nth-child(2)`;
+    this.cartSummaryTableColumnTotal = `${this.cartSummaryTableColumn(4)}:nth-child(2)`;
   }
 
   /*
@@ -78,14 +89,72 @@ class ViewShoppingCarts extends BOBasePage {
   }
 
   /**
-   *
+   * Get text from column in table
    * @param page {Page} Browser tab
-   * @param column {Number} Column on table
+   * @param columnName {String} Column on table
    * @param row {Number} Row on table
    * @returns {Promise<string>}
    */
-  async getCartSummary(page, column, row) {
-    return this.getTextContent(page, this.cartSummaryTableColumn(column, row));
+  async getTextColumn(page, columnName, row) {
+    let columnSelector;
+
+    switch (columnName) {
+      case 'product_title':
+        columnSelector = this.cartSummaryTableColumnProductTitle(row);
+        break;
+
+      case 'product_unit_price':
+        columnSelector = this.cartSummaryTableColumnProductUnitPrice(row);
+        break;
+
+      case 'product_quantity':
+        columnSelector = this.cartSummaryTableColumnProductQuantity(row);
+        break;
+
+      case 'product_stock_available':
+        columnSelector = this.cartSummaryTableColumnProductStockAvailable(row);
+        break;
+
+      case 'product_total':
+        columnSelector = this.cartSummaryTableColumnProductTotal(row);
+        break;
+
+      case 'total_cost_products':
+        columnSelector = this.cartSummaryTableColumnCostTotalProducts;
+        break;
+
+      case 'total_cost_shipping':
+        columnSelector = this.cartSummaryTableColumnCostTotalShipping;
+        break;
+
+      case 'total_cart':
+        columnSelector = this.cartSummaryTableColumnTotal;
+        break;
+
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
+
+    return this.getTextContent(page, columnSelector);
+  }
+
+  /**
+   * Get Total price for each column
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column to get text value
+   * @returns {Promise<Number>}
+   */
+  async getPriceColumnTotal(page, columnName) {
+    switch (columnName) {
+      case 'total_cost_products':
+        return (this.getPriceFromText(page, this.cartSummaryTableColumnCostTotalProducts));
+      case 'total_cost_shipping':
+        return (this.getPriceFromText(page, this.cartSummaryTableColumnCostTotalShipping));
+      case 'total_cart':
+        return (this.getPriceFromText(page, this.cartSummaryTableColumnTotal));
+      default:
+        throw new Error(`Column ${columnName} was not found`);
+    }
   }
 }
 

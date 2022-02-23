@@ -281,14 +281,27 @@ class AddOrder extends BOBasePage {
    *
    * @param page {Page} Browser tab
    * @param cartId {Number} Card Id
-   * @param column {Number} Row on table
+   * @param column {String} Row on table
    * @param row {Number} column on table
    * @returns {Promise<*|string>}
    */
   async getCartSummary(page, cartId, column, row) {
     const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
 
-    return viewCartPage.getCartSummary(cartIframe, column, row);
+    return viewCartPage.getTextColumn(cartIframe, column, row);
+  }
+
+  /**
+   *
+   * @param page {Page} Browser tab
+   * @param cartId {Number} Card Id
+   * @param column {String} Row on table
+   * @returns {Promise<*|number>}
+   */
+  async getPriceColumnTotalFromCartSummary(page, cartId, column) {
+    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+
+    return viewCartPage.getPriceColumnTotal(cartIframe, column);
   }
 
   /* Cart methods */
