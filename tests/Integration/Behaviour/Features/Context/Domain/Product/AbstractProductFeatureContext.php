@@ -152,8 +152,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
@@ -164,7 +165,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -176,8 +177,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
@@ -188,7 +190,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -200,8 +202,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = (int) $data[$propertyName];
@@ -212,7 +215,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -224,8 +227,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (!isset($data[$propertyName])) {
             return;
@@ -237,7 +241,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertEquals(
                 null,
                 $actualValue,
-                sprintf('Unexpected available_date. Expected NULL, got "%s"', var_export($actualValue, true))
+                sprintf('Unexpected available_date. Expected NULL, got "%s"%s', var_export($actualValue, true), $extraMessage)
             );
         } else {
             $expectedDateTime = new DateTime($data[$propertyName]);
@@ -250,7 +254,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $formattedExpectedDate,
                 $formattedActualDate,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $formattedExpectedDate, $formattedActualDate, $extraMessage)
             );
         }
 

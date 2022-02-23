@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -220,6 +221,8 @@ class CommandBuilder
                 return (int) $value;
             case CommandField::TYPE_ARRAY:
                 return (array) $value;
+            case CommandField::TYPE_DATETIME:
+                return DateTime::buildNullableDateTime($value);
             default:
                 return $value;
         }

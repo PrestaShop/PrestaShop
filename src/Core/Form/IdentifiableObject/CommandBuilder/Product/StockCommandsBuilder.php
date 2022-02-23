@@ -27,60 +27,58 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
 /**
  * Builds commands from product stock form type
  */
-final class StockCommandsBuilder implements ProductCommandsBuilderInterface
+final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['stock'])) {
             return [];
         }
 
-        $quantityData = $formData['stock'];
-        $command = new UpdateProductStockInformationCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[stock][quantities][delta_quantity][delta]', 'setDeltaQuantity', CommandField::TYPE_INT)
+            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', CommandField::TYPE_INT)
+            ->addMultiShopField('[stock][options][stock_location]', 'setLocation', CommandField::TYPE_STRING)
+            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', CommandField::TYPE_INT)
+            ->addMultiShopField('[stock][options][low_stock_alert]', 'setLowStockAlert', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', CommandField::TYPE_INT)
+            ->addMultiShopField('[stock][availability][out_of_stock_type]', 'setOutOfStockType', CommandField::TYPE_INT)
+            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', CommandField::TYPE_DATETIME)
+        ;
 
-        /* @see DeltaQuantityType */
-        if (isset($quantityData['quantities']['delta_quantity']['delta'])) {
-            $command->setDeltaQuantity((int) $quantityData['quantities']['delta_quantity']['delta']);
-        }
-        if (isset($quantityData['quantities']['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);
-        }
-        if (isset($quantityData['options']['stock_location'])) {
-            $command->setLocation($quantityData['options']['stock_location']);
-        }
-        if (isset($quantityData['options']['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $quantityData['options']['low_stock_threshold']);
-        }
-        if (isset($quantityData['options']['low_stock_alert'])) {
-            $command->setLowStockAlert((bool) $quantityData['options']['low_stock_alert']);
-        }
-        if (isset($quantityData['pack_stock_type'])) {
-            $command->setPackStockType((int) $quantityData['pack_stock_type']);
-        }
-        if (isset($quantityData['availability']['out_of_stock_type'])) {
-            $command->setOutOfStockType((int) $quantityData['availability']['out_of_stock_type']);
-        }
-        if (isset($quantityData['availability']['available_now_label'])) {
-            $command->setLocalizedAvailableNowLabels($quantityData['availability']['available_now_label']);
-        }
-        if (isset($quantityData['availability']['available_later_label'])) {
-            $command->setLocalizedAvailableLaterLabels($quantityData['availability']['available_later_label']);
-        }
-        if (isset($quantityData['availability']['available_date'])) {
-            $command->setAvailableDate(new DateTime($quantityData['availability']['available_date']));
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductStockInformationCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductStockInformationCommand($productId->getValue(), ShopConstraint::allShops());
 
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 }

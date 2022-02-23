@@ -102,7 +102,7 @@ export default class ModifyAllShopsCheckbox {
           });
           // We check the event via JQuery as well because some components use internal JQuery event instead of native
           // ones (like select2) And it allows to check all children changes easily
-          $multiShopField.on('change', () => {
+          $multiShopField.on('change dp.change', () => {
             widget.classList.add(MultiShopModifyAllMap.updatedClass);
           });
           // Check for checkbox change also, in case it is modified programmatically

@@ -70,11 +70,13 @@ class AvailabilityType extends TranslatorAwareType
                 'label' => $this->trans('Behavior when out of stock', 'Admin.Catalog.Feature'),
                 'expanded' => true,
                 'column_breaker' => true,
+                'modify_all_shops' => true,
             ])
             ->add('available_now_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
@@ -83,6 +85,7 @@ class AvailabilityType extends TranslatorAwareType
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
@@ -90,6 +93,7 @@ class AvailabilityType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }

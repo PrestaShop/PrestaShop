@@ -63,6 +63,20 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             'shop_url',
         ]);
         DatabaseDump::restoreMatchingTables('/.*_shop$/');
+
+        // We need to restore lang tables that are also multi-shop
+        DatabaseDump::restoreTables([
+            'carrier_lang',
+            'category_lang',
+            'cms_category_lang',
+            'cms_lang',
+            'cms_role_lang',
+            'customization_field_lang',
+            'info_lang',
+            'linksmenutop_lang',
+            'meta_lang',
+            'product_lang',
+        ]);
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
         Shop::resetStaticCache();
     }

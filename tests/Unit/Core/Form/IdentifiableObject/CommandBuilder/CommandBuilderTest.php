@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class CommandBuilderTest extends TestCase
 {
@@ -66,11 +68,13 @@ class CommandBuilderTest extends TestCase
             ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
         ;
         $children = [
             'bob',
             'steve',
         ];
+        $dateTime = new DateTimeImmutable('2022-10-10 15:34:45');
 
         $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
@@ -79,6 +83,7 @@ class CommandBuilderTest extends TestCase
             ->setIsValid(true)
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
 
         yield [
@@ -93,6 +98,7 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
             [$command],
         ];
@@ -105,6 +111,7 @@ class CommandBuilderTest extends TestCase
             ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
         ;
 
         yield [
@@ -119,6 +126,7 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
             [$command],
         ];
@@ -148,6 +156,7 @@ class CommandBuilderTest extends TestCase
             ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
         ;
 
         $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
@@ -156,6 +165,7 @@ class CommandBuilderTest extends TestCase
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
+            ->setDate($dateTime)
         ;
 
         // Same test but now some fields are multishop, since no multishop command is provided it shouldn't change the final result
@@ -169,6 +179,36 @@ class CommandBuilderTest extends TestCase
                 ],
                 '_number' => 42,
                 'unknown' => 45,
+                'date_time' => '2022-10-10 15:34:45',
+            ],
+            [$command],
+        ];
+
+        // Handle empty date time
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config
+            ->addField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
+        ;
+
+        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
+        $command
+            ->setDate(new NullDateTime())
+        ;
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => '',
+            ],
+            [$command],
+        ];
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => null,
             ],
             [$command],
         ];
@@ -202,11 +242,13 @@ class CommandBuilderTest extends TestCase
             ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
         ;
         $children = [
             'bob',
             'steve',
         ];
+        $dateTime = new DateTimeImmutable('2022-10-10 15:34:45');
 
         $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
         $command
@@ -215,6 +257,7 @@ class CommandBuilderTest extends TestCase
             ->setIsValid(true)
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
 
         yield [
@@ -229,6 +272,7 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
             [$command],
         ];
@@ -244,6 +288,7 @@ class CommandBuilderTest extends TestCase
         $allShopsCommand
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
 
         yield [
@@ -260,6 +305,8 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
             [$command, $allShopsCommand],
         ];
@@ -273,6 +320,8 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
             [$allShopsCommand],
         ];
@@ -284,6 +333,7 @@ class CommandBuilderTest extends TestCase
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
+            ->setDate($dateTime)
         ;
 
         $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
@@ -306,6 +356,8 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => false,
             ],
             [$command, $allShopsCommand],
         ];
@@ -318,6 +370,7 @@ class CommandBuilderTest extends TestCase
             ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
             ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
             ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', CommandField::TYPE_DATETIME)
         ;
 
         $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
@@ -325,6 +378,7 @@ class CommandBuilderTest extends TestCase
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
+            ->setDate($dateTime)
         ;
 
         $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
@@ -348,6 +402,8 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
             [$command, $allShopsCommand],
         ];

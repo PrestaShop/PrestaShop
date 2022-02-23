@@ -31,14 +31,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
-use PrestaShopException;
 use StockAvailable;
 
 /**
@@ -88,42 +85,6 @@ class StockAvailableRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     *
-     * @return StockId
-     *
-     * @throws StockAvailableNotFoundException
-     */
-    public function getStockIdByProduct(ProductId $productId): StockId
-    {
-        $stockAvailableId = StockAvailable::getStockAvailableIdByProductId($productId->getValue());
-        if ($stockAvailableId <= 0) {
-            throw new StockAvailableNotFoundException(sprintf(
-                    'Cannot find StockAvailable for product #%d',
-                    $productId->getValue()
-                )
-            );
-        }
-
-        return new StockId($stockAvailableId);
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
-     */
-    public function getForProduct(ProductId $productId): StockAvailable
-    {
-        $stockId = $this->getStockIdByProduct($productId);
-
-        return $this->getStockAvailable($stockId);
-    }
-
-    /**
      * @param CombinationId $combinationId
      *
      * @return StockAvailable
@@ -152,36 +113,6 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         }
 
         return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
-    }
-
-    /**
-     * @param ProductId $productId
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws StockAvailableNotFoundException
-     */
-    public function create(ProductId $productId): StockAvailable
-    {
-        $stockAvailable = new StockAvailable();
-        $stockAvailable->id_product = $productId->getValue();
-        $shopParams = [];
-        try {
-            StockAvailable::addSqlShopParams($shopParams);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to add StockAvailable shop params #%d', $productId->getValue()),
-                0,
-                $e
-            );
-        }
-
-        $stockAvailable->id_shop = $shopParams['id_shop'] ?? 0;
-        $stockAvailable->id_shop_group = $shopParams['id_shop_group'] ?? 0;
-        $this->addObjectModel($stockAvailable, CannotAddStockAvailableException::class);
-
-        return $stockAvailable;
     }
 
     /**

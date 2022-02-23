@@ -74,6 +74,7 @@ class StockType extends TranslatorAwareType
                 'label' => $this->trans('Pack quantities', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('availability', AvailabilityType::class)
         ;
