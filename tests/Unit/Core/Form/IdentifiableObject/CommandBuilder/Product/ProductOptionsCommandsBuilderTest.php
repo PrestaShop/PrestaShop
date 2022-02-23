@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder;
 
 class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -41,14 +43,30 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildSingleShopCommand(array $formData, array $expectedCommands)
+    public function testBuildSingleShopCommand(array $formData, array $expectedCommands): void
     {
         $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommandsForSingleShop()
+    /**
+     * @dataProvider getExpectedCommandsForAllShops
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildAllShopCommand(array $formData, array $expectedCommands): void
+    {
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getExpectedCommandsForSingleShop(): Generator
     {
         yield [
             [
@@ -164,8 +182,87 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         ];
     }
 
+    /**
+     * @return Generator
+     */
+    public function getExpectedCommandsForAllShops(): Generator
+    {
+        $command = $this->getAllShopsCommand();
+        $command->setCondition(ProductCondition::NEW);
+        yield [
+            [
+                'options' => [
+                    'condition' => 'new',
+                    self::MODIFY_ALL_NAME_PREFIX . 'condition' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setShowCondition(false);
+        yield [
+            [
+                'options' => [
+                    'not_handled' => 0,
+                    'show_condition' => 0,
+                    self::MODIFY_ALL_NAME_PREFIX . 'show_condition' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setShowPrice(false);
+        yield [
+            [
+                'options' => [
+                    'not_handled' => 0,
+                    'visibility' => [
+                        'show_price' => false,
+                        self::MODIFY_ALL_NAME_PREFIX . 'show_price' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setAvailableForOrder(true);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'available_for_order' => '1',
+                        self::MODIFY_ALL_NAME_PREFIX . 'available_for_order' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setVisibility(ProductVisibility::INVISIBLE);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'visibility' => ProductVisibility::INVISIBLE,
+                        self::MODIFY_ALL_NAME_PREFIX . 'visibility' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+    }
+
     private function getSingleShopCommand(): UpdateProductOptionsCommand
     {
         return new UpdateProductOptionsCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
+    }
+
+    private function getAllShopsCommand(): UpdateProductOptionsCommand
+    {
+        return new UpdateProductOptionsCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }
