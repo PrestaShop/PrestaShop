@@ -45,7 +45,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
         $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -196,7 +196,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
         $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -326,7 +326,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
     }
 
     private function getAllShopsCommand(): UpdateProductPricesCommand
