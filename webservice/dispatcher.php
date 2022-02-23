@@ -30,12 +30,6 @@ ob_start();
 
 require_once dirname(__FILE__) . '/../config/config.inc.php';
 
-global $kernel;
-if (null === $kernel) {
-    $kernel = new AppKernel(_PS_ENV_, _PS_MODE_DEV_);
-    $kernel->boot();
-}
-
 // Cart is needed for some requests
 Context::getContext()->cart = new Cart();
 Context::getContext()->container = ContainerBuilder::getContainer('webservice', _PS_MODE_DEV_);
