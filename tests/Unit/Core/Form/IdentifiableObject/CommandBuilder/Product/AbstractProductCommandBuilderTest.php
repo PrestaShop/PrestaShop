@@ -39,6 +39,8 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
 {
     public const SHOP_ID = 1;
 
+    protected const MODIFY_ALL_NAME_PREFIX = 'modify_all_shops_';
+
     /**
      * @var ShopConstraint
      */
@@ -65,5 +67,14 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
         }
 
         return $this->productId;
+    }
+
+    protected function getSingleShopConstraint(): ShopConstraint
+    {
+        if ($this->singleShopConstraint) {
+            return $this->singleShopConstraint;
+        }
+
+        return ShopConstraint::shop(self::SHOP_ID);
     }
 }

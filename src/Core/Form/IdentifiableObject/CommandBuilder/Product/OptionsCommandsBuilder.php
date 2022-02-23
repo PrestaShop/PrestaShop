@@ -69,7 +69,7 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
             ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
-            ->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING)
         ;
 
         $commandBuilder = new CommandBuilder($config);

@@ -36,19 +36,19 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Op
 class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedCommandsForSingleShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildSingleShopCommand(array $formData, array $expectedCommands)
     {
-        $builder = new OptionsCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    public function getExpectedCommandsForSingleShop()
     {
         yield [
             [
@@ -64,17 +64,16 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
         yield [
             [
                 'options' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setManufacturerId(1);
         yield [
             [
@@ -85,7 +84,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
@@ -96,7 +95,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setShowCondition(true);
         yield [
             [
@@ -108,7 +107,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setOnlineOnly(true);
         yield [
             [
@@ -122,7 +121,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setShowPrice(false);
         yield [
             [
@@ -136,7 +135,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setAvailableForOrder(true);
         yield [
             [
@@ -150,7 +149,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setVisibility(ProductVisibility::INVISIBLE);
         yield [
             [
@@ -163,5 +162,10 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             ],
             [$command],
         ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductOptionsCommand
+    {
+        return new UpdateProductOptionsCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
     }
 }
