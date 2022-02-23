@@ -47,17 +47,6 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
     private $productId;
 
     /**
-     * @var ShopConstraint|null
-     */
-    private $singleShopConstraint;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->singleShopConstraint = ShopConstraint::shop(self::SHOP_ID);
-    }
-
-    /**
      * @return ProductId
      */
     protected function getProductId(): ProductId
@@ -71,10 +60,6 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
 
     protected function getSingleShopConstraint(): ShopConstraint
     {
-        if ($this->singleShopConstraint) {
-            return $this->singleShopConstraint;
-        }
-
         return ShopConstraint::shop(self::SHOP_ID);
     }
 }
