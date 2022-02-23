@@ -324,7 +324,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
     }
 
     private function getAllShopsCommand(): UpdateProductPricesCommand
