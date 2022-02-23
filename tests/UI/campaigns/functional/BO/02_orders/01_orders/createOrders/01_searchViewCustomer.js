@@ -44,9 +44,10 @@ Scenario:
 - Search for non existent customer and check error message
 - Search for disabled customer and check error message
 - Search for customers with lastName 'DOE' and check result number
-- Check displayed customer card
+- Check displayed customer card then click on choose
+- Click on details button and check customer details
 Pre-condition:
-- Delete created customer
+- Delete created customers
  */
 describe('BO - Orders - Create order : Search and view customer details from new order page', async () => {
   // Pre-condition: Create disabled customer
@@ -182,7 +183,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
     [
       {args: {blockName: 'Orders', number: 5}},
       {args: {blockName: 'Carts', number: 6}},
-      {args: {blockName: 'Viewed products', number: 7}},
+      {args: {blockName: 'Viewed products', number: 6}},
       {args: {blockName: 'Messages', number: 0}},
       {args: {blockName: 'Vouchers', number: 0}},
       {args: {blockName: 'Last emails', number: 0}},

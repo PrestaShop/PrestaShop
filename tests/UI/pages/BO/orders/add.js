@@ -159,7 +159,7 @@ class AddOrder extends BOBasePage {
       this.waitForVisibleSelector(page, this.checkoutHistoryBlock),
     ]);
 
-    return this.elementVisible(page, this.checkoutHistoryBlock);
+    return this.elementVisible(page, this.checkoutHistoryBlock, 1000);
   }
 
   /**
