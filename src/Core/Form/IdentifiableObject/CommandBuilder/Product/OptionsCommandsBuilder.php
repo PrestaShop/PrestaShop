@@ -30,13 +30,30 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
-final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
+final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (empty($formData['options']) &&
             !isset($formData['description']['manufacturer']) &&
@@ -44,34 +61,21 @@ final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
             return [];
         }
 
-        $options = $formData['options'] ?? [];
-        $specifications = $formData['specifications'] ?? [];
-        $manufacturerId = isset($formData['description']['manufacturer']) ? (int) $formData['description']['manufacturer'] : null;
-        $command = new UpdateProductOptionsCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
+            ->addField('[visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
+            ->addMultiShopField('[visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
+            ->addMultiShopField('[visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
+            ->addMultiShopField('[visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_BOOL)
+        ;
 
-        if (isset($options['visibility']['visibility'])) {
-            $command->setVisibility($options['visibility']['visibility']);
-        }
-        if (isset($options['visibility']['available_for_order'])) {
-            $command->setAvailableForOrder((bool) $options['visibility']['available_for_order']);
-        }
-        if (isset($options['visibility']['show_price'])) {
-            $command->setShowPrice((bool) $options['visibility']['show_price']);
-        }
-        if (isset($options['visibility']['online_only'])) {
-            $command->setOnlineOnly((bool) $options['visibility']['online_only']);
-        }
-        if (isset($specifications['show_condition'])) {
-            $command->setShowCondition((bool) $specifications['show_condition']);
-        }
-        if (isset($specifications['condition'])) {
-            $command->setCondition($specifications['condition']);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductOptionsCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductOptionsCommand($productId->getValue(), ShopConstraint::allShops());
 
-        if (null !== $manufacturerId) {
-            $command->setManufacturerId($manufacturerId);
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 }
