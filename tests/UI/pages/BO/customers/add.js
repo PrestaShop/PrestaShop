@@ -59,9 +59,9 @@ class AddCustomer extends BOBasePage {
     await this.setValue(page, this.lastNameInput, customerData.lastName);
     await this.setValue(page, this.emailInput, customerData.email);
     await this.setValue(page, this.passwordInput, customerData.password);
-    await page.selectOption(this.yearOfBirthSelect, customerData.yearOfBirth);
-    await page.selectOption(this.monthOfBirthSelect, customerData.monthOfBirth);
-    await page.selectOption(this.dayOfBirthSelect, customerData.dayOfBirth);
+    await this.selectByVisibleText(page, this.yearOfBirthSelect, customerData.yearOfBirth);
+    await this.selectByVisibleText(page, this.monthOfBirthSelect, customerData.monthOfBirth);
+    await this.selectByVisibleText(page, this.dayOfBirthSelect, customerData.dayOfBirth);
     await this.setChecked(page, this.statusToggleInput(customerData.enabled ? 1 : 0));
     await this.setChecked(page, this.partnerOffersToggleInput(customerData.partnerOffers ? 1 : 0));
     await this.setCustomerGroupAccess(page, customerData.defaultCustomerGroup);

@@ -4,6 +4,9 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addCustomerPage = require('@pages/BO/customers/add');
 
+// Needed to check customer details
+const viewCustomerPage = require('@pages/BO/customers/view');
+
 /**
  * Add order page, contains functions that can be used on create order page
  * @class
@@ -22,7 +25,7 @@ class AddOrder extends BOBasePage {
 
     // Customer selectors
     this.addCustomerLink = '#customer-add-btn';
-    this.addCustomerIframe = 'iframe.fancybox-iframe';
+    this.customerIframe = 'iframe.fancybox-iframe';
     this.customerSearchInput = '#customer-search-input';
     this.customerSearchLoadingNoticeBlock = '#customer-search-loading-notice';
 
@@ -31,11 +34,14 @@ class AddOrder extends BOBasePage {
     this.customerSearchEmptyResultParagraphe = `${this.customerSearchEmptyResultBlock} .alert-text`;
 
     // Full results
-    this.customerSearchFullResultsBlock = '.js-customer-search-results';
+    this.customerSearchFullResultsBlock = 'div.js-customer-search-results';
+    this.customerResultsBlock = `${this.customerSearchFullResultsBlock} div.js-customer-search-result-col`;
     this.customerCardBlock = pos => `${this.customerSearchFullResultsBlock} `
-      + `.js-customer-search-result:nth-child(${pos})`;
+      + `.js-customer-search-result-col:nth-child(${pos})`;
     this.customerCardNameTitle = pos => `${this.customerCardBlock(pos)} .js-customer-name`;
+    this.customerCardBody = pos => `${this.customerCardBlock(pos)} .card-body`;
     this.customerCardChooseButton = pos => `${this.customerCardBlock(pos)} .js-choose-customer-btn`;
+    this.customerCardDetailButton = `${this.customerSearchFullResultsBlock} a.js-details-customer-btn`;
 
     // Checkout history selectors
     this.checkoutHistoryBlock = '#customer-checkout-history';
@@ -87,6 +93,17 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Get customer search number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getCustomersSearchNumber(page) {
+    await this.waitForVisibleSelector(page, this.customerCardNameTitle(1));
+
+    return page.$$eval(this.customerResultsBlock, divs => divs.length);
+  }
+
+  /**
    * Get customer name from card result
    * @param page {Page} Browser tab
    * @param cardPosition {number} Position of the card in results
@@ -97,6 +114,16 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Get customer card body
+   * @param page {Page} Browser tab
+   * @param cardPosition {number} Position of the card in results
+   * @returns {Promise<string>}
+   */
+  getCustomerCardBody(page, cardPosition = 1) {
+    return this.getTextContent(page, this.customerCardBody(cardPosition));
+  }
+
+  /**
    * Click on add new customer and new customer iFrame
    * @param page {Page} Browser tab
    * @param customerData {CustomerData} Customer data fake object
@@ -104,7 +131,7 @@ class AddOrder extends BOBasePage {
    */
   async addNewCustomer(page, customerData) {
     await page.click(this.addCustomerLink);
-    await this.waitForVisibleSelector(page, this.addCustomerIframe);
+    await this.waitForVisibleSelector(page, this.customerIframe);
 
     const customerFrame = await page.frame({url: new RegExp('sell/customers/new', 'gmi')});
 
@@ -112,7 +139,7 @@ class AddOrder extends BOBasePage {
 
     await Promise.all([
       customerFrame.click(addCustomerPage.saveCustomerButton),
-      this.waitForHiddenSelector(page, this.addCustomerIframe),
+      this.waitForHiddenSelector(page, this.customerIframe),
     ]);
 
     return this.getCustomerNameFromResult(page);
@@ -122,7 +149,7 @@ class AddOrder extends BOBasePage {
    * Click on choose customer in list
    * @param page {Page} Browser tab
    * @param cardPosition {number} Position of customer to choose on the list
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>}
    */
   async chooseCustomer(page, cardPosition = 1) {
     await page.click(this.customerCardChooseButton(cardPosition));
@@ -131,6 +158,56 @@ class AddOrder extends BOBasePage {
       this.waitForHiddenSelector(page, this.customerCardChooseButton(cardPosition)),
       this.waitForVisibleSelector(page, this.checkoutHistoryBlock),
     ]);
+
+    return this.elementVisible(page, this.checkoutHistoryBlock);
+  }
+
+  /**
+   * Click on details button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnDetailsButton(page) {
+    await this.waitForSelectorAndClick(page, this.customerCardDetailButton);
+
+    return this.elementVisible(page, this.customerIframe, 2000);
+  }
+
+  /**
+   * Get personal information title
+   * @param page {Page} Browser tab
+   * @param customerID {number} Id of customer to check details
+   * @returns {Promise<string>}
+   */
+  async getPersonalInformationTitle(page, customerID) {
+    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
+
+    return viewCustomerPage.getPersonalInformationTitle(viewCustomerFrame);
+  }
+
+  /**
+   * Get number of elements from view customer page
+   * @param page {Page} Browser tab
+   * @param customerID {number} Id of customer to check details
+   * @param blockTitle {string} Block to get number of its elements
+   * @returns {Promise<string>}
+   */
+  async getNumberOfElementFromViewCustomerPage(page, customerID, blockTitle) {
+    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
+
+    return viewCustomerPage.getNumberOfElementFromTitle(viewCustomerFrame, blockTitle);
+  }
+
+  /**
+   * Is private note block visible
+   * @param page {Page} Browser tab
+   * @param customerID {number} Id of customer to check details
+   * @returns {Promise<boolean>}
+   */
+  async isPrivateNoteBlockVisible(page, customerID) {
+    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
+
+    return viewCustomerPage.isPrivateNoteBlockVisible(viewCustomerFrame);
   }
 
   /* Cart methods */
