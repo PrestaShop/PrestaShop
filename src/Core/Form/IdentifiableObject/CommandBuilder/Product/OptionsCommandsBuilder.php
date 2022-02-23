@@ -30,46 +30,51 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
-final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
+final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (empty($formData['options']) &&
             !isset($formData['description']['manufacturer'])) {
             return [];
         }
 
-        $options = $formData['options'] ?? [];
-        $manufacturerId = isset($formData['description']['manufacturer']) ? (int) $formData['description']['manufacturer'] : null;
-        $command = new UpdateProductOptionsCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addField('[description][manufacturer]', 'setManufacturerId', CommandField::TYPE_INT)
+            ->addField('[visibility][online_only]', 'setOnlineOnly', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[visibility][visibility]', 'setVisibility', CommandField::TYPE_STRING)
+            ->addMultiShopField('[visibility][available_for_order]', 'setAvailableForOrder', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[visibility][show_price]', 'setShowPrice', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[show_condition]', 'setShowCondition', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[condition]', 'setCondition', CommandField::TYPE_BOOL)
+        ;
 
-        if (isset($options['visibility']['visibility'])) {
-            $command->setVisibility($options['visibility']['visibility']);
-        }
-        if (isset($options['visibility']['available_for_order'])) {
-            $command->setAvailableForOrder((bool) $options['visibility']['available_for_order']);
-        }
-        if (isset($options['visibility']['show_price'])) {
-            $command->setShowPrice((bool) $options['visibility']['show_price']);
-        }
-        if (isset($options['visibility']['online_only'])) {
-            $command->setOnlineOnly((bool) $options['visibility']['online_only']);
-        }
-        if (isset($options['show_condition'])) {
-            $command->setShowCondition((bool) $options['show_condition']);
-        }
-        if (isset($options['condition'])) {
-            $command->setCondition($options['condition']);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductOptionsCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductOptionsCommand($productId->getValue(), ShopConstraint::allShops());
 
-        if (null !== $manufacturerId) {
-            $command->setManufacturerId($manufacturerId);
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 }
