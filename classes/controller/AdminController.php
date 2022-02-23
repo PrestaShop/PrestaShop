@@ -2210,10 +2210,6 @@ class AdminControllerCore extends Controller
         } elseif ($this->display == 'details') {
             $this->content .= $this->renderDetails();
         } elseif (!$this->ajax) {
-            // FIXME: Sorry. I'm not very proud of this, but no choice... Please wait sf refactoring to solve this.
-            if (get_class($this) != 'AdminCarriersController') {
-                $this->content .= $this->renderModulesList();
-            }
             $this->content .= $this->renderKpis();
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
@@ -2343,20 +2339,6 @@ class AdminControllerCore extends Controller
         }
 
         return $modal_render;
-    }
-
-    /**
-     * Was used to display a list of recommended modules.
-     *
-     * @param string|bool $tracking_source Source information for URL used by "Install" button
-     *
-     * @return string Empty
-     *
-     * @deprecated since 1.7.4.0
-     */
-    public function renderModulesList($tracking_source = false)
-    {
-        return '';
     }
 
     /**
