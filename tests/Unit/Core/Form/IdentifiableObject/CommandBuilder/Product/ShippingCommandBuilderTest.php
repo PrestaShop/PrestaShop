@@ -36,8 +36,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Sh
 
 class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
-    private const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
-
     /**
      * @dataProvider getExpectedSingleShopCommands
      *
