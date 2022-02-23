@@ -63,12 +63,12 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addField('[description][manufacturer]', 'setManufacturerId', CommandField::TYPE_INT)
-            ->addField('[visibility][online_only]', 'setOnlineOnly', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[visibility][visibility]', 'setVisibility', CommandField::TYPE_STRING)
-            ->addMultiShopField('[visibility][available_for_order]', 'setAvailableForOrder', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[visibility][show_price]', 'setShowPrice', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[show_condition]', 'setShowCondition', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[condition]', 'setCondition', CommandField::TYPE_BOOL)
+            ->addField('[options][visibility][online_only]', 'setOnlineOnly', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', CommandField::TYPE_STRING)
+            ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[options][show_condition]', 'setShowCondition', CommandField::TYPE_BOOL)
+            ->addMultiShopField('[options][condition]', 'setCondition', CommandField::TYPE_STRING)
         ;
 
         $commandBuilder = new CommandBuilder($config);
