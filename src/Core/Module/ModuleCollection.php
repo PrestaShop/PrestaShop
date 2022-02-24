@@ -74,7 +74,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return static
      */
-    public static function createFrom(array $modules)
+    public static function createFrom(array $modules): ModuleCollection
     {
         return new static($modules);
     }
@@ -89,9 +89,6 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
         return $this->modules;
     }
 
-    /**
-     * @return ArrayIterator|Traversable
-     */
     public function getIterator(): Traversable
     {
         return new ArrayIterator($this->modules);
@@ -100,7 +97,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->containsKey($offset);
     }
@@ -108,7 +105,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?ModuleInterface
     {
         return $this->get($offset);
     }
@@ -118,7 +115,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $module)
+    public function offsetSet($offset, $module): void
     {
         if (!isset($offset)) {
             $this->add($module);
@@ -134,7 +131,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->remove($offset);
     }
@@ -146,7 +143,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return bool
      */
-    public function containsKey($key)
+    public function containsKey($key): bool
     {
         return isset($this->modules[$key]) || array_key_exists($key, $this->modules);
     }
@@ -174,7 +171,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): ?ModuleInterface
     {
         return $this->modules[$key] ?? null;
     }
@@ -182,7 +179,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getKeys()
+    public function getKeys(): array
     {
         return array_keys($this->modules);
     }
@@ -190,7 +187,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getValues()
+    public function getValues(): array
     {
         return array_values($this->modules);
     }
@@ -201,7 +198,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      * @param mixed $key the key
      * @param ModuleInterface $module the specified module
      */
-    public function set($key, ModuleInterface $module)
+    public function set($key, ModuleInterface $module): void
     {
         $this->modules[$key] = $module;
     }
@@ -213,7 +210,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return bool
      */
-    public function add(ModuleInterface $module)
+    public function add(ModuleInterface $module): bool
     {
         $this->modules[] = $module;
 
@@ -227,7 +224,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return ModuleInterface|null returns the removed module or null if not found
      */
-    public function removeByKey($key)
+    public function removeByKey($key): ?ModuleInterface
     {
         if (!isset($this->modules[$key])) {
             return null;
@@ -246,7 +243,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return bool true if the module has been found and removed
      */
-    public function remove(ModuleInterface $module)
+    public function remove(ModuleInterface $module): bool
     {
         $key = array_search($module, $this->modules, true);
 
@@ -262,7 +259,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         return empty($this->modules);
     }
@@ -272,7 +269,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->modules);
     }

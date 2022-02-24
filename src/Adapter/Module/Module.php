@@ -182,14 +182,14 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return LegacyModule|void
+     * @return LegacyModule|null
      *
      * @throws \Exception
      */
-    public function getInstance()
+    public function getInstance(): ?LegacyModule
     {
         if (!$this->hasValidInstance()) {
-            return;
+            return null;
         }
 
         return $this->instance;
@@ -198,7 +198,7 @@ class Module implements ModuleInterface
     /**
      * @return bool True if valid Module instance
      */
-    public function hasValidInstance()
+    public function hasValidInstance(): bool
     {
         if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
             || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)
