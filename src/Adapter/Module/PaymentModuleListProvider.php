@@ -58,7 +58,7 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     public function __construct(
         ModuleRepositoryInterface $moduleRepository,
         ModuleEntityRepository $moduleEntityRepository,
-        $shopId
+        int $shopId
     ) {
         $this->moduleRepository = $moduleRepository;
         $this->moduleEntityRepository = $moduleEntityRepository;

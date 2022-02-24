@@ -45,17 +45,14 @@ class ZipSourceHandler implements SourceHandlerInterface
     private const MODULE_REGEX = '/^(.*)\/\1\.php$/i'; // module_name/module_name.php
 
     /** @var string */
-    private $modulePath;
+    protected $modulePath;
 
     /** @var TranslatorInterface */
-    private $translator;
+    protected $translator;
 
     public function __construct(string $modulePath, TranslatorInterface $translator)
     {
-        if (substr($modulePath, -1) !== '/') {
-            $modulePath .= '/';
-        }
-        $this->modulePath = $modulePath;
+        $this->modulePath = rtrim($modulePath, '/') . '/';
         $this->translator = $translator;
     }
 

@@ -33,6 +33,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class EventSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var ModuleRepository
+     */
     private $moduleRepository;
 
     public function __construct(ModuleRepository $moduleRepository)

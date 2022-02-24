@@ -46,6 +46,6 @@ class SourceHandlerFactory
             }
         }
 
-        throw new SourceHandlerNotFoundException();
+        throw new SourceHandlerNotFoundException(sprintf('Handler not found for source %s', $source));
     }
 }
