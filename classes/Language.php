@@ -602,14 +602,11 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             // Database translations deletion
-            $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
-            $tableNameKey = 'Tables_in_' . _DB_NAME_;
+            $languagesTablesNames = static::getLanguagesTablesNames();
 
-            foreach ($result as $row) {
-                if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . (int) $this->id)) {
-                        return false;
-                    }
+            foreach ($languagesTablesNames as $tableName) {
+                if (!Db::getInstance()->execute('DELETE FROM `' . $tableName . '` WHERE `id_lang` = ' . (int) $this->id)) {
+                    return false;
                 }
             }
 
@@ -1009,26 +1006,25 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function copyLanguageData($from, $to)
     {
-        $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
-        foreach ($result as $row) {
-            if ($row['Tables_in_' . _DB_NAME_] != _DB_PREFIX_ . 'lang') {
-                $result2 = Db::getInstance()->executeS('SELECT * FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $from);
-                if (!count($result2)) {
-                    continue;
-                }
-                Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $to);
-                $query = 'INSERT INTO `' . $row['Tables_in_' . _DB_NAME_] . '` VALUES ';
-                foreach ($result2 as $row2) {
-                    $query .= '(';
-                    $row2['id_lang'] = $to;
-                    foreach ($row2 as $field) {
-                        $query .= (!is_string($field) && $field == null) ? 'NULL,' : '\'' . pSQL($field, true) . '\',';
-                    }
-                    $query = rtrim($query, ',') . '),';
-                }
-                $query = rtrim($query, ',');
-                Db::getInstance()->execute($query);
+        $excludeLangTable = [_DB_PREFIX_ . 'lang'];
+        $languagesTablesNames = static::getLanguagesTablesNames($excludeLangTable);
+        foreach ($languagesTablesNames as $tableName) {
+            $result2 = Db::getInstance()->executeS('SELECT * FROM `' . $tableName . '` WHERE `id_lang` = ' . (int) $from);
+            if (!count($result2)) {
+                continue;
             }
+            Db::getInstance()->execute('DELETE FROM `' . $tableName . '` WHERE `id_lang` = ' . (int) $to);
+            $query = 'INSERT INTO `' . $tableName . '` VALUES ';
+            foreach ($result2 as $row2) {
+                $query .= '(';
+                $row2['id_lang'] = $to;
+                 foreach ($row2 as $field) {
+                     $query .= (!is_string($field) && $field == null) ? 'NULL,' : '\'' . pSQL($field, true) . '\',';
+                 }
+                 $query = rtrim($query, ',') . '),';
+            }
+            $query = rtrim($query, ',');
+            Db::getInstance()->execute($query);
         }
 
         return true;
@@ -1760,5 +1756,28 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         $countries = array_change_key_case($countries, CASE_LOWER);
 
         return $countries;
+    }
+
+    /**
+     * Get languages tables name in database
+     *
+     * @return array<int, string>
+     */
+    public static function getLanguagesTablesNames(array $excludedTables = []): array{
+        $languagesTablesNames = [];
+
+        $queryResult = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
+
+        foreach ($queryResult as $queryRow) {
+            $languageTableName = array_values($queryRow)[0];
+
+            if(in_array($languageTableName, $excludedTables)){
+                continue;
+            }
+
+            $languagesTablesNames[] =$languageTableName;
+        }
+
+        return $languagesTablesNames;
     }
 }
