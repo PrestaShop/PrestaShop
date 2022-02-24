@@ -26,8 +26,8 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShopBundle\Form\Admin\Type\IntegerWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -51,7 +51,7 @@ class GeneralType extends TranslatorAwareType
             ->add('new_days_number', IntegerType::class, [
                 'required' => false,
             ])
-            ->add('short_description_limit', TextWithUnitType::class, [
+            ->add('short_description_limit', IntegerWithUnitType::class, [
                 'required' => false,
                 'unit' => $this->trans('characters', 'Admin.Shopparameters.Help'),
             ])
