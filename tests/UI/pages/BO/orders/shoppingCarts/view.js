@@ -36,7 +36,9 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
     this.cartSummaryTableRow = row => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
     // this.cartSummaryTableColumn = (column, row) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
-    this.cartSummaryTableColumn = row => `${this.cartSummaryTableRow(row)} td`;
+    // this.cartSummaryTableColumn = row => `${this.cartSummaryTableRow(row)} td`;
+    this.cartSummaryTableColumn = (row, column) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
+
 
     // Columns selectors:
     this.cartSummaryTableColumnProductTitle = row => `${this.cartSummaryTableColumn(row)}:nth-child(2)`;
@@ -91,70 +93,58 @@ class ViewShoppingCarts extends BOBasePage {
   /**
    * Get text from column in table
    * @param page {Page} Browser tab
-   * @param columnName {String} Column on table
-   * @param row {Number} Row on table
-   * @returns {Promise<string>}
+   * @param columnName {string} Column on table
+   * @param row {number} Row on table
+   * @returns {Promise<string|number>}
    */
-  async getTextColumn(page, columnName, row) {
+  async getTextColumn(page, columnName, row = 1) {
     let columnSelector;
 
     switch (columnName) {
-      case 'product_title':
-        columnSelector = this.cartSummaryTableColumnProductTitle(row);
+      case 'image':
+        columnSelector = `${this.cartSummaryTableColumn(row, 1)} img`;
+        break;
+      case 'title':
+        columnSelector = this.cartSummaryTableColumn(row, 2);
         break;
 
-      case 'product_unit_price':
-        columnSelector = this.cartSummaryTableColumnProductUnitPrice(row);
+      case 'unit_price':
+        columnSelector = this.cartSummaryTableColumn(row, 3);
         break;
 
-      case 'product_quantity':
-        columnSelector = this.cartSummaryTableColumnProductQuantity(row);
+      case 'quantity':
+        columnSelector = this.cartSummaryTableColumn(row, 4);
         break;
 
-      case 'product_stock_available':
-        columnSelector = this.cartSummaryTableColumnProductStockAvailable(row);
+      case 'stock_available':
+        columnSelector = this.cartSummaryTableColumn(row, 5);
         break;
 
-      case 'product_total':
-        columnSelector = this.cartSummaryTableColumnProductTotal(row);
+      case 'total':
+        columnSelector = this.cartSummaryTableColumn(row, 6);
         break;
 
       case 'total_cost_products':
-        columnSelector = this.cartSummaryTableColumnCostTotalProducts;
+        columnSelector = this.cartSummaryTableColumn(row + 1, 2);
         break;
 
       case 'total_cost_shipping':
-        columnSelector = this.cartSummaryTableColumnCostTotalShipping;
+        columnSelector = this.cartSummaryTableColumn(row + 2, 2);
         break;
 
       case 'total_cart':
-        columnSelector = this.cartSummaryTableColumnTotal;
+        columnSelector = this.cartSummaryTableColumn(row + 3, 2);
         break;
 
       default:
         throw new Error(`Column ${columnName} was not found`);
+    }
+
+    if (columnName === 'image') {
+      return this.getAttributeContent(page, columnSelector, 'src');
     }
 
     return this.getTextContent(page, columnSelector);
-  }
-
-  /**
-   * Get Total price for each column
-   * @param page {Page} Browser tab
-   * @param columnName {string} Column to get text value
-   * @returns {Promise<Number>}
-   */
-  async getPriceColumnTotal(page, columnName) {
-    switch (columnName) {
-      case 'total_cost_products':
-        return (this.getPriceFromText(page, this.cartSummaryTableColumnCostTotalProducts));
-      case 'total_cost_shipping':
-        return (this.getPriceFromText(page, this.cartSummaryTableColumnCostTotalShipping));
-      case 'total_cart':
-        return (this.getPriceFromText(page, this.cartSummaryTableColumnTotal));
-      default:
-        throw new Error(`Column ${columnName} was not found`);
-    }
   }
 }
 
