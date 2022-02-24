@@ -111,7 +111,7 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     public function getInstalledModules(): array
     {
-        return array_filter($this->getList(), function ($module) {
+        return array_filter($this->getList(), function (Module $module) {
             return $module->database->get('installed') === true;
         });
     }
