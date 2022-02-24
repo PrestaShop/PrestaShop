@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use Cookie;
+use PrestaShopBundle\Form\Admin\Type\IntegerWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -54,13 +54,15 @@ class GeneralType extends TranslatorAwareType
                 'label' => $this->trans('Check the cookie\'s IP address', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Check the IP address of the cookie in order to prevent your cookie from being stolen.', 'Admin.Advparameters.Help'),
             ])
-            ->add(self::FIELD_FRONT_COOKIE_LIFETIME, TextType::class, [
+            ->add(self::FIELD_FRONT_COOKIE_LIFETIME, IntegerWithUnitType::class, [
                 'label' => $this->trans('Lifetime of front office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.', 'Admin.Advparameters.Help'),
+                'unit' => $this->trans('hours', 'Admin.Shopparameters.Feature'),
             ])
-            ->add(self::FIELD_BACK_COOKIE_LIFETIME, TextType::class, [
+            ->add(self::FIELD_BACK_COOKIE_LIFETIME, IntegerWithUnitType::class, [
                 'label' => $this->trans('Lifetime of back office cookies', 'Admin.Advparameters.Feature'),
                 'help' => $this->trans('When you access your back office and decide to stay logged in, your cookies lifetime defines your browser session. Set here the number of hours during which you want them valid before logging in again.', 'Admin.Advparameters.Help'),
+                'unit' => $this->trans('hours', 'Admin.Shopparameters.Feature'),
             ])
             ->add(self::FIELD_COOKIE_SAMESITE, ChoiceType::class, [
                 'label' => $this->trans('Cookie SameSite', 'Admin.Advparameters.Feature'),
