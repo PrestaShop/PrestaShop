@@ -26,12 +26,19 @@
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+use Module as LegacyModule;
+
 interface ModuleInterface
 {
-    public function getInstance();
+    public function getInstance(): ?LegacyModule;
 
-    public function hasValidInstance();
+    public function hasValidInstance(): bool;
 
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
     public function get(string $name);
 
     public function onInstall(): bool;
