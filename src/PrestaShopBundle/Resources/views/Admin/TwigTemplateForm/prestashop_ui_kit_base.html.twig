@@ -89,6 +89,7 @@
 
 {% block integer_with_unit_widget %}
   <div class="input-group">
+    {%- set type = type|default('number') -%}
     {{- block('form_widget_simple') -}}
     {% if form.vars.unit is defined %}
       <div class="input-group-append">
@@ -98,6 +99,18 @@
   </div>
   {{ block('form_help') }}
 {% endblock integer_with_unit_widget %}
+
+{% block number_with_unit_widget %}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {% if form.vars.unit is defined %}
+      <div class="input-group-append">
+        <span class="input-group-text">{{ form.vars.unit }}</span>
+      </div>
+    {% endif %}
+  </div>
+  {{ block('form_help') }}
+{% endblock number_with_unit_widget %}
 
 {% block ip_address_text_widget %}
   <div class="input-group">
