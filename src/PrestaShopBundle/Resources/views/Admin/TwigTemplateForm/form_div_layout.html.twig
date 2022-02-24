@@ -174,6 +174,11 @@
   {{ block('form_widget_simple') }}
 {%- endblock integer_widget -%}
 
+{%- block integer_with_unit_widget -%}
+  {%- set type = type|default('number') -%}
+  {{ block('form_widget_simple') }}
+{%- endblock integer_with_unit_widget -%}
+
 {%- block money_widget -%}
   {{ money_pattern|replace({ '{{ widget }}': block('form_widget_simple') })|raw }}
 {%- endblock money_widget -%}
