@@ -26,10 +26,13 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IntegerWithUnitType extends TextWithUnitType
+class IntegerWithUnitType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -37,6 +40,29 @@ class IntegerWithUnitType extends TextWithUnitType
     public function getParent()
     {
         return IntegerType::class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'widget' => 'single_text',
+            'unit' => 'unit',
+        ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        $view->vars = array_merge($view->vars, [
+            'unit' => $options['unit'],
+        ]);
     }
 
     /**
