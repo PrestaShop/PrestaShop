@@ -24,6 +24,53 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.4 - (2022-02-24)
+####################################
+- Back Office:
+  - Improvement:
+    - #27150: Update links to reach docs.prestashop-project.org instead of doc.prestashop.com (by @PrestaEdit)
+  - Bug fix:
+    - #27430: Align checkboxes of multistore widget (by @NeOMakinG)
+    - #27648: Removed double escape for Tree Node template (by @Progi1984)
+    - #27516: Fix Entities Mapping (by @okom3pom)
+    - #27372: Fix stock page padding-left (by @atomiix)
+    - #27389: Fix bad display of progress bar for bulk actions (by @mparvazi)
+    - #27333: Fix bad display of scrollbar for sidebar menu in RTL (by @mparvazi)
+    - #27236: Fix customer grid data factory (by @rsoulard-prolaser)
+    - #27296: Add class on light display layout and remove padding top (by @NeOMakinG)
+    - #27330: Fix default value for Jquery colorpicker (by @sowbiba)
+    - #27257: Hide default spin buttons for input number (by @mparvazi)
+    - #27429: Add text nowrap to link btn inside grids (by @NeOMakinG)
+    - #27225: Improve CMS edit page footer (by @Hlavtox)
+- Front Office:
+  - Bug fix:
+    - #27748: Fix the category dropdown on the module catalog page (by @sowbiba)
+    - #27406: Don't check if an invalid address exists over and over again (by @eternoendless)
+    - #27586: Fixes error while adding product to cart in quantity check (by @vladikk007)
+    - #27387: Remove z-index and overflow of product description of product list (by @NeOMakinG)
+    - #27502: Fix responsive CSS in add-to-cart modal (by @saulaski)
+    - #27376: Fix an unclear alert (by @rsoulard-prolaser)
+    - #27374: Fix wrong array_slice arguments (by @atomiix)
+- Core:
+  - Improvement:
+    - #27614: Updated modern email theme (by @Progi1984)
+    - #27350: Upgrade Smarty to 3.4.43 (by @matks)
+  - Bug fix:
+    - #27647: Bump productcomments to 5.0.1 (by @Progi1984)
+    - #27459: Remove duplicate by using distinct connection and also make sure carts are linked (by @PierreRambaud)
+    - #26748: Instead of testing each hook if it is active, query once and cache. (by @lmeyer1)
+- Installer:
+  - Bug fix:
+    - #27722: Fix translations installation broken by prefix (by @saulaski)
+- Web Services:
+  - Bug fix:
+    - #27766: Fix multilang translator issue (by @jolelievre)
+    - #27622: Fix Symfony Kernel in WebService dispatcher in 1.7.8.x (by @jf-viguier)
+- Tests:
+  - Refactoring:
+    - #27679: Fix preview email themes test (by @nesrineabdmouleh)
+
+####################################
 #   v1.7.8.3 - (2022-01-05)
 ####################################
 - Back Office:
@@ -6686,3 +6733,4 @@ Release Notes for PrestaShop 1.7
 #   v1.7.0.0 - (2016-11-03)
 ####################################
   New Release!
+
