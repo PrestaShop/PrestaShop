@@ -80,7 +80,7 @@ export default class VirtualProductManager {
 
   private fillVirtualProductNameField(): void {
     $(ProductMap.virtualProduct.fileUploadField).on('change', () => {
-      const fullPath = $(ProductMap.virtualProduct.fileUploadField).val()!;
+      let fullPath = $(ProductMap.virtualProduct.fileUploadField).val()!;
 
       if (Array.isArray(fullPath)) {
         // Handle the error with the most appropriate way, here an error is just thrown

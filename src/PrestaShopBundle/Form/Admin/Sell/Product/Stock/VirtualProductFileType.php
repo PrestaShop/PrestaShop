@@ -33,14 +33,11 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -49,8 +46,10 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class VirtualProductFileType extends TranslatorAwareType implements EventSubscriberInterface
+class VirtualProductFileType extends TranslatorAwareType
 {
+    const ASSOCIATED_FILE_VALIDATION_GROUP = 'associated_file';
+
     /**
      * @var int
      */
@@ -82,16 +81,6 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         $this->maxFileSizeInMegabytes = $maxFileSizeInMegabytes;
         $this->router = $router;
         $this->formCloner = $formCloner;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            FormEvents::PRE_SUBMIT => 'adaptSelf',
-        ];
     }
 
     /**
@@ -130,10 +119,16 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 'label' => $this->trans('Filename', 'Admin.Global'),
                 'label_help_box' => $this->trans('The full filename with its extension (e.g. Book.pdf)', 'Admin.Catalog.Help'),
                 'constraints' => [
-                    new NotBlank(),
-                    new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                    new NotBlank([
+                        'groups' => [self::ASSOCIATED_FILE_VALIDATION_GROUP],
+                    ]),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_GENERIC_NAME,
+                        'groups' => [self::ASSOCIATED_FILE_VALIDATION_GROUP],
+                    ]),
                     new Length([
                         'max' => VirtualProductFileSettings::MAX_DISPLAY_FILENAME_LENGTH,
+                        'groups' => [self::ASSOCIATED_FILE_VALIDATION_GROUP],
                     ]),
                 ],
             ])
@@ -185,26 +180,6 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 ],
             ])
         ;
-
-        // The form type acts as its own listener to dynamize some field options
-        $builder->addEventSubscriber($this);
-    }
-
-    /**
-     * @param FormEvent $event
-     */
-    public function adaptSelf(FormEvent $event): void
-    {
-        $form = $event->getForm();
-        $data = $event->getData();
-
-        // Remove filename constraint if there is no virtual product to avoid invalidating the form for nothing
-        if (empty($data['has_file'])) {
-            $newNameField = $this->formCloner->cloneForm($form->get('name'), [
-                'constraints' => [],
-            ]);
-            $form->add($newNameField);
-        }
     }
 
     /**
@@ -223,6 +198,17 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 'class' => 'virtual-product-file-content',
             ],
             'columns_number' => 3,
+            'validation_groups' => function ($form) {
+                $groups = ['Default'];
+                $data = $form->getData();
+
+                // when a file is associated to a virtual product, we add related validation group
+                if (!empty($data['has_file'])) {
+                    $groups[] = self::ASSOCIATED_FILE_VALIDATION_GROUP;
+                }
+
+                return $groups;
+            },
         ]);
         $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }
