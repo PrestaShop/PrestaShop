@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\NumberWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -116,7 +116,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                 ],
             ])
-            ->add('weight', TextWithUnitType::class, [
+            ->add('weight', NumberWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on weight', 'Admin.Catalog.Feature'),
                 'unit' => $this->weightUnit,

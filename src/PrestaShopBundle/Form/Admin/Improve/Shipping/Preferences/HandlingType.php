@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\NumberWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -98,7 +98,7 @@ class HandlingType extends TranslatorAwareType
                 ),
                 'multistore_configuration_key' => 'PS_SHIPPING_FREE_PRICE',
             ])
-            ->add('free_shipping_weight', TextWithUnitType::class, [
+            ->add('free_shipping_weight', NumberWithUnitType::class, [
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',

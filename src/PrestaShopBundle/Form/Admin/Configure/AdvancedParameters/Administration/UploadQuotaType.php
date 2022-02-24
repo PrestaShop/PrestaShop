@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\NumberWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,7 +48,7 @@ class UploadQuotaType extends TranslatorAwareType
         $builder
             ->add(
                 self::FIELD_MAX_SIZE_ATTACHED_FILES,
-                TextWithUnitType::class,
+                NumberWithUnitType::class,
                 [
                     'label' => $this->trans(
                         'Maximum size for attached files',
@@ -80,7 +80,7 @@ class UploadQuotaType extends TranslatorAwareType
             )
             ->add(
                 self::FIELD_MAX_SIZE_DOWNLOADABLE_FILE,
-                TextWithUnitType::class,
+                NumberWithUnitType::class,
                 [
                     'label' => $this->trans(
                         'Maximum size for a downloadable product',
@@ -112,7 +112,7 @@ class UploadQuotaType extends TranslatorAwareType
             )
             ->add(
                 self::FIELD_MAX_SIZE_PRODUCT_IMAGE,
-                TextWithUnitType::class,
+                NumberWithUnitType::class,
                 [
                     'label' => $this->trans(
                         'Maximum size for a product\'s image',

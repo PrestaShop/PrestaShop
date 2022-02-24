@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shipping;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\NumberWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -72,7 +72,7 @@ class DimensionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('width', TextWithUnitType::class, [
+            ->add('width', NumberWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -89,7 +89,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('height', TextWithUnitType::class, [
+            ->add('height', NumberWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -106,7 +106,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('depth', TextWithUnitType::class, [
+            ->add('depth', NumberWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -123,7 +123,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('weight', TextWithUnitType::class, [
+            ->add('weight', NumberWithUnitType::class, [
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
                 'unit' => $this->weightUnit,
