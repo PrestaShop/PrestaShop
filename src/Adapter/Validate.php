@@ -33,6 +33,8 @@ use Validate as ValidateLegacy;
  */
 class Validate
 {
+    public const MYSQL_UNSIGNED_INT_MAX = 4294967295;
+
     /**
      * @param mixed $way
      *

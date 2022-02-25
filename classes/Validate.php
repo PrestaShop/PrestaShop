@@ -26,6 +26,7 @@
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
 use Egulias\EmailValidator\Validation\RFCValidation;
+use PrestaShop\PrestaShop\Adapter\Validate as AdapterValidate;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
@@ -821,7 +822,10 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value))
+            && (string) (int) $value === (string) $value
+            && $value < AdapterValidate::MYSQL_UNSIGNED_INT_MAX
+            && $value >= 0;
     }
 
     /**

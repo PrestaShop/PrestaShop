@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
@@ -46,6 +47,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
@@ -306,6 +308,20 @@ class CustomerType extends TranslatorAwareType
                     ),
                     'required' => false,
                     'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                    'constraints' => [
+                        new Range([
+                            'min' => 0,
+                            'max' => Validate::MYSQL_UNSIGNED_INT_MAX,
+                            'minMessage' => $this->trans(
+                                '%s is invalid. Please enter an integer greater than or equal to 0.',
+                                'Admin.Notifications.Error'
+                            ),
+                            'maxMessage' => $this->trans(
+                                '%s is invalid. Please enter an integer lower than %s.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
                 ])
                 ->add('risk_id', ChoiceType::class, [
                     'label' => $this->trans('Risk rating', 'Admin.Orderscustomers.Feature'),
