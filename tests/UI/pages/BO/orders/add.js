@@ -4,9 +4,6 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addCustomerPage = require('@pages/BO/customers/add');
 
-// Needed to check customer details
-const viewCustomerPage = require('@pages/BO/customers/view');
-
 /**
  * Add order page, contains functions that can be used on create order page
  * @class
@@ -174,40 +171,13 @@ class AddOrder extends BOBasePage {
   }
 
   /**
-   * Get personal information title
+   * Get customer Iframe
    * @param page {Page} Browser tab
-   * @param customerID {number} Id of customer to check details
-   * @returns {Promise<string>}
+   * @param customerID {number} Id of customer to check
+   * @returns {*}
    */
-  async getPersonalInformationTitle(page, customerID) {
-    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
-
-    return viewCustomerPage.getPersonalInformationTitle(viewCustomerFrame);
-  }
-
-  /**
-   * Get number of elements from view customer page
-   * @param page {Page} Browser tab
-   * @param customerID {number} Id of customer to check details
-   * @param blockTitle {string} Block to get number of its elements
-   * @returns {Promise<string>}
-   */
-  async getNumberOfElementFromViewCustomerPage(page, customerID, blockTitle) {
-    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
-
-    return viewCustomerPage.getNumberOfElementFromTitle(viewCustomerFrame, blockTitle);
-  }
-
-  /**
-   * Is private note block visible
-   * @param page {Page} Browser tab
-   * @param customerID {number} Id of customer to check details
-   * @returns {Promise<boolean>}
-   */
-  async isPrivateNoteBlockVisible(page, customerID) {
-    const viewCustomerFrame = await page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
-
-    return viewCustomerPage.isPrivateNoteBlockVisible(viewCustomerFrame);
+  getCustomerIframe(page, customerID) {
+    return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
   }
 
   /* Cart methods */

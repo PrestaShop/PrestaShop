@@ -11,6 +11,7 @@ const {createCustomerTest, deleteCustomerTest} = require('@commonTests/BO/custom
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
+const viewCustomerPage = require('@pages/BO/customers/view');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -173,7 +174,9 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should check the existence of personal information block in the iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformation', baseContext);
 
-      const cardHeaderText = await addOrderPage.getPersonalInformationTitle(page, DefaultCustomer.id);
+      page = await addOrderPage.getCustomerIframe(page, DefaultCustomer.id);
+
+      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
 
       await expect(cardHeaderText).to.contains(DefaultCustomer.firstName);
       await expect(cardHeaderText).to.contains(DefaultCustomer.lastName);
@@ -194,11 +197,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
       it(`should check the ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
 
-        const cardHeaderText = await addOrderPage.getNumberOfElementFromViewCustomerPage(
-          page,
-          DefaultCustomer.id,
-          test.args.blockName,
-        );
+        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(page, test.args.blockName);
         await expect(parseInt(cardHeaderText, 10)).to.be.at.least(test.args.number);
       });
     });
@@ -206,7 +205,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should check the existence of add private note block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddPrivateNote', baseContext);
 
-      const isVisible = await addOrderPage.isPrivateNoteBlockVisible(page, DefaultCustomer.id);
+      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(page);
       await expect(isVisible).to.be.true;
     });
   });
