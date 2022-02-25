@@ -51,6 +51,8 @@ class AddOrder extends BOBasePage {
     this.productQuantityInput = '#quantity-input';
     this.addtoCartButton = '#add-product-to-cart-btn';
     this.productsTable = '#products-table';
+    this.ordersTab = '#customer-orders-tab';
+    this.customerOrdersTable = 'customer-orders-table';
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -202,6 +204,17 @@ class AddOrder extends BOBasePage {
     await page.click(this.addtoCartButton);
 
     await this.waitForVisibleSelector(page, this.productsTable);
+  }
+
+  /**
+   * Click on orders tab
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnOrdersTab(page) {
+    await this.waitForSelectorAndClick(page, this.ordersTab);
+
+    return this.elementVisible(page, this.customerOrdersTable, 1000);
   }
 
   /* Addresses methods */
