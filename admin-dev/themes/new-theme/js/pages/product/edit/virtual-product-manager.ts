@@ -80,15 +80,21 @@ export default class VirtualProductManager {
 
   private fillVirtualProductNameField(): void {
     $(ProductMap.virtualProduct.fileUploadField).on('change', () => {
-      let fullPath = $(ProductMap.virtualProduct.fileUploadField).val()!;
+      // do not fill the name field if it's not empty
+      if ($(ProductMap.virtualProduct.fileNameField).val() !== '') {
+        return;
+      }
 
-      if (Array.isArray(fullPath)) {
-        // Handle the error with the most appropriate way, here an error is just thrown
+      let fullPath = $(ProductMap.virtualProduct.fileUploadField).val();
+
+      if (Array.isArray(fullPath) || typeof fullPath === 'undefined') {
         throw new Error('Full path of the file is not supposed to be an array');
       } else {
         // Convert to string in any other case
         fullPath = fullPath.toString();
       }
+
+      alert(fullPath);
 
       // get file name from full path
       const startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
