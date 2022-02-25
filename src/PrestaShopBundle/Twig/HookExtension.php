@@ -135,12 +135,12 @@ class HookExtension extends AbstractExtension
 
         $render = [];
         foreach ($renderedHook->getContent() as $module => $hookRender) {
-            $moduleAttributes = $this->moduleRepository->getModule($module);
+            $moduleAttributes = $this->moduleRepository->getModule($module)->getAttributes();
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
                 'content' => $hookRender,
-                'attributes' => $moduleAttributes->attributes->all(),
+                'attributes' => $moduleAttributes->all(),
             ];
         }
 
