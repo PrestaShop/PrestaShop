@@ -87,7 +87,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $this->modulePath = $modulePath;
     }
 
-    public function getList(): array
+    public function getList(): ModuleCollection
     {
         $modules = [];
         $modulesDirsList = $this->finder->directories()
@@ -105,26 +105,26 @@ class ModuleRepository implements ModuleRepositoryInterface
             $modules[] = $this->getModule($moduleName);
         }
 
-        return $this->mergeWithModulesFromHook($modules);
+        return ModuleCollection::createFrom($this->mergeWithModulesFromHook($modules));
     }
 
-    public function getInstalledModules(): array
+    public function getInstalledModules(): ModuleCollection
     {
-        return array_filter($this->getList(), function (Module $module) {
+        return $this->getList()->filter(static function (Module $module) {
             return $module->database->get('installed') === true;
         });
     }
 
-    public function getConfigurableModules(): array
+    public function getConfigurableModules(): ModuleCollection
     {
-        return array_filter($this->getList(), function (Module $module) {
+        return $this->getList()->filter(static function (Module $module) {
             return $module->hasValidInstance() && !empty($module->getInstance()->warning);
         });
     }
 
-    public function getUpgradableModules(): array
+    public function getUpgradableModules(): ModuleCollection
     {
-        return array_filter($this->getList(), function (Module $module) {
+        return $this->getList()->filter(static function (Module $module) {
             return $module->canBeUpgraded();
         });
     }

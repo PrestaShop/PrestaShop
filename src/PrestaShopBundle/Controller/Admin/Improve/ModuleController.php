@@ -487,11 +487,9 @@ class ModuleController extends ModuleAbstractController
     /**
      * Get categories and its modules.
      *
-     * @param array $modules List of installed modules
-     *
      * @return array
      */
-    private function getCategories(AdminModuleDataProvider $modulesProvider, array $modules)
+    private function getCategories(AdminModuleDataProvider $modulesProvider, ModuleCollection $modules)
     {
         /** @var CategoriesProvider $categoriesProvider */
         $categoriesProvider = $this->get('prestashop.categories_provider');
