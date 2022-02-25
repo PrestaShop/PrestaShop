@@ -323,7 +323,7 @@ class ModuleManager implements ModuleManagerInterface
         return $error;
     }
 
-    public function upgradeMigration(string $name): bool
+    protected function upgradeMigration(string $name): bool
     {
         $module_list = LegacyModule::getModulesOnDisk();
 
