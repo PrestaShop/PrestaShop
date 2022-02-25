@@ -26,8 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShopBundle\Form\Admin\Type\NumberWithUnitType;
-
 class TextWithUnitType extends NumberWithUnitType
 {
     /**
