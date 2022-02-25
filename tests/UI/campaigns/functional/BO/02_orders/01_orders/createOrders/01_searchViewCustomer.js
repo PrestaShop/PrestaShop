@@ -27,6 +27,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
+let customerIframe;
 
 const nonExistentCustomer = new CustomerFaker();
 const disabledCustomer = new CustomerFaker({enabled: false});
@@ -174,9 +175,9 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should check the existence of personal information block in the iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkPersonalInformation', baseContext);
 
-      page = await addOrderPage.getCustomerIframe(page, DefaultCustomer.id);
+      customerIframe = await addOrderPage.getCustomerIframe(page, DefaultCustomer.id);
 
-      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(page);
+      const cardHeaderText = await viewCustomerPage.getPersonalInformationTitle(customerIframe);
 
       await expect(cardHeaderText).to.contains(DefaultCustomer.firstName);
       await expect(cardHeaderText).to.contains(DefaultCustomer.lastName);
@@ -197,7 +198,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
       it(`should check the ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
 
-        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(page, test.args.blockName);
+        const cardHeaderText = await viewCustomerPage.getNumberOfElementFromTitle(customerIframe, test.args.blockName);
         await expect(parseInt(cardHeaderText, 10)).to.be.at.least(test.args.number);
       });
     });
@@ -205,7 +206,7 @@ describe('BO - Orders - Create order : Search and view customer details from new
     it('should check the existence of add private note block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkAddPrivateNote', baseContext);
 
-      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(page);
+      const isVisible = await viewCustomerPage.isPrivateNoteBlockVisible(customerIframe);
       await expect(isVisible).to.be.true;
     });
   });
