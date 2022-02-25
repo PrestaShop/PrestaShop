@@ -82,7 +82,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Gets a native PHP array representation of the collection.
      *
-     * @return array
+     * @return ModuleInterface[]
      */
     public function toArray(): array
     {
