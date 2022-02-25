@@ -42,9 +42,11 @@ class AlertsController extends ModuleAbstractController
      */
     public function indexAction()
     {
+        $moduleRepository = $this->getModuleRepository();
+
         return $this->render(
             '@PrestaShop/Admin/Module/alerts.html.twig',
-            $this->getNotificationPageData('to_configure')
+            $this->getNotificationPageData($moduleRepository->getConfigurableModules())
         );
     }
 
@@ -53,14 +55,14 @@ class AlertsController extends ModuleAbstractController
      */
     public function notificationsCountAction()
     {
-        $moduleRepository = $this->get('prestashop.core.admin.module.repository');
+        $moduleRepository = $this->getModuleRepository();
         $toConfigure = count($moduleRepository->getConfigurableModules());
         $toUpdate = count($moduleRepository->getUpgradableModules());
 
         return new JsonResponse([
-            'to_update' => $toUpdate,
-            'to_configure' => $toConfigure,
-            'count' => $toConfigure + $toUpdate,
+            self::UPDATABLE_MODULE_TYPE => $toUpdate,
+            self::CONFIGURABLE_MODULE_TYPE => $toConfigure,
+            self::TOTAL_MODULE_TYPE => $toConfigure + $toUpdate,
         ]);
     }
 }
