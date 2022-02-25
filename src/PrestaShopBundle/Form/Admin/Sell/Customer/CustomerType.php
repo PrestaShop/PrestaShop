@@ -46,7 +46,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
+use Validate;
 
 /**
  * Type is used to created form for customer add/edit actions
@@ -306,6 +308,24 @@ class CustomerType extends TranslatorAwareType
                     ),
                     'required' => false,
                     'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                    'constraints' => [
+                        new Range([
+                            'min' => 0,
+                            'max' => Validate::MYSQL_UNSIGNED_INT_MAX,
+                            'minMessage' => $this->trans(
+                                '%s is invalid. Please enter an integer greater than or equal to 0.',
+                                'Admin.Notifications.Error'
+                            ),
+                            'maxMessage' => $this->trans(
+                                '%s is invalid. Please enter an integer lower than or equal to %s.',
+                                'Admin.Notifications.Error',
+                                [
+                                    '{{ value }}',
+                                    '{{ max }}',
+                                ]
+                            ),
+                        ]),
+                    ],
                 ])
                 ->add('risk_id', ChoiceType::class, [
                     'label' => $this->trans('Risk rating', 'Admin.Orderscustomers.Feature'),
