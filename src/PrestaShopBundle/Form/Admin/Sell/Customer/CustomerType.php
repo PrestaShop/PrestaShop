@@ -44,7 +44,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -306,6 +308,22 @@ class CustomerType extends TranslatorAwareType
                     ),
                     'required' => false,
                     'invalid_message' => $this->trans('This field is invalid.', 'Admin.Notifications.Error'),
+                    'constraints' => [
+                        new GreaterThanOrEqual([
+                            'value' => 0,
+                            'message' => $this->trans(
+                                '%s is invalid. Please enter an integer greater than or equal to 0.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                        new LessThan([
+                            'value' => 4294967296,
+                            'message' => $this->trans(
+                                '%s is invalid. Please enter an integer lower than %s.',
+                                'Admin.Notifications.Error'
+                            ),
+                        ]),
+                    ],
                 ])
                 ->add('risk_id', ChoiceType::class, [
                     'label' => $this->trans('Risk rating', 'Admin.Orderscustomers.Feature'),
