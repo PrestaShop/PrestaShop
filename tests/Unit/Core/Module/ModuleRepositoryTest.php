@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Module;
 
 use Doctrine\Common\Cache\CacheProvider;
+use Module as LegacyModule;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
@@ -70,19 +71,7 @@ class ModuleRepositoryTest extends TestCase
             ->onlyMethods(['getModule'])
             ->getMock()
         ;
-        $this->moduleRepository->method('getModule')->willReturnCallback(function ($arg) {
-            $module = $this->createMock(Module::class);
-            $module->database = new ParameterBag([
-                'installed' => in_array($arg, self::INSTALLED_MODULES),
-            ]);
-            $moduleInstance = $this->createMock(\Module::class);
-            $moduleInstance->warning = 'Configurable warning';
-            $module->method('getInstance')->willReturn($moduleInstance);
-            $module->method('canBeUpgraded')->willReturn(in_array($arg, self::UPGRADABLE_MODULES));
-            $module->method('hasValidInstance')->willReturn(in_array($arg, self::CONFIGURABLE_MODULES));
-
-            return $module;
-        });
+        $this->moduleRepository->method('getModule')->willReturnCallback([$this, 'getModuleMock']);
     }
 
     public function testGetList(): void
@@ -112,5 +101,23 @@ class ModuleRepositoryTest extends TestCase
             $this->moduleRepository->getModulePath('bankwire')
         );
         $this->assertNull($this->moduleRepository->getModulePath('no-existing-module'));
+    }
+
+    public function getModuleMock(string $moduleName): Module
+    {
+        $databaseAttributes = new ParameterBag([
+            'installed' => in_array($moduleName, self::INSTALLED_MODULES),
+        ]);
+
+        $module = $this->createMock(Module::class);
+        $moduleInstance = $this->createMock(LegacyModule::class);
+        $moduleInstance->warning = 'Configurable warning';
+
+        $module->method('getInstance')->willReturn($moduleInstance);
+        $module->method('getDatabaseAttributes')->willReturn($databaseAttributes);
+        $module->method('canBeUpgraded')->willReturn(in_array($moduleName, self::UPGRADABLE_MODULES));
+        $module->method('hasValidInstance')->willReturn(in_array($moduleName, self::CONFIGURABLE_MODULES));
+
+        return $module;
     }
 }

@@ -273,4 +273,9 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
     {
         return count($this->modules);
     }
+
+    public function filter(callable $callable): ModuleCollection
+    {
+        return self::createFrom(array_filter($this->modules, $callable));
+    }
 }
