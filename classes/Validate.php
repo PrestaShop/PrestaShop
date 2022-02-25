@@ -36,6 +36,12 @@ use Symfony\Component\Validator\Validation;
 class ValidateCore
 {
     public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+    /**
+     * Maximal 32 bits value: (2^32)-1
+     *
+     * @var int
+     */
+    public const MYSQL_UNSIGNED_INT_MAX = 4294967295;
 
     const ADMIN_PASSWORD_LENGTH = 8;
     const PASSWORD_LENGTH = 5;
@@ -821,7 +827,10 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value))
+            && (string) (int) $value === (string) $value
+            && $value < (static::MYSQL_UNSIGNED_INT_MAX + 1)
+            && $value >= 0;
     }
 
     /**
