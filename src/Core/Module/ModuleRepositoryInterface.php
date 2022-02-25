@@ -28,27 +28,17 @@ namespace PrestaShop\PrestaShop\Core\Module;
 
 interface ModuleRepositoryInterface
 {
-    /**
-     * @return ModuleInterface[]
-     */
-    public function getList(): array;
+    public function getList(): ModuleCollection;
 
-    /**
-     * @return ModuleInterface[]
-     */
-    public function getInstalledModules(): array;
+    public function getInstalledModules(): ModuleCollection;
 
-    /**
-     * @return ModuleInterface[]
-     */
-    public function getUpgradableModules(): array;
+    public function getUpgradableModules(): ModuleCollection;
 
-    /**
-     * @return ModuleInterface[]
-     */
-    public function getConfigurableModules(): array;
+    public function getConfigurableModules(): ModuleCollection;
 
     public function getModule(string $moduleName): ModuleInterface;
 
     public function getModulePath(string $moduleName): ?string;
+
+    public function setActionUrls(ModuleCollection $moduleCollection): ModuleCollection;
 }
