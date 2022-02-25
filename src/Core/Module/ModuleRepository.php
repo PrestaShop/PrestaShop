@@ -112,7 +112,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getInstalledModules(): ModuleCollection
     {
         return $this->getList()->filter(static function (Module $module) {
-            return $module->database->get('installed') === true;
+            return $module->getDatabaseAttributes()->get('installed') === true;
         });
     }
 
@@ -130,6 +130,11 @@ class ModuleRepository implements ModuleRepositoryInterface
         });
     }
 
+    /**
+     * @param string $moduleName
+     *
+     * @return Module
+     */
     public function getModule(string $moduleName): ModuleInterface
     {
         $filePath = $this->getModulePath($moduleName);
@@ -141,8 +146,9 @@ class ModuleRepository implements ModuleRepositoryInterface
         $cacheKey = $this->getCacheKey($moduleName);
 
         if ($this->cacheProvider->contains($cacheKey)) {
+            /** @var Module $module */
             $module = $this->cacheProvider->fetch($cacheKey);
-            if ($module->disk->get('filemtime') === $filemtime) {
+            if ($module->getDiskAttributes()->get('filemtime') === $filemtime) {
                 return $module;
             }
         }
@@ -229,6 +235,11 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $this->installedModules[$moduleName] ?? [];
     }
 
+    /**
+     * @param Module[] $modules
+     *
+     * @return Module[]
+     */
     private function mergeWithModulesFromHook(array $modules): array
     {
         $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
@@ -241,7 +252,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             $merged = false;
             foreach ($modules as $module) {
                 if ($module->get('name') === $externalModule['name']) {
-                    $module->attributes->add($externalModule);
+                    $module->getAttributes()->add($externalModule);
                     $merged = true;
                     break;
                 }
