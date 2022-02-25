@@ -41,11 +41,11 @@ final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
     private $installedModules;
 
     /**
-     * @param ModuleInterface[] $installedModules
+     * @param ModuleCollection $installedModules
      */
-    public function __construct(array $installedModules)
+    public function __construct(ModuleCollection $installedModules)
     {
-        $this->installedModules = new ModuleCollection($installedModules);
+        $this->installedModules = $installedModules;
     }
 
     /**
