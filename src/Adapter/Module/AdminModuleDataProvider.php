@@ -211,34 +211,37 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         foreach ($modules as $module) {
             $urls = [];
+            $moduleAttributes = $module->getAttributes();
+            $moduleDatabaseAttributes = $module->getDatabaseAttributes();
+
             foreach ($this->moduleActions as $action) {
                 if ($action === 'configure') {
                     $urls[$action] = $this->router->generate('admin_module_configure_action', [
-                        'module_name' => $module->attributes->get('name'),
+                        'module_name' => $moduleAttributes->get('name'),
                     ]);
                     continue;
                 }
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
-                    'module_name' => $module->attributes->get('name'),
+                    'module_name' => $moduleAttributes->get('name'),
                 ]);
             }
 
-            if ($module->database->getBoolean('installed')) {
+            if ($moduleDatabaseAttributes->getBoolean('installed')) {
                 unset($urls['install']);
-                if (!$module->database->getBoolean('active')) {
+                if (!$moduleDatabaseAttributes->getBoolean('active')) {
                     unset(
                         $urls['disable'],
                         $urls['enableMobile'],
                         $urls['disableMobile']
                     );
-                    if ($module->database->get('active') === null) {
+                    if ($moduleDatabaseAttributes->get('active') === null) {
                         unset($urls['enable']);
                     }
                 } else {
                     unset(
                         $urls['enable'],
-                        $urls[$module->database->getBoolean('active_on_mobile') ? 'enableMobile' : 'disableMobile']
+                        $urls[$moduleDatabaseAttributes->getBoolean('active_on_mobile') ? 'enableMobile' : 'disableMobile']
                     );
                 }
 
@@ -246,14 +249,14 @@ class AdminModuleDataProvider implements ModuleInterface
                     unset($urls['upgrade']);
                 }
 
-                if (!$module->attributes->getBoolean('is_configurable')) {
+                if (!$moduleAttributes->getBoolean('is_configurable')) {
                     unset($urls['configure']);
                 }
             } else {
                 $urls = ['install' => $urls['install']];
             }
 
-            $filteredUrls = $this->filterAllowedActions($urls, $module->attributes->get('name'));
+            $filteredUrls = $this->filterAllowedActions($urls, $moduleAttributes->get('name'));
 
             if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {
                 $urlActive = $specific_action;
@@ -261,12 +264,12 @@ class AdminModuleDataProvider implements ModuleInterface
                 $urlActive = key($filteredUrls);
             }
 
-            $module->attributes->set('urls', $filteredUrls);
-            $module->attributes->set('url_active', $urlActive);
-            $module->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
+            $moduleAttributes->set('urls', $filteredUrls);
+            $moduleAttributes->set('url_active', $urlActive);
+            $moduleAttributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
             $module->attributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
-            $categoryParent = $this->categoriesProvider->getParentCategory($module->attributes->get('categoryName'));
-            $module->attributes->set('categoryParent', $categoryParent);
+            $categoryParent = $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'));
+            $moduleAttributes->set('categoryParent', $categoryParent);
         }
 
         return $modules;

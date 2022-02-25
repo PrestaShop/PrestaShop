@@ -367,6 +367,21 @@ class Module implements ModuleInterface
         return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
     }
 
+    public function getAttributes(): ParameterBag
+    {
+        return $this->attributes;
+    }
+
+    public function getDiskAttributes(): ParameterBag
+    {
+        return $this->disk;
+    }
+
+    public function getDatabaseAttributes(): ParameterBag
+    {
+        return $this->database;
+    }
+
     /**
      * Retrieve an instance of Legacy Module Object model from data.
      */
