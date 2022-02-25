@@ -103,7 +103,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
 
     /**
      * @Given /^I specify (cart rule|its) "([^"]+)" as "([^"]+)"$/
-     * @Given /^I specify that (its) "([^"]+)" is "([^"]+)"$/
+     * @Given /^I specify that (its) "([^"]+)" is "([^"]*)"$/
      */
     public function specifyCartRuleProperty(array $properties, string $property, string $value)
     {
