@@ -64,15 +64,16 @@ class ZipSourceHandler implements SourceHandlerInterface
     public function getModuleName(string $source): string
     {
         $zip = new ZipArchive();
-        $zip->open($source);
-        for ($i = 0; $i < $zip->numFiles; ++$i) {
-            if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {
-                $zip->close();
+        if ($zip->open($source) === true) {
+            for ($i = 0; $i < $zip->numFiles; ++$i) {
+                if (preg_match(self::MODULE_REGEX, $zip->getNameIndex($i), $matches)) {
+                    $zip->close();
 
-                return $matches[1];
+                    return $matches[1];
+                }
             }
+            $zip->close();
         }
-        $zip->close();
 
         throw new ModuleErrorException(
             $this->translator->trans(
@@ -86,11 +87,14 @@ class ZipSourceHandler implements SourceHandlerInterface
     public function handle(string $source): void
     {
         $zip = new ZipArchive();
-        if (!$zip->open($source) || !$zip->extractTo($this->modulePath) || !$zip->close()) {
+        if ($zip->open($source) !== true || !$zip->extractTo($this->modulePath) || !$zip->close()) {
             throw new ModuleErrorException(
                 $this->translator->trans(
                     'Cannot extract module in %path%. %error%',
-                    ['%path%' => $this->modulePath, '%error%' => $zip->getStatusString()],
+                    [
+                        '%path%' => $this->modulePath,
+                        '%error%' => @$zip->getStatusString() ?: '', // Since php 8.0 getStatusString cannot return false nor a warning
+                    ],
                     'Admin.Modules.Notification'
                 )
             );
