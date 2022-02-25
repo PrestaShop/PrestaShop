@@ -34,6 +34,7 @@ class ViewCustomer extends BOBasePage {
     this.viewedProductsDiv = '.customer-viewed-products-card';
 
     // Private note
+    this.privateNoteDiv = '.customer-private-note-card';
     this.privateNoteTextArea = '#private_note_note';
     this.privateNoteSaveButton = '#save-private-note';
 
@@ -100,6 +101,9 @@ class ViewCustomer extends BOBasePage {
         break;
       case 'Groups':
         selector = this.groupsDiv;
+        break;
+      case 'Addresses':
+        selector = this.addressesDiv;
         break;
       case 'Purchased products':
         selector = this.purchasedProductsDiv;
@@ -168,6 +172,15 @@ class ViewCustomer extends BOBasePage {
     }
 
     return this.getTextContent(page, `${selector} .card-body`);
+  }
+
+  /**
+   * Is private note block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isPrivateNoteBlockVisible(page) {
+    return this.elementVisible(page, this.privateNoteDiv);
   }
 
   /**
