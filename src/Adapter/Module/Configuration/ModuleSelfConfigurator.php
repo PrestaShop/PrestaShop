@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 use Doctrine\DBAL\Connection;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
@@ -67,7 +67,7 @@ class ModuleSelfConfigurator
     protected $defaultConfigFile = 'self_config.yml';
 
     /**
-     * @var ModuleRepository
+     * @var ModuleRepositoryInterface
      */
     protected $moduleRepository;
 
@@ -87,7 +87,7 @@ class ModuleSelfConfigurator
     protected $filesystem;
 
     public function __construct(
-        ModuleRepository $moduleRepository,
+        ModuleRepositoryInterface $moduleRepository,
         Configuration $configuration,
         Connection $connection,
         Filesystem $filesystem

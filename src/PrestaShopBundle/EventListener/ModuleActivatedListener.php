@@ -29,7 +29,7 @@ namespace PrestaShopBundle\EventListener;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
@@ -66,7 +66,7 @@ class ModuleActivatedListener
     private $annotationReader;
 
     /**
-     * @var ModuleRepository
+     * @var ModuleRepositoryInterface
      */
     private $moduleRepository;
 
@@ -75,14 +75,14 @@ class ModuleActivatedListener
      * @param TranslatorInterface $translator
      * @param Session $session
      * @param Reader $annotationReader
-     * @param ModuleRepository $moduleRepository
+     * @param ModuleRepositoryInterface $moduleRepository
      */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
         Session $session,
         Reader $annotationReader,
-        ModuleRepository $moduleRepository
+        ModuleRepositoryInterface $moduleRepository
     ) {
         $this->router = $router;
         $this->translator = $translator;

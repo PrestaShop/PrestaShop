@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -49,7 +49,7 @@ class HookExtension extends AbstractExtension
     private $moduleDataProvider;
 
     /**
-     * @var ModuleRepository
+     * @var ModuleRepositoryInterface
      */
     private $moduleRepository;
 
@@ -62,7 +62,7 @@ class HookExtension extends AbstractExtension
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ModuleDataProvider $moduleDataProvider,
-        ModuleRepository $moduleRepository = null
+        ModuleRepositoryInterface $moduleRepository = null
     ) {
         $this->hookDispatcher = $hookDispatcher;
         $this->moduleDataProvider = $moduleDataProvider;
