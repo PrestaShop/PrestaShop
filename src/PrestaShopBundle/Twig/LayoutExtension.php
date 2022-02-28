@@ -236,7 +236,7 @@ EOF;
 
     private function escapeSmarty(string $template): string
     {
-        return '{{ \'' . addslashes($template) . '\' | raw }}';
+        return '{{ \'' . addcslashes($template, "\\'\0") . '\' | raw }}';
     }
 
     /**
