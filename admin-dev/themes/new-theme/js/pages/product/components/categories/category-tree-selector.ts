@@ -94,8 +94,8 @@ export default class CategoryTreeSelector {
   }
 
   private async initModal(): Promise<void> {
-    this.modalContentContainer = document.querySelector(ProductCategoryMap.modalContentContainer) as HTMLElement;
-    this.categoryTree = this.modalContentContainer.querySelector(ProductCategoryMap.categoryTree) as HTMLElement;
+    this.modalContentContainer = document.querySelector<HTMLElement>(ProductCategoryMap.modalContentContainer);
+    this.categoryTree = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.categoryTree);
     this.tagsRenderer = new TagsRenderer(
       this.eventEmitter,
       `${ProductCategoryMap.modalContentContainer} ${ProductCategoryMap.tagsContainer}`,
@@ -117,7 +117,7 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const applyBtn = this.modalContentContainer.querySelector(ProductCategoryMap.applyCategoriesBtn) as HTMLElement;
+    const applyBtn = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.applyCategoriesBtn);
 
     applyBtn.addEventListener('click', () => {
       this.eventEmitter.emit(ProductEventMap.categories.applyCategoryTreeChanges, {
@@ -132,7 +132,7 @@ export default class CategoryTreeSelector {
       return;
     }
 
-    const cancelBtn = this.modalContentContainer.querySelector(ProductCategoryMap.cancelCategoriesBtn) as HTMLElement;
+    const cancelBtn = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.cancelCategoriesBtn);
     cancelBtn.addEventListener('click', () => this.closeModal());
   }
 
@@ -181,8 +181,8 @@ export default class CategoryTreeSelector {
     }, this);
     // Tree is initialized we can show it and hide loader
     if (this.modalContentContainer) {
-      const fieldset = this.modalContentContainer.querySelector(ProductCategoryMap.fieldset) as HTMLElement;
-      const loader = this.modalContentContainer.querySelector(ProductCategoryMap.loader) as HTMLElement;
+      const fieldset = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.fieldset);
+      const loader = this.modalContentContainer.querySelector<HTMLElement>(ProductCategoryMap.loader);
 
       fieldset.classList.remove('d-none');
       loader.classList.add('d-none');
@@ -194,13 +194,13 @@ export default class CategoryTreeSelector {
    */
   private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
     const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
-    const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
+    const childrenList = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.childrenList);
 
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
-      const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
-      const checkboxInput = inputsContainer.querySelector(ProductCategoryMap.treeCheckboxInput) as HTMLInputElement;
+      const inputsContainer = categoryNode.querySelector<HTMLElement>(ProductCategoryMap.treeElementInputs);
+      const checkboxInput = inputsContainer.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
       checkboxInput.value = String(treeCategory.id);
 
       inputsContainer.addEventListener('click', (event) => {
@@ -239,7 +239,7 @@ export default class CategoryTreeSelector {
     const categoryNode = frag.firstChild as HTMLElement;
 
     // Add category name text
-    const checkboxInput = categoryNode.querySelector(ProductCategoryMap.checkboxInput) as HTMLInputElement;
+    const checkboxInput = categoryNode.querySelector<HTMLInputElement>(ProductCategoryMap.checkboxInput);
     checkboxInput.value = String(category.id);
 
     const nameElement = document.createTextNode(category.name);
@@ -257,7 +257,7 @@ export default class CategoryTreeSelector {
    */
   private updateCategory(categoryId: number, check: boolean): void {
     const treeElement = this.categoryTree as HTMLElement;
-    const checkbox = treeElement.querySelector(ProductCategoryMap.inputByValue(categoryId)) as HTMLInputElement;
+    const checkbox = treeElement.querySelector<HTMLInputElement>(ProductCategoryMap.inputByValue(categoryId));
     checkbox.checked = check;
     this.openCategoryParents(checkbox);
     this.updateSelectedCategories();

@@ -39,14 +39,14 @@ export default class SpecificPriceList {
     productId: number,
   ) {
     this.productId = productId;
-    this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
+    this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer);
     this.eventEmitter = window.prestashop.instance.eventEmitter;
   }
 
   public renderList(): void {
     const {listFields} = SpecificPriceMap;
-    const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
-    const trTemplate = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLTemplateElement;
+    const tbody = this.listContainer.querySelector<HTMLElement>(`${SpecificPriceMap.listContainer} tbody`);
+    const trTemplate = this.listContainer.querySelector<HTMLTemplateElement>(SpecificPriceMap.listRowTemplate);
     tbody.innerHTML = '';
 
     getSpecificPrices(this.productId).then((response) => {
@@ -98,6 +98,6 @@ export default class SpecificPriceList {
   }
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
-    return templateTrClone.querySelector(selector) as HTMLElement;
+    return templateTrClone.querySelector<HTMLElement>(selector);
   }
 }

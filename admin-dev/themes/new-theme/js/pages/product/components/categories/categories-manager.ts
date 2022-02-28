@@ -47,10 +47,10 @@ export default class CategoriesManager {
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
-    this.categoriesContainer = document.querySelector(ProductCategoryMap.categoriesContainer) as HTMLElement;
-    this.addCategoriesBtn = this.categoriesContainer.querySelector(ProductCategoryMap.addCategoriesBtn) as HTMLElement;
+    this.categoriesContainer = document.querySelector<HTMLElement>(ProductCategoryMap.categoriesContainer);
+    this.addCategoriesBtn = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
     this.defaultCategoryInput = this.categoriesContainer
-      .querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLInputElement;
+      .querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
     this.tagsRenderer = new TagsRenderer(
       eventEmitter,
       `${ProductCategoryMap.categoriesContainer} ${ProductCategoryMap.tagsContainer}`,
@@ -74,13 +74,13 @@ export default class CategoriesManager {
 
   private collectCategories(): Array<Category> {
     // these are at first rendered on page load and later updated dynamically
-    const tagsContainer = this.categoriesContainer.querySelector(ProductCategoryMap.tagsContainer) as HTMLElement;
+    const tagsContainer = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
     const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
     const categories: Array<Category> = [];
 
     tags.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
-        const idInput = tag.querySelector(ProductCategoryMap.tagCategoryIdInput) as HTMLInputElement;
+        const idInput = tag.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput);
 
         categories.push({
           id: Number(idInput.value),
@@ -93,7 +93,7 @@ export default class CategoriesManager {
   }
 
   private extractCategoryName(tag: HTMLElement): string {
-    const tagNameElement = tag.querySelector(ProductCategoryMap.categoryNamePreview) as HTMLElement;
+    const tagNameElement = tag.querySelector<HTMLElement>(ProductCategoryMap.categoryNamePreview);
 
     if (tagNameElement) {
       return tagNameElement.innerText;
@@ -105,7 +105,7 @@ export default class CategoriesManager {
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
 
-    const selectElement = this.categoriesContainer.querySelector(ProductCategoryMap.defaultCategorySelectInput) as HTMLElement;
+    const selectElement = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
     const defaultCategoryId = this.getDefaultCategoryId();
     selectElement.innerHTML = '';
 
