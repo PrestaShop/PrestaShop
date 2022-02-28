@@ -32,6 +32,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 const LicensePlugin = require('webpack-license-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
@@ -95,6 +96,7 @@ module.exports = (env, argv) => {
 
     },
     plugins: [
+      new RemoveEmptyScriptsPlugin(),
       new CleanWebpackPlugin({
         root: path.resolve(__dirname),
         cleanOnceBeforeBuildPatterns: [
