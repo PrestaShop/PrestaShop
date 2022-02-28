@@ -65,7 +65,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(Request $request): Response
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
 
@@ -80,6 +80,7 @@ class SecurityController extends FrameworkBundleAdminController
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
                     'Admin.Notifications.Info'
                 ),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
                                        && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
