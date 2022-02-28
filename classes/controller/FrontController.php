@@ -521,7 +521,7 @@ class FrontControllerCore extends Controller
         if (Validate::isLoadedObject($this->context->cart)) {
             $cart_presentation = $this->cart_presenter->present($this->context->cart);
         } else {
-            $cart_presentation = null;
+            $cart_presentation = $this->cart_presenter->present(new Cart());
         }
 
         $templateVars = [
