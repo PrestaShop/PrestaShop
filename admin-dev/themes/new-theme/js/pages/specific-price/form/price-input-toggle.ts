@@ -34,9 +34,9 @@ export default class PriceInputToggle {
 
   private init(): void {
     const initialPriceCheckbox = document.querySelector<HTMLInputElement>(specificPriceMap.leaveInitialPriceCheckbox);
-    this.toggle(initialPriceCheckbox.checked);
+    this.toggle(initialPriceCheckbox?.checked);
 
-    initialPriceCheckbox.addEventListener('change', () => this.toggle(initialPriceCheckbox.checked));
+    initialPriceCheckbox?.addEventListener('change', () => this.toggle(initialPriceCheckbox?.checked));
   }
 
   private toggle(disable: boolean): void {
