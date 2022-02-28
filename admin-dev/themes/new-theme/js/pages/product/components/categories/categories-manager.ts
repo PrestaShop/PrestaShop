@@ -48,8 +48,8 @@ export default class CategoriesManager {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
     this.categoriesContainer = document.querySelector<HTMLElement>(ProductCategoryMap.categoriesContainer);
-    this.addCategoriesBtn = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
-    this.defaultCategoryInput = this.categoriesContainer
+    this.addCategoriesBtn = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
+    this.defaultCategoryInput = this.categoriesContainer?
       .querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
     this.tagsRenderer = new TagsRenderer(
       eventEmitter,
@@ -74,8 +74,8 @@ export default class CategoriesManager {
 
   private collectCategories(): Array<Category> {
     // these are at first rendered on page load and later updated dynamically
-    const tagsContainer = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
-    const tags = tagsContainer.querySelectorAll(ProductCategoryMap.tagItem);
+    const tagsContainer = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
+    const tags = tagsContainer?.querySelectorAll(ProductCategoryMap.tagItem);
     const categories: Array<Category> = [];
 
     tags.forEach((tag: Element) => {
@@ -105,9 +105,9 @@ export default class CategoriesManager {
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
 
-    const selectElement = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
+    const selectElement = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
     const defaultCategoryId = this.getDefaultCategoryId();
-    selectElement.innerHTML = '';
+    selectElement?.innerHTML = '';
 
     categories.forEach((category) => {
       const optionElement = document.createElement('option');
@@ -115,7 +115,7 @@ export default class CategoriesManager {
       optionElement.innerHTML = category.name;
       optionElement.selected = category.id === defaultCategoryId;
 
-      selectElement.append(optionElement);
+      selectElement?.append(optionElement);
     });
   }
 

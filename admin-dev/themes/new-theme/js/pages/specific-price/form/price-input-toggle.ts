@@ -41,6 +41,6 @@ export default class PriceInputToggle {
 
   private toggle(disable: boolean): void {
     const priceInput = document.querySelector<HTMLInputElement>(specificPriceMap.priceInput);
-    priceInput.classList.toggle('disabled', disable);
+    priceInput?.classList.toggle('disabled', disable);
   }
 }
