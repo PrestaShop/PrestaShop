@@ -36,6 +36,7 @@ function prodConfig() {
         'vazir-font@30.1.0': 'OFL-1.1',
         'typeahead.js@0.11.1': 'MIT',
       },
+      replenishDefaultLicenseTexts: true,
     }),
   );
 

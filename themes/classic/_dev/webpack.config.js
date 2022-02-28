@@ -88,6 +88,7 @@ let config = {
       licenseOverrides: {
         'bootstrap-touchspin@3.1.1': 'Apache-2.0',
       },
+      replenishDefaultLicenseTexts: true,
     })
   ]
 };

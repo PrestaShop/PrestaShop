@@ -125,6 +125,7 @@ module.exports = (env, argv) => {
         licenseOverrides: {
           'vazir-font@30.1.0': 'OFL-1.1'
         },
+        replenishDefaultLicenseTexts: true,
       })
     ],
   };
