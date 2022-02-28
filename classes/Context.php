@@ -368,7 +368,7 @@ class ContextCore
                 $idCarrier = (int) $this->cart->id_carrier;
                 $this->cart->secure_key = $customer->secure_key;
                 $this->cart->id_carrier = 0;
-                if (isset($idCarrier) && $idCarrier) {
+                if ($idCarrier) {
                     $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
                     $this->cart->setDeliveryOption($deliveryOption);
                 } else {
