@@ -151,7 +151,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function employeeSessionAction(EmployeeFilters $filters): Response
+    public function employeeSessionAction(Request $request, EmployeeFilters $filters): Response
     {
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
@@ -159,6 +159,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
@@ -180,7 +181,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function customerSessionAction(CustomerFilters $filters): Response
+    public function customerSessionAction(Request $request, CustomerFilters $filters): Response
     {
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
@@ -188,6 +189,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
