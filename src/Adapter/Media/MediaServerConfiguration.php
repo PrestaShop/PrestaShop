@@ -128,7 +128,7 @@ class MediaServerConfiguration implements DataConfigurationInterface
      *
      * @return bool
      */
-    private function isValidDomain($domainName)
+    private function isValidDomain(string $domainName): bool
     {
         return false !== filter_var($domainName, FILTER_VALIDATE_DOMAIN)
             && false !== filter_var(gethostbyname($domainName), FILTER_VALIDATE_IP);
