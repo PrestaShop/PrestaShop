@@ -180,7 +180,7 @@ class ViewCustomer extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isPrivateNoteBlockVisible(page) {
-    return this.elementVisible(page, this.privateNoteDiv);
+    return this.elementVisible(page, this.privateNoteDiv, 1000);
   }
 
   /**
