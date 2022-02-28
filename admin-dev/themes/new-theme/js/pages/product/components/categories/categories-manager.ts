@@ -36,11 +36,11 @@ export default class CategoriesManager {
 
   categoryTreeSelector: CategoryTreeSelector;
 
-  categoriesContainer: HTMLElement;
+  categoriesContainer: HTMLElement|null;
 
-  defaultCategoryInput: HTMLInputElement;
+  defaultCategoryInput: HTMLInputElement|null;
 
-  addCategoriesBtn: HTMLElement;
+  addCategoriesBtn: HTMLElement|null;
 
   tagsRenderer: TagsRenderer;
 
@@ -48,8 +48,8 @@ export default class CategoriesManager {
     this.eventEmitter = eventEmitter;
     this.categoryTreeSelector = new CategoryTreeSelector(eventEmitter);
     this.categoriesContainer = document.querySelector<HTMLElement>(ProductCategoryMap.categoriesContainer);
-    this.addCategoriesBtn = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
-    this.defaultCategoryInput = this.categoriesContainer
+    this.addCategoriesBtn = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.addCategoriesBtn);
+    this.defaultCategoryInput = this.categoriesContainer?
       .querySelector<HTMLInputElement>(ProductCategoryMap.defaultCategorySelectInput);
     this.tagsRenderer = new TagsRenderer(
       eventEmitter,
@@ -62,7 +62,7 @@ export default class CategoriesManager {
   }
 
   private initCategoryTreeModal(): void {
-    this.addCategoriesBtn.addEventListener('click', () => this.categoryTreeSelector.showModal(
+    this.addCategoriesBtn?.addEventListener('click', () => this.categoryTreeSelector.showModal(
       this.collectCategories(),
       this.getDefaultCategoryId(),
     ));
@@ -74,16 +74,16 @@ export default class CategoriesManager {
 
   private collectCategories(): Array<Category> {
     // these are at first rendered on page load and later updated dynamically
-    const tagsContainer = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
+    const tagsContainer = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.tagsContainer);
     const tags = tagsContainer?.querySelectorAll(ProductCategoryMap.tagItem);
     const categories: Array<Category> = [];
 
-    tags.forEach((tag: Element) => {
+    tags?.forEach((tag: Element) => {
       if (tag instanceof HTMLElement) {
         const idInput = tag.querySelector<HTMLInputElement>(ProductCategoryMap.tagCategoryIdInput);
 
         categories.push({
-          id: Number(idInput.value),
+          id: Number(idInput?.value),
           name: this.extractCategoryName(tag as HTMLElement),
         });
       }
@@ -105,7 +105,7 @@ export default class CategoriesManager {
   private renderDefaultCategorySelection(): void {
     const categories = this.collectCategories();
 
-    const selectElement = this.categoriesContainer.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
+    const selectElement = this.categoriesContainer?.querySelector<HTMLElement>(ProductCategoryMap.defaultCategorySelectInput);
     const defaultCategoryId = this.getDefaultCategoryId();
     selectElement?.innerHTML = '';
 
@@ -120,7 +120,7 @@ export default class CategoriesManager {
   }
 
   private listenDefaultCategorySelect(): void {
-    this.defaultCategoryInput.addEventListener('change', (e) => {
+    this.defaultCategoryInput?.addEventListener('change', (e) => {
       const currentTarget = e.currentTarget as HTMLInputElement;
       const newDefaultCategoryId = Number(currentTarget.value);
       const categories = this.collectCategories()
@@ -135,6 +135,6 @@ export default class CategoriesManager {
   }
 
   private getDefaultCategoryId(): number {
-    return Number(this.defaultCategoryInput.value);
+    return Number(this.defaultCategoryInput?.value);
   }
 }
