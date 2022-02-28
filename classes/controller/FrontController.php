@@ -459,9 +459,8 @@ class FrontControllerCore extends Controller
             CartRule::autoAddToCart($this->context);
         } else {
             $this->context->cart = $cart;
+            $this->context->cart->checkAndUpdateAddresses();
         }
-
-        $this->context->cart->checkAndUpdateAddresses();
 
         $this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
@@ -519,8 +518,14 @@ class FrontControllerCore extends Controller
 
     protected function assignGeneralPurposeVariables()
     {
+        if (Validate::isLoadedObject($this->context->cart)) {
+            $cart_presentation = $this->cart_presenter->present($this->context->cart);
+        } else {
+            $cart_presentation = null;
+        }
+
         $templateVars = [
-            'cart' => $this->cart_presenter->present($this->context->cart),
+            'cart' => $cart_presentation,
             'currency' => $this->getTemplateVarCurrency(),
             'customer' => $this->getTemplateVarCustomer(),
             'language' => $this->objectPresenter->present($this->context->language),
