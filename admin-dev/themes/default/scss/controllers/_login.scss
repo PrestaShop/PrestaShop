@@ -52,7 +52,6 @@
   }
 
   .flip-container {
-    height: 420px;
     margin-top: 115px;
     transform-style: preserve-3d;
     @include perspective(1000px);
@@ -77,14 +76,11 @@
 
   .front,
   .back {
-    position: absolute;
     top: 0;
     width: 100%;
     padding: 40px;
     transition: 0.6s;
-    transform-style: preserve-3d;
     @include backface-visibility(hidden);
-    @include left(0);
   }
 
   .front {
