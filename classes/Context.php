@@ -364,7 +364,7 @@ class ContextCore
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
         } else {
-            if (!empty($this->cookie->id_cart) && Validate::isLoadedObject($this->cart)) {
+            if (Validate::isLoadedObject($this->cart)) {
                 $idCarrier = (int) $this->cart->id_carrier;
                 $this->cart->secure_key = $customer->secure_key;
                 $this->cart->id_carrier = 0;
