@@ -20,9 +20,12 @@ class AddOrder extends BOBasePage {
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
 
+    // Iframe
+    this.iframe = 'iframe.fancybox-iframe';
+    this.closeIframe = 'a.fancybox-close';
+
     // Customer selectors
     this.addCustomerLink = '#customer-add-btn';
-    this.customerIframe = 'iframe.fancybox-iframe';
     this.customerSearchInput = '#customer-search-input';
     this.customerSearchLoadingNoticeBlock = '#customer-search-loading-notice';
 
@@ -52,7 +55,13 @@ class AddOrder extends BOBasePage {
     this.addtoCartButton = '#add-product-to-cart-btn';
     this.productsTable = '#products-table';
     this.ordersTab = '#customer-orders-tab';
-    this.customerOrdersTable = 'customer-orders-table';
+    this.customerOrdersTable = '#customer-orders-table';
+    this.customerOrdersTableBody = `${this.customerOrdersTable} tbody`;
+    this.customerOrdersTableRows = `${this.customerOrdersTableBody} tr`;
+    this.customerOrdersTableRow = row => `${this.customerOrdersTableRows}:nth-child(${row})`;
+    this.customerOrdersTableColumn = (column, row) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
+    this.orderDetailsButton = row => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
+    this.orderUseButton = row => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -130,7 +139,7 @@ class AddOrder extends BOBasePage {
    */
   async addNewCustomer(page, customerData) {
     await page.click(this.addCustomerLink);
-    await this.waitForVisibleSelector(page, this.customerIframe);
+    await this.waitForVisibleSelector(page, this.iframe);
 
     const customerFrame = await page.frame({url: new RegExp('sell/customers/new', 'gmi')});
 
@@ -138,7 +147,7 @@ class AddOrder extends BOBasePage {
 
     await Promise.all([
       customerFrame.click(addCustomerPage.saveCustomerButton),
-      this.waitForHiddenSelector(page, this.customerIframe),
+      this.waitForHiddenSelector(page, this.iframe),
     ]);
 
     return this.getCustomerNameFromResult(page);
@@ -169,7 +178,7 @@ class AddOrder extends BOBasePage {
   async clickOnDetailsButton(page) {
     await this.waitForSelectorAndClick(page, this.customerCardDetailButton);
 
-    return this.elementVisible(page, this.customerIframe, 2000);
+    return this.elementVisible(page, this.iframe, 2000);
   }
 
   /**
@@ -217,6 +226,73 @@ class AddOrder extends BOBasePage {
     return this.elementVisible(page, this.customerOrdersTable, 1000);
   }
 
+  /**
+   * Get orders number
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getOrdersNumber(page) {
+    await this.waitForVisibleSelector(page, this.customerOrdersTable);
+
+    return page.$$eval(this.customerOrdersTableRows, trs => trs.length);
+  }
+
+  /**
+   * Get text column from orders table
+   * @param page {Page} Browser tab
+   * @param column {string} Column name in orders table
+   * @param row {number} Column row in orders table
+   * @returns {Promise<string>}
+   */
+  async getTextFromOrdersTable(page, column, row = 1) {
+    return this.getTextContent(page, this.customerOrdersTableColumn(column, row));
+  }
+
+  /**
+   * Click on order details button
+   * @param page {Page} Browser tab
+   * @row {number} Column row in orders table
+   * @returns {Promise<boolean>}
+   */
+  async clickOnOrderDetailsButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.orderDetailsButton(row));
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get order Iframe
+   * @param page {Page} Browser tab
+   * @param orderID {number} Id of order to check
+   * @returns {*}
+   */
+  getOrderIframe(page, orderID) {
+    return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
+  }
+
+  /**
+   * Close order iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeOrderIframe(page) {
+    await this.waitForSelectorAndClick(page, this.closeIframe);
+
+    return this.elementNotVisible(page, this.iframe, 3000);
+  }
+
+  /**
+   * Click on order use button
+   * @param page {Page} Browser tab
+   * @param row {number} Row in orders table
+   * @returns {Promise<boolean>}
+   */
+  async clickOnOrderUseButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.orderUseButton(row));
+
+    return this.elementVisible(page, this.productsTable, 1000);
+  }
+
   /* Addresses methods */
 
   /**
@@ -259,11 +335,33 @@ class AddOrder extends BOBasePage {
   /**
    * Set order status
    * @param page {Page} Browser tab
-   * @param orderStatus {{id: number, status: string}} Order status to choose
+   * @param orderStatus {string} Order status to choose
    * @returns {Promise<void>}
    */
   async setOrderStatus(page, orderStatus) {
-    await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus.status);
+    await this.selectByVisibleText(page, this.orderStatusSelect, orderStatus);
+  }
+
+  /**
+   * Click on create order button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnCreateOrderButton(page) {
+    await this.clickAndWaitForNavigation(page, this.createOrderButton);
+  }
+
+  /**
+   * Set summary block
+   * @param page {Page} Browser tab
+   * @param paymentMethodName {string} Payment method to choose
+   * @param orderStatus {string} Order status to choose
+   * @returns {Promise<void>}
+   */
+  async setSummaryAndCreateOrder(page, paymentMethodName, orderStatus) {
+    await this.setPaymentMethod(page, paymentMethodName);
+    await this.setOrderStatus(page, orderStatus);
+    await this.clickOnCreateOrderButton(page);
   }
 
   /* All form methods */
@@ -301,7 +399,7 @@ class AddOrder extends BOBasePage {
     await this.setPaymentMethod(page, orderToMake.paymentMethod);
 
     // Set order status
-    await this.setOrderStatus(page, orderToMake.orderStatus);
+    await this.setOrderStatus(page, orderToMake.orderStatus.status);
 
     // Create the order
     await this.clickAndWaitForNavigation(page, this.createOrderButton);
