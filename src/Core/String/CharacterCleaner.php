@@ -31,7 +31,7 @@ class CharacterCleaner
     /**
      * Delete unicode class from regular expression patterns.
      *
-     * @deprecated since version 8.0.0, to be removed.
+     * @deprecated Since 8.0.0 and will be removed in the next major.
      *
      * @param string $pattern
      *
@@ -39,7 +39,13 @@ class CharacterCleaner
      */
     public function cleanNonUnicodeSupport($pattern)
     {
-        \Tools::displayAsDeprecated('The use of cleanNonUnicodeSupport is not required');
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0.0. Its use is not required.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
         return $pattern;
     }
