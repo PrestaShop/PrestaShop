@@ -755,6 +755,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else}class="datepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -771,6 +772,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else} class="datetimepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
