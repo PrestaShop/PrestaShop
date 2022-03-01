@@ -149,6 +149,7 @@ class Locale implements LocaleInterface
      */
     public function formatPrice($number, $currencyCode)
     {
+        if ( $number === null ) return null;
         return $this->numberFormatter->format(
             $number,
             $this->getPriceSpecification($currencyCode)
