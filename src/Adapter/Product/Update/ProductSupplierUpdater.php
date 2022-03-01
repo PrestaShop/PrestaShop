@@ -125,9 +125,6 @@ class ProductSupplierUpdater
         $uselessProductSupplierIds = $this->productSupplierRepository->getUselessProductSupplierIds($productId, $supplierIds);
         $this->productSupplierRepository->bulkDelete($uselessProductSupplierIds);
 
-        // @todo: We probably need to reintroduce the association with combinationId === 0 If not the association between
-        //        product and suppliers cannot be saved until some combinations exist, they would also be lost if we change product type
-
         // Get list of combinations for product, or NoCombination for products without association
         $productType = $this->productRepository->getProductType($productId);
 
@@ -178,7 +175,7 @@ class ProductSupplierUpdater
             $defaultProductSupplier = $this->productSupplierRepository->getByAssociation($firstAssociation);
 
             // Only the product needs to be updated, combination don't store the default supplier association
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
+            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, false);
         }
 
         return $allAssociations;
@@ -233,11 +230,6 @@ class ProductSupplierUpdater
         CombinationId $combinationId,
         array $productSuppliers
     ): array {
-        // @todo: this will have to be removed, we need to keep an association without combination so that association doesn't depend on the existence of combinations
-        // Only pick association that match no combination to clean them (in case some are present because of inconsistent DB)
-        $existingNonCombinationSuppliers = $this->getProductSupplierIds($productId, new NoCombinationId());
-        $this->productSupplierRepository->bulkDelete($existingNonCombinationSuppliers);
-
         return $this->updateProductSuppliers($productId, $productSuppliers, $combinationId);
     }
 
@@ -271,7 +263,7 @@ class ProductSupplierUpdater
                 // When no combinations exist yet we use the default ProductSupplier as a fallback
                 $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
             }
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
+            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, false);
 
             // Then each combination must be updated based on its data for default supplier (which may be different for each one)
             $associations = $this->productSupplierRepository->getAssociationsForSupplier($productId, $defaultSupplierId);
@@ -284,7 +276,7 @@ class ProductSupplierUpdater
         } else {
             // For products without combinations only one association is possible
             $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
+            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, true);
         }
     }
 
@@ -299,6 +291,7 @@ class ProductSupplierUpdater
     {
         $updatedAssociations = [];
         $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
+
         /** @var ProductSupplier|null $updatedDefaultSupplier */
         $updatedDefaultSupplier = null;
         foreach ($productSuppliers as $productSupplier) {
@@ -312,6 +305,7 @@ class ProductSupplierUpdater
             if ($defaultSupplierId->getValue() === (int) $productSupplier->id_supplier) {
                 $updatedDefaultSupplier = $productSupplier;
             }
+
             $updatedAssociations[] = new ProductSupplierAssociation(
                 $productId->getValue(),
                 $combinationId->getValue(),
@@ -322,13 +316,15 @@ class ProductSupplierUpdater
 
         // If product supplier associated to default supplier was updated we need to update the product's default supplier related data
         if (null !== $updatedDefaultSupplier) {
-            // Product must always be updated even for product with combinations
-            $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier);
-
             // CombinationInterface is either a CombinationId (identified combination) or a NoCombinationId (no combination for standard product)
             // So if $combinationId is a CombinationId we are updating a combination which also needs its default data to be updated
             if ($combinationId instanceof CombinationId) {
                 $this->updateDefaultSupplierDataForCombination($updatedDefaultSupplier);
+                // Product default data is updated but not its wholesale price
+                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier, false);
+            } elseif ($combinationId instanceof NoCombinationId) {
+                // Product default data is updated (including wholesale price) only when product itself is updated
+                $this->updateDefaultSupplierDataForProduct($updatedDefaultSupplier, true);
             }
         }
 
@@ -359,12 +355,14 @@ class ProductSupplierUpdater
      *
      * @param ProductSupplier $defaultProductSupplier
      */
-    private function updateDefaultSupplierDataForProduct(ProductSupplier $defaultProductSupplier): void
+    private function updateDefaultSupplierDataForProduct(ProductSupplier $defaultProductSupplier, bool $updateWholeSalePrice): void
     {
         $product = $this->productRepository->get(new ProductId((int) $defaultProductSupplier->id_product));
         $product->supplier_reference = $defaultProductSupplier->product_supplier_reference;
-        $product->wholesale_price = (float) (string) $defaultProductSupplier->product_supplier_price_te;
         $product->id_supplier = (int) $defaultProductSupplier->id_supplier;
+        if ($updateWholeSalePrice) {
+            $product->wholesale_price = (float) (string) $defaultProductSupplier->product_supplier_price_te;
+        }
 
         $this->productRepository->partialUpdate(
             $product,
