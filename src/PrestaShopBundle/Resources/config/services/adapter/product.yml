@@ -382,11 +382,15 @@ services:
 
   prestashop.adapter.product.repository.tag_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\TagRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
 
   prestashop.adapter.product.updater.product_tag_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTagUpdater
     arguments:
       - '@prestashop.adapter.product.repository.tag_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
 
   prestashop.adapter.product.update.product_category_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductCategoryUpdater
