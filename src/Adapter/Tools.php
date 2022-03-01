@@ -248,7 +248,7 @@ class Tools
     /**
      * Delete unicode class from regular expression patterns.
      *
-     * @deprecated since version 8.0.0, to be removed.
+     * @deprecated Since 8.0.0 and will be removed in the next major.
      *
      * @param string $pattern
      *
