@@ -1,5 +1,5 @@
 @mixin background-image-with-ms($image) {
-  @include background-image($image)
+  @include background-image($image);
     background-image: -ms-$image;
 }
 
