@@ -267,6 +267,10 @@ class ProductSupplierUpdater
         if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
             // Product must always be updated even for product with combinations, we use the default combination as the reference
             $defaultProductSupplier = $this->getDefaultCombinationProductSupplier($productId, $defaultSupplierId);
+            if (!$defaultProductSupplier) {
+                // When no combinations exist yet we use the default ProductSupplier as a fallback
+                $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
+            }
             $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
 
             // Then each combination must be updated based on its data for default supplier (which may be different for each one)
@@ -279,11 +283,7 @@ class ProductSupplierUpdater
             }
         } else {
             // For products without combinations only one association is possible
-            $defaultProductSupplier = $this->productSupplierRepository->getByAssociation(new ProductSupplierAssociation(
-                $productId->getValue(),
-                NoCombinationId::NO_COMBINATION_ID,
-                $defaultSupplierId->getValue()
-            ));
+            $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
             $this->updateDefaultSupplierDataForProduct($defaultProductSupplier);
         }
     }
@@ -379,15 +379,37 @@ class ProductSupplierUpdater
      * @param ProductId $productId
      * @param SupplierId $supplierId
      *
-     * @return ProductSupplier
+     * @return ProductSupplier|null
      */
-    private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId): ProductSupplier
+    private function getDefaultCombinationProductSupplier(ProductId $productId, SupplierId $supplierId): ?ProductSupplier
     {
         $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
+        if (!$defaultCombinationId) {
+            return null;
+        }
 
         return $this->productSupplierRepository->getByAssociation(new ProductSupplierAssociation(
             $productId->getValue(),
             $defaultCombinationId->getValue(),
+            $supplierId->getValue()
+        ));
+    }
+
+    /**
+     * Return the default ProductSupplier instance of a product, the one not associated to any combination.
+     *
+     * @param ProductId $productId
+     * @param SupplierId $supplierId
+     *
+     * @return ProductSupplier
+     *
+     * @throws ProductSupplierNotFoundException
+     */
+    private function getDefaultProductSupplier(ProductId $productId, SupplierId $supplierId): ProductSupplier
+    {
+        return $this->productSupplierRepository->getByAssociation(new ProductSupplierAssociation(
+            $productId->getValue(),
+            NoCombinationId::NO_COMBINATION_ID,
             $supplierId->getValue()
         ));
     }
