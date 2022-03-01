@@ -545,7 +545,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier1 |           | USD      | 0                  |
       | supplier2 |           | USD      | 0                  |
 
-  Scenario: I should be able to associate suppliers even when no combinations has been created
+  Scenario: I should be able to associate suppliers (and default supplier) even when no combinations has been created
     # We create new empty suppliers which have no other products
     Given I add new supplier supplier4 with following properties:
       | name                    | my supplier 4       |
@@ -578,11 +578,12 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier  | product_supplier  |
       | supplier5 | product5supplier5 |
       | supplier4 | product5supplier4 |
+    And I set product product5 default supplier to supplier4
     Then product product5 should have the following suppliers assigned:
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier           | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
@@ -678,7 +679,7 @@ Feature: Update product combination suppliers in Back Office (BO)
       | supplier4 |
       | supplier5 |
     And product product5 should have following supplier values:
-      | default supplier           | supplier5 |
+      | default supplier           | supplier4 |
     And supplier "supplier4" should have 1 products associated
     And supplier "supplier5" should have 1 products associated
     # No combinations but suppliers display the product regardless
