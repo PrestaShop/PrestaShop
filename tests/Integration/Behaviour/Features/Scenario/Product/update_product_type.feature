@@ -41,6 +41,10 @@ Feature: Add basic product from Back Office (BO)
     Then product "productCombinations" type should be combinations
     And product "productCombinations" should have following stock information:
       | quantity | 0 |
+    And product "productCombinations" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -51            |
+      | Puff       | Daddy     | 51             |
 
   Scenario: I update product type to combinations (if stock was zero no problem occurs)
     When I add product "productCombinations2" with following information:
