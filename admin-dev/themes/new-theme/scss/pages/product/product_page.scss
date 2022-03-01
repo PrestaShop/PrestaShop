@@ -1214,6 +1214,10 @@ $product-page-padding-bottom: 80px !default;
         }
       }
     }
+
+    .token-input {
+      min-width: 768px;
+    }
   }
 }
 

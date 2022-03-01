@@ -81,6 +81,7 @@ export default class ProductSEOManager {
       options: {
         createTokensOnBlur: true,
         delimiter: ',',
+        minWidth: '768px',
       },
     });
   }
