@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class ProductTypeUpdater
 {
@@ -129,7 +130,8 @@ class ProductTypeUpdater
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
 
         if ($resetProductStock) {
-            $this->productStockUpdater->resetStock($productId);
+            // Product type is bound to all shops, so when we reset stock because of type change it must be applied to all associated shops
+            $this->productStockUpdater->resetStock($productId, ShopConstraint::allShops());
         }
     }
 }
