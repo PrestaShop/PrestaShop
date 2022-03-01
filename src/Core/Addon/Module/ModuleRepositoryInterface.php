@@ -63,4 +63,13 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
      * @return ModuleInterface
      */
     public function getModule($name);
+
+    /**
+     * Get Module Attributes (name, displayName, etc.).
+     *
+     * @param string $name The technical name of the module
+     *
+     * @return \Symfony\Component\HttpFoundation\ParameterBag
+     */
+    public function getModuleAttributes($name);
 }
