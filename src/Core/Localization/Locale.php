@@ -138,7 +138,7 @@ class Locale implements LocaleInterface
     /**
      * Format a number as a price.
      *
-     * @param int|float|string $number
+     * @param int|float|string|null $number
      *                                 Number to be formatted as a price
      * @param string $currencyCode
      *                             Currency of the price
@@ -149,7 +149,10 @@ class Locale implements LocaleInterface
      */
     public function formatPrice($number, $currencyCode)
     {
-        if ( $number === null ) return null;
+        if ($number === null) {
+            return '';
+        }
+        
         return $this->numberFormatter->format(
             $number,
             $this->getPriceSpecification($currencyCode)
