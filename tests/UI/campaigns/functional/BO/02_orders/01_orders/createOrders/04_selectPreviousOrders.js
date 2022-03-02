@@ -31,7 +31,7 @@ const {Statuses} = require('@data/demo/orderStatuses');
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
 
-const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousOrder';
+const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousOrders';
 
 let browserContext;
 let page;
