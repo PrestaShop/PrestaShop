@@ -7,9 +7,8 @@ module.exports = {
       {id: 'parent_category', title: 'Parent category'},
       {id: 'root_category', title: 'Root category (0/1)'},
       {id: 'description', title: 'Description'},
-
     ],
-    combinations: [
+    records: [
       {
         id: 10,
         active: 1,

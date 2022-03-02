@@ -187,6 +187,6 @@ module.exports = {
   async createCSVFile(path, fileName, data) {
     await this.createFile(path, fileName, '');
     const csvWriter = await createCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
-    await csvWriter.writeRecords(data.combinations);
+    await csvWriter.writeRecords(data.records);
   },
 };
