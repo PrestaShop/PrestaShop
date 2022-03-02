@@ -390,7 +390,7 @@ class MetaCore extends ObjectModel
                 if (!empty($title)) {
                     $row['meta_title'] = $title;
                 } else {
-                    $row['meta_title'] = ($row['meta_title'] ?: $row['name']);
+                    $row['meta_title'] = $row['meta_title'] ?: $row['name'];
                 }
 
                 $result = Meta::completeMetaTags($row, $row['name']);
