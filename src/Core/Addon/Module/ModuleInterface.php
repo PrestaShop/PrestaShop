@@ -83,7 +83,7 @@ interface ModuleInterface extends AddonInterface
     public function onUpgrade($version): bool;
 
     /**
-     * Return is module is active
+     * Return true if module is active
      *
      * @return bool
      */
