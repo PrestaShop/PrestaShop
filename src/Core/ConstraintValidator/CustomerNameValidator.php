@@ -68,7 +68,7 @@ class CustomerNameValidator extends ConstraintValidator
      */
     private function isNameValid($name)
     {
-        return (bool) preg_match(self::PATTERN_NAME, $name);
+        return (bool) preg_match(static::PATTERN_NAME, $name);
     }
 
     /**
@@ -84,6 +84,6 @@ class CustomerNameValidator extends ConstraintValidator
             return true;
         }
 
-        return (bool) preg_match(self::PATTERN_DOT_SPACED, $name);
+        return (bool) preg_match(static::PATTERN_DOT_SPACED, $name);
     }
 }
