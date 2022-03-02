@@ -320,3 +320,11 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
     public: true
+
+  prestashop.core.grid.definition.factory.state:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\StateGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
+      - "@=service('router').generate('admin_states_index')"
+    public: true

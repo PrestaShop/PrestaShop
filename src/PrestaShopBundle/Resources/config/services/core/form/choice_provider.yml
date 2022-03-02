@@ -287,3 +287,12 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
     arguments:
       - '@translator'
+
+  prestashop.core.form.choice_provider.zone_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
+
+  prestashop.core.form.choice_provider.configurable_country_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
