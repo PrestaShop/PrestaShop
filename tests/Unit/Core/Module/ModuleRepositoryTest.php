@@ -66,7 +66,7 @@ class ModuleRepositoryTest extends TestCase
                 $this->createMock(AdminModuleDataProvider::class),
                 $this->createMock(CacheProvider::class),
                 $this->createMock(HookManager::class),
-                __DIR__ . '/../../../Resources/modules',
+                dirname(__DIR__, 3) . '/Resources/modules',
             ])
             ->onlyMethods(['getModule'])
             ->getMock()
@@ -97,7 +97,7 @@ class ModuleRepositoryTest extends TestCase
     public function testGetModulePath(): void
     {
         $this->assertEquals(
-            __DIR__ . '/../../../Resources/modules/bankwire',
+           dirname(__DIR__, 3) . '/Resources/modules/bankwire',
             $this->moduleRepository->getModulePath('bankwire')
         );
         $this->assertNull($this->moduleRepository->getModulePath('no-existing-module'));
