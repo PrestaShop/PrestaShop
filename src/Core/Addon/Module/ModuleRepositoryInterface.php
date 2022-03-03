@@ -71,5 +71,5 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
      *
      * @return \Symfony\Component\HttpFoundation\ParameterBag
      */
-    public function getModuleAttributes($name);
+    public function getModuleAttributes(string $name): ParameterBag;
 }
