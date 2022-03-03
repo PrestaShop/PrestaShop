@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
 use PrestaShop\PrestaShop\Adapter\Entity\Language as EntityLanguage;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
-use PrestaShop\PrestaShop\Adapter\Entity\Module;
+use PrestaShop\PrestaShop\Adapter\Entity\Module as ModuleEntity;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\ShopGroup;
 use PrestaShop\PrestaShop\Adapter\Entity\ShopUrl;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
@@ -973,7 +974,7 @@ class Install extends AbstractInstall
      */
     public function installModules(array $modules): bool
     {
-        Module::updateTranslationsAfterInstall(false);
+        ModuleEntity::updateTranslationsAfterInstall(false);
 
         $result = $this->executeAction(
             $modules,
@@ -988,7 +989,7 @@ class Install extends AbstractInstall
             return false;
         }
 
-        Module::updateTranslationsAfterInstall(true);
+        ModuleEntity::updateTranslationsAfterInstall(true);
         EntityLanguage::updateModulesTranslations($modules);
 
         return true;
@@ -996,7 +997,10 @@ class Install extends AbstractInstall
 
     public function postInstall(): bool
     {
-        $modules = array_keys(ModuleManagerBuilder::getInstance()->buildRepository()->getInstalledModules());
+        $moduleCollection = ModuleManagerBuilder::getInstance()->buildRepository()->getInstalledModules();
+        $modules = array_map(function (Module $module) {
+            return $module->get('name');
+        }, iterator_to_array($moduleCollection));
 
         return $this->executeAction(
             $modules,

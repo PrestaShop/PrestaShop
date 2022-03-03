@@ -34,7 +34,7 @@ interface ModuleRepositoryInterface
 
     public function getUpgradableModules(): ModuleCollection;
 
-    public function getConfigurableModules(): ModuleCollection;
+    public function getMustBeConfiguredModules(): ModuleCollection;
 
     public function getModule(string $moduleName): ModuleInterface;
 
