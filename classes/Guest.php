@@ -199,7 +199,7 @@ class GuestCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'guest`
 		WHERE `id_customer` = ' . (int) ($idCustomer));
 
-        return $result['id_guest'];
+        return $result['id_guest'] ?? false;
     }
 
     /**
