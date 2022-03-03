@@ -87,5 +87,5 @@ interface ModuleInterface extends AddonInterface
      *
      * @return bool
      */
-    public function isActive();
+    public function isActive(): bool;
 }
