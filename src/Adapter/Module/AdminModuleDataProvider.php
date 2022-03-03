@@ -212,7 +212,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 ]);
             }
 
-            if ($moduleDatabaseAttributes->getBoolean('installed')) {
+            if ($module->isInstalled()) {
                 unset($urls['install']);
                 if (!$moduleDatabaseAttributes->getBoolean('active')) {
                     unset(
