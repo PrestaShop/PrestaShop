@@ -25,7 +25,7 @@
  */
 interface WebserviceOutputInterface
 {
-    public function getContentType();
+    public function getContentType(): string;
 
     public function renderNode(ApiNode $apiNode);
 }

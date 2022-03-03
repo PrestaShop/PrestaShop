@@ -26,7 +26,7 @@
  */
 class WebserviceOutputJSONCore implements WebserviceOutputInterface
 {
-    public function getContentType()
+    public function getContentType(): string
     {
         return 'application/json';
     }

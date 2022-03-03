@@ -27,7 +27,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 {
     private const XLINK_NS = 'http://www.w3.org/1999/xlink';
 
-    public function getContentType()
+    public function getContentType(): string
     {
         return 'text/xml';
     }
@@ -65,7 +65,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
      *
      * @return void
      */
-    private function injectAttributes(&$xml, $node)
+    private function injectAttributes(SuperXMLElement &$xml, ApiNode $node): void
     {
         if (empty($node->getAttributes()) || !is_array($node->getAttributes())) {
             return;
@@ -88,7 +88,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
      *
      * @return void
      */
-    private function injectChildren(&$parentXml, $apiNode)
+    private function injectChildren(SuperXMLElement &$parentXml, ApiNode $apiNode): void
     {
         if (empty($apiNode->getNodes())) {
             return;
