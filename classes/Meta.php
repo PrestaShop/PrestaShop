@@ -536,6 +536,7 @@ class MetaCore extends ObjectModel
         if ($page_num > 1) {
             $meta_title .= ' (' . $page_num . ')';
         }
+        return $meta_title;
     }
 
     /**
