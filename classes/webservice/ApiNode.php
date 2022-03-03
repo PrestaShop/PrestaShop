@@ -24,6 +24,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+declare(strict_types=1);
+
 class ApiNode
 {
     public const TYPE_VALUE = 'value';
