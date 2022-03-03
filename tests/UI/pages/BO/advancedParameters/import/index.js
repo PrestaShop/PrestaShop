@@ -29,6 +29,9 @@ class Import extends BOBasePage {
     this.fileTypeSelector = '#entity';
     this.importFileSecondStepPanelTitle = '#container-customer > h3';
     this.importProgressModal = '#importProgress';
+    this.progressValidateBarInfo = '#validate_progressbar_done';
+    this.progressImportBarInfo = '#import_progressbar_done';
+    this.importDetailsFinished = '#import_details_finished';
     this.importProgressModalCloseButton = '#import_close_button';
   }
 
@@ -52,7 +55,7 @@ class Import extends BOBasePage {
    * @param filePath {string} Value of file path to set on file input
    * @return {Promise<string>}
    */
-  async uploadSampleFile(page, fileType, filePath) {
+  async uploadFile(page, fileType, filePath) {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
     await page.setInputFiles(this.fileInputField, filePath);
 
@@ -79,6 +82,18 @@ class Import extends BOBasePage {
     await page.click(this.importButton);
 
     return this.getTextContent(page, this.importProgressModal);
+  }
+
+  /**
+   * Get import validation message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getImportValidationMessage(page) {
+    await this.waitForVisibleSelector(page, `${this.progressValidateBarInfo}[style="width: 100%;"]`);
+    await this.waitForVisibleSelector(page, `${this.progressImportBarInfo}[style="width: 100%;"]`);
+
+    return this.getTextContent(page, this.importDetailsFinished);
   }
 
   /**
