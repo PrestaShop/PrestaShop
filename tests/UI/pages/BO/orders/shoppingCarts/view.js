@@ -1,7 +1,6 @@
 require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
-
 /**
  * View shopping page, contains functions that can be used on view shopping cart page
  * @class
@@ -35,20 +34,7 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
     this.cartSummaryTableRow = row => `${this.cartSummaryTableBody} tr:nth-child(${row})`;
-    // this.cartSummaryTableColumn = (column, row) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
-    // this.cartSummaryTableColumn = row => `${this.cartSummaryTableRow(row)} td`;
     this.cartSummaryTableColumn = (row, column) => `${this.cartSummaryTableRow(row)} td:nth-child(${column})`;
-
-
-    // Columns selectors:
-    this.cartSummaryTableColumnProductTitle = row => `${this.cartSummaryTableColumn(row)}:nth-child(2)`;
-    this.cartSummaryTableColumnProductUnitPrice = row => `${this.cartSummaryTableColumn(row)}:nth-child(3)`;
-    this.cartSummaryTableColumnProductQuantity = row => `${this.cartSummaryTableColumn(row)}:nth-child(4)`;
-    this.cartSummaryTableColumnProductStockAvailable = row => `${this.cartSummaryTableColumn(row)}:nth-child(5)`;
-    this.cartSummaryTableColumnProductTotal = row => `${this.cartSummaryTableColumn(row)}:nth-child(6)`;
-    this.cartSummaryTableColumnCostTotalProducts = `${this.cartSummaryTableColumn(2)}:nth-child(2)`;
-    this.cartSummaryTableColumnCostTotalShipping = `${this.cartSummaryTableColumn(3)}:nth-child(2)`;
-    this.cartSummaryTableColumnTotal = `${this.cartSummaryTableColumn(4)}:nth-child(2)`;
   }
 
   /*

@@ -56,10 +56,7 @@ class AddOrder extends BOBasePage {
     this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
     this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
     this.customerCartsTableDetailsButton = row => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
-
-    // View Carts iframe
-    this.cartsIframe = 'iframe.fancybox-iframe';
-
+    this.customerCartsTableUseButton = row => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -85,11 +82,13 @@ class AddOrder extends BOBasePage {
     // Shipping form selectors
     this.deliveryOptionSelect = '#delivery-option-select';
     this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
+    this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
 
     // Summary selectors
     this.paymentMethodSelect = '#cart_summary_payment_module';
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
+    this.totalTaxIncluded = '#summary-block span.js-total-with-tax';
   }
 
   /* Customer functions */
@@ -207,6 +206,29 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Close order iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeIframe(page) {
+    await this.waitForSelectorAndClick(page, this.closeFancyBoxIframe);
+
+    return this.elementNotVisible(page, this.iframe, 3000);
+  }
+
+  /* Carts table methods */
+
+  /**
+   * Get text when carts table is empty
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTextWhenCartsTableIsEmpty(page) {
+    await page.waitForTimeout(1000);
+    return this.getTextContent(page, this.emptyCartBlock, true);
+  }
+
+  /**
    * Get text column from carts table
    * @param page {Page} Browser tab
    * @param column {String} Column name from table
@@ -218,7 +240,7 @@ class AddOrder extends BOBasePage {
   }
 
   /**
-   *
+   * Click on cart details button
    * @param page {Page} Browser tab
    * @param row {Number} Row on table
    * @returns {Promise<Boolean>}
@@ -419,6 +441,33 @@ class AddOrder extends BOBasePage {
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
     await this.setChecked(page, this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
+  }
+
+  /**
+   * Get Delivery Option Selected
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryOption(page) {
+    return this.getTextContent(page, `${this.deliveryOptionSelect} option[selected='selected']`, false);
+  }
+
+  /**
+   * Get Shipping Cost
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShippingCost(page) {
+    return this.getTextContent(page, this.shippingCost);
+  }
+
+  /**
+   * Get Total
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTotal(page) {
+    return this.getTextContent(page, this.totalTaxIncluded);
   }
 
   /* Summary methods */
