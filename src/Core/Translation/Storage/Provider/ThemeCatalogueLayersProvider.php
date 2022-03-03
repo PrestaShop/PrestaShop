@@ -138,7 +138,7 @@ class ThemeCatalogueLayersProvider implements CatalogueLayersProviderInterface
      * @return MessageCatalogue
      *
      * The **file** translated catalogue for a theme other than classic corresponds
-     * to the core files, overwrite by the user-translated core wordings (if any), overwrite
+     * to the core files, overwritten by the user-translated core wordings (if any), overwritten
      * by the theme files (if any)
      */
     public function getFileTranslatedCatalogue(string $locale): MessageCatalogue
