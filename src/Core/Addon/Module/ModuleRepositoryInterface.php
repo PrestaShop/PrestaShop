@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
 use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 interface ModuleRepositoryInterface extends AddonRepositoryInterface
 {
@@ -44,10 +45,11 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
 
     /**
      * @param AddonListFilter $filter
+     * @param bool $skip_main_class_attributes
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
-    public function getFilteredList(AddonListFilter $filter);
+    public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false);
 
     /**
      * @return AddonInterface[] retrieve a list of addons, regardless any $filter
