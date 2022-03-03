@@ -530,7 +530,7 @@ class MetaCore extends ObjectModel
      *
      * @param string $meta_title
      */
-    public static function paginateMetaTitle(&$meta_title)
+    private static function paginateMetaTitle(string $meta_title): string
     {
         $page_num = (int) Tools::getValue('page');
         if ($page_num > 1) {
