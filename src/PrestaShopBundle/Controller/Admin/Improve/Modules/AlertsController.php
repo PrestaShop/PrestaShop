@@ -46,7 +46,7 @@ class AlertsController extends ModuleAbstractController
 
         return $this->render(
             '@PrestaShop/Admin/Module/alerts.html.twig',
-            $this->getNotificationPageData($moduleRepository->getConfigurableModules())
+            $this->getNotificationPageData($moduleRepository->getMustBeConfiguredModules())
         );
     }
 
@@ -56,7 +56,7 @@ class AlertsController extends ModuleAbstractController
     public function notificationsCountAction()
     {
         $moduleRepository = $this->getModuleRepository();
-        $toConfigure = count($moduleRepository->getConfigurableModules());
+        $toConfigure = count($moduleRepository->getMustBeConfiguredModules());
         $toUpdate = count($moduleRepository->getUpgradableModules());
 
         return new JsonResponse([

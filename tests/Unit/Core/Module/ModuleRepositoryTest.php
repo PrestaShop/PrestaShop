@@ -36,7 +36,6 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ModuleRepositoryTest extends TestCase
 {
@@ -89,9 +88,9 @@ class ModuleRepositoryTest extends TestCase
         $this->assertCount(count(self::UPGRADABLE_MODULES), $this->moduleRepository->getUpgradableModules());
     }
 
-    public function testGetConfigurableModules(): void
+    public function testGetMustBeConfiguredModules(): void
     {
-        $this->assertCount(count(self::CONFIGURABLE_MODULES), $this->moduleRepository->getConfigurableModules());
+        $this->assertCount(count(self::CONFIGURABLE_MODULES), $this->moduleRepository->getMustBeConfiguredModules());
     }
 
     public function testGetModulePath(): void
@@ -105,16 +104,13 @@ class ModuleRepositoryTest extends TestCase
 
     public function getModuleMock(string $moduleName): Module
     {
-        $databaseAttributes = new ParameterBag([
-            'installed' => in_array($moduleName, self::INSTALLED_MODULES),
-        ]);
-
         $module = $this->createMock(Module::class);
         $moduleInstance = $this->createMock(LegacyModule::class);
         $moduleInstance->warning = 'Configurable warning';
 
         $module->method('getInstance')->willReturn($moduleInstance);
-        $module->method('getDatabaseAttributes')->willReturn($databaseAttributes);
+        $module->method('isInstalled')->willReturn(in_array($moduleName, self::INSTALLED_MODULES));
+        $module->method('isConfigurable')->willReturn(in_array($moduleName, self::CONFIGURABLE_MODULES));
         $module->method('canBeUpgraded')->willReturn(in_array($moduleName, self::UPGRADABLE_MODULES));
         $module->method('hasValidInstance')->willReturn(in_array($moduleName, self::CONFIGURABLE_MODULES));
 

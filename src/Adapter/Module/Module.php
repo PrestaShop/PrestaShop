@@ -90,7 +90,7 @@ class Module implements ModuleInterface
         'author' => '',
         'author_uri' => false,
         'tab' => 'others',
-        'is_configurable' => 0,
+        'is_configurable' => false,
         'need_instance' => 0,
         'limited_countries' => [],
         'parent_class' => 'Module',
@@ -160,7 +160,7 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        if ($this->database->get('installed')) {
+        if ($this->isInstalled()) {
             $version = $this->database->get('version');
         } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
@@ -226,9 +226,19 @@ class Module implements ModuleInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return (bool) $this->database->get('active');
+    }
+
+    public function isInstalled(): bool
+    {
+        return (bool) $this->database->get('installed');
+    }
+
+    public function isConfigurable(): bool
+    {
+        return (bool) $this->attributes->get('is_configurable');
     }
 
     /**
@@ -463,7 +473,7 @@ class Module implements ModuleInterface
      */
     public function canBeUpgraded()
     {
-        if ($this->database->get('installed') == 0) {
+        if (!$this->isInstalled()) {
             return false;
         }
 
