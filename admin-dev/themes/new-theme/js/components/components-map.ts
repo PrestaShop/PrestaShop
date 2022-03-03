@@ -31,6 +31,7 @@ export default {
   multistoreHeader: {
     modal: '.js-multishop-modal',
     modalDialog: '.js-multishop-modal-dialog',
+    headerMultiShop: '.header-multishop',
     headerButton: '.js-header-multishop-open-modal',
     searchInput: '.js-multishop-modal-search',
     jsScrollbar: '.js-multishop-scrollbar',
@@ -95,5 +96,10 @@ export default {
   tineMceEditor: {
     selector: '.autoload_rte',
     selectorClass: 'autoload_rte',
+  },
+  contextualNotification: {
+    close: '.contextual-notification .close',
+    messageBoxId: 'content-message-box',
+    notificationClass: 'contextual-notification',
   },
 };
