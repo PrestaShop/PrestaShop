@@ -519,7 +519,7 @@ class MetaCore extends ObjectModel
             $metaTags['meta_title'] = $defaultValue;
         }
         if (!empty($context->controller) && method_exists($context->controller, 'getTemplateVarPagination')) {
-            Meta::paginateMetaTitle($metaTags['meta_title']);
+            $metaTags['meta_title'] = Meta::paginateMetaTitle($metaTags['meta_title']);
         }
 
         return $metaTags;
