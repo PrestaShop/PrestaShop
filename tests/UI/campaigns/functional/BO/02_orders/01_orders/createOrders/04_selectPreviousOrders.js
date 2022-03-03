@@ -52,7 +52,7 @@ const orderData = {
 };
 let orderIframe;
 const paymentMethod = 'Payments by check';
-const orderStatus = Statuses.paymentAccepted.status;
+const orderStatus = Statuses.paymentAccepted;
 /*
 Pre-condition:
 - Create customer
