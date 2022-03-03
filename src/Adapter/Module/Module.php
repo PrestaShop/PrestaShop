@@ -225,7 +225,7 @@ class Module implements ModuleInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return (bool) $this->database->get('active');
     }

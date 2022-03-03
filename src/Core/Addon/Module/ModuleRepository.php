@@ -41,6 +41,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleRepository implements ModuleRepositoryInterface
@@ -406,7 +407,14 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $module;
     }
 
-    public function getModuleAttributes($name)
+    /**
+     * Get Module Attributes (name, displayName, etc.).
+     *
+     * @param string $name The technical name of the module
+     *
+     * @return \Symfony\Component\HttpFoundation\ParameterBag
+     */
+    public function getModuleAttributes($name): ParameterBag
     {
         $module = $this->getModule($name);
 
