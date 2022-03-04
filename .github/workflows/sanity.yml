@@ -18,18 +18,14 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Setup Apache
-        run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
-
-      # temporary fix to make latest 7.4 & 8.0 work
-      - name: Update PCRE2
-        run: sudo apt-get install -y libpcre2-dev
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
+
+      - name: Setup Apache
+        run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
 
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
@@ -54,14 +50,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('admin-dev/**/package-lock.json', 'tests/**/package-lock.json', 'themes/**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Composer install and build assets
