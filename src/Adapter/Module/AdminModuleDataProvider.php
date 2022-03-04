@@ -214,7 +214,7 @@ class AdminModuleDataProvider implements ModuleInterface
 
             if ($module->isInstalled()) {
                 unset($urls['install']);
-                if (!$moduleDatabaseAttributes->getBoolean('active')) {
+                if (!$module->isActive()) {
                     unset(
                         $urls['disable'],
                         $urls['enableMobile'],
@@ -226,7 +226,7 @@ class AdminModuleDataProvider implements ModuleInterface
                 } else {
                     unset(
                         $urls['enable'],
-                        $urls[$moduleDatabaseAttributes->getBoolean('active_on_mobile') ? 'enableMobile' : 'disableMobile']
+                        $urls[$module->isActiveOnMobile() ? 'enableMobile' : 'disableMobile']
                     );
                 }
 
@@ -234,7 +234,7 @@ class AdminModuleDataProvider implements ModuleInterface
                     unset($urls['upgrade']);
                 }
 
-                if (!$moduleAttributes->getBoolean('is_configurable')) {
+                if (!$module->isConfigurable()) {
                     unset($urls['configure']);
                 }
             } else {
