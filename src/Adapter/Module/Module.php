@@ -231,6 +231,11 @@ class Module implements ModuleInterface
         return (bool) $this->database->get('active');
     }
 
+    public function isActiveOnMobile(): bool
+    {
+        return (bool) $this->database->get('active_on_mobile');
+    }
+
     public function isInstalled(): bool
     {
         return (bool) $this->database->get('installed');
