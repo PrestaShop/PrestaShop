@@ -408,11 +408,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
-     * Get Module Attributes (name, displayName, etc.).
-     *
-     * @param string $name The technical name of the module
-     *
-     * @return \Symfony\Component\HttpFoundation\ParameterBag
+     * {@inheritDoc}
      */
     public function getModuleAttributes($name): ParameterBag
     {
