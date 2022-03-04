@@ -218,9 +218,6 @@
   <configuration id="PS_CONDITIONS_CMS_ID" name="PS_CONDITIONS_CMS_ID">
     <value>3</value>
   </configuration>
-  <configuration id="TRACKING_DIRECT_TRAFFIC" name="TRACKING_DIRECT_TRAFFIC">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_VOLUME_UNIT" name="PS_VOLUME_UNIT">
     <value>cl</value>
   </configuration>
