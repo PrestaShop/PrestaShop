@@ -65,7 +65,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function indexAction(): Response
+    public function indexAction(Request $request): Response
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
 
@@ -80,6 +80,7 @@ class SecurityController extends FrameworkBundleAdminController
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
                     'Admin.Notifications.Info'
                 ),
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
                                        && $this->get('prestashop.adapter.shop.context')->isShopContext()),
             ]
@@ -150,7 +151,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function employeeSessionAction(EmployeeFilters $filters): Response
+    public function employeeSessionAction(Request $request, EmployeeFilters $filters): Response
     {
         $sessionsEmployeesGridFactory = $this->get('prestashop.core.grid.factory.security.session.employee');
 
@@ -158,6 +159,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/employees.html.twig',
             [
                 'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans('Employee sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsEmployeesGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
@@ -179,7 +181,7 @@ class SecurityController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function customerSessionAction(CustomerFilters $filters): Response
+    public function customerSessionAction(Request $request, CustomerFilters $filters): Response
     {
         $sessionsCustomersGridFactory = $this->get('prestashop.core.grid.factory.security.session.customer');
 
@@ -187,6 +189,7 @@ class SecurityController extends FrameworkBundleAdminController
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/customers.html.twig',
             [
                 'enableSidebar' => true,
+                'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
                 'layoutTitle' => $this->trans('Customer sessions', 'Admin.Navigation.Menu'),
                 'grid' => $this->presentGrid($sessionsCustomersGridFactory->getGrid($filters)),
                 'multistoreInfoTip' => $this->trans(
