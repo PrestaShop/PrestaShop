@@ -83,22 +83,23 @@ class TaxOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'enable_tax',
-            SwitchType::class,
-            [
-                'label' => $this->trans('Enable tax', 'Admin.International.Feature'),
-                'help' => $this->trans(
-                    'Select whether or not to include tax on purchases.',
-                    'Admin.International.Help'
-                ),
-                'required' => false,
-                'attr' => [
-                    'class' => 'js-enable-tax',
-                ],
-                'multistore_configuration_key' => 'PS_USE_ECOTAX',
-            ]
-        )
+        $builder
+            ->add(
+                'enable_tax',
+                SwitchType::class,
+                [
+                    'label' => $this->trans('Enable tax', 'Admin.International.Feature'),
+                    'help' => $this->trans(
+                        'Select whether or not to include tax on purchases.',
+                        'Admin.International.Help'
+                    ),
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'js-enable-tax',
+                    ],
+                    'multistore_configuration_key' => 'PS_USE_ECOTAX',
+                ]
+            )
             ->add('display_tax_in_cart', SwitchType::class, [
                 'label' => $this->trans(
                     'Display tax in the shopping cart',
@@ -129,10 +130,7 @@ class TaxOptionsType extends TranslatorAwareType
                     'Admin.International.Help'),
                 'multistore_configuration_key' => 'PS_USE_ECOTAX',
             ])
-        ;
-
-        if ($this->ecoTaxEnabled) {
-            $builder->add('eco_tax_rule_group', ChoiceType::class, [
+            ->add('eco_tax_rule_group', ChoiceType::class, [
                 'label' => $this->trans(
                     'Ecotax',
                     'Admin.International.Feature'),
@@ -141,8 +139,10 @@ class TaxOptionsType extends TranslatorAwareType
                     'Admin.International.Help'),
                 'choices' => $this->taxRuleGroupChoiceProvider->getChoices(),
                 'multistore_configuration_key' => 'PS_ECOTAX_TAX_RULES_GROUP_ID',
+                'row_attr' => [
+                    'class' => 'editEcoTaxRuleGroup' . ($this->ecoTaxEnabled ? '' : ' d-none'),
+                ],
             ]);
-        }
     }
 
     /**
