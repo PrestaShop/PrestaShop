@@ -50,10 +50,24 @@ class ProductSearchContext
      */
     private $idCustomer;
 
+    /**
+     * @var int the Shop Group id
+     */
+    private $idShopGroup;
+
+    /**
+     * @var bool if the sharing stock is enable
+     */
+    private $stockSharingBetweenShopGroupEnabled = false;
+
     public function __construct(Context $context = null)
     {
         if ($context) {
+            $shopGroup = $context->shop->getGroup();
+
             $this->idShop = $context->shop->id;
+            $this->idShopGroup = $shopGroup->id;
+            $this->stockSharingBetweenShopGroupEnabled = (bool) $shopGroup->share_stock;
             $this->idLang = $context->language->id;
             $this->idCurrency = $context->currency->id;
             $this->idCustomer = $context->customer->id;
@@ -63,7 +77,7 @@ class ProductSearchContext
     /**
      * @param int $idShop
      *
-     * @return $this
+     * @return self
      */
     public function setIdShop($idShop)
     {
@@ -83,7 +97,7 @@ class ProductSearchContext
     /**
      * @param int $idLang
      *
-     * @return $this
+     * @return self
      */
     public function setIdLang($idLang)
     {
@@ -103,7 +117,7 @@ class ProductSearchContext
     /**
      * @param int $idCurrency
      *
-     * @return $this
+     * @return self
      */
     public function setIdCurrency($idCurrency)
     {
@@ -123,7 +137,7 @@ class ProductSearchContext
     /**
      * @param int $idCustomer
      *
-     * @return $this
+     * @return self
      */
     public function setIdCustomer($idCustomer)
     {
@@ -138,5 +152,45 @@ class ProductSearchContext
     public function getIdCustomer()
     {
         return $this->idCustomer;
+    }
+
+    /**
+     * @return int the Shop Group Iid
+     */
+    public function getIdShopGroup(): int
+    {
+        return $this->idShopGroup;
+    }
+
+    /**
+     * @param int $idShopGroup
+     *
+     * @return self
+     */
+    public function setIdShopGroup(int $idShopGroup): self
+    {
+        $this->idShopGroup = $idShopGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return bool if sharing stock is enable
+     */
+    public function isStockSharingBetweenShopGroupEnabled(): bool
+    {
+        return $this->stockSharingBetweenShopGroupEnabled;
+    }
+
+    /**
+     * @param bool $stockSharingBetweenShopGroupEnabled
+     *
+     * @return self
+     */
+    public function setStockSharingBetweenShopGroupEnabled(bool $stockSharingBetweenShopGroupEnabled): self
+    {
+        $this->stockSharingBetweenShopGroupEnabled = $stockSharingBetweenShopGroupEnabled;
+
+        return $this;
     }
 }
