@@ -50,10 +50,24 @@ class ProductSearchContext
      */
     private $idCustomer;
 
+    /**
+     * @var int the Shop Group id
+     */
+    private $idShopGroup;
+
+    /**
+     * @var boolean if the sharing stock is enable
+     */
+    private $stockSharingBetweenShopGroupEnabled = false;
+
     public function __construct(Context $context = null)
     {
         if ($context) {
+            $shopGroup = $context->shop->getGroup();
+
             $this->idShop = $context->shop->id;
+            $this->idShopGroup = $shopGroup->id;
+            $this->stockSharingBetweenShopGroupEnabled = boolval($shopGroup->share_stock);
             $this->idLang = $context->language->id;
             $this->idCurrency = $context->currency->id;
             $this->idCustomer = $context->customer->id;
@@ -65,7 +79,7 @@ class ProductSearchContext
      *
      * @return $this
      */
-    public function setIdShop($idShop)
+    public function setIdShop(int $idShop): ProductSearchContext
     {
         $this->idShop = $idShop;
 
@@ -75,7 +89,7 @@ class ProductSearchContext
     /**
      * @return int the Product Search Shop id
      */
-    public function getIdShop()
+    public function getIdShop(): int
     {
         return $this->idShop;
     }
@@ -85,7 +99,7 @@ class ProductSearchContext
      *
      * @return $this
      */
-    public function setIdLang($idLang)
+    public function setIdLang(int $idLang): ProductSearchContext
     {
         $this->idLang = $idLang;
 
@@ -95,7 +109,7 @@ class ProductSearchContext
     /**
      * @return int the Product Search Language id
      */
-    public function getIdLang()
+    public function getIdLang(): int
     {
         return $this->idLang;
     }
@@ -105,7 +119,7 @@ class ProductSearchContext
      *
      * @return $this
      */
-    public function setIdCurrency($idCurrency)
+    public function setIdCurrency(int $idCurrency): ProductSearchContext
     {
         $this->idCurrency = $idCurrency;
 
@@ -115,7 +129,7 @@ class ProductSearchContext
     /**
      * @return int the Product Search Currency id
      */
-    public function getIdCurrency()
+    public function getIdCurrency(): int
     {
         return $this->idCurrency;
     }
@@ -125,7 +139,7 @@ class ProductSearchContext
      *
      * @return $this
      */
-    public function setIdCustomer($idCustomer)
+    public function setIdCustomer(int $idCustomer): ProductSearchContext
     {
         $this->idCustomer = $idCustomer;
 
@@ -135,8 +149,46 @@ class ProductSearchContext
     /**
      * @return int the Product Search Customer id
      */
-    public function getIdCustomer()
+    public function getIdCustomer(): int
     {
         return $this->idCustomer;
+    }
+
+    /**
+     * @return int the Shop Group Iid
+     */
+    public function getIdShopGroup(): int
+    {
+        return $this->idShopGroup;
+    }
+
+    /**
+     * @param int $idShopGroup
+     * @return $this
+     */
+    public function setIdShopGroup(int $idShopGroup): ProductSearchContext
+    {
+        $this->idShopGroup = $idShopGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return bool if sharing stock is enable
+     */
+    public function isStockSharingBetweenShopGroupEnabled(): bool
+    {
+        return $this->stockSharingBetweenShopGroupEnabled;
+    }
+
+    /**
+     * @param bool $stockSharingBetweenShopGroupEnabled
+     * @return $this
+     */
+    public function setStockSharingBetweenShopGroupEnabled(bool $stockSharingBetweenShopGroupEnabled): ProductSearchContext
+    {
+        $this->stockSharingBetweenShopGroupEnabled = $stockSharingBetweenShopGroupEnabled;
+
+        return $this;
     }
 }
