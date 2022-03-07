@@ -73,7 +73,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
     await files.deleteFile(combinationsFile);
   });
 
-  // 2 : Sort products with combinations but without available quantities
+  // 1-  Sort products with combinations but without available quantities
   describe('sort List of products with combinations but without available quantities in monitoring page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -156,7 +156,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
     });
   });
 
-  // 3 : Pagination
+  // 2 - Pagination
   describe('Pagination next and previous', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
