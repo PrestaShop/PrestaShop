@@ -9,41 +9,39 @@ const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
-// Import common
+// Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withoutCombinationsWithoutQuantities';
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutDescription';
 
 let browserContext;
 let page;
 let numberOfProductsIngrid = 0;
-const tableName = 'no_qty_product_without_combination';
-const prefixImportedProducts = 'todelete';
-
-// Import Data
-const {ProductsData} = require('@data/import/productsWithoutQuantities');
+const tableName = 'product_without_description';
 
 // Products file name
 const productsFile = 'products.csv';
 
+// Import Data
+const {ProductsData} = require('@data/import/disabledProducts');
+
 /*
 Pre-condition
-- Import list of products
+- Import list of products without image
 Scenario
-- Sort list of products without combinations and without available quantities in monitoring page
+- Sort list of products without description in monitoring page
 - Pagination next and previous
 Post-condition
 - Delete created products
  */
-describe('BO - Catalog - Monitoring : Sort and pagination list of products without combinations '
-  + 'and without available quantities', async () => {
+describe('BO - Catalog - Monitoring : Sort and pagination list of products without description', async () => {
   // Pre-condition: Import list of products
   importFileTest(productsFile, ProductsData.entity, baseContext);
 
@@ -61,8 +59,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     await files.deleteFile(productsFile);
   });
 
-  // 1 - Sort products without combinations and without available quantities
-  describe('sort List of products without combinations and without available quantities', async () => {
+  // 1 - Sort products without description
+  describe('Sort List of products without description', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -93,8 +91,6 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
         args: {
           testIdentifier: 'sortByIdAsc', sortBy: 'id_product', sortDirection: 'asc', isFloat: true,
@@ -176,5 +172,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
+  bulkDeleteProductsTest(tableName, baseContext);
 });

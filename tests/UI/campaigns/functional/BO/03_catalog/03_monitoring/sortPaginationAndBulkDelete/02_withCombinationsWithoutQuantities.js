@@ -12,7 +12,7 @@ const files = require('@utils/files');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -25,7 +25,6 @@ let browserContext;
 let page;
 let numberOfProductsIngrid = 0;
 const tableName = 'no_qty_product_with_combination';
-const prefixImportedProducts = 'todelete';
 
 // Products file name
 const productsFile = 'products.csv';
@@ -74,7 +73,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
   });
 
   // 1-  Sort products with combinations but without available quantities
-  describe('sort List of products with combinations but without available quantities in monitoring page', async () => {
+  describe('Sort List of products with combinations but without available quantities in monitoring page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -188,5 +187,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
+  bulkDeleteProductsTest(tableName, baseContext);
 });

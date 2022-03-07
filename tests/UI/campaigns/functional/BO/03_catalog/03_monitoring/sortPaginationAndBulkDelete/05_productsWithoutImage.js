@@ -12,34 +12,33 @@ const files = require('@utils/files');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutPrice';
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutImage';
 
 let browserContext;
 let page;
 
 let numberOfProductsIngrid = 0;
-const tableName = 'product_without_price';
-const prefixImportedProducts = 'todelete';
+const tableName = 'product_without_image';
 
 // Products file name
 const productsFile = 'products.csv';
 
 // Import Data
-const {ProductsData} = require('@data/import/disabledProducts');
+const {ProductsData} = require('@data/import/productsWithoutQuantities');
 
 /*
-Create 11 new products without price
-Sort list of products without price in monitoring page
+Create 11 new products without image
+Sort list of products without image in monitoring page
 Pagination next and previous
  */
-describe('BO - Catalog - Monitoring : Sort and pagination list of products without price', async () => {
+describe('BO - Catalog - Monitoring : Sort and pagination list of products without image', async () => {
   // Pre-condition: Import list of products
   importFileTest(productsFile, ProductsData.entity, baseContext);
 
@@ -57,8 +56,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     await files.deleteFile(productsFile);
   });
 
-  // 1 - Sort products without price
-  describe('sort List of products without price', async () => {
+  // 1 - Sort products without image table
+  describe('Sort List of products without image in monitoring page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -89,6 +88,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
       {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
       {args: {testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'desc'}},
       {args: {testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByEnabledAsc', sortBy: 'active', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByEnabledDesc', sortBy: 'active', sortDirection: 'desc'}},
       {
         args: {
           testIdentifier: 'sortByIdAsc', sortBy: 'id_product', sortDirection: 'asc', isFloat: true,
@@ -170,5 +171,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
+  bulkDeleteProductsTest(tableName, baseContext);
 });

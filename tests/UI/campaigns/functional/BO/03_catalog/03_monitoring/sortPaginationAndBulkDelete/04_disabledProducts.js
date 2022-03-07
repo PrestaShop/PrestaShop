@@ -12,7 +12,7 @@ const files = require('@utils/files');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -61,7 +61,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
   });
 
   // 1 - Sort disabled products
-  describe('sort List of disabled products', async () => {
+  describe('Sort List of disabled products', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -173,5 +173,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of disabled produ
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
+  bulkDeleteProductsTest(tableName, baseContext);
 });

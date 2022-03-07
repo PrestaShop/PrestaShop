@@ -176,6 +176,35 @@ class Monitoring extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
+  /**
+   * Bulk delete elements in table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to delete elements from it
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteElementsInTable(page, tableName) {
+    // Select all elements in table
+    await Promise.all([
+      page.$eval(`${this.gridPanel(tableName)} .js-bulk-action-select-all`, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.gridPanel(tableName)} .js-bulk-actions-btn:not([disabled])`),
+    ]);
+
+    // Click on bulk actions
+    await Promise.all([
+      page.click(`${this.gridPanel(tableName)} .js-bulk-actions-btn`),
+      this.waitForVisibleSelector(page, `#${tableName}_grid_bulk_action_delete_selection`),
+    ]);
+
+    // Click on delete selected and wait for modal
+    await Promise.all([
+      page.$eval(`#${tableName}_grid_bulk_action_delete_selection`, el => el.click()),
+      this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(tableName));
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
   /* Categories methods */
 
   /**

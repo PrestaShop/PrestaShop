@@ -12,20 +12,20 @@ const files = require('@utils/files');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
-const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutDescription';
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutPrice';
 
 let browserContext;
 let page;
+
 let numberOfProductsIngrid = 0;
-const tableName = 'product_without_description';
-const prefixImportedProducts = 'todelete';
+const tableName = 'product_without_price';
 
 // Products file name
 const productsFile = 'products.csv';
@@ -34,15 +34,11 @@ const productsFile = 'products.csv';
 const {ProductsData} = require('@data/import/disabledProducts');
 
 /*
-Pre-condition
-- Import list of products without image
-Scenario
-- Sort list of products without description in monitoring page
-- Pagination next and previous
-Post-condition
-- Delete created products
+Create 11 new products without price
+Sort list of products without price in monitoring page
+Pagination next and previous
  */
-describe('BO - Catalog - Monitoring : Sort and pagination list of products without description', async () => {
+describe('BO - Catalog - Monitoring : Sort and pagination list of products without price', async () => {
   // Pre-condition: Import list of products
   importFileTest(productsFile, ProductsData.entity, baseContext);
 
@@ -60,8 +56,8 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     await files.deleteFile(productsFile);
   });
 
-  // 1 - Sort products without description
-  describe('sort List of products without description', async () => {
+  // 1 - Sort products without price
+  describe('Sort List of products without price', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -173,5 +169,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
+  bulkDeleteProductsTest(tableName, baseContext);
 });
