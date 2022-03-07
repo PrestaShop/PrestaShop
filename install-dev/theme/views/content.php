@@ -117,7 +117,7 @@
           <?php foreach ($category->modules as $module): ?>
             <dd>
               <label>
-                <input value="<?php echo $module->get('name') ?>" type="checkbox" name="modules[]" <?php if ($this->session->content_modules !== null && in_array($module->get('name'), $this->session->content_modules)): ?>checked="checked"<?php endif; ?> autocomplete="off" />
+                <input value="<?php echo $module->get('name') ?>" type="checkbox" name="modules[]" <?php if ($this->session->content_modules === null || is_array($this->session->content_modules) && in_array($module->get('name'), $this->session->content_modules)): ?>checked="checked"<?php endif; ?> autocomplete="off" />
                 <?php echo $module->get('displayName') ?>
               </label>
             </dd>

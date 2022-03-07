@@ -71,7 +71,9 @@ class InstallControllerHttpContent extends InstallControllerHttp implements Http
         $this->model = new Install();
         $this->modules = $this->model->getModulesOnDisk();
         $this->themes = $this->model->getThemesOnDisk();
-        $this->session->content_install_fixtures = true;
+        if ($this->session->content_install_fixtures === null) {
+            $this->session->content_install_fixtures = true;
+        }
     }
 
     /**
@@ -95,7 +97,9 @@ class InstallControllerHttpContent extends InstallControllerHttp implements Http
 
         $this->session->moduleAction = $moduleAction;
         $this->session->content_theme = Tools::getValue('theme', null);
-        $this->session->content_install_fixtures = (bool) Tools::getValue('install-fixtures', true);
+        if (Tools::getIsset('install-fixtures')) {
+            $this->session->content_install_fixtures = (bool) Tools::getValue('install-fixtures', true);
+        }
     }
 
     /**
