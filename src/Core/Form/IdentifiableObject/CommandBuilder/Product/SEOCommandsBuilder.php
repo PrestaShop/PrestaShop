@@ -28,9 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Builder used to build UpdateSEO
@@ -45,36 +47,53 @@ class SEOCommandsBuilder implements ProductCommandsBuilderInterface
 
         $seoData = $formData['seo'] ?? [];
         $redirectionData = $formData['seo']['redirect_option'] ?? [];
+
+        $commands = [];
         $command = new UpdateProductSeoCommand($productId->getValue());
-        $commands = [$command];
+        $seoUpdate = false;
 
         if (isset($seoData['meta_title'])) {
             $command->setLocalizedMetaTitles($seoData['meta_title']);
+            $seoUpdate = true;
         }
         if (isset($seoData['meta_description'])) {
             $command->setLocalizedMetaDescriptions($seoData['meta_description']);
+            $seoUpdate = true;
         }
         if (isset($seoData['link_rewrite'])) {
             $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
+            $seoUpdate = true;
         }
 
         if (isset($redirectionData['type'])) {
             $targetId = (int) ($redirectionData['target']['id'] ?? 0);
             $command->setRedirectOption($redirectionData['type'], $targetId);
+            $seoUpdate = true;
         }
 
-        if (!empty($seoData['tags'])) {
-            $parsedTags = [];
-            if (is_array($seoData['tags'])) {
+        // Only return the command if some updates have been detected
+        if ($seoUpdate) {
+            $commands[] = $command;
+        }
+
+        if (isset($seoData['tags'])) {
+            if (!empty($seoData['tags'])) {
+                if (!is_array($seoData['tags'])) {
+                    throw new InvalidArgumentException('Expected tags to be a localized array');
+                }
+
+                $parsedTags = [];
                 foreach ($seoData['tags'] as $langId => $rawTags) {
                     $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
                 }
-            }
 
-            $commands[] = new SetProductTagsCommand(
-                $productId->getValue(),
-                $parsedTags
-            );
+                $commands[] = new SetProductTagsCommand(
+                    $productId->getValue(),
+                    $parsedTags
+                );
+            } else {
+                $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
+            }
         }
 
         return $commands;
