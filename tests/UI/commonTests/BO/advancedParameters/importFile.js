@@ -21,10 +21,11 @@ let page;
 /**
  * Function to import file
  * @param fileName {string} File name to import
+ * @param entityToImport {string} Value to import
  * @param baseContext {string} String to identify the test
  */
-function importFileTest(fileName, baseContext = 'commonTests-importFileTest') {
-  describe(`PRE-TEST: Import file ${fileName}`, async () => {
+function importFileTest(fileName, entityToImport, baseContext = 'commonTests-importFileTest') {
+  describe(`PRE-TEST: Import file '${fileName}'`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -57,8 +58,12 @@ function importFileTest(fileName, baseContext = 'commonTests-importFileTest') {
     it(`should import '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      const uploadSuccessText = await importPage.uploadFile(page, 'Categories', fileName);
+      const uploadSuccessText = await importPage.uploadFile(page, entityToImport, fileName);
       await expect(uploadSuccessText).contain(fileName);
+
+      if (await importPage.isForceAllIDNumbersVisible(page)) {
+        await importPage.setForceAllIDNumbers(page);
+      }
     });
 
     it('should go to next import file step', async function () {

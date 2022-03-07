@@ -7,99 +7,78 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
+const files = require('@utils/files');
 
-// Import login steps
+// Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
+const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
-
-// Import data
-const ProductFaker = require('@data/faker/product');
 
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withCombinationsWithoutQuantities';
 
 let browserContext;
 let page;
-let numberOfProducts = 0;
 let numberOfProductsIngrid = 0;
 const tableName = 'no_qty_product_with_combination';
+const prefixImportedProducts = 'todelete';
+
+// Products file name
+const productsFile = 'products.csv';
+
+// Combinations file name
+const combinationsFile = 'combinations.csv';
+
+// Import Data
+const {ProductsData} = require('@data/import/disabledProducts');
+const {CombinationsData} = require('@data/import/combinations');
 
 /*
-Create 11 new products with combinations but without available quantities
-Sort list of products with combinations but without available quantities in monitoring page
-Pagination next and previous
+Pre-condition
+- Import list of products
+- Import list of combinations
+Scenario
+- Sort list of products with combinations but without available quantities in monitoring page
+- Pagination next and previous
+Post-condition
+- Delete created products
  */
 describe('BO - Catalog - Monitoring : Sort and pagination list of products with '
   + 'combinations but without available quantities', async () => {
+  // Pre-condition: Import list of products
+  importFileTest(productsFile, ProductsData.entity, baseContext);
+
+  // Pre-condition: Import list of combinations
+  importFileTest(combinationsFile, CombinationsData.entity, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all products data
+    await files.createCSVFile('.', productsFile, ProductsData);
+    // Create csv file with all combinations data
+    await files.createCSVFile('.', combinationsFile, CombinationsData);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });
-
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to \'catalog > products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-
-    await dashboardPage.closeSfToolBar(page);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
-
-  // 1 : Create 11 products with combinations but without available quantities
-  const creationTests = new Array(11).fill(0, 0, 11);
-  describe('Create 11 products with combinations but without available quantities', async () => {
-    creationTests.forEach((test, index) => {
-      const createProductData = new ProductFaker({name: `todelete${index}`, type: 'Standard product', quantity: 0});
-      it(`should create product n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
-
-        await productsPage.goToAddProductPage(page);
-
-        await addProductPage.createEditBasicProduct(page, createProductData);
-
-        const createProductMessage = await addProductPage.setCombinationsInProduct(page, createProductData);
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-      });
-
-      it('should go to catalog page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToCatalog${index}`, baseContext);
-
-        await addProductPage.goToCatalogPage(page);
-
-        const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
-      });
-    });
+    // Delete products file
+    await files.deleteFile(productsFile);
+    // Delete combinations file
+    await files.deleteFile(combinationsFile);
   });
 
   // 2 : Sort products with combinations but without available quantities
   describe('sort List of products with combinations but without available quantities in monitoring page', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
@@ -208,48 +187,6 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
     });
   });
 
-  // 4 : Delete the created products
-  describe('Delete the created products with combinations but without available quantities', async () => {
-    const deletionTests = new Array(11).fill(0, 0, 11);
-    deletionTests.forEach((test, index) => {
-      it('should filter list of products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
-
-        await monitoringPage.filterTable(page, tableName, 'input', 'name', 'toDelete');
-
-        const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
-        await expect(textColumn).to.contains('TODELETE');
-      });
-
-      it(`should delete product n°${index + 1} from monitoring page`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
-
-        const textResult = await monitoringPage.deleteProductInGrid(page, tableName, 1);
-        await expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-
-        const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
-      });
-
-      it('should reset filter and check number of products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
-
-        const numberOfCategoriesAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfProducts + 11 - index - 1);
-      });
-
-      it('should go to \'catalog > monitoring\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToMonitoringPageToDelete${index}`, baseContext);
-
-        await productsPage.goToSubMenu(
-          page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.monitoringLink,
-        );
-
-        const pageTitle = await monitoringPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(monitoringPage.pageTitle);
-      });
-    });
-  });
+  // Post-condition: Delete created products
+  bulkDeleteProductsTest(prefixImportedProducts, baseContext);
 });

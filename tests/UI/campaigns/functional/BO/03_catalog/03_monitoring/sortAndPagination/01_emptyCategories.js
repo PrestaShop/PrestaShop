@@ -45,7 +45,7 @@ Post-condition:
  */
 describe('BO - Catalog - Monitoring : Sort and pagination list of empty categories', async () => {
   // Pre-condition: Import empty category list
-  importFileTest(fileName, baseContext);
+  importFileTest(fileName, Data.entity, baseContext);
 
   // before and after functions
   before(async function () {
