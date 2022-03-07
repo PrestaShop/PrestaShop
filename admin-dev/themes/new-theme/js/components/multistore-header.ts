@@ -100,6 +100,9 @@ const initMultistoreHeader = () => {
    */
   function updateLinksAnchor(): void {
     function updateLinkAnchor(shopLink: HTMLLinkElement) {
+      if (!shopLink.hasAttribute('href')) {
+        return;
+      }
       const updatedLink = shopLink.href.replace(/#(.*)$/, '') + window.location.hash;
       shopLink.setAttribute('href', updatedLink);
     }
