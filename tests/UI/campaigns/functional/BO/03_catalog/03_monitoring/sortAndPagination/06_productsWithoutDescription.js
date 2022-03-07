@@ -16,18 +16,13 @@ const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeletePr
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
-
-// Import data
-const ProductFaker = require('@data/faker/product');
 
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_productsWithoutDescription';
 
 let browserContext;
 let page;
-let numberOfProducts = 0;
 let numberOfProductsIngrid = 0;
 const tableName = 'product_without_description';
 const prefixImportedProducts = 'todelete';
