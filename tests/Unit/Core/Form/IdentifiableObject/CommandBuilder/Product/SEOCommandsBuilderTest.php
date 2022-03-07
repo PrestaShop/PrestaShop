@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
@@ -58,14 +59,13 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         yield [
             [
                 'seo' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
         $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
@@ -198,6 +198,24 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $localizedTagsData = [
+            1 => null,
+            2 => null,
+        ];
+        $localizedTags = [
+            1 => [],
+            2 => [],
+        ];
+        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
+        yield [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $localizedTagsData = [
             1 => 'coton,bonbon',
             2 => null,
         ];
@@ -209,16 +227,30 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'seo' => [
-                    'redirect_option' => [
-                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-                        'target' => [
-                            'id' => 51,
-                        ],
-                    ],
                     'tags' => $localizedTagsData,
                 ],
             ],
-            [$command, $tagCommands],
+            [$tagCommands],
+        ];
+
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield [
+            [
+                'seo' => [
+                    'tags' => [],
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield [
+            [
+                'seo' => [
+                    'tags' => '',
+                ],
+            ],
+            [$tagCommands],
         ];
     }
 
@@ -227,6 +259,8 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $builder = new SEOCommandsBuilder();
 
         $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected tags to be a localized array');
+
         $builder->buildCommands($this->getProductId(), [
             'seo' => [
                 'tags' => 'cotton, candy',
