@@ -39,6 +39,7 @@
 
 <script lang="ts">
   import Vue from 'vue';
+  import ComponentsMap from '@components/components-map';
   import Breadcrumb from './breadcrumb.vue';
   import Tabs from './tabs.vue';
 
@@ -50,6 +51,10 @@
       .find('.toolbar-icons');
   }
 
+  function getNotificationsElements() {
+    return $(`#ajax_confirmation, #${ComponentsMap.contextualNotification.messageBoxId}`);
+  }
+
   export default Vue.extend({
     components: {
       Breadcrumb,
@@ -59,6 +64,9 @@
       // move the toolbar buttons to this header
       const toolbarButtons = getOldHeaderToolbarButtons();
       toolbarButtons.insertAfter($(this.$el).find('.title-row > .title'));
+
+      const notifications = getNotificationsElements();
+      notifications.insertAfter($(this.$el));
 
       // signal header change (so size can be updated)
       const event = $.Event('vueHeaderMounted', {
