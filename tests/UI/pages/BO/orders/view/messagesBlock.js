@@ -120,7 +120,7 @@ class MessagesBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<void>}
    */
   async clickOnConfigureMessageLink(page) {
-    await this.waitForSelectorAndClick(page, this.configureLink);
+    await this.clickAndWaitForNavigation(page, this.configureLink);
   }
 }
 
