@@ -519,9 +519,9 @@ class FrontControllerCore extends Controller
     protected function assignGeneralPurposeVariables()
     {
         if (Validate::isLoadedObject($this->context->cart)) {
-            $cart_presentation = $this->cart_presenter->present($this->context->cart);
+            $presentedCart = $this->cart_presenter->present($this->context->cart);
         } else {
-            $cart_presentation = $this->cart_presenter->present(new Cart());
+            $presentedCart = $this->cart_presenter->present(new Cart());
         }
 
         $templateVars = [
