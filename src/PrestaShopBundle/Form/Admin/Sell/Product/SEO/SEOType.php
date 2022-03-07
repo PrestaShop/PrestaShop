@@ -176,7 +176,7 @@ class SEOType extends TranslatorAwareType
                 'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product.', 'Admin.Catalog.Feature'),
                 'help' => sprintf(
                     '%s %s',
-                    $this->trans('Separate each tag with a comma or press the Enter key.', 'Admin.Shopparameters.Help'),
+                    $this->trans('Separate each tag with a comma or press the Enter key.', 'Admin.Catalog.Help'),
                     $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
                 ),
                 'external_link' => [
