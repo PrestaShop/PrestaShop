@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -35,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Builder used to build UpdateSEO
@@ -82,18 +84,24 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
             new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
         );
 
-        if (!empty($seoData['tags'])) {
-            $parsedTags = [];
-            if (is_array($seoData['tags'])) {
+        if (isset($seoData['tags'])) {
+            if (!empty($seoData['tags'])) {
+                if (!is_array($seoData['tags'])) {
+                    throw new InvalidArgumentException('Expected tags to be a localized array');
+                }
+
+                $parsedTags = [];
                 foreach ($seoData['tags'] as $langId => $rawTags) {
                     $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
                 }
-            }
 
-            $commands[] = new SetProductTagsCommand(
-                $productId->getValue(),
-                $parsedTags
-            );
+                $commands[] = new SetProductTagsCommand(
+                    $productId->getValue(),
+                    $parsedTags
+                );
+            } else {
+                $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
+            }
         }
 
         return $commands;
