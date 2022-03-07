@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockExcept
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -140,6 +141,10 @@ class ProductStockUpdater
      */
     public function resetStock(ProductId $productId, ShopConstraint $shopConstraint): void
     {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
         if ($shopConstraint->forAllShops()) {
             $shops = $this->productRepository->getAssociatedShopIds($productId);
         } else {
