@@ -38,7 +38,7 @@ class StoreCore extends ObjectModel
     /** @var int State id */
     public $id_state;
 
-    /** @var string|array of Name */
+    /** @var string|array<string> Name */
     public $name;
 
     /** @var string|array of Address first line */
