@@ -29,7 +29,7 @@ Feature: store
       | longitude | -0.370797              |
       | country   | France                 |
     Then stores "StorePau, StoreSerresCastet" should be enabled
-    When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
-    Then stores "StorePau, StoreSerresCastet" should be enabled
     When I disable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be disabled
+    When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
+    Then stores "StorePau, StoreSerresCastet" should be enabled
