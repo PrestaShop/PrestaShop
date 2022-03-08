@@ -64,7 +64,7 @@ class Import extends BOBasePage {
   }
 
   /**
-   * Is force all id numbers
+   * Is force all id numbers visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
