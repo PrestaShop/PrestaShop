@@ -28,27 +28,79 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Addon\Module;
 
+use Employee;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\HookManager;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
+use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
+use Symfony\Component\Translation\Translator;
 
 class ModuleManagerTest extends TestCase
 {
     const UNINSTALLED_MODULE = 'uninstalled-module';
     const INSTALLED_MODULE = 'installed-module';
 
+    /**
+     * @var ModuleManager|null
+     */
     private $moduleManager;
-    private $adminModuleProviderS;
-    private $moduleProviderS; // S means "Stub"
+
+    /**
+     * @var AdminModuleDataProvider|MockObject|null
+     */
+    private $adminModuleProviderS; // S means "Stub"
+
+    /**
+     * @var ModuleDataProvider|MockObject|null
+     */
+    private $moduleProviderS;
+
+    /**
+     * @var ModuleDataUpdater|MockObject|null
+     */
     private $moduleUpdaterS;
+
+    /**
+     * @var ModuleRepository|MockObject|null
+     */
     private $moduleRepositoryS;
+
+    /**
+     * @var ModuleZipManager|MockObject|null
+     */
     private $moduleZipManagerS;
+
+    /**
+     * @var Translator|MockObject|null
+     */
     private $translatorS;
+
+    /**
+     * @var NullDispatcher|MockObject|null
+     */
     private $dispatcherS;
+
+    /**
+     * @var Employee|MockObject|null
+     */
     private $employeeS;
+
+    /**
+     * @var CacheClearerInterface|MockObject|null
+     */
     private $cacheClearerS;
+
+    /**
+     * @var HookManager|MockObject|null
+     */
     private $hookManagerS;
 
     protected function setUp(): void
@@ -179,7 +231,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockAdminModuleProvider(): void
     {
-        $this->adminModuleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider')
+        $this->adminModuleProviderS = $this->getMockBuilder(AdminModuleDataProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -204,7 +256,7 @@ class ModuleManagerTest extends TestCase
                 'configure', self::UNINSTALLED_MODULE, false,
             ],
         ];
-        $this->moduleProviderS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider')
+        $this->moduleProviderS = $this->getMockBuilder(ModuleDataProvider::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -240,7 +292,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockModuleUpdater(): void
     {
-        $this->moduleUpdaterS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater')
+        $this->moduleUpdaterS = $this->getMockBuilder(ModuleDataUpdater::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->moduleUpdaterS
@@ -253,7 +305,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockModuleRepository(): void
     {
-        $moduleS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\Module')
+        $moduleS = $this->getMockBuilder(Module::class)
             ->setConstructorArgs([[], [], []])
             ->getMock();
         $moduleS
@@ -284,7 +336,7 @@ class ModuleManagerTest extends TestCase
             ->method('onMobileEnable')
             ->willReturn(true);
 
-        $this->moduleRepositoryS = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
+        $this->moduleRepositoryS = $this->getMockBuilder(ModuleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -295,7 +347,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockModuleZipManager(): void
     {
-        $this->moduleZipManagerS = $this->getMockBuilder('PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager')
+        $this->moduleZipManagerS = $this->getMockBuilder(ModuleZipManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -309,7 +361,7 @@ class ModuleManagerTest extends TestCase
 
     private function mockTranslator(): void
     {
-        $this->translatorS = $this->getMockBuilder('Symfony\Component\Translation\Translator')
+        $this->translatorS = $this->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -338,7 +390,7 @@ class ModuleManagerTest extends TestCase
     private function mockEmployee(): void
     {
         /* this is a super admin */
-        $this->employeeS = $this->getMockBuilder('Employee')
+        $this->employeeS = $this->getMockBuilder(Employee::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -357,5 +409,6 @@ class ModuleManagerTest extends TestCase
         $this->translatorS = null;
         $this->dispatcherS = null;
         $this->employeeS = null;
+        $this->hookManagerS = null;
     }
 }

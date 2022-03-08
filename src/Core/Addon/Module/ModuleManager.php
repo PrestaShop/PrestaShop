@@ -296,7 +296,7 @@ class ModuleManager implements AddonManagerInterface
             return $this->upgrade($name, 'latest', $source);
         }
 
-        // The module is not in PS modules folder and no ZIP is given as source
+        // The module is not in modules folder and no ZIP is given as source
         // We try to retrieve the module's zip from another module (marketplace)
         if (!$this->moduleProvider->isOnDisk($name) && empty($source)) {
             // Give a chance to the other modules (like marketplace) to download the module
