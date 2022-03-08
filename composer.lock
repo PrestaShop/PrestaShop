@@ -5223,24 +5223,25 @@
         },
         {
             "name": "prestashop/decimal",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/decimal.git",
-                "reference": "188028580f4b551c126d1d723578f3ee88008e95"
+                "reference": "b5afdcc4b03140f838bb7b256aec6c21fd83951b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/188028580f4b551c126d1d723578f3ee88008e95",
-                "reference": "188028580f4b551c126d1d723578f3ee88008e95",
+                "url": "https://api.github.com/repos/PrestaShop/decimal/zipball/b5afdcc4b03140f838bb7b256aec6c21fd83951b",
+                "reference": "b5afdcc4b03140f838bb7b256aec6c21fd83951b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=7.2"
             },
             "require-dev": {
-                "codacy/coverage": "dev-master",
-                "phpunit/phpunit": "4.*"
+                "phpstan/phpstan": "^0.12.99",
+                "phpunit/phpunit": "8.*",
+                "prestashop/php-dev-tools": "^4.1"
             },
             "type": "library",
             "autoload": {
@@ -5256,10 +5257,6 @@
                 {
                     "name": "PrestaShop SA",
                     "email": "contact@prestashop.com"
-                },
-                {
-                    "name": "Pablo Borowicz",
-                    "email": "pablo.borowicz@prestashop.com"
                 }
             ],
             "description": "Object-oriented wrapper/shim for BC Math PHP extension. Allows for arbitrary-precision math operations.",
@@ -5273,9 +5270,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/decimal/issues",
-                "source": "https://github.com/PrestaShop/decimal/tree/1.4.0"
+                "source": "https://github.com/PrestaShop/decimal/tree/1.5.0"
             },
-            "time": "2020-10-08T07:14:07+00:00"
+            "time": "2022-02-02T09:04:37+00:00"
         },
         {
             "name": "prestashop/graphnvd3",
