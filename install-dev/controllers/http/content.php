@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 use PrestaShopBundle\Install\Install;
 use Symfony\Component\Yaml\Yaml;
 use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
@@ -157,7 +159,7 @@ class InstallControllerHttpContent extends InstallControllerHttp implements Http
         return $a->get('displayName') <=> $b->get('displayName');
     }
 
-    protected function findModuleCategory($module, $categories)
+    protected function findModuleCategory(ArrayFinder $module, array $categories)
     {
         $tab = $module->get('tab');
         if (!empty($tab)) {
