@@ -1,6 +1,4 @@
 require('module-alias/register');
-
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -19,60 +17,62 @@ const dashboardPage = require('@pages/BO/dashboard');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
-const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withCombinationsWithoutQuantities';
-
-let browserContext;
-let page;
-let numberOfProductsIngrid = 0;
-const tableName = 'no_qty_product_with_combination';
-
-// Products file name
-const productsFile = 'products.csv';
-
-// Combinations file name
-const combinationsFile = 'combinations.csv';
-
 // Import Data
 const {ProductsData} = require('@data/import/disabledProducts');
 const {CombinationsData} = require('@data/import/combinations');
 
+// Test context
+const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withCombinationsWithoutQuantities';
+
+let browserContext;
+let page;
+
+// Table name from monitoring page
+const tableName = 'no_qty_product_with_combination';
+
+// Variable used to create products csv file
+const productFileName = 'products.csv';
+
+// Variable used to create combinations csv file
+const combinationsFileName = 'combinations.csv';
+
 /*
-Pre-condition
+Pre-condition:
 - Import list of products
 - Import list of combinations
-Scenario
+Scenario:
 - Sort list of products with combinations but without available quantities in monitoring page
 - Pagination next and previous
-Post-condition
-- Delete created products
+Post-condition:
+- Delete imported products from monitoring page
  */
 describe('BO - Catalog - Monitoring : Sort and pagination list of products with '
   + 'combinations but without available quantities', async () => {
   // Pre-condition: Import list of products
-  importFileTest(productsFile, ProductsData.entity, baseContext);
+  importFileTest(productFileName, ProductsData.entity, baseContext);
 
   // Pre-condition: Import list of combinations
-  importFileTest(combinationsFile, CombinationsData.entity, baseContext);
+  importFileTest(combinationsFileName, CombinationsData.entity, baseContext);
 
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
     // Create csv file with all products data
-    await files.createCSVFile('.', productsFile, ProductsData);
+    await files.createCSVFile('.', productFileName, ProductsData);
     // Create csv file with all combinations data
-    await files.createCSVFile('.', combinationsFile, CombinationsData);
+    await files.createCSVFile('.', combinationsFileName, CombinationsData);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
     // Delete products file
-    await files.deleteFile(productsFile);
+    await files.deleteFile(productFileName);
     // Delete combinations file
-    await files.deleteFile(combinationsFile);
+    await files.deleteFile(combinationsFileName);
   });
 
-  // 1-  Sort products with combinations but without available quantities
+  // 1 - Sort products with combinations but without available quantities
   describe('Sort List of products with combinations but without available quantities in monitoring page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -89,9 +89,13 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
 
       const pageTitle = await monitoringPage.getPageTitle(page);
       await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+    });
 
-      numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfProductsIngrid).to.be.at.least(1);
+    it('should check that the number of imported products is greater than 10', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      const numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
+      await expect(numberOfProductsIngrid).to.be.at.least(10);
     });
 
     const sortTests = [

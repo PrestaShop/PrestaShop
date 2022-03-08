@@ -19,7 +19,7 @@ let browserContext;
 let page;
 
 /**
- * Function to bulk delete lines on table
+ * Function to bulk delete all elements on table
  * @param tableID {string} Table name to bulk delete elements
  * @param baseContext {string} String to identify the test
  */

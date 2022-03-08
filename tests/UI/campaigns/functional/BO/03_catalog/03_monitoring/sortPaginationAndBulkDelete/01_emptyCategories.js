@@ -1,6 +1,4 @@
 require('module-alias/register');
-
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
@@ -22,16 +20,19 @@ const monitoringPage = require('@pages/BO/catalog/monitoring');
 // Import Data
 const {Data} = require('@data/import/categories');
 
+// Test context
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_emptyCategories';
 
 let browserContext;
 let page;
-let numberOfEmptyCategories = 0;
+
+// Table name from monitoring page
 const tableName = 'empty_category';
 
-// Variable Used to create csv file
+// Variable used to create empty categories csv file
 const fileName = 'categories.csv';
 
+// Object used to delete imported categories
 const categoryData = {filterBy: 'name', value: 'category'};
 
 /*
@@ -41,7 +42,7 @@ Scenario:
 - Sort list of empty categories
 - Pagination next and previous
 Post-condition:
-- Delete created categories
+- Delete imported categories from category page
  */
 describe('BO - Catalog - Monitoring : Sort and pagination list of empty categories', async () => {
   // Pre-condition: Import empty category list
@@ -78,9 +79,13 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of empty categori
 
       const pageTitle = await monitoringPage.getPageTitle(page);
       await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+    });
 
-      numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
-      await expect(numberOfEmptyCategories).to.be.at.least(1);
+    it('should check that the number of imported categories is greater than 10', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfCategories', baseContext);
+
+      const numberOfEmptyCategories = await monitoringPage.resetAndGetNumberOfLines(page, 'empty_category');
+      await expect(numberOfEmptyCategories).to.be.at.least(10);
     });
 
     const sortTests = [
