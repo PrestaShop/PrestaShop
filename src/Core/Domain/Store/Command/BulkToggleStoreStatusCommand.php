@@ -41,7 +41,7 @@ class BulkToggleStoreStatusCommand
     private $expectedStatus;
 
     /**
-     * @var array<int, storeId>
+     * @var array<int, StoreId>
      */
     private $storeIds;
 
@@ -69,7 +69,15 @@ class BulkToggleStoreStatusCommand
     private function setStoreIds(array $storeIds): void
     {
         foreach ($storeIds as $storeId) {
-            $this->$storeIds[] = new StoreId((int) $storeId);
+            $this->storeIds[] = new StoreId((int) $storeId);
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus(): bool
+    {
+        return $this->expectedStatus;
     }
 }

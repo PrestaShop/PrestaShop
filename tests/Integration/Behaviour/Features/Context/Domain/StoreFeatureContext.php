@@ -32,12 +32,24 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use RuntimeException;
 use Store;
+use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
     private const DUMMY_STORE_ID = 1;
+
+    /**
+     * @var int default shop id from configs
+     */
+    private $defaultLangId;
+
+    public function __construct()
+    {
+        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
+        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
+    }
 
     /**
      * @When I toggle :reference
@@ -66,7 +78,8 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $storeIds[$storeReference] = (int) $store->id;
         }
 
-        $this->getCommandBus()->handle(new BulkToggleStoreStatusCommand($expectedStatus, $storeIds));
+        $bulkToggleCommand = new BulkToggleStoreStatusCommand($expectedStatus, $storeIds);
+        $this->getCommandBus()->handle($bulkToggleCommand);
 
         foreach ($storeIds as $reference => $id) {
             SharedStorage::getStorage()->set($reference, new Store($id));
@@ -93,7 +106,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      * @param string $storeReferences
      * @param string $expectedStatus
      */
-    public function assertMultipleStatesStatus(string $storeReferences, string $expectedStatus): void
+    public function assertMultipleStoreStatus(string $storeReferences, string $expectedStatus): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
             $this->assertStatus($storeReference, $expectedStatus);
