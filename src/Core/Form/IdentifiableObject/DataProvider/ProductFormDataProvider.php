@@ -179,6 +179,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
+            'specifications' => [
+                'condition' => ProductCondition::NEW,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
@@ -215,7 +218,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'visibility' => [
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
-                'condition' => ProductCondition::NEW,
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
@@ -346,6 +348,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractSpecificationsData(ProductForEditing $productForEditing): array
     {
         $details = $productForEditing->getDetails();
+        $options = $productForEditing->getOptions();
 
         return [
             'references' => [
@@ -357,6 +360,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'features' => $this->extractFeatureValues($productForEditing->getProductId()),
             'attachments' => $this->extractAttachmentsData($productForEditing),
+            'show_condition' => $options->showCondition(),
+            'condition' => $options->getCondition(),
             'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
@@ -561,8 +566,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'show_condition' => $options->showCondition(),
-            'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }

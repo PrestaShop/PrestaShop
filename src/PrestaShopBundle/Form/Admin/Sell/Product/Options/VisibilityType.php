@@ -95,7 +95,7 @@ class VisibilityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_subtitle' => $this->trans('Where do you want your product to appear?', 'Admin.Catalog.Feature'),
             'required' => false,
             'columns_number' => 4,

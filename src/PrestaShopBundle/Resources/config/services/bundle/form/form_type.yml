@@ -1362,6 +1362,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
     tags:
       - { name: form.type }
 
@@ -1580,8 +1582,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
     tags:
       - { name: form.type }
 

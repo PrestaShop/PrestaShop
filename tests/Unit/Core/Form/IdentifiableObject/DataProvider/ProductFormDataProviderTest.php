@@ -115,6 +115,9 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
+            'specifications' => [
+                'condition' => ProductCondition::NEW,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
@@ -151,7 +154,6 @@ class ProductFormDataProviderTest extends TestCase
                 'visibility' => [
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
-                'condition' => ProductCondition::NEW,
             ],
             'footer' => [
                 'active' => false,
@@ -182,6 +184,9 @@ class ProductFormDataProviderTest extends TestCase
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
+            'specifications' => [
+                'condition' => ProductCondition::NEW,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
@@ -218,7 +223,6 @@ class ProductFormDataProviderTest extends TestCase
                 'visibility' => [
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
-                'condition' => ProductCondition::NEW,
             ],
             'footer' => [
                 'active' => true,
@@ -755,14 +759,15 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
         $expectedOutputData['options']['visibility']['show_price'] = false;
-        $expectedOutputData['options']['condition'] = ProductCondition::USED;
-        $expectedOutputData['options']['show_condition'] = true;
 
         $expectedOutputData['specifications']['references']['isbn'] = 'isbn_2';
         $expectedOutputData['specifications']['references']['upc'] = 'upc_2';
         $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
         $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
         $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+
+        $expectedOutputData['specifications']['condition'] = ProductCondition::USED;
+        $expectedOutputData['specifications']['show_condition'] = true;
 
         $expectedOutputData['specifications']['attachments']['attached_files'] = [
             [
@@ -1454,6 +1459,8 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'features' => [],
                 'attachments' => [],
+                'show_condition' => false,
+                'condition' => ProductCondition::NEW,
                 'customizations' => [],
             ],
             'stock' => [
@@ -1528,8 +1535,6 @@ class ProductFormDataProviderTest extends TestCase
                     'show_price' => true,
                     'online_only' => false,
                 ],
-                'show_condition' => false,
-                'condition' => ProductCondition::NEW,
                 'suppliers' => [],
             ],
             'footer' => [

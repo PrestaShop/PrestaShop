@@ -89,7 +89,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'condition' => 'new',
                 ],
             ],
@@ -97,12 +97,12 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         ];
 
         $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
-        $command->setShowCondition(false);
+        $command->setShowCondition(true);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'not_handled' => 0,
-                    'show_condition' => 0,
+                    'show_condition' => 1,
                 ],
             ],
             [$command],

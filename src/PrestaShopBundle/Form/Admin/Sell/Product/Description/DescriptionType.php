@@ -110,7 +110,7 @@ class DescriptionType extends TranslatorAwareType
                         ]),
                     ],
                 ],
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'modify_all_shops' => true,
             ])
             ->add('description', TranslatableType::class, [
@@ -132,18 +132,18 @@ class DescriptionType extends TranslatorAwareType
                         ]),
                     ],
                 ],
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'modify_all_shops' => true,
             ])
             ->add('categories', CategoriesType::class, [
                 'label' => $this->trans('Categories', 'Admin.Global'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'product_id' => $productId,
             ])
             ->add('manufacturer', ManufacturerType::class)
             ->add('related_products', EntitySearchInputType::class, [
                 'label' => $this->trans('Related products', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'entry_type' => RelatedProductType::class,
                 'entry_options' => [
                     'block_prefix' => 'related_product',
