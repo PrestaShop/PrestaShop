@@ -79,7 +79,7 @@
     {/block}
 
     {block name='product_ecotax'}
-      {if $product.ecotax.amount > 0}
+      {if !$product.is_virtual && $product.ecotax.amount > 0}
         <p class="price-ecotax">{l s='Including %amount% for ecotax' d='Shop.Theme.Catalog' sprintf=['%amount%' => $product.ecotax.value]}
           {if $product.has_discount}
             {l s='(not impacted by the discount)' d='Shop.Theme.Catalog'}
