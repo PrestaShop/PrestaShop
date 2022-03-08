@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Behat\Gherkin\Node\TableNode;
+use Country;
 use Store;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -49,17 +50,18 @@ class StoreFeatureContext extends AbstractPrestaShopFeatureContext
      * @param string $storeReference
      * @param TableNode $table
      */
-    public function createState(string $storeReference, TableNode $table): void
+    public function createStore(string $storeReference, TableNode $table): void
     {
         $data = $table->getRowsHash();
 
         $store = new Store();
-        $store->name = $data['name'];
+        $store->name = [$this->defaultLangId => $data['name']];
         $store->active = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
-        $store->address1 = $data['address1'];
+        $store->address1 = [$this->defaultLangId => $data['address1']];
         $store->city = $data['city'];
         $store->latitude = (float) $data['latitude'];
         $store->longitude = (float) $data['longitude'];
+        $store->id_country = (int) Country::getIdByName($this->defaultLangId, $data['country']);
         $store->add();
 
         SharedStorage::getStorage()->set($storeReference, new Store($store->id));

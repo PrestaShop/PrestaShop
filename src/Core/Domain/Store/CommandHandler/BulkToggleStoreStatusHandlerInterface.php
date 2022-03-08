@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand
 /**
  * Defines contract for BulkToggleStoreStatusHandler
  */
-interface ToggleStoreStatusHandlerInterface
+interface BulkToggleStoreStatusHandlerInterface
 {
     /**
      * @param BulkToggleStoreStatusCommand $command

@@ -17,17 +17,19 @@ Feature: store
       | enabled   | true                   |
       | address1  | 1 rue de la republique |
       | city      | Pau                    |
-      | latitude  | 1.0                    |
-      | longitude | 1.0                    |
+      | latitude  | 43.2951                |
+      | longitude | -0.370797              |
+      | country   | France                 |
     And I add new store "StoreSerresCastet" with following properties:
       | name      | StoreSerresCastet      |
       | enabled   | true                   |
       | address1  | 1 rue de la foire      |
       | city      | Serres-Castet          |
-      | latitude  | 2.0                    |
-      | longitude | 2.0                    |
+      | latitude  | 43.2951                |
+      | longitude | -0.370797              |
+      | country   | France                 |
+    Then stores "StorePau, StoreSerresCastet" should be enabled
+    When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be enabled
     When I disable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be disabled
-    When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
-    Then stores "StorePau, StoreSerresCastet" should be enabled
