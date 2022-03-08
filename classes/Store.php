@@ -38,10 +38,10 @@ class StoreCore extends ObjectModel
     /** @var int State id */
     public $id_state;
 
-    /** @var string Store name */
+    /** @var mixed string or array of Name */
     public $name;
 
-    /** @var string Address first line */
+    /** @var mixed string or array of Address first line */
     public $address1;
 
     /** @var string Address second line (optional) */
@@ -68,7 +68,7 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
-    /** @var string Note */
+    /** @var mixed string or array of Note */
     public $note;
 
     /** @var string e-mail */
