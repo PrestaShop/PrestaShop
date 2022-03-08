@@ -304,8 +304,14 @@ class ModuleManager implements AddonManagerInterface
                 'actionAdminModuleInstallRetrieveSource',
                 [
                     'name' => $name,
-                ]
+                ],
+                null,
+                true
             );
+
+            if (is_array($sourceZip)) {
+                $sourceZip = array_values($sourceZip)[0];
+            }
 
             // We need to check that the file is actually a module's ZIP and the same module as the one expected
             if (is_file($sourceZip)) {
@@ -413,13 +419,27 @@ class ModuleManager implements AddonManagerInterface
 
         if ($source === null) {
             // Give a chance to the other modules (like marketplace) to retrieve the module source
-            $source = $this->hookManager->exec(
+            $sourceZip = $this->hookManager->exec(
                 'actionAdminModuleUpgradeRetrieveSource',
                 [
                     'name' => $name,
                     'current_version' => $module->get('version'),
-                ]
+                ],
+                null,
+                true
             );
+
+            if (is_array($sourceZip)) {
+                $sourceZip = array_values($sourceZip)[0];
+            }
+
+            // We need to check that the file is actually a module's ZIP and the same module as the one expected
+            if (is_file($sourceZip)) {
+                $moduleInZipName = $this->moduleZipManager->getName($sourceZip);
+                if ($name === $moduleInZipName) {
+                    $source = $sourceZip;
+                }
+            }
         }
 
         if (empty($source)) {
