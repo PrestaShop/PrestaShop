@@ -24,22 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand;
 
 /**
- * Thrown when cannot toggle store status
+ * Defines contract for BulkToggleStoreStatusHandler
  */
-class CannotToggleStoreStatusException extends StoreException
+interface ToggleStoreStatusHandlerInterface
 {
     /**
-     * Thrown when cannot toggle single store status.
+     * @param BulkToggleStoreStatusCommand $command
      */
-    public const SINGLE_TOGGLE = 10;
-
-    /**
-     * Thrown when cannot bulk toggle stores status.
-     */
-    public const BULK_TOGGLE = 20;
+    public function handle(BulkToggleStoreStatusCommand $command): void;
 }
