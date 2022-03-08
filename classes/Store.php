@@ -41,7 +41,7 @@ class StoreCore extends ObjectModel
     /** @var string|array<string> Name */
     public $name;
 
-    /** @var string|array of Address first line */
+    /** @var string|array<string> Address first line */
     public $address1;
 
     /** @var string|array Address second line (optional) */
