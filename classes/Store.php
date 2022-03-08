@@ -68,7 +68,7 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
-    /** @var string|array of Note */
+    /** @var string|array<string> Note */
     public $note;
 
     /** @var string e-mail */
