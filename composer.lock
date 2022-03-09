@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e4bdc9371b78d68882789a15b8724a46",
+    "content-hash": "9799c9c2ddab0b45079c3a61b199a751",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5512,6 +5512,53 @@
                 "source": "https://github.com/PrestaShop/php-dev-tools/tree/v4.0.1"
             },
             "time": "2021-05-10T09:33:33+00:00"
+        },
+        {
+            "name": "prestashop/productcomments",
+            "version": "v5.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/productcomments.git",
+                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/b2586beb1283ee037273a6cab2a911d0379f00a8",
+                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\ProductComment\\": "src/"
+                },
+                "classmap": [
+                    "productcomments.php"
+                ],
+                "exclude-from-classmap": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module productcomments",
+            "homepage": "https://github.com/PrestaShop/productcomments",
+            "support": {
+                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.1"
+            },
+            "time": "2022-02-10T15:06:39+00:00"
         },
         {
             "name": "prestashop/ps_banner",
