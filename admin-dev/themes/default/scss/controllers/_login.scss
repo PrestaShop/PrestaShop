@@ -1,8 +1,3 @@
-@mixin background-image-with-ms($image) {
-  @include background-image($image)
-    background-image: -ms-$image;
-}
-
 #login {
   min-height: 100%;
   padding-bottom: 45px;
@@ -52,9 +47,7 @@
   }
 
   .flip-container {
-    height: 420px;
     margin-top: 115px;
-    transform-style: preserve-3d;
     @include perspective(1000px);
 
     &.flip {
@@ -70,21 +63,16 @@
 
   .flipper {
     position: relative;
-    transform-style: preserve-3d;
     @include transition-duration(0.6s);
     @include transform-style ();
   }
 
   .front,
   .back {
-    position: absolute;
-    top: 0;
     width: 100%;
     padding: 40px;
     transition: 0.6s;
-    transform-style: preserve-3d;
     @include backface-visibility(hidden);
-    @include left(0);
   }
 
   .front {
