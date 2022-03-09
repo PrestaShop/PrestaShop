@@ -109,11 +109,11 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
     public function assertMultipleStoreStatus(string $storeReferences, string $expectedStatus): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $this->assertStatus($storeReference, $expectedStatus);
+            $this->assertStoreStatus($storeReference, $expectedStatus);
         }
     }
 
-    public function assertStatus(string $storeReference, string $expectedStatus): void
+    public function assertStoreStatus(string $storeReference, string $expectedStatus): void
     {
         /** @var Store $store */
         $store = SharedStorage::getStorage()->get($storeReference);
