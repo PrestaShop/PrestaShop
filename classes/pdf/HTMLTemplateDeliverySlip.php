@@ -61,7 +61,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         }
 
         // header informations
-        $this->date = Tools::displayDate($order_invoice->date_add);
+        // The date MUST be the delivery slip date and not the invoice date …
+        // In case of empty date, use the old one …
+        $this->date = Tools::displayDate($order_invoice->delivery_date) ?: Tools::displayDate($order_invoice->date_add);
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
