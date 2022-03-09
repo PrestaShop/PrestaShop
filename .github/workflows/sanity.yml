@@ -27,9 +27,6 @@ jobs:
       - name: Setup Apache
         run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
 
-      - name: Setup Apache
-        run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
-
       - name: Setup MySQL
         uses: mirromutth/mysql-action@v1.1
         with:
