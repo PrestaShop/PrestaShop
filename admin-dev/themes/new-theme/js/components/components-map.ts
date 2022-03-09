@@ -102,4 +102,5 @@ export default {
     messageBoxId: 'content-message-box',
     notificationClass: 'contextual-notification',
   },
+  ajaxConfirmation: '#ajax_confirmation',
 };
