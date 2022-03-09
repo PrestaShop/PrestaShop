@@ -19,6 +19,7 @@ class AddOrder extends BOBasePage {
 
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
+    this.noProductFoundText = 'No products found';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -57,13 +58,10 @@ class AddOrder extends BOBasePage {
 
     // Cart selectors
     this.cartBlock = '#cart-block';
-    this.productSearchInput = '#product-search';
-    this.addProductToCartForm = '#js-add-product-form';
-    this.productResultsSelect = '#product-select';
-    this.productQuantityInput = '#quantity-input';
-    this.addtoCartButton = '#add-product-to-cart-btn';
-    this.productsTable = '#products-table';
     this.ordersTab = '#customer-orders-tab';
+    this.cartErrorBlock = '#js-cart-error-block';
+
+    // Orders table selectors
     this.customerOrdersTable = '#customer-orders-table';
     this.customerOrdersTableBody = `${this.customerOrdersTable} tbody`;
     this.customerOrdersTableRows = `${this.customerOrdersTableBody} tr`;
@@ -71,6 +69,19 @@ class AddOrder extends BOBasePage {
     this.customerOrdersTableColumn = (column, row) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
     this.orderDetailsButton = row => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
     this.orderUseButton = row => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
+
+    // Cart selectors
+    this.productSearchInput = '#product-search';
+    this.noProductFoundAlert = `${this.cartBlock} .js-no-products-found`;
+    this.addProductToCartForm = '#js-add-product-form';
+    this.productResultsSelect = '#product-select';
+    this.productQuantityInput = '#quantity-input';
+    this.addtoCartButton = '#add-product-to-cart-btn';
+    this.productsTable = '#products-table';
+    this.productsTableBody = `${this.productsTable} tbody`;
+    this.productsTableRows = `${this.productsTableBody} tr`;
+    this.productsTableRow = row => `${this.productsTableRows}:nth-child(${row})`;
+    this.productsTableColumn = (column, row) => `${this.productsTableRow(row)} td.js-product-${column}`;
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -273,25 +284,84 @@ class AddOrder extends BOBasePage {
   /* Cart methods */
 
   /**
-   * Add product to cart
+   * Search a product and get error alert
    * @param page {Page} Browser tab
-   * @param product {ProductData} Product data to search with
-   * @param quantity {number} Product quantity to add to the cart
-   * @returns {Promise<void>}
+   * @param productName {string} Product name to search
+   * @returns {Promise<string>}
    */
-  async addProductToCart(page, product, quantity) {
+  async searchProductAndGetAlert(page, productName) {
+    await this.setValue(page, this.productSearchInput, productName);
+
+    return this.getTextContent(page, this.noProductFoundAlert);
+  }
+
+  /**
+   * Add product to cart and get alert
+   * @param page {Page} Browser tab
+   * @param productToSearch {string} Product name to search with
+   * @param productToSelect {string} Product name to select
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<string>}
+   */
+  async AddProductToCartAndGetAlert(page, productToSearch, productToSelect, quantity = 1) {
     // Search product
-    await this.setValue(page, this.productSearchInput, product.name);
+    await this.setValue(page, this.productSearchInput, productToSearch);
     await this.waitForVisibleSelector(page, this.addProductToCartForm);
 
     // Fill add product form
-    await this.selectByVisibleText(page, this.productResultsSelect, product.name);
-    await this.setValue(page, this.productQuantityInput, quantity.toString());
+    await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
+    await this.setValue(page, this.productQuantityInput, quantity);
 
     // Add to cart
     await page.click(this.addtoCartButton);
 
+    // Return error message
+    return this.getTextContent(page, this.cartErrorBlock);
+  }
+
+  /**
+   * Add product to cart
+   * @param page {Page} Browser tab
+   * @param productToSearch {object} Product data to search with
+   * @param productToSelect {string} Product name to select
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<void>}
+   */
+  async addProductToCart(page, productToSearch, productToSelect, quantity = 1) {
+    // Search product
+    await this.setValue(page, this.productSearchInput, productToSearch.name);
+    await this.waitForVisibleSelector(page, this.addProductToCartForm);
+
+    // Fill add product form
+    await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
+    if (await this.elementVisible(page, '.js-product-custom-input')) {
+      await this.setValue(page, '.js-product-custom-input', productToSearch.customizedValue);
+    }
+    await this.setValue(page, this.productQuantityInput, quantity);
+
+    // Add to cart
+    await page.click(this.addtoCartButton);
+
+    await page.waitForTimeout(500);
     await this.waitForVisibleSelector(page, this.productsTable);
+  }
+
+  /**
+   * Get product details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<{reference: string, image: string, quantityMax: number, price: number, description: string,
+   * quantityMin: number}>}
+   */
+  async getProductDetailsFromTable(page, row = 1) {
+    return {
+      image: await this.getAttributeContent(page, `${this.productsTableRow(row)} td img.js-product-image`, 'src'),
+      description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
+      reference: await this.getTextContent(page, this.productsTableColumn('ref', row)),
+      quantityMin: parseInt(await this.getAttributeContent(page, `${this.productsTableRow(row)} td input.js-product-qty-input`, 'min'), 10),
+      quantityMax: parseInt(await this.getTextContent(page, `${this.productsTableRow(row)} td span.js-product-qty-stock`), 10),
+      price: parseFloat(await this.getTextContent(page, this.productsTableColumn('total-price', row))),
+    };
   }
 
   /**
