@@ -43,8 +43,8 @@ class Module implements ModuleInterface
     public const ACTION_UNINSTALL = 'uninstall';
     public const ACTION_ENABLE = 'enable';
     public const ACTION_DISABLE = 'disable';
-    public const ACTION_ENABLE_MOBILE = 'enable_mobile';
-    public const ACTION_DISABLE_MOBILE = 'disable_mobile';
+    public const ACTION_ENABLE_MOBILE = 'enableMobile';
+    public const ACTION_DISABLE_MOBILE = 'disableMobile';
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
 
