@@ -14,6 +14,7 @@ default:
                 - "%paths.base%/Features/Scenario/State"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\StateFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\StateFeatureContext
         contact:
             paths:
