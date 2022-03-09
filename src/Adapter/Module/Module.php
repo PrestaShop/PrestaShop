@@ -302,7 +302,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUpgrade($version): bool
+    public function onUpgrade(string $version): bool
     {
         $this->database->set('version', $this->attributes->get('version_available'));
 
@@ -482,7 +482,7 @@ class Module implements ModuleInterface
         }
 
         // Potential update from API
-        if ($this->canBeUpgradedFromAddons()) {
+        if ($this->hasNewVersionAvailable()) {
             return true;
         }
 
@@ -491,11 +491,11 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Only check if an upgrade is available on the marketplace.
+     * Only check if an upgrade is available
      *
      * @return bool
      */
-    public function canBeUpgradedFromAddons()
+    public function hasNewVersionAvailable(): bool
     {
         return $this->attributes->get('version_available') !== 0
             && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');

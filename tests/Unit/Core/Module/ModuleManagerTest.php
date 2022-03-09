@@ -135,6 +135,7 @@ class ModuleManagerTest extends TestCase
 
     public function testUpgrade(): void
     {
+        $this->module->method('get')->with('version')->willReturn('1.0.0');
         $this->assertTrue($this->moduleManager->upgrade(self::INSTALLED_MODULE_NAME));
 
         $this->expectException(Exception::class);
