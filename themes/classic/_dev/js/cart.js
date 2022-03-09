@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
+import debounce from './components/debounce';
 
 prestashop.cart = prestashop.cart || {};
 
@@ -40,6 +41,12 @@ $(document).ready(() => {
   });
 
   prestashop.on('updatedCart', () => {
+    window.shouldPreventModal = false;
+
+    $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
+      preventCustomModalOpen(modalEvent);
+    });
+
     createSpin();
   });
 
@@ -125,7 +132,23 @@ $(document).ready(() => {
 
   const getTouchSpinInput = ($button) => $($button.parents(prestashop.themeSelectors.cart.touchspin).find('input'));
 
+  const preventCustomModalOpen = (event) => {
+    if (window.shouldPreventModal) {
+      event.preventDefault();
+
+      return false;
+    }
+
+    return true;
+  };
+
+  $(prestashop.themeSelectors.product.customizationModal).on('show.bs.modal', (modalEvent) => {
+    preventCustomModalOpen(modalEvent);
+  });
+
   const handleCartAction = (event) => {
+    abortPreviousRequests();
+    window.shouldPreventModal = true;
     event.preventDefault();
 
     const $target = $(event.currentTarget);
@@ -140,7 +163,6 @@ $(document).ready(() => {
       return;
     }
 
-    abortPreviousRequests();
     $.ajax({
       url: cartAction.url,
       method: 'POST',
@@ -151,8 +173,8 @@ $(document).ready(() => {
       },
     })
       .then((resp) => {
-        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
         const $quantityInput = getTouchSpinInput($target);
+        CheckUpdateQuantityOperations.checkUpdateOperation(resp);
         $quantityInput.val(resp.quantity);
 
         // Refresh cart preview
@@ -172,11 +194,11 @@ $(document).ready(() => {
 
   $body.on('click', prestashop.themeSelectors.cart.actions, handleCartAction);
 
-  $body.on('touchspin.on.startdownspin', spinnerSelector, handleCartAction);
-  $body.on('touchspin.on.startupspin', spinnerSelector, handleCartAction);
+  $body.on('touchspin.on.stopspin', spinnerSelector, debounce(updateProductQuantityInCart));
 
   function sendUpdateQuantityInCartRequest(updateQuantityInCartUrl, requestData, $target) {
     abortPreviousRequests();
+    window.shouldPreventModal = true;
 
     return $.ajax({
       url: updateQuantityInCartUrl,
@@ -188,7 +210,8 @@ $(document).ready(() => {
       },
     })
       .then((resp) => {
-        CheckUpdateQuantityOperations.checkUpdateOpertation(resp);
+        CheckUpdateQuantityOperations.checkUpdateOperation(resp);
+
         $target.val(resp.quantity);
 
         let dataset;
@@ -236,6 +259,7 @@ $(document).ready(() => {
     const targetValue = $target.val();
     /* eslint-disable */
     if (targetValue != parseInt(targetValue, 10) || targetValue < 0 || isNaN(targetValue)) {
+      window.shouldPreventModal = false;
       $target.val(baseValue);
       return;
     }
@@ -332,7 +356,7 @@ const CheckUpdateQuantityOperations = {
       $checkoutBtn.removeClass('disabled');
     }
   },
-  checkUpdateOpertation: (resp) => {
+  checkUpdateOperation: (resp) => {
     /**
      * resp.hasError can be not defined but resp.errors not empty: quantity is updated but order cannot be placed
      * when resp.hasError=true, quantity is not updated

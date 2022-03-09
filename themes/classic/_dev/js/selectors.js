@@ -38,6 +38,7 @@ prestashop.themeSelectors = {
     selected: '.selected, .js-thumb-selected',
     modalProductCover: '.js-modal-product-cover',
     cover: '.js-qv-product-cover',
+    customizationModal: '.js-customization-modal',
   },
   listing: {
     searchFilterToggler: '#search_filter_toggler, .js-search-toggler',
