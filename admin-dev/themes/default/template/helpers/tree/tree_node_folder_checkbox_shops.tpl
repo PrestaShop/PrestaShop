@@ -29,6 +29,6 @@
 		<label class="tree-toggler">{l s='Group: %s' sprintf=[$node['name']|escape:'html':'UTF-8']}</label>
 	</span>
 	<ul class="tree">
-      {$children}
+		{$children}
 	</ul>
 </li>

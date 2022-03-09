@@ -35,6 +35,7 @@ use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

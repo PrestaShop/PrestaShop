@@ -44,11 +44,11 @@
 
 
 
-=== Prerequirements
+=== Requirements
 
 To install PrestaShop 8, you need a web server running PHP 7.2+ and any flavor of MySQL 5.6+ (MySQL, MariaDB, Percona Server, etc.).
 
-You can find more information on our System requirements (https://devdocs.prestashop.com/8/basics/installation/system-requirements/) page.
+You can find more information on our System requirements (https://devdocs.prestashop.com/8/basics/installation/system-requirements/) page and on the System Administrator Guide (https://docs.prestashop-project.org/1-6-documentation/english-documentation/system-administrator-guide).
 
 === Installing PrestaShop
 
@@ -58,7 +58,7 @@ Here is the content of this archive:
 
 * The prestashop.zip archive, which contains all the necessary files.
 * The index.php file, which will automatically unzip the prestashop.zip archive for you.
-* The Install_PrestaShop.html file, which redirects you to https://doc.prestashop.com/display/PS17/Installing+PrestaShop
+* The Install_PrestaShop.html file, which redirects you to https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop
 
 From there on, follow these instructions:
 
@@ -66,7 +66,7 @@ From there on, follow these instructions:
 2. From your web browser, go to the folder where index.php and prestashop.zip have been uploaded and browse index.php. The Zip archive should unzip automatically.
 3. You are redirected to the PrestaShop installer. Follow the instructions.
 
-After PrestaShop has successfuly been installed, delete the /install/ folder from your server.
+After PrestaShop has successfully been installed, delete the /install/ folder from your server.
 
 Enjoy your store :)
 
@@ -75,7 +75,7 @@ Enjoy your store :)
 
 Essential links about PrestaShop:
 
-* User Guide: https://doc.prestashop.com/display/PS17/User+Guide
+* User Guide: https://docs.prestashop-project.org/1.7-documentation/user-guide
 * Tech docs (modules & themes): https://devdocs.prestashop.com/
 * Official blog: https://www.prestashop.com/en/blog
 * Developer blog: https://build.prestashop.com/
