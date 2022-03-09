@@ -28,8 +28,17 @@ Feature: store
       | latitude  | 43.2951                |
       | longitude | -0.370797              |
       | country   | France                 |
-    Then stores "StorePau, StoreSerresCastet" should be enabled
+    And I add new store "StoreBuros" with following properties:
+      | name      | StoreBuros             |
+      | enabled   | true                   |
+      | address1  | 1 chemin de carrere    |
+      | city      | Buros                  |
+      | latitude  | 43.2951                |
+      | longitude | -0.370797              |
+      | country   | France                 |
+    Then stores "StorePau, StoreSerresCastet, StoreBuros" should be enabled
     When I disable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be disabled
+    Then stores "StoreBuros" should be enabled
     When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
-    Then stores "StorePau, StoreSerresCastet" should be enabled
+    Then stores "StorePau, StoreSerresCastet, StoreBuros" should be enabled

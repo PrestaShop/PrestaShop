@@ -10,12 +10,11 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         state:
-          paths:
-            - "%paths.base%/Features/Scenario/State"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\StateFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\StateFeatureContext
+            paths:
+                - "%paths.base%/Features/Scenario/State"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\StateFeatureContext
         contact:
             paths:
                 - "%paths.base%/Features/Scenario/Contact"
@@ -23,12 +22,12 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
         store:
-          paths:
-            - "%paths.base%/Features/Scenario/Store"
-          contexts:
-            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\StoreFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\Domain\StoreFeatureContext
+            paths:
+                - "%paths.base%/Features/Scenario/Store"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\StoreFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\StoreFeatureContext
         customer:
             paths:
                 - "%paths.base%/Features/Scenario/Customer"

@@ -55,9 +55,9 @@ class StoreFeatureContext extends AbstractPrestaShopFeatureContext
         $data = $table->getRowsHash();
 
         $store = new Store();
-        $store->name = [$this->defaultLangId => $data['name']];
+        $store->name = [$this->defaultLangId => (string)$data['name']];
         $store->active = PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']);
-        $store->address1 = [$this->defaultLangId => $data['address1']];
+        $store->address1 = [$this->defaultLangId => (string)$data['address1']];
         $store->city = $data['city'];
         $store->latitude = (float) $data['latitude'];
         $store->longitude = (float) $data['longitude'];
