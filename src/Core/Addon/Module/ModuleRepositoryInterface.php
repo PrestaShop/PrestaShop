@@ -49,7 +49,7 @@ interface ModuleRepositoryInterface extends AddonRepositoryInterface
      *
      * @return AddonInterface[] retrieve a list of addons, regarding the $filter used
      */
-    public function getFilteredList(AddonListFilter $filter, $skip_main_class_attributes = false);
+    public function getFilteredList(AddonListFilter $filter, bool $skip_main_class_attributes = false);
 
     /**
      * @return AddonInterface[] retrieve a list of addons, regardless any $filter
