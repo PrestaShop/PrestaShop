@@ -25,6 +25,7 @@
  */
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
@@ -59,9 +60,16 @@ class ValidateCore
      */
     public static function isEmail($email)
     {
-        return !empty($email) && (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
+        // Check if the value is empty
+        if (empty($email)) {
+            return false;
+        }
+
+        // Check if the value is correct according to both validators (RFC & SwiftMailer)
+        return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
             new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+            new NoRFCWarningsValidation(),
         ]));
     }
 
