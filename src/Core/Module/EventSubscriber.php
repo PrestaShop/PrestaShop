@@ -56,7 +56,7 @@ class EventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onModuleStateChanged(ModuleManagementEvent $event)
+    public function onModuleStateChanged(ModuleManagementEvent $event): void
     {
         $moduleName = $event->getModule()->get('name');
         $this->moduleRepository->clearCache($moduleName);

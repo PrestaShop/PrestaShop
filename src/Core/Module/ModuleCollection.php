@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Module;
 
 use ArrayAccess;
@@ -90,6 +92,11 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
 
     public function offsetSet($offset, $value): void
     {
+        if (!$value instanceof ModuleInterface) {
+            throw new PrestaShopException(
+                sprintf('%s only accept %s elements.', self::class, ModuleInterface::class)
+            );
+        }
         $this->modules[$offset] = $value;
     }
 

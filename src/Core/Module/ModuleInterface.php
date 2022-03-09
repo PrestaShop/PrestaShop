@@ -85,5 +85,5 @@ interface ModuleInterface
      *
      * @return bool true for success
      */
-    public function onUpgrade($version): bool;
+    public function onUpgrade(string $version): bool;
 }
