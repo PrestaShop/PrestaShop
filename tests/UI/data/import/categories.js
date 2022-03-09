@@ -1,5 +1,6 @@
 module.exports = {
   Data: {
+    entity: 'Categories',
     header: [
       {id: 'id', title: 'Category ID'},
       {id: 'active', title: 'Active (0/1)'},

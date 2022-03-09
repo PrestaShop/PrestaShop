@@ -1,102 +1,71 @@
 require('module-alias/register');
-
-// Import expect from chai
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
+const files = require('@utils/files');
 
-// Import login steps
+// Import common
 const loginCommon = require('@commonTests/BO/loginBO');
+const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/monitoring');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
-const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const monitoringPage = require('@pages/BO/catalog/monitoring');
 
-const ProductFaker = require('@data/faker/product');
+// Import Data
+const {ProductsData} = require('@data/import/productsWithoutQuantities');
 
+// Test context
 const baseContext = 'functional_BO_catalog_monitoring_sortAndPagination_withoutCombinationsWithoutQuantities';
 
 let browserContext;
 let page;
-let numberOfProducts = 0;
-let numberOfProductsIngrid = 0;
+
+// Table name from monitoring page
 const tableName = 'no_qty_product_without_combination';
 
+// Variable used to create products csv file
+const productsFile = 'products.csv';
+
 /*
-Create 11 new products without combinations and without available quantities
-Sort list of products without combinations and without available quantities in monitoring page
-Pagination next and previous
+Pre-condition:
+- Import list of products
+Scenario:
+- Sort list of products without combinations and without available quantities in monitoring page
+- Pagination next and previous
+Post-condition:
+- Delete imported products from monitoring page
  */
 describe('BO - Catalog - Monitoring : Sort and pagination list of products without combinations '
   + 'and without available quantities', async () => {
+  // Pre-condition: Import list of products
+  importFileTest(productsFile, ProductsData.entity, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all products data
+    await files.createCSVFile('.', productsFile, ProductsData);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    // Delete products file
+    await files.deleteFile(productsFile);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to \'catalog > products\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.productsLink,
-    );
-
-    await dashboardPage.closeSfToolBar(page);
-
-    const pageTitle = await productsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(productsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of products', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-    numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfProducts).to.be.above(0);
-  });
-
-  // 1 : Create 11 products without combinations and without available quantities
-  const creationTests = new Array(11).fill(0, 0, 11);
-  describe('Create 11 products without combinations and without available quantities', async () => {
-    creationTests.forEach((test, index) => {
-      const createProductData = new ProductFaker({name: `todelete${index}`, type: 'Standard product', quantity: 0});
-      it(`should create product n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createProduct${index}`, baseContext);
-
-        await productsPage.goToAddProductPage(page);
-
-        const createProductMessage = await addProductPage.createEditBasicProduct(page, createProductData);
-        await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
-      });
-
-      it('should go to catalog page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToCatalog${index}`, baseContext);
-
-        await addProductPage.goToCatalogPage(page);
-
-        const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
-      });
+  // 1 - Sort products without combinations and without available quantities
+  describe('Sort List of products without combinations and without available quantities', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
     });
-  });
 
-  // 2 : Sort products without combinations and without available quantities
-  describe('sort List of products without combinations and without available quantities', async () => {
     it('should go to \'catalog > monitoring\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMonitoringPage', baseContext);
 
@@ -108,9 +77,13 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
 
       const pageTitle = await monitoringPage.getPageTitle(page);
       await expect(pageTitle).to.contains(monitoringPage.pageTitle);
+    });
 
-      numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfProductsIngrid).to.be.at.least(1);
+    it('should check that the number of imported products is greater than 10', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
+      const numberOfProductsIngrid = await monitoringPage.resetAndGetNumberOfLines(page, tableName);
+      await expect(numberOfProductsIngrid).to.be.at.least(10);
     });
 
     const sortTests = [
@@ -174,7 +147,7 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     });
   });
 
-  // 3 : Pagination
+  // 2 - Pagination
   describe('Pagination next and previous', async () => {
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
@@ -205,49 +178,6 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products witho
     });
   });
 
-  // 4 : Delete the created products
-  describe('Delete the created products without combinations and without available quantities', async () => {
-    const deletionTests = new Array(11).fill(0, 0, 11);
-    deletionTests.forEach((test, index) => {
-      it('should filter list of products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterToDelete${index}`, baseContext);
-
-        await monitoringPage.filterTable(page, tableName, 'input', 'name', 'toDelete');
-
-        const textColumn = await monitoringPage.getTextColumnFromTable(page, tableName, 1, 'name');
-
-        await expect(textColumn).to.contains('TODELETE');
-      });
-
-      it(`should delete product n°${index + 1} from monitoring page`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
-
-        const textResult = await monitoringPage.deleteProductInGrid(page, tableName, 1);
-        await expect(textResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-
-        const pageTitle = await productsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(productsPage.pageTitle);
-      });
-
-      it('should reset filter and check number of products', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAfterDelete${index}`, baseContext);
-
-        const numberOfCategoriesAfterDelete = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfCategoriesAfterDelete).to.be.equal(numberOfProducts + 11 - index - 1);
-      });
-
-      it('should go to \'catalog > monitoring\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToMonitoringPageToDelete${index}`, baseContext);
-
-        await productsPage.goToSubMenu(
-          page,
-          dashboardPage.catalogParentLink,
-          dashboardPage.monitoringLink,
-        );
-
-        const pageTitle = await monitoringPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(monitoringPage.pageTitle);
-      });
-    });
-  });
+  // Post-condition: Delete created products
+  bulkDeleteProductsTest(tableName, baseContext);
 });
