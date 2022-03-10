@@ -4,9 +4,6 @@ const BOBasePage = require('@pages/BO/BObasePage');
 // Needed to create customer in orders page
 const addCustomerPage = require('@pages/BO/customers/add');
 
-// Needed to check cart Iframe
-const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
-
 /**
  * Add order page, contains functions that can be used on create order page
  * @class
@@ -25,7 +22,7 @@ class AddOrder extends BOBasePage {
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
-    this.closeIframe = 'a.fancybox-close';
+    this.closeFancyBoxIframe = 'a.fancybox-close';
 
     // Customer selectors
     this.addCustomerLink = '#customer-add-btn';
@@ -206,7 +203,7 @@ class AddOrder extends BOBasePage {
   }
 
   /**
-   * Close order iframe
+   * Close iframe
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
@@ -224,7 +221,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getTextWhenCartsTableIsEmpty(page) {
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
     return this.getTextContent(page, this.emptyCartBlock, true);
   }
 
@@ -248,69 +245,29 @@ class AddOrder extends BOBasePage {
   async clickOnCartDetailsButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.customerCartsTableDetailsButton(row));
 
-    return this.elementVisible(page, this.cartsIframe, 1000);
+    return this.elementVisible(page, this.iframe, 2000);
   }
 
   /**
-   *
+   * Get shopping cart Iframe
    * @param page {Page} Browser tab
-   * @param cartId {Number} Cart Id
-   * @returns {Promise<*|string>}
+   * @param cartId {number} Id of customer to check
+   * @returns {*}
    */
-  async getCartId(page, cartId) {
-    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
-
-    return viewCartPage.getCartId(cartIframe);
+  getShoppingCartIframe(page, cartId) {
+    return page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
   }
 
   /**
-   *
+   * Click on cart use button
    * @param page {Page} Browser tab
-   * @param cartId {Number} Cart Id
-   * @returns {Promise<*|number>}
+   * @param row {Number} Row on table
+   * @returns {Promise<Boolean>}
    */
-  async getCartTotal(page, cartId) {
-    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+  async clickOnCartUseButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.customerCartsTableUseButton(row));
 
-    return viewCartPage.getCartTotal(cartIframe);
-  }
-
-  /**
-   *
-   * @param page {Page} Browser tab
-   * @param cartId {Number} Cart Id
-   * @returns {Promise<*|string>}
-   */
-  async getCustomerInformation(page, cartId) {
-    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
-
-    return viewCartPage.getCustomerInformation(cartIframe);
-  }
-
-  /**
-   *
-   * @param page {Page} Browser tab
-   * @param cartId {Number} Card Id
-   * @returns {Promise<string>}
-   */
-  async getOrderInformation(page, cartId) {
-    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
-
-    return viewCartPage.getOrderInformation(cartIframe);
-  }
-
-  /**
-   *
-   * @param page {Page} Browser tab
-   * @param cartId {Number} Card Id
-   * @param column {String} Row on table
-   * @param row {Number} column on table
-   * @returns {Promise<*|string>}
-   */
-  async getCartSummary(page, cartId, column, row = 1) {
-    const cartIframe = await page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
-
-    return viewCartPage.getTextColumn(cartIframe, column, row);
+    return this.elementVisible(page, this.productsTable, 1000);
   }
 
   /* Cart methods */
@@ -390,17 +347,6 @@ class AddOrder extends BOBasePage {
    */
   getOrderIframe(page, orderID) {
     return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
-  }
-
-  /**
-   * Close order iframe
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeOrderIframe(page) {
-    await this.waitForSelectorAndClick(page, this.closeIframe);
-
-    return this.elementNotVisible(page, this.iframe, 3000);
   }
 
   /**

@@ -285,7 +285,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
     it('should close the order Iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeOrderIframe', baseContext);
 
-      const isIframeNotVisible = await addOrderPage.closeOrderIframe(page);
+      const isIframeNotVisible = await addOrderPage.closeIframe(page);
       await expect(isIframeNotVisible, 'Order iframe still visible!').to.be.true;
     });
 

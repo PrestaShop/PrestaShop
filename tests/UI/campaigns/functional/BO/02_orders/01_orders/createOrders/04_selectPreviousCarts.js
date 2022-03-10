@@ -1,5 +1,7 @@
 require('module-alias/register');
 
+const {expect} = require('chai');
+
 // Import Utils
 const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
@@ -23,7 +25,7 @@ const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 
-// Import data
+// Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Carriers} = require('@data/demo/carriers');
 const {Products} = require('@data/demo/products');
@@ -34,24 +36,29 @@ const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousCarts';
 
-// Import expect rom chai
-const {expect} = require('chai');
-
-
 let browserContext;
 let page;
-let shoppingCartPage;
-let numberOfShoppingCarts;
-let numberOfNonOrderedShoppingCarts;
-let lastShoppingCartId = 0;
-const today = getDateFormat('yyyy-mm-dd');
-const myCarrierCost = 8.40;
-const todayCartFormat = getDateFormat('mm/dd/yyyy');
-let availableStockOfOrderedProduct = 0;
-const paymentMethod = 'Payments by check';
-const orderStatus = Statuses.paymentAccepted;
 
-/* Pre-condition:
+// Variable used to identify shopping cart page
+let shoppingCartPage;
+// Variable used to get the number of shopping carts
+let numberOfShoppingCarts;
+// Variable used to get the number of non ordered shopping carts
+let numberOfNonOrderedShoppingCarts;
+// Variable used to get the last shopping card ID
+let lastShoppingCartId = 0;
+// Const used to get today date format
+const today = getDateFormat('yyyy-mm-dd');
+const todayCartFormat = getDateFormat('mm/dd/yyyy');
+// Const used for My carrier cost
+const myCarrierCost = 8.40;
+// Variable used to get the available stock of the ordered product from BO > stocks page
+let availableStockOfOrderedProduct = 0;
+// Const used for the payment status
+const paymentMethod = 'Payments by check';
+
+/*
+Pre-condition:
 - Delete Non ordered carts from shopping cart page
 Scenario:
 - Create a cart from the FO by default customer
@@ -110,8 +117,6 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        // when we have a shopping cart non ordered (checkbox exists),
-        // the column_id became column_id+1 = column of the lastname
         const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
         await expect(textColumn).to.contains('Non ordered');
       }
@@ -141,8 +146,9 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // 1 - Check that no records found of carts on create order BO for the default customer
-  describe('Check that no records found of carts on create order BO for the default customer', async () => {
+  // 1 - Go to add new order page and choose default customer
+  describe('Go to add new order page and choose default customer', async () => {
+
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage1', baseContext);
 
@@ -181,7 +187,10 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       const isBlockHistoryVisible = await addOrderPage.chooseCustomer(page);
       await expect(isBlockHistoryVisible).to.be.true;
     });
+  });
 
+  // 2 - Check that no records found on carts table
+  describe('Check that no records found on carts table', async () => {
     it('should check that no records found in the carts section', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkThatNoRecordFoundForCarts', baseContext);
 
@@ -190,7 +199,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // todelete when this issue: https://github.com/PrestaShop/PrestaShop/issues/9589 is fixed
+  // To delete when this issue: https://github.com/PrestaShop/PrestaShop/issues/9589 is fixed
   describe('Delete the Non ordered shopping carts', async () => {
     it('should go to \'Orders > Shopping carts\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage2', baseContext);
@@ -223,8 +232,6 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
 
       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        // when we have a shopping cart non ordered (checkbox exists),
-        // the column_id became column_id+1 = column of the lastname
         const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
         await expect(textColumn).to.contains('Non ordered');
       }
@@ -254,12 +261,11 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // 2 - Create a Shopping cart from the FO by the default customer
+  // 3 - Create a Shopping cart from the FO by the default customer
   describe('Create a Shopping cart from the FO by the default customer', async () => {
     it('should click on view my shop', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewMyShop', baseContext);
 
-      // The page will be changed when clicking on View my shop
       page = await addOrderPage.viewMyShop(page);
 
       await homePage.changeLanguage(page, 'en');
@@ -321,10 +327,10 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       );
       await expect(isPaymentStepDisplayed, 'Payment Step is not displayed').to.be.true;
     });
+
     it('should close the current page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
 
-      // Tab1 = 0 BO and Tab2 = 1 FO and we will focus on the BO page
       page = await checkoutPage.closePage(browserContext, page, 0);
 
       const pageTitle = await shoppingCartsPage.getPageTitle(page);
@@ -335,7 +341,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // 3 - Get the Available stock of the ordered product
+  // 4 - Get the Available stock of the ordered product
   describe('Get the Available stock of the ordered product', async () => {
     it('should go to \'Catalog > Stocks\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToStocksPage', baseContext);
@@ -352,12 +358,13 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
 
     it('should get the Available stock of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
+
       availableStockOfOrderedProduct = await stocksPage.getTextColumnFromTableStocks(page, 1, 'available');
       await expect(availableStockOfOrderedProduct).to.be.above(0);
     });
   });
 
-  // 4 - Check the Carts table
+  // 5 - Check the Carts table
   describe('Check the Carts table', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage2', baseContext);
@@ -421,7 +428,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // 5 - Check the Cart details
+  // 6 - Check the Cart details
   describe('Check the Cart details', async () => {
     it('should click on details button and check the Cart Iframe is well displayed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'clickOnDetailsButton', baseContext);
@@ -498,7 +505,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     });
   });
 
-  // 6 - Complete the order
+  // 7 - Complete the order
   describe('Complete the order', async () => {
     it('should close the Shopping cart Iframe', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeIframe', baseContext);
@@ -538,7 +545,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
     it('should complete the order', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'completeOrder', baseContext);
 
-      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, orderStatus);
+      await addOrderPage.setSummaryAndCreateOrder(page, paymentMethod, Statuses.paymentAccepted);
 
       const pageTitle = await orderPageProductsBlock.getPageTitle(page);
       await expect(pageTitle).to.contains(orderPageProductsBlock.pageTitle);
