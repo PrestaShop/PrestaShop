@@ -320,6 +320,18 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Add quantity and add product to cart
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<void>}
+   */
+  async addProductQuantity(page, quantity, row) {
+    await this.setValue(page, `${this.productsTableRow(row)} td input.js-product-qty-input`, quantity);
+
+    await page.waitForTimeout(1000);
+  }
+
+  /**
    * Add product to cart
    * @param page {Page} Browser tab
    * @param productToSearch {object} Product data to search with

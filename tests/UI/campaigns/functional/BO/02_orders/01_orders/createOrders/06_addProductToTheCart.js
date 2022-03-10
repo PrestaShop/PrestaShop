@@ -11,14 +11,17 @@ const testContext = require('@utils/testContext');
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+const cartRulesPage = require('@pages/BO/catalog/discounts');
 const stocksPage = require('@pages/BO/catalog/stocks');
 const shoppingCartsPage = require('@pages/BO/orders/shoppingCarts');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
+const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {deleteProductTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
@@ -26,6 +29,7 @@ const {Products} = require('@data/demo/products');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
+const CartRuleFaker = require('@data/faker/cartRule');
 
 // Test context
 const baseContext = 'functional_BO_orders_orders_createOrders_selectPreviousOrders';
@@ -53,6 +57,75 @@ const packOfProducts = new ProductFaker({
   behaviourOutOfStock: 'Default behavior',
 });
 
+// Data to create product out of stock allowed
+const productOutOfStockAllowed = new ProductFaker({
+  name: 'Out of stock allowed',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: -12,
+  minimumQuantity: 1,
+  lowStockLevel: 3,
+  behaviourOutOfStock: 'Allow orders',
+});
+
+// Data to create product out of stock not allowed
+const productOutOfStockNotAllowed = new ProductFaker({
+  name: 'Out of stock not allowed',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: -15,
+  minimumQuantity: 1,
+  lowStockLevel: 3,
+  behaviourOutOfStock: 'Deny orders',
+});
+
+// Data to create product with specific price
+const productWithSpecificPrice = new ProductFaker({
+  name: 'Product with specific price',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: 20,
+  specificPrice: {
+    discount: 50,
+    startingAt: 2,
+    reductionType: '%',
+  },
+});
+
+// Data to create product with ecotax
+const productWithEcoTax = new ProductFaker({
+  name: 'Product with ecotax',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: 20,
+  minimumQuantity: 1,
+  ecoTax: 10,
+});
+
+// Data to create product with cart rule
+const productWithCartRule = new ProductFaker({
+  name: 'Product with cart rule',
+  type: 'Standard product',
+  taxRule: 'No tax',
+  quantity: 50,
+  minimumQuantity: 1,
+  stockLocation: 'stock 1',
+  lowStockLevel: 3,
+  behaviourOutOfStock: 'Default behavior',
+});
+
+// Data to create cart rule
+const newCartRuleData = new CartRuleFaker(
+  {
+    code: '4QABV6L3',
+    discountType: 'Percent',
+    discountPercent: 20,
+    applyDiscountTo: 'Specific product',
+    product: productWithCartRule.name,
+  },
+);
+
+// Data to add to cart customized product
 const customizedProduct = {
   name: Products.demo_14.name,
   reference: Products.demo_14.reference,
@@ -71,6 +144,9 @@ Post-condition:
 
  */
 describe('BO - Orders - Create order : Add a product to the cart', async () => {
+  // Pre-condition: Enable EcoTax
+  enableEcoTaxTest(baseContext);
+
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -109,10 +185,192 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     it('should create Product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
 
-      let createProductMessage = '';
-
-      createProductMessage = await addProductPage.setProduct(page, packOfProducts);
+      const createProductMessage = await addProductPage.setProduct(page, packOfProducts);
       await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition: Create product out of stock allowed
+  describe('PRE-TEST: Create product out of stock allowed', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      const createProductMessage = await addProductPage.setProduct(page, productOutOfStockAllowed);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition: Create product out of stock not allowed
+  describe('PRE-TEST: Create product out of stock not allowed', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      const createProductMessage = await addProductPage.setProduct(page, productOutOfStockNotAllowed);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition: Create product with specific price
+  describe('PRE-TEST: Create product with specific price', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      await addProductPage.createEditBasicProduct(page, productWithSpecificPrice);
+
+      const createProductMessage = await addProductPage.addSpecificPrices(page, productWithSpecificPrice.specificPrice);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition: Create product with ecotax
+  describe('PRE-TEST: Create product with ecotax', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      await addProductPage.createEditBasicProduct(page, productWithEcoTax);
+
+      const createProductMessage = await addProductPage.addEcoTax(page, productWithEcoTax.ecoTax);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+  });
+
+  // Pre-condition: Create product with cart rule
+  describe('PRE-TEST: Create product wih cart rule', async () => {
+    it('should go to \'Catalog > Products\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.catalogParentLink, dashboardPage.productsLink);
+
+      await productsPage.closeSfToolBar(page);
+
+      const pageTitle = await productsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productsPage.pageTitle);
+    });
+
+    it('should go to add product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddProductPage', baseContext);
+
+      await productsPage.goToAddProductPage(page);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
+    });
+
+    it('should create Product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createProduct', baseContext);
+
+      const createProductMessage = await addProductPage.setProduct(page, productWithCartRule);
+      await expect(createProductMessage).to.equal(addProductPage.settingUpdatedMessage);
+    });
+
+    describe(`Create cart rule and apply the discount to : '${productWithCartRule.name}'`, async () => {
+      it('should go to \'Catalog > Discounts\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
+
+        await dashboardPage.goToSubMenu(
+          page,
+          dashboardPage.catalogParentLink,
+          dashboardPage.discountsLink,
+        );
+
+        const pageTitle = await cartRulesPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+      });
+
+      it('should go to new cart rule page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+
+        await cartRulesPage.goToAddNewCartRulesPage(page);
+        const pageTitle = await addCartRulePage.getPageTitle(page);
+        await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+      });
+
+      it('should create new cart rule', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
+
+        const validationMessage = await addCartRulePage.createEditCartRules(page, newCartRuleData);
+        await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+      });
     });
   });
 
@@ -409,8 +667,105 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.price).to.equal(customizedProduct.price),
       ]);
     });
+
+    it('should add to cart product out of stock allowed and check details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchStandardCombinationsProduct', baseContext);
+
+      const productNameToSelect = `${productOutOfStockAllowed.name} - €${productOutOfStockAllowed.price.toFixed(2)}`;
+
+      await addOrderPage.addProductToCart(page, productOutOfStockAllowed, productNameToSelect);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 6);
+      await Promise.all([
+        expect(result.image).to.contains('en-default-small_default.jpg'),
+        expect(result.description).to.equal(productOutOfStockAllowed.name),
+        expect(result.reference).to.equal(productOutOfStockAllowed.reference),
+        expect(result.quantityMin).to.equal(1),
+        expect(result.quantityMax).to.equal(productOutOfStockAllowed.quantity),
+        expect(result.price).to.equal(productOutOfStockAllowed.price),
+      ]);
+    });
+
+    it('should add to cart product out of stock not allowed and check error message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
+
+      const productNameToSelect = `${productOutOfStockNotAllowed.name} - €${productOutOfStockNotAllowed.price.toFixed(2)}`;
+
+      const alertMessage = await addOrderPage.AddProductToCartAndGetAlert(page, productOutOfStockNotAllowed.name, productNameToSelect, 1);
+      await expect(alertMessage).to.equal('There are not enough products in stock.');
+    });
+
+    it('should add to cart product with specific price and check details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
+
+      const productNameToSelect = `${productWithSpecificPrice.name} - €${productWithSpecificPrice.price.toFixed(2)}`;
+
+      await addOrderPage.addProductToCart(page, productWithSpecificPrice, productNameToSelect, 2);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 7);
+      await Promise.all([
+        expect(result.image).to.contains('en-default-small_default.jpg'),
+        expect(result.description).to.equal(productWithSpecificPrice.name),
+        expect(result.reference).to.equal(productWithSpecificPrice.reference),
+        expect(result.quantityMin).to.equal(1),
+        expect(result.quantityMax).to.equal(productWithSpecificPrice.quantity),
+        expect(result.price).to.equal(productWithSpecificPrice.price),
+      ]);
+    });
+
+    it('should add to cart product with ecotax', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
+
+      const productNameToSelect = `${productWithEcoTax.name} - €${productWithEcoTax.price.toFixed(2)}`;
+
+      await addOrderPage.addProductToCart(page, productWithEcoTax, productNameToSelect, 1);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 8);
+      await Promise.all([
+        expect(result.image).to.contains('en-default-small_default.jpg'),
+        expect(result.description).to.equal(productWithEcoTax.name),
+        expect(result.reference).to.equal(productWithEcoTax.reference),
+        expect(result.quantityMin).to.equal(1),
+        expect(result.quantityMax).to.equal(productWithEcoTax.quantity),
+        expect(result.price).to.equal(productWithEcoTax.price),
+      ]);
+    });
+
+    it('should add to cart product with cart rule', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
+
+      const productNameToSelect = `${productWithCartRule.name} - €${productWithCartRule.price.toFixed(2)}`;
+
+      await addOrderPage.addProductToCart(page, productWithCartRule, productNameToSelect, 1);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 9);
+      await Promise.all([
+        expect(result.image).to.contains('en-default-small_default.jpg'),
+        expect(result.description).to.equal(productWithCartRule.name),
+        expect(result.reference).to.equal(productWithCartRule.reference),
+        expect(result.quantityMin).to.equal(1),
+        expect(result.quantityMax).to.equal(productWithCartRule.quantity),
+        expect(result.price).to.equal(productWithCartRule.price),
+      ]);
+    });
+
+    it('should increase the quantity of the product with cart rule and check details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
+
+      await addOrderPage.addProductQuantity(page, 2, 9);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 9);
+      await Promise.all([
+        expect(result.image).to.contains('en-default-small_default.jpg'),
+        expect(result.description).to.equal(productWithCartRule.name),
+        expect(result.reference).to.equal(productWithCartRule.reference),
+        expect(result.quantityMin).to.equal(1),
+        expect(result.quantityMax).to.equal(productWithCartRule.quantity),
+        expect(result.price).to.equal(productWithCartRule.price * 2),
+      ]);
+    });
   });
 
   // Post-condition: Delete the created product
-  deleteProductTest(packOfProducts, baseContext);
+  // deleteProductTest(packOfProducts, baseContext);
 });
