@@ -49,6 +49,15 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function init()
     {
+        //Test below to prevent unnecessary logs from "parent::init()"
+        $this->id_cart = (int)(Tools::getValue('id_cart', 0));
+        if (!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart) {
+            $cart = new Cart($this->id_cart);
+            if ($cart->orderExists()) {
+                unset($this->context->cookie->id_cart);
+            }
+        }
+
         parent::init();
 
         // If we are coming to this page to finish free order we do extra checks and validations
@@ -63,7 +72,6 @@ class OrderConfirmationControllerCore extends FrontController
          *
          * It's not implemented yet, however.
          */
-        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
         $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $this->order = new Order((int) ($this->id_order));
