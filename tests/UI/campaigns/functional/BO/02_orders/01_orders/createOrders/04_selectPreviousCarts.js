@@ -148,7 +148,6 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
 
   // 1 - Go to add new order page and choose default customer
   describe('Go to add new order page and choose default customer', async () => {
-
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage1', baseContext);
 
