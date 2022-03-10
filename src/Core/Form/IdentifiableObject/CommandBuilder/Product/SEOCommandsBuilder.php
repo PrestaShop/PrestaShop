@@ -30,37 +30,60 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
 
 /**
  * Builder used to build UpdateSEO
  */
-class SEOCommandsBuilder implements ProductCommandsBuilderInterface
+class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
-    public function buildCommands(ProductId $productId, array $formData): array
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
     {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
+    public function buildCommands(
+        ProductId $productId,
+        array $formData,
+        ShopConstraint $singleShopConstraint
+    ): array {
         if (!isset($formData['seo'])) {
             return [];
         }
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', CommandField::TYPE_ARRAY)
+            ->addMultiShopField(
+                '[seo][redirect_option]',
+                'setRedirectOption',
+                CommandField::TYPE_ARRAY,
+                static function (array $options): array {
+                    return [
+                        (string) $options['type'],
+                        (int) ($options['target']['id'] ?? 0),
+                    ];
+                }
+            )
+        ;
+        $commandBuilder = new CommandBuilder($config);
 
-        $seoData = $formData['seo'] ?? [];
-        $redirectionData = $formData['seo']['redirect_option'] ?? [];
-        $command = new UpdateProductSeoCommand($productId->getValue());
-
-        if (isset($seoData['meta_title'])) {
-            $command->setLocalizedMetaTitles($seoData['meta_title']);
-        }
-        if (isset($seoData['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($seoData['meta_description']);
-        }
-        if (isset($seoData['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
-        }
-
-        if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target']['id'] ?? 0);
-            $command->setRedirectOption($redirectionData['type'], $targetId);
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands(
+            $formData,
+            new UpdateProductSeoCommand($productId->getValue(), $singleShopConstraint),
+            new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
+        );
     }
 }

@@ -120,6 +120,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
@@ -148,6 +149,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
@@ -164,9 +166,11 @@ class SEOType extends TranslatorAwareType
                         'class' => 'serp-watched-url',
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('redirect_option', RedirectOptionType::class, [
                 'product_id' => $options['product_id'],
+                'modify_all_shops' => true,
             ])
             ->add('tags', TranslatableType::class, [
                 'required' => false,
@@ -193,6 +197,7 @@ class SEOType extends TranslatorAwareType
                         '[/1]' => '</a>',
                     ]),
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }

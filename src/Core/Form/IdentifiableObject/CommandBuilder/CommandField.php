@@ -62,14 +62,21 @@ class CommandField
     private $type;
 
     /**
+     * @var callable
+     */
+    private $argumentsUpdater;
+
+    /**
      * @var bool
      */
-    private $multiShopField;
+    private $isMultiShopField;
 
     /**
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
+     * @param callable|null $argumentsUpdater
+     * @param bool $isMultiShopField
      *
      * @throws InvalidCommandFieldTypeException
      */
@@ -77,7 +84,8 @@ class CommandField
         string $dataPath,
         string $commandSetter,
         string $type,
-        bool $multiShopField
+        ?callable $argumentsUpdater,
+        bool $isMultiShopField
     ) {
         if (!in_array($type, self::ACCEPTED_TYPES)) {
             throw new InvalidCommandFieldTypeException(sprintf(
@@ -90,7 +98,8 @@ class CommandField
         $this->dataPath = new PropertyPath($dataPath);
         $this->commandSetter = $commandSetter;
         $this->type = $type;
-        $this->multiShopField = $multiShopField;
+        $this->argumentsUpdater = $argumentsUpdater;
+        $this->isMultiShopField = $isMultiShopField;
     }
 
     /**
@@ -118,10 +127,18 @@ class CommandField
     }
 
     /**
+     * @return callable|null
+     */
+    public function getArgumentsUpdater(): ?callable
+    {
+        return $this->argumentsUpdater;
+    }
+
+    /**
      * @return bool
      */
     public function isMultiShopField(): bool
     {
-        return $this->multiShopField;
+        return $this->isMultiShopField;
     }
 }

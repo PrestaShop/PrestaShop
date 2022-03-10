@@ -30,10 +30,13 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
 class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
+    private const MULTI_SHOP_PREFIX = 'seo_multi_shop';
+
     /**
      * @dataProvider getExpectedCommands
      *
@@ -42,8 +45,12 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new SEOCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands(
+            $this->getProductId(),
+            $formData,
+            $this->singleShopConstraint
+        );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -56,22 +63,23 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         yield [
             [
                 'seo' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedMetaTitles = [
             1 => 'Titre français recherche',
             2 => 'English title seo',
         ];
-        $command->setLocalizedMetaTitles($localizedMetaTitles);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+        ;
         yield [
             [
                 'seo' => [
@@ -81,12 +89,14 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedMetaDescriptions = [
             1 => 'Description française recherche',
             2 => 'English description seo',
         ];
-        $command->setLocalizedMetaDescriptions($localizedMetaDescriptions);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+        ;
         yield [
             [
                 'seo' => [
@@ -96,12 +106,14 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedLinkRewrites = [
             1 => 'produit-francais',
             2 => 'english-product',
         ];
-        $command->setLocalizedLinkRewrites($localizedLinkRewrites);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+        ;
         yield [
             [
                 'seo' => [
@@ -111,10 +123,12 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setLocalizedLinkRewrites($localizedLinkRewrites);
-        $command->setLocalizedMetaTitles($localizedMetaTitles);
-        $command->setLocalizedMetaDescriptions($localizedMetaDescriptions);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+        ;
         yield [
             [
                 'seo' => [
@@ -126,8 +140,10 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0)
+        ;
         yield [
             [
                 'seo' => [
@@ -139,8 +155,10 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
         yield [
             [
                 'seo' => [
@@ -155,8 +173,10 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51);
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
         yield [
             [
                 'seo' => [
@@ -170,5 +190,21 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductSeoCommand
+    {
+        return new UpdateProductSeoCommand(
+            $this->getProductId()->getValue(),
+            ShopConstraint::shop(self::SHOP_ID)
+        );
+    }
+
+    private function getAllShopsCommand(): UpdateProductSeoCommand
+    {
+        return new UpdateProductSeoCommand(
+            $this->getProductId()->getValue(),
+            ShopConstraint::allShops()
+        );
     }
 }

@@ -41,53 +41,83 @@ class CommandFieldTest extends TestCase
      * @param string $dataPath
      * @param string $commandSetter
      * @param string $type
+     * @param callable|null $argumentsUpdater
      * @param bool $isMultiShopField
      */
-    public function testValidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField): void
-    {
-        $field = new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
-        $this->assertNotNull($field);
+    public function testValidConstructors(
+        string $dataPath,
+        string $commandSetter,
+        string $type,
+        ?callable $argumentsUpdater,
+        bool $isMultiShopField
+    ): void {
+        $field = new CommandField(
+            $dataPath,
+            $commandSetter,
+            $type,
+            $argumentsUpdater,
+            $isMultiShopField
+        );
+        $this->assertInstanceOf(CommandField::class, $field);
         $this->assertEquals($dataPath, $field->getDataPath());
-        $this->assertEquals($commandSetter, $field->getCommandSetter());
-        $this->assertEquals($type, $field->getType());
-        $this->assertEquals($isMultiShopField, $field->isMultiShopField());
+        $this->assertSame($commandSetter, $field->getCommandSetter());
+        $this->assertSame($type, $field->getType());
+        $this->assertSame($argumentsUpdater, $field->getArgumentsUpdater());
+        $this->assertSame($isMultiShopField, $field->isMultiShopField());
     }
 
     public function getValidParameters(): iterable
     {
-        yield [
+        yield 'multishop enabled' => [
             '[form_data][my_field]',
             'setMyField',
             CommandField::TYPE_STRING,
+            null,
             true,
         ];
-
-        yield [
+        yield 'arguments updater callback' => [
+            '[form_data][my_field]',
+            'setMyField',
+            CommandField::TYPE_STRING,
+            static function (): array {
+                return [];
+            },
+            false,
+        ];
+        yield 'string type' => [
+            '[form_data][my_field]',
+            'setMyField',
+            CommandField::TYPE_STRING,
+            null,
+            false,
+        ];
+        yield 'boolean type' => [
             'form_data.my_field',
             'setMyField',
             CommandField::TYPE_BOOL,
+            null,
             false,
         ];
-
-        yield [
+        yield 'integer type' => [
             'my_field',
             'setMyField',
             CommandField::TYPE_INT,
-            true,
+            null,
+            false,
         ];
-
-        yield [
+        yield 'array type' => [
             'localized_field',
             'setLocalizedField',
             CommandField::TYPE_ARRAY,
-            true,
+            null,
+            false,
         ];
-
-        yield [
+        yield 'datetime type' => [
             'date_time',
             'setDate',
             CommandField::TYPE_DATETIME,
-            true,
+            null,
+            false,
         ];
     }
 
@@ -100,31 +130,40 @@ class CommandFieldTest extends TestCase
      * @param bool $isMultiShopField
      * @param string $expectedException
      */
-    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField, string $expectedException): void
-    {
+    public function testInvalidConstructors(
+        string $dataPath,
+        string $commandSetter,
+        string $type,
+        bool $isMultiShopField,
+        string $expectedException
+    ): void {
         $this->expectException($expectedException);
-        new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
+        new CommandField(
+            $dataPath,
+            $commandSetter,
+            $type,
+            null,
+            $isMultiShopField
+        );
     }
 
     public function getInvalidParameters(): iterable
     {
-        yield [
+        yield 'invalid type' => [
             '[form_data][my_field]',
             'setMyField',
             'invalid',
             true,
             InvalidCommandFieldTypeException::class,
         ];
-
-        yield [
+        yield 'empty path' => [
             '',
             'setMyField',
             CommandField::TYPE_INT,
             false,
             InvalidPropertyPathException::class,
         ];
-
-        yield [
+        yield 'invalid path' => [
             '[form_data.objectField',
             'setMyField',
             CommandField::TYPE_INT,
