@@ -54,7 +54,22 @@ final class CustomerAddressGridDefinitionFactory extends AbstractGridDefinitionF
     public function __construct(HookDispatcherInterface $hookDispatcher, ?Request $currentRequest)
     {
         parent::__construct($hookDispatcher);
-        $this->backUrl = $currentRequest ? $currentRequest->getUri() : '';
+
+        // Remove query parameters to ensure behavior of "customer address grid" is consistent with `AddressGridDefinitionFactory`
+        if ($currentRequest) {
+            $requestCopy = clone $currentRequest;
+
+            $query = $requestCopy->query;
+            $query->remove('customer_address');
+            $qs = http_build_query($query->all(), '', '&');
+
+            $server = $requestCopy->server;
+            $server->set('QUERY_STRING', $qs);
+
+            $this->backUrl = $requestCopy->getUri();
+        } else {
+            $this->backUrl = '';
+        }
     }
 
     /**
