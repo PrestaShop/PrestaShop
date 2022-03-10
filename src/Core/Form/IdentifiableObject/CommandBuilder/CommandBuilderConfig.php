@@ -30,14 +30,33 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
 /**
  * Config that gives information to the CommandBuilder component to correctly check the data and prefill the command
- * object, each data property is associated to a setter in the command and its appropriate type for casting. Example:
+ * object, each data property is associated to a setter in the command and its appropriate type for casting.
+ * An optional callable argument is accepted in order to add or to update the setter arguments.
+ * Example:
  *
  * $config = new CommandBuilderConfig('modify_all_');
  * $config
  *     ->addField('[name]', 'setName', CommandField::TYPE_STRING)
- *     ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
- *     ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
- *     ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+ *     ->addField(
+ *         '[command][isValid]',
+ *         'setIsValid',
+ *         CommandField::TYPE_BOOL,
+ *         static function (bool $value, array $data): array {
+ *             return [
+ *                 $value,
+ *                 $data['foo'] ?? 'default',
+ *             ];
+ *         }
+ *     )
+ *     ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
+ *     ->addMultiShopField(
+ *         '[parent][children]',
+ *         'setChildren',
+ *         CommandField::TYPE_ARRAY,
+ *         static function (array $children): array {
+ *             return array_filter($children);
+ *         }
+ *     )
  * ;
  */
 class CommandBuilderConfig
@@ -64,17 +83,23 @@ class CommandBuilderConfig
      * @param string $propertyPath
      * @param string $commandSetter
      * @param string $propertyType
+     * @param callable|null $argumentsUpdater
      *
-     * @return $this
+     * @return static
      *
      * @throws InvalidCommandFieldTypeException
      */
-    public function addField(string $propertyPath, string $commandSetter, string $propertyType): self
-    {
+    public function addField(
+        string $propertyPath,
+        string $commandSetter,
+        string $propertyType,
+        ?callable $argumentsUpdater = null
+    ): self {
         $this->fields[] = new CommandField(
             $propertyPath,
             $commandSetter,
             $propertyType,
+            $argumentsUpdater,
             false
         );
 
@@ -85,17 +110,23 @@ class CommandBuilderConfig
      * @param string $propertyPath
      * @param string $commandSetter
      * @param string $propertyType
+     * @param callable|null $argumentsUpdater
      *
-     * @return $this
+     * @return static
      *
      * @throws InvalidCommandFieldTypeException
      */
-    public function addMultiShopField(string $propertyPath, string $commandSetter, string $propertyType): self
-    {
+    public function addMultiShopField(
+        string $propertyPath,
+        string $commandSetter,
+        string $propertyType,
+        ?callable $argumentsUpdater = null
+    ): self {
         $this->fields[] = new CommandField(
             $propertyPath,
             $commandSetter,
             $propertyType,
+            $argumentsUpdater,
             true
         );
 
