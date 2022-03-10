@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builder used to build UpdateProductBasicInformationCommand
@@ -64,9 +64,9 @@ class BasicInformationCommandsBuilder implements MultiShopProductCommandsBuilder
 
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiShopField('[header][name]', 'setLocalizedNames', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[description][description_short]', 'setLocalizedShortDescriptions', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[header][name]', 'setLocalizedNames', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description]', 'setLocalizedDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[description][description_short]', 'setLocalizedShortDescriptions', DataField::TYPE_ARRAY)
         ;
 
         $commandBuilder = new CommandBuilder($config);

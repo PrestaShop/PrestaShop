@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builds commands from product stock form type
@@ -63,16 +63,16 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
 
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiShopField('[stock][quantities][delta_quantity][delta]', 'setDeltaQuantity', CommandField::TYPE_INT)
-            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', CommandField::TYPE_INT)
-            ->addMultiShopField('[stock][options][stock_location]', 'setLocation', CommandField::TYPE_STRING)
-            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', CommandField::TYPE_INT)
-            ->addMultiShopField('[stock][options][low_stock_alert]', 'setLowStockAlert', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', CommandField::TYPE_INT)
-            ->addMultiShopField('[stock][availability][out_of_stock_type]', 'setOutOfStockType', CommandField::TYPE_INT)
-            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', CommandField::TYPE_DATETIME)
+            ->addMultiShopField('[stock][quantities][delta_quantity][delta]', 'setDeltaQuantity', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][options][stock_location]', 'setLocation', DataField::TYPE_STRING)
+            ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][options][low_stock_alert]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][availability][out_of_stock_type]', 'setOutOfStockType', DataField::TYPE_INT)
+            ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[stock][availability][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
         ;
 
         $commandBuilder = new CommandBuilder($config);
