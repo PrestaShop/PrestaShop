@@ -8,6 +8,7 @@ services:
       - '@twig'
       - '@prestashop.core.mail_template.variables_builder'
       - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.legacy.configuration'
     calls:
       - method: 'addTransformation'
         arguments:
