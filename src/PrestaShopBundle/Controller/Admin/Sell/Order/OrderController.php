@@ -403,7 +403,7 @@ class OrderController extends FrameworkBundleAdminController
                 'header' => &$headers,
                 'data' => &$data,
                 'orderGrid' => $orderGrid,
-                'isB2bEnabled' => $isB2bEnabled
+                'isB2bEnabled' => $isB2bEnabled,
             ]
         );
         return (new CsvResponse())
