@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration as Configuration;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
