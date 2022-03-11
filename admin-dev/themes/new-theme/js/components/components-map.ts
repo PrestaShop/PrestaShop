@@ -37,6 +37,7 @@ export default {
     jsScrollbar: '.js-multishop-scrollbar',
     shopLinks: 'a.multishop-modal-shop-name',
     groupShopLinks: 'a.multishop-modal-group-name',
+    allShopContextLinks: 'a.multishop-modal-all-name, a.multishop-modal-group-name, a.multishop-modal-shop-name',
     setContextUrl: (
       location: string,
       urlLetter: string,
@@ -93,6 +94,9 @@ export default {
   inputNotCheckbox: ':input:not(.multistore-checkbox)',
   inputContainer: '.input-container',
   formControlLabel: '.form-control-label',
+  multistoreConfigurationFormInputs: '.multistore-configuration-form input:not(.multistore-checkbox)',
+  multistoreContextSwitchCancelBtn: '.js-cancel-context-switch',
+  multistoreContextSwitchConfirmBtn: '.js-confirm-context-switch',
   tineMceEditor: {
     selector: '.autoload_rte',
     selectorClass: 'autoload_rte',
