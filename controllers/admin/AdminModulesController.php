@@ -681,7 +681,7 @@ class AdminModulesControllerCore extends AdminController
                         }
 
                         $echo = '';
-                        if ($key != 'update' && $key != 'updateAll') {
+                        if (!in_array($key, ['update', 'updateAll'])) {
                             // We check if method of module exists
                             if (!method_exists($module, $method)) {
                                 throw new PrestaShopException('Method of module cannot be found');
