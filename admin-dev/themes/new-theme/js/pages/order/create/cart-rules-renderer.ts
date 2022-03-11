@@ -120,10 +120,9 @@ export default class CartRulesRenderer {
    * @private
    */
   private renderNotFound(): void {
-    const $template = $(
+    this.$searchResultBox.append(
       $(createOrderMap.cartRulesNotFoundTemplate).html(),
-    ).clone();
-    this.$searchResultBox.replaceWith($template);
+    );
   }
 
   /**
