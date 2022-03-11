@@ -116,6 +116,50 @@ const initMultistoreHeader = () => {
 
   updateLinksAnchor();
   window.addEventListener('hashchange', updateLinksAnchor);
+
+  /**
+   * When a field from a multistore configuration form is changed,
+   * we set multistoreConfigurationFormHasChanged to true
+   */
+  const multistoreConfigurationFormContainer = document.querySelectorAll(ComponentsMap.multistoreConfigurationFormInputs);
+  let multistoreConfigurationFormHasChanged = false;
+  multistoreConfigurationFormContainer.forEach((element) => {
+    element.addEventListener('change', (event: Event) => {
+      multistoreConfigurationFormHasChanged = true;
+    });
+  });
+
+  /**
+   * When clicking on links to switch context,
+   * if the configuration form has been modified, display confirmation modal
+   */
+  function displaySwitchContextModal(event: Event) {
+    const switchContextModal = $('#switch_context_modal');
+    switchContextModal.modal('show');
+    switchContextModal.on('click', ComponentsMap.multistoreContextSwitchCancelBtn, () => {
+      switchContextModal.modal('hide');
+    });
+    switchContextModal.on('click', ComponentsMap.multistoreContextSwitchConfirmBtn, () => {
+      switchContextModal.modal('hide');
+      const target = <HTMLLinkElement>event.target;
+
+      if (target !== null) {
+        window.location.href = target.href;
+      }
+    });
+  }
+
+  const contextLinks = document.querySelectorAll(MultistoreHeaderMap.allShopContextLinks);
+  contextLinks.forEach((element) => {
+    element.addEventListener('click', (event: Event) => {
+      if (multistoreConfigurationFormHasChanged) {
+        event.preventDefault();
+        // close multistore header modal before displaying context switching modal
+        toggleModal();
+        displaySwitchContextModal(event);
+      }
+    });
+  });
 };
 
 $(() => {
