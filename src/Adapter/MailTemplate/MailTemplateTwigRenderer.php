@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\MailTemplateRendererInterface;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollection;
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Symfony\Component\Templating\EngineInterface;
-use PrestaShop\PrestaShop\Adapter\Configuration as Configuration;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -57,22 +57,28 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var TransformationCollection */
     private $transformations;
 
+    /** @var ConfigurationInterface */
+    private $configuration;
+
     /**
      * @param EngineInterface $engine
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
+     * @param ConfigurationInterface $configuration
      *
      * @throws TypeException
      */
     public function __construct(
         EngineInterface $engine,
         LayoutVariablesBuilderInterface $variablesBuilder,
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        ConfigurationInterface $configuration
     ) {
         $this->engine = $engine;
         $this->variablesBuilder = $variablesBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
+        $this->configuration = $configuration;
     }
 
     /**
@@ -122,7 +128,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
         $layoutVariables['templateType'] = $templateType;
-        $layoutVariables['giftWrapping'] = Configuration::get('PS_GIFT_WRAPPING');
+        $layoutVariables['giftWrapping'] = $this->configuration->get('PS_GIFT_WRAPPING');
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {
