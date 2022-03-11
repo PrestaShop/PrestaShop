@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollect
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
+use PrestaShop\PrestaShop\Adapter\Configuration as Configuration;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
@@ -122,6 +123,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
         $layoutVariables['templateType'] = $templateType;
+        $layoutVariables['giftWrapping'] = Configuration::get('PS_GIFT_WRAPPING');
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {

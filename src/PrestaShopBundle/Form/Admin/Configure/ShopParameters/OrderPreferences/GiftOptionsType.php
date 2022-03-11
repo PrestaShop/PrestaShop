@@ -78,7 +78,6 @@ class GiftOptionsType extends TranslatorAwareType
             ->add('enable_gift_wrapping', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Offer gift wrapping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Suggest gift-wrapping to customers.', 'Admin.Shopparameters.Help'),
                 'multistore_configuration_key' => 'PS_GIFT_WRAPPING',
             ])
             ->add('gift_wrapping_price', MoneyWithSuffixType::class, [
