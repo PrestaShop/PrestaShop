@@ -138,81 +138,11 @@ class AdminModulesControllerCore extends AdminController
         }
     }
 
-    public function displayAjaxRefreshModuleList()
-    {
-        echo json_encode(['status' => $this->status]);
-    }
-
-    public function ajaxProcessReloadModulesList()
-    {
-        if (Tools::getValue('filterCategory')) {
-            Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, Tools::getValue('filterCategory'));
-        }
-        if (Tools::getValue('unfilterCategory')) {
-            Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, '');
-        }
-
-        $this->initContent();
-        $this->smartyOutputContent('controllers/modules/list.tpl');
-        exit;
-    }
-
-    public function ajaxProcessSetFilter()
-    {
-        $this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
-        die('OK');
-    }
-
-    public function ajaxProcessSaveFavoritePreferences()
-    {
-        $action = Tools::getValue('action_pref');
-        $value = Tools::getValue('value_pref');
-        $module = Tools::getValue('module_pref');
-        $id_module_preference = (int) Db::getInstance()->getValue('SELECT `id_module_preference` FROM `' . _DB_PREFIX_ . 'module_preference` WHERE `id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'');
-        if ($id_module_preference > 0) {
-            $update = [];
-            if ($action == 'i') {
-                $update['interest'] = ($value == '' ? null : (int) $value);
-            }
-            if ($action == 'f') {
-                $update['favorite'] = ($value == '' ? null : (int) $value);
-            }
-            Db::getInstance()->update('module_preference', $update, '`id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'', 0, true);
-        } else {
-            $insert = ['id_employee' => (int) $this->id_employee, 'module' => pSQL($module), 'interest' => null, 'favorite' => null];
-            if ($action == 'i') {
-                $insert['interest'] = ($value == '' ? null : (int) $value);
-            }
-            if ($action == 'f') {
-                $insert['favorite'] = ($value == '' ? null : (int) $value);
-            }
-            Db::getInstance()->insert('module_preference', $insert, true);
-        }
-        die('OK');
-    }
-
-    public function ajaxProcessSaveTabModulePreferences()
-    {
-        $values = Tools::getValue('value_pref');
-        $module = Tools::getValue('module_pref');
-        if (Validate::isModuleName($module)) {
-            Db::getInstance()->execute('DELETE FROM `' . _DB_PREFIX_ . 'tab_module_preference` WHERE `id_employee` = ' . (int) $this->id_employee . ' AND `module` = \'' . pSQL($module) . '\'');
-            if (is_array($values) && count($values)) {
-                foreach ($values as $value) {
-                    Db::getInstance()->execute('
-                        INSERT INTO `' . _DB_PREFIX_ . 'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
-                        VALUES (NULL, ' . (int) $this->id_employee . ', ' . (int) $value . ', \'' . pSQL($module) . '\');');
-                }
-            }
-        }
-        die('OK');
-    }
-
-    /*
-    ** Get current URL
-    **
-    ** @param array $remove List of keys to remove from URL
-    ** @return string
+    /**
+     * Get current URL
+     *
+     * @param array $remove List of keys to remove from URL
+     * @return string
     */
     protected function getCurrentUrl($remove = [])
     {
@@ -729,10 +659,7 @@ class AdminModulesControllerCore extends AdminController
             Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('module_name') . '&token=' . Tools::getValue('token') . '&module_name=' . Tools::getValue('module_name'));
         }
 
-        // Execute filter or callback methods
-        $filter_methods = ['filterModules', 'resetFilterModules', 'filterCategory', 'unfilterCategory'];
-        $callback_methods = ['reset', 'download', 'enable', 'delete', 'enable_device', 'disable_device'];
-        $post_process_methods_list = array_merge((array) $filter_methods, (array) $callback_methods);
+        $post_process_methods_list = ['reset', 'download', 'enable', 'delete', 'enable_device', 'disable_device'];
         foreach ($post_process_methods_list as $ppm) {
             if (Tools::isSubmit($ppm)) {
                 $ppm = 'postProcess' . ucfirst($ppm);
