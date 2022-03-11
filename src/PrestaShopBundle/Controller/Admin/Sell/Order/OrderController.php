@@ -397,7 +397,15 @@ class OrderController extends FrameworkBundleAdminController
 
             $data[] = $item;
         }
-
+        $this->dispatchHook(
+            'actionExportOrder',
+            [
+                'header' => &$headers,
+                'data' => &$data,
+                'orderGrid' => $orderGrid,
+                'isB2bEnabled' => $isB2bEnabled
+            ]
+        );
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
