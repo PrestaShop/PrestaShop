@@ -1161,30 +1161,6 @@ function getControllerActionMap(force_action) {
   return new Array('back-office',controller, action);
 }
 
-function controllerQuickView()
-{
-  $('.controller-quick-view').click(function()
-  {
-    $.ajax({
-      type: "POST",
-      url : admin_modules_link,
-      dataType: 'json',
-      async: true,
-      data : {
-        ajax : "1",
-        controller : "AdminModules",
-        action : "GetModuleReadMoreView",
-        module: $(this).data("name"),
-      },
-      success : function(data)
-      {
-        $('#modules_list_container_tab_modal').html(data.body);
-        $('#modules_list_container .modal-header').html(data.header);
-      }
-    });
-  });
-}
-
 function ajaxStates(id_state_selected)
 {
   $.ajax({
