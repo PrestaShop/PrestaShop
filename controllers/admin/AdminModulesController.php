@@ -701,91 +701,18 @@ class AdminModulesControllerCore extends AdminController
                         }
                     }
 
-                    // If the method called is "configure" (getContent method), we show the html code of configure page
-                    if ($key == 'configure' && $moduleManager->isInstalled($module->name)) {
-                        $this->bootstrap = (bool) $module->bootstrap;
-                        if (isset($module->multishop_context)) {
-                            $this->multishop_context = $module->multishop_context;
-                        }
-
-                        $back_link = self::$currentIndex . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name;
-                        $hook_link = 'index.php?tab=AdminModulesPositions&token=' . Tools::getAdminTokenLite('AdminModulesPositions') . '&show_modules=' . (int) $module->id;
-                        $trad_link = 'index.php?tab=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&lang=';
-                        $rtl_link = 'index.php?tab=AdminModules&token=' . Tools::getAdminTokenLite('AdminModules') . '&configure=' . $module->name . '&generate_rtl=1';
-                        $disable_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&enable=0&tab_module=' . $module->tab;
-                        $uninstall_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&uninstall=' . $module->name . '&tab_module=' . $module->tab;
-                        $reset_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&reset&tab_module=' . $module->tab;
-
-                        $is_reset_ready = false;
-                        if (method_exists($module, 'reset')) {
-                            $is_reset_ready = true;
-                        }
-
-                        $this->context->smarty->assign(
-                            [
-                                'module_name' => $module->name,
-                                'module_display_name' => $module->displayName,
-                                'back_link' => $back_link,
-                                'module_hook_link' => $hook_link,
-                                'module_disable_link' => $disable_link,
-                                'module_uninstall_link' => $uninstall_link,
-                                'module_reset_link' => $reset_link,
-                                'trad_link' => $trad_link,
-                                'module_rtl_link' => ($this->context->language->is_rtl ? $rtl_link : null),
-                                'module_languages' => Language::getLanguages(false),
-                                'theme_language_dir' => _THEME_LANG_DIR_,
-                                'page_header_toolbar_title' => $this->page_header_toolbar_title,
-                                'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-                                'add_permission' => $this->access('add'),
-                                'is_reset_ready' => $is_reset_ready,
-                            ]
-                        );
-
-                        // Display checkbox in toolbar if multishop
-                        if (Shop::isFeatureActive()) {
-                            if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                                $shop_context = 'shop <strong>' . $this->context->shop->name . '</strong>';
-                            } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-                                $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
-                                $shop_context = 'all shops of group shop <strong>' . $shop_group->name . '</strong>';
-                            } else {
-                                $shop_context = 'all shops';
+                        // If the method called is "configure" (getContent method), we show the html code of configure page
+                        if ($key == 'configure' && $moduleManager->isInstalled($module->name)) {
+                            $this->buildModuleConfigurationPage($module, $echo);
+                        } elseif ($echo === true) {
+                            $return = 13;
+                            if ($method == 'install') {
+                                $return = 12;
+                                $installed_modules[] = $module->id;
                             }
-
-                            $this->context->smarty->assign([
-                                'module' => $module,
-                                'display_multishop_checkbox' => true,
-                                'current_url' => $this->getCurrentUrl('enable'),
-                                'shop_context' => $shop_context,
-                            ]);
+                        } elseif ($echo === false) {
+                            $module_errors[] = ['name' => $name, 'message' => $module->getErrors()];
                         }
-
-                        $this->context->smarty->assign([
-                            'is_multishop' => Shop::isFeatureActive(),
-                            'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP,
-                        ]);
-
-                        if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop)) {
-                            Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
-                            unset(Context::getContext()->tmpOldShop);
-                        }
-
-                        // Display module configuration
-                        $header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
-                        $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
-
-                        $output = $header . $echo;
-
-                        $this->context->smarty->assign('module_content', $output . $configuration_bar);
-                    } elseif ($echo === true) {
-                        $return = 13;
-                        if ($method == 'install') {
-                            $return = 12;
-                            $installed_modules[] = $module->id;
-                        }
-                    } elseif ($echo === false) {
-                        $module_errors[] = ['name' => $name, 'message' => $module->getErrors()];
-                    }
 
                     if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop)) {
                         Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
@@ -1305,5 +1232,110 @@ class AdminModulesControllerCore extends AdminController
             'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
             'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl'),
         ]));
+    }
+
+    /**
+     * @param Module $module
+     * @param string $echo
+     *
+     * @return void
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
+    protected function buildModuleConfigurationPage(Module $module, string $echo): void
+    {
+        $this->bootstrap = (bool) $module->bootstrap;
+        if (isset($module->multishop_context)) {
+            $this->multishop_context = $module->multishop_context;
+        }
+
+        $back_link = self::$currentIndex . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name;
+        $hook_link = 'index.php?tab=AdminModulesPositions&token='
+            . Tools::getAdminTokenLite(
+                'AdminModulesPositions'
+            ) . '&show_modules=' . (int) $module->id;
+        $trad_link = 'index.php?tab=AdminTranslations&token='
+            . Tools::getAdminTokenLite(
+                'AdminTranslations'
+            ) . '&type=modules&lang=';
+        $rtl_link = 'index.php?tab=AdminModules&token='
+            . Tools::getAdminTokenLite(
+                'AdminModules'
+            ) . '&configure=' . $module->name . '&generate_rtl=1';
+        $disable_link = $this->context->link->getAdminLink(
+                'AdminModules'
+            )
+            . '&module_name=' . $module->name . '&enable=0&tab_module=' . $module->tab;
+        $uninstall_link = $this->context->link->getAdminLink(
+                'AdminModules'
+            )
+            . '&module_name=' . $module->name . '&uninstall=' . $module->name . '&tab_module=' . $module->tab;
+        $reset_link = $this->context->link->getAdminLink(
+                'AdminModules'
+            )
+            . '&module_name=' . $module->name . '&reset&tab_module=' . $module->tab;
+
+        $is_reset_ready = false;
+        if (method_exists($module, 'reset')) {
+            $is_reset_ready = true;
+        }
+
+        $this->context->smarty->assign([
+            'module_name' => $module->name,
+            'module_display_name' => $module->displayName,
+            'back_link' => $back_link,
+            'module_hook_link' => $hook_link,
+            'module_disable_link' => $disable_link,
+            'module_uninstall_link' => $uninstall_link,
+            'module_reset_link' => $reset_link,
+            'trad_link' => $trad_link,
+            'module_rtl_link' => ($this->context->language->is_rtl ? $rtl_link : null),
+            'module_languages' => Language::getLanguages(false),
+            'theme_language_dir' => _THEME_LANG_DIR_,
+            'page_header_toolbar_title' => $this->page_header_toolbar_title,
+            'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+            'add_permission' => $this->access('add'),
+            'is_reset_ready' => $is_reset_ready,
+        ]);
+
+        // Display checkbox in toolbar if multishop
+        if (Shop::isFeatureActive()) {
+            if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+                $shop_context = 'shop <strong>' . $this->context->shop->name . '</strong>';
+            } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
+                $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
+                $shop_context = 'all shops of group shop <strong>' . $shop_group->name . '</strong>';
+            } else {
+                $shop_context = 'all shops';
+            }
+
+            $this->context->smarty->assign([
+                'module' => $module,
+                'display_multishop_checkbox' => true,
+                'current_url' => $this->getCurrentUrl('enable'),
+                'shop_context' => $shop_context,
+            ]);
+        }
+
+        $this->context->smarty->assign([
+            'is_multishop' => Shop::isFeatureActive(),
+            'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP,
+        ]);
+
+        if (Shop::isFeatureActive()
+            && isset(Context::getContext()->tmpOldShop)
+        ) {
+            Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
+            unset(Context::getContext()->tmpOldShop);
+        }
+
+        // Display module configuration
+        $header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
+        $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
+
+        $output = $header . $echo;
+
+        $this->context->smarty->assign('module_content', $output . $configuration_bar);
     }
 }
