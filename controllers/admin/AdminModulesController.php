@@ -890,29 +890,6 @@ class AdminModulesControllerCore extends AdminController
         return $html_error;
     }
 
-    /**
-     * @param Module $module
-     */
-    public function makeModulesStats($module)
-    {
-        // Count Installed Modules
-        if (isset($module->id) && $module->id > 0) {
-            ++$this->nb_modules_installed;
-        }
-
-        // Count Activated Modules
-        if (isset($module->id) && $module->id > 0 && $module->active > 0) {
-            ++$this->nb_modules_activated;
-        }
-
-        // Count Modules By Category
-        if (isset($this->list_modules_categories[$module->tab]['nb'])) {
-            ++$this->list_modules_categories[$module->tab]['nb'];
-        } else {
-            ++$this->list_modules_categories['others']['nb'];
-        }
-    }
-
     public function isModuleFiltered($module)
     {
         // If action on module, we display it
