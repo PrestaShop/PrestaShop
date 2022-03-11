@@ -33,15 +33,6 @@
 							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></span>
 							<div{if isset($btn.force_desc) && $btn.force_desc == true } class="locked"{/if}>{$btn.desc}</div>
 						</a>
-						{if $k == 'modules-list'}
-							<div id="modules_list_container" style="display:none">
-							<div style="float:right;margin:5px">
-								<a href="#" onclick="$('#modules_list_container').slideUp();return false;"><img alt="X" src="../img/admin/close.png" /></a>
-							</div>
-							<div id="modules_list_loader"><img src="../img/loader.gif" alt="" border="0" /></div>
-							<div id="modules_list_container_tab_modal" style="display:none;"></div>
-							</div>
-						{/if}
 					</li>
 				{/foreach}
 			</ul>
@@ -49,7 +40,6 @@
 			<script type="text/javascript">
 			//<![CDATA[
 				var submited = false
-				var modules_list_loaded = false;
 				$(function() {
 					//get reference on save link
 					btn_save = $('#{$table}_toolbar span[class~="process-icon-save"]').parent();
@@ -116,17 +106,7 @@
 							}
 						{/block}
 					}
-					{if isset($tab_modules_open) && $tab_modules_open}
-						$('#modules_list_container').slideDown();
-						openModulesList();
-					{/if}
 				});
-				{if isset($tab_modules_list) && $tab_modules_list}
-					$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
-						$('#modules_list_container').slideDown();
-						openModulesList();
-					});
-				{/if}
 			//]]>
 			</script>
 		{/block}

@@ -49,9 +49,6 @@ final class TabModuleListProvider implements TabModuleListProviderInterface
      */
     public function getTabModules($tabClassName)
     {
-        $tabId = Tab::getIdFromClassName($tabClassName);
-        $modules = Tab::getTabModulesList($tabId);
-
-        return $modules['default_list'];
+        return [];
     }
 }
