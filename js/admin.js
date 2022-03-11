@@ -779,8 +779,6 @@ $(document).ready(function()
       clearTimeout(ajax_running_timeout);
     });
 
-  bindTabModuleListAction();
-
   //Check filters value on submit filter
   $("[name='submitFilter']").click(function(event) {
     var list_id = $(this).data('list-id');
@@ -919,23 +917,6 @@ function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add, 
   });
 }
 
-function bindTabModuleListAction()
-{
-  $('.action_tab_module').each( function (){
-    $(this).click(function () {
-      option = $('#'+$(this).data('option')+' :selected');
-      if ($(option).data('onclick') != '')
-      {
-        var f = eval("(function(){ "+$(option).data('onclick')+"})");
-        if (f.call())
-          window.location.href = $(option).data('href');
-      }
-      else
-        window.location.href = $(option).data('href');
-      return false;
-    });
-  });
-}
 
 // Delete all tags HTML
 function stripHTML(oldString)
@@ -1178,45 +1159,6 @@ function getControllerActionMap(force_action) {
     controller = help_class_name;
 
   return new Array('back-office',controller, action);
-}
-
-function openModulesList()
-{
-
-  if (!modules_list_loaded)
-  {
-    header = $('#modules_list_container .modal-header').html();
-
-    $.ajax({
-      type: "GET",
-      url : admin_modules_link,
-      async: true,
-      data : {
-        ajax : "1",
-        controller : "AdminModules",
-        action : "getTabModulesList",
-        tab_modules_list : tab_modules_list,
-        back_tab_modules_list : window.location.href,
-        admin_list_from_source : getControllerActionMap().join()
-      },
-      success : function(data)
-      {
-        $('#modules_list_container_tab_modal').html(data).slideDown();
-        $('#modules_list_loader').hide();
-        modules_list_loaded = data;
-        $('.help-tooltip').tooltip();
-        controllerQuickView();
-      }
-    });
-  }
-  else
-  {
-    $('#modules_list_container_tab_modal').html(modules_list_loaded).slideDown();
-    $('#modules_list_loader').hide();
-    $('#modules_list_container .modal-header').html(header);
-    controllerQuickView();
-  }
-  return false;
 }
 
 function controllerQuickView()

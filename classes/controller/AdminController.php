@@ -152,12 +152,6 @@ class AdminControllerCore extends Controller
     /** @var array|null List to be generated */
     protected $fields_list;
 
-    /** @var array Modules list filters */
-    protected $filter_modules_list = null;
-
-    /** @var array Modules list filters */
-    protected $modules_list = [];
-
     /** @var array Edit form to be generated */
     protected $fields_form;
 
@@ -343,9 +337,6 @@ class AdminControllerCore extends Controller
 
     /** @var string|null */
     protected $display;
-
-    /** @var array */
-    protected $tab_modules_list = ['default_list' => [], 'slider_list' => []];
 
     /** @var string */
     public $tpl_folder;
@@ -1880,12 +1871,10 @@ class AdminControllerCore extends Controller
 
         // Check if header/footer have been overridden
         $dir = $this->context->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($this->override_folder, '\\/') . DIRECTORY_SEPARATOR;
-        $module_list_dir = $this->context->smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
 
         $header_tpl = file_exists($dir . 'header.tpl') ? $dir . 'header.tpl' : 'header.tpl';
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
-        $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
         $tpl_action = $this->tpl_folder . $this->display . '.tpl';
 
         // Check if action template has been overridden
@@ -1928,13 +1917,6 @@ class AdminControllerCore extends Controller
                     'page_header_toolbar' => $this->context->smarty->fetch($page_header_toolbar),
                 ]
             );
-            if (!empty($modal_module_list)) {
-                $this->context->smarty->assign(
-                    [
-                        'modal_module_list' => $this->context->smarty->fetch($modal_module_list),
-                    ]
-                );
-            }
         }
 
         $this->context->smarty->assign('baseAdminUrl', __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/');
@@ -3516,52 +3498,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param array|string|null $filter_modules_list
-     * @param string|bool $tracking_source
-     *
-     * @return bool
-     *
-     * @throws PrestaShopException
-     */
-    public function getModulesList($filter_modules_list, $tracking_source = false)
-    {
-        if (!is_array($filter_modules_list) && null !== $filter_modules_list) {
-            $filter_modules_list = [$filter_modules_list];
-        }
-
-        if (null === $filter_modules_list || !count($filter_modules_list)) {
-            return false;
-        } //if there is no modules to display just return false;
-
-        $all_modules = Module::getModulesOnDisk(true);
-        $this->modules_list = [];
-        foreach ($all_modules as $module) {
-            $perm = true;
-            if ($module->id) {
-                $perm &= Module::getPermissionStatic($module->id, 'configure');
-            } else {
-                $id_admin_module = Tab::getIdFromClassName('AdminModules');
-                $access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
-                if (!$access['edit']) {
-                    $perm &= false;
-                }
-            }
-
-            if (in_array($module->name, $filter_modules_list) && $perm) {
-                $this->fillModuleData($module, 'array', null, $tracking_source);
-                $this->modules_list[array_search($module->name, $filter_modules_list)] = $module;
-            }
-        }
-        ksort($this->modules_list);
-
-        if (count($this->modules_list)) {
-            return true;
-        }
-
-        return false; //no module found on disk just return false;
-    }
-
-    /**
      * @return array
      */
     public function getLanguages()
@@ -4337,14 +4273,6 @@ class AdminControllerCore extends Controller
         $module->options['uninstall_onclick'] = ((isset($module->onclick_option) && !$module->onclick_option) ?
             ((empty($module->confirmUninstall)) ? 'return confirm(\'' . $this->trans('Do you really want to uninstall this module?') . '\');' : 'return confirm(\'' . addslashes($module->confirmUninstall) . '\');') :
             $obj->onclickOption('uninstall', $module->options['uninstall_url']));
-
-        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int) Tools::getValue('conf') > 0) {
-            $module->message = $this->_conf[(int) Tools::getValue('conf')];
-        }
-
-        if ((Tools::getValue('module_name') == $module->name || in_array($module->name, explode('|', Tools::getValue('modules_list')))) && (int) Tools::getValue('conf') > 0) {
-            unset($obj);
-        }
     }
 
     /**
@@ -4634,43 +4562,6 @@ class AdminControllerCore extends Controller
         }
 
         return $return;
-    }
-
-    public function ajaxProcessGetModuleQuickView()
-    {
-        $modules = Module::getModulesOnDisk();
-
-        /** @var Module[] $modules */
-        foreach ($modules as $module) {
-            if ($module->name == Tools::getValue('module')) {
-                break;
-            }
-        }
-        if (isset($module) && $module instanceof Module) {
-            $url = isset($module->url) ? $module->url : null;
-
-            if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')) {
-                $url = $this->context->link->getAdminLink('AdminModules') . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
-            }
-
-            $this->context->smarty->assign([
-                'displayName' => $module->displayName,
-                'image' => isset($module->image) ? $module->image : null,
-                'nb_rates' => (int) $module->nb_rates[0],
-                'avg_rate' => (int) $module->avg_rate[0],
-                'badges' => $module->badges,
-                'compatibility' => $module->compatibility,
-                'description_full' => $module->description_full,
-                'additional_description' => $module->additional_description,
-                'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
-                'url' => $url,
-                'price' => isset($module->price) ? $module->price : null,
-            ]);
-        }
-        // Fetch the translations in the right place - they are not defined by our current controller!
-        Context::getContext()->override_controller_name_for_translations = 'AdminModules';
-        $this->smartyOutputContent('controllers/modules/quickview.tpl');
-        die(1);
     }
 
     /**

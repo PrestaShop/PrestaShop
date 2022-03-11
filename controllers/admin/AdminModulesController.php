@@ -56,8 +56,6 @@ class AdminModulesControllerCore extends AdminController
     protected $iso_default_country;
     protected $filter_configuration = [];
 
-    protected $xml_modules_list = _PS_API_MODULES_LIST_16_;
-
     /**
      * Admin Modules Controller Constructor
      * Init list modules categories
@@ -156,58 +154,6 @@ class AdminModulesControllerCore extends AdminController
 
         $this->initContent();
         $this->smartyOutputContent('controllers/modules/list.tpl');
-        exit;
-    }
-
-    public function ajaxProcessGetTabModulesList()
-    {
-        $tab_modules_list = Tools::getValue('tab_modules_list');
-        $back = Tools::getValue('back_tab_modules_list');
-        if ($back) {
-            $back .= '&tab_modules_open=1';
-        }
-        $modules_list_unsort = [];
-        if ($tab_modules_list) {
-            $tab_modules_list = explode(',', $tab_modules_list);
-            $modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, Tools::getValue('admin_list_from_source'));
-        }
-
-        $installed = $uninstalled = [];
-        foreach ($tab_modules_list as $value) {
-            $continue = 0;
-            foreach ($modules_list_unsort['installed'] as $mod_in) {
-                if ($mod_in->name == $value) {
-                    $continue = 1;
-                    $installed[] = $mod_in;
-                }
-            }
-            if ($continue) {
-                continue;
-            }
-            foreach ($modules_list_unsort['not_installed'] as $mod_in) {
-                if ($mod_in->name == $value) {
-                    $uninstalled[] = $mod_in;
-                }
-            }
-        }
-
-        $modules_list_sort = [
-            'installed' => $installed,
-            'not_installed' => $uninstalled,
-        ];
-
-        $this->context->smarty->assign([
-            'currentIndex' => self::$currentIndex,
-            'tab_modules_list' => $modules_list_sort,
-            'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules') . '&select=favorites',
-            'lang_iso' => $this->context->language->iso_code,
-        ]);
-
-        if ($admin_list_from_source = Tools::getValue('admin_list_from_source')) {
-            $this->context->smarty->assign('admin_list_from_source', $admin_list_from_source);
-        }
-
-        $this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
         exit;
     }
 
@@ -759,53 +705,6 @@ class AdminModulesControllerCore extends AdminController
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : ''));
             }
         }
-    }
-
-    /**
-     * @param array|null $tab_modules_list
-     * @param false $install_source_tracking
-     *
-     * @return array<string, array<Module>>
-     */
-    protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
-    {
-        $all_modules = Module::getModulesOnDisk(true, $this->id_employee);
-        $all_unik_modules = [];
-        $modules_list = ['installed' => [], 'not_installed' => []];
-
-        foreach ($all_modules as $mod) {
-            if (!isset($all_unik_modules[$mod->name])) {
-                $all_unik_modules[$mod->name] = $mod;
-            }
-        }
-
-        $all_modules = $all_unik_modules;
-
-        foreach ($all_modules as $module) {
-            if (!isset($tab_modules_list) || in_array($module->name, $tab_modules_list)) {
-                $perm = true;
-                if ($module->id) {
-                    $perm &= Module::getPermissionStatic($module->id, 'configure');
-                } else {
-                    $id_admin_module = Tab::getIdFromClassName('AdminModules');
-                    $access = Profile::getProfileAccess($this->context->employee->id_profile, $id_admin_module);
-                    if (!$access['edit']) {
-                        $perm &= false;
-                    }
-                }
-
-                if ($perm) {
-                    $this->fillModuleData($module, 'array', null, $install_source_tracking);
-                    if ($module->id) {
-                        $modules_list['installed'][] = $module;
-                    } else {
-                        $modules_list['not_installed'][] = $module;
-                    }
-                }
-            }
-        }
-
-        return $modules_list;
     }
 
     public function postProcess()

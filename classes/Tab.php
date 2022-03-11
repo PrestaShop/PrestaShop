@@ -696,42 +696,4 @@ class TabCore extends ObjectModel
     {
         return Db::getInstance()->getValue('SELECT class_name FROM ' . _DB_PREFIX_ . 'tab WHERE id_tab = ' . (int) $idTab);
     }
-
-    public static function getTabModulesList($idTab)
-    {
-        $modulesList = ['default_list' => [], 'slider_list' => []];
-
-        if (!Tools::isFileFresh(Module::CACHE_FILE_TAB_MODULES_LIST, Tools::CACHE_LIFETIME_SECONDS)) {
-            Tools::refreshFile(Module::CACHE_FILE_TAB_MODULES_LIST, _PS_TAB_MODULE_LIST_URL_);
-        }
-
-        $xmlTabModulesList = @simplexml_load_file(_PS_ROOT_DIR_ . Module::CACHE_FILE_TAB_MODULES_LIST);
-
-        $className = null;
-        $displayType = 'default_list';
-        if ($xmlTabModulesList) {
-            foreach ($xmlTabModulesList->tab as $tab) {
-                foreach ($tab->attributes() as $key => $value) {
-                    if ($key == 'class_name') {
-                        $className = (string) $value;
-                    }
-                }
-
-                if (Tab::getIdFromClassName((string) $className) == $idTab) {
-                    foreach ($tab->attributes() as $key => $value) {
-                        if ($key == 'display_type') {
-                            $displayType = (string) $value;
-                        }
-                    }
-
-                    foreach ($tab->children() as $module) {
-                        $modulesList[$displayType][(int) $module['position']] = (string) $module['name'];
-                    }
-                    ksort($modulesList[$displayType]);
-                }
-            }
-        }
-
-        return $modulesList;
-    }
 }
