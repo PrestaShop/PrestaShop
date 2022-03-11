@@ -4232,50 +4232,6 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @param Module $module
-     * @param string $output_type
-     * @param string|null $back
-     * @param string|bool $install_source_tracking
-     */
-    public function fillModuleData(&$module, $output_type = 'link', $back = null, $install_source_tracking = false)
-    {
-        /** @var Module $obj */
-        $obj = null;
-        if (isset($module->onclick_option) && $module->onclick_option) {
-            $obj = new $module->name();
-        }
-        // Fill module data
-        $module->logo = '../../img/module/default.png';
-
-        if (@filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . basename(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR . $module->name
-            . DIRECTORY_SEPARATOR . 'logo.gif')) {
-            $module->logo = 'logo.gif';
-        }
-        if (@filemtime(_PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . basename(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR . $module->name
-            . DIRECTORY_SEPARATOR . 'logo.png')) {
-            $module->logo = 'logo.png';
-        }
-
-        $link_admin_modules = $this->context->link->getAdminLink('AdminModules', true);
-
-        $module->options['install_url'] = $link_admin_modules . '&install=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name
-            . '&anchor=' . ucfirst($module->name) . ($install_source_tracking ? '&source=' . $install_source_tracking : '');
-        $module->options['update_url'] = $link_admin_modules . '&update=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
-        $module->options['uninstall_url'] = $link_admin_modules . '&uninstall=' . urlencode($module->name) . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name);
-
-        // free modules get their source tracking data here
-        $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back, $install_source_tracking);
-        // pay modules get their source tracking data here
-        if ($install_source_tracking && isset($module->addons_buy_url)) {
-            $module->addons_buy_url .= '&utm_term=' . $install_source_tracking;
-        }
-
-        $module->options['uninstall_onclick'] = ((isset($module->onclick_option) && !$module->onclick_option) ?
-            ((empty($module->confirmUninstall)) ? 'return confirm(\'' . $this->trans('Do you really want to uninstall this module?') . '\');' : 'return confirm(\'' . addslashes($module->confirmUninstall) . '\');') :
-            $obj->onclickOption('uninstall', $module->options['uninstall_url']));
-    }
-
-    /**
      * Display modules list.
      *
      * @param Module|stdClass $module
