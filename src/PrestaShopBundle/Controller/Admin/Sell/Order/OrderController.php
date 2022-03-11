@@ -397,6 +397,7 @@ class OrderController extends FrameworkBundleAdminController
 
             $data[] = $item;
         }
+
         $this->dispatchHook(
             'actionExportOrder',
             [
@@ -406,6 +407,7 @@ class OrderController extends FrameworkBundleAdminController
                 'isB2bEnabled' => $isB2bEnabled,
             ]
         );
+
         return (new CsvResponse())
             ->setData($data)
             ->setHeadersData($headers)
