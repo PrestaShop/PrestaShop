@@ -25,13 +25,13 @@
 
 <div class="product-header-details">
 {% block header_summary %}
+  {# It is important to use vars.data and not vars.value because value contains the localized value which may
+   # not be written with numeric characters anymore depending on the language but data is the initial float data.
+   #}
   {% set productData = productForm.vars.data %}
   <div class="product-header-summary">
     <div class="product-field-preview">
       <div class="product-field-value">
-        {# It is important to use vars.data and not vars.value because value contains the localized value which may
-         # not be written with numeric characters anymore depending on the language but data is the initial float data.
-         #}
         {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
       </div>
       <div class="product-field-label">
