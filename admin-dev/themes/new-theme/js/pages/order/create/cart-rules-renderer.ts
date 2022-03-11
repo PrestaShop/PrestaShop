@@ -123,7 +123,7 @@ export default class CartRulesRenderer {
     const $template = $(
       $(createOrderMap.cartRulesNotFoundTemplate).html(),
     ).clone();
-    this.$searchResultBox.replaceWith($template);
+    this.$searchResultBox.append($template);
   }
 
   /**
