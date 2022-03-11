@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -38,7 +39,6 @@ use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationCollect
 use PrestaShop\PrestaShop\Core\MailTemplate\Transformation\TransformationInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 /**
  * MailTemplateTwigRenderer is a basic implementation of MailTemplateRendererInterface
