@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,7 +37,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class generates "Product page" form
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class PageType extends AbstractType
+class PageType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -45,11 +45,59 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('display_quantities', SwitchType::class)
-            ->add('display_last_quantities', IntegerType::class)
-            ->add('display_unavailable_attributes', SwitchType::class)
-            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
+            ->add('display_quantities', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display available quantities on the product page',
+                    'Admin.Shopparameters.Feature'
+                ),
+            ])
+            ->add('display_last_quantities', IntegerType::class, [
+                'label' => $this->trans(
+                    'Display remaining quantities when the quantity is lower than',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Set to "0" to disable this feature.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
+            ->add('display_unavailable_attributes', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display unavailable attributes on the product page',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'If an attribute is not available in every product combination, it will not be displayed.',
+                    'Admin.Shopparameters.Help'
+                ),
+            ])
+            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display the "%add_to_cart_label%" button when a product has attributes',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '%add_to_cart_label%' => $this->trans(
+                            'Add to cart',
+                            'Shop.Theme.Actions'
+                        ),
+                    ]
+                ),
+                'help' => $this->trans(
+                    'Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '%add_to_cart_label%' => $this->trans(
+                            'Add to cart',
+                            'Shop.Theme.Actions'
+                        ),
+                    ]
+                ),
+            ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Separator of attribute anchor on the product links',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'choices' => [
                     '-' => '-',
                     ',' => ',',
@@ -57,7 +105,16 @@ class PageType extends AbstractType
                 'required' => true,
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('display_discount_price', SwitchType::class);
+            ->add('display_discount_price', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display discounted price',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'In the volume discounts board, display the new price with the applied discount instead of showing the discount (ie. "-5%").',
+                    'Admin.Shopparameters.Help'
+                ),
+            ]);
     }
 
     /**
