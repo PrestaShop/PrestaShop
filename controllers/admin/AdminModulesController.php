@@ -890,30 +890,6 @@ class AdminModulesControllerCore extends AdminController
         return $html_error;
     }
 
-    public function initModulesList(&$modules)
-    {
-        foreach ($modules as $k => $module) {
-            // Check add permissions, if add permissions not set, addons modules and uninstalled modules will not be displayed
-            if (!$this->access('add') && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought')) {
-                unset($modules[$k]);
-            } elseif (!$this->access('add') && (!isset($module->id) || $module->id < 1)) {
-                unset($modules[$k]);
-            } elseif ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure')) {
-                unset($modules[$k]);
-            } else {
-                // Init serial and modules author list
-                if (!in_array($module->name, $this->list_natives_modules)) {
-                    $this->serial_modules .= $module->name . ' ' . $module->version . '-' . ($module->active ? 'a' : 'i') . "\n";
-                }
-                $module_author = $module->author;
-                if (!empty($module_author) && ($module_author != '')) {
-                    $this->modules_authors[strtolower($module_author)] = 'notselected';
-                }
-            }
-        }
-        $this->serial_modules = urlencode($this->serial_modules);
-    }
-
     /**
      * @param Module $module
      */
