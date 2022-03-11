@@ -678,12 +678,12 @@ class AdminModulesControllerCore extends AdminController
                         $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
                     }
 
-                    $echo = '';
-                    if ($key != 'update' && $key != 'updateAll') {
-                        // We check if method of module exists
-                        if (!method_exists($module, $method)) {
-                            throw new PrestaShopException('Method of module cannot be found');
-                        }
+                        $echo = '';
+                        if (!in_array($key, ['update', 'updateAll'])) {
+                            // We check if method of module exists
+                            if (!method_exists($module, $method)) {
+                                throw new PrestaShopException('Method of module cannot be found');
+                            }
 
                         if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall')) {
                             $this->errors[] = $this->trans('You do not have permission to uninstall this module.', [], 'Admin.Modules.Notification');
