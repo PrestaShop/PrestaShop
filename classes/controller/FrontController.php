@@ -76,6 +76,34 @@ class FrontControllerCore extends Controller
     /** @var string Language ISO code */
     public $iso;
 
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var string ORDER BY field
+     */
+    public $orderBy;
+
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var string Order way string ('ASC', 'DESC')
+     */
+    public $orderWay;
+
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var int Current page number
+     */
+    public $p;
+
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var int Items (products) per page
+     */
+    public $n;
+
     /** @var bool If set to true, will redirected user to login page during init function. */
     public $auth = false;
 
@@ -121,6 +149,13 @@ class FrontControllerCore extends Controller
      * @var array Holds current customer's groups
      */
     protected static $currentCustomerGroups;
+
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var int
+     */
+    public $nb_items_per_page;
 
     /**
      * @var ObjectPresenter
