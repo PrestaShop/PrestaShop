@@ -68,7 +68,7 @@ class AttributeRepository extends \Doctrine\ORM\EntityRepository
 
         foreach ($result as $attribute) {
             if (isset($attributeGroups[$attribute['attributeGroupPosition']])) {
-                $attributeGroups[$attribute['attributeGroupPosition']]['attributes'][$attribute['attributePosition']] = $this->getAttributeRow($attribute);
+                array_push($attributeGroups[$attribute['attributeGroupPosition']]['attributes'], $this->getAttributeRow($attribute));
             } else {
                 $attributeGroups[$attribute['attributeGroupPosition']] = [
                     'id' => $attribute['attributeGroupId'],
