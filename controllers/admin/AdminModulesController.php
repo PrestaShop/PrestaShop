@@ -231,59 +231,6 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /*
-    ** Filter Configuration Methods
-    ** Set and reset filter configuration
-    */
-
-    protected function setFilterModules($module_type, $country_module_value, $module_install, $module_status)
-    {
-        Configuration::updateValue('PS_SHOW_TYPE_MODULES_' . (int) $this->id_employee, $module_type);
-        Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_' . (int) $this->id_employee, $country_module_value);
-        Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_' . (int) $this->id_employee, $module_install);
-        Configuration::updateValue('PS_SHOW_ENABLED_MODULES_' . (int) $this->id_employee, $module_status);
-    }
-
-    protected function resetFilterModules()
-    {
-        Configuration::updateValue('PS_SHOW_TYPE_MODULES_' . (int) $this->id_employee, 'allModules');
-        Configuration::updateValue('PS_SHOW_COUNTRY_MODULES_' . (int) $this->id_employee, 0);
-        Configuration::updateValue('PS_SHOW_INSTALLED_MODULES_' . (int) $this->id_employee, 'installedUninstalled');
-        Configuration::updateValue('PS_SHOW_ENABLED_MODULES_' . (int) $this->id_employee, 'enabledDisabled');
-        Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, '');
-    }
-
-    /*
-    ** Post Process Filter
-    **
-    */
-
-    public function postProcessFilterModules()
-    {
-        $this->setFilterModules(Tools::getValue('module_type'), Tools::getValue('country_module_value'), Tools::getValue('module_install'), Tools::getValue('module_status'));
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
-    }
-
-    public function postProcessResetFilterModules()
-    {
-        $this->resetFilterModules();
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
-    }
-
-    public function postProcessFilterCategory()
-    {
-        // Save configuration and redirect employee
-        Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, Tools::getValue('filterCategory'));
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
-    }
-
-    public function postProcessUnfilterCategory()
-    {
-        // Save configuration and redirect employee
-        Configuration::updateValue('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee, '');
-        Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
-    }
-
-    /*
     ** Post Process Module CallBack
     **
     */
