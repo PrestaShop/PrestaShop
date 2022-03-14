@@ -36,8 +36,6 @@ class AdminModulesControllerCore extends AdminController
 
     protected $id_employee;
 
-    public $bootstrap = true;
-
     /**
      * Admin Modules Controller Constructor
      * Init list modules categories
@@ -91,91 +89,6 @@ class AdminModulesControllerCore extends AdminController
         return $url;
     }
 
-    public function postProcessCallback()
-    {
-        $return = false;
-
-        if (!Tools::getValue('configure')) {
-            return;
-        }
-
-        /* PrestaShop demo mode */
-        if (_PS_MODE_DEMO_) {
-            $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
-
-            return;
-        }
-
-        $modules = Tools::getValue('configure');
-        if (!empty($modules)) {
-            if (strpos($modules, '|')) {
-                $modules_list_save = $modules;
-                $modules = explode('|', $modules);
-            }
-        }
-
-        if (!is_array($modules)) {
-            $modules = (array) $modules;
-        }
-
-        $module_errors = [];
-        foreach ($modules as $name) {
-            $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-            $moduleManager = $moduleManagerBuilder->build();
-
-            // Check potential error
-            if (!($module = Module::getInstanceByName(urldecode($name)))) {
-                $this->errors[] = $this->trans('Module not found');
-            } elseif (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name))) {
-                $this->errors[] = $this->trans('You do not have permission to configure this module.', [], 'Admin.Modules.Notification');
-            } else {
-                //retrocompatibility
-                if (Tools::getValue('controller') != '') {
-                    $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
-                }
-
-                // We check if method of module exists
-                if (!method_exists($module, 'getContent')) {
-                    throw new PrestaShopException('Method of module cannot be found');
-                }
-
-                if (count($this->errors)) {
-                    continue;
-                }
-                // Get the return value of current method
-                $echo = $module->getContent();
-
-                // we show the html code of configure page
-                if ($moduleManager->isInstalled($module->name)) {
-                    $this->buildModuleConfigurationPage($module, $echo);
-                } elseif ($echo === true) {
-                    $return = 13;
-                } elseif ($echo === false) {
-                    $module_errors[] = ['name' => $name, 'message' => $module->getErrors()];
-                }
-
-                if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop)) {
-                    Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
-                    unset(Context::getContext()->tmpOldShop);
-                }
-            }
-        }
-
-
-        if (count($module_errors)) {
-            // If error during module installation, no redirection
-            $html_error = $this->generateHtmlMessage($module_errors);
-            $this->errors[] = $this->trans('The following module(s) could not be installed properly: %s.', [$html_error], 'Admin.Modules.Notification');
-            $this->context->smarty->assign('error_module', 'true');
-        }
-
-        if ($return) {
-            if (isset($module)) {
-                Tools::redirectAdmin(self::$currentIndex . '&conf=' . $return . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : '') . $params);
-            }
-        }
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -185,15 +98,14 @@ class AdminModulesControllerCore extends AdminController
             return false;
         }
 
-        // unless we're configuring a module, redirect to module manager
-        // configure + module_name = module configuration page
-        // configure + generate_rtl = generte RTL stylesheets
-        if (!Tools::getIsset('configure') && (!Tools::getIsset('module_name') || !Tools::getIsset('generate_rtl'))) {
-            Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
-            return false;
+        // only accept configuring a module
+        if (Tools::getIsset('configure')) {
+            return true;
         }
 
-        return true;
+        // redirect to module manager
+        Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
+        return false;
     }
 
     /**
@@ -201,60 +113,43 @@ class AdminModulesControllerCore extends AdminController
      */
     public function postProcess()
     {
-        // Parent Post Process
+        /* PrestaShop demo mode */
+        /* @phpstan-ignore-next-line */
+        if (_PS_MODE_DEMO_) {
+            $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
+
+            return;
+        }
+
         parent::postProcess();
 
+        $moduleName = Tools::getValue('configure');
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
-        // If redirect parameter is present and module already installed, we redirect on configuration module page
-        if (Tools::getValue('redirect') == 'config' && Tools::getValue('module_name') != '' && $moduleManager->isInstalled(pSQL(Tools::getValue('module_name')))) {
-            Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('module_name') . '&token=' . Tools::getValue('token') . '&module_name=' . Tools::getValue('module_name'));
-        }
+        // Check potential error
+        if (!$moduleManager->isInstalled($moduleName) || !($module = Module::getInstanceByName($moduleName))) {
+            $this->errors[] = $this->trans(
+                'The module "%modulename%" cannot be found',
+                ['%modulename%' => $moduleName],
+                'Admin.Modules.Notification'
+            );
+        } elseif (!$this->access('edit') || !$module->getPermission('configure')) {
+            $this->errors[] = $this->trans(
+                'You do not have permission to configure this module.',
+                [],
+                'Admin.Modules.Notification'
+            );
+        } else {
 
-        // Call appropriate module callback
-        $this->postProcessCallback();
-
-        if (Tools::getValue('generate_rtl')) {
-            Language::getRtlStylesheetProcessor()
-                ->setProcessPaths([
-                    _PS_MODULE_DIR_ . Tools::getValue('configure'),
-                ])
-                ->process();
-            Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('configure') . '&token=' . Tools::getValue('token') . '&conf=6');
-        }
-
-        if ($back = Tools::getValue('back')) {
-            Tools::redirectAdmin($back);
-        }
-    }
-
-    /**
-     * Generate html errors for a module process.
-     *
-     * @param array $module_errors
-     *
-     * @return string
-     */
-    protected function generateHtmlMessage($module_errors)
-    {
-        $html_error = '';
-
-        if (count($module_errors)) {
-            $html_error = '<ul>';
-            foreach ($module_errors as $module_error) {
-                $html_error_description = '';
-                if (count($module_error['message']) > 0) {
-                    foreach ($module_error['message'] as $e) {
-                        $html_error_description .= '<br />&nbsp;&nbsp;&nbsp;&nbsp;' . $e;
-                    }
-                }
-                $html_error .= '<li><b>' . $module_error['name'] . '</b> : ' . $html_error_description . '</li>';
+            // build RTL assets
+            if (Tools::getValue('generate_rtl')) {
+                return $this->buildRtlAssets($module);
             }
-            $html_error .= '</ul>';
-        }
 
-        return $html_error;
+            // show module configuration page
+            return $this->buildModuleConfigurationPage($module);
+        }
     }
 
     public function initModal()
@@ -309,16 +204,27 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /**
-     * @param Module $module
-     * @param string $echo
-     *
      * @return void
+     *
      * @throws PrestaShopDatabaseException
      * @throws PrestaShopException
      * @throws SmartyException
      */
-    protected function buildModuleConfigurationPage(Module $module, string $echo): void
+    protected function buildModuleConfigurationPage(Module $module): void
     {
+        // retrocompatibility
+        if (Tools::getValue('controller') != '') {
+            $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
+        }
+
+        // We check if method of module exists
+        if (!method_exists($module, 'getContent')) {
+            throw new PrestaShopException(sprintf('Module %s has no getContent() method', $module->name));
+        }
+
+        // Get the page content
+        $echo = $module->getContent();
+
         $this->bootstrap = (bool) $module->bootstrap;
         if (isset($module->multishop_context)) {
             $this->multishop_context = $module->multishop_context;
@@ -390,5 +296,34 @@ class AdminModulesControllerCore extends AdminController
         $output = $header . $echo;
 
         $this->context->smarty->assign('module_content', $output . $configuration_bar);
+    }
+
+    /**
+     * Builds RTL assets for the module & redirects to a success page
+     *
+     * @return void
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Localization\RTL\Exception\GenerationException
+     */
+    protected function buildRtlAssets(Module $module): void
+    {
+        Language::getRtlStylesheetProcessor()
+            ->setProcessPaths([
+                _PS_MODULE_DIR_ . $module->name,
+            ])
+            ->process();
+
+        Tools::redirectAdmin(
+            $this->context->link->getAdminLink(
+                'AdminModules',
+                true,
+                [],
+                [
+                    'configure' => Tools::getValue('configure'),
+                    // @see AdminController::_conf
+                    'conf' => 6
+                ]
+            )
+        );
     }
 }
