@@ -767,7 +767,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function getLocaleById(int $langId): ?string
     {
-        $locale = Db::getInstance()->getValue('
+        $locale = Db::getInstance()->getValue(
+            '
             SELECT `locale` FROM `' . _DB_PREFIX_ . 'lang` WHERE `id_lang` = ' . $langId
         );
 
@@ -1018,10 +1019,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             foreach ($result2 as $row2) {
                 $query .= '(';
                 $row2['id_lang'] = $to;
-                 foreach ($row2 as $field) {
-                     $query .= (!is_string($field) && $field == null) ? 'NULL,' : '\'' . pSQL($field, true) . '\',';
-                 }
-                 $query = rtrim($query, ',') . '),';
+                foreach ($row2 as $field) {
+                    $query .= (!is_string($field) && $field == null) ? 'NULL,' : '\'' . pSQL($field, true) . '\',';
+                }
+                $query = rtrim($query, ',') . '),';
             }
             $query = rtrim($query, ',');
             Db::getInstance()->execute($query);
@@ -1763,7 +1764,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @return array<int, string>
      */
-    public static function getLanguagesTablesNames(array $excludedTables = []): array{
+    public static function getLanguagesTablesNames(array $excludedTables = []): array
+    {
         $languagesTablesNames = [];
 
         $queryResult = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '` LIKE "%_lang"');
@@ -1771,7 +1773,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         foreach ($queryResult as $queryRow) {
             $languageTableName = array_values($queryRow)[0];
 
-            if(in_array($languageTableName, $excludedTables)){
+            if (in_array($languageTableName, $excludedTables)) {
                 continue;
             }
 
