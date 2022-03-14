@@ -3037,7 +3037,7 @@ class ProductCore extends ObjectModel
                     "' . $now . '",
                     INTERVAL ' . $nb_days_new_product . ' DAY
                 )
-            ) >= 0) as new'
+            ) > 0) as new'
         );
 
         $sql->from('product', 'p');
@@ -3057,7 +3057,12 @@ class ProductCore extends ObjectModel
         if ($front) {
             $sql->where('product_shop.`visibility` IN ("both", "catalog")');
         }
-        $sql->where('product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . $nb_days_new_product . ' DAY')) . '"');
+        $sql->where('DATEDIFF(product_shop.`date_add`,
+            DATE_SUB(
+                "' . $now . '",
+                INTERVAL ' . $nb_days_new_product . ' DAY
+            )
+        ) > 0');
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
