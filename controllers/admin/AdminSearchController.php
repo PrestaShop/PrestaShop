@@ -208,6 +208,7 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 7) {
                 /* Handle module name */
                 if ($searchType == 7 && Validate::isModuleName($this->query) && ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module)) {
+                    // @todo redirect directly to module manager with search prefilled, because this won't work anymore
                     Tools::redirectAdmin('index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules'));
                 }
 
