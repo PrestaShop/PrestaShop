@@ -550,11 +550,6 @@ class AdminModulesControllerCore extends AdminController
         // Parent Post Process
         parent::postProcess();
 
-        // Get the list of installed module ans prepare it for ajax call.
-        if (($list = Tools::getValue('installed_modules'))) {
-            Context::getContext()->smarty->assign('installed_modules', json_encode(explode('|', $list)));
-        }
-
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
