@@ -25,7 +25,4 @@
 
 {if isset($module_content)}
 	{$module_content}
-{elseif !isset($smarty.get.configure)}
-  {include file='controllers/modules/js.tpl'}
-  {include file='controllers/modules/page.tpl'}
 {/if}
