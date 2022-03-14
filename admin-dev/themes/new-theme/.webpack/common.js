@@ -115,6 +115,7 @@ module.exports = {
     specific_price_form: './js/pages/specific-price/form',
     security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
+    state: './js/pages/state',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
     supplier: './js/pages/supplier',
