@@ -39,6 +39,7 @@ use Symfony\Component\Translation\MessageCatalogue;
 class TranslationTreeBuilderTest extends TestCase
 {
     private const LOCALE = 'en-US';
+    private const FRENCH_LOCALE = 'fr-FR';
 
     private static $defaultTranslations = [
         'AdminFirstDomain' => [
@@ -146,7 +147,7 @@ class TranslationTreeBuilderTest extends TestCase
     {
         $tree = $this->treeBuilder->getTree(
             new BackofficeProviderDefinition(),
-            self::LOCALE,
+            self::FRENCH_LOCALE,
             []
         );
 
