@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\CatalogueProviderFac
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\OthersProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
+use PrestaShopBundle\Translation\Provider\AbstractProvider;
 
 /**
  * This class provides the catalogue represented as an array.
@@ -190,6 +191,9 @@ class TranslationCatalogueBuilder
             foreach ($messages as $translationKey => $translationValue) {
                 $translationKey = (string) $translationKey;
                 $message = new Message($translationKey);
+                if ($locale === AbstractProvider::DEFAULT_LOCALE) {
+                    $message->setFileTranslation($translationKey);
+                }
                 if ($fileTranslatedCatalogue->defines($translationKey, $domainName)) {
                     $message->setFileTranslation($fileTranslatedCatalogue->get($translationKey, $domainName));
                 }
