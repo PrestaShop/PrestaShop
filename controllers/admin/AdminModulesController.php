@@ -85,15 +85,6 @@ class AdminModulesControllerCore extends AdminController
         ]);
     }
 
-    public function checkCategoriesNames($a, $b)
-    {
-        if ($a['name'] === $this->trans('Other Modules')) {
-            return true;
-        }
-
-        return (bool) ($a['name'] > $b['name']);
-    }
-
     public function setMedia($isNewTheme = false)
     {
         parent::setMedia($isNewTheme);
