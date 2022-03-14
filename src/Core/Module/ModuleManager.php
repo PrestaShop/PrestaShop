@@ -84,7 +84,7 @@ class ModuleManager implements ModuleManagerInterface
         $this->hookManager = $hookManager;
     }
 
-    public function install(string $name, ?string $source = null): bool
+    public function install(string $name, $source = null): bool
     {
         if (!$this->adminModuleDataProvider->isAllowedAccess(__FUNCTION__)) {
             throw new Exception($this->translator->trans(
