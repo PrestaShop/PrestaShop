@@ -363,8 +363,8 @@ class FrontControllerCore extends Controller
                 if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
                     $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
                 } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
-                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
-                        && Validate::isLanguageIsoCode($array[0])) {
+                    && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                    && Validate::isLanguageIsoCode($array[0])) {
                     $id_country = (int) Country::getByIso($array[0], true);
                 } else {
                     $id_country = Tools::getCountry();
@@ -372,10 +372,13 @@ class FrontControllerCore extends Controller
 
                 $country = new Country($id_country, (int) $this->context->cookie->id_lang);
 
-                if (!$has_currency && Validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
+                if (Validate::isLoadedObject($country) && $this->context->country->id !== $country->id) {
                     $this->context->country = $country;
-                    $this->context->cookie->id_currency = (int) Currency::getCurrencyInstance($country->id_currency ? (int) $country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'))->id;
-                    $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
+
+                    if (!$has_currency) {
+                        $this->context->cookie->id_currency = (int) Currency::getCurrencyInstance($country->id_currency ? (int) $country->id_currency : (int) Configuration::get('PS_CURRENCY_DEFAULT'))->id;
+                        $this->context->cookie->iso_code_country = strtoupper($country->iso_code);
+                    }
                 }
             }
         }
@@ -422,7 +425,7 @@ class FrontControllerCore extends Controller
             }
             /* Select an address if not set */
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
@@ -875,7 +878,7 @@ class FrontControllerCore extends Controller
 
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
-                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                    } catch (\GeoIp2\Exception\AddressNotFoundException$e) {
                         $record = null;
                     }
 
@@ -1118,7 +1121,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use registerStylesheet($id, $path, $params)
-        */
+         */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1139,7 +1142,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use unregisterStylesheet($id)
-        */
+         */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1160,7 +1163,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use registerJavascript($id, $path, $params)
-        */
+         */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1181,7 +1184,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use unregisterJavascript($id)
-        */
+         */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1561,8 +1564,8 @@ class FrontControllerCore extends Controller
             'quantity_discount' => [
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
                 'label' => ($quantity_discount_price)
-                    ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
-                    : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
+                ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
+                : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
             ],
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
