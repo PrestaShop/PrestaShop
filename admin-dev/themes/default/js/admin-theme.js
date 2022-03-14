@@ -453,25 +453,6 @@ $(document).ready(() => {
     $('#bo_query').focus();
   });
 
-  // reset form
-  /* global header_confirm_reset, body_confirm_reset, left_button_confirm_reset, right_button_confirm_reset */
-  $('.reset_ready').click(function () {
-    const href = $(this).attr('href');
-    confirm_modal(
-      header_confirm_reset,
-      body_confirm_reset,
-      left_button_confirm_reset,
-      right_button_confirm_reset,
-      () => {
-        window.location.href = `${href}&keep_data=1`;
-      },
-      () => {
-        window.location.href = `${href}&keep_data=0`;
-      },
-    );
-    return false;
-  });
-
   // scroll_if_anchor(window.location.hash);
   $('body').on('click', 'a.anchor', scroll_if_anchor);
 
