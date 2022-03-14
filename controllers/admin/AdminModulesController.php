@@ -39,7 +39,6 @@ class AdminModulesControllerCore extends AdminController
         'updateAll' => 'updateAll',
     ];
 
-    protected $list_modules_categories = [];
     /** @var array */
     protected $list_partners_modules = [];
     /** @var array */
@@ -73,39 +72,6 @@ class AdminModulesControllerCore extends AdminController
         $this->template = 'content-legacy.tpl';
 
         register_shutdown_function('displayFatalError');
-
-        // Set the modules categories
-        $this->list_modules_categories['administration']['name'] = $this->trans('Administration', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['advertising_marketing']['name'] = $this->trans('Advertising & Marketing', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['analytics_stats']['name'] = $this->trans('Analytics & Stats', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['billing_invoicing']['name'] = $this->trans('Taxes & Invoicing', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['checkout']['name'] = $this->trans('Checkout', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['content_management']['name'] = $this->trans('Content Management', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['customer_reviews']['name'] = $this->trans('Customer Reviews', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['export']['name'] = $this->trans('Export', [], 'Admin.Actions');
-        $this->list_modules_categories['front_office_features']['name'] = $this->trans('Front office Features', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['i18n_localization']['name'] = $this->trans('Internationalization & Localization', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['merchandizing']['name'] = $this->trans('Merchandising', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['migration_tools']['name'] = $this->trans('Migration Tools', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['payments_gateways']['name'] = $this->trans('Payments & Gateways', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['payment_security']['name'] = $this->trans('Site certification & Fraud prevention', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['pricing_promotion']['name'] = $this->trans('Pricing & Promotion', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['quick_bulk_update']['name'] = $this->trans('Quick / Bulk update', [], 'Admin.Modules.Feature');
-        /* 		$this->list_modules_categories['search_filter']['name'] = $this->trans('Search & Filter', [], 'Admin.Modules.Feature'); */
-        $this->list_modules_categories['seo']['name'] = $this->trans('SEO', [], 'Admin.Catalog.Feature');
-        $this->list_modules_categories['shipping_logistics']['name'] = $this->trans('Shipping & Logistics', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['slideshows']['name'] = $this->trans('Slideshows', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['smart_shopping']['name'] = $this->trans('Comparison site & Feed management', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['market_place']['name'] = $this->trans('Marketplace', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['others']['name'] = $this->trans('Other Modules', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['mobile']['name'] = $this->trans('Mobile', [], 'Admin.Global');
-        $this->list_modules_categories['dashboard']['name'] = $this->trans('Dashboard', [], 'Admin.Global');
-        $this->list_modules_categories['i18n_localization']['name'] = $this->trans('Internationalization & Localization', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['emailing']['name'] = $this->trans('Emailing & SMS', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['social_networks']['name'] = $this->trans('Social Networks', [], 'Admin.Modules.Feature');
-        $this->list_modules_categories['social_community']['name'] = $this->trans('Social & Community', [], 'Admin.Modules.Feature');
-
-        uasort($this->list_modules_categories, [$this, 'checkCategoriesNames']);
 
         // Set Id Employee, Iso Default Country and Filter Configuration
         $this->id_employee = (int) $this->context->employee->id;
