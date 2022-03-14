@@ -69,7 +69,7 @@ $install->installFixtures();
 Category::regenerateEntireNtree();
 Tab::resetStaticCache();
 $install->installTheme();
-$install->installModules();
+$install->installModules(array_keys($install->getModulesOnDisk()));
 
 DatabaseDump::create();
 

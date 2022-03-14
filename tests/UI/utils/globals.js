@@ -28,7 +28,6 @@ global.INSTALL = {
   DB_PASSWD: process.env.DB_PASSWD || '',
   DB_PREFIX: process.env.DB_PREFIX || 'tst_',
   SHOP_NAME: process.env.SHOP_NAME || 'PrestaShop',
-  PS_VERSION: process.env.PS_VERSION || '1.7.6.0',
 };
 
 global.BROWSER = {

@@ -24,33 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-/**
- * Step 2 : display license form
- */
-class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
+namespace Tests\Unit\Core\Theme;
+
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Theme\ConfigReader;
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
+
+class ConfigReaderTest extends TestCase
 {
     /**
-     * {@inheritdoc}
+     * @var ConfigReader
      */
-    public function processNextStep(): void
+    protected $config;
+
+    protected function setUp(): void
     {
-        $this->session->licence_agrement = (bool) Tools::getValue('licence_agrement');
-        $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
+        $this->config = new ConfigReader(__DIR__ . '/../../Resources/themes/');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function validate(): bool
+    public function testReadUnknownTheme(): void
     {
-        return (bool) $this->session->licence_agrement;
+        $this->assertNull(
+            $this->config->read('this-is-sparta-theme')
+        );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function display(): void
+    public function testRead(): void
     {
-        $this->displayContent('license');
+        $theme = $this->config->read('my-theme');
+        $this->assertInstanceOf(
+            ArrayFinder::class,
+            $theme
+        );
+        $this->assertArrayNotHasKey('preview', $theme);
+        $this->assertEquals('My super aweosome theme', $theme->get('display_name'));
+    }
+
+    public function testReadWithPreview(): void
+    {
+        $theme = $this->config->read('my-theme-with-preview');
+        $this->assertInstanceOf(
+            ArrayFinder::class,
+            $theme
+        );
+        $this->assertArrayHasKey('preview', $theme);
     }
 }

@@ -70,8 +70,8 @@ describe('Install Prestashop', async () => {
     }
   });
 
-  it('should click on next and go to step \'shop Information\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToShopInformation', baseContext);
+  it('should click on next and go to step \'Store Information\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToStoreInformation', baseContext);
 
     if (!(await installPage.elementVisible(page, installPage.thirdStepFinishedListItem, 500))) {
       await installPage.nextStep(page);
@@ -81,14 +81,25 @@ describe('Install Prestashop', async () => {
     await expect(stepTitle).to.contain(installPage.fourthStepEnTitle);
   });
 
-  it('should fill shop Information form and go to step \'Database Configuration\'', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseConfiguration', baseContext);
+  it('should fill shop Information form and go to step \'Content Configuration\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToContentConfiguration', baseContext);
 
+    await installPage.elementVisible(page, installPage.fourthStepFinishedListItem, 500);
     await installPage.fillInformationForm(page);
     await installPage.nextStep(page);
 
-    const stepTitle = await installPage.getStepTitle(page, 'System configuration');
+    const stepTitle = await installPage.getStepTitle(page, 'Content of your store');
     await expect(stepTitle).to.contain(installPage.fifthStepEnTitle);
+  });
+
+  it('should click on next and go to step \'System Configuration\'', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseInformation', baseContext);
+
+    await installPage.nextStep(page);
+    await installPage.elementVisible(page, installPage.fifthStepFinishedListItem, 500);
+
+    const stepTitle = await installPage.getStepTitle(page, 'System configuration');
+    await expect(stepTitle).to.contain(installPage.sixthStepEnTitle);
   });
 
   it('should fill database configuration form and check database connection', async function () {

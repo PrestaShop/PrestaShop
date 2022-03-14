@@ -30,6 +30,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
+use stdClass;
 
 class CategoriesProviderTest extends TestCase
 {
@@ -47,6 +48,16 @@ class CategoriesProviderTest extends TestCase
             $prestashopAddonsConfig['prestashop']['addons']['categories'],
             ['my_theme']
         );
+    }
+
+    public function testGetCategories(): void
+    {
+        $categories = $this->provider->getCategories();
+        $this->assertArrayHasKey(
+            'categories',
+            $categories
+        );
+        $this->assertInstanceOf(stdClass::class, $categories['categories']);
     }
 
     public function testGetCategoriesMenuWithoutModules()
