@@ -7,9 +7,9 @@ parameters:
     - app
     - bin
     - cache
-    # - classes
+    - classes
     - config
-    # - controllers
+    - controllers
     - docs
     - download
     - img

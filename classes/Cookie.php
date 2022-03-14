@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
  * @property int $id_customer
  * @property int $id_employee
  * @property int $id_lang
+ * @property int $id_guest
+ * @property int|null $id_connections
  * @property bool $is_guest
  * @property bool $logged
  * @property string $passwd
@@ -375,10 +377,10 @@ class CookieCore
             [
                 'expires' => $time,
                 'path' => $this->_path,
-                'domain' => $this->_domain,
+                'domain' => (string) $this->_domain,
                 'secure' => $this->_secure,
                 'httponly' => true,
-                'samesite' => $this->_sameSite,
+                'samesite' => in_array((string) $this->_sameSite, static::SAMESITE_AVAILABLE_VALUES) ? (string) $this->_sameSite : static::SAMESITE_NONE,
             ]
         );
     }
@@ -552,6 +554,9 @@ class CookieCore
         }
 
         if (isset($session) && Validate::isLoadedObject($session)) {
+            // Update session date_upd
+            $session->save();
+
             return $session;
         }
 

@@ -111,7 +111,7 @@ class ToolsCore
 
                 break;
             case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = ceil($length * 0.75);
+                $num_bytes = (int) ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
@@ -706,7 +706,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -938,11 +938,11 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
@@ -1766,7 +1766,7 @@ class ToolsCore
     {
         $tab = [];
         for ($i = 1; $i != 13; ++$i) {
-            $tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
+            $tab[$i] = date('F', mktime(0, 0, 0, $i, (int) date('m'), (int) date('Y')));
         }
 
         return $tab;
@@ -2848,36 +2848,35 @@ FileETag none
                     foreach ($robots_content['Directories'] as $dir) {
                         fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
                     }
-                }
-
-                // Disallow multilang directories
-                if (!empty($languagesIsoIds)) {
-                    foreach ($languagesIsoIds as $language) {
-                        foreach ($robots_content['Directories'] as $dir) {
-                            fwrite(
-                                $write_fd,
-                                sprintf(
-                                    'Disallow: /%s/%s%s',
-                                    $language['iso_code'],
-                                    $dir,
-                                    PHP_EOL
-                                )
-                            );
+                    // Disallow multilang directories
+                    if (is_array($languagesIsoIds) && count($languagesIsoIds) > 1) {
+                        foreach ($languagesIsoIds as $language) {
+                            foreach ($robots_content['Directories'] as $dir) {
+                                fwrite(
+                                    $write_fd,
+                                    sprintf(
+                                        'Disallow: %s%s/%s%s',
+                                        $uri['physical'],
+                                        $language['iso_code'],
+                                        $dir,
+                                        PHP_EOL
+                                    )
+                                );
+                            }
                         }
                     }
-                }
-            }
-        }
-
-        // Files
-        if (count($robots_content['Files'])) {
-            fwrite($write_fd, "# Files\n");
-            foreach ($robots_content['Files'] as $iso_code => $files) {
-                foreach ($files as $file) {
-                    if (!empty($languagesIsoIds)) {
-                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
-                    } else {
-                        fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
+                    // Files
+                    if (count($robots_content['Files'])) {
+                        fwrite($write_fd, "# Files\n");
+                        foreach ($robots_content['Files'] as $iso_code => $files) {
+                            foreach ($files as $file) {
+                                if (count($languagesIsoIds) > 1) {
+                                    fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
+                                } else {
+                                    fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $file . PHP_EOL);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2922,6 +2921,9 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/modules/*.gif',
+            '*/modules/*.svg',
+            '*/modules/*.webp',
             '/js/jquery/*',
         ];
 
@@ -3428,7 +3430,7 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
-     * @param bool $tpl
+     * @param bool|string $tpl
      * @param string $cache_id
      * @param string $compile_id
      *

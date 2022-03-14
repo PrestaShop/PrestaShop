@@ -29,8 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use GuzzleHttp\Client;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
@@ -45,7 +43,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
-use PrestaShopBundle\Service\DataProvider\Marketplace\ApiClient;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
@@ -74,7 +71,6 @@ class ModuleManagerBuilder
     public static $moduleDataUpdater = null;
     public static $moduleZipManager = null;
     public static $translator = null;
-    public static $addonsDataProvider = null;
     public static $categoriesProvider = null;
     public static $instance = null;
     public static $cacheProvider = null;
@@ -137,9 +133,7 @@ class ModuleManagerBuilder
                 self::$modulesRepository = $sfContainer->get('prestashop.core.admin.module.repository');
             } else {
                 self::$modulesRepository = new ModuleRepository(
-                    self::$adminModuleDataProvider,
                     self::$moduleDataProvider,
-                    self::$moduleDataUpdater,
                     self::$legacyLogger,
                     self::$translator,
                     _PS_MODULE_DIR_,
@@ -168,44 +162,22 @@ class ModuleManagerBuilder
 
         $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
 
-        $config = $yamlParser->parse($this->getConfigDir() . '/config.yml');
-        $prestashopAddonsConfig =
-            $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
+        $prestashopAddonsConfig = $yamlParser->parse($this->getConfigDir() . '/addons/categories.yml');
 
         $tools = new Tools();
         $tools->refreshCaCertFile();
 
-        $clientConfig = $config['eight_points_guzzle']['clients']['addons_api'];
-        $clientConfig['verify'] = _PS_CACHE_CA_CERT_FILE_;
-        if (file_exists($this->getConfigDir() . '/parameters.php')) {
-            $parameters = require $this->getConfigDir() . '/parameters.php';
-            if (array_key_exists('addons.api_client.verify_ssl', $parameters['parameters'])) {
-                $clientConfig['verify'] = $parameters['parameters']['addons.api_client.verify_ssl'];
-            }
-        }
-
         self::$translator = Context::getContext()->getTranslator();
 
-        $marketPlaceClient = new ApiClient(
-            new Client($clientConfig),
-            self::$translator->getLocale(),
-            $this->getCountryIso(),
-            null,
-            (new Configuration())->get('_PS_BASE_URL_'),
-            \AppKernel::VERSION
-        );
-
         self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
-        self::$addonsDataProvider = new AddonsDataProvider($marketPlaceClient, self::$moduleZipManager);
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
-        self::$addonsDataProvider->cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
-
+        $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
         self::$cacheProvider = new DoctrineProvider(
             new FilesystemAdapter(
                 '',
                 0,
-                self::$addonsDataProvider->cacheDir . '/doctrine'
+                $cacheDir . '/doctrine'
             )
         );
 
@@ -225,18 +197,14 @@ class ModuleManagerBuilder
         if (null === self::$adminModuleDataProvider) {
             self::$moduleDataProvider = new ModuleDataProvider(self::$legacyLogger, self::$translator);
             self::$adminModuleDataProvider = new AdminModuleDataProvider(
-                self::$translator,
-                self::$legacyLogger,
-                self::$addonsDataProvider,
                 self::$categoriesProvider,
                 self::$moduleDataProvider,
-                self::$cacheProvider,
                 Context::getContext()->employee
             );
             self::$adminModuleDataProvider->setRouter($this->getSymfonyRouter());
 
             self::$translator = Context::getContext()->getTranslator();
-            self::$moduleDataUpdater = new ModuleDataUpdater(self::$addonsDataProvider, self::$adminModuleDataProvider);
+            self::$moduleDataUpdater = new ModuleDataUpdater();
         }
     }
 

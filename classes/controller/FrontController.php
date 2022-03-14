@@ -105,7 +105,7 @@ class FrontControllerCore extends Controller
      *
      * @see $auth
      *
-     * @var bool
+     * @var bool|string
      */
     public $authRedirection = false;
 
@@ -353,7 +353,7 @@ class FrontControllerCore extends Controller
             $has_address_type = false;
 
             if ((int) $this->context->cookie->id_cart) {
-                $cart = new Cart($this->context->cookie->id_cart);
+                $cart = new Cart((int) $this->context->cookie->id_cart);
                 if (Validate::isLoadedObject($cart)) {
                     $has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
                 }
@@ -394,7 +394,7 @@ class FrontControllerCore extends Controller
         /* Cart already exists */
         if ((int) $this->context->cookie->id_cart) {
             if (!isset($cart)) {
-                $cart = new Cart($this->context->cookie->id_cart);
+                $cart = new Cart((int) $this->context->cookie->id_cart);
             }
 
             if (Validate::isLoadedObject($cart) && $cart->orderExists()) {
@@ -895,7 +895,7 @@ class FrontControllerCore extends Controller
                 }
 
                 if (isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
-                    $this->context->cookie->iso_code_country = Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'));
+                    $this->context->cookie->iso_code_country = Country::getIsoById((int) Configuration::get('PS_COUNTRY_DEFAULT'));
                 }
 
                 if (isset($this->context->cookie->iso_code_country) && ($idCountry = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country)))) {

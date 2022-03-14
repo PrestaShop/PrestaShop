@@ -11,7 +11,7 @@ https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/#pull-requ
 | ----------------- | -------------------------------------------------------
 | Branch?           | develop / 1.7.8.x
 | Description?      | Please be specific when describing the PR. <br> Every detail helps: versions, browser/server configuration, specific module/theme, etc. Feel free to add more information below this table.
-| Type?             | bug fix / improvement / new feature / refacto / critical
+| Type?             | bug fix / improvement / new feature / refacto
 | Category?         | FO / BO / CO / IN / WS / TE / LO / ME / PM
 | BC breaks?        | yes / no
 | Deprecations?     | yes / no

@@ -453,6 +453,15 @@ services:
 
   form.type.import.import:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Import\ImportType'
+    public: true
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.legacy.context").getLanguages(false)'
+    tags:
+      - { name: form.type }
+
+  form.type.order.delivery.slip_pdf:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Order\Delivery\SlipPdfType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
@@ -1360,6 +1369,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Specification\SpecificationsType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
     tags:
       - { name: form.type }
 
@@ -1578,8 +1589,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@prestashop.core.form.choice_provider.product_condition_choice_provider'
     tags:
       - { name: form.type }
 
@@ -1798,6 +1807,20 @@ services:
 
   form.type.sell.product.options.attached_file_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\AttachedFileType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.admin.security.general:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.customer_service.merchandise_return.merchandise_return_options_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\MerchandiseReturnOptionsType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:

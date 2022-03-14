@@ -209,7 +209,7 @@ class StockAvailableCore extends ObjectModel
                         continue;
                     }
 
-                    $product_quantity = $manager->getProductRealQuantities($id_product, null, $allowed_warehouse_for_product_clean, true);
+                    $product_quantity = $manager->getProductRealQuantities($id_product, 0, $allowed_warehouse_for_product_clean, true);
 
                     Hook::exec(
                         'actionUpdateQuantity',

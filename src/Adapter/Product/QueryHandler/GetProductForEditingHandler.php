@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
@@ -60,6 +60,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformatio
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
@@ -88,7 +89,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $categoryRepository;
 
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
@@ -131,7 +132,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @param NumberExtractor $numberExtractor
      * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
-     * @param StockAvailableRepository $stockAvailableRepository
+     * @param StockAvailableMultiShopRepository $stockAvailableRepository
      * @param VirtualProductFileRepository $virtualProductFileRepository
      * @param ProductImageRepository $productImageRepository
      * @param AttachmentRepository $attachmentRepository
@@ -144,7 +145,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         NumberExtractor $numberExtractor,
         ProductMultiShopRepository $productRepository,
         CategoryRepository $categoryRepository,
-        StockAvailableRepository $stockAvailableRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         VirtualProductFileRepository $virtualProductFileRepository,
         ProductImageRepository $productImageRepository,
         AttachmentRepository $attachmentRepository,
@@ -435,10 +436,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getProductStockInformation(Product $product): ProductStockInformation
     {
-        //@todo: In theory StockAvailable is created for each product when Product::add is called,
-        //  but we should explore some multishop edgecases
-        //  (like shop ids might be missing and foreach loop won't start resulting in a missing StockAvailable for product)
-        $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id));
+        $stockAvailable = $this->stockAvailableRepository->getForProduct(new ProductId($product->id), new ShopId($product->getShopId()));
 
         return new ProductStockInformation(
             (int) $product->pack_stock_type,

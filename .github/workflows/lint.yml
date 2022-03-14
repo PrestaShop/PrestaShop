@@ -17,9 +17,6 @@ jobs:
 
       - name: BackOffice Theme `default`
         run: cd ./admin-dev/themes/default && npm install && npm run scss-lint
-
-      - name: FrontOffice Theme `classic`
-        run: cd ./themes/classic/_dev && npm install && npm run scss-lint
   eslint:
     name: ESLint
     runs-on: ubuntu-latest
@@ -36,16 +33,12 @@ jobs:
             (cd admin-dev/themes/default && npm ci)
             && (cd admin-dev/themes/new-theme && npm ci)
             && (cd themes && npm ci)
-            && (cd themes/classic/_dev && npm ci)
 
       - name: BackOffice Theme `default`
         run: cd ./admin-dev/themes/default && npm install && npm run lint
 
       - name: BackOffice Theme `new-theme`
         run: cd ./admin-dev/themes/new-theme && npm install && npm run lint
-
-      - name: FrontOffice Theme `classic`
-        run: cd ./themes/ && npm install && npm run lint && cd ./classic/_dev && npm install && npm run lint
   yamllint_sf:
     name: YAML Lint (Symfony Check)
     runs-on: ubuntu-latest
@@ -78,9 +71,6 @@ jobs:
       - name: Run Lint Yaml on `src`
         run: php bin/console lint:yaml src
 
-      - name: Run Lint Yaml on `themes`
-        run: php bin/console lint:yaml themes
-
       - name: Run Lint Yaml on `.t9n.yml`
         run: php bin/console lint:yaml .t9n.yml
   yamllint:
@@ -103,9 +93,6 @@ jobs:
 
       - name: yamllint on `src`
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml src
-
-      - name: yamllint on `themes`
-        run: yamllint -c .github/workflows/yamllint/.yamllint.yml themes
 
       - name: yamllint on `.t9n.yml`
         run: yamllint -c .github/workflows/yamllint/.yamllint.yml .t9n.yml

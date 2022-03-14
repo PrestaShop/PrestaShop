@@ -118,18 +118,18 @@ class ModuleManagerTest extends TestCase
 
     public function testDisableOnMobileSuccessful(): void
     {
-        $this->assertTrue($this->moduleManager->disable_mobile(self::INSTALLED_MODULE));
+        $this->assertTrue($this->moduleManager->disableMobile(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->disable_mobile(self::UNINSTALLED_MODULE));
+        $this->assertFalse($this->moduleManager->disableMobile(self::UNINSTALLED_MODULE));
     }
 
     public function testEnableOnMobileSuccessful(): void
     {
-        $this->assertTrue($this->moduleManager->enable_mobile(self::INSTALLED_MODULE));
+        $this->assertTrue($this->moduleManager->enableMobile(self::INSTALLED_MODULE));
         $this->expectException('Exception');
         $this->expectExceptionMessage('The module %module% must be installed first');
-        $this->assertFalse($this->moduleManager->enable_mobile(self::UNINSTALLED_MODULE));
+        $this->assertFalse($this->moduleManager->enableMobile(self::UNINSTALLED_MODULE));
     }
 
     public function testResetSuccessful(): void

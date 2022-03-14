@@ -236,7 +236,7 @@ class PackCore extends Product
      * @param int $idProduct Product id
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
+     * @param CartCore|null $cart
      * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int
@@ -247,12 +247,11 @@ class PackCore extends Product
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        Cart $cart = null,
+        CartCore $cart = null,
         $idCustomization = null
     ) {
         $idProduct = (int) $idProduct;
         $idProductAttribute = (int) $idProductAttribute;
-        $cacheIsPack = (bool) $cacheIsPack;
 
         if (!self::isPack($idProduct)) {
             throw new PrestaShopException("Product with id $idProduct is not a pack");

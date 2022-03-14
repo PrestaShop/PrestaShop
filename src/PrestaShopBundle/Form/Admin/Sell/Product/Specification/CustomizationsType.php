@@ -63,7 +63,7 @@ class CustomizationsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Customization', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_subtitle' => $this->trans('Customers can personalize the product by entering some text or by providing custom image files.', 'Admin.Catalog.Feature'),
             'attr' => [
                 'class' => 'product-customizations-collection',

@@ -68,6 +68,7 @@ class StockOptionsType extends TranslatorAwareType
             ->add('stock_location', TextType::class, [
                 'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
@@ -79,6 +80,7 @@ class StockOptionsType extends TranslatorAwareType
                 'default_empty_data' => 0,
                 // Using null here allows to keep the field empty in the page instead of 0
                 'empty_view_data' => null,
+                'modify_all_shops' => true,
             ])
             ->add('low_stock_alert', SwitchType::class, [
                 'required' => false,
@@ -97,6 +99,7 @@ class StockOptionsType extends TranslatorAwareType
                         '[/1]' => '</a>',
                     ]
                 ),
+                'modify_all_shops' => true,
             ])
         ;
     }
@@ -110,7 +113,7 @@ class StockOptionsType extends TranslatorAwareType
         $resolver->setDefaults([
             'required' => false,
             'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
         ]);
     }
 }

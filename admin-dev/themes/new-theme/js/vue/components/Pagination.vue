@@ -54,10 +54,12 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     name: 'Pagination',
-    data() {
+    data(): {paginatedDatas: Array<Record<string, any>>, currentPage: number} {
       return {
         paginatedDatas: [],
         currentPage: 1,
@@ -65,7 +67,7 @@
     },
     props: {
       datas: {
-        type: Array,
+        type: Array as () => Array<Record<string, any>>,
         default: () => [],
       },
       paginationLength: {
@@ -79,7 +81,7 @@
        *
        * @param {int} pageNumber
        */
-      goToPage(pageNumber) {
+      goToPage(pageNumber: number): void {
         if (this.paginatedDatas[pageNumber - 1]) {
           this.currentPage = pageNumber;
           this.$emit('paginated', {
@@ -93,7 +95,7 @@
        *
        * @param {array} newDatas
        */
-      constructDatas(newDatas) {
+      constructDatas(newDatas: Array<Record<string, any>>): void {
         this.paginatedDatas = [];
 
         for (let i = 0; i < newDatas.length; i += this.paginationLength) {
@@ -110,7 +112,7 @@
        *
        * @param {int} key
        */
-      isActive(key) {
+      isActive(key: number): string | null {
         return this.currentPage === key + 1 ? 'active' : null;
       },
     },
@@ -126,11 +128,11 @@
        *
        * @param {array} newDatas
        */
-      datas(newDatas) {
+      datas(newDatas: Array<Record<string, any>>): void {
         this.constructDatas(newDatas);
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

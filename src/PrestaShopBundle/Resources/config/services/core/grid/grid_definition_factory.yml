@@ -306,3 +306,17 @@ services:
     arguments:
       - '@prestashop.adapter.legacy.configuration'
     public: true
+
+  prestashop.core.grid.definition.factory.security.session.employee:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+    public: true
+
+  prestashop.core.grid.definition.factory.security.session.customer:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\CustomerGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getContext().language.date_format_full'
+    public: true

@@ -141,7 +141,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
             'specifications' => $this->extractSpecificationsData($productForEditing),
-            'stock' => $this->extractStockData($productForEditing),
+            'stock' => $this->extractStockData($productForEditing, $shopConstraint),
             'pricing' => $this->extractPricingData($productForEditing),
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
@@ -179,6 +179,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
                 'related_products' => [],
             ],
+            'specifications' => [
+                'condition' => ProductCondition::NEW,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
@@ -215,7 +218,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'visibility' => [
                     'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                 ],
-                'condition' => ProductCondition::NEW,
             ],
             'footer' => [
                 'active' => $this->defaultProductActivation,
@@ -346,6 +348,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractSpecificationsData(ProductForEditing $productForEditing): array
     {
         $details = $productForEditing->getDetails();
+        $options = $productForEditing->getOptions();
 
         return [
             'references' => [
@@ -357,6 +360,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'features' => $this->extractFeatureValues($productForEditing->getProductId()),
             'attachments' => $this->extractAttachmentsData($productForEditing),
+            'show_condition' => $options->showCondition(),
+            'condition' => $options->getCondition(),
             'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
@@ -395,10 +400,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param ProductForEditing $productForEditing
+     * @param ShopConstraint $shopConstraint
      *
      * @return array<string, mixed>
      */
-    private function extractStockData(ProductForEditing $productForEditing): array
+    private function extractStockData(ProductForEditing $productForEditing, ShopConstraint $shopConstraint): array
     {
         $stockInformation = $productForEditing->getStockInformation();
         $availableDate = $stockInformation->getAvailableDate();
@@ -409,7 +415,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
-                'stock_movements' => $this->getStockMovements($productForEditing->getProductId()),
+                'stock_movements' => $this->getStockMovements($productForEditing->getProductId(), $shopConstraint),
                 'minimal_quantity' => $stockInformation->getMinimalQuantity(),
             ],
             'options' => [
@@ -433,10 +439,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
      *
      * @return array
      */
-    private function getStockMovements(int $productId): array
+    private function getStockMovements(int $productId, ShopConstraint $shopConstraint): array
     {
         /** @var EmployeeStockMovement[] $stockMovements */
-        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId));
+        $stockMovements = $this->queryBus->handle(new GetEmployeesStockMovements($productId, $shopConstraint->getShopId()->getValue()));
 
         $movementData = [];
         foreach ($stockMovements as $stockMovement) {
@@ -560,8 +566,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'show_condition' => $options->showCondition(),
-            'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }

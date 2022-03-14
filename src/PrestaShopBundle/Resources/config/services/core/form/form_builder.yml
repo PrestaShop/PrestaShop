@@ -7,6 +7,7 @@ services:
     arguments:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
+      - '@form.registry'
 
   prestashop.core.form.builder.sql_request_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'

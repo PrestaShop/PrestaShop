@@ -32,7 +32,7 @@ const {$} = window;
 
 export type SubmittableInputConfig = {
   wrapperSelector: string;
-  submitCallback: (input: Element) => any;
+  submitCallback: (input: HTMLInputElement) => any;
   afterSuccess?: ((input: HTMLInputElement, response: AjaxResponse) => any);
   afterFailure?: ((input: HTMLInputElement, error: AjaxError) => any);
 }

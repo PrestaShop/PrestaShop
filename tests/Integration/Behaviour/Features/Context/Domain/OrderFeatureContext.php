@@ -844,6 +844,27 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Then order :reference should have a cart rule with name :cartRuleName
+     *
+     * @param string $reference
+     * @param string $cartRuleName
+     *
+     * @throws RuntimeException
+     */
+    public function createdOrderShouldHaveNamedCartRule(string $reference, string $cartRuleName): void
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
+        if (null === $discount) {
+            throw new RuntimeException(sprintf(
+                'Order should have a cart rule with name "%s"',
+                $cartRuleName
+            ));
+        }
+    }
+
+    /**
      * @Then order :reference should be a gift with message :message
      *
      * @param string $reference

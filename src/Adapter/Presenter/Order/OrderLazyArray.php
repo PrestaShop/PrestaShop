@@ -332,7 +332,6 @@ class OrderLazyArray extends AbstractLazyArray
 
         foreach ($customerMessages as $cmId => $customerMessage) {
             $messages[$cmId] = $customerMessage;
-            $messages[$cmId]['message'] = nl2br($customerMessage['message']);
             $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
                 $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];

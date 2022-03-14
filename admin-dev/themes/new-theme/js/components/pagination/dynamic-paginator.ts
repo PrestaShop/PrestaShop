@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ServiceType from '@PSTypes/services';
+import PaginationServiceType from '@PSTypes/services';
 import RendererType from '@PSTypes/renderers';
 
 const {$} = window;
@@ -78,7 +78,7 @@ const {$} = window;
 export default class DynamicPaginator {
   private $paginationContainer: JQuery;
 
-  private paginationService: ServiceType;
+  private paginationService: PaginationServiceType;
 
   private renderer: RendererType;
 
@@ -97,7 +97,7 @@ export default class DynamicPaginator {
    */
   constructor(
     containerSelector: string,
-    paginationService: ServiceType,
+    paginationService: PaginationServiceType,
     renderer: RendererType,
     startingPage = 0,
     selectorsMap = {},

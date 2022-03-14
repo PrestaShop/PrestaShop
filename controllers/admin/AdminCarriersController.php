@@ -139,20 +139,13 @@ class AdminCarriersControllerCore extends AdminController
         $this->_join = 'INNER JOIN `' . _DB_PREFIX_ . 'carrier_lang` b ON a.id_carrier = b.id_carrier' . Shop::addSqlRestrictionOnLang('b') . ' AND b.id_lang = ' . (int) $this->context->language->id . ' LEFT JOIN `' . _DB_PREFIX_ . 'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop=' . (int) $this->context->shop->id . ')';
         $this->_use_found_rows = false;
 
-        // Removes the Recommended modules button
-        unset($this->page_header_toolbar_btn['modules-list']);
-
         // test if need to show header alert.
-        $sql = 'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2';
-        $showHeaderAlert = (Db::getInstance()->executeS($sql, false)->fetchColumn(0) == 0);
-
-        // Assign them in two steps! Because renderModulesList needs it before to be called.
-        $this->context->smarty->assign('panel_title', $this->trans('Use one of our recommended carrier modules', [], 'Admin.Shipping.Feature'));
-        $this->context->smarty->assign('panel_id', 'recommended-carriers-panel');
 
         $this->context->smarty->assign([
-            'showHeaderAlert' => $showHeaderAlert,
-            'modules_list' => $this->renderModulesList('back-office,AdminCarriers,new'),
+            'showHeaderAlert' => (Db::getInstance()->executeS(
+                    'SELECT COUNT(1) FROM `' . _DB_PREFIX_ . 'carrier` WHERE deleted = 0 AND id_reference > 2',
+                    false
+                )->fetchColumn(0) == 0),
         ]);
 
         return parent::renderList();
@@ -658,7 +651,7 @@ class AdminCarriersControllerCore extends AdminController
 
     public function ajaxProcessUpdatePositions()
     {
-        $way = (int) (Tools::getValue('way'));
+        $way = (bool) (Tools::getValue('way'));
         $id_carrier = (int) (Tools::getValue('id'));
         $positions = Tools::getValue($this->table);
 

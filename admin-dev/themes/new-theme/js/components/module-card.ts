@@ -93,8 +93,8 @@ export default class ModuleCard {
     this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
     this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
     this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
-    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
+    this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enableMobile';
+    this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
     this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
     this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
     this.moduleItemListSelector = '.module-item-list';
@@ -179,9 +179,9 @@ export default class ModuleCard {
       this.moduleActionMenuEnableMobileLinkSelector,
       function () {
         return (
-          self.dispatchPreEvent('enable_mobile', this)
-          && self.confirmAction('enable_mobile', this)
-          && self.requestToController('enable_mobile', $(this))
+          self.dispatchPreEvent('enableMobile', this)
+          && self.confirmAction('enableMobile', this)
+          && self.requestToController('enableMobile', $(this))
         );
       },
     );
@@ -191,9 +191,9 @@ export default class ModuleCard {
       this.moduleActionMenuDisableMobileLinkSelector,
       function () {
         return (
-          self.dispatchPreEvent('disable_mobile', this)
-          && self.confirmAction('disable_mobile', this)
-          && self.requestToController('disable_mobile', $(this))
+          self.dispatchPreEvent('disableMobile', this)
+          && self.confirmAction('disableMobile', this)
+          && self.requestToController('disableMobile', $(this))
         );
       },
     );

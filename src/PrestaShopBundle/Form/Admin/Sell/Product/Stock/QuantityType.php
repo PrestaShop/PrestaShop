@@ -111,6 +111,7 @@ class QuantityType extends TranslatorAwareType
                 ],
                 'required' => false,
                 'default_empty_data' => 0,
+                'modify_all_shops' => true,
             ])
         ;
     }
@@ -124,7 +125,7 @@ class QuantityType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'required' => false,
                 'product_id' => null,
             ])

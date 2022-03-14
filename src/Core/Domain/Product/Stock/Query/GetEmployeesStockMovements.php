@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class GetEmployeesStockMovements
 {
@@ -38,6 +39,11 @@ class GetEmployeesStockMovements
      * @var ProductId
      */
     private $productId;
+
+    /**
+     * @var ShopId
+     */
+    private $shopId;
 
     /**
      * @var int
@@ -56,10 +62,12 @@ class GetEmployeesStockMovements
      */
     public function __construct(
         int $productId,
+        int $shopId,
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
     ) {
         $this->productId = new ProductId($productId);
+        $this->shopId = new ShopId($shopId);
         $this->offset = $offset;
         $this->limit = $limit;
     }
@@ -70,6 +78,14 @@ class GetEmployeesStockMovements
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopId
+     */
+    public function getShopId(): ShopId
+    {
+        return $this->shopId;
     }
 
     /**

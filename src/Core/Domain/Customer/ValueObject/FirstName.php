@@ -85,8 +85,7 @@ class FirstName
     {
         $firstName = html_entity_decode($firstName, ENT_COMPAT, 'UTF-8');
 
-        $length = function_exists('mb_strlen') ? mb_strlen($firstName, 'UTF-8') : strlen($firstName);
-        if (self::MAX_LENGTH < $length) {
+        if (self::MAX_LENGTH < mb_strlen($firstName, 'UTF-8')) {
             throw new CustomerConstraintException(sprintf('Customer first name is too long. Max allowed length is %s', self::MAX_LENGTH), CustomerConstraintException::INVALID_FIRST_NAME);
         }
     }

@@ -8,7 +8,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -53,7 +53,7 @@ describe('BO - Design - Email Theme : Preview email theme', async () => {
   describe('Preview email theme', async () => {
     [
       {args: {emailThemeName: 'classic', numberOfLayouts: 50}},
-      {args: {emailThemeName: 'modern', numberOfLayouts: 50}},
+      {args: {emailThemeName: 'modern', numberOfLayouts: 54}},
     ].forEach((test) => {
       it(`should preview email theme '${test.args.emailThemeName}'`, async function () {
         await testContext.addContextItem(

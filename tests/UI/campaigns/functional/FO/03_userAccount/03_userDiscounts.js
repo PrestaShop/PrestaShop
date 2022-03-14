@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 // BO

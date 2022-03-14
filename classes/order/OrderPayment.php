@@ -89,7 +89,7 @@ class OrderPaymentCore extends ObjectModel
     /**
      * Get the detailed payment of an order.
      *
-     * @param int $order_reference
+     * @param string $order_reference
      *
      * @return array
      *

@@ -293,10 +293,6 @@
     <access id="access_1_307" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_READ"/>
     <access id="access_1_308" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_UPDATE"/>
     <access id="access_1_309" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_DELETE"/>
-    <access id="access_1_310" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_CREATE"/>
-    <access id="access_1_311" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_READ"/>
-    <access id="access_1_312" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_UPDATE"/>
-    <access id="access_1_313" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_DELETE"/>
     <access id="access_1_314" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_CREATE"/>
     <access id="access_1_315" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_READ"/>
     <access id="access_1_316" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_UPDATE"/>
@@ -449,5 +445,17 @@
     <access id="access_1_486" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_READ"/>
     <access id="access_1_487" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_UPDATE"/>
     <access id="access_1_488" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINFEATUREFLAG_DELETE"/>
+    <access id="access_1_489" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITY_CREATE"/>
+    <access id="access_1_490" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITY_READ"/>
+    <access id="access_1_491" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITY_UPDATE"/>
+    <access id="access_1_492" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITY_DELETE"/>
+    <access id="access_1_493" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONEMPLOYEE_CREATE"/>
+    <access id="access_1_494" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONEMPLOYEE_READ"/>
+    <access id="access_1_494" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONEMPLOYEE_UPDATE"/>
+    <access id="access_1_495" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONEMPLOYEE_DELETE"/>
+    <access id="access_1_496" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONCUSTOMER_CREATE"/>
+    <access id="access_1_497" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONCUSTOMER_READ"/>
+    <access id="access_1_498" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONCUSTOMER_UPDATE"/>
+    <access id="access_1_499" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINSECURITYSESSIONCUSTOMER_DELETE"/>
   </entities>
 </entity_access>

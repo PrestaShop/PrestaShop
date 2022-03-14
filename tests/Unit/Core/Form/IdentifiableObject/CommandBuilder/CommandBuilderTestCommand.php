@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
+use DateTimeImmutable;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CommandBuilderTestCommand
@@ -56,6 +57,11 @@ class CommandBuilderTestCommand
      * @var array
      */
     private $children;
+
+    /**
+     * @var DateTimeImmutable
+     */
+    private $date;
 
     /**
      * @var ShopConstraint
@@ -176,5 +182,25 @@ class CommandBuilderTestCommand
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getDate(): DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    /**
+     * @param DateTimeImmutable $date
+     *
+     * @return static
+     */
+    public function setDate(DateTimeImmutable $date): self
+    {
+        $this->date = $date;
+
+        return $this;
     }
 }

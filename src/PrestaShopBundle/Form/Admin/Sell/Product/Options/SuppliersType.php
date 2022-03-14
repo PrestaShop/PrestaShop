@@ -120,7 +120,7 @@ class SuppliersType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Suppliers', 'Admin.Global'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'columns_number' => 2,
             'row_attr' => [
                 'class' => 'product-suppliers-block',

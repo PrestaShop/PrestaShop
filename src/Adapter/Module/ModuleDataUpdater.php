@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Module as LegacyModule;
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -36,26 +35,6 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class ModuleDataUpdater
 {
-    /**
-     * @var AddonsInterface
-     */
-    private $addonsDataProvider;
-
-    /**
-     * @var AdminModuleDataProvider
-     */
-    private $adminModuleDataProvider;
-
-    /**
-     * @param AddonsInterface $addonsDataProvider
-     * @param AdminModuleDataProvider $adminModuleDataProvider
-     */
-    public function __construct(AddonsInterface $addonsDataProvider, AdminModuleDataProvider $adminModuleDataProvider)
-    {
-        $this->addonsDataProvider = $addonsDataProvider;
-        $this->adminModuleDataProvider = $adminModuleDataProvider;
-    }
-
     /**
      * @param string $name
      *

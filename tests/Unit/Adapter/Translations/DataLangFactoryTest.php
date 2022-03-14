@@ -33,28 +33,27 @@ use PrestaShopBundle\Translation\TranslatorInterface;
 
 class DataLangFactoryTest extends TestCase
 {
-    const DB_PREFIX = 'ps_';
-
     /**
-     * @param string $tableName
-     * @param string $expected
-     *
      * @dataProvider provideTableNames
      */
-    public function testItCreatesClassNamesFromTableNames(string $tableName, string $expected)
+    public function testItCreatesClassNamesFromTableNames(string $databasePrefix, string $tableName, string $expected)
     {
-        $factory = new DataLangFactory(self::DB_PREFIX, $this->getMockBuilder(TranslatorInterface::class)->getMock());
+        $factory = new DataLangFactory(
+            $databasePrefix,
+            $this->getMockBuilder(TranslatorInterface::class)->getMock()
+        );
         $this->assertSame($expected, $factory->getClassNameFromTable($tableName));
     }
 
     public function provideTableNames()
     {
         return [
-            [self::DB_PREFIX . 'tab_lang', 'TabLang'],
-            [self::DB_PREFIX . 'cart_rule_lang', 'CartRuleLang'],
-            ['cart_rule_lang', 'CartRuleLang'],
-            [self::DB_PREFIX . 'tab_lang', 'TabLang'],
-            ['tab', 'TabLang'],
+            ['ps_', 'ps_tab_lang', 'TabLang'],
+            ['ps_', 'ps_cart_rule_lang', 'CartRuleLang'],
+            ['ps_', 'cart_rule_lang', 'CartRuleLang'],
+            ['ps_', 'tab', 'TabLang'],
+            ['ps', 'pstab_lang', 'TabLang'],
+            ['ps', 'ps_tab_lang', 'TabLang'],
         ];
     }
 }

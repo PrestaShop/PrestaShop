@@ -25,17 +25,21 @@
  */
 
 .form-horizontal {
-  .card-block {
-    justify-content: center;
+  .card-body {
     padding: 1.875rem $card-spacer-x;
+  }
 
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
+  .form-wrapper {
+    padding: 0 $spacer * 0.5;
+
+    @include media-breakpoint-up(sm) {
+      width: 83%;
+      margin: auto;
     }
   }
 
-  .card-text {
-    @extend .col-sm-10;
+  .form-check-radio {
+    padding-top: calc(0.375rem + 1px);
   }
 
   .form-group {
@@ -110,6 +114,21 @@
     .modal-dialog {
       top: 45%;
     }
+  }
+}
+
+.form-group.inline-switch-widget {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  > * {
+    width: auto;
+  }
+
+  > .input-group {
+    min-width: 35px;
+    margin-top: -7px;
   }
 }
 

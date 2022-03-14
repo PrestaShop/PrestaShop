@@ -50,8 +50,9 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
             $tpl = $this->template_resource;
         }
 
-        return "\n<!-- begin $tpl -->\n"
-            . parent::fetch($template, $cache_id, $compile_id, $parent)
-            . "\n<!-- end $tpl -->\n";
+        // @phpstan-ignore-next-line
+        $fetch = parent::fetch($template, $cache_id, $compile_id, $parent);
+
+        return "\n<!-- begin $tpl -->\n" . $fetch . "\n<!-- end $tpl -->\n";
     }
 }

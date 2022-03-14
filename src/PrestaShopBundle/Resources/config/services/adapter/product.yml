@@ -101,7 +101,7 @@ services:
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.category.repository.category_repository'
-      - '@prestashop.adapter.product.stock.repository.stock_available_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.product.virtual_product.repository.virtual_product_file_repository'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
       - '@prestashop.adapter.attachment.attachment_repository'
@@ -124,7 +124,7 @@ services:
   prestashop.adapter.product.command_handler.update_product_basic_information_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductBasicInformationHandler
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
     tags:
       - name: tactician.handler
@@ -442,4 +442,5 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.product.stock.repository.stock_available_multi_shop_repository'
       - '@prestashop.adapter.shop.repository.shop_repository'

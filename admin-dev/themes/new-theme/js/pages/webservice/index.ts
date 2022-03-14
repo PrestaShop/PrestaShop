@@ -57,4 +57,10 @@ $(() => {
   window.prestashop.instance.generatableInput.attachOn('.js-generator-btn');
 
   new PermissionsRowSelector();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });

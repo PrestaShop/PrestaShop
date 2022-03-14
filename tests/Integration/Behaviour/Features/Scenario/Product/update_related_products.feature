@@ -7,6 +7,12 @@ Feature: Update product related products from Back Office (BO)
   As an employee
   I need to be able to update related products of a product from Back Office
 
+  Background:
+    Given language with iso code "en" is the default one
+    And attribute group "Color" named "Color" in en language exists
+    And attribute "White" named "White" in en language exists
+    And attribute "Black" named "Black" in en language exists
+
   Scenario: I set related products
     Given I add product "product1" with following information:
       | name[en-US] | book of law |
@@ -23,10 +29,12 @@ Feature: Update product related products from Back Office (BO)
     And I add product "product4" with following information:
       | name[en-US] | Reading glasses |
       | type        | combinations    |
-    And product "product4" has following combinations:
-      | reference   | quantity | attributes  |
-      | whiteFramed | 10       | Color:White |
-      | blackFramed | 10       | Color:Black |
+    When I generate combinations for product product4 using following attributes:
+      | Color | [White,Black] |
+    Then product "product4" should have following combinations:
+      | id reference | combination name | reference | attributes    | impact on price | quantity | is default |
+      | whiteFramed  | Color - White    |           | [Color:White] | 0               | 0        | true       |
+      | blackFramed  | Color - Black    |           | [Color:Black] | 0               | 0        | false      |
     And product product1 should have no related products
     And product product2 type should be standard
     And product "product3" type should be pack

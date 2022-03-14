@@ -91,9 +91,6 @@ services:
 
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
-    arguments:
-      - "@prestashop.core.admin.data_provider.addons_interface"
-      - "@prestashop.adapter.admin.data_provider.module"
 
   prestashop.adapter.admin.model.product:
     class: PrestaShopBundle\Model\Product\AdminModelAdapter

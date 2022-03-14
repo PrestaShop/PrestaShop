@@ -29,10 +29,13 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder;
 
 class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
+    private const MULTI_SHOP_PREFIX = 'prices_multi_shop';
+
     /**
      * @dataProvider getExpectedCommands
      *
@@ -41,8 +44,8 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new BasicInformationCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new BasicInformationCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -55,17 +58,16 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             [],
         ];
 
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
         yield [
             [
                 'description' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $localizedNames = [
             1 => 'Nom français',
             2 => 'French name',
@@ -80,7 +82,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             [$command],
         ];
 
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $localizedDescriptions = [
             1 => 'Description française',
             2 => 'English description',
@@ -95,7 +97,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             [$command],
         ];
 
-        $command = new UpdateProductBasicInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $localizedShortDescriptions = [
             1 => 'Résumé français',
             2 => 'English summary',
@@ -109,5 +111,154 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             ],
             [$command],
         ];
+    }
+
+    /**
+     * @dataProvider getExpectedCommandsMultiShop
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
+    {
+        $builder = new BasicInformationCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function getExpectedCommandsMultiShop(): iterable
+    {
+        $localizedNames = [
+            1 => 'Nom français',
+            2 => 'French name',
+        ];
+        $localizedDescriptions = [
+            1 => 'Description française',
+            2 => 'English description',
+        ];
+        $localizedShortDescriptions = [
+            1 => 'Résumé français',
+            2 => 'English summary',
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        yield [
+            [
+                'header' => [
+                    'name' => $localizedNames,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    'description_short' => $localizedShortDescriptions,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        yield [
+            [
+                'header' => [
+                    'name' => $localizedNames,
+                    self::MULTI_SHOP_PREFIX . 'name' => true,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description' => true,
+                    'description_short' => $localizedShortDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description_short' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedDescriptions($localizedDescriptions)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        yield [
+            [
+                'header' => [
+                    'name' => $localizedNames,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description' => false,
+                    'description_short' => $localizedShortDescriptions,
+                ],
+            ],
+            [$command],
+        ];
+
+        $allShopsCommand = $this->getAllShopsCommand();
+        $singleCommand = $this->getSingleShopCommand();
+        $singleCommand
+            ->setLocalizedDescriptions($localizedDescriptions)
+        ;
+        $allShopsCommand
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        yield [
+            [
+                'header' => [
+                    'name' => $localizedNames,
+                    self::MULTI_SHOP_PREFIX . 'name' => true,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description' => false,
+                    'description_short' => $localizedShortDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description_short' => true,
+                ],
+            ],
+            [$singleCommand, $allShopsCommand],
+        ];
+
+        $allShopsCommand = $this->getAllShopsCommand();
+        $singleCommand = $this->getSingleShopCommand();
+        $singleCommand
+            ->setLocalizedNames($localizedNames)
+            ->setLocalizedShortDescriptions($localizedShortDescriptions)
+        ;
+        $allShopsCommand
+            ->setLocalizedDescriptions($localizedDescriptions)
+        ;
+        yield [
+            [
+                'header' => [
+                    'name' => $localizedNames,
+                ],
+                'description' => [
+                    'description' => $localizedDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description' => true,
+                    'description_short' => $localizedShortDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'description_short' => false,
+                ],
+            ],
+            [$singleCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductBasicInformationCommand
+    {
+        return new UpdateProductBasicInformationCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+    }
+
+    private function getAllShopsCommand(): UpdateProductBasicInformationCommand
+    {
+        return new UpdateProductBasicInformationCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

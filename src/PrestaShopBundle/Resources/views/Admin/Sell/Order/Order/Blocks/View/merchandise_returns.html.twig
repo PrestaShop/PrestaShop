@@ -30,8 +30,8 @@
       <tr>
         <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
         <th>{{ 'Type'|trans({}, 'Admin.Global') }}</th>
-        <th>{{ 'Carrier'|trans({}, 'Admin.Shipping.Feature') }}</th>
-        <th>{{ 'Tracking number'|trans({}, 'Admin.Shipping.Feature') }}</th>
+        <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+        <th>{{ 'Number'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
       </tr>
       </thead>
       <tbody>
@@ -40,12 +40,10 @@
           <td data-role="merchandise-return-date">{{ return.date|date_format_full }}</td>
           <td data-role="merchandise-return-type">{{ return.type }}</td>
           <td data-role="merchandise-return-state">{{ return.stateName }}</td>
-          <td class="text-right" data-role="merchandise-return-tracking-number">
-            {% if return.trackingNumber and return.trackingUrl %}
-              <a href="{{ return.trackingUrl }}">{{ return.trackingNumber }}</a>
-            {% elseif return.trackingNumber %}
-              {{ return.trackingNumber }}
-            {% endif %}
+          <td data-role="merchandise-return-id">
+            <a class="d-print-none" href="{{ getAdminLink('AdminReturn', true, {'id_order_return': return.idOrderReturn, updateorder_return : '', 'back': app.request.uri}) }}">
+                {{ return.orderReturnNumber }}
+            </a>
           </td>
         </tr>
       {% endfor %}

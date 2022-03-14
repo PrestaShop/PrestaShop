@@ -1,6 +1,7 @@
 const fs = require('fs');
 const pdfJs = require('pdfjs-dist/legacy/build/pdf.js');
 const imgGen = require('js-image-generator');
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 /**
  * @module FilesHelper
@@ -175,5 +176,17 @@ module.exports = {
     await fs.rename(oldPath, newPath, (err) => {
       if (err) throw err;
     });
+  },
+
+  /**
+   * Create csv file
+   * @param fileName {string} Name of the file to create
+   * @param data {Object} Data to create csv file
+   * @returns {Promise<void>}
+   */
+  async createCSVFile(path, fileName, data) {
+    await this.createFile(path, fileName, '');
+    const csvWriter = await createCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
+    await csvWriter.writeRecords(data.records);
   },
 };

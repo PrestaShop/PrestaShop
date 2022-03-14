@@ -62,6 +62,7 @@ class HeaderType extends TranslatorAwareType
                 'row_attr' => [
                     'class' => 'header-name',
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [

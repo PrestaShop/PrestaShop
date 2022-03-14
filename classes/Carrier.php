@@ -321,13 +321,13 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price by total weight.
+     * Check if the carrier is available for a given weight and zone
      *
      * @param int $id_carrier Carrier ID
      * @param float $total_weight Total weight
      * @param int $id_zone Zone ID
      *
-     * @return float|bool Delivery price, false if not possible
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
     {
@@ -349,7 +349,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_weight = Hook::exec('actionDeliveryPriceByWeight', ['id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_weight)) {
-            self::$price_by_weight2[$cache_key] = $price_by_weight;
+            self::$price_by_weight2[$cache_key] = true;
         }
 
         return self::$price_by_weight2[$cache_key];
@@ -426,14 +426,14 @@ class CarrierCore extends ObjectModel
     }
 
     /**
-     * Get delivery price for a given order.
+     * Check if the carrier is available for a given order total, currency and zone
      *
      * @param int $id_carrier Carrier ID
      * @param float $order_total Order total to pay
      * @param int $id_zone Zone id (for customer delivery address)
      * @param int|null $id_currency Currency ID
      *
-     * @return float Delivery price
+     * @return bool true if carrier is available
      */
     public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
     {
@@ -459,7 +459,7 @@ class CarrierCore extends ObjectModel
 
         $price_by_price = Hook::exec('actionDeliveryPriceByPrice', ['id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone]);
         if (is_numeric($price_by_price)) {
-            self::$price_by_price2[$cache_key] = $price_by_price;
+            self::$price_by_price2[$cache_key] = true;
         }
 
         return self::$price_by_price2[$cache_key];
@@ -697,7 +697,7 @@ class CarrierCore extends ObjectModel
      *
      * @param int $id_zone Zone ID
      * @param array|null $groups Group of the Customer
-     * @param Cart|null $cart Optional Cart object
+     * @param CartCore|null $cart Optional Cart object
      * @param array $error Contains an error message if an error occurs
      *
      * @return array Carriers for the order
@@ -742,12 +742,12 @@ class CarrierCore extends ObjectModel
                 if ($row['range_behavior']) {
                     // Get id zone
                     if (!$id_zone) {
-                        $id_zone = (int) Country::getIdZone(Configuration::get('PS_COUNTRY_DEFAULT'));
+                        $id_zone = (int) Country::getIdZone((int) Configuration::get('PS_COUNTRY_DEFAULT'));
                     }
 
                     // Get only carriers that have a range compatible with cart
                     if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
-                        && (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone))) {
+                        && (Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
                         unset($result[$k]);
 
@@ -755,7 +755,7 @@ class CarrierCore extends ObjectModel
                     }
 
                     if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-                        && (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null))) {
+                        && (Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency ?? null) === false)) {
                         $error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
                         unset($result[$k]);
 
@@ -1101,7 +1101,7 @@ class CarrierCore extends ObjectModel
             return false;
         }
 
-        return new Carrier($id_carrier, $id_lang);
+        return new Carrier((int) $id_carrier, $id_lang);
     }
 
     /**
@@ -1209,8 +1209,7 @@ class CarrierCore extends ObjectModel
      *
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxrulesGroup ID
-     *                           false if not found
+     * @return int TaxrulesGroup ID
      */
     public function getIdTaxRulesGroup(Context $context = null)
     {
@@ -1223,8 +1222,8 @@ class CarrierCore extends ObjectModel
      * @param int $id_carrier Carrier ID
      * @param Context|null $context Context
      *
-     * @return false|string|null TaxRulesGroup ID
-     *                           false if not found
+     * @return int TaxRulesGroup ID
+     *             false if not found
      */
     public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
     {
@@ -1240,10 +1239,10 @@ class CarrierCore extends ObjectModel
                     WHERE `id_carrier` = ' . (int) $id_carrier . ' AND id_shop=' . (int) Context::getContext()->shop->id);
             Cache::store($key, $result);
 
-            return $result;
+            return (int) $result;
         }
 
-        return Cache::retrieve($key);
+        return (int) Cache::retrieve($key);
     }
 
     /**
@@ -1477,10 +1476,10 @@ class CarrierCore extends ObjectModel
      * @since 1.5.0
      *
      * @param Product $product The id of the product, or an array with at least the package size and weight
-     * @param int $id_warehouse Warehouse ID
+     * @param int|null $id_warehouse Warehouse ID
      * @param int|null $id_address_delivery Delivery Address ID
      * @param int|null$id_shop Shop ID
-     * @param Cart|null $cart Cart object
+     * @param CartCore|null $cart Cart object
      * @param array|null $error contain an error message if an error occurs
      *
      * @return array Available Carriers

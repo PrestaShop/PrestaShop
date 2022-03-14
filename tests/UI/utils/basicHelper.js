@@ -1,4 +1,5 @@
 /**
+ * @module basicHelper
  * @description Basic helper used to wrap basic methods don't used on pages
  */
 module.exports = {

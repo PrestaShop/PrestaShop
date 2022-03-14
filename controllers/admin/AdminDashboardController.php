@@ -67,8 +67,7 @@ class AdminDashboardControllerCore extends AdminController
 
     protected function getOptionFields()
     {
-        $forms = [];
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $carriers = Carrier::getCarriers((int) $this->context->language->id, true, false, false, null, Carrier::ALL_CARRIERS);
         $modules = Module::getModulesOnDisk(true);
 
@@ -413,21 +412,6 @@ class AdminDashboardControllerCore extends AdminController
     {
         Configuration::updateValue('PS_DASHBOARD_SIMULATION', (int) Tools::getValue('PS_DASHBOARD_SIMULATION'));
         die('k' . Configuration::get('PS_DASHBOARD_SIMULATION') . 'k');
-    }
-
-    /**
-     * Returns last news from the blog
-     *
-     * @throws PrestaShopException
-     */
-    public function displayAjaxGetBlogRss()
-    {
-        $newsFetcher = $this->get('prestashop.adapter.news.provider');
-        $return = $newsFetcher->getData($this->context->language->iso_code);
-
-        // Response
-        header('Content-Type: application/json');
-        $this->ajaxRender(json_encode($return));
     }
 
     public function ajaxProcessSaveDashConfig()

@@ -283,14 +283,14 @@ class ContextCore
         if (Tools::isSubmit('no_mobile_theme')) {
             Context::getContext()->cookie->no_mobile = true;
             if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest(Context::getContext()->cookie->id_guest);
+                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = false;
                 $guest->update();
             }
         } elseif (Tools::isSubmit('mobile_theme_ok')) {
             Context::getContext()->cookie->no_mobile = false;
             if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest(Context::getContext()->cookie->id_guest);
+                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = true;
                 $guest->update();
             }
@@ -360,7 +360,7 @@ class ContextCore
         $this->cookie->email = $customer->email;
         $this->cookie->is_guest = $customer->isGuest();
 
-        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
+        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
         } else {
@@ -453,18 +453,20 @@ class ContextCore
         $withDB = !$this->language instanceof InstallLanguage;
         $theme = $this->shop !== null ? $this->shop->theme : null;
 
-        try {
-            $containerFinder = new ContainerFinder($this);
-            $containerFinder->getContainer()->get('prestashop.translation.translator_language_loader')
-                ->setIsAdminContext($adminContext)
-                ->loadLanguage($translator, $locale, $withDB, $theme);
-        } catch (ContainerNotFoundException $exception) {
-            // If a container is still not found, instantiate manually the translator loader
-            // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
-            // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-            (new TranslatorLanguageLoader(new ModuleRepository()))
-                ->setIsAdminContext($adminContext)
-                ->loadLanguage($translator, $locale, $withDB, $theme);
+        if ($this instanceof Context) {
+            try {
+                $containerFinder = new ContainerFinder($this);
+                $containerFinder->getContainer()->get('prestashop.translation.translator_language_loader')
+                    ->setIsAdminContext($adminContext)
+                    ->loadLanguage($translator, $locale, $withDB, $theme);
+            } catch (ContainerNotFoundException $exception) {
+                // If a container is still not found, instantiate manually the translator loader
+                // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
+                // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
+                (new TranslatorLanguageLoader(new ModuleRepository()))
+                    ->setIsAdminContext($adminContext)
+                    ->loadLanguage($translator, $locale, $withDB, $theme);
+            }
         }
 
         return $translator;

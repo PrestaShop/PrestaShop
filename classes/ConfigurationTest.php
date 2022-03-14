@@ -36,7 +36,7 @@ class ConfigurationTestCore
         '/localization/fr.xml',
         '/mails/index.php',
         '/modules/index.php',
-        '/override/controllers/front/index.php',
+        '/override/index.php',
         '/pdf/order-return.tpl',
         '/translations/export/index.php',
         '/webservice/dispatcher.php',

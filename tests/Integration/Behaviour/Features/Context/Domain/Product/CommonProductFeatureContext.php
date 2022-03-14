@@ -28,18 +28,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
-use Behat\Gherkin\Node\TableNode;
 use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext;
-use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
-use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
@@ -116,42 +114,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Given product :productReference has following combinations:
-     *
-     * @param string $productReference
-     * @param TableNode $tableNode
-     */
-    public function addCombinationsToProduct(string $productReference, TableNode $tableNode): void
-    {
-        $details = $tableNode->getColumnsHash();
-        $combinationsDetails = [];
-
-        foreach ($details as $combination) {
-            $combinationsDetails[] = new CombinationDetails(
-                $combination['reference'],
-                (int) $combination['quantity'],
-                explode(';', $combination['attributes'])
-            );
-        }
-
-        $combinations = ProductCombinationFactory::makeCombinations(
-            $this->getSharedStorage()->get($productReference),
-            $combinationsDetails
-        );
-
-        foreach ($combinations as $combination) {
-            $this->getSharedStorage()->set($combination->reference, (int) $combination->id);
-        }
-
-        // Product class has a lot of cache that is set as soon as the product is created, including for prices
-        // which are cached for each combinations. Since it was cached when the combinations did not exist we need
-        // to clear it so that the newly created combinations' prices are correctly computed next time they are needed.
-        Product::resetStaticCache();
-    }
-
-    /**
-     * @Then /^product "(.+)" localized "(.+)" should be:$/
-     * @Given /^product "(.+)" localized "(.+)" is:$/
+     * @Then product :productReference localized :fieldName should be:
+     * @Given product :productReference localized :fieldName is:
      *
      * localizedValues transformation handled by @see LocalizedArrayTransformContext
      *
@@ -159,10 +123,37 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      * @param string $fieldName
      * @param array $expectedLocalizedValues
      */
-    public function assertLocalizedProperty(string $productReference, string $fieldName, array $expectedLocalizedValues): void
+    public function assertLocalizedPropertyForDefaultShop(string $productReference, string $fieldName, array $expectedLocalizedValues): void
     {
         $productForEditing = $this->getProductForEditing($productReference);
+        $this->assertLocalizedProperty($productForEditing, $fieldName, $expectedLocalizedValues);
+    }
 
+    /**
+     * @Then product :productReference localized :fieldName for shops :shopReferences should be:
+     *
+     * localizedValues transformation handled by @see LocalizedArrayTransformContext
+     *
+     * @param string $productReference
+     * @param string $fieldName
+     * @param array $expectedLocalizedValues
+     */
+    public function assertLocalizedPropertyForShops(string $productReference, string $fieldName, string $shopReferences, array $expectedLocalizedValues): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $productForEditing = $this->getProductForEditing(
+                $productReference,
+                $shopId
+            );
+
+            $this->assertLocalizedProperty($productForEditing, $fieldName, $expectedLocalizedValues);
+        }
+    }
+
+    private function assertLocalizedProperty(ProductForEditing $productForEditing, string $fieldName, array $expectedLocalizedValues): void
+    {
         if ('tags' === $fieldName) {
             UpdateTagsFeatureContext::assertLocalizedTags(
                 $expectedLocalizedValues,

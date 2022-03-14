@@ -500,7 +500,7 @@ class ModuleSelfConfigurator
     protected function runConfigurationDelete($config)
     {
         foreach ($config as $key) {
-            $this->configuration->delete($key);
+            $this->configuration->remove($key);
         }
     }
 }

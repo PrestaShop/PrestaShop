@@ -255,7 +255,7 @@ abstract class PaymentModuleCore extends Module
         $cart_is_loaded = Validate::isLoadedObject($this->context->cart);
         if (!$cart_is_loaded || $this->context->cart->OrderExists()) {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
-            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
+            PrestaShopLogger::addLog($error, 4, 1, 'Cart', (int) ($this->context->cart->id));
             die(Tools::displayError($error));
         }
 
@@ -320,7 +320,7 @@ abstract class PaymentModuleCore extends Module
                     } else {
                         $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                         $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [$rule_name, (int) $rule->id], 'Admin.Payment.Notification');
-                        PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int) $this->context->cart->id);
+                        PrestaShopLogger::addLog($error, 3, 2, 'Cart', (int) $this->context->cart->id);
                     }
                 }
             }
@@ -405,7 +405,7 @@ abstract class PaymentModuleCore extends Module
             $order = $order_list[$key];
             if (!isset($order->id)) {
                 $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
-                PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
+                PrestaShopLogger::addLog($error, 4, 2, 'Cart', (int) ($order->id_cart));
                 die(Tools::displayError($error));
             }
             if (!$secure_key) {
@@ -586,7 +586,11 @@ abstract class PaymentModuleCore extends Module
                     $order_detail->product_quantity_in_stock < 0)) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $order->id;
-                $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
+                $history->changeIdOrderState(
+                    (int) Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'),
+                    $order,
+                    true
+                );
                 $history->addWithemail();
             }
 
@@ -666,7 +670,7 @@ abstract class PaymentModuleCore extends Module
                         '{invoice_other}' => $invoice->other,
                         '{order_name}' => $order->getUniqReference(),
                         '{id_order}' => $order->id,
-                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
+                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, true),
                         '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
                         '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
                         '{products}' => $product_list_html,

@@ -517,7 +517,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         foreach ($shops as $shop) {
             // retrieve default language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
             foreach ($langTables as $name) {
                 $return &= $this->duplicateRowsFromDefaultShopLang($name, $shopDefaultLangId, $shop->id);
@@ -977,7 +977,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        return new Language($id_lang);
+        return new Language((int) $id_lang);
     }
 
     /**
@@ -1511,7 +1511,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!empty($langId)) {
             $lang = new static($langId);
-
+            /** @var Language $lang */
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values
@@ -1590,7 +1590,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $table
      * @param string $className
-     * @param static $lang
+     * @param LanguageCore $lang
      *
      * @throws PrestaShopDatabaseException
      */
@@ -1610,6 +1610,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!empty($keys) && !empty($fieldsToUpdate)) {
             $shops = Shop::getShopsCollection(false);
+            /** @var array<Shop> $shops */
             foreach ($shops as $shop) {
                 static::updateMultilangFromClassForShop($classObject, $lang, $shop);
             }
@@ -1620,7 +1621,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * untranslate then re-translate duplicated rows in tables with pattern xxx_lang.
      *
      * @param DataLangCore $classObject
-     * @param static $lang
+     * @param LanguageCore $lang
      * @param Shop $shop
      *
      * @throws \PrestaShopDatabaseException
@@ -1628,7 +1629,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
     {
-        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+        $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
 
         $sfContainer = SymfonyContainer::getInstance();

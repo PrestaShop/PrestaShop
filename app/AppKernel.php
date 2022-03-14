@@ -55,8 +55,6 @@ class AppKernel extends Kernel
             new PrestaShopBundle\PrestaShopBundle(),
             // PrestaShop Translation parser
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
-            // REST API consumer
-            new EightPoints\Bundle\GuzzleBundle\EightPointsGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );

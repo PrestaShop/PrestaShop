@@ -228,7 +228,6 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
             'customization',
             'customization_field',
             'supply_order_detail',
-            'attribute_impact',
             'product_attribute',
             'product_attribute_shop',
             'product_attribute_combination',
@@ -255,7 +254,6 @@ final class ImportEntityDeleter implements ImportEntityDeleterInterface
     {
         $truncateTables = [
             'attribute',
-            'attribute_impact',
             'attribute_lang',
             'attribute_group',
             'attribute_group_lang',

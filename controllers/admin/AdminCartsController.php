@@ -63,7 +63,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN (
-            SELECT `id_guest`
+            SELECT DISTINCT `id_guest`
             FROM `' . _DB_PREFIX_ . 'connections`
             WHERE
                 TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
@@ -433,7 +433,7 @@ class AdminCartsControllerCore extends AdminController
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', [], 'Admin.Catalog.Notification');
                         }
-                        $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                        $file_name = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
@@ -517,10 +517,12 @@ class AdminCartsControllerCore extends AdminController
             if ($delivery_option !== false) {
                 $this->context->cart->setDeliveryOption([$this->context->cart->id_address_delivery => $delivery_option]);
             }
-            if (Validate::isBool(($recyclable = (int) Tools::getValue('recyclable')))) {
+            $recyclable = (int) Tools::getValue('recyclable');
+            if (Validate::isBool($recyclable)) {
                 $this->context->cart->recyclable = $recyclable;
             }
-            if (Validate::isBool(($gift = (int) Tools::getValue('gift')))) {
+            $gift = (int) Tools::getValue('gift');
+            if (Validate::isBool($gift)) {
                 $this->context->cart->gift = $gift;
             }
             if (Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message'))))) {

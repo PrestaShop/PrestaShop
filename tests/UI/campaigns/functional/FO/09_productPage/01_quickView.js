@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
 // Import pages
@@ -257,16 +257,28 @@ describe('FO - product page : Product quick view', async () => {
 
   // 6 - Change combination from quick view
   describe('Change combination from quick view modal', async () => {
-    it('should change combination on popup and check it in cart page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
       await homePage.quickViewProduct(page, 1);
+
+      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      await expect(isModalVisible).to.be.true;
+    });
+
+    it('should change combination on popup and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
+
       await homePage.changeCombinationAndAddToCart(page, combination);
 
       await homePage.proceedToCheckout(page);
 
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(combination.quantity);
+    });
+
+    it('should check product details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
 
       let result = await cartPage.getProductDetail(page, 1);
       await Promise.all([

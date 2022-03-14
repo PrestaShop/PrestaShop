@@ -80,59 +80,60 @@
       <div class="card-header">
         {{ 'My theme for %name% shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
       </div>
-      <div class="card-body row">
+      <div class="card-body">
+        <div class="row">
+          {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+            'themeName': currentlyUsedTheme.get('display_name'),
+            'themeVersion': currentlyUsedTheme.get('version'),
+            'themeAuthor': currentlyUsedTheme.get('author.name'),
+            'themeAuthorUrl': theme.get('author.url'),
+            'isActive': true
+          } %}
+            {% block image %}
+              <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name') }}">
+            {% endblock %}
+            {% block button_container %}
+              <button class="btn action-button">
+                <i class="material-icons icon-current-theme">done</i>
+                {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
+              </button>
+            {% endblock %}
+          {% endembed %}
 
-        {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-          'themeName': currentlyUsedTheme.get('display_name'),
-          'themeVersion': currentlyUsedTheme.get('version'),
-          'themeAuthor': currentlyUsedTheme.get('author.name'),
-          'themeAuthorUrl': theme.get('author.url'),
-          'isActive': true
-        } %}
-          {% block image %}
-            <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name') }}">
-          {% endblock %}
-          {% block button_container %}
-            <button class="btn action-button">
-              <i class="material-icons icon-current-theme">done</i>
-              {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
-            </button>
-          {% endblock %}
-        {% endembed %}
-
-        {% if notUsedThemes is not empty %}
-          {% for theme in notUsedThemes %}
-            {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-              'themeName': theme.get('display_name'),
-              'themeVersion': theme.get('version'),
-              'themeAuthor': theme.get('author.name'),
-              'themeAuthorUrl': theme.get('author.url'),
-              'isActive': false
-            }  %}
-              {% block image %}
-                <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
-              {% endblock %}
-              {% block button_container %}
-                <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
-                  <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}"/>
-                  <button type="button" class="btn action-button js-display-use-theme-modal" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
-                    <i class="material-icons">
-                      present_to_all
-                    </i>
-                    <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
-                  </button>
-                </form>
-                <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
-                  <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
-                  <button type="button" class="btn delete-button js-display-delete-theme-modal">
-                    <i class="material-icons">
-                      delete
-                    </i>
-                  </button>
-                </form>
-              {% endblock %}
-            {% endembed %}
-          {% endfor %}
+          {% if notUsedThemes is not empty %}
+            {% for theme in notUsedThemes %}
+              {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+                'themeName': theme.get('display_name'),
+                'themeVersion': theme.get('version'),
+                'themeAuthor': theme.get('author.name'),
+                'themeAuthorUrl': theme.get('author.url'),
+                'isActive': false
+              }  %}
+                {% block image %}
+                  <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
+                {% endblock %}
+                {% block button_container %}
+                  <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}"/>
+                    <button type="button" class="btn action-button js-display-use-theme-modal" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
+                      <i class="material-icons">
+                        present_to_all
+                      </i>
+                      <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
+                    </button>
+                  </form>
+                  <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
+                    <button type="button" class="btn delete-button js-display-delete-theme-modal">
+                      <i class="material-icons">
+                        delete
+                      </i>
+                    </button>
+                  </form>
+                {% endblock %}
+              {% endembed %}
+            {% endfor %}
+          </div>
 
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/use_theme_modal.html.twig' %}
           {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/delete_theme_modal.html.twig' %}

@@ -162,6 +162,15 @@ class Home extends FOBasePage {
   }
 
   /**
+   * Is quick view product modal visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isQuickViewProductModalVisible(page) {
+    return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products

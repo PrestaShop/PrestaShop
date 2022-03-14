@@ -33,6 +33,7 @@ const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
 
 module.exports = {
   externals: {
@@ -110,7 +111,9 @@ module.exports = {
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
+    shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/specific-price/form',
+    security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
@@ -395,6 +398,9 @@ module.exports = {
       filter: /preload/,
       // eslint-disable-next-line
       replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
+    }),
+    new CssoWebpackPlugin({
+      forceMediaMerge: true,
     }),
   ],
 };

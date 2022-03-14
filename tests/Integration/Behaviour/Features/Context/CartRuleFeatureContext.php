@@ -53,7 +53,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $countryFeatureContext;
 
     /**
-     * @var ProductFeatureContext
+     * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
 
@@ -92,8 +92,8 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $environment = $scope->getEnvironment();
         /** @var CountryFeatureContext $countryFeatureContext */
         $countryFeatureContext = $environment->getContext(CountryFeatureContext::class);
-        /** @var ProductFeatureContext $productFeatureContext */
-        $productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        /** @var LegacyProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
         /** @var CarrierFeatureContext $carrierFeatureContext */
         $carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
         /** @var CustomerFeatureContext $customerFeatureContext */

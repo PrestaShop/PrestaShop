@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Adapter\Preferences;
+namespace Tests\Unit\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Adapter\Shop\MaintenanceConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
