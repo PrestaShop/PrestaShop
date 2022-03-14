@@ -38,7 +38,7 @@ class SourceHandlerFactory
         $this->sourceHandlers[] = $sourceHandler;
     }
 
-    public function getHandler(string $source): SourceHandlerInterface
+    public function getHandler($source): SourceHandlerInterface
     {
         foreach ($this->sourceHandlers as $handler) {
             if ($handler->canHandle($source)) {

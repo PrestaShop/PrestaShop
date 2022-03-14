@@ -56,12 +56,12 @@ class ZipSourceHandler implements SourceHandlerInterface
         $this->translator = $translator;
     }
 
-    public function canHandle(string $source): bool
+    public function canHandle($source): bool
     {
         return is_file($source) && in_array(mime_content_type($source), self::AUTHORIZED_MIME);
     }
 
-    public function getModuleName(string $source): string
+    public function getModuleName($source): string
     {
         $zip = new ZipArchive();
         if ($zip->open($source) === true) {
