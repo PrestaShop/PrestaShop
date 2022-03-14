@@ -28,7 +28,13 @@ namespace PrestaShop\PrestaShop\Core\Module;
 
 interface ModuleManagerInterface
 {
-    public function install(string $name, ?string $source = null): bool;
+    /**
+     * @param string $name
+     * @param mixed|null $source can be anything a SourceHandler can handle
+     *
+     * @return bool
+     */
+    public function install(string $name, $source = null): bool;
 
     public function uninstall(string $name, bool $deleteFiles = false): bool;
 
