@@ -29,17 +29,6 @@ function prodConfig() {
     }),
   );
 
-  prod.plugins.push(
-    new LicensePlugin({
-      outputFilename: 'thirdPartyNotice.json',
-      licenseOverrides: {
-        'vazir-font@30.1.0': 'OFL-1.1',
-        'typeahead.js@0.11.1': 'MIT',
-      },
-      replenishDefaultLicenseTexts: true,
-    }),
-  );
-
   return prod;
 }
 
