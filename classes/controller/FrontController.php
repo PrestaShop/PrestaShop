@@ -363,8 +363,8 @@ class FrontControllerCore extends Controller
                 if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
                     $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
                 } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
-                    && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
-                    && Validate::isLanguageIsoCode($array[0])) {
+                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                        && Validate::isLanguageIsoCode($array[0])) {
                     $id_country = (int) Country::getByIso($array[0], true);
                 } else {
                     $id_country = Tools::getCountry();
@@ -425,7 +425,7 @@ class FrontControllerCore extends Controller
             }
             /* Select an address if not set */
             if (isset($cart) && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0 ||
-                !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
+                    !isset($cart->id_address_invoice) || $cart->id_address_invoice == 0) && $this->context->cookie->id_customer) {
                 $to_update = false;
                 if ($this->automaticallyAllocateDeliveryAddress && (!isset($cart->id_address_delivery) || $cart->id_address_delivery == 0)) {
                     $to_update = true;
@@ -878,7 +878,7 @@ class FrontControllerCore extends Controller
 
                     try {
                         $record = $reader->city(Tools::getRemoteAddr());
-                    } catch (\GeoIp2\Exception\AddressNotFoundException$e) {
+                    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
                         $record = null;
                     }
 
