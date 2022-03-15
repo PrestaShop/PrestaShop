@@ -1121,7 +1121,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use registerStylesheet($id, $path, $params)
-         */
+        */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1142,7 +1142,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use unregisterStylesheet($id)
-         */
+        */
 
         if (!is_array($css_uri)) {
             $css_uri = (array) $css_uri;
@@ -1163,7 +1163,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use registerJavascript($id, $path, $params)
-         */
+        */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1184,7 +1184,7 @@ class FrontControllerCore extends Controller
         /*
         This is deprecated in PrestaShop 1.7 and has no effect in PrestaShop 1.7 theme.
         You should use unregisterJavascript($id)
-         */
+        */
 
         if (!is_array($js_uri)) {
             $js_uri = (array) $js_uri;
@@ -1564,8 +1564,8 @@ class FrontControllerCore extends Controller
             'quantity_discount' => [
                 'type' => ($quantity_discount_price) ? 'price' : 'discount',
                 'label' => ($quantity_discount_price)
-                ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
-                : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
+                    ? $this->getTranslator()->trans('Unit price', [], 'Shop.Theme.Catalog')
+                    : $this->getTranslator()->trans('Unit discount', [], 'Shop.Theme.Catalog'),
             ],
             'voucher_enabled' => (int) CartRule::isFeatureActive(),
             'return_enabled' => (int) Configuration::get('PS_ORDER_RETURN'),
