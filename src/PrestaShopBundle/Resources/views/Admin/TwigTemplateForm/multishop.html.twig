@@ -63,7 +63,7 @@
       {% endfor %}
     </ul>
 
-    {% set attr = attr|merge({'class': 'shop-selector-input'}) %}
+    {% set attr = attr|merge({'class': 'd-none shop-selector-input'}) %}
     {{ block('choice_widget') }}
   </div>
 {% endblock %}

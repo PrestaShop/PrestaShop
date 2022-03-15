@@ -48,6 +48,7 @@ export default {
     selectInput: '.shop-selector-input',
     searchInput: '.js-shop-selector-search',
     shopItem: '.shop-selector-shop-item',
+    selectedClass: 'selected-shop',
   },
   choiceTable: {
     selectAll: '.js-choice-table-select-all',

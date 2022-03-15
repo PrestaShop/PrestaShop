@@ -34,8 +34,11 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -66,7 +69,7 @@ class CreateProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('shop_id', ShopSelectorType::class)
+            ->add('shop_id', HiddenType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => $this->formChoiceProvider->getChoices(),
                 'choice_attr' => $this->formChoiceProvider->getChoicesAttributes(),
@@ -82,6 +85,17 @@ class CreateProductFormType extends TranslatorAwareType
                 ],
             ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $data = $event->getData();
+            if (!empty($data['shop_id'])) {
+                return;
+            }
+
+            // If no shop as pre-selected we use the shop selector input instead of a hidden one
+            $form = $event->getForm();
+            $form->add('shop_id', ShopSelectorType::class);
+        });
     }
 
     /**
