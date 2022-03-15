@@ -42,6 +42,7 @@ import MultipleChoiceTable from '@js/components/multiple-choice-table';
 import MultistoreConfigField from '@js/components/form/multistore-config-field';
 import PreviewOpener from '@components/form/preview-opener';
 import Router from '@components/router';
+import ShopSelector from '@components/shop-selector/shop-selector';
 import TaggableField from '@js/components/taggable-field';
 import TextWithLengthCounter from '@components/form/text-with-length-counter';
 import TinyMCEEditor from '@js/components/tinymce-editor';
@@ -151,6 +152,7 @@ const initPrestashopComponents = (): void => {
     MultistoreConfigField,
     PreviewOpener,
     Router,
+    ShopSelector,
     TaggableField,
     TextWithLengthCounter,
     TinyMCEEditor,
