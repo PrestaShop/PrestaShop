@@ -125,7 +125,7 @@ module.exports = (env, argv) => {
       new LicensePlugin({ 
         outputFilename: 'thirdPartyNotice.json',
         licenseOverrides: {
-          'vazir-font@30.1.0': 'OFL-1.1'
+          'vazirmatn@32.0.0': 'OFL-1.1'
         },
         replenishDefaultLicenseTexts: true,
       })
