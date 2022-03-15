@@ -170,8 +170,12 @@ class ProductController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 $redirectParams = ['productId' => $result->getIdentifiableObjectId()];
-                if ($request->query->has('shopId')) {
-                    $redirectParams['setShopContext'] = 's-' . $request->query->get('shopId');
+
+                // Force shop context switching to selected shop for creation
+                $createdData = $productForm->getData();
+                if (!empty($createdData['shop_id'])) {
+                    $this->addFlash('success', $this->trans('Your shop context has automatically been modified.', 'Admin.Notifications.Success'));
+                    $redirectParams['setShopContext'] = 's-' . $createdData['shop_id'];
                 }
 
                 return $this->redirectToRoute('admin_products_v2_edit', $redirectParams);

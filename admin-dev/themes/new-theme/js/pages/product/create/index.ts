@@ -28,5 +28,9 @@ import ProductMap from '@pages/product/product-map';
 const {$} = window;
 
 $(() => {
+  window.prestashop.component.initComponents([
+    'ShopSelector',
+  ]);
+
   new ProductTypeSelector(ProductMap.create.createModalSelector);
 });

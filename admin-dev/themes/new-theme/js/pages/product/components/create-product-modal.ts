@@ -25,16 +25,12 @@
 import Router from '@components/router';
 import ProductMap from '@pages/product/product-map';
 import {FormIframeModal} from '@components/modal';
-import ShopSelector from '@components/shop-selector/shop-selector';
 
 export default class CreateProductModal {
   private router: Router;
 
-  private shopSelector: ShopSelector;
-
   constructor() {
     this.router = new Router();
-    this.shopSelector = new ShopSelector();
     this.init();
   }
 
@@ -44,13 +40,7 @@ export default class CreateProductModal {
       const $link = $(event.target);
       const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
 
-      if (this.shopSelector.isAvailable()) {
-        this.shopSelector.show($link.data('modalTitle'), (shopId: number) => {
-          this.openCreationModal(`${linkUrl}&shopId=${shopId}`);
-        });
-      } else {
-        this.openCreationModal(linkUrl);
-      }
+      this.openCreationModal(linkUrl);
     });
   }
 
