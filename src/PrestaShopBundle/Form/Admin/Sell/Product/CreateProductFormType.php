@@ -31,9 +31,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -66,6 +66,7 @@ class CreateProductFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('shop_id', ShopSelectorType::class)
             ->add('type', ChoiceType::class, [
                 'choices' => $this->formChoiceProvider->getChoices(),
                 'choice_attr' => $this->formChoiceProvider->getChoicesAttributes(),
@@ -74,7 +75,6 @@ class CreateProductFormType extends TranslatorAwareType
                 'empty_data' => ProductType::TYPE_STANDARD,
                 'block_prefix' => 'product_type',
             ])
-            ->add('shop_id', HiddenType::class)
             ->add('create', SubmitType::class, [
                 'label' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
                 'row_attr' => [

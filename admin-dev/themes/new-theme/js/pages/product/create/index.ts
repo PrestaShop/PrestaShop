@@ -27,5 +27,9 @@ import ProductTypeSelector from '@pages/product/create/product-type-selector';
 const {$} = window;
 
 $(() => {
+  window.prestashop.component.initComponents([
+    'ShopSelector',
+  ]);
+
   new ProductTypeSelector();
 });
