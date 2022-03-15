@@ -30,10 +30,13 @@ export default class ShopSelector {
   constructor() {
     $(document).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
       const $clickedShop = $(event.currentTarget);
-      const $parent = $clickedShop.parents(ComponentsMap.shopSelector.container);
+      const $parent = $clickedShop.parents(ComponentsMap.shopSelector.container).first();
       const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $parent);
 
-      $shopSelector.val($clickedShop.data('shopId'));
+      $(ComponentsMap.shopSelector.shopItem).removeClass(ComponentsMap.shopSelector.selectedClass);
+      $clickedShop.addClass(ComponentsMap.shopSelector.selectedClass);
+
+      $shopSelector.val($clickedShop.data('shopId')).trigger('change');
     });
   }
 }

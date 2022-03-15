@@ -24,6 +24,7 @@
  */
 import ProductTypeSelector from '@pages/product/create/product-type-selector';
 import ProductMap from '@pages/product/product-map';
+import ComponentsMap from '@components/components-map';
 
 const {$} = window;
 
@@ -31,6 +32,22 @@ $(() => {
   window.prestashop.component.initComponents([
     'ShopSelector',
   ]);
+
+  const $shopSelectorInput = $(ComponentsMap.shopSelector.selectInput);
+  const $shopSelectorGroup = $shopSelectorInput.parents('.form-group').first();
+
+  // Hide all other form groups and only show the shop selector at first
+  if ($shopSelectorGroup.length > 0) {
+    const $formGroups = $('#product > .form-group');
+    $formGroups.hide();
+    $shopSelectorGroup.show();
+
+    // As soon as a shop is selected show the rest of the form
+    $shopSelectorInput.on('change', () => {
+      $formGroups.show();
+      $shopSelectorGroup.hide();
+    });
+  }
 
   new ProductTypeSelector(ProductMap.create.createModalSelector);
 });

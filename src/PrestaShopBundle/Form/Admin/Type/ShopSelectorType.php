@@ -68,6 +68,7 @@ class ShopSelectorType extends ChoiceType
             'choice_label' => 'name',
             'choice_value' => 'id',
             'block_prefix' => 'shop_selector',
+            'label' => false,
         ]);
     }
 
@@ -75,11 +76,11 @@ class ShopSelectorType extends ChoiceType
     {
         parent::buildForm($builder, $options);
         $builder->addModelTransformer(new CallbackTransformer(
-            function (int $shopId) {
-                return $this->shopRepository->find($shopId);
+            function (?int $shopId) {
+                return !empty($shopId) ? $this->shopRepository->find($shopId) : null;
             },
-            function (Shop $shop) {
-                return $shop->getId();
+            function (?Shop $shop) {
+                return $shop ? $shop->getId() : null;
             }
         ));
     }
