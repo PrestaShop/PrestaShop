@@ -155,7 +155,7 @@ class PriceCalculator
         $realQuantity = 0,
         $idCustomization = 0
     ) {
-        return Product::priceCalculation(
+        $value = Product::priceCalculation(
             $idShop,
             $idProduct,
             $idProductAttribute,
@@ -178,6 +178,32 @@ class PriceCalculator
             $realQuantity,
             $idCustomization
         );
+        
+        \Hook::exec('actionPriceCalculation', [
+            'id_product' => $idProduct,
+            'id_product_attribute' => $idProductAttribute,
+            'id_customization' => $idCustomization,
+            'id_country' => $idCountry,
+            'id_state' => $idState,
+            'zip_code' => $zipCode,
+            'id_currency' => $idCurrency,
+            'id_group' => $idGroup,
+            'id_cart' => $idCart,
+            'id_customer' => $idCustomer,
+            'use_customer_price' => $useCustomerPrice,
+            'quantity' => $quantity,
+            'real_quantity' => $realQuantity,
+            'use_tax' => $useTax,
+            'decimals' => $decimals,
+            'only_reduc' => $onlyReduc,
+            'use_reduc' => $useReduc,
+            'with_ecotax' => $withEcotax,
+            'specific_price' => &$specificPrice,
+            'use_group_reduction' => $useGroupReduction,
+            'value' => &$value,
+        ]);
+        
+        return $value;
     }
 
     /**
