@@ -827,6 +827,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.common.shop_selector:
+    class: 'PrestaShopBundle\Form\Admin\Type\ShopSelectorType'
+    arguments:
+      - '@prestashop.core.admin.shop.repository'
+      - "@=service('prestashop.core.admin.shop_group.repository').findActive()"
+    tags:
+      - { name: form.type }
+
   form.type.search_and_reset:
     class: 'PrestaShopBundle\Form\Admin\Type\SearchAndResetType'
     arguments:

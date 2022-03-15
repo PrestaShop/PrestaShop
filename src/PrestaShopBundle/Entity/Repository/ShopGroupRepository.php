@@ -52,4 +52,9 @@ class ShopGroupRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findActive(): array
+    {
+        return $this->findBy(['active' => true]);
+    }
 }

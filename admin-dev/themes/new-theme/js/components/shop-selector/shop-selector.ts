@@ -22,35 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Modal from '@components/modal/modal';
 import ComponentsMap from '@components/components-map';
 
 import ClickEvent = JQuery.ClickEvent;
 
 export default class ShopSelector {
-  private modalContent: Element | null;
-
   constructor() {
-    this.modalContent = document.querySelector(ComponentsMap.shopSelector.modalContent);
-  }
+    $(document).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
+      const $clickedShop = $(event.currentTarget);
+      const $parent = $clickedShop.parents(ComponentsMap.shopSelector.container);
+      const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $parent);
 
-  isAvailable(): boolean {
-    return this.modalContent !== null;
-  }
-
-  async show(modalTitle: string, selectedShopCallback: (shopId: number) => void): Promise<void> {
-    const modal: Modal = new Modal({
-      id: ComponentsMap.shopSelector.modalId,
-      modalTitle,
-      closable: true,
-    });
-
-    modal.render(<string> this.modalContent?.outerHTML);
-    modal.show();
-
-    $(`#${ComponentsMap.shopSelector.modalId}`).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
-      modal.hide();
-      selectedShopCallback(parseInt(event.currentTarget.dataset.shopId, 10));
+      $shopSelector.val($clickedShop.data('shopId'));
     });
   }
 }

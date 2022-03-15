@@ -44,8 +44,8 @@ export default {
     ): string => `${location}&setShopContext=${urlLetter}-${itemId}`,
   },
   shopSelector: {
-    modalId: 'shopSelectorModal',
-    modalContent: '.shop-selector-content',
+    container: '.shop-selector',
+    selectInput: '.shop-selector-input',
     searchInput: '.js-shop-selector-search',
     shopItem: '.shop-selector-shop-item',
   },
