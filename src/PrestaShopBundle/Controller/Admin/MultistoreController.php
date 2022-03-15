@@ -137,17 +137,6 @@ class MultistoreController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Multistore/dropdown.html.twig', $dropdownData['templateData']);
     }
 
-    public function shopSelector(): Response
-    {
-        $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
-
-        return $this->render('@PrestaShop/Admin/Multistore/shop_selector.html.twig', [
-            'groupList' => $groupList,
-            'isMultistoreUsed' => $this->multistoreFeature->isUsed(),
-            'link' => $this->getContext()->link,
-        ]);
-    }
-
     /**
      * Gathers data for multistore dropdown in group shop context
      *

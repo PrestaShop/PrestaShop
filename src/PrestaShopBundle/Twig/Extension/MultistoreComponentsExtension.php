@@ -59,7 +59,6 @@ class MultistoreComponentsExtension extends AbstractExtension
     {
         return [
             new TwigFunction('multistoreHeader', [$this, 'getMultistoreHeader'], ['is_safe' => ['html']]),
-            new TwigFunction('getShopSelector', [$this, 'getShopSelector'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -71,13 +70,5 @@ class MultistoreComponentsExtension extends AbstractExtension
     public function getMultistoreHeader(bool $lockedToAllShopContext = false): string
     {
         return $this->multistoreController->header($lockedToAllShopContext)->getContent();
-    }
-
-    /**
-     * @return string
-     */
-    public function getShopSelector(): string
-    {
-        return $this->multistoreController->shopSelector()->getContent();
     }
 }
