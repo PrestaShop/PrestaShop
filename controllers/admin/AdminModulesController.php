@@ -23,6 +23,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 class AdminModulesControllerCore extends AdminController
@@ -67,8 +68,9 @@ class AdminModulesControllerCore extends AdminController
      * Get current URL
      *
      * @param array $remove List of keys to remove from URL
+     *
      * @return string
-    */
+     */
     protected function getCurrentUrl($remove = [])
     {
         $url = $_SERVER['REQUEST_URI'];
@@ -105,6 +107,7 @@ class AdminModulesControllerCore extends AdminController
 
         // redirect to module manager
         Tools::redirectAdmin($this->context->link->getAdminLink('AdminModulesSf'));
+
         return false;
     }
 
@@ -141,10 +144,14 @@ class AdminModulesControllerCore extends AdminController
                 'Admin.Modules.Notification'
             );
         } else {
-
             // build RTL assets
             if (Tools::getValue('generate_rtl')) {
                 return $this->buildRtlAssets($module);
+            }
+
+            // enable/disable
+            if (($enable = ('1' === Tools::getValue('enable'))) || '1' === Tools::getValue('disable')) {
+                return $this->toggleActiveStatus($module, $enable);
             }
 
             // show module configuration page
@@ -204,6 +211,44 @@ class AdminModulesControllerCore extends AdminController
     }
 
     /**
+     * Toggles the module enabled or disabled
+     *
+     * @param Module $module
+     * @param bool $enabled
+     *
+     * @return void
+     */
+    protected function toggleActiveStatus(Module $module, bool $enabled): void
+    {
+        try {
+            $success = ($enabled) ? $module->enable() : $module->disable();
+        } catch (Exception $e) {
+            $success = false;
+            $errorMessage = $e->getMessage();
+        }
+
+        if ($success) {
+            Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true, [], ['configure' => $module->name, 'conf' => 6]));
+
+            return;
+        }
+
+        if (!isset($errorMessage)) {
+            $moduleErrors = $module->getErrors();
+            if (!empty($moduleErrors)) {
+                $errorMessage = implode('; ', $moduleErrors);
+            } else {
+                $errorMessage = $this->trans('Unfortunately, the module did not return additional details.', [], 'Admin.Modules.Notifications');
+            }
+        }
+
+        $params = ['%module%' => $module->name, '%error_details%' => $errorMessage];
+        $this->errors[] = ($enabled)
+            ? $this->trans('Error when enabling module %module%. %error_details%.', $params, 'Admin.Modules.Notifications')
+            : $this->trans('Error when disabling module %module%. %error_details%.', $params, 'Admin.Modules.Notifications');
+    }
+
+    /**
      * @return void
      *
      * @throws PrestaShopDatabaseException
@@ -223,26 +268,18 @@ class AdminModulesControllerCore extends AdminController
         }
 
         // Get the page content
-        $echo = $module->getContent();
+        $content = $module->getContent();
 
         $this->bootstrap = (bool) $module->bootstrap;
         if (isset($module->multishop_context)) {
             $this->multishop_context = $module->multishop_context;
         }
 
+        $link = Context::getContext()->link;
         $back_link = self::$currentIndex . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name;
-        $hook_link = 'index.php?tab=AdminModulesPositions&token='
-            . Tools::getAdminTokenLite(
-                'AdminModulesPositions'
-            ) . '&show_modules=' . (int) $module->id;
-        $trad_link = 'index.php?tab=AdminTranslations&token='
-            . Tools::getAdminTokenLite(
-                'AdminTranslations'
-            ) . '&type=modules&lang=';
-        $rtl_link = 'index.php?tab=AdminModules&token='
-            . Tools::getAdminTokenLite(
-                'AdminModules'
-            ) . '&configure=' . $module->name . '&generate_rtl=1';
+        $hook_link = $link->getAdminLink('AdminModulesPositions', true, [], ['show_modules' => (int) $module->id]);
+        $trad_link = $link->getAdminLink('AdminTranslations', true, [], ['type' => 'modules', 'lang=' => '']);
+        $rtl_link = $link->getAdminLink('AdminModules', true, [], ['configure' => $module->name, 'generate_rtl' => 1]);
 
         $this->context->smarty->assign([
             'module_name' => $module->name,
@@ -272,9 +309,14 @@ class AdminModulesControllerCore extends AdminController
             $this->context->smarty->assign([
                 'module' => $module,
                 'display_multishop_checkbox' => true,
-                'current_url' => $this->getCurrentUrl('enable'),
                 'shop_context' => $shop_context,
+                'multishop_enable_url' => $link->getAdminLink('AdminModules', true, [], ['configure' => $module->name, 'enable' => 1]),
+                'multishop_disable_url' => $link->getAdminLink('AdminModules', true, [], ['configure' => $module->name, 'disable' => 1]),
             ]);
+
+            $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
+        } else {
+            $configuration_bar = '';
         }
 
         $this->context->smarty->assign([
@@ -291,11 +333,8 @@ class AdminModulesControllerCore extends AdminController
 
         // Display module configuration
         $header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
-        $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
 
-        $output = $header . $echo;
-
-        $this->context->smarty->assign('module_content', $output . $configuration_bar);
+        $this->context->smarty->assign('module_content', $header . $content . $configuration_bar);
     }
 
     /**
@@ -321,7 +360,7 @@ class AdminModulesControllerCore extends AdminController
                 [
                     'configure' => Tools::getValue('configure'),
                     // @see AdminController::_conf
-                    'conf' => 6
+                    'conf' => 6,
                 ]
             )
         );
