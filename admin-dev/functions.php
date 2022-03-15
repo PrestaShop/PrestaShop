@@ -28,54 +28,6 @@ if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
 require_once _PS_ADMIN_DIR_.'/../images.inc.php';
-function bindDatepicker($id, $time)
-{
-    if ($time) {
-        echo '
-		var dateObj = new Date();
-		var hours = dateObj.getHours();
-		var mins = dateObj.getMinutes();
-		var secs = dateObj.getSeconds();
-		if (hours < 10) { hours = "0" + hours; }
-		if (mins < 10) { mins = "0" + mins; }
-		if (secs < 10) { secs = "0" + secs; }
-		var time = " "+hours+":"+mins+":"+secs;';
-    }
-
-    echo '
-	$(function() {
-		$("#'.Tools::htmlentitiesUTF8($id).'").datepicker({
-			prevText:"",
-			nextText:"",
-			dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
-	});';
-}
-
-/**
- * @deprecated 1.5.3.0 Use Controller::addJqueryUi('ui.datepicker') instead
- * @param int|array $id ID can be a identifier or an array of identifiers
- * @param bool $time
- */
-function includeDatepicker($id, $time = false)
-{
-    Tools::displayAsDeprecated();
-    echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/jquery.ui.core.min.js"></script>';
-    echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
-    echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
-    $iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
-    if ($iso != 'en') {
-        echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
-    }
-    echo '<script type="text/javascript">';
-    if (is_array($id)) {
-        foreach ($id as $id2) {
-            bindDatepicker($id2, $time);
-        }
-    } else {
-        bindDatepicker($id, $time);
-    }
-    echo '</script>';
-}
 
 /**
  * Generate a new settings file, only transmitted parameters are updated
