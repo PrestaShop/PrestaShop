@@ -22,10 +22,12 @@ const addCartRulePage = require('@pages/BO/catalog/discounts/add');
 const loginCommon = require('@commonTests/BO/loginBO');
 const {deleteProductTest} = require('@commonTests/BO/catalog/createDeleteProduct');
 const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
+const {createCurrencyTest, deleteCurrencyTest} = require('@commonTests/BO/international/createDeleteCurrency');
 
 // Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {Products} = require('@data/demo/products');
+const {Currencies} = require('@data/demo/currencies');
 
 // Import faker data
 const ProductFaker = require('@data/faker/product');
@@ -117,11 +119,18 @@ const productWithCartRule = new ProductFaker({
 // Data to create cart rule
 const newCartRuleData = new CartRuleFaker(
   {
-    code: '4QABV6L3',
-    discountType: 'Percent',
-    discountPercent: 20,
     applyDiscountTo: 'Specific product',
     product: productWithCartRule.name,
+    freeShipping: true,
+    discountType: 'Amount',
+    discountPercent: 20,
+    discountAmount: {
+      value: 20,
+      currency: 'EUR',
+      tax: 'Tax excluded',
+    },
+    freeGift: true,
+    freeGiftProduct: Products.demo_13,
   },
 );
 
@@ -147,6 +156,9 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Pre-condition: Enable EcoTax
   enableEcoTaxTest(baseContext);
 
+  // Pre-condition: Create currency
+  createCurrencyTest(Currencies.mad, baseContext);
+
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
@@ -156,12 +168,12 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
+  it('should login in BO', async function () {
+    await loginCommon.loginBO(this, page);
+  });
+
   // Pre-condition: Create pack of products with minimum quantity = 2
   describe('PRE-TEST: Create pack of products', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
     it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
@@ -731,7 +743,7 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
       ]);
     });
 
-    it('should add to cart product with cart rule', async function () {
+    it('should add to cart product with cart rule and check the product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchVirtualProduct', baseContext);
 
       const productNameToSelect = `${productWithCartRule.name} - €${productWithCartRule.price.toFixed(2)}`;
@@ -746,6 +758,20 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.quantityMin).to.equal(1),
         expect(result.quantityMax).to.equal(productWithCartRule.quantity),
         expect(result.price).to.equal(productWithCartRule.price),
+      ]);
+    });
+
+    it('should check the gift product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGiftProduct', baseContext);
+
+      const result = await addOrderPage.getProductGiftDetailsFromTable(page, 10);
+      await Promise.all([
+        expect(result.image).to.contains(Products.demo_13.coverImage),
+        expect(result.description).to.equal(Products.demo_13.name),
+        expect(result.reference).to.equal(Products.demo_13.reference),
+        expect(result.basePrice).to.equal('Gift'),
+        expect(result.quantity).to.equal(1),
+        expect(result.price).to.equal('Gift'),
       ]);
     });
 
@@ -764,8 +790,21 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
         expect(result.price).to.equal(productWithCartRule.price * 2),
       ]);
     });
+
+    it('should remove the product and check that the product and the gift are deleted from the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'removeProduct', baseContext);
+
+      const isProductStillExist = await addOrderPage.removeProduct(page, 9);
+      await expect(isProductStillExist, 'Product still visible in the cart!').to.be.true;
+    });
+
+    it('should select another currency', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectAnotherCurrency', baseContext);
+
+      await addOrderPage.selectAnotherCurrency(page, Currencies.mad);
+    });
   });
 
   // Post-condition: Delete the created product
-  // deleteProductTest(packOfProducts, baseContext);
+  deleteProductTest(packOfProducts, baseContext);
 });

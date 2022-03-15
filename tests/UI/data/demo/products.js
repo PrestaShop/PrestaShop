@@ -76,6 +76,7 @@ module.exports = {
     demo_13: {
       id: 8,
       name: 'Mug Today is a good day',
+      coverImage: 'mug-today-is-a-good-day.jpg',
       reference: 'demo_13',
       category: 'Home Accessories',
       price: 14.28,

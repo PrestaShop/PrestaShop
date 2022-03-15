@@ -328,7 +328,9 @@ class AddOrder extends BOBasePage {
   async addProductQuantity(page, quantity, row) {
     await this.setValue(page, `${this.productsTableRow(row)} td input.js-product-qty-input`, quantity);
 
-    await page.waitForTimeout(1000);
+    await page.click(this.productsTableColumn('total-price', row));
+
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -374,6 +376,46 @@ class AddOrder extends BOBasePage {
       quantityMax: parseInt(await this.getTextContent(page, `${this.productsTableRow(row)} td span.js-product-qty-stock`), 10),
       price: parseFloat(await this.getTextContent(page, this.productsTableColumn('total-price', row))),
     };
+  }
+
+  /**
+   * Get product gift details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<{reference: string, image: string, quantity: number, price: string, description: string,
+   * basePrice: string}>}
+   */
+  async getProductGiftDetailsFromTable(page, row = 1) {
+    return {
+      image: await this.getAttributeContent(page, `${this.productsTableRow(row)} td img.js-product-image`, 'src'),
+      description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
+      reference: await this.getTextContent(page, this.productsTableColumn('ref', row)),
+      basePrice: await this.getTextContent(page, `${this.productsTableRow(row)} td:nth-child(4)`),
+      quantity: parseInt(await this.getTextContent(page, `${this.productsTableColumn('gift-qty', row)}`), 10),
+      price: await this.getTextContent(page, this.productsTableColumn('total-price', row)),
+    };
+  }
+
+  /**
+   * Remove product
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<boolean>}
+   */
+  async removeProduct(page, row = 1) {
+    await this.waitForSelectorAndClick(page, `${this.productsTableRow(row)} td button.js-product-remove-btn`);
+
+    return this.elementNotVisible(page, this.productsTableColumn('total-price', row), 2000);
+  }
+
+  /**
+   * Select another currency
+   * @param page {Page} Browser tab
+   * @param currency {string} Currency to select
+   * @returns {Promise<void>}
+   */
+  async selectAnotherCurrency(page, currency) {
+    await this.selectByVisibleText(page, '#js-cart-currency-select', currency);
   }
 
   /**
