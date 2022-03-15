@@ -151,15 +151,12 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        /** @var Context $shopContext */
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        if (!$shopContext->isSingleShopContext()) {
-            return $this->renderDisableMultistorePage();
-        }
-
         if ($request->query->has('shopId')) {
             $data['shop_id'] = $request->query->get('shopId');
         } else {
+            /** @var Context $shopContext */
+            $shopContext = $this->get('prestashop.adapter.shop.context');
+
             $data['shop_id'] = $shopContext->getContextShopID();
         }
         $productForm = $this->getCreateProductFormBuilder()->getForm($data);
@@ -531,7 +528,7 @@ class ProductController extends FrameworkBundleAdminController
         $toolbarButtons = [];
 
         $toolbarButtons['add'] = [
-            'href' => $this->generateUrl('admin_products_v2_create'),
+            'href' => $this->generateUrl('admin_products_v2_create', ['shopId' => $this->getShopIdFromShopContext()]),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product-button',
@@ -855,5 +852,17 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
+    }
+
+    /**
+     * @return int|null
+     */
+    private function getShopIdFromShopContext(): ?int
+    {
+        /** @var Context $shopContext */
+        $shopContext = $this->get('prestashop.adapter.shop.context');
+        $shopId = $shopContext->getContextShopID();
+
+        return !empty($shopId) ? (int) $shopId : null;
     }
 }
