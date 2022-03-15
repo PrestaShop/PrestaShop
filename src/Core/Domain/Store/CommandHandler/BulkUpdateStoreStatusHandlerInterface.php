@@ -29,9 +29,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 
 /**
- * Defines contract for BulkToggleStoreStatusHandler
+ * Defines contract for BulkUpdateStoreStatusHandler
  */
-interface BulkToggleStoreStatusHandlerInterface
+interface BulkUpdateStoreStatusHandlerInterface
 {
     /**
      * @param BulkUpdateStoreStatusCommand $command
