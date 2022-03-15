@@ -380,14 +380,12 @@ class CartRuleCore extends ObjectModel
         $free_shipping_only = false,
         $highlight_only = false
     ) {
-        if (!CartRule::isFeatureActive()
-            || !CartRule::haveCartRuleToday($id_customer)
-        ) {
+        if (!CartRule::isFeatureActive() || !CartRule::haveCartRuleToday($id_customer)) {
             return [];
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
         $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
 
@@ -504,6 +502,41 @@ class CartRuleCore extends ObjectModel
 
         if (!$country_restriction) {
             $result = $result_bak;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all (inactive too) CartRules for a given customer
+     *
+     * @param int $customerId
+     *
+     * @return array
+     */
+    public static function getAllCustomerCartRules(
+        int $customerId
+    ): array {
+        $query = new DbQuery();
+        $query->select('cr.*, crl.name');
+        $query->from('cart_rule', 'cr');
+        $query->where('cr.id_customer = ' . $customerId . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = ""))');
+        $query->leftJoin('cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT'));
+        $query->orderBy('cr.active DESC, cr.id_customer DESC');
+
+        $result = Db::getInstance()->executeS($query);
+
+        if (!$result) {
+            return [];
+        }
+
+        foreach ($result as &$cart_rule) {
+            if ($cart_rule['quantity_per_user']) {
+                $quantity_used = Order::getDiscountsCustomer($customerId, (int) $cart_rule['id_cart_rule']);
+                $cart_rule['quantity_for_user'] = $cart_rule['quantity_per_user'] - $quantity_used;
+            } else {
+                $cart_rule['quantity_for_user'] = 0;
+            }
         }
 
         return $result;
