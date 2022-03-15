@@ -139,6 +139,22 @@ final class LegacyModuleExtractor implements LegacyModuleExtractorInterface
 
         unset($allWordings[$defaultDomain]);
 
-        return new MessageCatalogue($extractedCatalogue->getLocale(), $allWordings);
+        $newMessageCatalogue = new MessageCatalogue($extractedCatalogue->getLocale(), $allWordings);
+        foreach ($allWordings as $domain => $messages) {
+            foreach ($messages as $key => $message) {
+                $metadata = $extractedCatalogue->getMetadata($key, $domain);
+                if (null === $metadata && $domain === $newDomain) {
+                    $metadata = $extractedCatalogue->getMetadata($key, $defaultDomain);
+                }
+
+                $newMessageCatalogue->setMetadata(
+                    $key,
+                    $metadata,
+                    $domain
+                );
+            }
+        }
+
+        return $newMessageCatalogue;
     }
 }
