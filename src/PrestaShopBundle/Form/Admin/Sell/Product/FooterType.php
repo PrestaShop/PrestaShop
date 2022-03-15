@@ -51,20 +51,28 @@ class FooterType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var int|null
+     */
+    private $contextShopId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ProductProvider $productUrlProvider
      * @param RouterInterface $router
+     * @param int|null $contextShopId
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ProductProvider $productUrlProvider,
-        RouterInterface $router
+        RouterInterface $router,
+        ?int $contextShopId
     ) {
         parent::__construct($translator, $locales);
         $this->productUrlProvider = $productUrlProvider;
         $this->router = $router;
+        $this->contextShopId = $contextShopId;
     }
 
     /**
@@ -159,7 +167,7 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'add_circle_outline',
                 'attr' => [
                     'class' => 'btn-outline-secondary new-product',
-                    'href' => $this->router->generate('admin_products_v2_create'),
+                    'href' => $this->router->generate('admin_products_v2_create', ['shopId' => $this->contextShopId]),
                     'disabled' => empty($productId),
                 ],
             ])

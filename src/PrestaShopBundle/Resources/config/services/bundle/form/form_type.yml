@@ -1636,6 +1636,7 @@ services:
     arguments:
       - '@prestashop.adapter.shop.url.product_provider'
       - '@router'
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
     tags:
       - { name: form.type }
 
