@@ -146,16 +146,20 @@ class AdminModulesControllerCore extends AdminController
         } else {
             // build RTL assets
             if (Tools::getValue('generate_rtl')) {
-                return $this->buildRtlAssets($module);
+                $this->buildRtlAssets($module);
+
+                return;
             }
 
             // enable/disable
             if (($enable = ('1' === Tools::getValue('enable'))) || '1' === Tools::getValue('disable')) {
-                return $this->toggleActiveStatus($module, $enable);
+                $this->toggleActiveStatus($module, $enable);
+
+                return;
             }
 
             // show module configuration page
-            return $this->buildModuleConfigurationPage($module);
+            $this->buildModuleConfigurationPage($module);
         }
     }
 
