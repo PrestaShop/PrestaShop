@@ -1277,7 +1277,7 @@ class HookCore extends ObjectModel
             $hook_names = Cache::retrieve('active_hooks');
         } else {
             $sql = new DbQuery();
-            $sql->select('name');
+            $sql->select('lower(name) as name');
             $sql->from('hook', 'h');
             $sql->where('h.active = 1');
             $active_hooks = Db::getInstance()->executeS($sql);
@@ -1289,6 +1289,6 @@ class HookCore extends ObjectModel
             }
         }
 
-        return in_array($hook_name, $hook_names);
+        return in_array(strtolower($hook_name), $hook_names);
     }
 }
