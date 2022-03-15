@@ -27,29 +27,17 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use PHPUnit\Framework\Assert as Assert;
-use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkToggleStoreStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use RuntimeException;
 use Store;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
     private const DUMMY_STORE_ID = 1;
-
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-    }
 
     /**
      * @When I toggle :reference
@@ -78,8 +66,8 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $storeIds[$storeReference] = (int) $store->id;
         }
 
-        $bulkToggleCommand = new BulkToggleStoreStatusCommand($expectedStatus, $storeIds);
-        $this->getCommandBus()->handle($bulkToggleCommand);
+        $bulkUpdateCommand = new BulkUpdateStoreStatusCommand($expectedStatus, $storeIds);
+        $this->getCommandBus()->handle($bulkUpdateCommand);
 
         foreach ($storeIds as $reference => $id) {
             SharedStorage::getStorage()->set($reference, new Store($id));
