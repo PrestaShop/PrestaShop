@@ -179,7 +179,6 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "LegacyTests\\": "tests-legacy/",
             "Tests\\": "tests/"
         },
         "files": [
@@ -205,10 +204,6 @@
         "integration-tests": [
             "@composer create-test-db",
             "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests/Integration/phpunit.xml"
-        ],
-        "phpunit-endpoints": [
-            "@composer create-test-db",
-            "@php -d date.timezone=UTC ./vendor/phpunit/phpunit/phpunit -c tests-legacy/phpunit-endpoints.xml"
         ],
         "restore-test-db": [
             "@php ./tests/bin/restore-test-db.php"
