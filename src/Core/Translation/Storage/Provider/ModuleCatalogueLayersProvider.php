@@ -395,10 +395,20 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
             // only add if the domain is relevant to this module
             foreach ($this->filenameFilters as $pattern) {
                 if (preg_match($pattern, $newDomain)) {
+                    $messages = $catalogue->all($domain);
                     $newCatalogue->add(
-                        $catalogue->all($domain),
+                        $messages,
                         $newDomain
                     );
+
+                    foreach ($messages as $key => $message) {
+                        $newCatalogue->setMetadata(
+                            $key,
+                            $catalogue->getMetadata($key, $domain),
+                            $newDomain
+                        );
+                    }
+
                     break;
                 }
             }
