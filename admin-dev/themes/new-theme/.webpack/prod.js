@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
-const LicensePlugin = require('webpack-license-plugin');
 const common = require('./common.js');
 
 /**
