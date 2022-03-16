@@ -1325,7 +1325,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_id` int(10) unsigned NOT NULL,
   `product_attribute_id` int(10) unsigned DEFAULT NULL,
   `id_customization` int(10) unsigned DEFAULT 0,
-  `product_name` varchar(255) NOT NULL,
+  `product_name` text NOT NULL,
   `product_quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `product_quantity_in_stock` int(10) NOT NULL DEFAULT '0',
   `product_quantity_refunded` int(10) unsigned NOT NULL DEFAULT '0',
