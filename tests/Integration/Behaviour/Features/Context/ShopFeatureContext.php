@@ -77,7 +77,20 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             'meta_lang',
             'product_lang',
         ]);
+        Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', false);
+
         Shop::setContext(Shop::CONTEXT_SHOP, 1);
+        Shop::resetStaticCache();
+    }
+
+    /**
+     * @Given /^I (enable|disable) multishop feature/
+     *
+     * @param bool $status
+     */
+    public function toggleMultiShopMode(bool $status): void
+    {
+        Configuration::updateGlobalValue('PS_MULTISHOP_FEATURE_ACTIVE', $status);
         Shop::resetStaticCache();
     }
 
