@@ -646,22 +646,27 @@ class StockAvailableCore extends ObjectModel
             return false;
         }
 
-        if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-            if (Shop::getContextShopGroup()->share_stock == 1) {
-                $pa_sql = '';
-                if ($id_product_attribute !== null) {
-                    $pa_sql = '_attribute';
-                    $id_product_attribute_sql = $id_product_attribute;
-                } else {
-                    $id_product_attribute_sql = $id_product;
-                }
+        if (null !== $shop) {
+            $groupSharedStock = $shop->getGroup()->share_stock == 1;
+        } else {
+            $groupSharedStock = Shop::getContext() == Shop::CONTEXT_SHOP && Shop::getContextShopGroup()->share_stock == 1;
+        }
 
-                if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
+        // If stock is shared by group and the product is still associated to some shops from the group no need to delete the stock
+        if ($groupSharedStock) {
+            $pa_sql = '';
+            if ($id_product_attribute !== null) {
+                $pa_sql = '_attribute';
+                $id_product_attribute_sql = $id_product_attribute;
+            } else {
+                $id_product_attribute_sql = $id_product;
+            }
+
+            if ((int) Db::getInstance()->getValue('SELECT COUNT(*)
 						FROM ' . _DB_PREFIX_ . 'product' . $pa_sql . '_shop
 						WHERE id_product' . $pa_sql . '=' . (int) $id_product_attribute_sql . '
 							AND id_shop IN (' . implode(',', array_map('intval', Shop::getContextListShopID(Shop::SHARE_STOCK))) . ')')) {
-                    return true;
-                }
+                return true;
             }
         }
 
