@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopDatabaseException;
+use PrestaShopException;
 
 /**
  * This abstract class is an extension of the AbstractObjectModelRepository that provides additional helper functions
@@ -171,6 +172,40 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
                 $id,
                 $shopId->getValue()
             ));
+        }
+    }
+
+    /**
+     * @param ObjectModel $objectModel
+     * @param int[] $shopIds
+     * @param string $exceptionClass
+     * @param int $errorCode
+     *
+     * @throws CoreException
+     */
+    protected function deleteObjectModelFromShops(ObjectModel $objectModel, array $shopIds, string $exceptionClass, int $errorCode = 0): void
+    {
+        try {
+            // Use this field to indicate which shop associations need to be removed
+            $objectModel->id_shop_list = $shopIds;
+
+            if (!$objectModel->delete()) {
+                throw new $exceptionClass(
+                    sprintf('Failed to delete %s #%d', get_class($objectModel), $objectModel->id),
+                    $errorCode
+                );
+            }
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf(
+                    'Error occurred when trying to delete %s #%d [%s]',
+                    get_class($objectModel),
+                    $objectModel->id,
+                    $e->getMessage()
+                ),
+                0,
+                $e
+            );
         }
     }
 }
