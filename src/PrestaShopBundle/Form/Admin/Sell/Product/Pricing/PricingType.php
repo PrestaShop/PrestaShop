@@ -67,12 +67,18 @@ class PricingType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var bool
+     */
+    private $taxEnabled;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param array $taxRuleGroupChoices
      * @param array $taxRuleGroupChoicesAttributes
      * @param Currency $defaultCurrency
      * @param RouterInterface $router
+     * @param bool $taxEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -80,13 +86,15 @@ class PricingType extends TranslatorAwareType
         array $taxRuleGroupChoices,
         array $taxRuleGroupChoicesAttributes,
         Currency $defaultCurrency,
-        RouterInterface $router
+        RouterInterface $router,
+        bool $taxEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->taxRuleGroupChoices = $taxRuleGroupChoices;
         $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
         $this->defaultCurrency = $defaultCurrency;
         $this->router = $router;
+        $this->taxEnabled = $taxEnabled;
     }
 
     /**
@@ -106,8 +114,10 @@ class PricingType extends TranslatorAwareType
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
+                    'data-tax-enabled' => $this->taxEnabled,
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
+                'help' => !$this->taxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_taxes_index'),

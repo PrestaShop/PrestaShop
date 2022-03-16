@@ -1513,6 +1513,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
     tags:
       - { name: form.type }
 

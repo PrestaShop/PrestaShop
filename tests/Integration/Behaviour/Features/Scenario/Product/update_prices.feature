@@ -213,3 +213,30 @@ Feature: Update product price fields from Back Office (BO).
     Then I should get error that tax rules group does not exist
     And product product1 should have following prices information:
       | tax rules group | US-AL Rate (4%) |
+
+  Scenario: When tax feature is disabled the price tax included has the same value as price tax excluded
+    Given shop configuration for "PS_TAX" is set to 0
+    And tax rules group named "US-AL Rate (4%)" exists
+    And product product1 should not have any suppliers assigned
+    And product product1 should not have a default supplier
+    When I update product "product1" prices with following information:
+      | price              | 100.99          |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 900             |
+      | unity              | bag of ten      |
+    Then product product1 should have following prices information:
+      | price                   | 100.99          |
+      | price_tax_included      | 100.99          |
+      | ecotax                  | 0               |
+      | tax rules group         | US-AL Rate (4%) |
+      | on_sale                 | true            |
+      | wholesale_price         | 70              |
+      | unit_price              | 900             |
+      | unit_price_tax_included | 900             |
+      | unit_price_ratio        | 0.112211        |
+      | unity                   | bag of ten      |
+    # Reset configuration to its initial value
+    Then shop configuration for "PS_TAX" is set to 1
