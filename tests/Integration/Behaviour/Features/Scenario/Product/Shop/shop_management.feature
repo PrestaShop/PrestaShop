@@ -9,7 +9,8 @@ Feature: Copy product from shop to shop.
   As a BO user I want to be able to copy product from shop to shop.
 
   Background:
-    Given shop "shop1" with name "test_shop" exists
+    Given I enable multishop feature
+    And shop "shop1" with name "test_shop" exists
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "test_second_shop" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
@@ -363,3 +364,160 @@ Feature: Copy product from shop to shop.
       | largeDefault  | large_default  | 800   | 800    |
       | mediumDefault | medium_default | 452   | 452    |
       | smallDefault  | small_default  | 98    | 98     |
+
+  Scenario: I delete product from one shop the data are still present in the other shop
+    # By default the product is created for default shop
+    Given I add product "productToDelete" to shop "shop2" with following information:
+      | name[en-US] | magic staff |
+      | type        | standard    |
+    Then product productToDelete is associated to shop shop2
+    And default shop for product productToDelete is shop2
+    # First modify data for default shop
+    When I update product "productToDelete" stock for shop shop2 with following information:
+      | pack_stock_type               | pack_only    |
+      | out_of_stock_type             | available    |
+      | delta_quantity                | 42           |
+      | minimal_quantity              | 12           |
+      | location                      | dtc          |
+      | low_stock_threshold           | 42           |
+      | low_stock_alert               | true         |
+      | available_now_labels[en-US]   | get it now   |
+      | available_later_labels[en-US] | too late bro |
+      | available_date                | 1969-07-16   |
+    And I update product "productToDelete" basic information for shop shop2 with following values:
+      | name[en-US]              | photo of super mug |
+      | description[en-US]       | super mug          |
+      | description_short[en-US] | Just a super mug   |
+    When I update product "productToDelete" prices for shop shop2 with following information:
+      | price              | 100.99          |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 10              |
+      | unity              | bag of ten      |
+    # Copy values to another shop which was not associated yet
+    When I copy product productToDelete from shop shop2 to shop shop1
+    And I copy product productToDelete from shop shop2 to shop shop3
+    Then product productToDelete is associated to shop shop1
+    And product productToDelete is associated to shop shop2
+    And product productToDelete is associated to shop shop3
+    And product productToDelete is not associated to shop shop4
+    And default shop for product productToDelete is shop2
+    And product "productToDelete" localized "name" for shops "shop1,shop2,shop3" should be:
+      | locale     | value              |
+      | en-US      | photo of super mug |
+    And product "productToDelete" localized "description" for shops "shop1,shop2,shop3" should be:
+      | locale | value     |
+      | en-US  | super mug |
+    And product "productToDelete" localized "description_short" for shops "shop1,shop2,shop3" should be:
+      | locale | value            |
+      | en-US  | Just a super mug |
+    Then product "productToDelete" should have following stock information for shops "shop1,shop2,shop3":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "productToDelete" localized "available_now_labels" for shops "shop1,shop2,shop3" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "productToDelete" localized "available_later_labels" for shops "shop1,shop2,shop3" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product "productToDelete" should have following stock information for shops "shop1,shop2,shop3":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "productToDelete" localized "available_now_labels" for shops "shop1,shop2,shop3" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "productToDelete" localized "available_later_labels" for shops "shop1,shop2,shop3" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    Then product productToDelete should have following prices information for shops "shop1,shop2,shop3":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 10              |
+      | unity              | bag of ten      |
+      | unit_price_ratio   | 10.099          |
+    # Now I delete product from its default shop, a new default shop is assigned
+    When I delete product productToDelete from shops "shop2"
+    Then product productToDelete is associated to shop shop1
+    And product productToDelete is associated to shop shop3
+    And product productToDelete is not associated to shop shop2
+    And product productToDelete is not associated to shop shop4
+    And default shop for product productToDelete is shop1
+    # Check that values are still present for other shops
+    And product "productToDelete" localized "name" for shops "shop1,shop3" should be:
+      | locale     | value              |
+      | en-US      | photo of super mug |
+    And product "productToDelete" localized "description" for shops "shop1,shop3" should be:
+      | locale | value     |
+      | en-US  | super mug |
+    And product "productToDelete" localized "description_short" for shops "shop1,shop3" should be:
+      | locale | value            |
+      | en-US  | Just a super mug |
+    Then product "productToDelete" should have following stock information for shops "shop1,shop3":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "productToDelete" localized "available_now_labels" for shops "shop1,shop3" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "productToDelete" localized "available_later_labels" for shops "shop1,shop3" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    And product "productToDelete" should have following stock information for shops "shop1,shop3":
+      | pack_stock_type     | pack_only  |
+      | out_of_stock_type   | available  |
+      | quantity            | 42         |
+      | minimal_quantity    | 12         |
+      | location            | dtc        |
+      | low_stock_threshold | 42         |
+      | low_stock_alert     | true       |
+      | available_date      | 1969-07-16 |
+    And product "productToDelete" localized "available_now_labels" for shops "shop1,shop3" should be:
+      | locale | value      |
+      | en-US  | get it now |
+      | fr-FR  |            |
+    And product "productToDelete" localized "available_later_labels" for shops "shop1,shop3" should be:
+      | locale | value        |
+      | en-US  | too late bro |
+      | fr-FR  |              |
+    Then product productToDelete should have following prices information for shops "shop1,shop3":
+      | price              | 100.99          |
+      | price_tax_included | 105.0296        |
+      | ecotax             | 0               |
+      | tax rules group    | US-AL Rate (4%) |
+      | on_sale            | true            |
+      | wholesale_price    | 70              |
+      | unit_price         | 10              |
+      | unity              | bag of ten      |
+      | unit_price_ratio   | 10.099          |
+    # Now I delete product from remaining shops it should be completely removed
+    When I delete product productToDelete from shops "shop1,shop3"
+    Then product productToDelete should not exist anymore

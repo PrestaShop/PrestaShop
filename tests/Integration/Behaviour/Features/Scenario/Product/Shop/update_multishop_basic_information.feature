@@ -10,7 +10,8 @@ Feature: Update product basic information from Back Office (BO)
   I need to be able to update product basic information from BO
 
   Background:
-    Given shop "shop1" with name "test_shop" exists
+    Given I enable multishop feature
+    And shop "shop1" with name "test_shop" exists
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
     And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
