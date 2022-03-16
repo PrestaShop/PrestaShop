@@ -130,7 +130,7 @@ Feature: Add basic product from Back Office (BO)
     Then product "productPack1" type should be standard
     And pack "productPack1" should be empty
 
-  Scenario: Changing combinations type should remove all combinations
+  Scenario: Changing combinations type should remove all combinations (and stock is reset to zero)
     Given I add product "productCombinations3" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
@@ -146,9 +146,57 @@ Feature: Add basic product from Back Office (BO)
       | productCombinations3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
       | productCombinations3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
       | productCombinations3MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
+    When I update combination "productCombinations3SWhite" stock with following details:
+      | delta quantity             | 100         |
+    Then combination "productCombinations3SWhite" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 100         |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   |             |
+      | available date             |             |
+    And combination "productCombinations3SWhite" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 100            |
+    And combination "productCombinations3SWhite" last stock movement increased by 100
+    When I update combination "productCombinations3SBlack" stock with following details:
+      | delta quantity             | 50          |
+    Then combination "productCombinations3SBlack" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 50          |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   |             |
+      | available date             |             |
+    And combination "productCombinations3SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 50             |
+    And combination "productCombinations3SBlack" last stock movement increased by 50
+    # Product stock is the sum of all combinations
+    And product "productCombinations3" should have following stock information:
+      | quantity            | 150   |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
+    And product "productCombinations3" should have no stock movements
     When I update product "productCombinations3" type to standard
     Then product "productCombinations3" type should be standard
     And product "productCombinations3" should have no combinations
+    And product "productCombinations3" should have following stock information:
+      | quantity            | 0     |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
+    And product "productCombinations3" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -150           |
+    And product "productCombinations3" last stock movement decreased by 150
 
   Scenario: Changing virtual type should remove virtual file
     Given I add product "virtualProduct2" with following information:

@@ -99,6 +99,8 @@ export default class ProductTypeSwitcher {
     switch (this.initialType) {
       case ProductConst.PRODUCT_TYPE.COMBINATIONS:
         confirmWarnings.push(this.$typeSelector.data('combinations-warning'));
+        // Switching FROM combination resets the stock
+        confirmWarnings.push(this.$typeSelector.data('stock-warning'));
         break;
       case ProductConst.PRODUCT_TYPE.PACK:
         confirmWarnings.push(this.$typeSelector.data('pack-warning'));
@@ -108,7 +110,7 @@ export default class ProductTypeSwitcher {
         break;
     }
 
-    // Switching to combination resets the stock
+    // Switching TO combination resets the stock
     if (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
       confirmWarnings.push(this.$typeSelector.data('stock-warning'));
     }

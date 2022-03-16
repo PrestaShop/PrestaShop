@@ -104,6 +104,11 @@ class ProductTypeUpdater
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
         if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+            // When we change the combination type we must reset the stock since all combinations are removed, it must be done before
+            // removing all combinations, because the Combination legacy object performs this reset internally, so we won't have the data
+            // anymore to create the appropriate stock movement
+            $this->resetProductStock($productId);
+
             $this->combinationDeleter->deleteAllProductCombinations($productId);
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
@@ -116,7 +121,7 @@ class ProductTypeUpdater
             'cache_is_pack',
         ];
 
-        // When a product is converted to product with combinations the stock is reset
+        // When a product is converted TO product with combinations the stock is reset
         $resetProductStock = $product->product_type !== ProductType::TYPE_COMBINATIONS && $productType->getValue() === ProductType::TYPE_COMBINATIONS;
 
         $product->product_type = $productType->getValue();
@@ -130,8 +135,13 @@ class ProductTypeUpdater
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
 
         if ($resetProductStock) {
-            // Product type is bound to all shops, so when we reset stock because of type change it must be applied to all associated shops
-            $this->productStockUpdater->resetStock($productId, ShopConstraint::allShops());
+            $this->resetProductStock($productId);
         }
+    }
+
+    private function resetProductStock(ProductId $productId): void
+    {
+        // Product type is bound to all shops, so when we reset stock because of type change it must be applied to all associated shops
+        $this->productStockUpdater->resetStock($productId, ShopConstraint::allShops());
     }
 }
