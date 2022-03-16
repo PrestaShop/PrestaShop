@@ -416,6 +416,20 @@ class AddOrder extends BOBasePage {
    */
   async selectAnotherCurrency(page, currency) {
     await this.selectByVisibleText(page, '#js-cart-currency-select', currency);
+
+    await page.waitForTimeout(2000);
+  }
+
+  /**
+   * Select another language
+   * @param page {Page} Browser tab
+   * @param language {string} Language to select
+   * @returns {Promise<void>}
+   */
+  async selectAnotherLanguage(page, language){
+    await this.selectByVisibleText(page, '#js-cart-language-select', language);
+
+    await page.waitForTimeout(2000);
   }
 
   /**

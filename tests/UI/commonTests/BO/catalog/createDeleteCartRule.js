@@ -22,6 +22,65 @@ let numberOfCartRules;
 
 /**
  * Function to delete cart rule
+ * @param cartRuleData {CartRuleData} Cart rule data to create
+ * @param baseContext {string} String to identify the test
+ */
+function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartRuleTest') {
+  describe('PRE-TEST: Create cart rule', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Catalog > Discounts\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.discountsLink,
+      );
+
+      const pageTitle = await cartRulesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
+    });
+
+    it('should reset and get number of cart rules', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCartRules).to.be.at.least(0);
+    });
+
+    it('should go to new cart rule page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
+
+      await cartRulesPage.goToAddNewCartRulesPage(page);
+
+      const pageTitle = await addCartRulePage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
+    });
+
+    it('should create new cart rule', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
+
+      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleData);
+      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+    });
+  });
+}
+
+/**
+ * Function to delete cart rule
  * @param cartRuleName {string} Cart rule name to delete
  * @param baseContext {string} String to identify the test
  */
@@ -129,60 +188,6 @@ function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTes
 
       const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCartRulesAfterDelete).to.equal(0);
-    });
-  });
-}
-
-function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartRuleTest') {
-  describe('PRE-TEST: Create cart rule', async () => {
-    // before and after functions
-    before(async function () {
-      browserContext = await helper.createBrowserContext(this.browser);
-      page = await helper.newTab(browserContext);
-    });
-
-    after(async () => {
-      await helper.closeBrowserContext(browserContext);
-    });
-
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    it('should reset and get number of cart rules', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRules).to.be.at.least(0);
-    });
-
-    it('should go to new cart rule page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToNewCartRulePage', baseContext);
-
-      await cartRulesPage.goToAddNewCartRulesPage(page);
-
-      const pageTitle = await addCartRulePage.getPageTitle(page);
-      await expect(pageTitle).to.contains(addCartRulePage.pageTitle);
-    });
-
-    it('should create new cart rule', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createCartRule', baseContext);
-
-      const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleData);
-      await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
     });
   });
 }

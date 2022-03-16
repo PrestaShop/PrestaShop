@@ -3,6 +3,7 @@ module.exports = {
     demo_1: {
       id: 1,
       name: 'Hummingbird printed t-shirt',
+      nameFR: 'T-shirt imprimé colibri',
       reference: 'demo_1',
       category: 'Men',
       shortDescription: 'Regular fit, round neckline, short sleeves. Made of extra long staple pima cotton.',
