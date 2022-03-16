@@ -25,9 +25,11 @@
 
 /* eslint max-classes-per-file: ["error", 2] */
 
+import ResizeObserver from 'resize-observer-polyfill';
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
+import IframeEvent from '@components/modal/iframe-event';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
@@ -39,10 +41,12 @@ export interface IframeModalType extends ModalType {
   render: (content: string, hideIframe?: boolean) => void;
 }
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
+export type IframeEventCallbackFunction = (event: IframeEvent) => void;
 export type IframeModalParams = ModalParams & {
   modalTitle?: string;
   onLoaded?: IframeCallbackFunction,
   onUnload?: IframeCallbackFunction,
+  onIframeEvent?: IframeEventCallbackFunction,
   iframeUrl: string;
   autoSize: boolean;
   autoSizeContainer: string;
@@ -85,7 +89,9 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     this.iframe.frameBorder = '0';
     this.iframe.scrolling = 'auto';
     this.iframe.width = '100%';
-    this.iframe.height = '100%';
+    if (!params.autoSize) {
+      this.iframe.height = '100%';
+    }
 
     this.loader = document.createElement('div');
     this.loader.classList.add('modal-iframe-loader');
@@ -110,6 +116,8 @@ export class IframeModal extends Modal implements IframeModalType {
 
   protected autoSizeContainer!: string;
 
+  protected resizeObserver?: ResizeObserver | null;
+
   constructor(
     inputParams: InputIframeModalParams,
   ) {
@@ -130,14 +138,14 @@ export class IframeModal extends Modal implements IframeModalType {
 
     this.autoSize = params.autoSize;
     this.autoSizeContainer = params.autoSizeContainer;
-    this.modal.iframe.addEventListener('load', (loadedEvent) => {
+    this.modal.iframe.addEventListener('load', (loadedEvent: Event) => {
       this.hideLoading();
       if (params.onLoaded) {
         params.onLoaded(this.modal.iframe, loadedEvent);
       }
 
       if (this.modal.iframe.contentWindow) {
-        this.modal.iframe.contentWindow.addEventListener('beforeunload', (unloadEvent) => {
+        this.modal.iframe.contentWindow.addEventListener('beforeunload', (unloadEvent: BeforeUnloadEvent) => {
           if (params.onUnload) {
             params.onUnload(this.modal.iframe, unloadEvent);
           }
@@ -145,13 +153,19 @@ export class IframeModal extends Modal implements IframeModalType {
         });
 
         // Auto resize the iframe container
-        this.autoResize();
+        this.initAutoResize();
       }
     });
 
     this.$modal.on('shown.bs.modal', () => {
       this.modal.iframe.src = params.iframeUrl;
     });
+
+    window.addEventListener(IframeEvent.parentWindowEvent, ((event: IframeEvent) => {
+      if (params.onIframeEvent) {
+        params.onIframeEvent(event);
+      }
+    }) as EventListener);
   }
 
   render(content: string, hideIframe: boolean = true): void {
@@ -174,24 +188,55 @@ export class IframeModal extends Modal implements IframeModalType {
     this.modal.loader.classList.add('d-none');
   }
 
+  hide(): void {
+    super.hide();
+    this.cleanResizeObserver();
+  }
+
   hideIframe(): void {
     this.modal.iframe.classList.add('d-none');
   }
 
-  private autoResize(): void {
+  private getResizableContainer(): HTMLElement | null {
     if (this.autoSize && this.modal.iframe.contentWindow) {
-      const iframeContainer = this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+      return this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+    }
 
-      if (iframeContainer) {
-        const iframeScrollHeight = iframeContainer.scrollHeight;
-        const contentHeight = this.getOuterHeight(this.modal.header)
-          + this.getOuterHeight(this.modal.message)
-          + iframeScrollHeight;
+    return null;
+  }
 
-        // Avoid applying height of 0 (on first load for example)
-        if (contentHeight) {
-          this.modal.dialog.style.height = `${contentHeight}px`;
-        }
+  private initAutoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      this.cleanResizeObserver();
+      this.resizeObserver = new ResizeObserver(() => {
+        this.autoResize();
+      });
+
+      this.resizeObserver.observe(iframeContainer);
+    }
+    this.autoResize();
+  }
+
+  private cleanResizeObserver(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+  }
+
+  private autoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      const iframeScrollHeight = iframeContainer.scrollHeight;
+      const contentHeight = this.getOuterHeight(this.modal.message)
+        + iframeScrollHeight;
+
+      // Avoid applying height of 0 (on first load for example)
+      if (contentHeight) {
+        this.modal.body.style.height = `${contentHeight}px`;
       }
     }
   }
