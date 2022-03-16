@@ -44,49 +44,52 @@
         {{ productData.pricing.retail_price.price_tax_included|price_format }}
       </div>
       <div class="product-field-label">
-        {# First find the selected tax rate #}
-        {% set taxRate = 0 %}
-        {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
-          {% if choice.data == productData.pricing.tax_rules_group_id %}
-            {% set taxRate = choice.attr['data-tax-rate'] %}
-          {% endif %}
-        {% endfor %}
+        {# If tax feature is enabled display it in the label #}
+        {% if taxEnabled %}
+          {# First find the selected tax rate #}
+          {% set taxRate = 0 %}
+          {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
+            {% if choice.data == productData.pricing.tax_rules_group_id %}
+              {% set taxRate = choice.attr['data-tax-rate'] %}
+            {% endif %}
+          {% endfor %}
 
-        {# If tax rate is defined display it in the label #}
-        {% if taxRate %}
           {{ 'tax incl. (tax rule: %taxRate%%)'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
         {% else %}
-          {{ 'tax incl.'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
+          {{ 'tax incl.'|trans({}, 'Admin.Catalog.Feature') }}
         {% endif %}
       </div>
     </div>
 
-    {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
-    {% if productData.header.type != 'combinations' %}
-      {% set lowStock = productData.stock.options.low_stock_threshold %}
-    {% else %}
-      {% set lowStock = 0 %}
-    {% endif %}
+    {# Only display stock when Stock management is enabled #}
+    {% if stockEnabled %}
+      {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
+      {% if productData.header.type != 'combinations' %}
+        {% set lowStock = productData.stock.options.low_stock_threshold %}
+      {% else %}
+        {% set lowStock = 0 %}
+      {% endif %}
 
-    {% if quantityData <= 0 %}
-      {% set stockClass = 'danger' %}
-      {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
-    {% elseif lowStock > 0 and quantityData < lowStock %}
-      {% set stockClass = 'warning' %}
-      {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
-    {% else %}
-      {% set stockClass = 'success' %}
-      {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
-    {% endif %}
+      {% if quantityData <= 0 %}
+        {% set stockClass = 'danger' %}
+        {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% elseif lowStock > 0 and quantityData < lowStock %}
+        {% set stockClass = 'warning' %}
+        {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% else %}
+        {% set stockClass = 'success' %}
+        {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% endif %}
 
-    <div class="product-field-preview">
-      <div class="product-field-value {{ stockClass }}">
-        {{ quantityData }}
+      <div class="product-field-preview">
+        <div class="product-field-value {{ stockClass }}">
+          {{ quantityData }}
+        </div>
+        <div class="product-field-label">
+          {{ stockLabel }}
+        </div>
       </div>
-      <div class="product-field-label">
-        {{ stockLabel }}
-      </div>
-    </div>
+    {% endif %}
   </div>
 {% endblock %}
 

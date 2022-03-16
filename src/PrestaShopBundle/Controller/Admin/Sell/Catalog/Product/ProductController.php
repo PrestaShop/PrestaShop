@@ -352,6 +352,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
 
         $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
@@ -368,6 +369,8 @@ class ProductController extends FrameworkBundleAdminController
             'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+            'taxEnabled' => (bool) $configuration->get('PS_TAX'),
+            'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
