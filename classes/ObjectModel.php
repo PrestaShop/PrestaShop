@@ -893,15 +893,20 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         $this->clearCache();
         $result = true;
         // Remove association to multishop table
+        $id_shop_list = Shop::getContextListShopID();
+        if (count($this->id_shop_list)) {
+            $id_shop_list = $this->id_shop_list;
+        }
+
+        $id_shop_list = array_map('intval', $id_shop_list);
+
         if (Shop::isTableAssociated($this->def['table'])) {
-            $id_shop_list = Shop::getContextListShopID();
-            if (count($this->id_shop_list)) {
-                $id_shop_list = $this->id_shop_list;
-            }
-
-            $id_shop_list = array_map('intval', $id_shop_list);
-
             $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
+        }
+
+        if ($this->isLangMultishop()) {
+            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . $this->def['primary'] . '`=' .
                 (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
         }
 
@@ -926,6 +931,26 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         Hook::exec('actionObject' . $this->getFullyQualifiedName() . 'DeleteAfter', ['object' => $this]);
 
         return $result;
+    }
+
+    public function deleteFromShops(array $sopIds): void
+    {
+        if (Shop::isTableAssociated($this->def['table'])) {
+            $id_shop_list = Shop::getContextListShopID();
+            if (count($this->id_shop_list)) {
+                $id_shop_list = $this->id_shop_list;
+            }
+
+            $id_shop_list = array_map('intval', $id_shop_list);
+
+            $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
+                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
+        }
+
+        // Database deletion for multilingual fields related to the object
+        if (!empty($this->def['multilang']) && !$has_multishop_entries) {
+            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
+        }
     }
 
     /**
