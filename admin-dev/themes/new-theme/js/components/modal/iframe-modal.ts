@@ -180,17 +180,17 @@ export class IframeModal extends Modal implements IframeModalType {
 
   private autoResize(): void {
     if (this.autoSize && this.modal.iframe.contentWindow) {
-      const iframeContainer = this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+      // eslint-disable-next-line max-len
+      const iframeContainer: HTMLElement = <HTMLElement> this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
 
       if (iframeContainer) {
         const iframeScrollHeight = iframeContainer.scrollHeight;
-        const contentHeight = this.getOuterHeight(this.modal.header)
-          + this.getOuterHeight(this.modal.message)
+        const contentHeight = this.getOuterHeight(this.modal.message)
           + iframeScrollHeight;
 
         // Avoid applying height of 0 (on first load for example)
         if (contentHeight) {
-          this.modal.dialog.style.height = `${contentHeight}px`;
+          this.modal.body.style.height = `${contentHeight}px`;
         }
       }
     }

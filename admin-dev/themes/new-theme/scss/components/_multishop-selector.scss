@@ -58,16 +58,16 @@ $component-name: shop-selector;
     &.#{$component-name}-item {
       justify-content: flex-start;
       margin-bottom: 1rem;
-      color: $medium-gray;
       font-weight: 600;
+      color: $medium-gray;
     }
   }
 
   &-shop-item {
     padding: 0.5rem;
+    font-weight: 600;
     cursor: pointer;
     @include border-radius(0.5rem);
-    font-weight: 600;
 
     .material-icons {
       color: $brand-primary;
