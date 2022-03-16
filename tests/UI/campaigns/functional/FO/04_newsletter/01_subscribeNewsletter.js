@@ -125,6 +125,13 @@ describe('FO Subscribe to Newsletter', async () => {
       await expect(pageTitle).to.contains(moduleManagerPage.pageTitle);
     });
 
+    it(`should search for module ${moduleName}`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'searchForModule', baseContext);
+
+      const isModuleVisible = await moduleManagerPage.searchModule(page, moduleName, moduleName);
+      await expect(isModuleVisible).to.be.true;
+    });
+
     it('should go to newsletter subscription module configuration page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToNewsletterModuleConfigPage', baseContext);
 
