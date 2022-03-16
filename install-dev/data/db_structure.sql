@@ -2139,7 +2139,7 @@ CREATE TABLE `PREFIX_webservice_permission` (
   `id_webservice_permission` int(11) NOT NULL AUTO_INCREMENT,
   `resource` varchar(50) NOT NULL,
   `method` enum(
-    'GET', 'POST', 'PUT', 'DELETE', 'HEAD'
+    'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'
   ) NOT NULL,
   `id_webservice_account` int(11) NOT NULL,
   PRIMARY KEY (`id_webservice_permission`),
