@@ -480,7 +480,7 @@ services:
       - '@prestashop.adapter.product.update.product_shop_updater'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand
 
   prestashop.adapter.product.shop.command_handler.delete_product_from_shops_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler\DeleteProductFromShopsHandler
