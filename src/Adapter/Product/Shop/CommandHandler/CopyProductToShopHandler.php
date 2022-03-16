@@ -29,11 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Shop\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductShopUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShop;
+use PrestaShop\PrestaShop\Core\Domain\Product\Shop\Command\CopyProductToShopCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Shop\CommandHandler\CopyProductToShopHandlerInterface;
 
 /**
- * Handles @see CopyProductToShop using dedicated service
+ * Handles @see CopyProductToShopCommand using dedicated service
  */
 class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
 {
@@ -54,7 +54,7 @@ class CopyProductToShopHandler implements CopyProductToShopHandlerInterface
     /**
      * {@inheritDoc}
      */
-    public function handle(CopyProductToShop $command): void
+    public function handle(CopyProductToShopCommand $command): void
     {
         $this->productShopUpdater->copyToShop(
             $command->getProductId(),
