@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotAddStockAvailableException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotDeleteStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -127,6 +128,16 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
         $stockId = $this->getStockIdByProduct($productId, $shopId);
 
         return $this->getStockAvailable($stockId);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @throws CoreException
+     */
+    public function delete(ProductId $productId, ShopId $shopId): void
+    {
+        $this->deleteObjectModel($this->getForProduct($productId, $shopId), CannotDeleteStockAvailableException::class);
     }
 
     /**

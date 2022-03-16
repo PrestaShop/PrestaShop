@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerExcepti
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -48,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
@@ -334,6 +336,27 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         return $shops;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopId[] $shopIds
+     *
+     * @throws ShopAssociationNotFound
+     */
+    public function deleteFromShops(ProductId $productId, array $shopIds): void
+    {
+        foreach ($shopIds as $shopId) {
+            $this->checkShopAssociation($productId->getValue(), Product::class, $shopId);
+        }
+
+        // We fetch the product from its default shop, the values don't matter anyway we just need a Product instance
+        $product = $this->getProductByDefaultShop($productId);
+        $intShopIds = array_map(function (ShopId $shopId) {
+            return $shopId->getValue();
+        }, $shopIds);
+
+        $this->deleteObjectModelFromShops($product, $intShopIds, CannotDeleteProductException::class);
     }
 
     /**
