@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builder used to build UpdateSEO
@@ -63,20 +63,16 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
         }
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', CommandField::TYPE_ARRAY)
-            ->addMultiShopField(
-                '[seo][redirect_option]',
-                'setRedirectOption',
-                CommandField::TYPE_ARRAY,
-                static function (array $options): array {
-                    return [
-                        (string) $options['type'],
-                        (int) ($options['target']['id'] ?? 0),
-                    ];
-                }
-            )
+            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
+            ->addMultiShopCompoundField('setRedirectOption', [
+                '[seo][redirect_option][type]' => DataField::TYPE_STRING,
+                '[seo][redirect_option][target][id]' => [
+                    'type' => DataField::TYPE_INT,
+                    'default' => 0,
+                ],
+            ])
         ;
         $commandBuilder = new CommandBuilder($config);
 

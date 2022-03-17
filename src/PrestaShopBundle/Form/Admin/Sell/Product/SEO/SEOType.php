@@ -170,7 +170,6 @@ class SEOType extends TranslatorAwareType
             ])
             ->add('redirect_option', RedirectOptionType::class, [
                 'product_id' => $options['product_id'],
-                'modify_all_shops' => true,
             ])
             ->add('tags', TranslatableType::class, [
                 'required' => false,

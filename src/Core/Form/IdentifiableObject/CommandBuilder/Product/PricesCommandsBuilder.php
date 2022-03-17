@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builder used to build UpdateProductPricesCommand
@@ -65,13 +65,13 @@ class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
         $priceData = $formData['pricing'];
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', CommandField::TYPE_STRING)
-            ->addMultiShopField('[retail_price][ecotax]', 'setEcotax', CommandField::TYPE_STRING)
-            ->addMultiShopField('[tax_rules_group_id]', 'setTaxRulesGroupId', CommandField::TYPE_INT)
-            ->addMultiShopField('[on_sale]', 'setOnSale', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', CommandField::TYPE_STRING)
-            ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', CommandField::TYPE_STRING)
-            ->addMultiShopField('[unit_price][unity]', 'setUnity', CommandField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][ecotax]', 'setEcotax', DataField::TYPE_STRING)
+            ->addMultiShopField('[tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
+            ->addMultiShopField('[on_sale]', 'setOnSale', DataField::TYPE_BOOL)
+            ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][unity]', 'setUnity', DataField::TYPE_STRING)
         ;
 
         $commandBuilder = new CommandBuilder($config);

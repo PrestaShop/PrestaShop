@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchIndexException;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -55,9 +54,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  *     }
  *     if (!empty($data['isValid'])) {
  *         $modificationDetected = true;
- *         $command->setIsValid(
- *             $data['isValid'],
- *             $data['foo'] ?? 'default'
+ *         $command->setRedirectOption(
+ *             $data['seo']['redirect_option']['type'],
+ *             $data['seo']['redirect_option']['target']['id'] ?? 0
  *         );
  *     }
  *
@@ -67,19 +66,15 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  *
  *     $config = new CommandBuilderConfig();
  *     $config
- *         ->addField('[number]', 'setNumber', CommandField::TYPE_INT)
- *         ->addField('[author][name]', 'setAuthorName', CommandField::TYPE_STRING)
- *         ->addField(
- *             '[isValid]',
- *             'setIsValid',
- *             CommandField::TYPE_BOOL,
- *             function (bool $value, array $data): array {
- *                 return [
- *                     $value,
- *                     $data['foo'] ?? 'default',
- *                 ];
- *             }
- *         )
+ *         ->addField('[number]', 'setNumber', DataField::TYPE_INT)
+ *         ->addField('[author][name]', 'setAuthorName', DataField::TYPE_STRING)
+ *         ->addCompoundField('setRedirectOption', [
+ *             '[seo][redirect_option][type]' => DataField::TYPE_STRING,
+ *             '[seo][redirect_option][target][id]' => [
+ *                 'type' => DataField::TYPE_INT,
+ *                 'default' => 0,
+ *             ],
+ *         ])
  *     ;
  *     $builder = new CommandBuilder($config);
  *
@@ -154,30 +149,25 @@ class CommandBuilder
         object $singleShopCommand,
         object $allShopsCommand = null
     ): array {
-        $modifiedCommands = [];
+        $updatedCommands = [];
+
         foreach ($this->config->getFields() as $commandField) {
             $command = $this->getAppropriateCommand(
-                $data,
                 $commandField,
+                $data,
                 $singleShopCommand,
                 $allShopsCommand
             );
-            $isCommandUpdated = $this->updateCommand(
-                $command,
-                $commandField,
-                $data
-            );
-            if ($isCommandUpdated && !in_array($command, $modifiedCommands)) {
-                $modifiedCommands[] = $command;
+            if ($this->updateCommand($command, $commandField, $data)) {
+                $updatedCommands[] = $command;
             }
         }
-
         // Make sure the order of returned commands is always consistent (single shop comes first)
         $commands = [];
-        if (in_array($singleShopCommand, $modifiedCommands)) {
+        if (in_array($singleShopCommand, $updatedCommands, true)) {
             $commands[] = $singleShopCommand;
         }
-        if (in_array($allShopsCommand, $modifiedCommands)) {
+        if (in_array($allShopsCommand, $updatedCommands, true)) {
             $commands[] = $allShopsCommand;
         }
 
@@ -185,50 +175,28 @@ class CommandBuilder
     }
 
     /**
+     * Updates the provided command with data selected by field
+     *
      * @param object $command
      * @param CommandField $commandField
      * @param array $data
      *
      * @return bool Returns true if command has been updated, or false otherwise
      */
-    private function updateCommand(
-        object $command,
-        CommandField $commandField,
-        array $data
-    ): bool {
+    private function updateCommand(object $command, CommandField $commandField, array $data): bool
+    {
         try {
-            $value = $this->propertyAccessor->getValue($data, $commandField->getDataPath());
-        } catch (NoSuchIndexException $e) {
-            // Data has no value for this field, this is acceptable since partial data can be sent
+            $setterArguments = $this->fetchDataValues($commandField, $data);
+        } catch (NoSuchIndexException $exception) {
+            // Data has no value for this field, this is acceptable since partial data can be submitted
             return false;
         }
         $setterMethod = $commandField->getCommandSetter();
-        $castedValue = $this->castValue($value, $commandField->getType());
 
         if (!method_exists($command, $setterMethod)) {
             throw new RuntimeException(
                 sprintf('Setter method "%s" not found in command "%s"', $setterMethod, get_class($command))
             );
-        }
-        if (is_callable($commandField->getArgumentsUpdater())) {
-            $setterArguments = call_user_func(
-                $commandField->getArgumentsUpdater(),
-                $castedValue,
-                $data
-            );
-            if (is_array($setterArguments)) {
-                $setterArguments = array_values($setterArguments);
-            } else {
-                throw new RuntimeException(
-                    sprintf(
-                        'Arguments updater of data path "%s" returned "%s" type, expected an array',
-                        $commandField->getDataPath(),
-                        gettype($setterArguments)
-                    )
-                );
-            }
-        } else {
-            $setterArguments = [$castedValue];
         }
         $command->$setterMethod(...$setterArguments);
 
@@ -238,45 +206,92 @@ class CommandBuilder
     /**
      * Check if the data has a mapping checkbox to modify all shops for the tested field, if so use the allShopsCommand
      *
-     * @param array $data
      * @param CommandField $commandField
+     * @param array $data
      * @param object $singleShopCommand
      * @param object|null $allShopsCommand
      *
      * @return object
      */
     private function getAppropriateCommand(
-        array $data,
         CommandField $commandField,
+        array $data,
         object $singleShopCommand,
         ?object $allShopsCommand
     ): object {
         if (null === $allShopsCommand || !$commandField->isMultiShopField()) {
             return $singleShopCommand;
         }
+        // Search multi-shop checkbox in data fields
+        foreach ($commandField->getDataFields() as $dataField) {
+            $propertyPath = $dataField->getPropertyPath();
+            $lastElement = $propertyPath->getElement($propertyPath->getLength() - 1);
+            $modifyAllElement = $this->config->getModifyAllNamePrefix() . $lastElement;
 
-        $dataPath = $commandField->getDataPath();
-        $lastElement = $dataPath->getElement($dataPath->getLength() - 1);
-        $modifyAllNamePrefix = $this->config->getModifyAllNamePrefix() . $lastElement;
+            // Replace last element of property path to guess path of multi-shop checkbox
+            $stringPath = (string) $propertyPath;
+            $lastElementPosition = strrpos($stringPath, $lastElement);
 
-        // Replace last element
-        $stringPath = (string) $dataPath;
-        if (($pos = strrpos($stringPath, $lastElement)) !== false) {
-            $stringPath = substr_replace($stringPath, $modifyAllNamePrefix, $pos, strlen($lastElement));
+            if ($lastElementPosition === false) {
+                throw new RuntimeException(
+                    sprintf('Failed to guess multi-shop checkbox path from "%s"', $stringPath)
+                );
+            }
+            $stringPath = substr_replace(
+                $stringPath,
+                $modifyAllElement,
+                $lastElementPosition,
+                strlen($lastElement)
+            );
+            // Return multi-shop command if enabled by checkbox
+            try {
+                if ($this->propertyAccessor->getValue($data, $stringPath)) {
+                    return $allShopsCommand;
+                }
+            } catch (NoSuchIndexException $exception) {
+                // No checkbox value found in data
+            }
         }
 
-        try {
-            $modifyAll = $this->propertyAccessor->getValue($data, $stringPath);
-
-            return $modifyAll ? $allShopsCommand : $singleShopCommand;
-        } catch (NoSuchIndexException | NoSuchPropertyException $e) {
-            // The checkbox parameter for all shops is not even detected, regardless of its value only the single shop
-            // command can be used
-            return $singleShopCommand;
-        }
+        return $singleShopCommand;
     }
 
     /**
+     * Extracts field values from data
+     *
+     * @param array $data
+     * @param CommandField $commandField
+     *
+     * @return array<int, mixed>
+     *
+     * @throws DataFieldException
+     */
+    private function fetchDataValues(CommandField $commandField, array $data): array
+    {
+        $dataValues = [];
+
+        foreach ($commandField->getDataFields() as $dataField) {
+            try {
+                $value = $this->castValue(
+                    $this->propertyAccessor->getValue($data, $dataField->getPropertyPath()),
+                    $dataField->getType()
+                );
+            } catch (NoSuchIndexException $exception) {
+                if ($dataField->hasDefaultValue()) {
+                    $value = $dataField->getDefaultValue();
+                } else {
+                    throw $exception;
+                }
+            }
+            $dataValues[] = $value;
+        }
+
+        return $dataValues;
+    }
+
+    /**
+     * Casts the provided value
+     *
      * @param mixed $value
      * @param string $type
      *
@@ -285,15 +300,15 @@ class CommandBuilder
     private function castValue($value, string $type)
     {
         switch ($type) {
-            case CommandField::TYPE_STRING:
+            case DataField::TYPE_STRING:
                 return (string) $value;
-            case CommandField::TYPE_BOOL:
+            case DataField::TYPE_BOOL:
                 return (bool) $value;
-            case CommandField::TYPE_INT:
+            case DataField::TYPE_INT:
                 return (int) $value;
-            case CommandField::TYPE_ARRAY:
+            case DataField::TYPE_ARRAY:
                 return (array) $value;
-            case CommandField::TYPE_DATETIME:
+            case DataField::TYPE_DATETIME:
                 return DateTime::buildNullableDateTime($value);
             default:
                 return $value;
