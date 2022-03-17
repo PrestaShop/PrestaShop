@@ -179,7 +179,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     public function getTemplateVarManufacturers()
     {
-        $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
+        $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id);
         $manufacturers_for_display = [];
 
         foreach ($manufacturers as $manufacturer) {
