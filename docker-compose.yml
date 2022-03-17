@@ -9,7 +9,7 @@ services:
   mysql:
     image: mysql:5
     ports:
-      - "3306"
+      - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
     environment:
