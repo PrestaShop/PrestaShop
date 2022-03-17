@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\RemoveAllCustomizationFieldsFromProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles @see RemoveAllCustomizationFieldsFromProductCommand using legacy object model
@@ -82,6 +83,6 @@ final class RemoveAllCustomizationFieldsFromProductHandler implements RemoveAllC
         }, $product->getCustomizationFieldIds());
 
         $this->customizationFieldDeleter->bulkDelete($customizationFieldIds);
-        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product);
+        $this->productCustomizationFieldUpdater->refreshProductCustomizability($product, ShopConstraint::allShops());
     }
 }

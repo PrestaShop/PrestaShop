@@ -10,6 +10,13 @@ services:
     arguments:
       - '@prestashop.adapter.product.customization.validate.customization_field_validator'
 
+  prestashop.adapter.product.customization.repository.customization_field_multi_shop_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\Customization\Repository\CustomizationFieldMultiShopRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@prestashop.adapter.product.customization.validate.customization_field_validator'
+
   prestashop.adapter.product.customization.update.customization_field_deleter:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\Update\CustomizationFieldDeleter
     arguments:
@@ -19,9 +26,9 @@ services:
   prestashop.adapter.product.customization.update.product_customization_field_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater
     arguments:
-      - '@prestashop.adapter.product.customization.repository.customization_field_repository'
+      - '@prestashop.adapter.product.customization.repository.customization_field_multi_shop_repository'
       - '@prestashop.adapter.product.customization.update.customization_field_deleter'
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
 
   prestashop.adapter.product.customization.query_handler.get_product_customization_fields_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\QueryHandler\GetProductCustomizationFieldsHandler
@@ -35,7 +42,7 @@ services:
   prestashop.adapter.product.customization.command_handler.set_product_customization_fields_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandler
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.customization.update.product_customization_field_updater'
     tags:
       - name: tactician.handler
