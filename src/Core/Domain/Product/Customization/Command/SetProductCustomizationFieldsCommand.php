@@ -66,6 +66,7 @@ class SetProductCustomizationFieldsCommand
         $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
         $this->setCustomizationFields($customizationFields);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
