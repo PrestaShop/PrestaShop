@@ -28,14 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Customization\CommandHandler;
 
-use CustomizationField;
 use PrestaShop\PrestaShop\Adapter\Product\Customization\Update\ProductCustomizationFieldUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CommandHandler\SetProductCustomizationFieldsHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField as CustomizationFieldDTO;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles @see SetProductCustomizationFieldsCommand using legacy object model
@@ -43,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class SetProductCustomizationFieldsHandler implements SetProductCustomizationFieldsHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -53,11 +50,11 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
     private $productCustomizationFieldUpdater;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductCustomizationFieldUpdater $productCustomizationFieldUpdater
     ) {
         $this->productRepository = $productRepository;
@@ -72,36 +69,16 @@ class SetProductCustomizationFieldsHandler implements SetProductCustomizationFie
     public function handle(SetProductCustomizationFieldsCommand $command): array
     {
         $productId = $command->getProductId();
-        $product = $this->productRepository->get($productId);
-        $customizationFields = [];
+        $product = $this->productRepository->getByShopConstraint($productId, $command->getShopConstraint());
 
-        foreach ($command->getCustomizationFields() as $providedCustomizationField) {
-            $customizationFields[] = $this->buildEntityFromDTO($productId, $providedCustomizationField);
-        }
-
-        $this->productCustomizationFieldUpdater->setProductCustomizationFields($productId, $customizationFields);
+        $this->productCustomizationFieldUpdater->setProductCustomizationFields(
+            $productId,
+            $command->getCustomizationFields(),
+            $command->getShopConstraint()
+        );
 
         return array_map(function (int $customizationFieldId): CustomizationFieldId {
             return new CustomizationFieldId($customizationFieldId);
         }, $product->getNonDeletedCustomizationFieldIds());
-    }
-
-    /**
-     * @param ProductId $productId
-     * @param CustomizationFieldDTO $customizationFieldDTO
-     *
-     * @return CustomizationField
-     */
-    private function buildEntityFromDTO(ProductId $productId, CustomizationFieldDTO $customizationFieldDTO): CustomizationField
-    {
-        $customizationField = new CustomizationField();
-        $customizationField->id = $customizationFieldDTO->getCustomizationFieldId();
-        $customizationField->id_product = $productId->getValue();
-        $customizationField->type = $customizationFieldDTO->getType();
-        $customizationField->required = $customizationFieldDTO->isRequired();
-        $customizationField->name = $customizationFieldDTO->getLocalizedNames();
-        $customizationField->is_module = $customizationFieldDTO->isAddedByModule();
-
-        return $customizationField;
     }
 }

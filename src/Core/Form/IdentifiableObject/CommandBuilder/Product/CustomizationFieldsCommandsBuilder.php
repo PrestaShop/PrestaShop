@@ -30,33 +30,65 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builds commands from product customizations form
  */
-final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilderInterface
+final class CustomizationFieldsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['specifications']['customizations'])) {
             return [];
         }
-
         $customizations = $formData['specifications']['customizations'];
-
         if (empty($customizations['customization_fields'])) {
             return [new RemoveAllCustomizationFieldsFromProductCommand($productId->getValue())];
         }
-
-        return [
-            new SetProductCustomizationFieldsCommand(
+        $commands = [];
+        foreach ($customizations as $index => $customization) {
+            $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+            $config->addMultiShopField(
+                '[specifications][customizations][' . $index . ']',
+                'SetCustomizationFields',
+                DataField::TYPE_ARRAY
+            );
+            $commandBuilder = new CommandBuilder($config);
+            $shopCommand = new SetProductCustomizationFieldsCommand(
                 $productId->getValue(),
-                $this->buildCustomizationFields($customizations['customization_fields'])
-            ),
-        ];
+                $this->buildCustomizationFields($customization),
+                $singleShopConstraint
+            );
+            $allShopsCommand = new SetProductCustomizationFieldsCommand(
+                $productId->getValue(),
+                $this->buildCustomizationFields($customization),
+                ShopConstraint::allShops()
+            );
+            $localCommands = $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
+            $commands = array_merge($commands, $localCommands);
+        }
+
+        return $commands;
     }
 
     /**
@@ -73,6 +105,7 @@ final class CustomizationFieldsCommandsBuilder implements ProductCommandsBuilder
                 'localized_names' => $customization['name'],
                 'is_required' => (bool) $customization['required'],
                 'added_by_module' => false,
+                'modify_all_shops_name' => (bool) $customization['modify_all_shops_name'],
                 'id' => isset($customization['id']) ? (int) $customization['id'] : null,
             ];
         }

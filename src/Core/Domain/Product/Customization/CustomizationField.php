@@ -59,9 +59,15 @@ class CustomizationField
     private $customizationFieldId;
 
     /**
+     * @var bool
+     */
+    private $applyToAllShops;
+
+    /**
      * @param int $type
      * @param string[] $localizedNames
      * @param bool $required
+     * @param bool $applyToAllShops
      * @param bool $addedByModule
      * @param int|null $customizationFieldId If provided, means that its existing CustomizationField and should be updated
      */
@@ -69,6 +75,7 @@ class CustomizationField
         int $type,
         array $localizedNames,
         bool $required,
+        bool $applyToAllShops = false,
         bool $addedByModule = false,
         ?int $customizationFieldId = null
     ) {
@@ -77,6 +84,7 @@ class CustomizationField
         $this->required = $required;
         $this->addedByModule = $addedByModule;
         $this->customizationFieldId = $customizationFieldId ?? null;
+        $this->applyToAllShops = $applyToAllShops;
     }
 
     /**
@@ -117,5 +125,13 @@ class CustomizationField
     public function getCustomizationFieldId(): ?int
     {
         return $this->customizationFieldId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApplyToAllShops(): bool
+    {
+        return $this->applyToAllShops;
     }
 }

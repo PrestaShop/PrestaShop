@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 
 /**
@@ -48,12 +49,22 @@ class SetProductCustomizationFieldsCommand
     private $customizationFields = [];
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      * @param array $customizationFields
+     * @param ShopConstraint $shopConstraint
      */
-    public function __construct(int $productId, array $customizationFields)
-    {
+    public function __construct(
+        int $productId,
+        array $customizationFields,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
         $this->setCustomizationFields($customizationFields);
     }
 
@@ -76,7 +87,7 @@ class SetProductCustomizationFieldsCommand
     /**
      * @param array $customizationFields
      */
-    private function setCustomizationFields(array $customizationFields): void
+    public function setCustomizationFields(array $customizationFields): void
     {
         if (empty($customizationFields)) {
             throw new RuntimeException(sprintf(
@@ -85,15 +96,33 @@ class SetProductCustomizationFieldsCommand
                 RemoveAllCustomizationFieldsFromProductCommand::class
             ));
         }
-
         foreach ($customizationFields as $customizationField) {
-            $this->customizationFields[] = new CustomizationField(
-                (int) $customizationField['type'],
-                $customizationField['localized_names'],
-                (bool) $customizationField['is_required'],
-                (bool) $customizationField['added_by_module'],
-                isset($customizationField['id']) ? (int) $customizationField['id'] : null
-            );
+            $customizationField = $this->normalizeCustomizationFieldData($customizationField);
+            $this->customizationFields[] =
+                new CustomizationField(
+                    (int) $customizationField['type'],
+                    $customizationField['localized_names'],
+                    (bool) $customizationField['is_required'],
+                    $customizationField['modify_all_shops_name'],
+                    (bool) isset($customizationField['added_by_module']) ? $customizationField['added_by_module'] : false,
+                    isset($customizationField['id']) ? (int) $customizationField['id'] : null
+                );
         }
+    }
+
+    private function normalizeCustomizationFieldData(array $originalCustomizationFieldData): array
+    {
+        $originalCustomizationFieldData['localized_names'] = $originalCustomizationFieldData['localized_names'] ?? $originalCustomizationFieldData['name'];
+        $originalCustomizationFieldData['is_required'] = $originalCustomizationFieldData['is_required'] ?? $originalCustomizationFieldData['required'];
+
+        return $originalCustomizationFieldData;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
