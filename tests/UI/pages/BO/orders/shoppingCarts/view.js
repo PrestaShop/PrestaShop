@@ -90,6 +90,7 @@ class ViewShoppingCarts extends BOBasePage {
       case 'image':
         columnSelector = `${this.cartSummaryTableColumn(row, 1)} img`;
         break;
+
       case 'title':
         columnSelector = this.cartSummaryTableColumn(row, 2);
         break;
