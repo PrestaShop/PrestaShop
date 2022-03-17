@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Improve;
 
 use DateTime;
+use Db;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module as ModuleAdapter;
@@ -210,6 +211,7 @@ class ModuleController extends ModuleAbstractController
             $args = [$module];
             if ($action === 'uninstall') {
                 $args[] = (bool) ($request->request->get('actionParams', [])['deletion'] ?? false);
+                $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleRepository->getModule($module));
             }
             $response[$module]['status'] = call_user_func([$moduleManager, $action], ...$args);
         } catch (Exception $e) {
@@ -229,6 +231,9 @@ class ModuleController extends ModuleAbstractController
 
         $moduleInstance = $moduleRepository->getModule($module);
         if ($response[$module]['status'] === true) {
+            if (!isset($response[$module]['refresh_needed'])) {
+                $response[$module]['refresh_needed'] = $this->moduleNeedsReload($moduleInstance);
+            }
             $response[$module]['msg'] = $this->trans(
                 '%action% action on module %module% succeeded.',
                 'Admin.Modules.Notification',
@@ -421,6 +426,20 @@ class ModuleController extends ModuleAbstractController
         }
 
         return $topMenuData;
+    }
+
+    private function moduleNeedsReload(ModuleAdapter $module): bool
+    {
+        $instance = $module->getInstance();
+        if (!empty($instance->getTabs())) {
+            return true;
+        }
+
+        return !empty(Db::getInstance()->executeS(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . 'hook_module` hm
+            INNER JOIN `' . _DB_PREFIX_ . 'hook` h ON h.id_hook = hm.id_hook
+            WHERE hm.id_module = ' . (int) $instance->id . ' AND h.name = \'actionListModules\' LIMIT 1'
+        ));
     }
 
     /**

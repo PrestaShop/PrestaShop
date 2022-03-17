@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Module;
 
+use PrestaShop\PrestaShop\Adapter\Cache\Clearer\SymfonyCacheClearer;
 use PrestaShopBundle\Event\ModuleManagementEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,19 +39,28 @@ class EventSubscriber implements EventSubscriberInterface
      */
     private $moduleRepository;
 
-    public function __construct(ModuleRepository $moduleRepository)
+    /**
+     * @var SymfonyCacheClearer
+     */
+    private $cacheClearer;
+
+    /** @var bool */
+    private $cleared = false;
+
+    public function __construct(ModuleRepository $moduleRepository, SymfonyCacheClearer $cacheClearer)
     {
         $this->moduleRepository = $moduleRepository;
+        $this->cacheClearer = $cacheClearer;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            ModuleManagementEvent::INSTALL => 'onModuleStateChanged',
-            ModuleManagementEvent::UNINSTALL => 'onModuleStateChanged',
+            ModuleManagementEvent::INSTALL => 'onModuleInstalledOrUninstalled',
+            ModuleManagementEvent::UNINSTALL => 'onModuleInstalledOrUninstalled',
+            ModuleManagementEvent::UPGRADE => 'onModuleInstalledOrUninstalled',
             ModuleManagementEvent::ENABLE => 'onModuleStateChanged',
             ModuleManagementEvent::DISABLE => 'onModuleStateChanged',
-            ModuleManagementEvent::UPGRADE => 'onModuleStateChanged',
             ModuleManagementEvent::ENABLE_MOBILE => 'onModuleStateChanged',
             ModuleManagementEvent::DISABLE_MOBILE => 'onModuleStateChanged',
         ];
@@ -60,5 +70,14 @@ class EventSubscriber implements EventSubscriberInterface
     {
         $moduleName = $event->getModule()->get('name');
         $this->moduleRepository->clearCache($moduleName);
+    }
+
+    public function onModuleInstalledOrUninstalled(ModuleManagementEvent $event): void
+    {
+        $this->onModuleStateChanged($event);
+        if (!$this->cleared) {
+            $this->cacheClearer->clear();
+            $this->cleared = true;
+        }
     }
 }
