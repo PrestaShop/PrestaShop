@@ -367,6 +367,7 @@ export default class ModuleCard {
     );
     const url = `//${window.location.host}${form.attr('action')}`;
     const actionParams = form.serializeArray();
+    let refreshNeeded = false;
 
     if (forceDeletion === 'true' || forceDeletion === true) {
       actionParams.push({name: 'actionParams[deletion]', value: 'true'});
@@ -414,6 +415,11 @@ export default class ModuleCard {
           duration: 6000,
         });
 
+        if (result[moduleTechName].refresh_needed === true) {
+          refreshNeeded = true;
+          return;
+        }
+
         const alteredSelector = self.getModuleItemSelector().replace('.', '');
         let mainElement = null;
 
@@ -455,6 +461,10 @@ export default class ModuleCard {
         });
       })
       .always(() => {
+        if (refreshNeeded) {
+          document.location.reload();
+          return;
+        }
         jqElementObj.fadeIn();
         spinnerObj.remove();
         if (callback) {

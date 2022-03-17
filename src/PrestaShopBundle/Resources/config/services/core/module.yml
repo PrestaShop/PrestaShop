@@ -23,6 +23,7 @@ services:
     class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
     arguments:
       - '@prestashop.core.admin.module.repository'
+      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
     tags:
       - { name: kernel.event_subscriber }
 
