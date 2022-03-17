@@ -62,13 +62,13 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
 
 $input_xml = null;
 
-// if a XML is in PUT or in POST
-if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen('php://input', 'rb');
-    while ($putData = fread($putresource, 1024)) {
-        $input_xml .= $putData;
+// if a XML is in POST, PUT or PATCH
+if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH'])) {
+    $put_resource = fopen('php://input', 'rb');
+    while ($put_data = fread($put_resource, 1024)) {
+        $input_xml .= $put_data;
     }
-    fclose($putresource);
+    fclose($put_resource);
 }
 if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0) {
     $input_xml = substr($input_xml, 4);

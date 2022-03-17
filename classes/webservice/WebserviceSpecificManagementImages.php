@@ -316,7 +316,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 foreach (array_keys($this->imageTypes) as $image_type_name) {
                     $more_attr = [
                         'xlink_resource' => $this->wsObject->wsUrl . $this->wsObject->urlSegment[0] . '/' . $image_type_name,
-                        'get' => 'true', 'put' => 'false', 'post' => 'false', 'delete' => 'false', 'head' => 'true',
+                        'get' => 'true', 'put' => 'false', 'post' => 'false', 'patch' => 'false', 'delete' => 'false', 'head' => 'true',
                         'upload_allowed_mimetypes' => implode(', ', $this->acceptedImgMimeTypes),
                     ];
                     $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader($image_type_name, [], $more_attr, false);
@@ -392,7 +392,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 foreach (array_keys($this->imageTypes['general']) as $general_image_type_name) {
                     $more_attr = [
                         'xlink_resource' => $this->wsObject->wsUrl . $this->wsObject->urlSegment[0] . '/' . $this->wsObject->urlSegment[1] . '/' . $general_image_type_name,
-                        'get' => 'true', 'put' => 'true', 'post' => 'false', 'delete' => 'false', 'head' => 'true',
+                        'get' => 'true', 'put' => 'true', 'post' => 'false', 'patch' => 'false', 'delete' => 'false', 'head' => 'true',
                         'upload_allowed_mimetypes' => implode(', ', $this->acceptedImgMimeTypes),
                     ];
                     $this->output .= $this->objOutput->getObjectRender()->renderNodeHeader($general_image_type_name, [], $more_attr, false);
@@ -451,7 +451,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             foreach ($lang_list as $lang) {
                 $more_attr = [
                     'xlink_resource' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/default/' . $lang['iso_code'],
-                    'get' => 'true', 'put' => 'true', 'post' => 'true', 'delete' => 'true', 'head' => 'true',
+                    'get' => 'true', 'put' => 'true', 'post' => 'true', 'patch' => 'true', 'delete' => 'true', 'head' => 'true',
                     'upload_allowed_mimetypes' => implode(', ', $this->acceptedImgMimeTypes),
                     'iso' => $lang['iso_code'],
                 ];
