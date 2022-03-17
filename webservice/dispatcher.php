@@ -88,7 +88,6 @@ WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func([$class_name, 'getInstance']);
 
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
-
 // display result
 if (ob_get_length() != 0) {
     header('Content-Type: application/javascript');
@@ -96,7 +95,7 @@ if (ob_get_length() != 0) {
 
 // Manage cache
 if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_SHA1'] == $result['content_sha1']) {
-    $result['status'] = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
+    $result['headers'][] = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
 }
 
 if (is_array($result['headers'])) {
@@ -104,10 +103,11 @@ if (is_array($result['headers'])) {
         header($param_value);
     }
 }
+
 if (isset($result['type'])) {
-    //	header($result['content_sha1']);
     if (!isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) || $_SERVER['HTTP_LOCAL_CONTENT_SHA1'] != $result['content_sha1']) {
         echo $result['content'];
     }
 }
+
 ob_end_flush();

@@ -1880,7 +1880,8 @@ class WebserviceRequestCore
                 unset($return['content']);
             }
         } elseif (isset($return['content'])) {
-            $this->objOutput->setHeaderParams('Content-Sha1', sha1($return['content']));
+            $return['content_sha1'] = sha1($return['content']);
+            $this->objOutput->setHeaderParams('Content-Sha1', $return['content_sha1']);
         }
 
         // if errors happens when creating returned xml,
