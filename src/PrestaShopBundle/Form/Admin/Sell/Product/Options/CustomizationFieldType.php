@@ -64,6 +64,7 @@ class CustomizationFieldType extends TranslatorAwareType
         $builder
             ->add('id', HiddenType::class)
             ->add('name', TranslatableType::class, [
+                'modify_all_shops' => true,
                 'label' => $this->trans('Label', 'Admin.Global'),
                 'constraints' => [
                     new DefaultLanguage(),
