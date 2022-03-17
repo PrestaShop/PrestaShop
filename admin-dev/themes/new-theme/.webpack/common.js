@@ -408,7 +408,7 @@ module.exports = {
     new LicensePlugin({
       outputFilename: 'thirdPartyNotice.json',
       licenseOverrides: {
-        'vazirmatn@32.0.0': 'OFL-1.1',
+        'vazirmatn@32.1.0': 'OFL-1.1',
         'typeahead.js@0.11.1': 'MIT',
       },
       replenishDefaultLicenseTexts: true,

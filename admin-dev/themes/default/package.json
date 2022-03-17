@@ -54,6 +54,6 @@
     "@openfonts/ubuntu-condensed_latin": "^1.44.2",
     "open-sans-fonts": "^1.6.2",
     "perfect-scrollbar": "^1.4.0",
-    "vazirmatn": "^32.0.0"
+    "vazirmatn": "^32.1.0"
   }
 }
