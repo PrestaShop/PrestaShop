@@ -29,6 +29,9 @@
     <div class="col-md-5">
       {{ form_widget(form.name) }}
       {{ form_errors(form.name) }}
+      {% with {'form': form.name} %}
+        {{- block('form_modify_all_shops') -}}
+      {% endwith %}
     </div>
     <div class="col-md-4">
       {{ form_widget(form.type) }}
