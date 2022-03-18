@@ -53,18 +53,20 @@
         </div>
 
         <div class="form-group row">
-          {{ ps.label_with_help(('Allow ordering of out-of-stock products'|trans), ('By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
-          <div class="col-sm">
-            {{ form_errors(stockForm.allow_ordering_oos) }}
-            {{ form_widget(stockForm.allow_ordering_oos) }}
-          </div>
-        </div>
-
-        <div class="form-group row">
           {{ ps.label_with_help(('Display unavailable attributes on the product page'|trans), ('If an attribute is not available in every product combination, it will not be displayed.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(stockForm.display_unavailable_attributes) }}
             {{ form_widget(stockForm.display_unavailable_attributes) }}
+          </div>
+        </div>
+
+        {{ form_row(stockForm.display_last_quantities) }}
+
+        <div class="form-group row">
+          {{ ps.label_with_help(('Order out-of-stock products'|trans), ('By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(stockForm.allow_ordering_oos) }}
+            {{ form_widget(stockForm.allow_ordering_oos) }}
           </div>
         </div>
 
@@ -113,6 +115,7 @@
         </div>
 
         {{ form_row(stockForm.oos_show_label_listing_pages) }}
+
         {% block product_stock_preferences_form_rest %}
           {{ form_rest(stockForm) }}
         {% endblock %}
