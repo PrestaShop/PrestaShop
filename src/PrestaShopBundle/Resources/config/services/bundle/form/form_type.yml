@@ -832,6 +832,7 @@ services:
     arguments:
       - '@prestashop.core.admin.shop.repository'
       - "@=service('prestashop.core.admin.shop_group.repository').findActive()"
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
     tags:
       - { name: form.type }
 
