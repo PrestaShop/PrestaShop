@@ -44,6 +44,7 @@ import CreateProductModal from '@pages/product/components/create-product-modal';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
+import ProductShopsModal from '@pages/product/components/product-shops-modal';
 
 const {$} = window;
 
@@ -108,4 +109,6 @@ $(() => {
   if (productType === ProductMap.productType.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
+
+  new ProductShopsModal();
 });

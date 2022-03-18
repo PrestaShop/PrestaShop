@@ -46,6 +46,7 @@ export default {
       typeDescription: '.product-type-description-content',
     },
   },
+  productShopsButton: 'a.product-shops-action',
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
