@@ -196,6 +196,14 @@ class PreferencesType extends TranslatorAwareType
                         'Admin.Shopparameters.Help'
                     ),
                 ])
+            ->add(
+                'display_footer_copyright', SwitchType::class, [
+                    'label' => $this->trans('Display PrestaShop copyright in the footer', 'Admin.Shopparameters.Feature'),
+                    'help' => $this->trans(
+                        'If you want to hide PrestaShop copyright information in the footer leave this option disabled.',
+                        'Admin.Shopparameters.Help'
+                    ),
+                ])
             ->add('multishop_feature_active', SwitchType::class, [
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans('Enable Multistore', 'Admin.Shopparameters.Feature'),

@@ -317,6 +317,9 @@
   <configuration id="PS_DISPLAY_BEST_SELLERS" name="PS_DISPLAY_BEST_SELLERS">
     <value>1</value>
   </configuration>
+  <configuration id="PS_DISPLAY_FOOTER_COPYRIGHT" name="PS_DISPLAY_FOOTER_COPYRIGHT">
+    <value>1</value>
+  </configuration>
   <configuration id="PS_CATALOG_MODE" name="PS_CATALOG_MODE">
     <value>0</value>
   </configuration>

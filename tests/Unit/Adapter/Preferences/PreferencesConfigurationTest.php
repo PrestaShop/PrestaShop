@@ -80,6 +80,7 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_DISPLAY_SUPPLIERS', false, false],
                     ['PS_DISPLAY_MANUFACTURERS', false, true],
                     ['PS_DISPLAY_BEST_SELLERS', false, false],
+                    ['PS_DISPLAY_FOOTER_COPYRIGHT', false, true],
                     ['PS_MULTISHOP_FEATURE_ACTIVE', false, true],
                 ]
             );
@@ -97,6 +98,7 @@ class PreferencesConfigurationTest extends TestCase
                 'display_suppliers' => false,
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
+                'display_footer_copyright' => true,
                 'multishop_feature_active' => true,
                 'shop_activity' => 'test',
             ],
@@ -149,6 +151,7 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'display_footer_copyright' => false,
                     'multishop_feature_active' => true,
                     'shop_activity' => 'test',
                 ]
@@ -177,6 +180,7 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_DISPLAY_SUPPLIERS', false],
                     ['PS_DISPLAY_MANUFACTURERS', true],
                     ['PS_DISPLAY_BEST_SELLERS', false],
+                    ['PS_DISPLAY_FOOTER_COPYRIGHT', false],
                     ['PS_MULTISHOP_FEATURE_ACTIVE', true],
                     ['PS_PRICE_ROUND_MODE', 'test'],
                     ['PS_ROUND_TYPE', 'test'],
@@ -205,6 +209,7 @@ class PreferencesConfigurationTest extends TestCase
                     'display_suppliers' => false,
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
+                    'display_footer_copyright' => false,
                     'multishop_feature_active' => true,
                     'shop_activity' => 'test',
                 ]
