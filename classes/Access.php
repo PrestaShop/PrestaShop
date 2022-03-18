@@ -433,4 +433,31 @@ class AccessCore extends ObjectModel
 
         return in_array('error', $res) ? 'error' : 'ok';
     }
+
+    /**
+     * Copy access between profiles.
+     *
+     * @param int $idSourceProfile Source Profile ID
+     * @param int $idTargetProfile Target Profile ID
+     *
+     * @return bool
+     */
+    public static function copyAccess(int $idSourceProfile, int $idTargetProfile): bool
+    {
+        $result = true;
+
+        $tabAccessSql = '
+            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'access` (`id_profile`, `id_authorization_role`)
+            (SELECT ' . (int) $idTargetProfile . ', `id_authorization_role` FROM  `' . _DB_PREFIX_ . 'access` WHERE `id_profile` = ' . (int) $idSourceProfile . ')
+        ';
+        $result &= (bool) Db::getInstance()->execute($tabAccessSql);
+
+        $moduleAccessSql = '
+            INSERT IGNORE INTO `' . _DB_PREFIX_ . 'module_access` (`id_profile`, `id_authorization_role`)
+            (SELECT ' . (int) $idTargetProfile . ', `id_authorization_role` FROM  `' . _DB_PREFIX_ . 'module_access` WHERE `id_profile` = ' . (int) $idSourceProfile . ')
+        ';
+        $result &= (bool) Db::getInstance()->execute($moduleAccessSql);
+
+        return (bool) $result;
+    }
 }

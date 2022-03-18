@@ -28,7 +28,9 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDuplicateProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
+use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DuplicateProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\FailedToDeleteProfileException;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\ProfileConstraintException;
@@ -249,6 +251,34 @@ class ProfileController extends FrameworkBundleAdminController
     }
 
     /**
+     * Duplicate a profile.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
+     *
+     * @param int $profileId
+     *
+     * @return RedirectResponse
+     */
+    public function duplicateAction($profileId)
+    {
+        try {
+            $duplicateProfileCommand = new DuplicateProfileCommand($profileId);
+
+            $this->getCommandBus()->handle($duplicateProfileCommand);
+
+            $this->addFlash('success', $this->trans('Successful duplication', 'Admin.Notifications.Success'));
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_profiles_index');
+    }
+
+    /**
      * Bulk delete profiles.
      *
      * @AdminSecurity(
@@ -271,6 +301,33 @@ class ProfileController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle($deleteProfilesCommand);
 
             $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
+        } catch (ProfileException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_profiles_index');
+    }
+
+    /**
+     * Bulk duplicate profiles.
+     *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
+     * @DemoRestricted(redirectRoute="admin_profiles_index")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDuplicateAction(Request $request)
+    {
+        $profileIds = $request->request->get('profile_bulk');
+
+        try {
+            $duplicateProfilesCommand = new BulkDuplicateProfileCommand($profileIds);
+
+            $this->getCommandBus()->handle($duplicateProfilesCommand);
+
+            $this->addFlash('success', $this->trans('Successful duplication', 'Admin.Notifications.Success'));
         } catch (ProfileException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }

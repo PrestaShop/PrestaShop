@@ -48,7 +48,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
+    use BulkDuplicateActionTrait;
     use DeleteActionTrait;
+    use DuplicateActionTrait;
 
     public const GRID_ID = 'profile';
 
@@ -144,6 +146,13 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
                             'profileId',
                             'id_profile'
                         )
+                    )
+                    ->add(
+                        $this->buildDuplicateAction(
+                            'admin_profiles_duplicate',
+                            'profileId',
+                            'id_profile'
+                        )
                     ),
             ])
             )
@@ -217,6 +226,9 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
         return (new BulkActionCollection())
             ->add(
                 $this->buildBulkDeleteAction('admin_profiles_bulk_delete')
+            )
+            ->add(
+                $this->buildBulkDuplicateAction('admin_profiles_bulk_duplicate')
             )
         ;
     }

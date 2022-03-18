@@ -48,6 +48,17 @@ admin_profiles_delete:
   requirements:
     profileId: \d+
 
+admin_profiles_duplicate:
+  path: /{profileId}/duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::duplicateAction'
+    _legacy_controller: AdminProfiles
+    _legacy_parameters:
+      id_profile: profileId
+  requirements:
+    profileId: \d+
+
 admin_profiles_bulk_delete:
   path: /delete/bulk
   methods: [ POST ]
@@ -55,3 +66,10 @@ admin_profiles_bulk_delete:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::bulkDeleteAction'
     _legacy_controller: AdminProfiles
     _legacy_link: AdminProfiles:submitBulkdeleteprofile
+
+admin_profiles_bulk_duplicate:
+  path: /duplicate/bulk
+  methods: [ POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\ProfileController::bulkDuplicateAction'
+    _legacy_controller: AdminProfiles

@@ -38,3 +38,13 @@ services:
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing'
+
+  prestashop.adapter.profile.command_handler.duplicate_profile:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\DuplicateProfileHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\DuplicateProfileCommand' }
+
+  prestashop.adapter.profile.command_handler.bulk_duplicate_profile:
+    class: 'PrestaShop\PrestaShop\Adapter\Profile\CommandHandler\BulkDuplicateProfileHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDuplicateProfileCommand' }
