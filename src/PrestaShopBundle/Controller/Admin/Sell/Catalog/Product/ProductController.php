@@ -146,6 +146,44 @@ class ProductController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function productShopsAction(Request $request, int $productId): Response
+    {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+            return $this->renderDisableMultistorePage($productId);
+        }
+
+        $productShopsForm = $this->getProductShopsFormBuilder()->getFormFor($productId);
+
+        try {
+            $productShopsForm->handleRequest($request);
+
+            $result = $this->getProductShopsFormHandler()->handleFor($productId, $productShopsForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                $redirectParams = ['productId' => $productId];
+                if ($request->query->has('liteDisplaying')) {
+                    $redirectParams['liteDisplaying'] = true;
+                }
+
+                return $this->redirectToRoute('admin_products_shops', $redirectParams);
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->renderProductShopsForm($productShopsForm, $request->query->has('liteDisplaying'));
+    }
+
+    /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param Request $request
      *
      * @return Response
      */
@@ -694,6 +732,21 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @param FormInterface $productShopsForm
+     *
+     * @return Response
+     */
+    private function renderProductShopsForm(FormInterface $productShopsForm, bool $lightDisplay): Response
+    {
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/shops.html.twig', [
+            'lightDisplay' => $lightDisplay,
+            'showContentHeader' => false,
+            'productShopsForm' => $productShopsForm->createView(),
+            'helpLink' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    /**
      * Gets creation form builder.
      *
      * @return FormBuilderInterface
@@ -719,6 +772,24 @@ class ProductController extends FrameworkBundleAdminController
     private function getProductFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Gets shop association form builder.
+     *
+     * @return FormBuilderInterface
+     */
+    private function getProductShopsFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.product_shops_form_builder');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    private function getProductShopsFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.product_shops_form_handler');
     }
 
     /**

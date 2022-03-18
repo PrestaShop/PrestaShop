@@ -1336,6 +1336,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.product_shops_form_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductShopsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.edit_product_form_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EditProductFormType'
     parent: 'form.type.translatable.aware'

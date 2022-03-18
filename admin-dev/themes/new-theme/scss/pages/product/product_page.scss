@@ -1232,6 +1232,12 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  &.product-shops-form {
+    width: 100%;
+    padding: 0 1rem 0.1rem;
+    background-color: $white;
+  }
+
   .maxLength {
     float: none;
   }
