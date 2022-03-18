@@ -726,22 +726,6 @@ class ToolsCore
     }
 
     /**
-     * Return the CLDR associated with the context or given language_code.
-     *
-     * @see Tools::getContextLocale
-     * @deprecated since PrestaShop 1.7.6.0
-     *
-     * @param Context|null $context
-     * @param null $language_code
-     *
-     * @throws PrestaShopException
-     */
-    public static function getCldr(Context $context = null, $language_code = null)
-    {
-        throw new PrestaShopException('This CLDR library has been removed. See Tools::getContextLocale instead.');
-    }
-
-    /**
      * Return price with currency sign for a given product.
      *
      * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
@@ -890,38 +874,6 @@ class ToolsCore
         }
 
         return $price;
-    }
-
-    /**
-     * Implement array_replace for PHP <= 5.2.
-     *
-     * @return array|mixed|null
-     *
-     * @deprecated since version 1.7.4.0, to be removed.
-     */
-    public static function array_replace()
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
-        if (!function_exists('array_replace')) {
-            $args = func_get_args();
-            $num_args = func_num_args();
-            $res = [];
-            for ($i = 0; $i < $num_args; ++$i) {
-                if (is_array($args[$i])) {
-                    foreach ($args[$i] as $key => $val) {
-                        $res[$key] = $val;
-                    }
-                } else {
-                    trigger_error(__FUNCTION__ . '(): Argument #' . ($i + 1) . ' is not an array', E_USER_WARNING);
-
-                    return null;
-                }
-            }
-
-            return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
-        }
     }
 
     /**
