@@ -373,7 +373,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         //if empty, set link_rewrite for default locale
         $linkRewriteKey = 'link_rewrite_' . $this->locales[0]['id_lang'];
         if (empty($form_data[$linkRewriteKey])) {
-            $form_data[$linkRewriteKey] = $this->tools->link_rewrite($form_data['name_' . $this->locales[0]['id_lang']]);
+            $form_data[$linkRewriteKey] = $this->tools->linkRewrite($form_data['name_' . $this->locales[0]['id_lang']]);
         }
 
         //map inputAccessories
