@@ -32,6 +32,8 @@ use Doctrine\ORM\EntityManager;
 use PrestaShop\PrestaShop\Adapter\Feature\MultistoreFeature;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker;
@@ -62,10 +64,11 @@ class MultistoreController extends FrameworkBundleAdminController
      * This methods returns a Response object containing the multistore header displayed at the top of migrated pages
      *
      * @param bool $lockedToAllShopContext
+     * @param int|null $productId
      *
      * @return Response
      */
-    public function header(bool $lockedToAllShopContext): Response
+    public function header(bool $lockedToAllShopContext, int $productId = null): Response
     {
         if (!$this->multistoreFeature->isUsed()) {
             return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
@@ -94,6 +97,28 @@ class MultistoreController extends FrameworkBundleAdminController
         $groupList = [];
         if (!$lockedToAllShopContext) {
             $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
+
+            // Filter shops that are not associated to product
+            if (!empty($productId)) {
+                $productRepository = $this->get('prestashop.adapter.product.repository.product_multi_shop_repository');
+                $productShops = $productRepository->getAssociatedShopIds(new ProductId($productId));
+
+                if (!empty($productShops)) {
+                    $productShopIds = array_map(function (ShopId $shopId) {
+                        return $shopId->getValue();
+                    }, $productShops);
+
+                    /** @var ShopGroup $shopGroup */
+                    foreach ($groupList as $shopGroup) {
+                        /** @var Shop $shop */
+                        foreach ($shopGroup->getShops() as $shop) {
+                            if (!in_array($shop->getId(), $productShopIds)) {
+                                $shopGroup->getShops()->removeElement($shop);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
