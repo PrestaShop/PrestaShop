@@ -24,6 +24,21 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.5 - (2022-03-15)
+####################################
+- Back Office:
+  - Bug fix:
+    - #27843: Fix: login page float buggy on latest chrome version and long shop name problem (by @NeOMakinG)
+    - #27776: Stock field must be empty and still be considered as zero (by @jolelievre)
+    - #27763: Add help field when integer type is used to a form (by @okom3pom)
+- Front Office:
+  - Bug fix:
+    - #27814: Fixed Microdata ItemList position : index starts to 1 and not 0 (by @Progi1984)
+- Core:
+  - Bug fix:
+    - #27874: Hook getHookStatusByName should not be case-sensitive (by @lmeyer1)
+
+####################################
 #   v1.7.8.4 - (2022-02-24)
 ####################################
 - Back Office:
