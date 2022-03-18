@@ -214,8 +214,10 @@ class CartCore extends ObjectModel
             Cart::$_customer = $customer;
 
             if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key) {
-                $this->secure_key = $customer->secure_key;
-                $this->save();
+                if ($this->secure_key !== $customer->secure_key) {
+                    $this->secure_key = $customer->secure_key;
+                    $this->save();
+                }
             }
         }
 
