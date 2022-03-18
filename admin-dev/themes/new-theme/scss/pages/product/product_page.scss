@@ -2399,6 +2399,12 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#modal-product-shops {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
 // Create product modal
 @import "create_product_modal";
 @import "product_light_list";

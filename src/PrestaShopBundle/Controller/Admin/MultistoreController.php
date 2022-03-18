@@ -134,6 +134,7 @@ class MultistoreController extends FrameworkBundleAdminController
             'isGroupContext' => $this->multistoreContext->isGroupShopContext(),
             'lockedToAllShopContext' => $lockedToAllShopContext,
             'colorConfigLink' => !$isAllShopContext && empty($currentContext->getColor()) ? $colorConfigLink : false,
+            'productId' => $productId,
         ]);
     }
 
