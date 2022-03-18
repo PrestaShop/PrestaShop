@@ -3230,16 +3230,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
-     *
-     * @return bool
-     */
-    public static function getSafeModeStatus()
-    {
-        return false;
-    }
-
-    /**
      * Extract a zip file to the given directory
      *
      * @param string $from_file
