@@ -59,6 +59,7 @@ class MultistoreComponentsExtension extends AbstractExtension
     {
         return [
             new TwigFunction('multistoreHeader', [$this, 'getMultistoreHeader'], ['is_safe' => ['html']]),
+            new TwigFunction('multistoreProductHeader', [$this, 'getMultistoreProductHeader'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -70,5 +71,15 @@ class MultistoreComponentsExtension extends AbstractExtension
     public function getMultistoreHeader(bool $lockedToAllShopContext = false): string
     {
         return $this->multistoreController->header($lockedToAllShopContext)->getContent();
+    }
+
+    /**
+     * @param int $productId
+     *
+     * @return string
+     */
+    public function getMultistoreProductHeader(int $productId): string
+    {
+        return $this->multistoreController->header(false, $productId)->getContent();
     }
 }
