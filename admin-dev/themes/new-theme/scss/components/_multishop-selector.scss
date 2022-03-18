@@ -63,51 +63,71 @@ $component-name: shop-selector;
     }
   }
 
-  &-shop-item {
-    padding: 0.5rem;
-    font-weight: 600;
-    cursor: pointer;
-    @include border-radius(0.5rem);
-
-    .material-icons {
-      color: $brand-primary;
-      opacity: 0;
-    }
-  }
-
-  &-shop-item:hover {
-    background-color: rgba(37, 185, 215, 0.15);
-
-    .material-icons {
-      opacity: 1;
-    }
-  }
-
-  &-shop-item.selected-shop {
-    background-color: rgba(37, 185, 215, 0.15);
-  }
-
   &-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: start;
+    justify-content: start;
     width: 100%;
 
     > .#{$component-name}-color-check .material-icons {
       font-size: 1.25rem;
     }
 
-    &-left {
-      display: flex;
-      align-items: center;
+    .md-checkbox {
+      width: 100%;
+      cursor: pointer;
 
-      > i {
-        margin-right: 0.825rem;
-        font-size: 1.2rem;
+      label {
+        width: 100%;
+        padding-left: 25px;
+
+        .md-checkbox-control::before,
+        .md-checkbox-control::after {
+          margin-top: 10px;
+        }
+      }
+    }
+
+    &-name {
+      display: flex;
+      align-items: start;
+      width: 100%;
+      padding: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      @include border-radius(0.5rem);
+
+      .material-icons {
+        margin-left: auto;
+        font-size: 1.4rem;
+        color: $brand-primary;
+        opacity: 0;
       }
 
-      @include media-breakpoint-down(sm) {
-        max-width: 80%;
+      .shop-selector-status {
+        color: $brand-primary;
+        margin-left: auto;
+        margin-right: 5px;
+      }
+    }
+
+    &-name:hover {
+      background-color: rgba(37, 185, 215, 0.15);
+
+      .material-icons {
+        opacity: 1;
+      }
+    }
+
+    &.selected-shop {
+      .shop-selector-item-name {
+        background-color: rgba(37, 185, 215, 0.15);
+      }
+    }
+
+    &.disabled {
+      .shop-selector-item-name {
+        cursor: not-allowed;
       }
     }
   }
