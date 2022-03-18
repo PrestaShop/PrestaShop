@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ad959abea14e91569886a41fa0352bc",
+    "content-hash": "29da63fd339b05d30bae006dad4c30e2",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -6914,6 +6914,48 @@
                 "source": "https://github.com/PrestaShop/ps_wirepayment/tree/v2.1.1"
             },
             "time": "2021-12-28T16:47:05+00:00"
+        },
+        {
+            "name": "prestashop/psgdpr",
+            "version": "v1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/psgdpr.git",
+                "reference": "27dbd1aac653e0a08d9df99911b1a59cf2bd9bed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/psgdpr/zipball/27dbd1aac653e0a08d9df99911b1a59cf2bd9bed",
+                "reference": "27dbd1aac653e0a08d9df99911b1a59cf2bd9bed",
+                "shasum": ""
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "classes",
+                    "controllers",
+                    "psgdpr.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module psgdpr",
+            "homepage": "https://github.com/PrestaShopCorp/psgdpr",
+            "support": {
+                "source": "https://github.com/PrestaShop/psgdpr/tree/v1.4.0"
+            },
+            "time": "2022-03-18T10:15:06+00:00"
         },
         {
             "name": "prestashop/statsbestcategories",
