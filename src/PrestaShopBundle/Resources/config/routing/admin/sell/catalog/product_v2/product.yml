@@ -56,6 +56,21 @@ admin_products_v2_edit:
   options:
     expose: true
 
+admin_products_shops:
+  path: /{productId}/shops
+  methods: [ GET, POST, PATCH ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::productShopsAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:assignshops
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
 admin_products_v2_download_virtual_product_file:
   path: /virtual-product-file/{virtualProductFileId}
   methods: [ GET ]
