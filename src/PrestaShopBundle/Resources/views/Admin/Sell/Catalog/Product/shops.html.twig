@@ -33,7 +33,11 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(productShopsForm, {'attr': {'class': 'form-horizontal product-shops-form product-page-v2 justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {{ form_start(productShopsForm, {'attr': {
+      'class': 'form-horizontal product-shops-form product-page-v2 justify-content-md-center',
+      'novalidate': 'novalidate',
+      'data-product-id': productId,
+  }}) }}
   {% block product_creation_form %}
     {{ form_row(productShopsForm) }}
   {% endblock %}
