@@ -28,15 +28,65 @@ import ClickEvent = JQuery.ClickEvent;
 
 export default class ShopSelector {
   constructor() {
-    $(document).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
-      const $clickedShop = $(event.currentTarget);
-      const $parent = $clickedShop.parents(ComponentsMap.shopSelector.container).first();
-      const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $parent);
+    $(ComponentsMap.shopSelector.container).each((index, container) => {
+      const $container = $(container);
+      const isMultiple = $container.data('multiple');
 
-      $(ComponentsMap.shopSelector.shopItem).removeClass(ComponentsMap.shopSelector.selectedClass);
-      $clickedShop.addClass(ComponentsMap.shopSelector.selectedClass);
-
-      $shopSelector.val($clickedShop.data('shopId')).trigger('change');
+      if (isMultiple) {
+        const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $container).first();
+        const initialShops: string[] = <string[]> $shopSelector.val() || [];
+        $shopSelector.data('initialShops', initialShops.join(','));
+      }
     });
+
+    $(document).on('click', ComponentsMap.shopSelector.shopItem, (event: ClickEvent) => {
+      const $clickedShop: JQuery = $(event.currentTarget);
+      const $container = $clickedShop.parents(ComponentsMap.shopSelector.container).first();
+      const $shopSelector = $(ComponentsMap.shopSelector.selectInput, $container).first();
+      const isMultiple = $container.data('multiple');
+
+      if (isMultiple) {
+        this.selectMultipleShops($container, $shopSelector);
+      } else {
+        this.selectSingleShop($clickedShop, $shopSelector);
+      }
+    });
+  }
+
+  private selectSingleShop($selectedShop: JQuery, $shopSelector: JQuery): void {
+    $(ComponentsMap.shopSelector.shopItem).removeClass(ComponentsMap.shopSelector.selectedClass);
+    $selectedShop.addClass(ComponentsMap.shopSelector.selectedClass);
+
+    $shopSelector.val($selectedShop.data('shopId')).trigger('change');
+  }
+
+  private selectMultipleShops($container: JQuery, $shopSelector: JQuery): void {
+    const $shops: JQuery = $(ComponentsMap.shopSelector.shopItem, $container);
+    const selectedShops: string[] = [];
+    const initialShops: string[] = $shopSelector.data('initialShops').split(',').map((shopId: string) => parseInt(shopId, 10));
+
+    $shops.each((index, shopItem) => {
+      const $shopItem: JQuery = $(shopItem);
+
+      if ($shopItem.hasClass(ComponentsMap.shopSelector.currentClass)) {
+        selectedShops.push($shopItem.data('shopId'));
+        return;
+      }
+
+      const $shopStatus: JQuery = $(ComponentsMap.shopSelector.shopStatus, $shopItem);
+      const $checkbox:JQuery = $('input', $shopItem);
+      const initiallySelected: boolean = initialShops.includes($shopItem.data('shopId'));
+
+      if ($checkbox.is(':checked')) {
+        selectedShops.push($shopItem.data('shopId'));
+        $shopItem.toggleClass(ComponentsMap.shopSelector.selectedClass, !initiallySelected);
+        $shopStatus.html(initiallySelected ? '' : $shopStatus.data('addedLabel'));
+      } else {
+        $shopStatus.html(initiallySelected ? $shopStatus.data('removedLabel') : '');
+        $shopItem.toggleClass(ComponentsMap.shopSelector.selectedClass, initiallySelected);
+      }
+    });
+
+    $shopSelector.val(selectedShops).trigger('change');
   }
 }

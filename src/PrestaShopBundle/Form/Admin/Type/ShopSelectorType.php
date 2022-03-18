@@ -50,13 +50,20 @@ class ShopSelectorType extends ChoiceType
      */
     private $shopGroups;
 
+    /**
+     * @var int|null
+     */
+    private $contextShopId;
+
     public function __construct(
         ShopRepository $shopRepository,
-        array $shopGroups
+        array $shopGroups,
+        ?int $contextShopId
     ) {
         parent::__construct();
         $this->shopRepository = $shopRepository;
         $this->shopGroups = $shopGroups;
+        $this->contextShopId = $contextShopId;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -72,23 +79,37 @@ class ShopSelectorType extends ChoiceType
         ]);
     }
 
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+        $view->vars['contextShopId'] = $this->contextShopId;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
         $builder->addModelTransformer(new CallbackTransformer(
-            function (?int $shopId) {
-                return !empty($shopId) ? $this->shopRepository->find($shopId) : null;
+            function ($selection) {
+                if (is_array($selection)) {
+                    return array_map(function (int $shopId) {
+                        return $this->shopRepository->find($shopId);
+                    }, $selection);
+                } elseif (!empty($selection)) {
+                    $this->shopRepository->find($selection);
+                }
+
+                return null;
             },
-            function (?Shop $shop) {
-                return $shop ? $shop->getId() : null;
+            function ($selection) {
+                if (is_array($selection)) {
+                    return array_map(function (Shop $shop) {
+                        return $shop->getId();
+                    }, $selection);
+                }
+
+                return $selection instanceof Shop ? $selection->getId() : null;
             }
         ));
-    }
-
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        parent::buildView($view, $form, $options);
-        $view->vars['groupList'] = $this->shopGroups;
     }
 
     private function getShopChoices(): array
