@@ -2245,43 +2245,9 @@ class AdminControllerCore extends Controller
         ]);
     }
 
-    /**
-     * Init tab modules list and add button in toolbar.
-     *
-     * @deprecated since 1.7.7.0
-     */
-    protected function initTabModuleList()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function addPageHeaderToolBarModulesListButton()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function addToolBarModulesListButton()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
     protected function getAdminModulesUrl()
     {
         return $this->context->link->getAdminLink('AdminModulesCatalog');
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function filterTabModuleList()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
@@ -2625,13 +2591,6 @@ class AdminControllerCore extends Controller
         $helper->list_skip_actions = $this->list_skip_actions;
 
         $this->helper = $helper;
-    }
-
-    /**
-     * @deprecated 1.6.0
-     */
-    public function setDeprecatedMedia()
-    {
     }
 
     /**
