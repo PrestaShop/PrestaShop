@@ -30,49 +30,57 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
 class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
+    private const MULTI_SHOP_PREFIX = 'seo_multi_shop';
+
     /**
-     * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedCommandsForSingleShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildCommandsForSingleShop(array $formData, array $expectedCommands)
     {
-        $builder = new SEOCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands(
+            $this->getProductId(),
+            $formData,
+            $this->singleShopConstraint
+        );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    public function getExpectedCommandsForSingleShop(): iterable
     {
-        yield [
+        yield 'empty data' => [
             [
                 'no_price_data' => ['useless value'],
             ],
             [],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        yield [
+        yield 'empty seo data' => [
             [
                 'seo' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedMetaTitles = [
             1 => 'Titre français recherche',
             2 => 'English title seo',
         ];
-        $command->setLocalizedMetaTitles($localizedMetaTitles);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+        ;
+        yield 'meta title' => [
             [
                 'seo' => [
                     'meta_title' => $localizedMetaTitles,
@@ -81,13 +89,15 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedMetaDescriptions = [
             1 => 'Description française recherche',
             2 => 'English description seo',
         ];
-        $command->setLocalizedMetaDescriptions($localizedMetaDescriptions);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+        ;
+        yield 'meta description' => [
             [
                 'seo' => [
                     'meta_description' => $localizedMetaDescriptions,
@@ -96,13 +106,15 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
         $localizedLinkRewrites = [
             1 => 'produit-francais',
             2 => 'english-product',
         ];
-        $command->setLocalizedLinkRewrites($localizedLinkRewrites);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+        ;
+        yield 'link rewrite' => [
             [
                 'seo' => [
                     'link_rewrite' => $localizedLinkRewrites,
@@ -111,24 +123,11 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setLocalizedLinkRewrites($localizedLinkRewrites);
-        $command->setLocalizedMetaTitles($localizedMetaTitles);
-        $command->setLocalizedMetaDescriptions($localizedMetaDescriptions);
-        yield [
-            [
-                'seo' => [
-                    'link_rewrite' => $localizedLinkRewrites,
-                    'meta_description' => $localizedMetaDescriptions,
-                    'meta_title' => $localizedMetaTitles,
-                ],
-            ],
-            [$command],
-        ];
-
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_NOT_FOUND, 0)
+        ;
+        yield 'redirect not found' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -139,9 +138,11 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'redirect to product' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -155,9 +156,11 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductSeoCommand($this->getProductId()->getValue());
-        $command->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51);
-        yield [
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
+        yield 'redirect to category' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -170,5 +173,164 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'all fields' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    'meta_description' => $localizedMetaDescriptions,
+                    'link_rewrite' => $localizedLinkRewrites,
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+    }
+
+    /**
+     * @dataProvider getExpectedCommandsForMultiShop
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildCommandsForMultiShop(array $formData, array $expectedCommands): void
+    {
+        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builtCommands = $builder->buildCommands(
+            $this->getProductId(),
+            $formData,
+            $this->singleShopConstraint
+        );
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function getExpectedCommandsForMultiShop(): iterable
+    {
+        $localizedMetaTitles = [
+            1 => 'Titre français recherche',
+            2 => 'English title seo',
+        ];
+        $localizedMetaDescriptions = [
+            1 => 'Description française recherche',
+            2 => 'English description seo',
+        ];
+        $localizedLinkRewrites = [
+            1 => 'produit-francais',
+            2 => 'english-product',
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'single shop only' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    self::MULTI_SHOP_PREFIX . 'meta_title' => false,
+                    'meta_description' => $localizedMetaDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'meta_description' => '0',
+                    'link_rewrite' => $localizedLinkRewrites,
+                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => '',
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getAllShopsCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'multi-shop only' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    self::MULTI_SHOP_PREFIX . 'meta_title' => true,
+                    'meta_description' => $localizedMetaDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'meta_description' => 'enabled',
+                    'link_rewrite' => $localizedLinkRewrites,
+                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => 1,
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        self::MULTI_SHOP_PREFIX . 'type' => true,
+                        'target' => [
+                            'id' => 42,
+                        ],
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $singleCommand = $this
+            ->getSingleShopCommand()
+            ->setLocalizedMetaTitles($localizedMetaTitles)
+            ->setLocalizedLinkRewrites($localizedLinkRewrites)
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setLocalizedMetaDescriptions($localizedMetaDescriptions)
+            ->setRedirectOption(RedirectType::TYPE_PRODUCT_TEMPORARY, 42)
+        ;
+        yield 'single shop and multi-shop' => [
+            [
+                'seo' => [
+                    'meta_title' => $localizedMetaTitles,
+                    self::MULTI_SHOP_PREFIX . 'meta_title' => false,
+                    'meta_description' => $localizedMetaDescriptions,
+                    self::MULTI_SHOP_PREFIX . 'meta_description' => true,
+                    'link_rewrite' => $localizedLinkRewrites,
+                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => false,
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        'target' => [
+                            'id' => 42,
+                            self::MULTI_SHOP_PREFIX . 'id' => true,
+                        ],
+                    ],
+                ],
+            ],
+            [$singleCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductSeoCommand
+    {
+        return new UpdateProductSeoCommand(
+            $this->getProductId()->getValue(),
+            ShopConstraint::shop(self::SHOP_ID)
+        );
+    }
+
+    private function getAllShopsCommand(): UpdateProductSeoCommand
+    {
+        return new UpdateProductSeoCommand(
+            $this->getProductId()->getValue(),
+            ShopConstraint::allShops()
+        );
     }
 }

@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
 use DateTimeImmutable;
+use OutOfBoundsException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class CommandBuilderTestCommand
@@ -64,6 +65,11 @@ class CommandBuilderTestCommand
     private $date;
 
     /**
+     * @var array<string, mixed>
+     */
+    private $options;
+
+    /**
      * @var ShopConstraint
      */
     private $shopConstraint;
@@ -73,6 +79,7 @@ class CommandBuilderTestCommand
      */
     public function __construct(ShopConstraint $shopConstraint)
     {
+        $this->options = [];
         $this->shopConstraint = $shopConstraint;
     }
 
@@ -200,6 +207,40 @@ class CommandBuilderTestCommand
     public function setDate(DateTimeImmutable $date): self
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function getOption(string $name)
+    {
+        if (array_key_exists($name, $this->options)) {
+            return $this->options[$name];
+        }
+        throw new OutOfBoundsException("Option \"$name\" is undefined");
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return static
+     */
+    public function setOption(string $name, $value): self
+    {
+        $this->options[$name] = $value;
 
         return $this;
     }
