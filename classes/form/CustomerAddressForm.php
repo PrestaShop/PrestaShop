@@ -111,7 +111,7 @@ class CustomerAddressFormCore extends AbstractForm
     {
         $is_valid = $this->validateFieldsValues();
 
-        if (($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this])) !== '') {
+        if (!is_null($hookReturn = Hook::exec('actionValidateCustomerAddressForm', ['form' => $this]))) {
             $is_valid &= (bool) $hookReturn;
         }
 
