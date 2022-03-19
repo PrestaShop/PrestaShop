@@ -32,7 +32,7 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 /**
- * Class CustomerNameValidator is responsilbe for doing the actual validation under CustomerName constraint.
+ * Class CustomerNameValidator is responsible for doing the actual validation under the CustomerName constraint.
  */
 class CustomerNameValidator extends ConstraintValidator
 {
