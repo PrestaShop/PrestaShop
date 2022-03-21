@@ -68,21 +68,28 @@
             <div class="widget-checkbox-inline">
               {{ form_errors(formLowStockAlert) }}
               {{ form_widget(formLowStockAlert) }}
-              <span class="help-box" 
-                    data-toggle="popover" 
-                    data-html="true" 
+              <span class="help-box"
+                    data-toggle="popover"
+                    data-html="true"
                     data-content="{{ "The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]"|trans({'[1]':'<a href=&quot;'~getAdminLink("AdminEmployees")~'&quot;>','[/1]':'</a>'}, 'Admin.Catalog.Help')|raw }}">
               </span>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <label class="form-control-label">&nbsp;</label>
+            <div class="widget-checkbox-inline">
+              {{ form_errors(formToBeRestocked) }}
+              {{ form_widget(formToBeRestocked) }}
             </div>
           </div>
         </div>
       </fieldset>
     </div>
 
-    <div id="virtual_product" 
-         data-action="{{ path('admin_product_virtual_save_action', { 'idProduct': productId }) }}" 
+    <div id="virtual_product"
+         data-action="{{ path('admin_product_virtual_save_action', { 'idProduct': productId }) }}"
          data-action-remove="{{ path('admin_product_virtual_remove_action', {'idProduct': productId }) }}">
-        
+
       <h2>{{ formVirtualProduct.vars.label }}</h2>
       <fieldset class="form-group">
         {{ form_widget(formVirtualProduct.is_virtual_file) }}

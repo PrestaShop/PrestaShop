@@ -168,6 +168,9 @@ class AdminProductWrapper
         if (!isset($combinationValues['attribute_low_stock_alert'])) {
             $combinationValues['attribute_low_stock_alert'] = false;
         }
+        if (!isset($combinationValues['attribute_to_be_restocked'])) {
+            $combinationValues['attribute_to_be_restocked'] = false;
+        }
 
         $product->updateAttribute(
             $id_product_attribute,
@@ -189,7 +192,8 @@ class AdminProductWrapper
             $combinationValues['attribute_isbn'],
             $combinationValues['attribute_low_stock_threshold'],
             $combinationValues['attribute_low_stock_alert'],
-            $combinationValues['attribute_mpn']
+            $combinationValues['attribute_mpn'],
+            $combinationValues['attribute_to_be_restocked']
         );
 
         StockAvailable::setProductDependsOnStock((int) $product->id, $product->depends_on_stock, null, $id_product_attribute);

@@ -197,6 +197,7 @@ class CombinationDataProvider
             'attribute_minimal_quantity' => $combination['minimal_quantity'],
             'attribute_low_stock_threshold' => $combination['low_stock_threshold'],
             'attribute_low_stock_alert' => (bool) $combination['low_stock_alert'],
+            'attribute_to_be_restocked' => (bool) $combination['to_be_restocked'],
             'available_date_attribute' => $combination['available_date'],
             'attribute_default' => (bool) $combination['default_on'],
             'attribute_location' => $this->productAdapter->getLocation($product->id, $combination['id_product_attribute']),

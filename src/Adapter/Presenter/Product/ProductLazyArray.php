@@ -1057,6 +1057,7 @@ class ProductLazyArray extends AbstractLazyArray
             'link',
             'link_rewrite',
             'low_stock_alert',
+            'to_be_restocked',
             'low_stock_threshold',
             'main_variants',
             'meta_description',

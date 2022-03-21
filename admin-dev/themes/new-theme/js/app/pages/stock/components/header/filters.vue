@@ -144,6 +144,25 @@
             />
           </div>
         </div>
+        <div
+        class="col-lg-4"
+        v-if="isOverview"
+        >
+          <div class="py-3">
+            <h2>{{ trans('filter_stock_needed') }}</h2>
+            <PSCheckbox
+              ref="only_restockable"
+              id="only_restockable"
+              class="mt-1"
+              @checked="onCheckboxChange"
+            >
+              <span
+                slot="label"
+                class="ml-2"
+              >{{ trans('filter_stock_show_only_restockable') }}</span>
+            </PSCheckbox>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -155,10 +174,12 @@
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
     active: number;
+    only_restockable : number;
     children: Array<StockCategory>;
     id: string;
     id_category: number;
@@ -228,6 +249,7 @@
           id_employee: this.id_employee,
           date_add: this.date_add,
           active: this.active,
+          only_restockable : this.only_restockable
         });
       },
       onChange(item: any): void {
@@ -248,12 +270,17 @@
         this.active = value;
         this.applyFilter();
       },
+      onCheckboxChange(value: any): void {
+        this.only_restockable = value.checked ? 1 : null;
+        this.applyFilter();
+      },
     },
     components: {
       FilterComponent,
       PSSelect,
       PSDatePicker,
       PSRadio,
+      PSCheckbox,
     },
     mounted() {
       this.date_add = [];
@@ -269,6 +296,7 @@
         id_employee: [] as Array<any>,
         date_add: [] as Array<any>,
         active: null,
+        only_restockable : false
       };
     },
   });

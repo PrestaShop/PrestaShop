@@ -61,6 +61,9 @@
           {{ trans('title_status') }}
         </th>
         <th class="text-center">
+          {{ trans('title_to_be_restocked') }}
+        </th>
+        <th class="text-center">
           <PSSort
             order="physical_quantity"
             @sort="sort"

@@ -203,6 +203,12 @@ class ProductCombination extends CommonAbstractType
                     new Assert\Type(['type' => 'bool']),
                 ],
             ])
+            ->add('attribute_to_be_restocked', CheckboxType::class, [
+                'label' => $this->translator->trans('This product can be re-stockable', [], 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new Assert\Type(['type' => 'bool']),
+                ],
+            ])
             ->add('available_date_attribute', DatePickerType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Availability date', [], 'Admin.Catalog.Feature'),

@@ -394,6 +394,10 @@ abstract class QueryParamsCollection
             return $this->appendSqlActiveFilter($filters, $value);
         }
 
+        if ('only_restockable' === $column) {
+            return $this->appendSqlOnlyRestockableFilter($filters, $value);
+        }
+
         if (!is_array($value)) {
             $filters[] = sprintf('AND {%s} = :%s', $column, $column);
 
@@ -488,9 +492,12 @@ abstract class QueryParamsCollection
             return $this->appendSqlActiveFilterParam($value, $sqlParams);
         }
 
+        if ('only_restockable' === $column) {
+            return $this->appendSqlOnlyRestockableFilterParam($value, $sqlParams);
+        }
+
         if (!is_array($value)) {
             $sqlParams[$column] = (int) $value;
-
             return $sqlParams;
         }
 
@@ -603,6 +610,35 @@ abstract class QueryParamsCollection
     {
         if (in_array($value, ['0', '1'])) {
             $sqlParams[':active'] = $value;
+        }
+
+        return $sqlParams;
+    }
+
+    /**
+     * @param array $filters
+     * @param string|int $only_restockable
+     *
+     * @return array
+     */
+    protected function appendSqlOnlyRestockableFilter(array $filters, $only_restockable)
+    {
+        if (in_array($only_restockable, ['0', '1'])) {
+            $filters[] = sprintf('AND %s = %s', 'pa.to_be_restocked', ':only_restockable');
+        }
+        return $filters;
+    }
+
+    /**
+     * @param int|string $value
+     * @param array $sqlParams
+     *
+     * @return mixed
+     */
+    protected function appendSqlOnlyRestockableFilterParam($value, $sqlParams)
+    {
+        if (in_array($value, ['0', '1'])) {
+            $sqlParams[':only_restockable'] = $value;
         }
 
         return $sqlParams;

@@ -64,6 +64,18 @@
       <i class="material-icons disable">close</i>
     </td>
     <td
+      v-if="product.to_be_restocked"
+      class="text-sm-center"
+    >
+      <i class="material-icons enable">check</i>
+    </td>
+    <td
+      v-else
+      class="text-sm-center"
+    >
+      <i class="material-icons disable">close</i>
+    </td>
+    <td
       class="text-sm-center"
       :class="{'stock-warning':lowStock}"
     >

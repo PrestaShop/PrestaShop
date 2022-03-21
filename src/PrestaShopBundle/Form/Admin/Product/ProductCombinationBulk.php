@@ -107,6 +107,10 @@ class ProductCombinationBulk extends CommonAbstractType
             ->add('low_stock_alert', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Send me an email when the quantity is below or equals this level', [], 'Admin.Catalog.Feature'),
+            ])
+            ->add('to_be_restocked', CheckboxType::class, [
+                'label' => $this->translator->trans('This product can be re-stockable', [], 'Admin.Catalog.Feature'),
+                'required' => false
             ]);
     }
 

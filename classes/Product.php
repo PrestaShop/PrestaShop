@@ -98,6 +98,9 @@ class ProductCore extends ObjectModel
     /** @var bool Low stock mail alert activated */
     public $low_stock_alert = false;
 
+    /** @var bool Product needs to be restocked */
+    public $to_be_restocked = true;
+
     /** @var string|array Text when in stock or array of text by id_lang */
     public $available_now;
 
@@ -511,6 +514,7 @@ class ProductCore extends ObjectModel
             'minimal_quantity' => ['type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'],
             'low_stock_threshold' => ['type' => self::TYPE_INT, 'shop' => true, 'allow_null' => true, 'validate' => 'isInt'],
             'low_stock_alert' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
+            'to_be_restocked' => ['type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'],
             'price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice', 'required' => true],
             'wholesale_price' => ['type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'],
             'unity' => ['type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isString'],
@@ -1791,7 +1795,8 @@ class ProductCore extends ObjectModel
         $isbn,
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $to_be_restocked = true
     ) {
         Tools::displayAsDeprecated();
 
@@ -1813,7 +1818,8 @@ class ProductCore extends ObjectModel
             $isbn,
             $low_stock_threshold,
             $low_stock_alert,
-            $mpn
+            $mpn,
+            $to_be_restocked
         );
 
         if (!$id_product_attribute) {
@@ -1937,7 +1943,8 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $to_be_restocked = true
     ) {
         $id_product_attribute = $this->addAttribute(
             $price,
@@ -1957,7 +1964,8 @@ class ProductCore extends ObjectModel
             $isbn,
             $low_stock_threshold,
             $low_stock_alert,
-            $mpn
+            $mpn,
+            $to_be_restocked
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
         $result = ObjectModel::updateMultishopTable('Combination', [
@@ -2126,7 +2134,8 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $to_be_restocked = true
     ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
@@ -2150,7 +2159,8 @@ class ProductCore extends ObjectModel
             $isbn,
             $low_stock_threshold,
             $low_stock_alert,
-            $mpn = null
+            $mpn = null,
+            $to_be_restocked
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
@@ -2238,7 +2248,8 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $to_be_restocked = true
     ) {
         $combination = new Combination($id_product_attribute);
 
@@ -2252,6 +2263,7 @@ class ProductCore extends ObjectModel
                 'default_on' => null !== $default,
                 'minimal_quantity' => null !== $minimal_quantity,
                 'available_date' => null !== $available_date,
+                'to_be_restocked' => null !== $to_be_restocked
             ]);
         }
 
@@ -2273,6 +2285,7 @@ class ProductCore extends ObjectModel
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
+        $combination->to_be_restocked = (bool)$to_be_restocked;
 
         if (count($id_shop_list)) {
             $combination->id_shop_list = $id_shop_list;
@@ -2350,7 +2363,8 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $to_be_restocked = true
     ) {
         if (!$this->id) {
             return;
@@ -2374,6 +2388,7 @@ class ProductCore extends ObjectModel
         $combination->minimal_quantity = (int) $minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
+        $combination->to_be_restocked = !empty($to_be_restocked);
         $combination->available_date = $available_date;
 
         if (count($id_shop_list)) {

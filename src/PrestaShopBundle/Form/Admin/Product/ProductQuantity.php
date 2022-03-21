@@ -216,6 +216,20 @@ class ProductQuantity extends CommonAbstractType
                 ]
             )
             ->add(
+                'to_be_restocked',
+                FormType\CheckboxType::class,
+                [
+                    'label' => $this->translator->trans(
+                        'This product can be re-stockable',
+                        [],
+                        'Admin.Catalog.Feature'
+                    ),
+                    'constraints' => [
+                        new Assert\Type(['type' => 'bool']),
+                    ],
+                ]
+            )
+            ->add(
                 'available_now',
                 TranslateType::class,
                 [

@@ -57,6 +57,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
             'attributes',
             'features',
             'active',
+            'only_restockable',
         ];
     }
 

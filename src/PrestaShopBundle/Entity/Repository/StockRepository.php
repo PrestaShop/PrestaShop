@@ -264,6 +264,7 @@ class StockRepository extends StockManagementRepository
           COALESCE(s.name, "N/A")                                                           AS supplier_name,
           COALESCE(ic.id_image, 0)                                                          AS product_cover_id,
           p.active,
+          pa.to_be_restocked,
           sa.quantity                                                                       AS product_available_quantity,
           sa.physical_quantity                                                              AS product_physical_quantity,
           sa.reserved_quantity                                                              AS product_reserved_quantity,

@@ -1659,6 +1659,7 @@ CREATE TABLE `PREFIX_product` (
   `product_type` ENUM(
     'standard', 'pack', 'virtual', 'combinations', ''
   ) NOT NULL DEFAULT '',
+  `to_be_restocked` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_product`),
   INDEX reference_idx(`reference`),
   INDEX supplier_reference_idx(`supplier_reference`),
@@ -1711,6 +1712,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
+  `to_be_restocked` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
   KEY `date_add` (
@@ -1741,6 +1743,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `available_date` date DEFAULT NULL,
+  `to_be_restocked` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
@@ -1766,6 +1769,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `low_stock_threshold` int(10) NULL DEFAULT NULL,
   `low_stock_alert` TINYINT(1) NOT NULL DEFAULT 0,
   `available_date` date DEFAULT NULL,
+  `to_be_restocked` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (
     `id_product_attribute`, `id_shop`
   ),

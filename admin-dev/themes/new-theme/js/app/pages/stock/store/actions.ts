@@ -42,6 +42,7 @@ export const getStock = ({commit}: {commit: Commit}, payload: Record<string, any
       supplier_id: payload.suppliers ? payload.suppliers : [],
       category_id: payload.categories ? payload.categories : [],
       active: payload.active !== 'null' ? payload.active : [],
+      only_restockable: payload.only_restockable !== 'null' ? payload.only_restockable : [],
       low_stock: payload.low_stock,
     },
   }).then((response: Record<string, any>): void => {
