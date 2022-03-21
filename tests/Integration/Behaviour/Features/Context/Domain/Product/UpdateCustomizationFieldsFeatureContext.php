@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -56,9 +57,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         $fieldReferences = [];
 
         foreach ($customizationFields as $customizationField) {
-            $addedByModule = isset($customizationField['added by module']) ?
-                PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
-                false;
+            $addedByModule = isset($customizationField['added by module']) && PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']);
             $fieldReference = $customizationField['reference'];
             $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
 
@@ -69,6 +68,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 'localized_names' => $customizationField['name'],
                 'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
                 'added_by_module' => $addedByModule,
+                'modify_all_shops_name' => $customizationField['modify_all_shops_name'] === 'true',
             ];
         }
 
@@ -85,8 +85,10 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param int $nameLength
      */
-    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength)
-    {
+    public function addCustomizationFieldWithTooLongName(
+        string $productReference,
+        int $nameLength
+    ): void {
         $fieldsForUpdate = [];
         foreach (Language::getIDs() as $langId) {
             $langId = (int) $langId;
@@ -98,11 +100,15 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 'localized_names' => [
                     $langId => PrimitiveUtils::generateRandomString($nameLength),
                 ],
+                'modify_all_shops_name' => true,
             ];
         }
 
         try {
-            $this->updateProductCustomizationFields($productReference, ['name'], $fieldsForUpdate);
+            $this->updateProductCustomizationFields(
+                $productReference, ['name'],
+                $fieldsForUpdate
+            );
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -287,12 +293,16 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param array $fieldReferences
      * @param array $fieldsForUpdate
      */
-    private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
-    {
+    private function updateProductCustomizationFields(
+        string $productReference,
+        array $fieldReferences,
+        array $fieldsForUpdate
+    ): void {
         try {
             $newCustomizationFieldIds = $this->getCommandBus()->handle(new SetProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
-                $fieldsForUpdate
+                $fieldsForUpdate,
+                ShopConstraint::allShops()
             ));
 
             Assert::assertSameSize(

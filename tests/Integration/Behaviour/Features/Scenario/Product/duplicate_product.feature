@@ -100,8 +100,8 @@ Feature: Duplicate product from Back Office (BO).
     And I set following related products to product product1:
       | product2 |
     And I update product product1 with following customization fields:
-      | reference    | type | name[en-US]               | name[fr-FR]                         | is required |
-      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        |
+      | reference    | type | name[en-US]               | name[fr-FR]                         | is required | modify_all_shops_name |
+      | customField1 | text | text on top of left lense | texte en haut de la lentille gauche | true        | true                  |
     And I add new attachment "att1" with following properties:
       | description[en-US] | puffin photo nr1 |
       | description[fr-FR] | macareux         |

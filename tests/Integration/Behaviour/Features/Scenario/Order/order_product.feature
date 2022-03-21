@@ -23,8 +23,8 @@ Feature: Order from Back Office (BO)
       | name[en-US] | Customizable Postcard |
       | type        | standard              |
     And I update product product12345 with following customization fields:
-      | reference   | type | name[en-US] | is required |
-      | customField | text | back image  | false       |
+      | reference   | type | name[en-US] | is required | modify_all_shops_name |
+      | customField | text | back image  | false       | true                  |
     And I update product "product12345" stock with following information:
       | out_of_stock_type             | available |
     And I update product "product12345" details with following values:
