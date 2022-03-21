@@ -28,13 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
-use LogicException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 abstract class AbstractGetStockMovementHistory
 {
-    protected const DEFAULT_LIMIT = 5;
+    public const DEFAULT_LIMIT = 5;
 
     /**
      * @var ShopId
@@ -53,7 +53,7 @@ abstract class AbstractGetStockMovementHistory
 
     /**
      * @throws ShopException
-     * @throws LogicException
+     * @throws InvalidArgumentException
      */
     public function __construct(
         int $shopId,
@@ -63,12 +63,12 @@ abstract class AbstractGetStockMovementHistory
         $this->shopId = new ShopId($shopId);
 
         if ($offset < 0) {
-            throw new LogicException('Offset should be a positive integer');
+            throw new InvalidArgumentException('Offset should be a positive integer');
         }
         $this->offset = $offset;
 
         if ($limit < 0) {
-            throw new LogicException('Limit should be a positive integer');
+            throw new InvalidArgumentException('Limit should be a positive integer');
         }
         $this->limit = $limit;
     }

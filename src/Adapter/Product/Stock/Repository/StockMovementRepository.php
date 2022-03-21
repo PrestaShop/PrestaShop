@@ -118,9 +118,9 @@ class StockMovementRepository
                 ->setParameter('stockIds', $filter->getStockIdsAsString())
             ;
         }
-        if (null !== $filter->getIsOrder()) {
+        if (null !== $filter->isGroupedByOrderAssociation()) {
             $queryBuilder->andWhere(
-                'sm.id_order IS ' . ($filter->getIsOrder() ? 'NOT NULL' : 'NULL')
+                'sm.id_order IS ' . ($filter->isGroupedByOrderAssociation() ? 'NOT NULL' : 'NULL')
             );
         }
 
@@ -143,6 +143,21 @@ class StockMovementRepository
         $groupingQueryBuilder = $this->createFilterQueryBuilder($singleFilter);
         $groupingCondition = (string) $groupingQueryBuilder->getQueryPart('where');
         $queryBuilder
+//            ->addSelect(
+//                sprintf(
+//                    'MIN(@%2$s := CASE WHEN @%2$s IS NULL THEN %1$s WHEN %3$s THEN %1$s ELSE @%2$s END) %2$s',
+//                    $pkColumn,
+//                    $groupingIdColumn,
+//                    $groupingCondition
+//                ),
+//                sprintf(
+//                    'CASE WHEN %s THEN CONCAT(\'single-\', %s) ELSE CONCAT(\'range-\', @%s) END %s',
+//                    $groupingCondition,
+//                    $pkColumn,
+//                    $groupingIdColumn,
+//                    $groupingNameColumn
+//                )
+//            )
             ->addSelect(
                 implode(' ', [
                     "MIN(@$groupingIdColumn := CASE",

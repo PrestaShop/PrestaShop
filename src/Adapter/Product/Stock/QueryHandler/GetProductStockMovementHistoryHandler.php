@@ -35,7 +35,7 @@ class GetProductStockMovementHistoryHandler extends AbstractGetStockMovementHist
 {
     public function handle(GetProductStockMovementHistory $query): array
     {
-        return $this->createStockMovementHistory(
+        return $this->getStockMovementHistory(
             $this->stockAvailableRepository->getStockIdByProduct(
                 $query->getProductId(),
                 $query->getShopId()

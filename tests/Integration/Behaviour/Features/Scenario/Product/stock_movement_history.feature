@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags stock-movement-history
 @restore-all-tables-before-feature
 @clear-cache-before-feature
-@legacy-product-type
+#@clear-cache-after-feature
 @stock-movement-history
 Feature: Search stock movement history from Back Office (BO)
   As a BO user

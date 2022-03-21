@@ -57,13 +57,13 @@ abstract class AbstractGetStockMovementHistoryHandler
     /**
      * @return StockMovementHistory[]
      */
-    protected function createStockMovementHistory(StockId $stockId, int $offset, int $limit): array
+    protected function getStockMovementHistory(StockId $stockId, int $offset, int $limit): array
     {
         $historySettings = new StockMovementHistorySettings();
         // Filter stock movements by stock ID
         $historySettings->getMainFilter()->setStockIds($stockId);
         // Select stock movements without order as single histories, excluded from groupings
-        $historySettings->getSingleFilter()->setIsOrder(false);
+        $historySettings->getSingleFilter()->setGroupedByOrderAssociation(false);
         // Exclude stock movement groupings with zero quantity
         $historySettings->excludeGroupingWithZeroQuantity(true);
 

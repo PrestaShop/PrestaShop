@@ -282,15 +282,16 @@ class StockMovementHistory
     {
         $dates = $this->getDates();
 
-        if (array_key_exists($key, $dates)) {
-            return $dates[$key];
+        if (!array_key_exists($key, $dates)) {
+            throw new RuntimeException(
+                sprintf(
+                    'Invalid date key "%s" provided, available keys: %s',
+                    $key,
+                    implode(', ', array_keys($dates))
+                )
+            );
         }
-        throw new RuntimeException(
-            sprintf(
-                'Invalid date key "%s" provided, available keys: %s',
-                $key,
-                implode(', ', array_keys($dates))
-            )
-        );
+
+        return $dates[$key];
     }
 }

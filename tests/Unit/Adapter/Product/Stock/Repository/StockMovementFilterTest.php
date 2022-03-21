@@ -57,9 +57,9 @@ class StockMovementFilterTest extends TestCase
      */
     public function testItReturnsIsOrder(?bool $isOrder): void
     {
-        $filter = (new StockMovementFilter())->setIsOrder($isOrder);
+        $filter = (new StockMovementFilter())->setGroupedByOrderAssociation($isOrder);
 
-        Assert::assertSame($isOrder, $filter->getIsOrder());
+        Assert::assertSame($isOrder, $filter->isGroupedByOrderAssociation());
     }
 
     public function getIsOrderValues(): Generator

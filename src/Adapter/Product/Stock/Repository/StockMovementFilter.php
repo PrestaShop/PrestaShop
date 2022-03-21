@@ -40,7 +40,7 @@ class StockMovementFilter
     /**
      * @var bool|null
      */
-    protected $isOrder = null;
+    protected $isGroupedByOrderAssociation = null;
 
     public function getStockIdsAsString(string $separator = ','): string
     {
@@ -70,14 +70,14 @@ class StockMovementFilter
         return $this;
     }
 
-    public function getIsOrder(): ?bool
+    public function isGroupedByOrderAssociation(): ?bool
     {
-        return $this->isOrder;
+        return $this->isGroupedByOrderAssociation;
     }
 
-    public function setIsOrder(?bool $isOrder): self
+    public function setGroupedByOrderAssociation(?bool $isGroupedByOrderAssociation): self
     {
-        $this->isOrder = $isOrder;
+        $this->isGroupedByOrderAssociation = $isGroupedByOrderAssociation;
 
         return $this;
     }

@@ -35,7 +35,7 @@ class GetCombinationStockMovementHistoryHandler extends AbstractGetStockMovement
 {
     public function handle(GetCombinationStockMovementHistory $query): array
     {
-        return $this->createStockMovementHistory(
+        return $this->getStockMovementHistory(
             $this->stockAvailableRepository->getStockIdByCombination(
                 $query->getCombinationId(),
                 $query->getShopId()

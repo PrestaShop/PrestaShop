@@ -1,7 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combination-stock-movement-history
 @restore-all-tables-before-feature
 @clear-cache-before-feature
-@legacy-product-type
+#@clear-cache-after-feature
 @product-combination
 @combination-stock-movement-history
 Feature: Search stock movement history from Back Office (BO)
@@ -17,8 +17,6 @@ Feature: Search stock movement history from Back Office (BO)
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And a carrier "default_carrier" with name "My carrier" exists
-#    Given there is a product in the catalog named "product1" with a price of 17.0 and 1000 items in stock
-#    And product "product1" has a combination named "combination1" with 100 items in stock
     Given I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
@@ -43,9 +41,11 @@ Feature: Search stock movement history from Back Office (BO)
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    Given I update combination "product1SBlack" stock with following details:
+
+  Scenario: I can get the last 5 rows of stock movement history by default and I can paginate
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 100 |
-    Given I create an empty cart "dummy_cart1" for customer "testCustomer"
+    When I create an empty cart "dummy_cart1" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart1"
     And I add 2 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart1"
     And I add order "bo_order1" with the following details:
@@ -53,7 +53,7 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order1                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I create an empty cart "dummy_cart2" for customer "testCustomer"
+    When I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
     And I add 3 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart2"
     And I add order "bo_order2" with the following details:
@@ -61,9 +61,9 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order2                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 10 |
-    Given I create an empty cart "dummy_cart3" for customer "testCustomer"
+    When I create an empty cart "dummy_cart3" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
     And I add 4 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart3"
     And I add order "bo_order3" with the following details:
@@ -71,7 +71,7 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order3                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I create an empty cart "dummy_cart4" for customer "testCustomer"
+    When I create an empty cart "dummy_cart4" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart4"
     And I add 5 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart4"
     And I add order "bo_order4" with the following details:
@@ -79,9 +79,9 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order4                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I update combination "product1SBlack" stock with following details:
+    When I update combination "product1SBlack" stock with following details:
       | delta quantity | 5 |
-    Given I create an empty cart "dummy_cart5" for customer "testCustomer"
+    When I create an empty cart "dummy_cart5" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart5"
     And I add 3 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart5"
     And I add order "bo_order5" with the following details:
@@ -89,7 +89,7 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order5                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I create an empty cart "dummy_cart6" for customer "testCustomer"
+    When I create an empty cart "dummy_cart6" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart6"
     And I add 1 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart6"
     And I add order "bo_order6" with the following details:
@@ -97,7 +97,7 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order6                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-    Given I create an empty cart "dummy_cart7" for customer "testCustomer"
+    When I create an empty cart "dummy_cart7" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart7"
     And I add 2 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart7"
     And I add order "bo_order7" with the following details:
@@ -105,8 +105,6 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order7                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
-
-  Scenario: I can get the last 5 rows of stock movement history by default and I can paginate
     When I search stock movement history of combination "product1SBlack" I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -6             |

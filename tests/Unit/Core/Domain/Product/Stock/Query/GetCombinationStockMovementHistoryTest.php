@@ -28,12 +28,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Domain\Product\Stock\Query;
 
 use Generator;
-use LogicException;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class GetCombinationStockMovementHistoryTest extends TestCase
 {
@@ -124,14 +124,14 @@ class GetCombinationStockMovementHistoryTest extends TestCase
             'limit' => 0,
         ];
         yield 'offset is negative' => [
-            'exceptionClass' => LogicException::class,
+            'exceptionClass' => InvalidArgumentException::class,
             'combinationId' => 1,
             'shopId' => 1,
             'offset' => -1,
             'limit' => 0,
         ];
         yield 'limit is negative' => [
-            'exceptionClass' => LogicException::class,
+            'exceptionClass' => InvalidArgumentException::class,
             'combinationId' => 1,
             'shopId' => 1,
             'offset' => 0,
