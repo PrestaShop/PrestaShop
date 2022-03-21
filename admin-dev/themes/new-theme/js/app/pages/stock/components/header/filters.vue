@@ -271,7 +271,7 @@
         this.applyFilter();
       },
       onCheckboxChange(value: any): void {
-        this.only_restockable = value.checked ? 1 : null;
+        this.only_restockable = value.checked ? 1 : 0;
         this.applyFilter();
       },
     },
@@ -296,7 +296,7 @@
         id_employee: [] as Array<any>,
         date_add: [] as Array<any>,
         active: null,
-        only_restockable : false
+        only_restockable : 0
       };
     },
   });
