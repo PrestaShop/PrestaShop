@@ -57,7 +57,7 @@ admin_states_delete:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\StateController::deleteAction
     _legacy_controller: AdminStates
-#    _legacy_link: AdminStates:deletestate
+    #_ legacy_link: AdminStates:deletestate
     _legacy_parameters:
       id_state: stateId
   requirements:
