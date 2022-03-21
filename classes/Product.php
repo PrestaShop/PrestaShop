@@ -3920,7 +3920,7 @@ class ProductCore extends ObjectModel
             $price -= $group_reduction;
         }
 
-        \Hook::exec('actionProductPriceCalculation', [
+        Hook::exec('actionProductPriceCalculation', [
             'id_shop' => $id_shop,
             'id_product' => $id_product,
             'id_product_attribute' => $id_product_attribute,
