@@ -38,6 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -56,9 +58,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
         $fieldReferences = [];
 
         foreach ($customizationFields as $customizationField) {
-            $addedByModule = isset($customizationField['added by module']) ?
-                PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']) :
-                false;
+            $addedByModule = isset($customizationField['added by module']) && PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['added by module']);
             $fieldReference = $customizationField['reference'];
             $id = $this->getSharedStorage()->exists($fieldReference) ? $this->getSharedStorage()->get($fieldReference) : null;
 
@@ -69,6 +69,7 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 'localized_names' => $customizationField['name'],
                 'is_required' => PrimitiveUtils::castStringBooleanIntoBoolean($customizationField['is required']),
                 'added_by_module' => $addedByModule,
+                'modify_all_shops_name' => $customizationField['modify_all_shops_name'] === 'true',
             ];
         }
 
@@ -85,8 +86,10 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param string $productReference
      * @param int $nameLength
      */
-    public function addCustomizationFieldWithTooLongName(string $productReference, int $nameLength)
-    {
+    public function addCustomizationFieldWithTooLongName(
+        string $productReference,
+        int $nameLength
+    ): void {
         $fieldsForUpdate = [];
         foreach (Language::getIDs() as $langId) {
             $langId = (int) $langId;
@@ -98,11 +101,15 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                 'localized_names' => [
                     $langId => PrimitiveUtils::generateRandomString($nameLength),
                 ],
+                'modify_all_shops_name' => true,
             ];
         }
 
         try {
-            $this->updateProductCustomizationFields($productReference, ['name'], $fieldsForUpdate);
+            $this->updateProductCustomizationFields(
+                $productReference, ['name'],
+                $fieldsForUpdate
+            );
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
@@ -169,23 +176,66 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      */
     public function assertCustomizationFields(string $productReference, TableNode $table)
     {
-        $data = $this->localizeByColumns($table);
-        /** @var CustomizationField[] $actualFields */
+        $this->assertCustomizationFieldsForShopIds($productReference, [new ShopId($this->getDefaultShopId())], $table);
+    }
+
+    /**
+     * @Then product :productReference should have following customization fields for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $table
+     */
+    public function assertCustomizationFieldsForShops(string $productReference, string $shopReferences, TableNode $table)
+    {
+        $shopIds = array_map(function ($shopReference) {
+            return $this->getSharedStorage()->get($shopReference);
+        }, explode(',', $shopReferences));
+        $this->assertCustomizationFieldsForShopIds(
+            $productReference,
+            array_map(
+                static function (int $shopId): ShopId {
+                    return new ShopId($shopId);
+                },
+                $shopIds
+            ),
+            $table
+        );
+    }
+
+    /**
+     * @param string $productReference
+     * @param ShopId[] $shopIds
+     * @param TableNode $table
+     */
+    public function assertCustomizationFieldsForShopIds(string $productReference, array $shopIds, TableNode $table)
+    {
+        $expectedData = $this->localizeByColumns($table);
         $actualFields = $this->getProductCustomizationFields($productReference);
         $notFoundExpectedFields = [];
-
-        foreach ($data as $expectedField) {
-            $expectedId = $this->getSharedStorage()->get($expectedField['reference']);
+        $foundAllExpectedField = true;
+        foreach ($actualFields as $key => $actualField) {
+            if (!in_array(
+                $actualField->getShopId(),
+                array_map(
+                    static function (ShopId $shopId): int {
+                        return $shopId->getValue();
+                    },
+                    $shopIds
+                )
+            )) {
+                continue;
+            }
             $foundExpectedField = false;
-
-            foreach ($actualFields as $key => $actualField) {
+            foreach ($expectedData as $expectedDatum) {
+                $expectedId = $this->getSharedStorage()->get($expectedDatum['reference']);
                 if ($expectedId === $actualField->getCustomizationFieldId()) {
                     $foundExpectedField = true;
-                    $expectedType = $expectedField['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
-                    $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['is required']);
+                    $expectedType = $expectedDatum['type'] === 'file' ? CustomizationFieldType::TYPE_FILE : CustomizationFieldType::TYPE_TEXT;
+                    $expectedRequired = PrimitiveUtils::castStringBooleanIntoBoolean($expectedDatum['is required']);
                     Assert::assertEquals($expectedType, $actualField->getType(), 'Unexpected customization type');
                     Assert::assertEquals(
-                        $expectedField['name'],
+                        $expectedDatum['name'],
                         $actualField->getLocalizedNames(),
                         sprintf('Unexpected product "%s" customization field name', $productReference)
                     );
@@ -200,8 +250,8 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                         );
                     }
 
-                    if (isset($expectedField['added by module'])) {
-                        $expectedByModule = PrimitiveUtils::castStringBooleanIntoBoolean($expectedField['added by module']);
+                    if (isset($expectedDatum['added by module'])) {
+                        $expectedByModule = PrimitiveUtils::castStringBooleanIntoBoolean($expectedDatum['added by module']);
                         if ($expectedByModule !== $actualField->isAddedByModule()) {
                             throw new RuntimeException(
                                 sprintf(
@@ -214,21 +264,18 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
                     }
                     //unset this asserted customization field so we can check if there any left after loop
                     unset($actualFields[$key]);
-
-                    continue;
                 }
             }
-
-            if (!$foundExpectedField) {
-                $notFoundExpectedFields[] = $expectedField;
+            if($foundExpectedField === false) {
+                $notFoundExpectedFields[] = $expectedDatum;
+                $foundAllExpectedField = false;
             }
         }
-
-        if (!empty($notFoundExpectedFields)) {
+        if (!$foundAllExpectedField) {
             throw new RuntimeException(sprintf(
                 'Following customization fields were not found for product %s: %s',
                 $productReference,
-                var_export($notFoundExpectedFields)
+                print_r($notFoundExpectedFields, true)
             ));
         }
 
@@ -287,12 +334,16 @@ class UpdateCustomizationFieldsFeatureContext extends AbstractProductFeatureCont
      * @param array $fieldReferences
      * @param array $fieldsForUpdate
      */
-    private function updateProductCustomizationFields(string $productReference, array $fieldReferences, array $fieldsForUpdate): void
-    {
+    private function updateProductCustomizationFields(
+        string $productReference,
+        array $fieldReferences,
+        array $fieldsForUpdate
+    ): void {
         try {
             $newCustomizationFieldIds = $this->getCommandBus()->handle(new SetProductCustomizationFieldsCommand(
                 $this->getSharedStorage()->get($productReference),
-                $fieldsForUpdate
+                $fieldsForUpdate,
+                ShopConstraint::allShops()
             ));
 
             Assert::assertSameSize(

@@ -31,7 +31,9 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\RemoveAllCustomizationFieldsFromProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Command\SetProductCustomizationFieldsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\CustomizationFieldsCommandsBuilder;
+use PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension;
 
 class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -42,7 +44,7 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
 
     public function setUp(): void
     {
-        $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandsBuilder();
+        $this->customizationFieldsCommandBuilder = new CustomizationFieldsCommandsBuilder(ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX);
     }
 
     /**
@@ -53,7 +55,11 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands($this->getProductId(), $formData);
+        $builtCommands = $this->customizationFieldsCommandBuilder->buildCommands(
+            $this->getProductId(),
+            $formData,
+            ShopConstraint::allShops()
+        );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -120,7 +126,8 @@ class CustomizationFieldsCommandsBuilderTest extends AbstractProductCommandBuild
                     'id' => null,
                     'added_by_module' => false,
                 ],
-            ]
+            ],
+            ShopConstraint::allShops()
         );
 
         yield [
