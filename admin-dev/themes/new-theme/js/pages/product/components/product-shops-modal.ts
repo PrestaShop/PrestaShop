@@ -35,7 +35,7 @@ export default class ProductShopsModal {
   }
 
   private init(): void {
-    $(ProductMap.productShopsButton).on('click', (event: JQuery.ClickEvent) => {
+    $(ProductMap.shops.modalButtons).on('click', (event: JQuery.ClickEvent) => {
       event.preventDefault();
       const $link = $(event.target);
       const linkUrl = `${$link.prop('href')}&liteDisplaying=1`;
@@ -46,12 +46,13 @@ export default class ProductShopsModal {
 
   private openCreationModal(linkUrl: string): void {
     const iframeModal = new FormIframeModal({
-      id: 'modal-product-shops',
-      formSelector: 'form[name="product_shops"]',
+      id: ProductMap.shops.modalId,
+      formSelector: ProductMap.shops.form,
       formUrl: linkUrl,
       closable: true,
-      // We override the body selector so that the modal keeps the size of the initial create form even after submit
-      // autoSizeContainer: '.create-product-form',
+      // We override the body selector so that the modal keeps the size of the initial create form even after submit (success notifications
+      // are not computed in the size)
+      autoSizeContainer: ProductMap.shops.modalSizeContainer,
       onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes) {
           const successAlertsCount = Number(dataAttributes.alertsSuccess);
