@@ -56,7 +56,12 @@ export default {
     createModalSelector: '#create_product_type',
     form: 'form.product-form',
   },
-  productShopsButton: 'a.product-shops-action',
+  shops: {
+    modalButtons: 'a.product-shops-action',
+    modalId: 'modal-product-shops',
+    form: 'form[name="product_shops"]',
+    modalSizeContainer: '.product-shops-form',
+  },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
   navigationBar: '#form-nav',
