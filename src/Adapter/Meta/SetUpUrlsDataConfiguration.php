@@ -105,7 +105,7 @@ final class SetUpUrlsDataConfiguration extends AbstractMultistoreConfiguration
             $shopConstraint = $this->getShopConstraint();
 
             if (!$this->htaccessFileGenerator->generateFile($configuration['disable_apache_multiview'])) {
-                $configuration['friendly_url'] = 0;
+                $configuration['friendly_url'] = false;
 
                 $errorMessage = $this->translator
                     ->trans(
