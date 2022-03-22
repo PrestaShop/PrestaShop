@@ -246,9 +246,9 @@ class Tools
      *
      * @throws \PrestaShopException
      */
-    public function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    public function displayDate($date, $full = false)
     {
-        return LegacyTools::displayDate($date, $id_lang, $full, $separator);
+        return LegacyTools::displayDate($date, $full);
     }
 
     /**

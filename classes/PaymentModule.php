@@ -670,7 +670,7 @@ abstract class PaymentModuleCore extends Module
                         '{invoice_other}' => $invoice->other,
                         '{order_name}' => $order->getUniqReference(),
                         '{id_order}' => $order->id,
-                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, true),
+                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), true),
                         '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
                         '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
                         '{products}' => $product_list_html,

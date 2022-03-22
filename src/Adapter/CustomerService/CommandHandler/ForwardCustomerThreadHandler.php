@@ -235,7 +235,7 @@ final class ForwardCustomerThreadHandler implements ForwardCustomerThreadHandler
             );
         }
 
-        $message['date_add'] = Tools::displayDate($message['date_add'], null, true);
+        $message['date_add'] = Tools::displayDate($message['date_add'], true);
         $message['user_agent'] = strip_tags($message['user_agent']);
         $message['message'] = $this->replaceUrlsWithTags($message['message']);
 
