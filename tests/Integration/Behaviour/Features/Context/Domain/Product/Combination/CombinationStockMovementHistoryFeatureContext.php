@@ -99,7 +99,7 @@ class CombinationStockMovementHistoryFeatureContext extends AbstractCombinationF
                     $stockMovementHistory->getType()
                 )
             );
-            Assert::assertSame(
+            Assert::assertEquals(
                 $tableRow['first_name'],
                 $stockMovementHistory->getEmployeeFirstName(),
                 sprintf(
@@ -108,7 +108,7 @@ class CombinationStockMovementHistoryFeatureContext extends AbstractCombinationF
                     $stockMovementHistory->getEmployeeFirstName()
                 )
             );
-            Assert::assertSame(
+            Assert::assertEquals(
                 $tableRow['last_name'],
                 $stockMovementHistory->getEmployeeLastName(),
                 sprintf(

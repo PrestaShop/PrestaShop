@@ -105,7 +105,7 @@ abstract class AbstractGetStockMovementHistoryHandler
             explode(',', $historyRow['id_stock_list']),
             explode(',', $historyRow['id_order_list']),
             explode(',', $historyRow['id_employee_list']),
-            $historyRow['delta_quantity']
+            (int) $historyRow['delta_quantity']
         );
     }
 }

@@ -99,7 +99,7 @@ class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
                     $stockMovementHistory->getType()
                 )
             );
-            Assert::assertSame(
+            Assert::assertEquals(
                 $tableRow['first_name'],
                 $stockMovementHistory->getEmployeeFirstName(),
                 sprintf(
@@ -108,7 +108,7 @@ class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
                     $stockMovementHistory->getEmployeeFirstName()
                 )
             );
-            Assert::assertSame(
+            Assert::assertEquals(
                 $tableRow['last_name'],
                 $stockMovementHistory->getEmployeeLastName(),
                 sprintf(
