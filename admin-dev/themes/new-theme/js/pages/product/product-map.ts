@@ -54,7 +54,9 @@ export default {
   create: {
     newProductButton: '.new-product-button',
     createModalSelector: '#create_product_type',
+    modalId: 'modal-create-product',
     form: 'form.product-form',
+    modalSizeContainer: '.create-product-form',
   },
   shops: {
     modalButtons: 'a.product-shops-action',
