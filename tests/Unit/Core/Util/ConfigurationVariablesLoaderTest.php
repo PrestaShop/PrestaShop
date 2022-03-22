@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Util\ConfigurationVariablesLoader;
 
 class ConfigurationVariablesLoaderTest extends TestCase
 {
-    public function testLoadEnvVariablesSetValuesWhenParametersAreMissing(): void
+    public function testLoadEnvironmentVariablesSetValuesWhenParametersAreMissing(): void
     {
         $envFile = $this->createBasicEnvFile();
 
@@ -65,10 +65,10 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'use_debug_toolbar' => 'true',
                 ],
             ],
-            $configurationVariablesLoader->loadEnvVariables([]));
+            $configurationVariablesLoader->loadEnvironmentVariables([]));
     }
 
-    public function testLoadEnvVariablesReturnsEmptyParametersWhenParametersAreEmpty(): void
+    public function testLoadEnvironmentVariablesReturnsEmptyParametersWhenParametersAreEmpty(): void
     {
         $envFile = $this->createBasicEnvFile();
 
@@ -98,10 +98,10 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'ps_creation_date' => '2021-01-17',
                     'use_debug_toolbar' => 'true',
                 ],
-            ], $configurationVariablesLoader->loadEnvVariables(['parameters' => []]));
+            ], $configurationVariablesLoader->loadEnvironmentVariables(['parameters' => []]));
     }
 
-    public function testLoadEnvVariablesReplacedAllowedParameters(): void
+    public function testLoadEnvironmentVariablesReplacedAllowedParameters(): void
     {
         $envFile = $this->createEnvFile('PS_DATABASE_PORT=33123
 PS_DATABASE_NAME=test_database
@@ -137,7 +137,7 @@ PS_CREATION_DATE=2021-01-01
                     'ps_creation_date' => '2021-01-01',
                 ],
             ],
-            $configurationVariablesLoader->loadEnvVariables(
+            $configurationVariablesLoader->loadEnvironmentVariables(
                 [
                     'parameters' => [
                         'database_host' => '192.168.1.1',

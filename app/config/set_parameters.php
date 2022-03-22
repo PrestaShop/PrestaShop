@@ -47,7 +47,7 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
 if (isset($container) && $container instanceof Container) {
     if (defined('_PS_ENV_VARS_FILE_')) {
         $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
-        $parameters = $configurationVariablesLoader->loadEnvVariables($parameters);
+        $parameters = $configurationVariablesLoader->loadEnvironmentVariables($parameters);
     }
 
     foreach ($parameters['parameters'] as $key => $value) {

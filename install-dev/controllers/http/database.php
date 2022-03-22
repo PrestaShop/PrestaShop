@@ -201,7 +201,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
             if (defined('_PS_ENV_VARS_FILE_')) {
                 $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
-                $parameters = $configurationVariablesLoader->loadEnvVariables($parameters);
+                $parameters = $configurationVariablesLoader->loadEnvironmentVariables($parameters);
             }
 
             $this->database_server = $parameters['parameters']['database_host'];

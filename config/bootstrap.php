@@ -92,7 +92,7 @@ if ($lastParametersModificationTime) {
 
     if (defined('_PS_ENV_VARS_FILE_')) {
         $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
-        $config = $configurationVariablesLoader->loadEnvVariables($config);
+        $config = $configurationVariablesLoader->loadEnvironmentVariables($config);
     }
 
     $database_host = $config['parameters']['database_host'];

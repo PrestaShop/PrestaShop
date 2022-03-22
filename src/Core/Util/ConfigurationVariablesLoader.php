@@ -60,7 +60,7 @@ class ConfigurationVariablesLoader
         (new Dotenv(true))->loadEnv($envFilePath);
     }
 
-    public function loadEnvVariables(array $parameters): array
+    public function loadEnvironmentVariables(array $parameters): array
     {
         if (!isset($parameters['parameters'])) {
             $parameters['parameters'] = [];
