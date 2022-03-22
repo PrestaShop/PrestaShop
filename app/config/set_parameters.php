@@ -25,8 +25,7 @@
  */
 
 use PrestaShop\PrestaShop\Core\Util\ConfigurationVariablesLoader;
-use PrestaShopBundle\Install\Upgrade;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 $parametersFilepath = __DIR__  . '/parameters.php';
 $parameters = require $parametersFilepath;
@@ -44,7 +43,7 @@ if (!defined('_PS_IN_TEST_') && isset($_SERVER['argv'])) {
     }
 }
 
-if (isset($container) && $container instanceof Container) {
+if (isset($container) && $container instanceof ContainerInterface) {
     if (defined('_PS_ENV_VARS_FILE_')) {
         $configurationVariablesLoader = new ConfigurationVariablesLoader(_PS_ENV_VARS_FILE_);
         $parameters = $configurationVariablesLoader->loadEnvironmentVariables($parameters);
