@@ -70,7 +70,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @return HtaccessFileGenerator
      */
-    protected function createHtaccessFileGeneratorMock()
+    protected function createHtaccessFileGeneratorMock(): HtaccessFileGenerator
     {
         $stub = $this->getMockBuilder(HtaccessFileGenerator::class)
             ->disableOriginalConstructor()
@@ -85,7 +85,7 @@ class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @return TranslatorInterface
      */
-    protected function createTranslatorMock()
+    protected function createTranslatorMock(): TranslatorInterface
     {
         return $this->getMockBuilder(TranslatorInterface::class)
             ->disableOriginalConstructor()
