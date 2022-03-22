@@ -24,7 +24,9 @@
  */
 import Router from '@components/router';
 import ProductMap from '@pages/product/product-map';
+import ProductEventMap from '@pages/product/product-event-map';
 import {FormIframeModal} from '@components/modal';
+import IframeEvent from '@components/modal/iframe-event';
 
 export default class ProductShopsModal {
   private router: Router;
@@ -67,6 +69,11 @@ export default class ProductShopsModal {
             iframeModal.showLoading();
             window.location.href = editUrl;
           }
+        }
+      },
+      onIframeEvent: (event: IframeEvent) => {
+        if (event.name === ProductEventMap.cancelProductShops) {
+          iframeModal.hide();
         }
       },
     });
