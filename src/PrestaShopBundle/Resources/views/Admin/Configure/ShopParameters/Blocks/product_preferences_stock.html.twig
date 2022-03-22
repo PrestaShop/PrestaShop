@@ -63,7 +63,7 @@
         {{ form_row(stockForm.display_last_quantities) }}
 
         <div class="form-group row">
-          {{ ps.label_with_help(('Order out-of-stock products'|trans), ('By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Allow ordering of out-of-stock products'|trans), ('By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'|trans({'%add_to_cart_label%': 'Add to cart'|trans({}, 'Shop.Theme.Actions')}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(stockForm.allow_ordering_oos) }}
             {{ form_widget(stockForm.allow_ordering_oos) }}
