@@ -181,10 +181,10 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $birthday = $this->translator->trans('Unknown', [], 'Admin.Orderscustomers.Feature');
         }
 
-        $registrationDate = Tools::displayDate($customer->date_add, null, true);
-        $lastUpdateDate = Tools::displayDate($customer->date_upd, null, true);
+        $registrationDate = Tools::displayDate($customer->date_add, true);
+        $lastUpdateDate = Tools::displayDate($customer->date_upd, true);
         $lastVisitDate = $customerStats['last_visit'] ?
-            Tools::displayDate($customerStats['last_visit'], null, true) :
+            Tools::displayDate($customerStats['last_visit'], true) :
             $this->translator->trans('Never', [], 'Admin.Global');
 
         $customerShop = new Shop($customer->id_shop);
@@ -311,7 +311,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
             $cart = new Cart((int) $row['id_cart']);
             $customerCarts[] = new CartInformation(
                 sprintf('%06d', $row['id_cart']),
-                Tools::displayDate($row['date_add'], null, true),
+                Tools::displayDate($row['date_add'], true),
                 $this->locale->formatPrice($cart->getOrderTotal(true), $row['currency_iso_code']),
                 $row['carrier_name']
             );
@@ -334,7 +334,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
         foreach ($products as $product) {
             $boughtProducts[] = new BoughtProductInformation(
                 (int) $product['id_order'],
-                Tools::displayDate($product['date_add'], null, false),
+                Tools::displayDate($product['date_add'], false),
                 $product['product_name'],
                 $product['product_quantity']
             );
@@ -415,7 +415,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
                 (int) $message['id_customer_thread'],
                 substr(strip_tags(html_entity_decode($message['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75),
                 $status,
-                Tools::displayDate($message['date_add'], null, true)
+                Tools::displayDate($message['date_add'], true)
             );
         }
 
@@ -460,7 +460,7 @@ final class GetCustomerForViewingHandler implements GetCustomerForViewingHandler
 
         foreach ($emails as $email) {
             $customerEmails[] = new SentEmailInformation(
-                Tools::displayDate($email['date_add'], null, true),
+                Tools::displayDate($email['date_add'], true),
                 $email['language'],
                 $email['subject'],
                 $email['template']

@@ -912,6 +912,10 @@ class Install extends AbstractInstall
             );
 
             if ($moduleData !== null) {
+                if ($moduleData->get('name') !== $module->getFilename()) {
+                    continue;
+                }
+
                 $modules[$module->getFileName()] = $moduleData;
             }
         }

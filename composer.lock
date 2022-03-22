@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eb25b604a0c46230289d8a7b09a4c704",
+    "content-hash": "4ad959abea14e91569886a41fa0352bc",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -6149,6 +6149,44 @@
                 "source": "https://github.com/PrestaShop/ps_dataprivacy/tree/v2.1.0"
             },
             "time": "2021-12-31T10:42:45+00:00"
+        },
+        {
+            "name": "prestashop/ps_emailalerts",
+            "version": "v2.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_emailalerts.git",
+                "reference": "654f9509da88dda9e5e1703fc0b34ad8b4622c29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_emailalerts/zipball/654f9509da88dda9e5e1703fc0b34ad8b4622c29",
+                "reference": "654f9509da88dda9e5e1703fc0b34ad8b4622c29",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.16"
+            },
+            "type": "prestashop-module",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_emailalerts",
+            "homepage": "https://github.com/PrestaShop/ps_emailalerts",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_emailalerts/tree/v2.3.3"
+            },
+            "time": "2022-03-11T08:17:10+00:00"
         },
         {
             "name": "prestashop/ps_emailsubscription",

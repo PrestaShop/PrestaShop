@@ -968,28 +968,19 @@ class ToolsCore
      */
     public static function dateFormat($params, &$smarty)
     {
-        return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
+        return Tools::displayDate($params['date'], (isset($params['full']) ? $params['full'] : false));
     }
 
     /**
      * Display date regarding to language preferences.
      *
      * @param string $date Date to display format UNIX
-     * @param int $id_lang Language id DEPRECATED
      * @param bool $full With time or not (optional)
-     * @param string $separator DEPRECATED
      *
      * @return string Date
      */
-    public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    public static function displayDate($date, $full = false)
     {
-        if ($id_lang !== null) {
-            Tools::displayParameterAsDeprecated('id_lang');
-        }
-        if ($separator !== null) {
-            Tools::displayParameterAsDeprecated('separator');
-        }
-
         if (!$date || !($time = strtotime($date))) {
             return $date;
         }

@@ -132,6 +132,7 @@ class RedirectOptionType extends TranslatorAwareType
                     $this->trans('Permanent redirection to a product (301)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_PERMANENT,
                     $this->trans('Temporary redirection to a product (302)', 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('target', EntitySearchInputType::class, [
                 'required' => false,
@@ -153,6 +154,7 @@ class RedirectOptionType extends TranslatorAwareType
                     'data-category-help' => $entityAttributes['category']['help'],
                     'data-category-filtered' => $entityAttributes['category']['filtered'],
                 ],
+                'modify_all_shops' => true,
             ])
         ;
 

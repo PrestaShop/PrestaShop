@@ -27,7 +27,6 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-require_once _PS_ADMIN_DIR_.'/../images.inc.php';
 
 /**
  * Generate a new settings file, only transmitted parameters are updated

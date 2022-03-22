@@ -40,4 +40,8 @@ export default {
     'product[pricing][unit_price][modify_all_shops_price_tax_included]',
   ],
   'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
+  'product.seo.overrideAllRedirectOption': [
+    'product[seo][redirect_option][modify_all_shops_type]',
+    'product[seo][redirect_option][modify_all_shops_target]',
+  ],
 };
