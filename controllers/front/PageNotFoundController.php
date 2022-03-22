@@ -48,11 +48,6 @@ class PageNotFoundControllerCore extends FrontController
         // 404 - no need to redirect to the canonical url
     }
 
-    protected function sslRedirection()
-    {
-        // 404 - no need to redirect
-    }
-
     public function getTemplateVarPage()
     {
         $page = parent::getTemplateVarPage();
