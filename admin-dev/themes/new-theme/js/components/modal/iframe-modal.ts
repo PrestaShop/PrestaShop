@@ -25,9 +25,11 @@
 
 /* eslint max-classes-per-file: ["error", 2] */
 
+import ResizeObserver from 'resize-observer-polyfill';
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
+import IframeEvent from '@components/modal/iframe-event';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
@@ -39,10 +41,12 @@ export interface IframeModalType extends ModalType {
   render: (content: string, hideIframe?: boolean) => void;
 }
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
+export type IframeEventCallbackFunction = (event: IframeEvent) => void;
 export type IframeModalParams = ModalParams & {
   modalTitle?: string;
   onLoaded?: IframeCallbackFunction,
   onUnload?: IframeCallbackFunction,
+  onIframeEvent?: IframeEventCallbackFunction,
   iframeUrl: string;
   autoSize: boolean;
   autoSizeContainer: string;
@@ -85,7 +89,9 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     this.iframe.frameBorder = '0';
     this.iframe.scrolling = 'auto';
     this.iframe.width = '100%';
-    this.iframe.height = '100%';
+    if (!params.autoSize) {
+      this.iframe.height = '100%';
+    }
 
     this.loader = document.createElement('div');
     this.loader.classList.add('modal-iframe-loader');
@@ -145,12 +151,19 @@ export class IframeModal extends Modal implements IframeModalType {
         });
 
         // Auto resize the iframe container
-        this.autoResize();
+        this.initAutoResize();
       }
     });
 
     this.$modal.on('shown.bs.modal', () => {
       this.modal.iframe.src = params.iframeUrl;
+    });
+
+    // @ts-ignore
+    window.addEventListener(IframeEvent.parentWindowEvent, (event: IframeEvent) => {
+      if (params.onIframeEvent) {
+        params.onIframeEvent(event);
+      }
     });
   }
 
@@ -178,20 +191,38 @@ export class IframeModal extends Modal implements IframeModalType {
     this.modal.iframe.classList.add('d-none');
   }
 
-  private autoResize(): void {
+  private getResizableContainer(): HTMLElement | null {
     if (this.autoSize && this.modal.iframe.contentWindow) {
-      // eslint-disable-next-line max-len
-      const iframeContainer: HTMLElement = <HTMLElement> this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+      return this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+    }
 
-      if (iframeContainer) {
-        const iframeScrollHeight = iframeContainer.scrollHeight;
-        const contentHeight = this.getOuterHeight(this.modal.message)
-          + iframeScrollHeight;
+    return null;
+  }
 
-        // Avoid applying height of 0 (on first load for example)
-        if (contentHeight) {
-          this.modal.body.style.height = `${contentHeight}px`;
-        }
+  private initAutoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      const ro = new ResizeObserver(() => {
+        this.autoResize();
+      });
+
+      ro.observe(iframeContainer);
+    }
+    this.autoResize();
+  }
+
+  private autoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      const iframeScrollHeight = iframeContainer.scrollHeight;
+      const contentHeight = this.getOuterHeight(this.modal.message)
+        + iframeScrollHeight;
+
+      // Avoid applying height of 0 (on first load for example)
+      if (contentHeight) {
+        this.modal.body.style.height = `${contentHeight}px`;
       }
     }
   }

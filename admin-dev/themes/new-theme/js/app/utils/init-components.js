@@ -52,6 +52,7 @@ import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
+import IframeClient from '@components/modal/iframe-client';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
@@ -134,6 +135,7 @@ const initPrestashopComponents = () => {
     GeneratableInput,
     Grid,
     GridExtensions,
+    IframeClient,
     ModifyAllShopsCheckbox,
     MultipleChoiceTable,
     MultistoreConfigField,
