@@ -1531,7 +1531,8 @@ $product-page-padding-bottom: 80px !default;
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
 // page there is no need to scope them inside the product-page-v2 class
-.create-product-form {
+.create-product-form,
+.product-shops-form {
   width: 100%;
   padding: 0 1rem 0.1rem;
   background-color: $white;

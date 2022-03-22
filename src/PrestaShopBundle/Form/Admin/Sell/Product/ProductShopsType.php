@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
 use PrestaShopBundle\Form\Admin\Type\ShopSelectorType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -49,8 +51,27 @@ class ProductShopsType extends TranslatorAwareType
             ->add('selected_shops', ShopSelectorType::class, [
                 'multiple' => true,
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => $this->trans('Save', 'Admin.Global'),
+            ->add('buttons', ButtonCollectionType::class, [
+                'buttons' => [
+                    'cancel' => [
+                        'type' => ButtonType::class,
+                        'group' => 'left',
+                        'options' => [
+                            'label' => $this->trans('Cancel', 'Admin.Global'),
+                            'attr' => [
+                                'class' => 'btn-secondary',
+                            ],
+                        ],
+                    ],
+                    'submit' => [
+                        'type' => SubmitType::class,
+                        'group' => 'right',
+                        'options' => [
+                            'label' => $this->trans('Save', 'Admin.Global'),
+                        ],
+                    ],
+                ],
+                'justify_content' => 'flex-end',
             ])
         ;
     }

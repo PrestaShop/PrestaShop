@@ -63,6 +63,7 @@ export default {
     modalId: 'modal-product-shops',
     form: 'form[name="product_shops"]',
     modalSizeContainer: '.product-shops-form',
+    cancelButton: '#product_shops_buttons_cancel',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
