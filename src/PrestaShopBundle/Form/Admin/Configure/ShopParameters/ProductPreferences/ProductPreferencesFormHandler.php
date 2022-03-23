@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Form\Handler;
 
 /**
@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Form\Handler;
 class ProductPreferencesFormHandler extends Handler
 {
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
     private $cacheClearer;
 
@@ -48,8 +48,7 @@ class ProductPreferencesFormHandler extends Handler
         $errors = $this->formDataProvider->setData($data);
 
         if (empty($errors)) {
-            $this->cacheClearer->clearSmartyCache();
-            $this->cacheClearer->clearMediaCache();
+            $this->cacheClearer->clear();
 
             if (isset($data['stock_management']) && !$data['stock_management']) {
                 $data['allow_ordering_oos'] = 1;
@@ -62,9 +61,9 @@ class ProductPreferencesFormHandler extends Handler
     /**
      * Inject the cache clearer if needed.
      *
-     * @param CacheClearer $cacheClearer the Cache clearer
+     * @param CacheClearerInterface $cacheClearer the Cache clearer
      */
-    public function setCacheClearer(CacheClearer $cacheClearer)
+    public function setCacheClearer(CacheClearerInterface $cacheClearer)
     {
         $this->cacheClearer = $cacheClearer;
     }
