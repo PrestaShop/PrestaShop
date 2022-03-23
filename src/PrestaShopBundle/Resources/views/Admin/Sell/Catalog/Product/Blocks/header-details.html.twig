@@ -73,7 +73,7 @@
       {% if quantityData <= 0 %}
         {% set stockClass = 'danger' %}
         {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
-      {% elseif lowStock > 0 and quantityData < lowStock %}
+      {% elseif lowStock > 0 and quantityData <= lowStock %}
         {% set stockClass = 'warning' %}
         {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
       {% else %}
