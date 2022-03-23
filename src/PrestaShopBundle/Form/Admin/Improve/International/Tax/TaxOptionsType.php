@@ -100,21 +100,26 @@ class TaxOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_USE_ECOTAX',
                 ]
             )
-            ->add('display_tax_in_cart', SwitchType::class, [
-                'label' => $this->trans(
-                    'Display tax in the shopping cart',
-                    'Admin.International.Feature'
-                ),
-                'help' => $this->trans(
-                    'Select whether or not to display tax on a distinct line in the cart.',
-                    'Admin.International.Help'
-                ),
-                'required' => false,
-                'attr' => [
-                    'class' => 'js-display-in-cart',
-                ],
-                'multistore_configuration_key' => 'PS_TAX_DISPLAY',
-            ])
+            ->add(
+                'display_tax_in_cart',
+                SwitchType::class,
+                [
+                    'label' => $this->trans(
+                        'Display tax in the shopping cart',
+                        'Admin.International.Feature'
+                    ),
+                    'help' => $this->trans(
+                        'Select whether or not to display tax on a distinct line in the cart.',
+                        'Admin.International.Help'
+                    ),
+                    'empty_data' => false,
+                    'required' => false,
+                    'attr' => [
+                        'class' => 'js-display-in-cart',
+                    ],
+                    'multistore_configuration_key' => 'PS_TAX_DISPLAY',
+                ]
+            )
             ->add('tax_address_type', ChoiceType::class, [
                 'label' => $this->trans('Based on', 'Admin.International.Feature'),
                 'required' => false,
