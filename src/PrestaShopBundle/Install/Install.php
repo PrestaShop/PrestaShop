@@ -1003,7 +1003,7 @@ class Install extends AbstractInstall
     public function postInstall(): bool
     {
         $moduleCollection = ModuleManagerBuilder::getInstance()->buildRepository()->getInstalledModules();
-        $modules = array_map(function (Module $module) {
+        $modules = array_map(function (Module $module): string {
             return $module->get('name');
         }, iterator_to_array($moduleCollection));
 

@@ -197,8 +197,12 @@ class ModuleManagerTest extends TestCase
         );
     }
 
-    private function getModuleMock()
+    /**
+     * @return Module&MockObject
+     */
+    private function getModuleMock(): Module
     {
+        /** @var Module&MockObject $module */
         $module = $this->getMockBuilder(Module::class)
             ->disableOriginalConstructor()
             ->enableOriginalClone()
@@ -222,7 +226,7 @@ class ModuleManagerTest extends TestCase
         return $module;
     }
 
-    private function getModuleDataProviderMock()
+    private function getModuleDataProviderMock(): ModuleDataProvider
     {
         $moduleDataProvider = $this->createMock(ModuleDataProvider::class);
 
