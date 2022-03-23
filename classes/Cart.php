@@ -533,6 +533,7 @@ class CartCore extends ObjectModel
             $row['obj'] = new CartRule($row['id_cart_rule'], (int) $this->id_lang);
             $row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
             $row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
+            $row['id_discount'] = $row['id_cart_rule'];
         }
 
         return $result;
