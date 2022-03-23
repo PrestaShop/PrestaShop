@@ -145,8 +145,8 @@
           </div>
         </div>
         <div
-        class="col-lg-4"
-        v-if="isOverview"
+          class="col-lg-4"
+          v-if="isOverview"
         >
           <div class="py-3">
             <h2>{{ trans('filter_stock_needed') }}</h2>
@@ -249,7 +249,7 @@
           id_employee: this.id_employee,
           date_add: this.date_add,
           active: this.active,
-          only_restockable : this.only_restockable
+          only_restockable: this.only_restockable,
         });
       },
       onChange(item: any): void {
@@ -296,7 +296,7 @@
         id_employee: [] as Array<any>,
         date_add: [] as Array<any>,
         active: null,
-        only_restockable : 0
+        only_restockable: 0,
       };
     },
   });
