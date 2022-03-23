@@ -332,6 +332,11 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     public function testItSucceedsForWebserviceKeyTypeWhenValidCharactersGiven(): void
     {
         $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
+    }
+    
+    public function testItSucceedsForCoordinateTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('48.856614', new TypedRegex(['type' => TypedRegex::TYPE_COORDINATE]));
 
         $this->assertNoViolation();
     }
@@ -419,6 +424,16 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
             ['notebook-ė', '1', true],
             ['notebook with spaces', '1', false],
         ];
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForCoordinate
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForCoordinateTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_COORDINATE]), $invalidChar);
     }
 
     /**
@@ -726,6 +741,41 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield ["'"];
         yield ['*'];
         yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
+    }
+
+    public function getInvalidCharactersForCoordinate(): Generator
+    {
+        yield ['not_valid'];
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['@'];
+        yield ['#'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['?'];
+        yield ['`'];
+        yield ['\\'];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ["'"];
+        yield ['*'];
         yield [','];
         yield [':'];
         yield [';'];
