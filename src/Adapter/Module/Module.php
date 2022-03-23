@@ -47,6 +47,7 @@ class Module implements ModuleInterface
     public const ACTION_DISABLE_MOBILE = 'disableMobile';
     public const ACTION_RESET = 'reset';
     public const ACTION_UPGRADE = 'upgrade';
+    public const ACTION_CONFIGURE = 'configure';
 
     /**
      * @var LegacyModule Module The instance of the legacy module
