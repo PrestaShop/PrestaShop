@@ -45,6 +45,7 @@ export interface ProgressModalType extends ModalType {
 export type ProgressModalParams = ModalParams & {
   modalTitle: string;
   total: number;
+  completed: number;
   confirmCallback: (event: Event) => void,
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
 }
@@ -88,8 +89,8 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
     super.buildModalContainer(params);
     this.container.classList.remove('fade');
-
-    this.buildProgressBar();
+    let progressBarDone = params.completed * 100 / params.total;
+    this.buildProgressBar(progressBarDone);
 
     let progressDetails = document.createElement('div');
     progressDetails.classList.add(
@@ -133,7 +134,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     this.content.append(this.footer);
   }
 
-  buildProgressBar()
+  buildProgressBar(completed: number)
   {
     this.progress = document.createElement('div');
     this.progress.setAttribute('style', 'display: block; width: 100%');
@@ -146,10 +147,10 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     let progressBar = document.createElement('div');
     progressBar.classList.add('progress-bar', 'progress-bar-success');
     progressBar.setAttribute('role', 'progressbar');
-    progressBar.setAttribute('style', 'width: 0%;');
+    progressBar.setAttribute('style', 'width: ' + completed+ '%;');
 
     let progressDone = document.createElement('div');
-    progressDone.setAttribute('style', 'width: 0%');
+    progressDone.setAttribute('style', 'width: ' + completed +  '0%');
 
     progressDone.classList.add
     (
@@ -277,6 +278,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
       closable: false,
       modalTitle: "Progress action",
       total: total,
+      completed: 0,
       dialogStyle: {},
       confirmCallback,
       closeCallback: cancelCallback,
@@ -298,6 +300,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     $(document).on('click', '.switch-to-progress-button', function() {
       modal.currentModal = 'progress';
+      params.completed = modal.doneCount;
       let container = new ProgressModalContainer(params);
       $('#progress-modal .modal-content').html(container.content);
 
@@ -306,7 +309,14 @@ export class ProgressModal extends Modal implements ProgressModalType {
     $(document).on('click', '.switch-to-errors-button', function() {
       modal.currentModal = 'error';
 
-      let container = new ProgressModalErrorContainer(params, modal.errors);
+      let params: ProgressErrorModalParams = {
+        id: 'progress-modal',
+        errors: modal.errors,
+        closable: false,
+        modalTitle: "Progress action",
+      };
+
+      let container = new ProgressModalErrorContainer(params);
       console.log(container.errors);
       $('#progress-modal .modal-content').html(container.content);
      // $('#progress-modal .modal-content').html(modal.buildErrorContent());
