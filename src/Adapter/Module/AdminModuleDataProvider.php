@@ -49,21 +49,45 @@ class AdminModuleDataProvider implements ModuleInterface
      * @const array giving a translation domain key for each module action
      */
     public const _ACTIONS_TRANSLATION_DOMAINS_ = [
-        'install' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
-        'enable' => 'Admin.Actions',
-        'disable' => 'Admin.Actions',
-        'enableMobile' => 'Admin.Modules.Feature',
-        'disableMobile' => 'Admin.Modules.Feature',
-        'reset' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
+        Module::ACTION_INSTALL => 'Admin.Actions',
+        Module::ACTION_UNINSTALL => 'Admin.Actions',
+        Module::ACTION_ENABLE => 'Admin.Actions',
+        Module::ACTION_DISABLE => 'Admin.Actions',
+        Module::ACTION_ENABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_DISABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_RESET => 'Admin.Actions',
+        Module::ACTION_UPGRADE => 'Admin.Actions',
         'configure' => 'Admin.Actions',
+    ];
+
+    /**
+     * @const array giving a translation label for each module action
+     */
+    public const _ACTIONS_TRANSLATION_LABELS_ = [
+        Module::ACTION_INSTALL => 'Install',
+        Module::ACTION_UNINSTALL => 'Uninstall',
+        Module::ACTION_ENABLE => 'Enable',
+        Module::ACTION_DISABLE => 'Disable',
+        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
+        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
+        Module::ACTION_RESET => 'Reset',
+        Module::ACTION_UPGRADE => 'Upgrade',
+        'configure' => 'Configure',
     ];
 
     /**
      * @var array of defined and callable module actions
      */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enableMobile', 'disableMobile', 'reset', 'upgrade'];
+    protected $moduleActions = [
+        Module::ACTION_INSTALL,
+        Module::ACTION_UNINSTALL,
+        Module::ACTION_ENABLE,
+        Module::ACTION_DISABLE,
+        Module::ACTION_ENABLE_MOBILE,
+        Module::ACTION_DISABLE_MOBILE,
+        Module::ACTION_RESET,
+        Module::ACTION_UPGRADE,
+    ];
 
     /**
      * @var Router|null
@@ -255,6 +279,7 @@ class AdminModuleDataProvider implements ModuleInterface
             $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
             $addon->attributes->set('urls', $urls);
             $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
+            $addon->attributes->set('actionTranslationLabels', self::_ACTIONS_TRANSLATION_LABELS_);
             if ($specific_action && array_key_exists($specific_action, $urls)) {
                 $addon->attributes->set('url_active', $specific_action);
             } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
