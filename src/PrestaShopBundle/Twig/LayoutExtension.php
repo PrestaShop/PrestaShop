@@ -213,7 +213,12 @@ EOF;
             $useRegularH1Structure
         );
 
-        //test if legacy template from "content.tpl" has '{$content}'
+        // There is nothing to display no legacy layout are generated
+        if ($layout === '') {
+            return '';
+        }
+
+        // Test if legacy template from "content.tpl" has '{$content}'
         if (false === strpos($layout, '{$content}')) {
             throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
         }
