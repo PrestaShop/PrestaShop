@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
@@ -190,7 +191,7 @@ class ModuleCommand extends Command
                 $this->translator->trans(
                     '%action% action on module %module% succeeded.',
                     [
-                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
+                        '%action%' => ucfirst(AdminModuleDataProvider::_ACTIONS_TRANSLATION_LABELS_[$action]),
                         '%module%' => $moduleName, ],
                     'Admin.Modules.Notification'
                 )
