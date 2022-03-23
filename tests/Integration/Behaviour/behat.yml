@@ -28,6 +28,8 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\StoreFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
         customer:
             paths:
                 - "%paths.base%/Features/Scenario/Customer"
