@@ -179,7 +179,7 @@
 
   export interface StockCategory {
     active: number;
-    only_restockable : number;
+    only_restockable : boolean;
     children: Array<StockCategory>;
     id: string;
     id_category: number;

@@ -623,7 +623,7 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlOnlyRestockableFilter(array $filters, $only_restockable)
     {
-        if (in_array($only_restockable, ['0', '1'])) {
+        if ((bool)$only_restockable) {
             $filters[] = sprintf('AND %s = %s', 'pa.to_be_restocked', ':only_restockable');
         }
         return $filters;
@@ -637,8 +637,8 @@ abstract class QueryParamsCollection
      */
     protected function appendSqlOnlyRestockableFilterParam($value, $sqlParams)
     {
-        if (in_array($value, ['0', '1'])) {
-            $sqlParams[':only_restockable'] = $value;
+        if ((bool)$value) {
+            $sqlParams[':only_restockable'] = 1;
         }
 
         return $sqlParams;
