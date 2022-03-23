@@ -93,26 +93,25 @@ export default class ProductTypeSwitcher {
   }
 
   private confirmTypeSubmit(newType: string) {
+    const stockEnabled: boolean = this.$typeSelector.data('stockEnabled');
     const confirmWarnings = [];
 
     // eslint-disable-next-line default-case
     switch (this.initialType) {
       case ProductConst.PRODUCT_TYPE.COMBINATIONS:
-        confirmWarnings.push(this.$typeSelector.data('combinations-warning'));
-        // Switching FROM combination resets the stock
-        confirmWarnings.push(this.$typeSelector.data('stock-warning'));
+        confirmWarnings.push(this.$typeSelector.data('combinationsWarning'));
         break;
       case ProductConst.PRODUCT_TYPE.PACK:
-        confirmWarnings.push(this.$typeSelector.data('pack-warning'));
+        confirmWarnings.push(this.$typeSelector.data('packWarning'));
         break;
       case ProductConst.PRODUCT_TYPE.VIRTUAL:
-        confirmWarnings.push(this.$typeSelector.data('virtual-warning'));
+        confirmWarnings.push(this.$typeSelector.data('virtualWarning'));
         break;
     }
 
-    // Switching TO combination resets the stock
-    if (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
-      confirmWarnings.push(this.$typeSelector.data('stock-warning'));
+    // Switching FROM and TO combination resets the stock
+    if (stockEnabled && (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS || this.initialType)) {
+      confirmWarnings.push(this.$typeSelector.data('stockWarning'));
     }
 
     let confirmMessage: string = `<div class="alert alert-info">${this.$typeSelector.data('confirm-message')}</div>`;

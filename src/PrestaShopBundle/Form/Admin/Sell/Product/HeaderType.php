@@ -35,9 +35,29 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class HeaderType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $stockManagementEnabled
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $stockManagementEnabled
+    ) {
+        parent::__construct($translator, $locales);
+        $this->stockManagementEnabled = $stockManagementEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -73,6 +93,7 @@ class HeaderType extends TranslatorAwareType
                     'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
                     'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
                     'data-stock-warning' => $this->trans('This will reset the stock of this product.', 'Admin.Catalog.Notification'),
+                    'data-stock-enabled' => $this->stockManagementEnabled,
                     'class' => 'header-product-type-selector',
                 ],
             ])

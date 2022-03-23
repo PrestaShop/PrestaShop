@@ -1317,6 +1317,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\HeaderType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
     tags:
       - { name: form.type }
 
