@@ -184,8 +184,6 @@ class Module implements ModuleInterface
 
     /**
      * @return LegacyModule|null
-     *
-     * @throws \Exception
      */
     public function getInstance(): ?LegacyModule
     {

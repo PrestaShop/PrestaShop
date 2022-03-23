@@ -76,7 +76,7 @@ class AdminModuleDataProvider implements ModuleInterface
     ];
 
     /**
-     * @var array of defined and callable module actions
+     * @var array<string> of defined and callable module actions
      */
     protected $moduleActions = [
         Module::ACTION_INSTALL,
@@ -267,9 +267,11 @@ class AdminModuleDataProvider implements ModuleInterface
             $moduleAttributes->set('urls', $filteredUrls);
             $moduleAttributes->set('url_active', $urlActive);
             $moduleAttributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            $module->attributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
-            $categoryParent = $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'));
-            $moduleAttributes->set('categoryParent', $categoryParent);
+            $moduleAttributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
+            $moduleAttributes->set(
+                'categoryParent',
+                $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'))
+            );
         }
 
         return $modules;
