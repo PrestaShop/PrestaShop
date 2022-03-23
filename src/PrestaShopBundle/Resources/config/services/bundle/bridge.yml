@@ -6,89 +6,93 @@ services:
     class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
     arguments:
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.core.bridge.breadcrumbs_and_title_hydrator"
-      - "@prestashop.core.bridge.footer_hydrator"
-      - "@prestashop.core.bridge.header_hydrator"
-      - "@prestashop.core.bridge.modal_hydrator"
-      - "@prestashop.core.bridge.notification_hydrator"
-      - "@prestashop.core.bridge.toolbar_flags_hydrator"
-      - "@prestashop.core.bridge.smarty_vars_assigner"
+      - "@prestashop.core.bridge.breadcrumbs_and_title_configurator"
+      - "@prestashop.core.bridge.footer_configurator"
+      - "@prestashop.core.bridge.header_configurator"
+      - "@prestashop.core.bridge.modal_configurator"
+      - "@prestashop.core.bridge.notification_configurator"
+      - "@prestashop.core.bridge.toolbar_flags_configurator"
+      - "@prestashop.adapter.legacy.configuration"
 
   prestashop.core.bridge.controller_configuration_factory:
-    class: PrestaShopBundle\Bridge\Controller\ControllerConfigurationFactory
+    class: PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory
     arguments:
-      - "@security.untracked_token_storage"
+      - "@prestashop.user_provider"
 
-  prestashop.core.bridge.breadcrumbs_and_title_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleHydrator
+  prestashop.core.bridge.breadcrumbs_and_title_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.adapter.legacy.configuration"
+
+  prestashop.core.bridge.footer_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\FooterConfigurator
     arguments:
       - "@prestashop.adapter.legacy.context"
 
-  prestashop.core.bridge.footer_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\FooterHydrator
-    arguments:
-      - "@prestashop.adapter.legacy.context"
-
-  prestashop.core.bridge.header_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\HeaderHydrator
+  prestashop.core.bridge.header_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
     arguments:
       - "@prestashop.router"
       - "@translator"
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
+      - "@prestashop.adapter.legacy.configuration"
 
-  prestashop.core.bridge.modal_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\ModalHydrator
+  prestashop.core.bridge.modal_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\ModalConfigurator
 
-  prestashop.core.bridge.notification_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\NotificationsHydrator
+  prestashop.core.bridge.notification_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\NotificationsConfigurator
+    arguments:
+      - "@prestashop.adapter.legacy.configuration"
 
-  prestashop.core.bridge.toolbar_flags_hydrator:
-    class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsHydrator
+  prestashop.core.bridge.toolbar_flags_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
     arguments:
       - "@prestashop.router"
-      - "@translator"
       - "@prestashop.adapter.legacy.context"
-
-  prestashop.core.bridge.smarty_vars_assigner:
-    class: PrestaShopBundle\Bridge\Smarty\SmartyVarsAssigner
-    arguments:
-      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.adapter.legacy.configuration"
 
   prestashop.core.bridge.helper_list_bridge:
     class: PrestaShopBundle\Bridge\Helper\HelperListBridge
     arguments:
       - "@prestashop.adapter.legacy.context"
-      - "@security.untracked_token_storage"
-      - "@prestashop.core.bridge.helper_list_vars_assigner"
+      - "@prestashop.user_provider"
+      - "@prestashop.core.bridge.helper_list_configurator"
       - "@prestashop.hook.dispatcher"
+      - "@prestashop.adapter.legacy.configuration"
 
   prestashop.core.bridge.helper_list_configuration_factory:
     class: PrestaShopBundle\Bridge\Helper\HelperListConfigurationFactory
 
-  prestashop.core.bridge.helper_list_vars_assigner:
-    class: PrestaShopBundle\Bridge\Helper\HelperListVarsAssigner
+  prestashop.core.bridge.helper_list_configurator:
+    class: PrestaShopBundle\Bridge\Helper\HelperListConfigurator
     arguments:
-      - "@prestashop.core.bridge.breadcrumbs_and_title_hydrator"
-      - "@prestashop.core.bridge.toolbar_flags_hydrator"
+      - "@prestashop.core.bridge.breadcrumbs_and_title_configurator"
       - "@prestashop.router"
 
-  prestashop.core.bridge.processor.process_filter:
-    class: PrestaShopBundle\Bridge\Processor\ProccessFilter
+  prestashop.core.bridge.processor.filters_helper:
+    class: PrestaShopBundle\Bridge\Helper\FiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
 
-  prestashop.core.bridge.processor.reset_filter:
-    class: PrestaShopBundle\Bridge\Processor\ResetFilter
+  prestashop.core.bridge.processor.reset_filters_helper:
+    class: PrestaShopBundle\Bridge\Helper\ResetFiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"
 
-  PrestaShopBundle\Bridge\Listener\InitControllerListener:
-    class: PrestaShopBundle\Bridge\Listener\InitControllerListener
+  PrestaShopBundle\Bridge\AdminController\Listener\InitControllerListener:
+    class: PrestaShopBundle\Bridge\AdminController\Listener\InitControllerListener
     tags:
       - { name: kernel.event_listener, event: kernel.controller }
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.core.bridge.controller_configuration_factory"
       - "@prestashop.core.localization.locale.repository"
+
+  prestashop.core.bridge.helper_list_feature_customizer:
+    class: PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridgeCustomizer
+    parent: prestashop.core.bridge.helper_list_bridge
+    public: true

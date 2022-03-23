@@ -24,60 +24,63 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Helper;
 
-use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 
 /**
- * Build Helper list configuration
+ * Create an instance of the helper configuration object, using controller configuration.
  */
 class HelperListConfigurationFactory
 {
-    public function create(array $configuration = []): HelperListConfiguration
-    {
+    /**
+     * @param string $table
+     * @param string $className
+     * @param ControllerConfiguration $controllerConfiguration
+     * @param string $identifier
+     * @param string|null $positionIdentifier
+     * @param string|null $defaultOrderBy
+     * @param bool $isJoinLanguageTableAuto
+     * @param bool $deleted
+     * @param bool $explicitSelect
+     * @param bool $useFoundRows
+     *
+     * @return HelperListConfiguration
+     */
+    public function create(
+        string $table,
+        string $className,
+        ControllerConfiguration $controllerConfiguration,
+        string $identifier = 'id',
+        string $positionIdentifier = null,
+        string $defaultOrderBy = null,
+        bool $isJoinLanguageTableAuto = false,
+        bool $deleted = false,
+        bool $explicitSelect = false,
+        bool $useFoundRows = true
+    ): HelperListConfiguration {
+        if (empty($defaultOrderBy)) {
+            $defaultOrderBy = $identifier;
+        }
         $helperListConfiguration = new HelperListConfiguration();
 
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-        $configuration = $resolver->resolve($configuration);
-
-        $helperListConfiguration->table = $configuration['table'];
-        $helperListConfiguration->listId = $configuration['listId'];
-        $helperListConfiguration->className = $configuration['className'];
-        $helperListConfiguration->controllerNameLegacy = $configuration['controllerNameLegacy'];
-        $helperListConfiguration->identifier = $configuration['identifier'];
-        $helperListConfiguration->isJoinLanguageTableAuto = $configuration['isJoinLanguageTableAuto'];
-        $helperListConfiguration->deleted = $configuration['deleted'];
-        $helperListConfiguration->defaultOrderBy = $configuration['defaultOrderBy'];
-        $helperListConfiguration->fieldsList = $configuration['fieldsList'];
-        $helperListConfiguration->explicitSelect = $configuration['explicitSelect'];
-        $helperListConfiguration->useFoundRows = $configuration['useFoundRows'];
+        $helperListConfiguration->table = $table;
+        $helperListConfiguration->listId = $table;
+        $helperListConfiguration->className = $className;
+        $helperListConfiguration->identifier = $identifier;
+        $helperListConfiguration->positionIdentifier = $positionIdentifier;
+        $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;
+        $helperListConfiguration->deleted = $deleted;
+        $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
+        $helperListConfiguration->explicitSelect = $explicitSelect;
+        $helperListConfiguration->useFoundRows = $useFoundRows;
+        $helperListConfiguration->id = $controllerConfiguration->id;
+        $helperListConfiguration->controllerNameLegacy = $controllerConfiguration->controllerNameLegacy;
+        $helperListConfiguration->token = $controllerConfiguration->token;
+        $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
 
         return $helperListConfiguration;
-    }
-
-    private function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefault('defaultOrderBy', function (Options $options) {
-            return $options['identifier'];
-        }
-        );
-
-        $resolver->setDefaults([
-            'isJoinLanguageTableAuto' => false,
-            'deleted' => false,
-            'explicitSelect' => false,
-            'useFoundRows' => true,
-        ]);
-
-        $resolver->setRequired([
-            'table',
-            'listId',
-            'className',
-            'controllerNameLegacy',
-            'identifier',
-            'fieldsList',
-        ]);
     }
 }

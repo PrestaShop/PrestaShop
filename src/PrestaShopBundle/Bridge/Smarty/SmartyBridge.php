@@ -24,20 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use Configuration;
 use Cookie;
 use Link;
 use Media;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Smarty;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
 
 /**
- * This class is used to render smarty as a symfony response
+ * This class is used to put all needed variable in the Smarty object,
+ * and to render smarty as a symfony response.
  */
 class SmartyBridge
 {
@@ -59,49 +62,59 @@ class SmartyBridge
     private $cookie;
 
     /**
-     * @var BreadcrumbsAndTitleHydrator
+     * @var BreadcrumbsAndTitleConfigurator
      */
     private $breadcrumbsAndTitleHydrator;
 
     /**
-     * @var FooterHydrator
+     * @var FooterConfigurator
      */
     private $footerHydrator;
 
     /**
-     * @var HeaderHydrator
+     * @var HeaderConfigurator
      */
     private $headerHydrator;
 
     /**
-     * @var ModalHydrator
+     * @var ModalConfigurator
      */
     private $modalHydrator;
 
     /**
-     * @var NotificationsHydrator
+     * @var NotificationsConfigurator
      */
     private $notificationHydrator;
 
     /**
-     * @var ToolbarFlagsHydrator
+     * @var ToolbarFlagsConfigurator
      */
     private $toolbarFlagsHydrator;
 
     /**
-     * @var SmartyVarsAssigner
+     * @var Configuration
      */
-    private $smartyVarsAssigner;
+    private $configuration;
 
+    /**
+     * @param LegacyContext $legacyContext
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
+     * @param FooterConfigurator $footerHydrator
+     * @param HeaderConfigurator $headerHydrator
+     * @param ModalConfigurator $modalHydrator
+     * @param NotificationsConfigurator $notificationHydrator
+     * @param ToolbarFlagsConfigurator $toolbarFlagsHydrator
+     * @param Configuration $configuration
+     */
     public function __construct(
         LegacyContext $legacyContext,
-        BreadcrumbsAndTitleHydrator $breadcrumbsAndTitleHydrator,
-        FooterHydrator $footerHydrator,
-        HeaderHydrator $headerHydrator,
-        ModalHydrator $modalHydrator,
-        NotificationsHydrator $notificationHydrator,
-        ToolbarFlagsHydrator $toolbarFlagsHydrator,
-        SmartyVarsAssigner $smartyVarsAssigner
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator,
+        FooterConfigurator $footerHydrator,
+        HeaderConfigurator $headerHydrator,
+        ModalConfigurator $modalHydrator,
+        NotificationsConfigurator $notificationHydrator,
+        ToolbarFlagsConfigurator $toolbarFlagsHydrator,
+        Configuration $configuration
     ) {
         $this->smarty = $legacyContext->getSmarty();
         $this->link = $legacyContext->getContext()->link;
@@ -112,9 +125,16 @@ class SmartyBridge
         $this->modalHydrator = $modalHydrator;
         $this->notificationHydrator = $notificationHydrator;
         $this->toolbarFlagsHydrator = $toolbarFlagsHydrator;
-        $this->smartyVarsAssigner = $smartyVarsAssigner;
+        $this->configuration = $configuration;
     }
 
+    /**
+     * @param string $content
+     * @param ControllerConfiguration $controllerConfiguration
+     * @param string $template
+     *
+     * @return Response
+     */
     public function render(string $content, ControllerConfiguration $controllerConfiguration, $template = self::LAYOUT): Response
     {
         $this->breadcrumbsAndTitleHydrator->hydrate($controllerConfiguration);
@@ -123,11 +143,18 @@ class SmartyBridge
         $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
         $this->headerHydrator->hydrate($controllerConfiguration);
         $this->footerHydrator->hydrate($controllerConfiguration);
-        $this->smartyVarsAssigner->assign($controllerConfiguration->templatesVars);
+        $this->smarty->assign($controllerConfiguration->templatesVars);
 
         return new Response($this->display($controllerConfiguration, $content, $template));
     }
 
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     * @param string $content
+     * @param string $templateName
+     *
+     * @return string
+     */
     public function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
     {
         $this->smarty->assign([
@@ -146,7 +173,7 @@ class SmartyBridge
         }
         $this->smarty->assign(
             'meta_title',
-            strip_tags(implode(' ' . Configuration::get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->metaTitle))
+            strip_tags(implode(' ' . $this->configuration->get('PS_NAVIGATION_PIPE') . ' ', $controllerConfiguration->metaTitle))
         );
 
         $template_dirs = $this->smarty->getTemplateDir() ?: [];
@@ -216,13 +243,14 @@ class SmartyBridge
      * Create a template from the override file, else from the base file.
      *
      * @param ControllerConfiguration $controllerConfiguration
+     * @param string $templateName
      *
      * @return \Smarty_Internal_Template
      */
     private function createTemplate(ControllerConfiguration $controllerConfiguration, $templateName)
     {
         if ($controllerConfiguration->folderTemplate) {
-            if (!Configuration::get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
+            if (!$this->configuration->get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
                 return $this->smarty->createTemplate($controllerConfiguration->folderTemplate . $templateName, $this->smarty);
             } elseif (file_exists($this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
                 return $this->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName, $this->smarty);
@@ -256,6 +284,11 @@ class SmartyBridge
         return trim($html);
     }
 
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return string
+     */
     private function renderModal(ControllerConfiguration $controllerConfiguration): string
     {
         $modalRender = '';

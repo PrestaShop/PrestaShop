@@ -24,47 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+namespace PrestaShopBundle\Bridge\Exception;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * Is thrown when a bad type is used to add an action.
  */
-class LegacyUrlListener
+class ActionTypeDoesntExistException extends BridgeException
 {
-    /**
-     * @var LegacyUrlConverter
-     */
-    private $converter;
-
-    /**
-     * @param LegacyUrlConverter $converter
-     */
-    public function __construct(LegacyUrlConverter $converter)
-    {
-        $this->converter = $converter;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        //Add comment
-        $event->setResponse(new RedirectResponse($convertedUrl, 308));
-    }
 }

@@ -24,47 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+namespace PrestaShopBundle\Bridge\Smarty;
+
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * This class hydrates modals information needed for legacy modals.
  */
-class LegacyUrlListener
+class ModalConfigurator implements ConfiguratorInterface
 {
     /**
-     * @var LegacyUrlConverter
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return void
      */
-    private $converter;
-
-    /**
-     * @param LegacyUrlConverter $converter
-     */
-    public function __construct(LegacyUrlConverter $converter)
+    public function hydrate(ControllerConfiguration $controllerConfiguration): void
     {
-        $this->converter = $converter;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        //Add comment
-        $event->setResponse(new RedirectResponse($convertedUrl, 308));
+        $controllerConfiguration->templatesVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        $controllerConfiguration->templatesVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
+        $controllerConfiguration->templatesVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
+        $controllerConfiguration->templatesVars['add_permission'] = 1;
     }
 }

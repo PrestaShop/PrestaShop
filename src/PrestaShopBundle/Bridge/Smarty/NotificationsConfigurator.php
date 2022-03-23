@@ -24,18 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use Configuration;
 use Media;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Profile;
 
 /**
- * Class NotificationsHydrator hydrate notifications in the ControllerConfiguration
+ * This class hydrates controller configuration with notifications permissions
+ * to know if the connected user can see the notifications or not.
  */
-class NotificationsHydrator implements HydratorInterface
+class NotificationsConfigurator implements ConfiguratorInterface
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function __construct(Configuration $configuration)
+    {
+        $this->configuration = $configuration;
+    }
+
     /**
      * Sets the smarty variables and js defs used to show / hide some notifications.
      *
@@ -48,9 +64,9 @@ class NotificationsHydrator implements HydratorInterface
         $accesses = Profile::getProfileAccesses($controllerConfiguration->user->getData()->id_profile, 'class_name');
 
         $notificationsSettings = [
-            'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1' : false,
-            'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'] ? '1' : false,
-            'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1' : false,
+            'show_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1' : false,
+            'show_new_messages' => $this->configuration->get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'] ? '1' : false,
+            'show_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1' : false,
         ];
 
         $controllerConfiguration->templatesVars = array_merge($controllerConfiguration->templatesVars, $notificationsSettings);

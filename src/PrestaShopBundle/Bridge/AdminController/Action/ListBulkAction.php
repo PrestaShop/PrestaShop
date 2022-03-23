@@ -24,11 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Controller;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Define a Controller interface which can be shared with legacy
+ * This class is the object to instantiate if you want to add a bulk action for your list.
  */
-interface ControllerBridgeInterface
+class ListBulkAction extends Action
 {
 }

@@ -24,47 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
-
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+namespace PrestaShopBundle\Bridge\AdminController\Field;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * Define contract for field class.
  */
-class LegacyUrlListener
+interface FieldInterface
 {
     /**
-     * @var LegacyUrlConverter
+     * @return array
      */
-    private $converter;
+    public function getConfig(): array;
 
     /**
-     * @param LegacyUrlConverter $converter
+     * @return string
      */
-    public function __construct(LegacyUrlConverter $converter)
-    {
-        $this->converter = $converter;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        //Add comment
-        $event->setResponse(new RedirectResponse($convertedUrl, 308));
-    }
+    public function getLabel(): string;
 }

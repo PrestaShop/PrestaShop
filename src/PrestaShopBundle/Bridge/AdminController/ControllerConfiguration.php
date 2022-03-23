@@ -24,12 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Controller;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Security\Admin\Employee;
 
 /**
- * Define configuration for Controller migrate horizontally
+ * This object holds the configuration of a Controller that is being migrated horizontally.
+ * Its properties reflect the properties of a legacy PrestaShop controller.
  */
 class ControllerConfiguration
 {
@@ -104,21 +107,6 @@ class ControllerConfiguration
     public $pageHeaderToolbarTitle = '';
 
     /**
-     * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
-     */
-    public $actionsAvailable = ['view', 'edit', 'duplicate', 'delete'];
-
-    /**
-     * @var array
-     */
-    public $actions = [];
-
-    /**
-     * @var array
-     */
-    public $bulkActions;
-
-    /**
      * @var array
      */
     public $pageHeaderToolbarButton = [];
@@ -126,22 +114,7 @@ class ControllerConfiguration
     /**
      * @var array
      */
-    public $toolbarButton = [];
-
-    /**
-     * @var array
-     */
     public $toolbarTitle = [];
-
-    /**
-     * @var array
-     */
-    public $filter = [];
-
-    /**
-     * @var array
-     */
-    public $fieldsList;
 
     /**
      * @var bool

@@ -24,79 +24,71 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Helper;
 
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleHydrator;
-use PrestaShopBundle\Bridge\Smarty\ToolbarFlagsHydrator;
+use HelperList;
+use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
 use PrestaShopBundle\Service\Routing\Router;
 
 /**
- * Assign variables needed by HelperList
+ * Assign variables needed by the legacy helper list to render a list using Smarty.
+ * These variables come from the helper list configuration.
  */
-class HelperListVarsAssigner
+class HelperListConfigurator
 {
     /**
-     * @var BreadcrumbsAndTitleHydrator
+     * @var BreadcrumbsAndTitleConfigurator
      */
     private $breadcrumbsAndTitleHydrator;
-
-    /**
-     * @var ToolbarFlagsHydrator
-     */
-    private $toolbarFlagsHydrator;
 
     /**
      * @var Router
      */
     private $router;
 
+    /**
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
+     * @param Router $router
+     */
     public function __construct(
-        BreadcrumbsAndTitleHydrator $breadcrumbsAndTitleHydrator,
-        ToolbarFlagsHydrator $toolbarFlagsHydrator,
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator,
         Router $router
     ) {
         $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
-        $this->toolbarFlagsHydrator = $toolbarFlagsHydrator;
         $this->router = $router;
     }
 
     /**
      * This function sets various display options for helper list.
      *
-    //* @param HelperList|HelperView|HelperOptions $helper
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param HelperList $helper
+     *
+     * @return void
      */
     public function setHelperDisplay(
-        ControllerConfiguration $controllerConfiguration,
         HelperListConfiguration $helperListConfiguration,
-        $helper
-    ) {
-        if (empty($controllerConfiguration->breadcrumbs)) {
-            $this->breadcrumbsAndTitleHydrator->hydrate($controllerConfiguration);
-        }
+        HelperList $helper
+    ): void {
+        $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->id);
 
-        if (empty($controllerConfiguration->toolbarTitle)) {
-            $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
-        }
-
-        $helper->title = $controllerConfiguration->toolbarTitle;
-        $helper->toolbar_btn = $controllerConfiguration->toolbarButton;
+        $helper->title = $breadcrumbs['tab']['name'];
+        $helper->toolbar_btn = $helperListConfiguration->toolbarButton;
         $helper->show_toolbar = true;
-        $helper->actions = $controllerConfiguration->actions;
-        $helper->bulk_actions = $controllerConfiguration->bulkActions;
+        $helper->actions = $helperListConfiguration->actions;
+        $helper->bulk_actions = $helperListConfiguration->bulkActions;
         $helper->currentIndex = $this->router->generate('admin_features_index');
-        $helper->table = $controllerConfiguration->table;
-        if (isset($helper->name_controller)) {
-            $helper->name_controller = $controllerConfiguration->controllerNameLegacy;
-        }
+        $helper->table = $helperListConfiguration->table;
         $helper->orderBy = $helperListConfiguration->orderBy;
         $helper->orderWay = $helperListConfiguration->orderWay;
         $helper->listTotal = $helperListConfiguration->listTotal;
         $helper->identifier = $helperListConfiguration->identifier;
-        $helper->token = $controllerConfiguration->token;
-        $helper->position_identifier = $controllerConfiguration->positionIdentifier;
-        $helper->controller_name = $controllerConfiguration->controllerNameLegacy;
-        $helper->list_id = $helperListConfiguration->listId ?? $controllerConfiguration->table;
-        $helper->bootstrap = $controllerConfiguration->bootstrap;
+        $helper->token = $helperListConfiguration->token;
+        $helper->position_identifier = $helperListConfiguration->positionIdentifier;
+        $helper->controller_name = $helperListConfiguration->controllerNameLegacy;
+        $helper->list_id = $helperListConfiguration->listId ?? $helperListConfiguration->table;
+        $helper->bootstrap = $helperListConfiguration->bootstrap;
     }
 }

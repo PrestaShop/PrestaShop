@@ -24,39 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Smarty;
+declare(strict_types=1);
 
-use Language;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+namespace PrestaShopBundle\Bridge\Exception;
 
 /**
- * Hydrate template variables for footer
+ * Base class for PrestaShop bridge exceptions.
  */
-class FooterHydrator implements HydratorInterface
+class BridgeException extends \Exception
 {
-    /**
-     * @var Language
-     */
-    private $language;
-
-    public function __construct(LegacyContext $legacyContext)
-    {
-        $this->language = $legacyContext->getLanguage();
-    }
-
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    public function hydrate(ControllerConfiguration $controllerConfiguration)
-    {
-        $controllerConfiguration->templatesVars['css_files'] = $controllerConfiguration->cssFiles;
-        $controllerConfiguration->templatesVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
-        $controllerConfiguration->templatesVars['ps_version'] = _PS_VERSION_;
-        $controllerConfiguration->templatesVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
-
-        //'modals' => $this->renderModal(),
-    }
 }

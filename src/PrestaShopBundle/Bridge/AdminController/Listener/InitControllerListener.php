@@ -24,20 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Listener;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\AdminController\Listener;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use PrestaShopBundle\Bridge\Controller\ControllerBridgeInterface;
-use PrestaShopBundle\Bridge\Controller\ControllerConfigurationFactory;
+use PrestaShopBundle\Bridge\AdminController\ControllerBridgeInterface;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Tab;
 use Tools;
 
 /**
- * Init Controller by configuring something needs in all Controller migrate horizontally
+ * Initialize controller by instantiating controller configuration,
+ * and configuring legacy context, controller, and controller configuration.
  */
 class InitControllerListener
 {
@@ -56,6 +59,11 @@ class InitControllerListener
      */
     private $localeRepository;
 
+    /**
+     * @param LegacyContext $legacyContext
+     * @param ControllerConfigurationFactory $configurationFactory
+     * @param Repository $localeRepository
+     */
     public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory, Repository $localeRepository)
     {
         $this->context = $legacyContext->getContext();
@@ -63,13 +71,30 @@ class InitControllerListener
         $this->localeRepository = $localeRepository;
     }
 
-    public function onKernelController(ControllerEvent $event)
+    /**
+     * This method is the first entry point of horizontal migration.
+     * In this method we:
+     *      - Assign an instance of itself to the controller in the php_self variable..
+     *        This comportment is needed for legacies hooks.
+     *      - Assign to the context an instance of the controller.
+     *        This is needed for all legacy classes that use the context and used controller instance.
+     *      - Define the current locale for this request.
+     *      - Create the configuration object needed by each controller migrate horizontally.
+     *      - Init the current index which is needed by legacy Helper
+     *      - Get the token from the URL and store hit in the controller configuration object
+     *
+     * @param ControllerEvent $event
+     *
+     * @return void
+     */
+    public function onKernelController(ControllerEvent $event): void
     {
         if (!$this->supports($event)) {
             return;
         }
 
         $controller = $event->getController()[0];
+        $controllerNameLegacy = $event->getRequest()->attributes->get('_legacy_controller');
 
         $controller->php_self = get_class($controller);
         $this->context->controller = $controller;
@@ -79,20 +104,24 @@ class InitControllerListener
             $this->context->language->getLocale()
         );
 
-        $controller->controllerConfiguration = $this->configurationFactory->create([
-            'id' => Tab::getIdFromClassName(
-                get_class($controller)::CONTROLLER_NAME_LEGACY
+        $controller->controllerConfiguration = $this->configurationFactory->create(
+            Tab::getIdFromClassName(
+                $controllerNameLegacy
             ),
-            'controllerName' => get_class($controller),
-            'controllerNameLegacy' => get_class($controller)::CONTROLLER_NAME_LEGACY,
-            'positionIdentifier' => get_class($controller)::POSITION_IDENTIFIER,
-            'table' => get_class($controller)::TABLE,
-        ]);
+            get_class($controller),
+            $controllerNameLegacy,
+            get_class($controller)::TABLE
+        );
 
         $this->setCurrentIndex($controller);
         $this->initToken($controller, $event->getRequest());
     }
 
+    /**
+     * @param ControllerEvent $event
+     *
+     * @return bool
+     */
     private function supports(ControllerEvent $event): bool
     {
         if (!is_array($event->getController()) || !isset($event->getController()[0])) {
@@ -106,6 +135,11 @@ class InitControllerListener
         return true;
     }
 
+    /**
+     * @param ControllerBridgeInterface $controller
+     *
+     * @return void
+     */
     private function setCurrentIndex(ControllerBridgeInterface $controller): void
     {
         if (!property_exists($controller, 'controllerConfiguration')) {
@@ -121,7 +155,10 @@ class InitControllerListener
     }
 
     /**
-     * Sets the smarty variables and js defs used to show / hide some notifications.
+     * @param ControllerBridgeInterface $controller
+     * @param Request $request
+     *
+     * @return void
      */
     private function initToken(ControllerBridgeInterface $controller, Request $request)
     {

@@ -24,47 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\EventListener;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+namespace PrestaShopBundle\Bridge\AdminController;
+
+use Tools;
 
 /**
- * Converts any legacy url into a migrated Symfony url (if it exists) and redirect to it.
+ * This class allow you to get filter prefix in different way.
  */
-class LegacyUrlListener
+class FilterPrefix
 {
     /**
-     * @var LegacyUrlConverter
+     * @param string $className
+     *
+     * @return string|null
      */
-    private $converter;
-
-    /**
-     * @param LegacyUrlConverter $converter
-     */
-    public function __construct(LegacyUrlConverter $converter)
+    public static function getByClassName(string $className): ?string
     {
-        $this->converter = $converter;
-    }
-
-    /**
-     * @param GetResponseEvent $event
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        if (!$event->isMasterRequest()) {
-            return;
-        }
-
-        try {
-            $convertedUrl = $this->converter->convertByRequest($event->getRequest());
-        } catch (CoreException $e) {
-            return;
-        }
-
-        //Add comment
-        $event->setResponse(new RedirectResponse($convertedUrl, 308));
+        return str_replace(['admin', 'controller'], '', Tools::strtolower($className));
     }
 }

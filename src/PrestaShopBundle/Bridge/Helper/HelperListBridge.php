@@ -24,27 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Helper;
 
-use Configuration;
 use Context;
 use Db;
-use DbQuery;
 use HelperList;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
-use PrestaShopBundle\Bridge\Utils\CookieFilterUtils;
-use PrestaShopBundle\Security\Admin\Employee;
+use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Tools;
 use Validate;
 
 /**
- * A bridge to use helper list to render list in Controller migrate horizontally
+ * A bridge to use helper list to render list in Controller migrate horizontally.
  */
 class HelperListBridge
 {
@@ -54,12 +52,12 @@ class HelperListBridge
     private $context;
 
     /**
-     * @var Employee
+     * @var UserProvider
      */
-    private $user;
+    private $userProvider;
 
     /**
-     * @var HelperListVarsAssigner
+     * @var HelperListConfigurator
      */
     private $helperListVarsAssigner;
 
@@ -68,62 +66,87 @@ class HelperListBridge
      */
     private $hookDispatcher;
 
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @param LegacyContext $legacyContext
+     * @param UserProvider $userProvider
+     * @param HelperListConfigurator $helperListVarsAssigner
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param Configuration $configuration
+     */
     public function __construct(
         LegacyContext $legacyContext,
-        TokenStorage $tokenStorage,
-        HelperListVarsAssigner $helperListVarsAssigner,
-        HookDispatcherInterface $hookDispatcher
+        UserProvider $userProvider,
+        HelperListConfigurator $helperListVarsAssigner,
+        HookDispatcherInterface $hookDispatcher,
+        Configuration $configuration
     ) {
         $this->context = $legacyContext->getContext();
-        $this->user = $this->getUser($tokenStorage);
+        $this->userProvider = $userProvider;
         $this->helperListVarsAssigner = $helperListVarsAssigner;
         $this->hookDispatcher = $hookDispatcher;
+        $this->configuration = $configuration;
     }
 
     /**
-     * Render list content
+     * Render html for list using HelperList helper.
      *
-     * @var HelperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
-     * @return string
+     * @return string|null
      */
     public function renderList(
-        ControllerConfiguration $controllerConfiguration,
         HelperListConfiguration $helperListConfiguration
     ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
         }
 
+        $this->getList($helperListConfiguration, $this->context->language->id);
+
         $helper = new HelperList();
 
-        $this->helperListVarsAssigner->setHelperDisplay($controllerConfiguration, $helperListConfiguration, $helper);
+        $this->helperListVarsAssigner->setHelperDisplay($helperListConfiguration, $helper);
         $helper->_default_pagination = $helperListConfiguration->defaultPagination;
         $helper->_pagination = $helperListConfiguration->pagination;
         $helper->tpl_delete_link_vars = $helperListConfiguration->deleteLinksVariableTemplate;
 
-        // For compatibility reasons, we have to check standard actions in class attributes
-        foreach ($controllerConfiguration->actionsAvailable as $action) {
-            if (!in_array($action, $controllerConfiguration->actions) && isset($controllerConfiguration->$action) && $controllerConfiguration->$action) {
-                $controllerConfiguration->actions[] = $action;
+        foreach ($helperListConfiguration->actionsAvailable as $action) {
+            if (!in_array($action, $helperListConfiguration->actions) && isset($helperListConfiguration->$action) && $helperListConfiguration->$action) {
+                $helperListConfiguration->actions[] = $action;
             }
         }
 
         /* @phpstan-ignore-next-line */
         $helper->sql = $helperListConfiguration->listsql;
 
-        return $helper->generateList($helperListConfiguration->list, $controllerConfiguration->fieldsList);
+        return $helper->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList);
     }
 
+    /**
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param int $idLang
+     * @param string $orderBy
+     * @param string $orderWay
+     * @param int $start
+     * @param string $limit
+     * @param int|bool $idLangShop
+     *
+     * @return void
+     */
     public function getList(
         HelperListConfiguration $helperListConfiguration,
-        int $id_lang,
+        int $idLang,
         $orderBy = null,
         $orderWay = null,
         $start = 0,
         $limit = null,
         $idLangShop = false
-    ) {
+    ): void {
         if ($helperListConfiguration->table == 'feature_value') {
             $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
         }
@@ -143,7 +166,7 @@ class HelperListBridge
         }
 
         /* Check params validity */
-        if (!is_numeric($start) || !Validate::isUnsignedId($id_lang)) {
+        if (!is_numeric($start) || !Validate::isUnsignedId($idLang)) {
             throw new PrestaShopException('get list params is not valid');
         }
 
@@ -175,7 +198,7 @@ class HelperListBridge
         }
 
         if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->className)) {
-            if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->user->getData()->isSuperAdmin()) {
+            if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
                 $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $helperListConfiguration->table . '_shop') . '`? *sa#', $helperListConfiguration->join);
                 if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($helperListConfiguration->table)) {
                     $helperListConfiguration->where .= ' AND EXISTS (
@@ -189,7 +212,7 @@ class HelperListBridge
         }
 
         $fromClause = $this->getFromClause($helperListConfiguration);
-        $joinClause = $this->getJoinClause($helperListConfiguration, $id_lang, $idLangShop);
+        $joinClause = $this->getJoinClause($helperListConfiguration, $idLang, $idLangShop);
         $whereClause = $this->getWhereClause($helperListConfiguration);
         $orderByClause = $this->getOrderByClause($helperListConfiguration, $orderBy, $orderWay);
 
@@ -254,7 +277,7 @@ class HelperListBridge
                 break;
             }
 
-            $helperListConfiguration->listTotal = Db::getInstance()->getValue($list_count, false);
+            $helperListConfiguration->listTotal = (int) Db::getInstance()->getValue($list_count, false);
 
             if ($shouldLimitSqlResults) {
                 $start = (int) $start - (int) $limit;
@@ -266,51 +289,19 @@ class HelperListBridge
             }
         } while (empty($this->_list));
 
-        if ($helperListConfiguration->table == 'feature') {
-            $nbItems = count($helperListConfiguration->list);
-            for ($i = 0; $i < $nbItems; ++$i) {
-                $item = &$helperListConfiguration->list[$i];
-
-                $query = new DbQuery();
-                $query->select('COUNT(fv.id_feature_value) as count_values');
-                $query->from('feature_value', 'fv');
-                $query->where('fv.id_feature =' . (int) $item['id_feature']);
-                $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-                $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-                $item['value'] = (int) $res;
-                unset($query);
-            }
-        }
-
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingResultsModifier', [
             'list' => &$helperListConfiguration->list,
             'list_total' => &$helperListConfiguration->listTotal,
         ]);
     }
 
-    private function getUser(TokenStorageInterface $tokenStorage)
-    {
-        if (null === $token = $tokenStorage->getToken()) {
-            return null;
-        }
-
-        if (!\is_object($user = $token->getUser())) {
-            return null;
-        }
-
-        if (!$user instanceof Employee) {
-            return null;
-        }
-
-        return $user;
-    }
-
     /**
-     * @param int $limit
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param string $limit
      *
      * @return int
      */
-    private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, $limit)
+    private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, $limit): int
     {
         if (empty($limit)) {
             if (
@@ -338,22 +329,25 @@ class HelperListBridge
     }
 
     /**
+     * @param HelperListConfiguration $helperListConfiguration
+     *
      * @return string
      */
     private function getFromClause(HelperListConfiguration $helperListConfiguration)
     {
-        $sql_table = $helperListConfiguration->table == 'order' ? 'orders' : $helperListConfiguration->table;
+        $sqlTable = $helperListConfiguration->table == 'order' ? 'orders' : $helperListConfiguration->table;
 
-        return "\n" . 'FROM `' . _DB_PREFIX_ . $sql_table . '` a ';
+        return "\n" . 'FROM `' . _DB_PREFIX_ . $sqlTable . '` a ';
     }
 
     /**
-     * @param int $id_lang
-     * @param int $id_lang_shop
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param int $idLang
+     * @param int $idLangShop
      *
      * @return string
      */
-    private function getJoinClause(HelperListConfiguration $helperListConfiguration, $id_lang, $id_lang_shop)
+    private function getJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop)
     {
         $shopJoinClause = '';
         if ($helperListConfiguration->shopLinkType) {
@@ -361,12 +355,13 @@ class HelperListBridge
                             ON a.`id_' . bqSQL($helperListConfiguration->shopLinkType) . '` = shop.`id_' . bqSQL($helperListConfiguration->shopLinkType) . '`';
         }
 
-        return "\n" . $this->getLanguageJoinClause($helperListConfiguration, $id_lang, $id_lang_shop) .
-            "\n" . (isset($this->_join) ? $this->_join . ' ' : '') .
+        return "\n" . $this->getLanguageJoinClause($helperListConfiguration, $idLang, $idLangShop) .
+            "\n" . (isset($helperListConfiguration->join) ? $helperListConfiguration->join . ' ' : '') .
             "\n" . $shopJoinClause;
     }
 
     /**
+     * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      * @param int $idLangShop
      *
@@ -381,7 +376,7 @@ class HelperListBridge
 
             if ($idLangShop) {
                 if (!Shop::isFeatureActive()) {
-                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) Configuration::get('PS_SHOP_DEFAULT');
+                    $languageJoinClause .= ' AND b.`id_shop` = ' . (int) $this->configuration->get('PS_SHOP_DEFAULT');
                 } elseif (Shop::getContext() == Shop::CONTEXT_SHOP) {
                     $languageJoinClause .= ' AND b.`id_shop` = ' . (int) $idLangShop;
                 } else {
@@ -395,6 +390,8 @@ class HelperListBridge
     }
 
     /**
+     * @param HelperListConfiguration $helperListConfiguration
+     *
      * @return string
      */
     private function getWhereClause(HelperListConfiguration $helperListConfiguration): string
@@ -432,8 +429,9 @@ class HelperListBridge
     }
 
     /**
-     * @param string|null $orderBy
-     * @param string|null $orderDirection
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param string $orderBy
+     * @param string $orderDirection
      *
      * @return string
      */
@@ -450,14 +448,15 @@ class HelperListBridge
     }
 
     /**
-     * @param string|null $orderBy
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param string $orderBy
      *
      * @return false|string
      */
     private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
-            $prefix = CookieFilterUtils::getCookieByPrefix($helperListConfiguration->controllerNameLegacy);
+            $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
 
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'}) {
                 $orderBy = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'};
@@ -492,13 +491,14 @@ class HelperListBridge
     }
 
     /**
-     * @param string|null $orderDirection
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param string $orderDirection
      *
-     * @return string
+     * @return mixed|string
      */
     private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
-        $prefix = CookieFilterUtils::getCookieByPrefix($helperListConfiguration->controllerNameLegacy);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
         if (empty($orderDirection)) {
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'}) {
                 $orderDirection = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'};
@@ -516,6 +516,11 @@ class HelperListBridge
         return pSQL(Tools::strtoupper($orderDirection));
     }
 
+    /**
+     * @param int $limit
+     *
+     * @return bool
+     */
     private function shouldLimitSqlResults($limit): bool
     {
         return $limit !== false;

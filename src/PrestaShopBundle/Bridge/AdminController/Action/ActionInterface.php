@@ -24,17 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Define needed constant for addAction methods
+ * Defines the contract for actions class and needed constant to know available action.
  */
-interface AddActionInterface
+interface ActionInterface
 {
-    public const ACTION_TYPE_BULK = 'bulk';
-    public const ACTION_TYPE_ROW = 'row';
-    public const ACTION_TYPE_HEADER_TOOLBAR = 'header_toolbar';
-    public const ACTION_TYPE_LIST_HEADER_TOOLBAR = 'list_header_toolbar';
+    public const AVAILABLE_ACTION_VIEW = 'view';
+    public const AVAILABLE_ACTION_EDIT = 'edit';
+    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
+    public const AVAILABLE_ACTION_DELETE = 'delete';
 
-    public function addAction(string $type, string $action, array $config = []): void;
+    /**
+     * @return array
+     */
+    public function getConfig(): array;
+
+    /**
+     * @return string
+     */
+    public function getLabel(): string;
 }

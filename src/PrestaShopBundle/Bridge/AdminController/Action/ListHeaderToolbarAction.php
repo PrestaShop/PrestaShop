@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Smarty;
+declare(strict_types=1);
 
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Hydrate template variables for modal
+ * This class is the object to instantiate if you want to add an action in the header toolbar of your list.
  */
-class ModalHydrator implements HydratorInterface
+class ListHeaderToolbarAction extends Action
 {
-    public function hydrate(ControllerConfiguration $controllerConfiguration): void
-    {
-        $controllerConfiguration->templatesVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
-        $controllerConfiguration->templatesVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['add_permission'] = 1;
-    }
 }

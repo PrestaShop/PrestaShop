@@ -24,15 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Helper;
 
+use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use Shop;
 
 /**
- * Configuration for helper list bridge
+ * This object contains the configuration needed to generate a list using the helper list.
  */
 class HelperListConfiguration
 {
+    /**
+     * @var int
+     */
+    public $id;
+
     /**
      * @var string
      */
@@ -61,6 +69,11 @@ class HelperListConfiguration
     /**
      * @var string
      */
+    public $token;
+
+    /**
+     * @var string
+     */
     public $select;
 
     /**
@@ -71,7 +84,7 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $join;
+    public $join = '';
 
     /**
      * @var string
@@ -159,7 +172,7 @@ class HelperListConfiguration
     public $list;
 
     /**
-     * @var string
+     * @var int
      */
     public $listTotal;
 
@@ -182,4 +195,39 @@ class HelperListConfiguration
      * @var array
      */
     public $deleteLinksVariableTemplate = [];
+
+    /**
+     * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
+     */
+    public $actionsAvailable = [
+        ActionInterface::AVAILABLE_ACTION_VIEW,
+        ActionInterface::AVAILABLE_ACTION_EDIT,
+        ActionInterface::AVAILABLE_ACTION_DUPLICATE,
+        ActionInterface::AVAILABLE_ACTION_DELETE,
+    ];
+
+    /**
+     * @var array
+     */
+    public $toolbarButton = [];
+
+    /**
+     * @var array
+     */
+    public $actions = [];
+
+    /**
+     * @var array
+     */
+    public $bulkActions = [];
+
+    /**
+     * @var string
+     */
+    public $positionIdentifier;
+
+    /**
+     * @var bool
+     */
+    public $bootstrap;
 }

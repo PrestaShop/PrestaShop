@@ -24,30 +24,43 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Smarty;
 
+use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use Smarty;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 
 /**
- * Assign variable to smarty
+ * This class assign css files, js files, prestashop version,
+ * and if the language is FR to the controller configuration.
  */
-class SmartyVarsAssigner
+class FooterConfigurator implements ConfiguratorInterface
 {
     /**
-     * @var Smarty
+     * @var Language
      */
-    private $smarty;
+    private $language;
 
+    /**
+     * @param LegacyContext $legacyContext
+     */
     public function __construct(LegacyContext $legacyContext)
     {
-        $this->smarty = $legacyContext->getSmarty();
+        $this->language = $legacyContext->getLanguage();
     }
 
-    public function assign(array $templatesVars)
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return void
+     */
+    public function hydrate(ControllerConfiguration $controllerConfiguration): void
     {
-        foreach ($templatesVars as $name => $value) {
-            $this->smarty->assign($name, $value);
-        }
+        $controllerConfiguration->templatesVars['css_files'] = $controllerConfiguration->cssFiles;
+        $controllerConfiguration->templatesVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
+        $controllerConfiguration->templatesVars['ps_version'] = _PS_VERSION_;
+        $controllerConfiguration->templatesVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
     }
 }

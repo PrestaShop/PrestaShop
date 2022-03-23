@@ -24,22 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use Configuration;
 use Cookie;
 use Country;
 use Currency;
 use Language;
 use Link;
 use Media;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use QuickAccess;
 use Shop;
@@ -49,9 +51,10 @@ use Tab;
 use Tools;
 
 /**
- * Hydrate template variables for header
+ * Sets template variables for header.
+ * For example notification tips, employee information, quick access...
  */
-class HeaderHydrator implements HydratorInterface
+class HeaderConfigurator implements ConfiguratorInterface
 {
     /**
      * @var Cookie
@@ -103,11 +106,24 @@ class HeaderHydrator implements HydratorInterface
      */
     private $hookDispatcher;
 
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @param RouterInterface $router
+     * @param TranslatorInterface $translator
+     * @param LegacyContext $legacyContext
+     * @param HookDispatcherInterface $hookDispatcher
+     * @param Configuration $configuration
+     */
     public function __construct(
         RouterInterface $router,
         TranslatorInterface $translator,
         LegacyContext $legacyContext,
-        HookDispatcherInterface $hookDispatcher
+        HookDispatcherInterface $hookDispatcher,
+        Configuration $configuration
     ) {
         $this->cookie = $legacyContext->getContext()->cookie;
         $this->country = $legacyContext->getContext()->country;
@@ -119,6 +135,7 @@ class HeaderHydrator implements HydratorInterface
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
         $this->hookDispatcher = $hookDispatcher;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -128,7 +145,7 @@ class HeaderHydrator implements HydratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration)
+    public function hydrate(ControllerConfiguration $controllerConfiguration): void
     {
         header('Cache-Control: no-store, no-cache');
 
@@ -136,7 +153,7 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['current'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templatesVars['token'] = $controllerConfiguration->token;
         $controllerConfiguration->templatesVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
-        $controllerConfiguration->templatesVars['stock_management'] = (int) Configuration::get('PS_STOCK_MANAGEMENT');
+        $controllerConfiguration->templatesVars['stock_management'] = (int) $this->configuration->get('PS_STOCK_MANAGEMENT');
         $controllerConfiguration->templatesVars['no_order_tip'] = $this->getNotificationTip('order');
         $controllerConfiguration->templatesVars['no_customer_tip'] = $this->getNotificationTip('customer');
         $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
@@ -172,29 +189,29 @@ class HeaderHydrator implements HydratorInterface
         $controllerConfiguration->templatesVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
         $controllerConfiguration->templatesVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
         $controllerConfiguration->templatesVars['employee'] = $controllerConfiguration->user->getData();
-        $controllerConfiguration->templatesVars['help_box'] = Configuration::get('PS_HELPBOX');
+        $controllerConfiguration->templatesVars['help_box'] = $this->configuration->get('PS_HELPBOX');
         $controllerConfiguration->templatesVars['is_multishop'] = Shop::isFeatureActive();
         $controllerConfiguration->templatesVars['login_link'] = $this->link->getAdminLink('AdminLogin');
         $controllerConfiguration->templatesVars['logout_link'] = $this->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
         $controllerConfiguration->templatesVars['multi_shop'] = Shop::isFeatureActive();
         $controllerConfiguration->templatesVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->user->getData()->id);
-        $controllerConfiguration->templatesVars['round_mode'] = Configuration::get('PS_PRICE_ROUND_MODE');
+        $controllerConfiguration->templatesVars['round_mode'] = $this->configuration->get('PS_PRICE_ROUND_MODE');
         $controllerConfiguration->templatesVars['base_url'] = $this->shop->getBaseURL(true);
         $controllerConfiguration->templatesVars['bootstrap'] = $controllerConfiguration->bootstrap;
         $controllerConfiguration->templatesVars['controller_name'] = $controllerConfiguration->controllerNameLegacy;
         $controllerConfiguration->templatesVars['country_iso_code'] = $this->country->iso_code;
         $controllerConfiguration->templatesVars['currentIndex'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templatesVars['current_tab_level'] = $currentTabLevel;
-        $controllerConfiguration->templatesVars['default_language'] = (int) Configuration::get('PS_LANG_DEFAULT');
+        $controllerConfiguration->templatesVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
         $controllerConfiguration->templatesVars['full_language_code'] = $this->language->language_code;
-        $controllerConfiguration->templatesVars['full_cldr_language_code'] = 'fr';
+        $controllerConfiguration->templatesVars['full_cldr_language_code'] = $this->currentLocale->getCode();
         $controllerConfiguration->templatesVars['img_dir'] = _PS_IMG_;
         $controllerConfiguration->templatesVars['install_dir_exists'] = file_exists(_PS_ADMIN_DIR_ . '/../install');
         $controllerConfiguration->templatesVars['iso'] = $this->language->iso_code;
         $controllerConfiguration->templatesVars['iso_user'] = $this->language->iso_code;
         $controllerConfiguration->templatesVars['lang_is_rtl'] = $this->language->is_rtl;
         $controllerConfiguration->templatesVars['link'] = $this->link;
-        $controllerConfiguration->templatesVars['shop_name'] = Configuration::get('PS_SHOP_NAME');
+        $controllerConfiguration->templatesVars['shop_name'] = $this->configuration->get('PS_SHOP_NAME');
         $controllerConfiguration->templatesVars['tabs'] = $tabs;
         $controllerConfiguration->templatesVars['version'] = _PS_VERSION_;
 
@@ -206,7 +223,12 @@ class HeaderHydrator implements HydratorInterface
         );
     }
 
-    private function getNotificationTip($type)
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    private function getNotificationTip(string $type): string
     {
         $tips = [
             'order' => [
@@ -237,6 +259,11 @@ class HeaderHydrator implements HydratorInterface
         return $tips[$type][array_rand($tips[$type])];
     }
 
+    /**
+     * @param RenderedHookInterface $renderedHook
+     *
+     * @return string|null
+     */
     private function getDisplayHookRender(RenderedHookInterface $renderedHook): ?string
     {
         if (!$content = $renderedHook->getContent()) {
@@ -252,6 +279,13 @@ class HeaderHydrator implements HydratorInterface
         return $result;
     }
 
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     * @param int $parentId
+     * @param int $level
+     *
+     * @return array
+     */
     private function getTabs(ControllerConfiguration $controllerConfiguration, $parentId = 0, $level = 0): array
     {
         $tabs = Tab::getTabs($this->language->id, $parentId);
@@ -260,7 +294,7 @@ class HeaderHydrator implements HydratorInterface
         foreach ($tabs as $index => $tab) {
             if (!Tab::checkTabRights($tab['id_tab'])
                 || !$tab['enabled']
-                || ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
+                || ($tab['class_name'] == 'AdminStock' && $this->configuration->get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
                 || $tab['class_name'] == 'AdminCarrierWizard') {
                 unset($tabs[$index]);
 
@@ -307,7 +341,7 @@ class HeaderHydrator implements HydratorInterface
      *
      * @return string Url, or empty if no active sub-tab
      */
-    private function getTabLinkFromSubTabs(array $subtabs)
+    private function getTabLinkFromSubTabs(array $subtabs): string
     {
         foreach ($subtabs as $tab) {
             if ($tab['active'] && $tab['enabled']) {
@@ -320,6 +354,8 @@ class HeaderHydrator implements HydratorInterface
 
     /**
      * Prepare price specifications to display cldr prices in javascript context.
+     *
+     * @return array
      */
     private function preparePriceSpecifications(): array
     {
@@ -337,8 +373,10 @@ class HeaderHydrator implements HydratorInterface
 
     /**
      * Prepare number specifications to display cldr numbers in javascript context.
+     *
+     * @return array
      */
-    private function prepareNumberSpecifications()
+    private function prepareNumberSpecifications(): array
     {
         /* @var NumberSpecification */
         $numberSpecification = $this->currentLocale->getNumberSpecification();

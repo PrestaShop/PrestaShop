@@ -24,19 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Smarty;
+declare(strict_types=1);
 
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Define contract for all hydrator
+ * This class is the object to instantiate if you want to add an action on each row of your list.
  */
-interface HydratorInterface
+class ListRowAction extends Action
 {
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    public function hydrate(ControllerConfiguration $controllerConfiguration);
 }

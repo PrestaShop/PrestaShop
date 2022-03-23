@@ -1,14 +1,53 @@
 <?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
 use Media;
-use PrestaShopBundle\Bridge\Controller\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
 
+/**
+ * This trait adds methods to get a response object with the HTML passed as parameters and with all stuff needed,
+ * like header, footer, notifications.
+ *
+ * Developers must use this trait in a controller migrated horizontally to render a smarty template as a Symfony response.
+ * He can also be used to add CSS, js, jquery plugin, and jquery UI to a response.
+ */
 trait SmartyTrait
 {
+    /**
+     * @param string $content
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return Response
+     */
     public function renderSmarty(string $content, ControllerConfiguration $controllerConfiguration): Response
     {
         $this->setMedia();
@@ -16,6 +55,9 @@ trait SmartyTrait
         return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $controllerConfiguration);
     }
 
+    /**
+     * {@intheritedoc}
+     */
     public function setMedia($isNewTheme = false): void
     {
         $adminWebpath = '';
@@ -114,7 +156,7 @@ trait SmartyTrait
     }
 
     /**
-     * Adds a new stylesheet(s) to the page header.
+     * {@intheritedoc}
      */
     public function addCSS($cssUri, $cssMediaType = 'all', $offset = null, $checkPath = true): void
     {
@@ -150,7 +192,7 @@ trait SmartyTrait
     }
 
     /**
-     * Adds a new JavaScript file(s) to the page header.
+     * {@intheritedoc}
      */
     public function addJS($jsUri, $checkPath = true): void
     {
@@ -176,7 +218,7 @@ trait SmartyTrait
     }
 
     /**
-     * Adds jQuery plugin(s) to queued JS file list.
+     * {@intheritedoc}
      */
     public function addJqueryPlugin($name, $folder = null, $css = true): void
     {
@@ -192,7 +234,7 @@ trait SmartyTrait
             }
             if ($css && !empty($pluginPath['css'])) {
                 if (is_array($pluginPath['css'])) {
-                    $this->addCSS(key($pluginPath['css']), 'all', null, false);
+                    $this->addCSS((string) key($pluginPath['css']), 'all', null, false);
                 } else {
                     $this->addCSS($pluginPath['css'], 'all', null, false);
                 }
@@ -201,7 +243,7 @@ trait SmartyTrait
     }
 
     /**
-     * Adds jQuery UI component(s) to queued JS file list.
+     * {@intheritedoc}
      */
     public function addJqueryUI($component, $theme = 'base', $checkDependencies = true): void
     {
