@@ -50,7 +50,7 @@ class OrderConfirmationControllerCore extends FrontController
     public function init()
     {
         // Test below to prevent unnecessary logs from "parent::init()"
-        $this->id_cart = (int)Tools::getValue('id_cart', 0);
+        $this->id_cart = (int) Tools::getValue('id_cart', 0);
         if (!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart) {
             $cart = new Cart($this->id_cart);
             if ($cart->orderExists()) {
