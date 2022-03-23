@@ -33,6 +33,6 @@ use PrestaShop\PrestaShop\Core\Exception\CoreException;
 /**
  * Thrown when trying to create a CommandField with invalid type.
  */
-class InvalidCommandFieldTypeException extends CoreException
+class DataFieldException extends CoreException
 {
 }
