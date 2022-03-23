@@ -241,7 +241,15 @@ EOF;
 
     private function escapeSmarty(string $template): string
     {
-        return '{{ \'' . addcslashes($template, "\\'\0") . '\' | raw }}';
+        // Hard limit of twig filter at 8191 characters (2^13 - 1)
+        // Split the string in multiple chunks
+        $strings = str_split($template, 2000);
+        $return = '';
+        foreach ($strings as $string) {
+            $return .= '{{ \'' . addcslashes($string, "'\0") . '\' | raw }}';
+        }
+
+        return $return;
     }
 
     /**
