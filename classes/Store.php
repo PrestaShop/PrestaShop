@@ -38,13 +38,13 @@ class StoreCore extends ObjectModel
     /** @var int State id */
     public $id_state;
 
-    /** @var string|array<string> Name */
+    /** @var string|array<int, string> Store name */
     public $name;
 
-    /** @var string|array<string> Address first line */
+    /** @var string|array<int, string> Address first line */
     public $address1;
 
-    /** @var string|array<string> Address second line (optional) */
+    /** @var string|array<int, string> Address second line (optional) */
     public $address2;
 
     /** @var string Postal code */
@@ -59,7 +59,7 @@ class StoreCore extends ObjectModel
     /** @var float Longitude */
     public $longitude;
 
-    /** @var string|array Store hours (PHP serialized) */
+    /** @var string|array<int, string> Store hours (PHP serialized) */
     public $hours;
 
     /** @var string Phone number */
@@ -68,7 +68,7 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
-    /** @var string|array<string> Note */
+    /** @var string|array<int, string> Note */
     public $note;
 
     /** @var string e-mail */

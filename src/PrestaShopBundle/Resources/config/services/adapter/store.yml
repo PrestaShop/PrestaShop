@@ -10,6 +10,10 @@ services:
       - '@prestashop.core.domain.store.repository.store_repository'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing' }
+  prestashop.adapter.store.command_handler.add_store:
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
+    tags:
+      - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand }
   prestashop.adapter.store.command_handler.toggle_store_status:
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
     arguments:

@@ -3965,7 +3965,7 @@ class AdminImportControllerCore extends AdminController
             foreach ($store->hours as $hour) {
                 $newHours[] = [$hour];
             }
-            $store->hours = json_encode($newHours);
+            $store->hours[(int) Configuration::get('PS_LANG_DEFAULT')] = json_encode($newHours);
         }
 
         if (isset($store->country) && is_numeric($store->country)) {

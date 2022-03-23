@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
@@ -41,20 +41,10 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\PhoneNumber;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Postcode;
 
 /**
- * Store information for editing
+ * Class AddStoreCommand is responsible for adding store data.
  */
-class StoreForEditing
+class AddStoreCommand
 {
-    /**
-     * @var int
-     */
-    private $storeId;
-
-    /**
-     * @var bool
-     */
-    private $active;
-
     /**
      * @var CountryId
      */
@@ -131,82 +121,17 @@ class StoreForEditing
     private $localizedNotes = [];
 
     /**
-     * @param int $storeId
-     * @param bool $isActive
+     * @param int $countryId
+     * @param string $postcode
+     * @param string $city
      * @param int[] $shopAssociation
-     * @param array<int, string> $localizedNames
-     * @param array<int, string> $localizedAddress1
-     * @param array<int, string> $localizedAddress2
-     * @param array<int, string> $localizedHours
-     * @param array<int, string> $localizedNotes
      */
-    public function __construct(
-        int $storeId,
-        bool $isActive,
-        $shopAssociation,
-        int $countryId,
-        string $postcode,
-        string $city,
-        ?int $stateId = null,
-        ?string $latitude = null,
-        ?string $longitude = null,
-        ?string $phone = null,
-        ?string $fax = null,
-        ?string $email = null,
-        array $localizedNames = [],
-        array $localizedAddress1 = [],
-        array $localizedAddress2 = [],
-        array $localizedHours = [],
-        array $localizedNotes = []
-    ) {
-        $this->storeId = $storeId;
-        $this->active = $isActive;
-        $this->shopAssociation = $shopAssociation;
-        $this->countryId = new CountryId($countryId);
-        $this->postcode = new Postcode($postcode);
-        $this->city = new CityName($city);
-        $this->stateId = $stateId !== null ? new StateId($stateId) : null;
-        $this->latitude = $latitude !== null ? new Coordinate($latitude) : null;
-        $this->longitude = $longitude !== null ? new Coordinate($longitude) : null;
-        $this->phone = $phone !== null ? new PhoneNumber($phone) : null;
-        $this->fax = $fax !== null ? new PhoneNumber($fax) : null;
-        $this->email = $email !== null ? new Email($email) : null;
-
-        foreach ($localizedNames as $langId => $name) {
-            $this->localizedNames[$langId] = new GenericName($name);
-        }
-
-        foreach ($localizedAddress1 as $langId => $address) {
-            $this->localizedAddress1[$langId] = new Address($address);
-        }
-
-        foreach ($localizedAddress2 as $langId => $address) {
-            $this->localizedAddress2[$langId] = new Address($address);
-        }
-
-        foreach ($localizedHours as $langId => $hours) {
-            $this->localizedHours[$langId] = new Hours($hours);
-        }
-
-        foreach ($localizedNotes as $langId => $note) {
-            $this->localizedNotes[$langId] = new Note($note);
-        }
-    }
-
-    /**
-     * @return int
-     */
-    public function getStoreId(): int
+    public function __construct(int $countryId, string $postcode, string $city, $shopAssociation)
     {
-        return $this->storeId;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isActive(): bool
-    {
-        return $this->active;
+        $this->setCountryId($countryId);
+        $this->setPostcode($postcode);
+        $this->setCity($city);
+        $this->setShopAssociation($shopAssociation);
     }
 
     public function getCountryId(): CountryId
@@ -214,9 +139,27 @@ class StoreForEditing
         return $this->countryId;
     }
 
+    public function setCountryId(int $countryId): self
+    {
+        $this->countryId = new CountryId($countryId);
+
+        return $this;
+    }
+
     public function getStateId(): ?StateId
     {
         return $this->stateId;
+    }
+
+    public function setStateId(?int $stateId): self
+    {
+        if (null !== $stateId) {
+            $stateId = new StateId($stateId);
+        }
+
+        $this->stateId = $stateId;
+
+        return $this;
     }
 
     public function getPostcode(): Postcode
@@ -224,9 +167,23 @@ class StoreForEditing
         return $this->postcode;
     }
 
+    public function setPostcode(string $postcode): self
+    {
+        $this->postcode = new Postcode($postcode);
+
+        return $this;
+    }
+
     public function getCity(): CityName
     {
         return $this->city;
+    }
+
+    public function setCity($city): self
+    {
+        $this->city = new CityName($city);
+
+        return $this;
     }
 
     public function getLatitude(): ?Coordinate
@@ -234,9 +191,31 @@ class StoreForEditing
         return $this->latitude;
     }
 
+    public function setLatitude(?string $latitude): self
+    {
+        if (null !== $latitude) {
+            $latitude = new Coordinate($latitude);
+        }
+
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
     public function getLongitude(): ?Coordinate
     {
         return $this->longitude;
+    }
+
+    public function setLongitude(?string $longitude): self
+    {
+        if (null !== $longitude) {
+            $longitude = new Coordinate($longitude);
+        }
+
+        $this->longitude = $longitude;
+
+        return $this;
     }
 
     public function getPhone(): ?PhoneNumber
@@ -244,14 +223,47 @@ class StoreForEditing
         return $this->phone;
     }
 
+    public function setPhone(?string $phone): self
+    {
+        if (null !== $phone) {
+            $phone = new PhoneNumber($phone);
+        }
+
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getFax(): ?PhoneNumber
     {
         return $this->fax;
     }
 
-    public function getEmail(): ?Email
+    public function setFax(?string $fax): self
+    {
+        if (null !== $fax) {
+            $fax = new PhoneNumber($fax);
+        }
+
+        $this->fax = $fax;
+
+        return $this;
+    }
+
+    public function getEmail(): Email
     {
         return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        if (null !== $email) {
+            $email = new Email($email);
+        }
+
+        $this->email = $email;
+
+        return $this;
     }
 
     /**
@@ -263,11 +275,33 @@ class StoreForEditing
     }
 
     /**
+     * @param int[] $shopAssociation
+     */
+    public function setShopAssociation(array $shopAssociation): self
+    {
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
+    }
+
+    /**
      * @return array<int, GenericName>
      */
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
+    }
+
+    /**
+     * @param array<int, string> $localizedNames
+     */
+    public function setLocalizedNames(array $localizedNames): self
+    {
+        foreach ($localizedNames as $langId => $name) {
+            $this->localizedNames[$langId] = new GenericName($name);
+        }
+
+        return $this;
     }
 
     /**
@@ -279,11 +313,35 @@ class StoreForEditing
     }
 
     /**
+     * @param array<int, string> $localizedAddress1
+     */
+    public function setLocalizedAddress1(array $localizedAddress1): self
+    {
+        foreach ($localizedAddress1 as $langId => $address) {
+            $this->localizedAddress1[$langId] = new Address($address);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array<int, Address>
      */
     public function getLocalizedAddress2(): array
     {
         return $this->localizedAddress2;
+    }
+
+    /**
+     * @param array<int, string> $localizedAddress2
+     */
+    public function setLocalizedAddress2(array $localizedAddress2): self
+    {
+        foreach ($localizedAddress2 as $langId => $address) {
+            $this->localizedAddress2[$langId] = new Address($address);
+        }
+
+        return $this;
     }
 
     /**
@@ -295,10 +353,34 @@ class StoreForEditing
     }
 
     /**
+     * @param array<int, string> $localizedHours
+     */
+    public function setLocalizedHours(array $localizedHours): self
+    {
+        foreach ($localizedHours as $langId => $hours) {
+            $this->localizedHours[$langId] = new Hours($hours);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return array<int, Note>
      */
     public function getLocalizedNotes(): array
     {
         return $this->localizedNotes;
+    }
+
+    /**
+     * @param array<int, string> $localizedNotes
+     */
+    public function setLocalizedNotes(array $localizedNotes): self
+    {
+        foreach ($localizedNotes as $langId => $note) {
+            $this->localizedNotes[$langId] = new Note($note);
+        }
+
+        return $this;
     }
 }

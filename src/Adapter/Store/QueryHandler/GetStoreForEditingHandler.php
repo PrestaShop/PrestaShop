@@ -63,6 +63,24 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             throw new StoreException(sprintf('An unexpected error occurred when retrieving store with id %d', $query->getStoreId()->getValue()), 0, $e);
         }
 
-        return new StoreForEditing($store->id, $store->active);
+        return new StoreForEditing(
+            $store->id,
+            $store->active,
+            $store->getAssociatedShops(),
+            $store->id_country,
+            $store->postcode,
+            $store->city,
+            $store->id_state,
+            (string) $store->latitude,
+            (string) $store->longitude,
+            $store->phone,
+            $store->fax,
+            $store->email,
+            $store->name,
+            $store->address1,
+            $store->address2,
+            $store->hours,
+            $store->note
+        );
     }
 }
