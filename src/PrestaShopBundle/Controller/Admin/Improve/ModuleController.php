@@ -224,7 +224,7 @@ class ModuleController extends ModuleAbstractController
             return new JsonResponse($response);
         }
 
-        $actionTitle = str_replace('_', ' ', $action);
+        $actionTitle = AdminModuleDataProvider::ACTIONS_TRANSLATION_LABELS[$action];
 
         try {
             $response[$module]['status'] = $moduleManager->{$action}($module);
