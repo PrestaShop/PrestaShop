@@ -54,7 +54,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 Country::getIdByName($this->getDefaultLangId(), $data['country']),
                 $data['postcode'],
                 $data['city'],
-                $this->getShopIdsByReferences($data['shops']),
+                $this->getShopIdsByReferences($data['shops'])
             );
 
             $addStoreCommand
@@ -146,7 +146,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             $data['address1'] ?? [],
             $data['address2'] ?? [],
             $data['hours'] ?? [],
-            $data['note'] ?? [],
+            $data['note'] ?? []
         );
     }
 
