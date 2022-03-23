@@ -43,13 +43,14 @@ export interface ProgressModalType extends ModalType {
   modal: ProgressModalContainerType;
 }
 export type ProgressModalParams = ModalParams & {
-  modalDescription: string;
-  closeButtonLabel: string;
   modalTitle: string;
-  modalProgressTitle: string;
-  modalFailureTitle: string;
+  total: number;
   confirmCallback: (event: Event) => void,
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
+}
+
+export type ProgressErrorModalParams = ModalParams & {
+  errors: Array<string>;
 }
 export type InputProgressModalParams = Partial<ProgressModalParams>;
 
@@ -76,9 +77,6 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
 
   closeButton!: HTMLElement;
 
-  successCount = 0;
-
-  failCount = 0;
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
@@ -87,22 +85,36 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
   }
 
   buildModalContainer(params: ProgressModalParams): void {
+    params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
     super.buildModalContainer(params);
+    this.container.classList.remove('fade');
 
-    this.buildProgress(params.modalTitle, params.modalProgressTitle, params.modalFailureTitle);
+    this.buildProgressBar();
 
     let progressDetails = document.createElement('div');
     progressDetails.classList.add(
       'float-right',
-      'progress-details-text',
+      'progress-percent',
     );
+
+    progressDetails.append('0%');
 
     this.body.append(progressDetails);
 
     this.body.append(this.progress);
 
+    let switchButtonContainer = document.createElement('div');
+    switchButtonContainer.classList.add(
+      'switch-to-errors-button',
+      'btn',
+      'btn-primary'
+    );
+    switchButtonContainer.innerHTML = 'Errors';
+    this.body.append(switchButtonContainer);
+
+
     let errorContainer = document.createElement('div');
-    errorContainer.classList.add('modal-error-container');
+    errorContainer.classList.add('modal-error-container-single');
     this.body.append(errorContainer);
     // Modal footer element
     this.footer = document.createElement('div');
@@ -114,28 +126,15 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     this.closeButton.setAttribute('disabled', 'true');
     this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
     this.closeButton.dataset.dismiss = 'modal';
-    this.closeButton.innerHTML = params.closeButtonLabel;
+    this.closeButton.innerHTML = 'Close';
 
     // Appending element to the modal
     this.footer.append(this.closeButton, ...params.customButtons);
     this.content.append(this.footer);
   }
 
-  buildProgress(modalTitle: string, modalProgressTitle: string, modalFailureTitle: string)
-  {
-    this.buildProgressBar();
-    this.buildProgressInfo(modalTitle);
-    this.buildProgressSuccess(modalProgressTitle);
-    this.buildProgressError(modalFailureTitle);
-
-    this.progress.append(this.progressSuccess);
-    this.progress.append(this.progressFailure);
-    this.progress.append(this.progressInfo);
-  }
-
   buildProgressBar()
   {
-
     this.progress = document.createElement('div');
     this.progress.setAttribute('style', 'display: block; width: 100%');
 
@@ -143,84 +142,112 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     (
       'progress',
       'active',
-      'progress-striped'
     );
     let progressBar = document.createElement('div');
     progressBar.classList.add('progress-bar', 'progress-bar-success');
     progressBar.setAttribute('role', 'progressbar');
     progressBar.setAttribute('style', 'width: 0%;');
-    let span = document.createElement('span');
-    span.append('0%');
 
-    progressBar.append(span);
-    this.progress.append(progressBar);
-  }
+    let progressDone = document.createElement('div');
+    progressDone.setAttribute('style', 'width: 0%');
 
-  buildProgressSuccess(modalProgressName: string)
-  {
-    this.progressSuccess = document.createElement('div');
-    this.progressSuccess.setAttribute('style', 'width: 0%');
-
-    this.progressSuccess.classList.add
+    progressDone.classList.add
     (
       'progress-bar',
       'progress-bar-success',
     );
-    this.progressSuccess.setAttribute('role', 'progressbar');
-    this.progressSuccess.setAttribute('id', 'modal_progressbar_info')
-
-    let successSpan = document.createElement('span');
-    let successCountSpan = document.createElement('span');
-    successCountSpan.classList.add(
-      'progress-success-count'
-    );
-    successSpan.append(modalProgressName + ' ');
-    successSpan.append(successCountSpan);
-
-    this.progressSuccess.append(successSpan);
+    progressDone.setAttribute('role', 'progressbar');
+    progressDone.setAttribute('id', 'modal_progressbar_done');
+    this.progress.append(progressDone);
   }
 
-  buildProgressError(modalFailureName: string)
-  {
+  buildModalErrorContainer(params: ProgressErrorModalParams): void {
+    super.buildModalContainer(params);
+    this.container.classList.remove('fade');
 
-    this.progressFailure = document.createElement('div');
-    this.progressFailure.setAttribute('style', 'width: 0%');
-
-    this.progressFailure.classList.add
+    let errorContainer = document.createElement('div');
+    errorContainer.classList.add('progress-modal-error-container');
+    errorContainer.classList.add
     (
-      'progress-bar',
-      'progress-bar-danger',
+      'alert',
+      'alert-warning',
+      'd-print-none'
     );
-    this.progressFailure.setAttribute('role', 'progressbar');
-    this.progressFailure.setAttribute('id', 'modal;_progressbar_failure')
+    this.body.append(errorContainer);
 
-    let failureSpan = document.createElement('span');
-    let failureCountSpan = document.createElement('span');
-    failureCountSpan.classList.add(
-      'progress-failure-count'
+    this.footer = document.createElement('div');
+    this.footer.classList.add('modal-footer');
+    let switchButtonContainer = document.createElement('div');
+    switchButtonContainer.classList.add(
+      'switch-to-progress-button',
+      'btn',
+      'btn-secondary'
     );
-    failureSpan.append(modalFailureName + ' ');
-    failureSpan.append(failureCountSpan);
-    this.progressFailure.append(failureSpan);
+    switchButtonContainer.innerHTML = 'Back to processing';
+
+    let downloadButtonContainer = document.createElement('div');
+    downloadButtonContainer.classList.add(
+      'download-error-log',
+      'btn',
+      'btn-secondary'
+    );
+    downloadButtonContainer.innerHTML = 'Download error log';
+    this.footer.append(switchButtonContainer);
+    this.footer.append(downloadButtonContainer);
+    this.body.append(this.footer);
+  }
+}
+
+export class ProgressModalErrorContainer extends ModalContainer implements ModalContainerType {
+  footer!: HTMLElement;
+  closeButton!: HTMLElement;
+  errors!: Array<string>;
+
+  /* This constructor is important to force the input type but ESLint is not happy about it*/
+  /* eslint-disable no-useless-constructor */
+  constructor(params: ProgressErrorModalParams) {
+    super(params);
   }
 
-  buildProgressInfo(actionName: string)
-  {
-    this.progressInfo = document.createElement('div');
-    this.progressInfo.setAttribute('style', 'width: 0%');
+  buildModalContainer(params: ProgressErrorModalParams): void {
+    super.buildModalContainer(params);
+    this.container.classList.remove('fade');
 
-    this.progressInfo.classList.add
+    let errorContainer = document.createElement('div');
+    errorContainer.classList.add('progress-modal-error-container');
+    params.errors.forEach(function (error) {
+      let errorContent = document.createElement('p');
+      errorContent.append(error);
+      errorContainer.append(errorContent);
+    });
+    errorContainer.classList.add
     (
-      'progress-bar',
-      'progress-bar-info',
+      'alert',
+      'alert-warning',
+      'd-print-none'
     );
-    this.progressInfo.setAttribute('role', 'progressbar');
-    this.progressInfo.setAttribute('id', 'modal_progressbar_done')
+    this.body.append(errorContainer);
 
-    let infoSpan = document.createElement('span');
-    infoSpan.append(actionName);
+    this.footer = document.createElement('div');
+    this.footer.classList.add('modal-footer');
+    let switchButtonContainer = document.createElement('div');
+    switchButtonContainer.classList.add(
+      'switch-to-progress-button',
+      'btn',
+      'btn-secondary'
+    );
+    switchButtonContainer.innerHTML = 'Back to processing';
 
-    this.progressInfo.append(infoSpan);
+    let downloadButtonContainer = document.createElement('div');
+    downloadButtonContainer.classList.add(
+      'download-error-log',
+      'btn',
+      'btn-secondary'
+    );
+    downloadButtonContainer.innerHTML = 'Download error log';
+    this.footer.append(switchButtonContainer);
+    this.footer.append(downloadButtonContainer);
+    this.body.append(this.footer);
   }
 }
 
@@ -233,10 +260,10 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
  */
 export class ProgressModal extends Modal implements ProgressModalType {
   modal!: ProgressModalContainerType;
-  successCount !: number;
-  errorCount !: number;
-  totalDoneCount !: number;
+  doneCount !: number;
   total !: number;
+  errors !: Array<string>;
+  currentModal !: string;
 
   constructor(
     inputParams: InputProgressModalParams,
@@ -245,14 +272,11 @@ export class ProgressModal extends Modal implements ProgressModalType {
     cancelCallback = () => true,
   ) {
     const params: ProgressModalParams = {
-      id: 'confirm-modal',
-      modalDescription: 'Description',
-      closeButtonLabel: 'Close',
+      id: 'progress-modal',
       customButtons: [],
       closable: false,
       modalTitle: "Progress action",
-      modalProgressTitle: "Processing..",
-      modalFailureTitle: "Failed to process",
+      total: total,
       dialogStyle: {},
       confirmCallback,
       closeCallback: cancelCallback,
@@ -261,61 +285,65 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     super(params);
     this.total = total;
-    this.successCount = 0;
-    this.errorCount = 0;
-    this.totalDoneCount = 0;
+    this.doneCount = 0;
+    this.errors = [];
+    this.currentModal = 'progress';
   }
 
   protected initContainer(params: ProgressModalParams): void {
+    let modal = this;
     this.modal = new ProgressModalContainer(params);
+
     super.initContainer(params);
+
+    $(document).on('click', '.switch-to-progress-button', function() {
+      modal.currentModal = 'progress';
+      let container = new ProgressModalContainer(params);
+      $('#progress-modal .modal-content').html(container.content);
+
+     // $('#progress-modal .modal-content').html(modal.buildInformationContent());
+    });
+    $(document).on('click', '.switch-to-errors-button', function() {
+      modal.currentModal = 'error';
+
+      let container = new ProgressModalErrorContainer(params, modal.errors);
+      console.log(container.errors);
+      $('#progress-modal .modal-content').html(container.content);
+     // $('#progress-modal .modal-content').html(modal.buildErrorContent());
+    });
   }
 
-  public addProgressDetail(id: number)
+  public testCallback()
   {
-    $('.progress-details-text').text('Activating: #' + id);
+
   }
 
   public modalActionSuccess()
   {
-    this.successCount++;
-    this.totalDoneCount++;
-    let progressBarSuccess = this.successCount * 100 / this.total;
-    $('#modal_progressbar_info').width(progressBarSuccess+'%');
-    $('.progress-success-count').html(this.successCount + '/' + this.total);
-    let progressionDone = this.totalDoneCount * 100 / this.total;
-    $('#modal_progressbar_done').width((100-progressionDone)+'%');
+    this.doneCount++;
+    if (this.currentModal == 'progress') {
+      let progressBarDone = this.doneCount * 100 / this.total;
+      $('#modal_progressbar_done').width(progressBarDone+'%');
+      $('.progress-percent').text(progressBarDone+'%');
+    }
+
   }
 
   public modalActionError(error: string)
   {
-    this.errorCount++;
-    this.totalDoneCount++;
-    let progressionError = this.errorCount * 100 / this.total;
-    $('#modal_progressbar_failure').width(progressionError+'%');
-    $('.progress-failure-count').html(this.errorCount + '/' + this.total);
-    let progressionDone = this.totalDoneCount * 100 / this.total;
-    $('#modal_progressbar_done').width((100-progressionDone)+'%');
+    this.doneCount++;
+    this.errors.push(error);
+    if (this.currentModal == 'progress') {
+      let progressBarDone = this.doneCount * 100 / this.total;
+      $('#modal_progressbar_done').width(progressBarDone + '%');
+      $('.progress-percent').text(progressBarDone + '%');
+    }
 
-
-    let errorContainer = document.createElement('div');
-    errorContainer.classList.add
-    (
-      'alert',
-      'alert-danger',
-      'd-print-none'
-    );
-    let errorTextContainer = document.createElement('div');
-    let errorContent = document.createElement('p');
-    errorContent.append(error);
-    errorTextContainer.classList.add
-    (
-      'text-danger',
-    );
-    errorTextContainer.append(errorContent);
-    errorContainer.append(errorTextContainer);
-    $('.modal-error-container').append(errorContainer);
-
+    if (this.currentModal == 'error') {
+      let errorContent = document.createElement('p');
+      errorContent.append(error);
+      $('.progress-modal-error-container').append(errorContent);
+    }
   }
 }
 

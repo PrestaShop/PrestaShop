@@ -412,7 +412,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Activate selection', [], 'Admin.Actions'))
                     ->setOptions([
                         'ajax_route' => 'admin_products_v2_activate_ajax',
-                        'modal_title' => $this->trans('Activating products', [], 'Admin.Actions'),
+                        'modal_title' => $this->trans('Activating %d products', [], 'Admin.Actions'),
                         'modal_close_button_label' => $this->trans('Close', [], 'Admin.Actions'),
                         'modal_progress_title' => $this->trans('Activating...', [], 'Admin.Actions'),
                         'modal_failure_title' => $this->trans('Failed to activate:', [], 'Admin.Actions'),

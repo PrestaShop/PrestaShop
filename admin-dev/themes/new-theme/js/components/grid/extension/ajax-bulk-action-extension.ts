@@ -55,9 +55,6 @@ export default class AjaxBulkActionExtension {
         let Id;
         $('.js-bulk-action-checkbox:checked').each( function (i) {
           Id = $(this).val();
-          // @todo there is bug with id not changing
-          modal.addProgressDetail(Number(Id));
-
           $.ajax({
             type: "POST",
             headers: { "cache-control": "no-cache" },
@@ -85,19 +82,11 @@ export default class AjaxBulkActionExtension {
     grid: Grid,
     total: number,
   ): ProgressModal {
-    const modalDescription = $submitBtn.data('modalDescription');
-    const closeButtonLabel = $submitBtn.data('closeButtonLabel');
     const modalTitle = $submitBtn.data('modalTitle');
-    const modalProgressTitle = $submitBtn.data('modalProgressTitle');
-    const modalFailureTitle = $submitBtn.data('modalFailureTitle');
 
     const modal = new ProgressModal(
       {
-        modalDescription,
-        closeButtonLabel,
         modalTitle,
-        modalProgressTitle,
-        modalFailureTitle,
       },
       total,
       () => this.postForm($submitBtn, grid),

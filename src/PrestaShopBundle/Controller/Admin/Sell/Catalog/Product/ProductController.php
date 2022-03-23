@@ -283,6 +283,13 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function activateAjaxAction(Request $request): JsonResponse
     {
+        /** @todo this is temprorary to test errors */
+        $response = [
+            'success' => false,
+            'message' => $this->trans('Test Error.', 'Admin.Notifications.Success')
+        ];
+
+        return new JsonResponse($response);
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductStatusCommand((int) $request->get('id'), true)
