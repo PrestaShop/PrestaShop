@@ -138,11 +138,11 @@
             {/if}
           </td>
 
-					<td class="center"></td>
+          <td class="center"></td>
 
           {assign var=end value=($layout._colCount-3)}
           {for $var=0 to $end}
-						<td class="center"></td>
+            <td class="center"></td>
           {/for}
 
         </tr>
