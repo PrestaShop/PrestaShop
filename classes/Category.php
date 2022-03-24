@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-
 /**
  * Class CategoryCore.
  */
@@ -1730,9 +1728,7 @@ class CategoryCore extends ObjectModel
         }
         $this->cleanGroups();
         if (empty($list)) {
-            $sfContainer = SymfonyContainer::getInstance();
-            $groupDataProvider = $sfContainer->get('prestashop.adapter.group.group_data_provider');
-            $list = $groupDataProvider->getAllGroupIds();
+            $list = Group::getAllGroupIds();
         }
         $this->addGroups($list);
 
