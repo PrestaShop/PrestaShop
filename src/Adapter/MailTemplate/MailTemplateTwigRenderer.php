@@ -58,8 +58,8 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     /** @var TransformationCollection */
     private $transformations;
 
-    /** @var ConfigurationInterface */
-    private $configuration;
+    /** @var bool */
+    private $hasGiftWrapping;
 
     /**
      * @param Environment $twig
@@ -72,13 +72,13 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
         Environment $twig,
         LayoutVariablesBuilderInterface $variablesBuilder,
         HookDispatcherInterface $hookDispatcher,
-        ConfigurationInterface $configuration
+        bool $hasGiftWrapping
     ) {
         $this->twig = $twig;
         $this->variablesBuilder = $variablesBuilder;
         $this->hookDispatcher = $hookDispatcher;
         $this->transformations = new TransformationCollection();
-        $this->configuration = $configuration;
+        $this->hasGiftWrapping = $hasGiftWrapping;
     }
 
     /**
@@ -128,7 +128,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
     ) {
         $layoutVariables = $this->variablesBuilder->buildVariables($layout, $language);
         $layoutVariables['templateType'] = $templateType;
-        $layoutVariables['giftWrapping'] = $this->configuration->get('PS_GIFT_WRAPPING');
+        $layoutVariables['giftWrapping'] = $this->hasGiftWrapping;
         if (MailTemplateInterface::HTML_TYPE === $templateType) {
             $layoutPath = !empty($layout->getHtmlPath()) ? $layout->getHtmlPath() : $layout->getTxtPath();
         } else {
