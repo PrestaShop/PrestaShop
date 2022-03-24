@@ -6087,7 +6087,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated 8.0.0
+     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic
      *
      * @param array $products
      * @param array $customized_datas
@@ -6149,7 +6149,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated 8.0.0
+     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic
      *
      * Add customization price for a single product
      *
