@@ -93,7 +93,7 @@ class GiftOptionsType extends TranslatorAwareType
             ->add('enable_gift_wrapping', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Offer gift wrapping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Remember to regenerate email templates after enabling or disabling this option in [1]Design > Email theme[/1].',
+                'help' => $this->trans('Remember to regenerate email templates in [1]Design > Email theme[/1] after enabling or disabling this feature.',
                     'Admin.Shopparameters.Help',
                     [
                         '[1]' => '<a href="' . $this->router->generate('admin_mail_theme_index') . '" target="_blank">',
