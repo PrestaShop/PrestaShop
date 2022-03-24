@@ -61,7 +61,7 @@ class GetAssociatedSuppliersHandler implements GetAssociatedSuppliersHandlerInte
 
         return new AssociatedSuppliers(
             $defaultSupplier ? $defaultSupplier->getValue() : NoSupplierId::NO_SUPPLIER_ID,
-            array_map(function (SupplierId $supplierId) {
+            array_map(static function (SupplierId $supplierId): int {
                 return $supplierId->getValue();
             }, $supplierIds)
         );
