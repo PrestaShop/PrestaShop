@@ -590,33 +590,6 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Marked as deprecated but should not throw any "deprecated" message
-     * This function is used in order to keep front office backward compatibility 14 -> 1.5
-     * (Order History).
-     *
-     * @deprecated
-     */
-    public function setProductPrices(&$row)
-    {
-        $tax_calculator = OrderDetail::getTaxCalculatorStatic((int) $row['id_order_detail']);
-        $row['tax_calculator'] = $tax_calculator;
-        $row['tax_rate'] = $tax_calculator->getTotalRate();
-
-        $row['product_price'] = Tools::ps_round($row['unit_price_tax_excl'], Context::getContext()->getComputingPrecision());
-        $row['product_price_wt'] = Tools::ps_round($row['unit_price_tax_incl'], Context::getContext()->getComputingPrecision());
-
-        $group_reduction = 1;
-        if ($row['group_reduction'] > 0) {
-            $group_reduction = 1 - $row['group_reduction'] / 100;
-        }
-
-        $row['product_price_wt_but_ecotax'] = $row['product_price_wt'] - $row['ecotax'];
-
-        $row['total_wt'] = $row['total_price_tax_incl'];
-        $row['total_price'] = $row['total_price_tax_excl'];
-    }
-
-    /**
      * Get order products.
      *
      * @param bool|array $products
@@ -656,8 +629,6 @@ class OrderCore extends ObjectModel
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
 
-            // Backward compatibility 1.4 -> 1.5
-            $this->setProductPrices($row);
             $customized_datas = Product::getAllCustomizedDatas($this->id_cart, null, true, $this->id_shop, (int) $row['id_customization']);
             $this->setProductCustomizedDatas($row, $customized_datas);
 
@@ -803,16 +774,6 @@ class OrderCore extends ObjectModel
         }
 
         return $virtual;
-    }
-
-    /**
-     * @deprecated 1.5.0.1 use Order::getCartRules() instead
-     */
-    public function getDiscounts($details = false)
-    {
-        Tools::displayAsDeprecated('Use Order::getCartRules() instead');
-
-        return static::getCartRules();
     }
 
     public function getCartRules()
@@ -1020,61 +981,6 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * @deprecated since 1.5.0.2
-     *
-     * @param string $date_from
-     * @param string $date_to
-     * @param int|null $id_customer
-     * @param string|null $type
-     *
-     * @return array
-     */
-    public static function getOrdersIdInvoiceByDate($date_from, $date_to, $id_customer = null, $type = null)
-    {
-        Tools::displayAsDeprecated();
-        $sql = 'SELECT `id_order`
-                FROM `' . _DB_PREFIX_ . 'orders`
-                WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \'' . pSQL($date_to) . '\' AND invoice_date >= \'' . pSQL($date_from) . '\'
-                    ' . Shop::addSqlRestriction()
-                    . ($type ? ' AND `' . bqSQL($type) . '_number` != 0' : '')
-                    . ($id_customer ? ' AND id_customer = ' . (int) $id_customer : '') .
-                ' ORDER BY invoice_date ASC';
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-        $orders = [];
-        foreach ($result as $order) {
-            $orders[] = (int) $order['id_order'];
-        }
-
-        return $orders;
-    }
-
-    /**
-     * @deprecated 1.5.0.3
-     *
-     * @param int $id_order_state
-     *
-     * @return array
-     */
-    public static function getOrderIdsByStatus($id_order_state)
-    {
-        Tools::displayAsDeprecated();
-        $sql = 'SELECT id_order
-                FROM ' . _DB_PREFIX_ . 'orders o
-                WHERE o.`current_state` = ' . (int) $id_order_state . '
-                ' . Shop::addSqlRestriction(false, 'o') . '
-                ORDER BY invoice_date ASC';
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-
-        $orders = [];
-        foreach ($result as $order) {
-            $orders[] = (int) $order['id_order'];
-        }
-
-        return $orders;
-    }
-
-    /**
      * Get product total without taxes.
      *
      * @return float total without taxes
@@ -1151,20 +1057,6 @@ class OrderCore extends ObjectModel
     }
 
     /**
-     * Get an order id by its cart id.
-     *
-     * @param int $id_cart Cart id
-     *
-     * @return int Order id
-     *
-     * @deprecated since 1.7.1.0 Use getIdByCartId() instead
-     */
-    public static function getOrderByCartId($id_cart)
-    {
-        return self::getIdByCartId($id_cart);
-    }
-
-    /**
      * Get an order object by its cart id.
      *
      * @param int $id_cart Cart id
@@ -1195,23 +1087,6 @@ class OrderCore extends ObjectModel
         $result = Db::getInstance()->getValue($sql);
 
         return !empty($result) ? (int) $result : false;
-    }
-
-    /**
-     * @deprecated 1.5.0.1
-     * @see Order::addCartRule()
-     *
-     * @param int $id_cart_rule
-     * @param string $name
-     * @param float $value
-     *
-     * @return bool
-     */
-    public function addDiscount($id_cart_rule, $name, $value)
-    {
-        Tools::displayAsDeprecated('Use Order::addCartRule($id_cart_rule, $name, array(\'tax_incl\' => $value, \'tax_excl\' => \'0.00\')) instead');
-
-        return static::addCartRule($id_cart_rule, $name, ['tax_incl' => $value, 'tax_excl' => '0.00']);
     }
 
     /**
@@ -1613,21 +1488,6 @@ class OrderCore extends ObjectModel
         WHERE id_order = ' . (int) $this->id);
 
         return (float) $result;
-    }
-
-    /**
-     * @param int $id_invoice
-     *
-     * @deprecated 1.5.0.1
-     */
-    public static function getInvoice($id_invoice)
-    {
-        Tools::displayAsDeprecated();
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-        SELECT `invoice_number`, `id_order`
-        FROM `' . _DB_PREFIX_ . 'orders`
-        WHERE invoice_number = ' . (int) $id_invoice);
     }
 
     public function isAssociatedAtGuest($email)
@@ -2472,14 +2332,6 @@ class OrderCore extends ObjectModel
         $orderCarrier->tracking_number = $shipping_number;
 
         return $orderCarrier->update();
-    }
-
-    /**
-     * @deprecated since 1.6.1
-     */
-    public function getWsCurrentState()
-    {
-        return $this->getCurrentState();
     }
 
     public function setWsCurrentState($state)

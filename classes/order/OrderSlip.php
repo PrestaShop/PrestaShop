@@ -227,20 +227,11 @@ class OrderSlipCore extends ObjectModel
 
     public function getProducts()
     {
-        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
         SELECT *, osd.product_quantity
         FROM `' . _DB_PREFIX_ . 'order_slip_detail` osd
         INNER JOIN `' . _DB_PREFIX_ . 'order_detail` od ON osd.id_order_detail = od.id_order_detail
         WHERE osd.`id_order_slip` = ' . (int) $this->id);
-
-        $order = new Order($this->id_order);
-        $products = [];
-        foreach ($result as $row) {
-            $order->setProductPrices($row);
-            $products[] = $row;
-        }
-
-        return $products;
     }
 
     public static function getSlipsIdByDate($dateFrom, $dateTo)
