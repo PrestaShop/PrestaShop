@@ -3947,7 +3947,6 @@ class ProductCore extends ObjectModel
             'specific_price_reduction' => &$specific_price_reduction,
             'price' => &$price,
         ]);
-        
         if ($only_reduc) {
             return Tools::ps_round($specific_price_reduction, $decimals);
         }
