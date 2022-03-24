@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
-use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Builder used to build UpdateSEO
@@ -84,6 +84,7 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
             new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
         );
 
+        $seoData = $formData['seo'] ?? [];
         if (isset($seoData['tags'])) {
             if (!empty($seoData['tags'])) {
                 if (!is_array($seoData['tags'])) {
@@ -91,14 +92,20 @@ class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
                 }
 
                 $parsedTags = [];
+                $allEmpty = true;
                 foreach ($seoData['tags'] as $langId => $rawTags) {
                     $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+                    $allEmpty = $allEmpty && empty($rawTags);
                 }
 
-                $commands[] = new SetProductTagsCommand(
-                    $productId->getValue(),
-                    $parsedTags
-                );
+                if ($allEmpty) {
+                    $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
+                } else {
+                    $commands[] = new SetProductTagsCommand(
+                        $productId->getValue(),
+                        $parsedTags
+                    );
+                }
             } else {
                 $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
             }
