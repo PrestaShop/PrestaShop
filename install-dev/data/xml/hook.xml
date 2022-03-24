@@ -2844,6 +2844,11 @@
       <title>Product Properties</title>
       <description>This hook is called after defining the properties of a product</description>
     </hook>
+    <hook id="actionProductPriceCalculation">
+      <name>actionProductPriceCalculation</name>
+      <title>Product Price Calculation</title>
+      <description>This hook is called into the priceCalculation method to be able to override the price calculation</description>
+    </hook>
     <hook id="actionOverrideEmployeeImage">
       <name>actionOverrideEmployeeImage</name>
       <title>Get Employee Image</title>
