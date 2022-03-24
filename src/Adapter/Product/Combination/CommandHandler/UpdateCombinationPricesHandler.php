@@ -82,7 +82,7 @@ class UpdateCombinationPricesHandler implements UpdateCombinationPricesHandlerIn
     {
         $productId = $this->combinationRepository->getProductId($combinationId);
         $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
-        if (!$defaultSupplierId) {
+        if (null === $defaultSupplierId) {
             return;
         }
 

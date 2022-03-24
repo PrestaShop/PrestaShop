@@ -340,7 +340,7 @@ class ProductSupplierUpdater
     {
         $combination = $this->combinationRepository->get(new CombinationId((int) $defaultCombinationSupplier->id_product_attribute));
         $combination->supplier_reference = $defaultCombinationSupplier->product_supplier_reference;
-        $combination->wholesale_price = (float) (string) $defaultCombinationSupplier->product_supplier_price_te;
+        $combination->wholesale_price = (float) $defaultCombinationSupplier->product_supplier_price_te;
 
         $this->combinationRepository->partialUpdate(
             $combination,
