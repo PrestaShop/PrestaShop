@@ -208,7 +208,20 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             2 => ['cotton', 'candy'],
         ];
         $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
-        yield 'tags and seo command' => [
+        yield 'tags command' => [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
+        yield 'seo command and tags command' => [
             [
                 'seo' => [
                     'redirect_option' => [
@@ -224,24 +237,6 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $localizedTagsData = [
-            1 => null,
-            2 => null,
-        ];
-        $localizedTags = [
-            1 => [],
-            2 => [],
-        ];
-        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
-        yield 'tags command with only empty values' => [
-            [
-                'seo' => [
-                    'tags' => $localizedTagsData,
-                ],
-            ],
-            [$tagCommands],
-        ];
-
-        $localizedTagsData = [
             1 => 'coton,bonbon',
             2 => null,
         ];
@@ -251,6 +246,20 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         ];
         $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
         yield 'tags with empty value for one language' => [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $localizedTagsData = [
+            1 => null,
+            2 => null,
+        ];
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield 'remove tags command with all localized values empty' => [
             [
                 'seo' => [
                     'tags' => $localizedTagsData,
@@ -282,7 +291,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     public function testInvalidTags(): void
     {
-        $builder = new SEOCommandsBuilder();
+        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected tags to be a localized array');
@@ -291,7 +300,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             'seo' => [
                 'tags' => 'cotton, candy',
             ],
-        ]);
+        ], $this->singleShopConstraint);
     }
 
     /**
