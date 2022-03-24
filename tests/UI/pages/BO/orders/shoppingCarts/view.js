@@ -21,15 +21,15 @@ class ViewShoppingCarts extends BOBasePage {
     this.cartTotal = '#box-kpi-cart div.value';
 
     // Customer Block
-    this.customerInformationBlock = '#main-div div[data-role=\'customer-information\']';
+    this.customerInformationBlock = '#main-div div[data-role="customer-information"]';
     this.customerInformationCartBody = `${this.customerInformationBlock} .card-body`;
 
     // Order Information Block
-    this.orderInformationBlock = '#main-div div[data-role=\'order-information\']';
+    this.orderInformationBlock = '#main-div div[data-role="order-information"]';
     this.orderInformationBlockBody = `${this.orderInformationBlock} .card-body`;
 
     // Cart Summary Block
-    this.cartSummaryBlock = '#main-div div[data-role=\'cart-summary\']';
+    this.cartSummaryBlock = '#main-div div[data-role="cart-summary"]';
     this.cartSummaryBlockBody = `${this.cartSummaryBlock} .card-body`;
     this.cartSummaryTable = `${this.cartSummaryBlockBody} .table`;
     this.cartSummaryTableBody = `${this.cartSummaryTable} tbody`;
