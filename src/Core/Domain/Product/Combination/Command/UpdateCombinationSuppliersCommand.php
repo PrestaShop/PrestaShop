@@ -60,7 +60,7 @@ class UpdateCombinationSuppliersCommand
         array $combinationSuppliers
     ) {
         $this->combinationId = new CombinationId($combinationId);
-        $this->setCombinationSuppliers($combinationSuppliers, $combinationId);
+        $this->setCombinationSuppliers($combinationSuppliers);
     }
 
     /**
@@ -82,7 +82,7 @@ class UpdateCombinationSuppliersCommand
     /**
      * @param array<int, array<string, string|int|null>> $productSuppliers
      */
-    private function setCombinationSuppliers(array $productSuppliers, int $combinationId): void
+    private function setCombinationSuppliers(array $productSuppliers): void
     {
         if (empty($productSuppliers)) {
             throw new InvalidArgumentException(sprintf(
@@ -95,7 +95,7 @@ class UpdateCombinationSuppliersCommand
         foreach ($productSuppliers as $productSupplier) {
             $this->combinationSuppliers[] = new ProductSupplierUpdate(
                 new CombinationSupplierAssociation(
-                    $combinationId,
+                    $this->combinationId->getValue(),
                     $productSupplier['supplier_id'],
                     !empty($productSupplier['product_supplier_id']) ? $productSupplier['product_supplier_id'] : null
                 ),

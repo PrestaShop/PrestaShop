@@ -295,7 +295,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        return array_map(function (array $row) {
+        return array_map(static function (array $row): SupplierId {
             return new SupplierId((int) $row['id_supplier']);
         }, $results);
     }
@@ -423,7 +423,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             return [];
         }
 
-        return array_map(function (array $row) {
+        return array_map(static function (array $row): ProductSupplierId {
             return new ProductSupplierId((int) $row['id_product_supplier']);
         }, $uselessProductSupplierIds);
     }
