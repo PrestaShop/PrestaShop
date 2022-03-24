@@ -3302,17 +3302,6 @@ exit;
     }
 
     /**
-     * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
-     */
-    public static function display404Error()
-    {
-        header('HTTP/1.1 404 Not Found');
-        header('Status: 404 Not Found');
-        include __DIR__ . '/../404.php';
-        die;
-    }
-
-    /**
      * Concat $begin and $end, add ? or & between strings.
      *
      * @since 1.5.0
