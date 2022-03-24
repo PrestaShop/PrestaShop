@@ -1494,7 +1494,9 @@ class CartCore extends ObjectModel
         $quantity = (int) $quantity;
         $id_product = (int) $id_product;
         $id_product_attribute = (int) $id_product_attribute;
-        $product = new Product($id_product, false, (int) Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+        $id_customization = (int) $id_customization;
+        $id_address_delivery = (int) $id_address_delivery;
+        $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
         if ($id_product_attribute) {
             $combination = new Combination((int) $id_product_attribute);
@@ -1633,10 +1635,10 @@ class CartCore extends ObjectModel
 
             if ((int) $id_customization) {
                 $result_add &= Db::getInstance()->update('customization', [
-                    'id_product_attribute' => (int) $id_product_attribute,
-                    'id_address_delivery' => (int) $id_address_delivery,
+                    'id_product_attribute' => $id_product_attribute,
+                    'id_address_delivery' => $id_address_delivery,
                     'in_cart' => 1,
-                ], '`id_customization` = ' . (int) $id_customization);
+                ], '`id_customization` = ' . $id_customization);
             }
 
             if (!$result_add) {
