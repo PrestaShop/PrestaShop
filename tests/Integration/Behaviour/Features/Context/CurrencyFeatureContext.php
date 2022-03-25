@@ -128,7 +128,7 @@ class CurrencyFeatureContext extends AbstractPrestaShopFeatureContext
     public function setCurrentCurrency($currencyName)
     {
         $this->checkCurrencyWithNameExists($currencyName);
-        if ($this->getCurrentCart()) {
+        if ($this->getCurrentCart() !== null) {
             $this->getCurrentCart()->id_currency = $this->currencies[$currencyName]->id;
         }
         Context::getContext()->currency = $this->currencies[$currencyName];

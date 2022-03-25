@@ -137,7 +137,7 @@ class TagRepository
      *
      * @return array Localized tags for a product
      */
-    public function getProductTags(ProductId $productId): array
+    public function getLocalizedProductTags(ProductId $productId): array
     {
         $qb = $this->connection->createQueryBuilder();
         $qb
