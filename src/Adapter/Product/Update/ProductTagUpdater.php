@@ -115,7 +115,7 @@ class ProductTagUpdater
      */
     private function hasModification(ProductId $productId, array $localizedTagsList): bool
     {
-        $localizedProductTags = $this->tagRepository->getProductTags($productId);
+        $localizedProductTags = $this->tagRepository->getLocalizedProductTags($productId);
         $currentTagLanguages = array_keys($localizedProductTags);
         $updateTagLanguages = array_map(static function (LocalizedTags $localizedTags): int {
             return $localizedTags->getLanguageId()->getValue();
@@ -132,7 +132,7 @@ class ProductTagUpdater
 
             $currentTags = $this->stringifyTags($localizedProductTags[$localizedTags->getLanguageId()->getValue()] ?? []);
             $updateTags = $this->stringifyTags($localizedTags->getTags() ?? []);
-            if ($currentTags != $updateTags) {
+            if ($currentTags !== $updateTags) {
                 return true;
             }
         }
