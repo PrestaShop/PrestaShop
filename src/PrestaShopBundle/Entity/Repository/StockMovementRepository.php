@@ -37,6 +37,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class StockMovementRepository extends StockManagementRepository
 {
     /**
+     * @var string
+     */
+    protected $dateFormatFull;
+
+    /**
      * StockMovementRepository constructor.
      *
      * @param ContainerInterface $container
@@ -45,6 +50,7 @@ class StockMovementRepository extends StockManagementRepository
      * @param ContextAdapter $contextAdapter
      * @param ImageManager $imageManager
      * @param string $tablePrefix
+     * @param string $dateFormatFull
      */
     public function __construct(
         ContainerInterface $container,
@@ -52,7 +58,8 @@ class StockMovementRepository extends StockManagementRepository
         EntityManager $entityManager,
         ContextAdapter $contextAdapter,
         ImageManager $imageManager,
-        $tablePrefix
+        $tablePrefix,
+        string $dateFormatFull
     ) {
         parent::__construct(
             $container,
@@ -62,6 +69,8 @@ class StockMovementRepository extends StockManagementRepository
             $imageManager,
             $tablePrefix
         );
+
+        $this->dateFormatFull = $dateFormatFull;
     }
 
     /**
@@ -186,9 +195,9 @@ class StockMovementRepository extends StockManagementRepository
      */
     protected function addAdditionalData(array $rows)
     {
-        $rows = $this->addCombinationsAndFeatures($rows);
-        $rows = $this->addImageThumbnailPaths($rows);
+        $rows = parent::addAdditionalData($rows);
         $rows = $this->addOrderLink($rows);
+        $rows = $this->addFormattedDate($rows);
 
         return $rows;
     }
@@ -305,5 +314,17 @@ class StockMovementRepository extends StockManagementRepository
         $this->em->flush();
 
         return $stockMvt->getIdStockMvt();
+    }
+
+    protected function addFormattedDate(array $rows): array
+    {
+        foreach ($rows as &$row) {
+            $row['date_add_formatted'] = date(
+                $this->dateFormatFull,
+                strtotime($row['date_add'])
+            );
+        }
+
+        return $rows;
     }
 }
