@@ -54,7 +54,7 @@ class AddCategoryCommand
     private $localizedDescriptions;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedAdditionalDescriptions;
 
@@ -204,7 +204,7 @@ class AddCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedAdditionalDescriptions(): ?array
     {

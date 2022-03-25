@@ -60,7 +60,7 @@ class EditCategoryCommand
     private $localizedDescriptions;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedAdditionalDescriptions;
 
@@ -213,7 +213,7 @@ class EditCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedAdditionalDescriptions(): ?array
     {

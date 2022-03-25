@@ -49,7 +49,7 @@ class AddRootCategoryCommand
     private $localizedDescriptions;
 
     /**
-     * @var string[]
+     * @var string[]|null
      */
     private $localizedAdditionalDescriptions;
 
@@ -171,7 +171,7 @@ class AddRootCategoryCommand
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getLocalizedAdditionalDescriptions(): ?array
     {
