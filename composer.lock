@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4ad959abea14e91569886a41fa0352bc",
+    "content-hash": "46ce8cf0343db69126504d892b3a4721",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -6369,6 +6369,51 @@
                 "source": "https://github.com/PrestaShop/ps_featuredproducts/tree/v2.1.2"
             },
             "time": "2021-12-14T09:04:39+00:00"
+        },
+        {
+            "name": "prestashop/ps_googleanalytics",
+            "version": "v4.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/ps_googleanalytics.git",
+                "reference": "ced588980dcc3eeff06a2a8e275cf76c27a35e9e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/ps_googleanalytics/zipball/ced588980dcc3eeff06a2a8e275cf76c27a35e9e",
+                "reference": "ced588980dcc3eeff06a2a8e275cf76c27a35e9e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "3.*"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_googleanalytics.php",
+                    "controllers",
+                    "classes"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module ps_googleanalytics",
+            "homepage": "https://github.com/PrestaShop/ps_googleanalytics",
+            "support": {
+                "source": "https://github.com/PrestaShop/ps_googleanalytics/tree/v4.1.2"
+            },
+            "time": "2022-03-24T08:50:37+00:00"
         },
         {
             "name": "prestashop/ps_imageslider",
