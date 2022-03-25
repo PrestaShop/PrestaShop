@@ -56,8 +56,8 @@ export default class BulkFormHandler {
     this.listenSelections();
     this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
 
-    const bulkFormBtn = document.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
-    bulkFormBtn.addEventListener('click', () => this.showFormModal());
+    const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
+    bulkFormBtn?.addEventListener('click', () => this.showFormModal());
   }
 
   private showProgressModal(): ConfirmModal {
