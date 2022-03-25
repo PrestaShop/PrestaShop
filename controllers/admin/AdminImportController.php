@@ -401,6 +401,7 @@ class AdminImportControllerCore extends AdminController
 
                 self::$default_values = [
                     'active' => '1',
+                    'date_upd' => date('Y-m-d H:i:s'),
                     'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
                 ];
 
