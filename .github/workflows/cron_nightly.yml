@@ -33,7 +33,7 @@ jobs:
       -   name: Initialize GCloud Service Key
           run: echo $GC_SERVICE_KEY > $HOME/gcloud-service-key.json
 
-      -   uses: google-github-actions/setup-gcloud@master
+      -   uses: google-github-actions/setup-gcloud@v0
           with:
             service_account_key: ${{ env.GC_SERVICE_KEY }}
             project_id: ${{ env.GC_PROJECT_ID }}
