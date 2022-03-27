@@ -104,7 +104,10 @@ services:
 
   prestashop.adapter.notifications.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Admin\NotificationsConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.smarty_cache.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Smarty\SmartyCacheConfiguration'
