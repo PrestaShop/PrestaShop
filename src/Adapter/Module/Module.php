@@ -380,7 +380,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUnregisterHook($hookName): bool
+    public function onUnregisterHook(string $hookName): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
