@@ -27,33 +27,35 @@
 namespace PrestaShop\PrestaShop\Adapter\Upload;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Manages the configuration data about upload quota options.
  */
-class UploadQuotaConfiguration implements DataConfigurationInterface
+class UploadQuotaConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES,
+        UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE,
+        UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE,
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'max_size_attached_files' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE'),
-            'max_size_downloadable_product' => $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE'),
-            'max_size_product_image' => $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
+            UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES
+                => (double) $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE', null, $shopConstraint),
+            UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE 
+                => (double) $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE', null, $shopConstraint),
+            UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE 
+                => (double) $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE', null, $shopConstraint),
         ];
     }
 
@@ -62,79 +64,33 @@ class UploadQuotaConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
-
         if ($this->validateConfiguration($configuration)) {
-            $errors = $this->updateFileUploadConfiguration($configuration);
+            $shopConstraint = $this->getShopConstraint();
+
+            $updateConfigurationValue = function(string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
+                $this->updateConfigurationValue($configurationKey, $fieldName, $configuration, $shopConstraint);
+            };
+
+            $updateConfigurationValue('PS_ATTACHMENT_MAXIMUM_SIZE', UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES);
+            $updateConfigurationValue('PS_LIMIT_UPLOAD_FILE_VALUE', UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE);
+            $updateConfigurationValue('PS_LIMIT_UPLOAD_IMAGE_VALUE', UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE);
         }
 
-        return $errors;
+        return [];
     }
 
     /**
-     * Update the file upload limit if possible.
-     *
-     * @return array the errors list during the update operation
-     *
-     * @throws Exception
+     * @return OptionsResolver
      */
-    private function updateFileUploadConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        $uploadMaxSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
-        $sizes = [
-            'max_size_attached_files' => $uploadMaxSize,
-            'max_size_downloadable_product' => (int) str_replace('M', '', ini_get('post_max_size')),
-            'max_size_product_image' => $uploadMaxSize,
-        ];
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES, ['double'])
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE, ['double'])
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE, ['double'])
+        ;
 
-        $errors = [];
-        foreach ($configuration as $configurationKey => $configurationValue) {
-            if (array_key_exists($configurationKey, $this->getConfiguration())) {
-                if ((int) $configurationValue > $sizes[$configurationKey]) {
-                    $errors[] = [
-                        'key' => 'The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.',
-                        'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => [],
-                    ];
-                }
-
-                $this->configuration->set(
-                    $this->getConfigurationKey($configurationKey),
-                    max((int) $configurationValue, 1)
-                );
-            }
-        }
-
-        return $errors;
-    }
-
-    /**
-     * Map array key to the related configuration property.
-     *
-     * @param string $key
-     *
-     * @return string the related configuration key
-     */
-    private function getConfigurationKey($key)
-    {
-        $properties = [
-            'max_size_attached_files' => 'PS_ATTACHMENT_MAXIMUM_SIZE',
-            'max_size_downloadable_product' => 'PS_LIMIT_UPLOAD_FILE_VALUE',
-            'max_size_product_image' => 'PS_LIMIT_UPLOAD_IMAGE_VALUE',
-        ];
-
-        return $properties[$key];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validateConfiguration(array $configuration)
-    {
-        return isset(
-            $configuration['max_size_attached_files'],
-            $configuration['max_size_downloadable_product'],
-            $configuration['max_size_product_image']
-        );
+        return $resolver;
     }
 }

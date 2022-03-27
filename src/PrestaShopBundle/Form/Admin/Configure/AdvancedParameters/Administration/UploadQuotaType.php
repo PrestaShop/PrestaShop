@@ -26,11 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\LessThanOrEqual;
 use Symfony\Component\Validator\Constraints\Type;
 
 class UploadQuotaType extends TranslatorAwareType
@@ -44,7 +47,10 @@ class UploadQuotaType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $uploadMaxSize = (int) str_replace('M', '', ini_get('upload_max_filesize'));
+        $postMaxSize = (int) str_replace('M', '', ini_get('post_max_size'));
         $configuration = $this->getConfiguration();
+
         $builder
             ->add(
                 self::FIELD_MAX_SIZE_ATTACHED_FILES,
@@ -62,20 +68,8 @@ class UploadQuotaType extends TranslatorAwareType
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-                    'constraints' => [
-                        new Type(
-                            [
-                                'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                        new GreaterThanOrEqual(
-                            [
-                                'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                    ],
+                    'constraints' => $this->getUploadMaxSizeConstraints($uploadMaxSize),
+                    'multistore_configuration_key' => 'PS_ATTACHMENT_MAXIMUM_SIZE'
                 ]
             )
             ->add(
@@ -94,20 +88,8 @@ class UploadQuotaType extends TranslatorAwareType
                         ]
                     ),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
-                    'constraints' => [
-                        new Type(
-                            [
-                                'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                        new GreaterThanOrEqual(
-                            [
-                                'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                    ],
+                    'constraints' => $this->getUploadMaxSizeConstraints($postMaxSize),
+                    'multistore_configuration_key' => 'PS_LIMIT_UPLOAD_FILE_VALUE'
                 ]
             )
             ->add(
@@ -125,23 +107,38 @@ class UploadQuotaType extends TranslatorAwareType
                             '%size%' => $configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE'),
                         ]
                     ),
-                    'constraints' => [
-                        new Type(
-                            [
-                                'value' => 'numeric',
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                        new GreaterThanOrEqual(
-                            [
-                                'value' => 0,
-                                'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
-                            ]
-                        ),
-                    ],
+                    'constraints' => $this->getUploadMaxSizeConstraints($uploadMaxSize),
                     'unit' => $this->trans('megabytes', 'Admin.Advparameters.Feature'),
+                    'multistore_configuration_key' => 'PS_LIMIT_UPLOAD_IMAGE_VALUE'
                 ]
             );
+    }
+
+    /**
+     * @return Constraint[]
+     */
+    private function getUploadMaxSizeConstraints(int $serverMaxSize): array
+    {
+        return [
+            new Type(
+                [
+                    'type' => 'numeric',
+                    'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
+                ]
+            ),
+            new GreaterThanOrEqual(
+                [
+                    'value' => 0,
+                    'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
+                ]
+            ),
+            new LessThanOrEqual(
+                [
+                    'value' => $serverMaxSize,
+                    'message' => $this->trans('The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.', 'Admin.Notifications.Error'),
+                ]
+            )
+        ];
     }
 
     /**
@@ -160,5 +157,15 @@ class UploadQuotaType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'administration_upload_quota_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

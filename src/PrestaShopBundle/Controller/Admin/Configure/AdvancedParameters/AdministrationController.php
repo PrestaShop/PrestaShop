@@ -26,19 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use Symfony\Component\Form\FormInterface;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
-use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -47,35 +39,18 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AdministrationController extends FrameworkBundleAdminController
 {
-    public const CONTROLLER_NAME = 'AdminAdminPreferences';
-
     /**
      * Show Administration page.
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
-     *
-     * @return Response
      */
-    public function indexAction()
+    public function indexAction(Request $request): Response
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
         $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
         $notificationsForm = $this->getNotificationsFormHandler()->getForm();
-        $isDebug = $this->get('prestashop.adapter.environment')->isDebug();
 
-        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
-            'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
-            'requireBulkActions' => false,
-            'showContentHeader' => true,
-            'enableSidebar' => true,
-            'help_link' => $this->generateSidebarLink('AdminAdminPreferences'),
-            'requireFilterStatus' => false,
-            'generalForm' => $generalForm->createView(),
-            'uploadQuotaForm' => $uploadQuotaForm->createView(),
-            'notificationsForm' => $notificationsForm->createView(),
-            'isDebug' => $isDebug,
-        ]);
+        return $this->renderForms($generalForm, $uploadQuotaForm, $notificationsForm, $request);
     }
 
     /**
@@ -86,18 +61,31 @@ class AdministrationController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
-    public function processGeneralFormAction(Request $request)
+    public function processGeneralFormAction(Request $request): Response
     {
-        return $this->processForm(
-            $request,
-            $this->getGeneralFormHandler(),
-            'General'
-        );
+        $this->dispatchPostProcessHooks('General');
+
+        $formHandler = $this->getGeneralFormHandler();
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
+                return $this->renderFormProcessingSuccess();
+            }
+
+            $this->flashErrors($saveErrors);
+        }
+
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
+
+        return $this->renderForms($form, $uploadQuotaForm, $notificationsForm, $request);
     }
 
     /**
@@ -108,18 +96,31 @@ class AdministrationController extends FrameworkBundleAdminController
      *     message="You do not have permission to update this.",
      *     redirectRoute="admin_administration")
      * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
-    public function processUploadQuotaFormAction(Request $request)
+    public function processUploadQuotaFormAction(Request $request): Response
     {
-        return $this->processForm(
-            $request,
-            $this->getUploadQuotaFormHandler(),
-            'UploadQuota'
-        );
+        $this->dispatchPostProcessHooks('UploadQuota');
+
+        $formHandler = $this->getUploadQuotaFormHandler();
+
+        $form = $formHandler->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $saveErrors = $formHandler->save($data);
+
+            if (0 === count($saveErrors)) {
+                return $this->renderFormProcessingSuccess();
+            }
+
+            $this->flashErrors($saveErrors);
+        }
+
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $notificationsForm = $this->getNotificationsFormHandler()->getForm();
+
+        return $this->renderForms($generalForm, $form, $notificationsForm, $request);
     }
 
     /**
@@ -131,183 +132,87 @@ class AdministrationController extends FrameworkBundleAdminController
      *     redirectRoute="admin_administration"
      * )
      * @DemoRestricted(redirectRoute="admin_administration")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
      */
-    public function processNotificationsFormAction(Request $request)
+    public function processNotificationsFormAction(Request $request): Response
     {
-        return $this->processForm(
-            $request,
-            $this->getNotificationsFormHandler(),
-            'Notifications'
-        );
-    }
+        $this->dispatchPostProcessHooks('Notifications');
 
-    /**
-     * Process the Administration configuration form.
-     *
-     * @param Request $request
-     * @param FormHandlerInterface $formHandler
-     * @param string $hookName
-     *
-     * @return RedirectResponse
-     */
-    protected function processForm(Request $request, FormHandlerInterface $formHandler, string $hookName)
-    {
-        $this->dispatchHook(
-            'actionAdminAdministrationControllerPostProcess' . $hookName . 'Before',
-            ['controller' => $this]
-        );
-
-        $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
+        $formHandler = $this->getNotificationsFormHandler();
 
         $form = $formHandler->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            try {
-                $formHandler->save($data);
-            } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
+            $saveErrors = $formHandler->save($data);
 
-                return $this->redirectToRoute('admin_administration');
+            if (0 === count($saveErrors)) {
+                return $this->renderFormProcessingSuccess();
             }
 
-            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+            $this->flashErrors($saveErrors);
         }
+
+        $generalForm = $this->getGeneralFormHandler()->getForm();
+        $uploadQuotaForm = $this->getUploadQuotaFormHandler()->getForm();
+
+        return $this->renderForms($generalForm, $uploadQuotaForm, $form, $request);
+    }
+
+    private function dispatchPostProcessHooks(string $formName): void
+    {
+        $this->dispatchHook(
+            'actionAdminAdministrationControllerPostProcess' . $formName . 'Before',
+            ['controller' => $this]
+        );
+
+        $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
+    }
+
+    private function renderFormProcessingSuccess(): Response
+    {
+        $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_administration');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
+    private function renderForms(
+        FormInterface $generalForm, 
+        FormInterface $uploadQuotaForm, 
+        FormInterface $notificationsForm,
+        Request $request
+    ): Response
+    {
+        $legacyController = $request->attributes->get('_legacy_controller');
+        $isDebug = $this->get('prestashop.adapter.environment')->isDebug();
+
+        return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/administration.html.twig', [
+            'layoutHeaderToolbarBtn' => [],
+            'layoutTitle' => $this->trans('Administration', 'Admin.Navigation.Menu'),
+            'requireBulkActions' => false,
+            'showContentHeader' => true,
+            'enableSidebar' => true,
+            'help_link' => $this->generateSidebarLink($legacyController),
+            'requireFilterStatus' => false,
+            'generalForm' => $generalForm->createView(),
+            'uploadQuotaForm' => $uploadQuotaForm->createView(),
+            'notificationsForm' => $notificationsForm->createView(),
+            'isDebug' => $isDebug,
+        ]);
+    }
+
     protected function getGeneralFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.administration.general.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getUploadQuotaFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.administration.upload_quota.form_handler');
     }
 
-    /**
-     * @return FormHandlerInterface
-     */
     protected function getNotificationsFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.administration.notifications.form_handler');
-    }
-
-    /**
-     * @var InvalidConfigurationDataErrorCollection
-     */
-    private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
-    {
-        $messages = [];
-
-        foreach ($errors as $error) {
-            $messages[] = $this->getErrorMessage($error);
-        }
-
-        return $messages;
-    }
-
-    /**
-     * @param InvalidConfigurationDataError $error
-     *
-     * @return string
-     *
-     * @throws FieldNotFoundException
-     */
-    private function getErrorMessage(InvalidConfigurationDataError $error): string
-    {
-        switch ($error->getErrorCode()) {
-            case FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO:
-                return $this->trans(
-                    '%s is invalid. Please enter an integer greater than or equal to 0.',
-                    'Admin.Notifications.Error',
-                    [$this->getFieldLabel($error->getFieldName())]
-                );
-            case FormDataProvider::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED:
-                return $this->trans(
-                    '%s is invalid. Please enter an integer lower than %s.',
-                    'Admin.Notifications.Error',
-                    [
-                        $this->getFieldLabel($error->getFieldName()),
-                        GeneralDataProvider::MAX_COOKIE_VALUE,
-                    ]
-                );
-            case FormDataProvider::ERROR_COOKIE_SAMESITE_NONE:
-                return $this->trans(
-                    'The SameSite=None is only available in secure mode.',
-                    'Admin.Advparameters.Notification'
-                );
-        }
-
-        return $this->trans(
-            '%s is invalid.',
-            'Admin.Notifications.Error',
-            [
-                $this->getFieldLabel($error->getFieldName()),
-                GeneralDataProvider::MAX_COOKIE_VALUE,
-            ]
-        );
-    }
-
-    /**
-     * @param string $fieldName
-     *
-     * @return string
-     */
-    private function getFieldLabel(string $fieldName): string
-    {
-        /*
-         * Reusing same translated string as in UploadQuotaType, ideally I would take strings from there instead
-         * Because if somebody changes name in UploadQuotaType it won't be changed here. Not sure how to do that,
-         * building the whole form just to retrieve labels sound like an overhead.
-         * Maybe move labels to some other service and then retrieve them in both UploadQuotaType and here.
-         */
-        switch ($fieldName) {
-            case UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES:
-                return $this->trans(
-                    'Maximum size for attached files',
-                    'Admin.Advparameters.Feature'
-                );
-            case UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE:
-                return $this->trans(
-                    'Maximum size for a downloadable product',
-                    'Admin.Advparameters.Feature'
-                );
-            case UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE:
-                return $this->trans(
-                    'Maximum size for a product\'s image',
-                    'Admin.Advparameters.Feature'
-                );
-            case GeneralType::FIELD_FRONT_COOKIE_LIFETIME:
-                return $this->trans(
-                    'Lifetime of front office cookies',
-                    'Admin.Advparameters.Feature'
-                );
-            case GeneralType::FIELD_BACK_COOKIE_LIFETIME:
-                return $this->trans(
-                    'Lifetime of back office cookies',
-                    'Admin.Advparameters.Feature'
-                );
-        }
-
-        throw new FieldNotFoundException(
-            sprintf(
-                'Field name for field %s not found',
-                $fieldName
-            )
-        );
     }
 }
