@@ -26,33 +26,35 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\NotificationsType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Manages the configuration data about notifications options.
  */
-class NotificationsConfiguration implements DataConfigurationInterface
+class NotificationsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS,
+        NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS,
+        NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES,
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'show_notifs_new_orders' => $this->configuration->getBoolean('PS_SHOW_NEW_ORDERS'),
-            'show_notifs_new_customers' => $this->configuration->getBoolean('PS_SHOW_NEW_CUSTOMERS'),
-            'show_notifs_new_messages' => $this->configuration->getBoolean('PS_SHOW_NEW_MESSAGES'),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS 
+                => (bool) $this->configuration->get('PS_SHOW_NEW_ORDERS', null, $shopConstraint),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS 
+                => (bool) $this->configuration->get('PS_SHOW_NEW_CUSTOMERS', null, $shopConstraint),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES 
+                => (bool) $this->configuration->get('PS_SHOW_NEW_MESSAGES', null, $shopConstraint),
         ];
     }
 
@@ -64,23 +66,32 @@ class NotificationsConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHOW_NEW_ORDERS', (bool) $configuration['show_notifs_new_orders']);
-            $this->configuration->set('PS_SHOW_NEW_CUSTOMERS', (bool) $configuration['show_notifs_new_customers']);
-            $this->configuration->set('PS_SHOW_NEW_MESSAGES', (bool) $configuration['show_notifs_new_messages']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $updateConfigurationValue = function(string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
+                $this->updateConfigurationValue($configurationKey, $fieldName, $configuration, $shopConstraint);
+            };
+
+            $updateConfigurationValue('PS_SHOW_NEW_ORDERS', NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS);
+            $updateConfigurationValue('PS_SHOW_NEW_CUSTOMERS', NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS);
+            $updateConfigurationValue('PS_SHOW_NEW_MESSAGES', NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES);
         }
 
         return $errors;
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['show_notifs_new_orders'],
-            $configuration['show_notifs_new_customers'],
-            $configuration['show_notifs_new_messages']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes(NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS, ['bool'])
+            ->setAllowedTypes(NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS, ['bool'])
+            ->setAllowedTypes(NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES, ['bool'])
+        ;
+
+        return $resolver;
     }
 }

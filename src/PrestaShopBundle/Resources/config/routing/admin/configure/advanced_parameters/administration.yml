@@ -23,7 +23,7 @@ admin_administration_upload_quota_save:
 
 admin_administration_notifications_save:
   path: /notifications
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::processNotificationsFormAction'
     _legacy_controller: AdminAdminPreferences
