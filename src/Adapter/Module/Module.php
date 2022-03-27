@@ -400,7 +400,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onRegisterHook($hookName): bool
+    public function onRegisterHook(string $hookName): bool
     {
         if (!$this->hasValidInstance()) {
             return false;
