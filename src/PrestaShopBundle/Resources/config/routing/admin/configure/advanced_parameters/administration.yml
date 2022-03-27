@@ -16,7 +16,7 @@ admin_administration_general_save:
 
 admin_administration_upload_quota_save:
   path: /upload-quota
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\AdministrationController::processUploadQuotaFormAction'
     _legacy_controller: AdminAdminPreferences
