@@ -86,4 +86,14 @@ interface ModuleInterface
      * @return bool true for success
      */
     public function onUpgrade(string $version): bool;
+
+    /**
+     * @return bool
+     */
+    public function onRegisterHook(string $hookName): bool;
+
+    /**
+     * @return bool
+     */
+    public function onUnregisterHook(string $hookName): bool;
 }
