@@ -92,6 +92,34 @@ class AddOrder extends BOBasePage {
     this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
 
     // Vouchers block selectors
+    this.vouchersTable = '#cart-rules-table';
+    this.vouchersTableBody = `${this.vouchersTable} tbody`;
+    this.vouchersTableRows = `${this.vouchersTableBody} tr`;
+    this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
+    this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
+
+    // Cart selectors
+    this.productSearchInput = '#product-search';
+    this.noProductFoundAlert = `${this.cartBlock} .js-no-products-found`;
+    this.addProductToCartForm = '#js-add-product-form';
+    this.productResultsSelect = '#product-select';
+    this.productQuantityInput = '#quantity-input';
+    this.productCustomInput = '.js-product-custom-input';
+    this.currencySelect = '#js-cart-currency-select';
+    this.languageSelect = '#js-cart-language-select';
+    this.addtoCartButton = '#add-product-to-cart-btn';
+    /* Products table selectors */
+    this.productsTable = '#products-table';
+    this.productsTableBody = `${this.productsTable} tbody`;
+    this.productsTableRows = `${this.productsTableBody} tr`;
+    this.productsTableRow = row => `${this.productsTableRows}:nth-child(${row})`;
+    this.productsTableColumn = (column, row) => `${this.productsTableRow(row)} td.js-product-${column}`;
+    this.productTableQuantityColumn = row => `${this.productsTableRow(row)} td input.js-product-qty-input`;
+    this.productTableImageColumn = row => `${this.productsTableRow(row)} td img.js-product-image`;
+    this.productTableQuantityStockColumn = row => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
+    this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
+
+    // Vouchers block selectors
     this.cartRulesTable = '#cart-rules-table';
 
     // Addresses form selectors
@@ -104,6 +132,14 @@ class AddOrder extends BOBasePage {
     this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
 
     // Summary selectors
+    this.summaryBlock = '#summary-block';
+    this.totalProducts = `${this.summaryBlock} .js-total-products`;
+    this.totalDiscountProduct = `${this.summaryBlock} .js-total-discounts`;
+    this.totalShippingProduct = `${this.summaryBlock} .js-total-shipping`;
+    this.totalTaxesProduct = `${this.summaryBlock} .js-total-taxes`;
+    this.totalTaxExcProduct = `${this.summaryBlock} .js-total-without-tax`;
+    this.totalTaxIncProduct = `${this.summaryBlock} div:nth-child(6)`;
+
     this.paymentMethodSelect = '#cart_summary_payment_module';
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
@@ -292,6 +328,29 @@ class AddOrder extends BOBasePage {
     return this.elementVisible(page, this.productsTable, 1000);
   }
 
+  /* Cart methods */
+
+  /**
+   * Add product to cart
+   * @param page {Page} Browser tab
+   * @param product {ProductData} Product data to search with
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<void>}
+   */
+  async addProductToCart(page, product, quantity) {
+    // Search product
+    await this.setValue(page, this.productSearchInput, product.name);
+    await this.waitForVisibleSelector(page, this.addProductToCartForm);
+
+    // Fill add product form
+    await this.selectByVisibleText(page, this.productResultsSelect, product.name);
+    await this.setValue(page, this.productQuantityInput, quantity.toString());
+
+    // Add to cart
+    await page.click(this.addtoCartButton);
+
+    await this.waitForVisibleSelector(page, this.productsTable);
+  }
   /* Carts & Orders methods */
 
   /**
@@ -603,6 +662,23 @@ class AddOrder extends BOBasePage {
   }
 
   /* Summary methods */
+
+  /**
+   * Get summary block details
+   * @param page {Page} Browser tab
+   * @returns {Promise<{totalTaxIncluded: string, totalVouchers: string, totalTaxes: string, totalProducts: string,
+   * totalTaxExcluded: string, totalShipping: string}>}
+   */
+  async getSummaryDetails(page) {
+    return {
+      totalProducts: await this.getTextContent(page, this.totalProducts),
+      totalVouchers: await this.getTextContent(page, this.totalDiscountProduct),
+      totalShipping: await this.getTextContent(page, this.totalShippingProduct),
+      totalTaxes: await this.getTextContent(page, this.totalTaxesProduct),
+      totalTaxExcluded: await this.getTextContent(page, this.totalTaxExcProduct),
+      totalTaxIncluded: await this.getTextContent(page, this.totalTaxIncProduct),
+    };
+  }
 
   /**
    * Set payment method
