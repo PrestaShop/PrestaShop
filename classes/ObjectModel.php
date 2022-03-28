@@ -933,26 +933,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
         return $result;
     }
 
-    public function deleteFromShops(array $sopIds): void
-    {
-        if (Shop::isTableAssociated($this->def['table'])) {
-            $id_shop_list = Shop::getContextListShopID();
-            if (count($this->id_shop_list)) {
-                $id_shop_list = $this->id_shop_list;
-            }
-
-            $id_shop_list = array_map('intval', $id_shop_list);
-
-            $result &= Db::getInstance()->delete($this->def['table'] . '_shop', '`' . $this->def['primary'] . '`=' .
-                (int) $this->id . ' AND id_shop IN (' . implode(', ', $id_shop_list) . ')');
-        }
-
-        // Database deletion for multilingual fields related to the object
-        if (!empty($this->def['multilang']) && !$has_multishop_entries) {
-            $result &= Db::getInstance()->delete($this->def['table'] . '_lang', '`' . bqSQL($this->def['primary']) . '` = ' . (int) $this->id);
-        }
-    }
-
     /**
      * Deletes multiple objects from the database at once.
      *
