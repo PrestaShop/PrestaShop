@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use DateTimeInterface;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
@@ -122,6 +123,29 @@ class SpecificPriceController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/edit.html.twig', [
             'specificPriceForm' => $form->createView(),
             'lightDisplay' => $request->query->has('liteDisplaying'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $specificPriceId
+     *
+     * @return JsonResponse
+     */
+    public function deleteAction(Request $request, int $specificPriceId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteProductSpecificPriceCommand($specificPriceId));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
         ]);
     }
 
