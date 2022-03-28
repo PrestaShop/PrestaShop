@@ -304,6 +304,15 @@ export class ProgressModal extends Modal implements ProgressModalType {
       $('#progress-modal .modal-content').html(container.content);
 
     });
+
+    $(document).on('click', '.download-error-log', function() {
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      modal.errors.forEach(function(error) {
+        csvContent += error + "\r\n";
+      });
+      let encodedContent = encodeURI(csvContent);
+      window.open(encodedContent);
+    });
     $(document).on('click', '.switch-to-errors-button', function() {
       modal.currentModal = 'error';
 
