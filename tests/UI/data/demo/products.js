@@ -63,6 +63,18 @@ module.exports = {
       quantity: 1200,
       status: true,
     },
+    demo_12: {
+      id: 7,
+      name: 'Mug The adventure begins',
+      thumbnailImage: 'mug-the-adventure-begins.jpg',
+      reference: 'demo_12',
+      category: 'Home Accessories',
+      price_ht: 11.9,
+      price_ttc: 14.28,
+      tax: 20,
+      quantity: 300,
+      status: true,
+    },
     demo_11: {
       id: 6,
       name: 'Mug The best is yet to come',
