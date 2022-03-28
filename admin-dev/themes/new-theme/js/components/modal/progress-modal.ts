@@ -96,7 +96,6 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
       'float-right',
       'progress-percent',
     );
-console.log(progressBarDone);
     progressDetails.append(progressBarDone + '%');
 
     this.body.append(progressDetails);
@@ -297,23 +296,29 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     super.initContainer(params);
 
-    $(document).on('click', '.switch-to-progress-button', function() {
+    const switchToProgressButton = document.querySelector('.switch-to-progress-button') as HTMLElement;
+    switchToProgressButton.addEventListener('click', () => {
       modal.currentModal = 'progress';
       params.completed = modal.doneCount;
       let container = new ProgressModalContainer(params);
-      $('#progress-modal .modal-content').html(container.content);
-
+      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
+      progressModal.innerHTML = container.content.innerHTML;
     });
 
-    $(document).on('click', '.download-error-log', function() {
+    const downloadErrorLogButton = document.querySelector('.download-error-log') as HTMLElement;
+    downloadErrorLogButton.addEventListener('click', () => {
       let csvContent = 'data:text/csv;charset=utf-8,';
       modal.errors.forEach(function(error) {
         csvContent += error + "\r\n";
       });
-      let encodedContent = encodeURI(csvContent);
-      window.open(encodedContent);
+      let link = document.createElement('a');
+      link.href = encodeURI(csvContent);
+      link.download = 'Errors.csv';
+      link.click();
     });
-    $(document).on('click', '.switch-to-errors-button', function() {
+
+    const switchToErrorsButton = document.querySelector('.switch-to-errors-button') as HTMLElement;
+    switchToErrorsButton.addEventListener('click', () => {
       modal.currentModal = 'error';
 
       let params: ProgressErrorModalParams = {
@@ -324,14 +329,9 @@ export class ProgressModal extends Modal implements ProgressModalType {
       };
 
       let container = new ProgressModalErrorContainer(params);
-      $('#progress-modal .modal-content').html(container.content);
-     // $('#progress-modal .modal-content').html(modal.buildErrorContent());
+      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
+      progressModal.innerHTML = container.content.innerHTML;
     });
-  }
-
-  public testCallback()
-  {
-
   }
 
   public modalActionSuccess()
