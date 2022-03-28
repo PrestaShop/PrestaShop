@@ -46,12 +46,9 @@ export type ProgressModalParams = ModalParams & {
   modalTitle: string;
   total: number;
   completed: number;
+  errors: Array<string>;
   confirmCallback: (event: Event) => void,
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
-}
-
-export type ProgressErrorModalParams = ModalParams & {
-  errors: Array<string>;
 }
 export type InputProgressModalParams = Partial<ProgressModalParams>;
 
@@ -80,6 +77,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
 
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
+
   /* eslint-disable no-useless-constructor */
   constructor(params: ProgressModalParams) {
     super(params);
@@ -109,8 +107,14 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
       'btn-primary'
     );
     switchButtonContainer.innerHTML = 'Errors';
-    this.body.append(switchButtonContainer);
+    switchButtonContainer.addEventListener('click', () => {
+      // modal.currentModal = 'error';
 
+      let container = new ProgressModalErrorContainer(params);
+      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
+      progressModal.innerHTML = container.content.innerHTML;
+    });
+    this.body.append(switchButtonContainer);
 
     let errorContainer = document.createElement('div');
     errorContainer.classList.add('modal-error-container-single');
@@ -132,8 +136,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     this.content.append(this.footer);
   }
 
-  buildProgressBar(completed: number)
-  {
+  buildProgressBar(completed: number) {
     this.progress = document.createElement('div');
     this.progress.setAttribute('style', 'display: block; width: 100%');
 
@@ -145,10 +148,10 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     let progressBar = document.createElement('div');
     progressBar.classList.add('progress-bar', 'progress-bar-success');
     progressBar.setAttribute('role', 'progressbar');
-    progressBar.setAttribute('style', 'width: ' + completed+ '%;');
+    progressBar.setAttribute('style', 'width: ' + completed + '%;');
 
     let progressDone = document.createElement('div');
-    progressDone.setAttribute('style', 'width: ' + completed +  '%');
+    progressDone.setAttribute('style', 'width: ' + completed + '%');
 
     progressDone.classList.add
     (
@@ -159,44 +162,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     progressDone.setAttribute('id', 'modal_progressbar_done');
     this.progress.append(progressDone);
   }
-
-  buildModalErrorContainer(params: ProgressErrorModalParams): void {
-    super.buildModalContainer(params);
-    this.container.classList.remove('fade');
-
-    let errorContainer = document.createElement('div');
-    errorContainer.classList.add('progress-modal-error-container');
-    errorContainer.classList.add
-    (
-      'alert',
-      'alert-warning',
-      'd-print-none'
-    );
-    this.body.append(errorContainer);
-
-    this.footer = document.createElement('div');
-    this.footer.classList.add('modal-footer');
-    let switchButtonContainer = document.createElement('div');
-    switchButtonContainer.classList.add(
-      'switch-to-progress-button',
-      'btn',
-      'btn-secondary'
-    );
-    switchButtonContainer.innerHTML = 'Back to processing';
-
-    let downloadButtonContainer = document.createElement('div');
-    downloadButtonContainer.classList.add(
-      'download-error-log',
-      'btn',
-      'btn-secondary'
-    );
-    downloadButtonContainer.innerHTML = 'Download error log';
-    this.footer.append(switchButtonContainer);
-    this.footer.append(downloadButtonContainer);
-    this.body.append(this.footer);
-  }
 }
-
 export class ProgressModalErrorContainer extends ModalContainer implements ModalContainerType {
   footer!: HTMLElement;
   closeButton!: HTMLElement;
@@ -204,13 +170,12 @@ export class ProgressModalErrorContainer extends ModalContainer implements Modal
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
-  constructor(params: ProgressErrorModalParams) {
+  constructor(params: ProgressModalParams) {
     super(params);
   }
 
-  buildModalContainer(params: ProgressErrorModalParams): void {
+  buildModalContainer(params: ProgressModalParams): void {
     super.buildModalContainer(params);
-    this.container.classList.remove('fade');
 
     let errorContainer = document.createElement('div');
     errorContainer.classList.add('progress-modal-error-container');
@@ -236,7 +201,13 @@ export class ProgressModalErrorContainer extends ModalContainer implements Modal
       'btn-secondary'
     );
     switchButtonContainer.innerHTML = 'Back to processing';
-
+    switchButtonContainer.addEventListener('click', () => {
+      // this.currentModal = 'progress';
+      // params.completed = modal.doneCount;
+      let container = new ProgressModalContainer(params);
+      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
+      progressModal.innerHTML = container.content.innerHTML;
+    });
     let downloadButtonContainer = document.createElement('div');
     downloadButtonContainer.classList.add(
       'download-error-log',
@@ -244,6 +215,16 @@ export class ProgressModalErrorContainer extends ModalContainer implements Modal
       'btn-secondary'
     );
     downloadButtonContainer.innerHTML = 'Download error log';
+    downloadButtonContainer.addEventListener('click', () => {
+      let csvContent = 'data:text/csv;charset=utf-8,';
+      params.errors.forEach(function(error) {
+        csvContent += error + "\r\n";
+      });
+      let link = document.createElement('a');
+      link.href = encodeURI(csvContent);
+      link.download = 'Errors.csv';
+      link.click();
+    });
     this.footer.append(switchButtonContainer);
     this.footer.append(downloadButtonContainer);
     this.body.append(this.footer);
@@ -277,6 +258,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
       modalTitle: "Progress action",
       total: total,
       completed: 0,
+      errors: [],
       dialogStyle: {},
       confirmCallback,
       closeCallback: cancelCallback,
@@ -291,47 +273,32 @@ export class ProgressModal extends Modal implements ProgressModalType {
   }
 
   protected initContainer(params: ProgressModalParams): void {
-    let modal = this;
+    // let modal = this;
     this.modal = new ProgressModalContainer(params);
 
     super.initContainer(params);
 
-    const switchToProgressButton = document.querySelector('.switch-to-progress-button') as HTMLElement;
-    switchToProgressButton.addEventListener('click', () => {
-      modal.currentModal = 'progress';
-      params.completed = modal.doneCount;
-      let container = new ProgressModalContainer(params);
-      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
-      progressModal.innerHTML = container.content.innerHTML;
-    });
-
-    const downloadErrorLogButton = document.querySelector('.download-error-log') as HTMLElement;
-    downloadErrorLogButton.addEventListener('click', () => {
-      let csvContent = 'data:text/csv;charset=utf-8,';
-      modal.errors.forEach(function(error) {
-        csvContent += error + "\r\n";
-      });
-      let link = document.createElement('a');
-      link.href = encodeURI(csvContent);
-      link.download = 'Errors.csv';
-      link.click();
-    });
-
-    const switchToErrorsButton = document.querySelector('.switch-to-errors-button') as HTMLElement;
-    switchToErrorsButton.addEventListener('click', () => {
-      modal.currentModal = 'error';
-
-      let params: ProgressErrorModalParams = {
-        id: 'progress-modal',
-        errors: modal.errors,
-        closable: false,
-        modalTitle: "Progress action",
-      };
-
-      let container = new ProgressModalErrorContainer(params);
-      let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
-      progressModal.innerHTML = container.content.innerHTML;
-    });
+    //
+    // const downloadErrorLogButton = document.querySelector('.download-error-log') as HTMLElement;
+    // downloadErrorLogButton.addEventListener('click', () => {
+    //   let csvContent = 'data:text/csv;charset=utf-8,';
+    //   modal.errors.forEach(function(error) {
+    //     csvContent += error + "\r\n";
+    //   });
+    //   let link = document.createElement('a');
+    //   link.href = encodeURI(csvContent);
+    //   link.download = 'Errors.csv';
+    //   link.click();
+    // });
+    //
+    // const switchToErrorsButton = document.querySelector('.switch-to-errors-button') as HTMLElement;
+    // switchToErrorsButton.addEventListener('click', () => {
+    //   modal.currentModal = 'error';
+    //
+    //   let container = new ProgressModalErrorContainer(params);
+    //   let progressModal = document.querySelector('#progress-modal .modal-content') as HTMLElement;
+    //   progressModal.innerHTML = container.content.innerHTML;
+    // });
   }
 
   public modalActionSuccess()
