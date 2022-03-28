@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceVa
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotDeleteSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
@@ -123,6 +124,21 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         );
 
         return $specificPrice;
+    }
+
+    /**
+     * @param SpecificPriceId $specificPriceId
+     * @return void
+     */
+    public function delete(SpecificPriceId $specificPriceId): void
+    {
+        $objectModel = $this->getObjectModel(
+            $specificPriceId->getValue(),
+            SpecificPrice::class,
+            SpecificPriceNotFoundException::class
+        );
+
+        $this->deleteObjectModel($objectModel, CannotDeleteSpecificPriceException::class);
     }
 
     /**
