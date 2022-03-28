@@ -1577,14 +1577,25 @@ services:
       - '@router'
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
     public: true
-    tags:
-      - { name: form.type }
+      tags:
+          - { name: form.type }
 
   form.type.sell.product.pricing.specific_price_priority_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType'
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.group_price_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\GroupPriceType'
+    parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.core.form.choice_provider.currency_by_id'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+      - '@prestashop.core.form.choice_provider.group_by_id'
+    public: true
     tags:
       - { name: form.type }
 
