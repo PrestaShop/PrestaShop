@@ -51,6 +51,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\GroupPriceType;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -58,21 +62,6 @@ class SpecificPriceType extends TranslatorAwareType
      * @var string
      */
     private $defaultCurrencyIso;
-
-    /**
-     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
-     */
-    private $currencyByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $countryByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $groupByIdChoiceProvider;
 
     /**
      * @var FormChoiceProviderInterface
@@ -103,9 +92,6 @@ class SpecificPriceType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
-     * @param FormChoiceProviderInterface|FormChoiceAttributeProviderInterface $currencyByIdChoiceProvider
-     * @param FormChoiceProviderInterface $countryByIdChoiceProvider
-     * @param FormChoiceProviderInterface $groupByIdChoiceProvider
      * @param FormChoiceProviderInterface $shopByIdChoiceProvider
      * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
      * @param ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
@@ -116,9 +102,6 @@ class SpecificPriceType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         string $defaultCurrencyIso,
-        $currencyByIdChoiceProvider,
-        FormChoiceProviderInterface $countryByIdChoiceProvider,
-        FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
         FormChoiceProviderInterface $taxInclusionChoiceProvider,
         ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider,
@@ -126,9 +109,6 @@ class SpecificPriceType extends TranslatorAwareType
         bool $isMultishopEnabled
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
-        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
-        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
         $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
         $this->defaultCurrencyIso = $defaultCurrencyIso;
@@ -146,24 +126,9 @@ class SpecificPriceType extends TranslatorAwareType
 
         $builder
             ->add('product_id', HiddenType::class)
-            ->add('currency_id', ChoiceType::class, [
-                'label' => $this->trans('Currency', 'Admin.Global'),
-                'placeholder' => $this->trans('All currencies', 'Admin.Global'),
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
-                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
-                'required' => false,
-            ])
-            ->add('country_id', ChoiceType::class, [
-                'label' => $this->trans('Country', 'Admin.Global'),
-                'placeholder' => $this->trans('All countries', 'Admin.Global'),
-                'choices' => $this->countryByIdChoiceProvider->getChoices(),
-                'required' => false,
-            ])
-            ->add('group_id', ChoiceType::class, [
-                'label' => $this->trans('Group', 'Admin.Global'),
-                'required' => false,
-                'placeholder' => $this->trans('All groups', 'Admin.Global'),
-                'choices' => $this->groupByIdChoiceProvider->getChoices(),
+            ->add('groups', GroupPriceType::class, [
+                'label' => $this->trans('Apply to', 'Admin.Global'),
+                'required' => false
             ])
             ->add('customer', EntitySearchInputType::class, [
                 'label' => $this->trans('Customer', 'Admin.Global'),
@@ -227,6 +192,7 @@ class SpecificPriceType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'columns_number' => 2
             ])
             ->add('reduction', ReductionType::class, [
                 'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
@@ -253,6 +219,28 @@ class SpecificPriceType extends TranslatorAwareType
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
                 'placeholder' => false,
                 'required' => false,
+            ])
+            ->add('buttons', ButtonCollectionType::class, [
+                'buttons' => [
+                    'cancel' => [
+                        'type' => ButtonType::class,
+                        'group' => 'left',
+                        'options' => [
+                            'label' => $this->trans('Cancel', 'Admin.Global'),
+                            'attr' => [
+                                'class' => 'btn-secondary',
+                            ],
+                        ],
+                    ],
+                    'submit' => [
+                        'type' => SubmitType::class,
+                        'group' => 'right',
+                        'options' => [
+                            'label' => $this->trans('Save', 'Admin.Global'),
+                        ],
+                    ],
+                ],
+                'justify_content' => 'flex-end',
             ])
         ;
 
