@@ -88,7 +88,6 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
   buildModalContainer(params: ProgressModalParams): void {
     params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
     super.buildModalContainer(params);
-    this.container.classList.remove('fade');
     let progressBarDone = params.completed * 100 / params.total;
     this.buildProgressBar(progressBarDone);
 
@@ -97,8 +96,8 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
       'float-right',
       'progress-percent',
     );
-
-    progressDetails.append('0%');
+console.log(progressBarDone);
+    progressDetails.append(progressBarDone + '%');
 
     this.body.append(progressDetails);
 
@@ -150,7 +149,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     progressBar.setAttribute('style', 'width: ' + completed+ '%;');
 
     let progressDone = document.createElement('div');
-    progressDone.setAttribute('style', 'width: ' + completed +  '0%');
+    progressDone.setAttribute('style', 'width: ' + completed +  '%');
 
     progressDone.classList.add
     (
@@ -304,7 +303,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
       let container = new ProgressModalContainer(params);
       $('#progress-modal .modal-content').html(container.content);
 
-     // $('#progress-modal .modal-content').html(modal.buildInformationContent());
     });
     $(document).on('click', '.switch-to-errors-button', function() {
       modal.currentModal = 'error';
@@ -317,7 +315,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
       };
 
       let container = new ProgressModalErrorContainer(params);
-      console.log(container.errors);
       $('#progress-modal .modal-content').html(container.content);
      // $('#progress-modal .modal-content').html(modal.buildErrorContent());
     });
