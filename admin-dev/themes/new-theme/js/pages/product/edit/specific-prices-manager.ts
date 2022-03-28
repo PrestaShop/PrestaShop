@@ -22,14 +22,15 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
+import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
 
 Vue.use(VueI18n);
@@ -43,13 +44,17 @@ export default class SpecificPricesManager {
 
   specificPriceList: SpecificPriceList;
 
+  router: Router;
+
   constructor(
     productId: number,
   ) {
+    this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceList = new SpecificPriceList(productId);
     this.initComponents();
+    this.initSpecificPriceModal();
     this.specificPriceList.renderList();
     this.initListeners();
   }
@@ -67,36 +72,50 @@ export default class SpecificPricesManager {
     });
   }
 
-  private initSpecificPriceModal(
-    productId: number,
-    specificPriceModalSelector: string,
-    eventEmitter: EventEmitter,
-  ): Vue | null {
-    const container = document.querySelector(specificPriceModalSelector);
+  private initSpecificPriceModal() {
+    const addButton = document.querySelector(SpecificPriceMap.addSpecificPriceBtn);
 
-    if (!(container instanceof HTMLElement)) {
-      console.error('Invalid container provided for specificPrice modal');
-
-      return null;
+    if (addButton === null) {
+      return;
     }
 
-    const translations = JSON.parse(<string>container.dataset.translations);
-    const i18n = new VueI18n({
-      locale: 'en',
-      formatter: new ReplaceFormatter(),
-      messages: {en: translations},
+    addButton.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      const url = this.router.generate(
+        'admin_products_specific_prices_create',
+        {
+          productId: this.productId,
+          liteDisplaying: 1,
+        },
+      );
+      this.renderSpecificPriceModal(url);
     });
+  }
 
-    return new Vue({
-      el: specificPriceModalSelector,
-      template:
-        '<specific-price-modal :productId=productId :eventEmitter=eventEmitter />',
-      components: {SpecificPriceModal},
-      i18n,
-      data: {
-        eventEmitter,
-        productId,
-      },
+  private renderSpecificPriceModal(formUrl: string) {
+    console.log(formUrl);
+    const iframeModal = new FormIframeModal({
+      id: 'modal-create-specific-price',
+      formSelector: 'form[name="specific_price"]',
+      formUrl,
+      closable: true,
+      // We override the body selector so that the modal keeps the size of the initial create form even after submit
+      autoSizeContainer: '.create-product-form',
+      /*onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        if (dataAttributes) {
+          if (dataAttributes.modalTitle) {
+            iframeModal.setTitle(dataAttributes.modalTitle);
+          }
+
+          if (dataAttributes.productId) {
+            const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
+            // Keep showing loading until the page is refreshed
+            iframeModal.showLoading();
+            window.location.href = editUrl;
+          }
+        }
+      },*/
     });
+    iframeModal.show();
   }
 }
