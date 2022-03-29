@@ -13,7 +13,7 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     Given shop "shop1" with name "test_shop" exists
     And shop group "default_shop_group" with name "Default" exists
     And I add a shop "shop2" with name "default_shop_group" and color "red" for the group "default_shop_group"
-    And I add a shop group "shopGroup2" with name "test_second_shop_group" and color "green"
+    And I add a shop group "test_second_shop_group" with name "Test second shop group" and color "green"
     And I add a shop "shop3" with name "test_third_shop" and color "blue" for the group "test_second_shop_group"
     And I add a shop "shop4" with name "test_shop_without_url" and color "blue" for the group "test_second_shop_group"
     And single shop context is loaded
@@ -320,3 +320,52 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | Puff       | Daddy     | -10            |
       | Puff       | Daddy     | 42             |
     And product "product1" last stock movement for shop "shop1" increased by 51
+
+  Scenario: I update product type to combinations (stock is reset to zero for ALL associated shops)
+    When I add product "productCombinations" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "productCombinations" should be disabled
+    And product "productCombinations" type should be standard
+    And product "productCombinations" localized "name" should be:
+      | locale | value          |
+      | en-US  | bottle of beer |
+    When I update product "productCombinations" stock with following information:
+      | delta_quantity | 42 |
+    And product "productCombinations" should have following stock information:
+      | quantity | 42 |
+    And I copy product productCombinations from shop shop1 to shop shop2
+    Then product "productCombinations" should have following stock information for shops "shop1,shop2":
+      | quantity | 42 |
+    When I update product "productCombinations" stock for shop shop2 with following information:
+      | delta_quantity | 69 |
+    And I update product "productCombinations" stock for shop shop1 with following information:
+      | delta_quantity | 51 |
+    Then product "productCombinations" should have following stock information for shops "shop1":
+      | quantity | 93 |
+    And product "productCombinations" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 51             |
+      | Puff       | Daddy     | 42             |
+    And product "productCombinations" last stock movement for shop "shop1" increased by 51
+    And product "productCombinations" should have following stock information for shops "shop2":
+      | quantity | 111 |
+    And product "productCombinations" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 69             |
+    And product "productCombinations" last stock movement for shop "shop2" increased by 69
+    When I update product "productCombinations" type to combinations
+    Then product "productCombinations" type should be combinations
+    Then product "productCombinations" should have following stock information for shops "shop1,shop2":
+      | quantity | 0 |
+    And product "productCombinations" last employees stock movements for shop "shop1" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -93            |
+      | Puff       | Daddy     | 51             |
+      | Puff       | Daddy     | 42             |
+    And product "productCombinations" last stock movement for shop "shop1" decreased by 93
+    And product "productCombinations" last employees stock movements for shop "shop2" should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -111           |
+      | Puff       | Daddy     | 69             |
+    And product "productCombinations" last stock movement for shop "shop2" decreased by 111

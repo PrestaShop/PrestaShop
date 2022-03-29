@@ -29,17 +29,35 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class HeaderType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $stockManagementEnabled
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $stockManagementEnabled
+    ) {
+        parent::__construct($translator, $locales);
+        $this->stockManagementEnabled = $stockManagementEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -51,7 +69,7 @@ class HeaderType extends TranslatorAwareType
                 'label' => false,
             ])
             ->add('name', TranslatableType::class, [
-                'label' => false,
+                'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
                 'constraints' => $nameConstraints,
                 'options' => [
@@ -64,16 +82,9 @@ class HeaderType extends TranslatorAwareType
                 ],
                 'modify_all_shops' => true,
             ])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
-                ],
-                'choice_translation_domain' => 'Admin.Catalog.Feature',
+            ->add('type', ProductTypeType::class, [
                 'attr' => [
-                    'class' => 'custom-select',
+                    'data-switch-modal-title' => $this->trans('Change the product type', 'Admin.Catalog.Notification'),
                     'data-modal-title' => $this->trans('Are you sure you want to change the product type?', 'Admin.Catalog.Notification'),
                     'data-modal-apply' => $this->trans('Change product type', 'Admin.Catalog.Notification'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
@@ -81,12 +92,10 @@ class HeaderType extends TranslatorAwareType
                     'data-combinations-warning' => $this->trans('This will delete all combinations.', 'Admin.Catalog.Notification'),
                     'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
                     'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
+                    'data-stock-warning' => $this->trans('This will reset the stock of this product.', 'Admin.Catalog.Notification'),
+                    'data-stock-enabled' => $this->stockManagementEnabled,
+                    'class' => 'header-product-type-selector',
                 ],
-                'label' => false,
-                'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
-                'required' => false,
-                // placeholder false is important to avoid empty option in select input despite required being false
-                'placeholder' => false,
             ])
         ;
     }

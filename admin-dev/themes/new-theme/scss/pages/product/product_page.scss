@@ -109,6 +109,112 @@ $product-page-padding-bottom: 80px !default;
   }
 
   // Components
+  .product-header-v2 {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5625rem;
+    padding: 0.625rem;
+    margin: 1rem 0;
+    background: $white;
+    @include border-radius(0.375rem);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+
+    > * {
+      flex-grow: 1;
+    }
+
+    $product-cover-size: 110px;
+
+    .product-header-cover {
+      flex-grow: 0;
+      min-width: $product-cover-size;
+      max-width: $product-cover-size;
+
+      .form-group {
+        margin-bottom: 0;
+      }
+    }
+
+    .product-header-form {
+      flex-grow: 2;
+      min-width: 35%;
+
+      > .form-group {
+        margin-bottom: 0;
+      }
+
+      .product-type-preview {
+        color: $medium-gray;
+        cursor: pointer;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .product-header-details {
+      padding: 1.125rem 1.125rem 0 0;
+
+      .product-header-summary {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 1rem;
+
+        .product-field-preview {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          max-height: 29px;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 29px;
+
+          .product-field-value {
+            padding: 0 0.75rem;
+            color: $white;
+            background-color: $medium-gray;
+            @include border-radius(24px);
+
+            &.danger {
+              background-color: $danger;
+            }
+
+            &.warning {
+              background-color: $warning;
+            }
+
+            &.success {
+              background-color: $success;
+            }
+          }
+        }
+      }
+
+      .product-header-references {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        margin: 1.75rem 0 0;
+        font-size: 0.875rem;
+        font-weight: 400;
+
+        .product-reference {
+          padding: 0 0.5rem 0 0;
+
+          label {
+            &::after {
+              content: ":";
+            }
+          }
+        }
+      }
+    }
+  }
+
   .product-header {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
@@ -150,33 +256,8 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         margin: 0 -1rem;
 
-        .image_preview-widget {
-          width: 98px;
-
-          img {
-            display: block;
-            width: auto;
-            max-width: 98px;
-            height: auto;
-            max-height: 98px;
-            margin: 0 auto;
-          }
-        }
-
         .header-name {
           flex-grow: 1;
-        }
-
-        .references-display {
-          margin: 1rem 0;
-
-          label {
-            font-weight: 600;
-
-            &::after {
-              content: ":";
-            }
-          }
         }
 
         > .form-group {
@@ -248,26 +329,25 @@ $product-page-padding-bottom: 80px !default;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      gap: 0.5rem;
       width: 100%;
       height: 100%;
+      padding: 0 0.5rem;
 
-      .product-footer-left,
-      .product-footer-right {
+      .footer-buttons-container {
         display: flex;
         flex-direction: row;
-        margin: 0 0.5rem;
-
-        > * {
-          margin: 0 0.5rem;
-        }
+        gap: 0.5rem;
       }
 
       .product-footer-left {
         justify-content: flex-start;
+        order: 1;
       }
 
       .product-footer-right {
         justify-content: flex-end;
+        order: 2;
       }
 
       .switch-widget {
@@ -1066,11 +1146,61 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+// We use this class to scope the modifications that only target product page v2
+// Ideally the whole css should be cleaned when we remove the older page and this class won't be needed anymore
 .product-page-v2 {
-  &.create-product-form {
-    width: 100%;
-    padding: 0 1rem 0.1rem;
-    background-color: $white;
+  .tabs {
+    position: relative;
+
+    .toolbar {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+
+      .toolbar-button {
+        margin: 0 0.156rem;
+      }
+    }
+  }
+
+  .product-tabs {
+    @include border-radius(6px);
+
+    > .form-contenttab {
+      @include border-radius(6px);
+      background-color: $white;
+    }
+
+    // First tab needs a straight top left corner when selected to avoid empty space under the tab button
+    > .form-contenttab.active:first-child {
+      @include border-top-left-radius(0);
+    }
+
+    > .external-tab-placeholder {
+      // So that the placeholder has size 0
+      padding: 0;
+    }
+  }
+
+  // External tab are rendered outside of the tab container so their bottom corners need to to be rounded
+  .external-tab {
+    h2 {
+      padding-top: 20px;
+    }
+
+    > .tab-content {
+      padding: 0;
+      @include border-radius(6px);
+
+      > .form-contenttab {
+        padding: {
+          top: $grid-gutter-width / 2;
+          bottom: $grid-gutter-width / 2;
+        }
+        @include border-radius(6px);
+        background-color: $white;
+      }
+    }
   }
 
   .maxLength {
@@ -1156,48 +1286,56 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+}
 
-  .product-type-selector {
+// Some of the following styles target product page v2 components, but since the are new and only used in the new
+// page there is no need to scope them inside the product-page-v2 class
+.create-product-form {
+  width: 100%;
+  padding: 0 1rem 0.1rem;
+  background-color: $white;
+}
+
+.product-type-selector {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  select {
+    display: none;
+  }
+
+  .product-type-choices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
-    margin-bottom: 1rem;
+    padding-top: 1.5rem;
 
-    select {
-      display: none;
-    }
-
-    .product-type-choices {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .product-type-choice {
+      position: relative;
       width: 100%;
-      padding-top: 1.5rem;
-
-      .product-type-choice {
-        position: relative;
-        width: 100%;
-        max-width: 350px;
-        padding-right: 3rem;
-        margin: 0.25rem 0;
-        text-align: left;
-
-        .material-icons {
-          position: absolute;
-          top: 50%;
-          right: 0.75rem;
-          margin-top: -0.725rem;
-          font-size: 1.45rem;
-        }
-      }
-    }
-
-    .product-type-description {
-      width: 100%;
-      margin: 1.5rem 0;
-      text-align: center;
+      max-width: 350px;
+      padding-right: 3rem;
+      margin: 0.25rem 0;
+      text-align: left;
 
       .material-icons {
-        color: $brand-primary;
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        margin-top: -0.725rem;
+        font-size: 1.45rem;
       }
+    }
+  }
+
+  .product-type-description {
+    width: 100%;
+    margin: 1.5rem 0;
+    text-align: center;
+
+    .material-icons {
+      color: $brand-primary;
     }
   }
 }

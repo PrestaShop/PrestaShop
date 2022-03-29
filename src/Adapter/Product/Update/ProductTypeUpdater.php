@@ -31,12 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter;
 use PrestaShop\PrestaShop\Adapter\Product\Pack\Update\ProductPackUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Update\VirtualProductUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class ProductTypeUpdater
 {
@@ -61,21 +63,29 @@ class ProductTypeUpdater
     private $virtualProductUpdater;
 
     /**
+     * @var ProductStockUpdater
+     */
+    private $productStockUpdater;
+
+    /**
      * @param ProductRepository $productRepository
      * @param ProductPackUpdater $productPackUpdater
      * @param CombinationDeleter $combinationDeleter
      * @param VirtualProductUpdater $virtualProductUpdater
+     * @param ProductStockUpdater $productStockUpdater
      */
     public function __construct(
         ProductRepository $productRepository,
         ProductPackUpdater $productPackUpdater,
         CombinationDeleter $combinationDeleter,
-        VirtualProductUpdater $virtualProductUpdater
+        VirtualProductUpdater $virtualProductUpdater,
+        ProductStockUpdater $productStockUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->productPackUpdater = $productPackUpdater;
         $this->combinationDeleter = $combinationDeleter;
         $this->virtualProductUpdater = $virtualProductUpdater;
+        $this->productStockUpdater = $productStockUpdater;
     }
 
     /**
@@ -94,18 +104,25 @@ class ProductTypeUpdater
             $this->productPackUpdater->setPackProducts(new PackId($productId->getValue()), []);
         }
         if ($product->product_type === ProductType::TYPE_COMBINATIONS && $productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+            // When we change the combination type we must reset the stock since all combinations are removed, it must be done before
+            // removing all combinations, because the Combination legacy object performs this reset internally, so we won't have the data
+            // anymore to create the appropriate stock movement
+            $this->resetProductStock($productId);
+
             $this->combinationDeleter->deleteAllProductCombinations($productId);
         }
         if ($product->product_type === ProductType::TYPE_VIRTUAL && $productType->getValue() !== ProductType::TYPE_VIRTUAL) {
             $this->virtualProductUpdater->deleteFileForProduct($productId);
         }
-
-        // Finally update product type
+        // Finally, update product type
         $updatedProperties = [
             'product_type',
             'is_virtual',
             'cache_is_pack',
         ];
+
+        // When a product is converted TO product with combinations the stock is reset
+        $resetProductStock = $product->product_type !== ProductType::TYPE_COMBINATIONS && $productType->getValue() === ProductType::TYPE_COMBINATIONS;
 
         $product->product_type = $productType->getValue();
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType->getValue();
@@ -116,5 +133,15 @@ class ProductTypeUpdater
         }
 
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
+
+        if ($resetProductStock) {
+            $this->resetProductStock($productId);
+        }
+    }
+
+    private function resetProductStock(ProductId $productId): void
+    {
+        // Product type is bound to all shops, so when we reset stock because of type change it must be applied to all associated shops
+        $this->productStockUpdater->resetStock($productId, ShopConstraint::allShops());
     }
 }

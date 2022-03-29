@@ -1293,8 +1293,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\CreateProductFormType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@prestashop.core.form.choice_provider.product_type_choice_provider'
     tags:
       - { name: form.type }
 
@@ -1307,10 +1305,20 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.product_type_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType'
+    public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.product_type_choice_provider'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.header_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\HeaderType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
     tags:
       - { name: form.type }
 
@@ -1507,6 +1515,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
     tags:
       - { name: form.type }
 

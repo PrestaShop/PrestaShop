@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form product-page-v2 justify-content-md-center', 'novalidate': 'novalidate'}}) }}
+  {{ form_start(productForm, {'attr': {'class': 'form-horizontal create-product-form justify-content-md-center', 'novalidate': 'novalidate'}}) }}
     {% block product_creation_form %}
       {{ form_row(productForm) }}
     {% endblock %}

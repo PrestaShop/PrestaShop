@@ -37,6 +37,15 @@ Feature: Update product combination stock information in Back Office (BO)
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have following stock information:
+      | pack_stock_type     | default |
+      | out_of_stock_type   | default |
+      | quantity            | 0       |
+      | minimal_quantity    | 1       |
+      | location            |         |
+      | low_stock_threshold | 0       |
+      | low_stock_alert     | false   |
+      | available_date      |         |
     And combination "product1SBlack" should have following stock details:
       | combination stock detail   | value |
       | quantity                   | 0     |
@@ -64,6 +73,33 @@ Feature: Update product combination stock information in Back Office (BO)
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 100
+    When I update combination "product1SWhite" stock with following details:
+      | delta quantity             | 50          |
+      | minimal quantity           | 10          |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | available date             | 2021-10-10  |
+    Then combination "product1SWhite" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 50          |
+      | minimal quantity           | 10          |
+      | low stock threshold        | 10          |
+      | low stock alert is enabled | true        |
+      | location                   | Storage nr1 |
+      | available date             | 2021-10-10  |
+    And combination "product1SWhite" last stock movement increased by 50
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 50       | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 100      | false      |
+      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    # Product quantity is the sum of all combinations' quantity
+    And product "product1" should have following stock information:
+      | quantity            | 150       |
     When I update combination "product1SBlack" stock with following details:
       | delta quantity      | -101        |
       | minimal quantity    | 1           |
@@ -82,6 +118,8 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement decreased by 101
+    And product "product1" should have following stock information:
+      | quantity            | 49       |
     When I update combination "product1SBlack" stock with following details:
       | delta quantity             | 1          |
       | minimal quantity           | 0          |
@@ -103,7 +141,17 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 1
-#   Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
+    And product "product1" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 50       | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have following stock information:
+      | quantity            | 50       |
+    # Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update combination "product1SBlack" stock with following details:
       | delta quantity | 0 |
     Then combination "product1SBlack" should have following stock details:
@@ -120,3 +168,5 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | -101           |
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 1
+    And product "product1" should have following stock information:
+      | quantity            | 50       |

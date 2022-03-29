@@ -28,23 +28,25 @@ const attachmentsBlockId = '#product_specifications_attachments';
 
 export default {
   productForm: 'form[name=product]',
-  productTypeSelector: '#product_header_type',
+  productTypePreview: '.product-type-preview',
   productType: {
-    STANDARD: 'standard',
-    PACK: 'pack',
-    VIRTUAL: 'virtual',
-    COMBINATIONS: 'combinations',
-  },
-  create: {
-    newProductButton: 'a.new-product',
+    headerSelector: '#product_header_type',
+    headerPreviewButton: '.product-type-preview',
+    switchModalId: 'switch-product-type-modal',
+    switchModalSelector: '#switch-product-type-modal .header-product-type-selector',
+    switchModalContent: '#product-type-selector-modal-content',
+    switchModalButton: '#switch-product-type-modal .btn-confirm-submit',
     productTypeSelector: {
-      select: '#product_type',
       choicesContainer: '.product-type-choices',
       typeChoices: '.product-type-choice',
       defaultChoiceClass: 'btn-outline-secondary',
       selectedChoiceClass: 'btn-primary',
       typeDescription: '.product-type-description-content',
     },
+  },
+  create: {
+    newProductButton: 'a.new-product',
+    createModalSelector: '#product_type',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
