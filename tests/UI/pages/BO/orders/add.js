@@ -97,6 +97,7 @@ class AddOrder extends BOBasePage {
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
     this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
     this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
+    this.vouchersTableRowRemoveButton= row => `${this.vouchersTableRows}:nth-child(${row}) td button.js-cart-rule-delete-btn`;
 
     // Cart selectors
     this.productSearchInput = '#product-search';
@@ -406,17 +407,6 @@ class AddOrder extends BOBasePage {
    */
   getOrderIframe(page, orderID) {
     return page.frame({url: new RegExp(`sell/orders/${orderID}/view`, 'gmi')});
-  }
-
-  /**
-   * Close order iframe
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeOrderIframe(page) {
-    await this.waitForSelectorAndClick(page, this.closeIframe);
-
-    return this.elementNotVisible(page, this.iframe, 3000);
   }
 
   /**
