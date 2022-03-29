@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\Foundation\Version;
@@ -34,21 +36,41 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
-     * The link from which available languages are retrieved.
+     * The languages repository base path
+     *
+     * @TODO : add this to {prestashop_repository}/app/config/config.yml
      */
-    public const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    private const LANG_REPOSITORY_BASE_PATH = 'http://i18n.prestashop.com';
 
     /**
      * @var Version
      */
-    private $version;
+    private Version $version;
 
     /**
-     * @param Version $version
+     * @param string $version
      */
-    public function __construct(Version $version)
+    public function __construct(string $version)
     {
-        $this->version = $version;
+        $this->version = Version::buildFromString($version);
+    }
+
+    /**
+     * @param string $locale
+     *
+     * @return string requested URL
+     */
+    public function getLanguagePackUrl(string $locale = null): string
+    {
+        return self::LANG_REPOSITORY_BASE_PATH . '/translations/' . $this->version->getSemVersion() . "/{$locale}/{$locale}.zip";
+    }
+
+    /**
+     * @return string requested URL
+     */
+    public function getLanguagePackListUrl(): string
+    {
+        return self::LANG_REPOSITORY_BASE_PATH . '/translations/' . $this->version->getSemVersion() . '/available_languages.json';
     }
 
     /**
@@ -56,14 +78,20 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackList()
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
+        $normalizedLink = $this->getLanguagePackListUrl();
         $jsonResponse = file_get_contents($normalizedLink);
-
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
-        }
+        $result = json_decode($jsonResponse, true) ?? [];
 
         return $result;
+    }
+
+    /**
+     * Builds an instance from version defined in environment (`_PS_VERSION_`) _
+     *
+     * @return self
+     */
+    public static function build()
+    {
+        return new self(_PS_VERSION_);
     }
 }

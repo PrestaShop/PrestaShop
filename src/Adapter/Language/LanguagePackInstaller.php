@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Language;
 
 use Language;
-use PrestaShop\PrestaShop\Core\Foundation\Version;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -37,11 +36,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 final class LanguagePackInstaller implements LanguagePackInstallerInterface
 {
     /**
-     * @var Version
-     */
-    private $version;
-
-    /**
      * @var TranslatorInterface
      */
     private $translator;
@@ -50,11 +44,9 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
      * LanguagePackInstaller constructor.
      *
      * @param TranslatorInterface $translator
-     * @param Version $version
      */
-    public function __construct(TranslatorInterface $translator, Version $version)
+    public function __construct(TranslatorInterface $translator)
     {
-        $this->version = $version;
         $this->translator = $translator;
     }
 
@@ -64,7 +56,7 @@ final class LanguagePackInstaller implements LanguagePackInstallerInterface
     public function downloadAndInstallLanguagePack($iso)
     {
         $freshInstall = empty(Language::getIdByIso($iso));
-        $result = Language::downloadAndInstallLanguagePack($iso, $this->version->getSemVersion(), null, $freshInstall);
+        $result = Language::downloadAndInstallLanguagePack($iso, null, null, $freshInstall);
 
         if (false === $result) {
             return [
