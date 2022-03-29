@@ -87,6 +87,13 @@
             {{ form_widget(generalForm.default_status) }}
           </div>
         </div>
+        <div class="form-group row">
+          {{ ps.label_with_help(('Default order of priority for specific prices'|trans), ('If a customer meets multiple conditions, specific prices will be applied in this order of priority, unless a different order has been set for a particular product.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          <div class="col-sm">
+            {{ form_errors(generalForm.specific_price_priorities) }}
+            {{ form_widget(generalForm.specific_price_priorities) }}
+          </div>
+        </div>
 
         {% block product_general_preferences_form_rest %}
           {{ form_rest(generalForm) }}

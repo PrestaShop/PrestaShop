@@ -27,7 +27,10 @@
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -40,9 +43,21 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     private $configuration;
 
-    public function __construct(Configuration $configuration)
-    {
+    /**
+     * @var SpecificPricePriorityUpdater
+     */
+    private $specificPricePriorityUpdater;
+
+    /**
+     * @param Configuration $configuration
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     */
+    public function __construct(
+        Configuration $configuration,
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+    ) {
         $this->configuration = $configuration;
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
     }
 
     /**
@@ -58,6 +73,7 @@ class GeneralConfiguration implements DataConfigurationInterface
             'quantity_discount' => $this->configuration->get('PS_QTY_DISCOUNT_ON_COMBINATION'),
             'force_friendly_url' => $this->configuration->getBoolean('PS_FORCE_FRIENDLY_PRODUCT'),
             'default_status' => $this->configuration->getBoolean('PS_PRODUCT_ACTIVATION_DEFAULT'),
+            'specific_price_priorities' => $this->getPrioritiesData(),
         ];
     }
 
@@ -77,6 +93,19 @@ class GeneralConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_QTY_DISCOUNT_ON_COMBINATION', (int) $config['quantity_discount']);
             $this->configuration->set('PS_FORCE_FRIENDLY_PRODUCT', (int) $config['force_friendly_url']);
             $this->configuration->set('PS_PRODUCT_ACTIVATION_DEFAULT', (int) $config['default_status']);
+            try {
+                $this->specificPricePriorityUpdater->updateDefaultPriorities(new PriorityList($config['specific_price_priorities']));
+            } catch (SpecificPriceConstraintException $e) {
+                if ($e->getCode() !== SpecificPriceConstraintException::DUPLICATE_PRIORITY) {
+                    throw $e;
+                }
+
+                $errors[] = [
+                    'key' => 'The selected condition must be different in each field to set an order of priority.',
+                    'domain' => 'Admin.Notifications.Error',
+                    'parameters' => [],
+                ];
+            }
         }
 
         return $errors;
@@ -96,10 +125,23 @@ class GeneralConfiguration implements DataConfigurationInterface
             'quantity_discount',
             'force_friendly_url',
             'default_status',
+            'specific_price_priorities',
         ]);
 
         $resolver->resolve($configuration);
 
         return true;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getPrioritiesData(): array
+    {
+        if (!empty($this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'))) {
+            return explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'));
+        }
+
+        return array_values(PriorityList::AVAILABLE_PRIORITIES);
     }
 }

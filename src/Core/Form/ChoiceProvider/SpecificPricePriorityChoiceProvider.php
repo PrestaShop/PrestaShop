@@ -23,39 +23,40 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\SetGlobalSpecificPricePriorityHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * Handles @see SetGlobalSpecificPricePriorityCommand using legacy object model
- */
-class SetGlobalSpecificPricePriorityHandler implements SetGlobalSpecificPricePriorityHandlerInterface
+class SpecificPricePriorityChoiceProvider implements FormChoiceProviderInterface
 {
     /**
-     * @var SpecificPricePriorityUpdater
+     * @var TranslatorInterface
      */
-    private $specificPricePriorityUpdater;
+    private $translator;
 
     /**
-     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     * @param TranslatorInterface $translator
      */
     public function __construct(
-        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+        TranslatorInterface $translator
     ) {
-        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+        $this->translator = $translator;
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<string, string>
      */
-    public function handle(SetGlobalSpecificPricePriorityCommand $command): void
+    public function getChoices(): array
     {
-        $this->specificPricePriorityUpdater->setGlobalPriorities($command->getPriorityList());
+        return [
+            $this->translator->trans('Store', [], 'Admin.Global') => PriorityList::PRIORITY_SHOP,
+            $this->translator->trans('Currency', [], 'Admin.Global') => PriorityList::PRIORITY_CURRENCY,
+            $this->translator->trans('Country', [], 'Admin.Global') => PriorityList::PRIORITY_COUNTRY,
+            $this->translator->trans('Group', [], 'Admin.Global') => PriorityList::PRIORITY_GROUP,
+        ];
     }
 }

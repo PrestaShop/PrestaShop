@@ -23,36 +23,35 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
+namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\RemoveSpecificPricePriorityForProductHandlerInterface;
 
-/**
- * Sets global priorities for specific price
- */
-class SetGlobalSpecificPricePriorityCommand
+class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPricePriorityForProductHandlerInterface
 {
     /**
-     * @var PriorityList
+     * @var SpecificPricePriorityUpdater
      */
-    private $priorityList;
+    private $specificPricePriorityUpdater;
 
     /**
-     * @param string[] $priorityList
+     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
      */
-    public function __construct(array $priorityList)
-    {
-        $this->priorityList = new PriorityList($priorityList);
+    public function __construct(
+        SpecificPricePriorityUpdater $specificPricePriorityUpdater
+    ) {
+        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
     }
 
     /**
-     * @return PriorityList
+     * @param RemoveSpecificPricePriorityForProductCommand $command
      */
-    public function getPriorityList(): PriorityList
+    public function handle(RemoveSpecificPricePriorityForProductCommand $command): void
     {
-        return $this->priorityList;
+        $this->specificPricePriorityUpdater->removePrioritiesForProduct($command->getProductId());
     }
 }

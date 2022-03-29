@@ -24,19 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetGlobalSpecificPricePriorityCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
 
-/**
- * Defines contract for handling @see SetGlobalSpecificPricePriorityCommand
- */
-interface SetGlobalSpecificPricePriorityHandlerInterface
+interface RemoveSpecificPricePriorityForProductHandlerInterface
 {
-    /**
-     * @param SetGlobalSpecificPricePriorityCommand $command
-     */
-    public function handle(SetGlobalSpecificPricePriorityCommand $command): void;
+    public function handle(RemoveSpecificPricePriorityForProductCommand $command): void;
 }

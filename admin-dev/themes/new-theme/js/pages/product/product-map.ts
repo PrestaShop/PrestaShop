@@ -259,5 +259,9 @@ export default {
       editBtn: '.js-edit-specific-price-btn',
       deleteBtn: '.js-delete-specific-price-btn',
     },
+    priority: {
+      priorityListWrapper: '.specific-price-priority-list',
+      priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
+    },
   },
 };

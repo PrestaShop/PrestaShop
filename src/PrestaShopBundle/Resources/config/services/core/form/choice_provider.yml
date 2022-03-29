@@ -296,3 +296,8 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
       - '@prestashop.adapter.data_provider.country'
+
+  prestashop.core.form.choice_provider.specific_price_priority_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider'
+    arguments:
+      - '@translator'
