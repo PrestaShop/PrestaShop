@@ -621,7 +621,7 @@ class Install extends AbstractInstall
             ];
 
             if (file_exists(_PS_TRANSLATIONS_DIR_ . (string) $iso . '.gzip') == false) {
-                $language = EntityLanguage::downloadLanguagePack($iso, _PS_INSTALL_VERSION_);
+                $language = EntityLanguage::downloadLanguagePack($iso);
 
                 if ($language == false) {
                     throw new PrestashopInstallerException($this->translator->trans('Cannot download language pack "%iso%"', ['%iso%' => $iso], 'Install'));

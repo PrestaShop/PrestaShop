@@ -408,7 +408,7 @@ class LocalizationPackCore
                 }
 
                 $freshInstall = empty(Language::getIdByIso($attributes['iso_code']));
-                $errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], $attributes['version'], $attributes, $freshInstall);
+                $errors = Language::downloadAndInstallLanguagePack($attributes['iso_code'], null, $attributes, $freshInstall);
                 if ($errors !== true && is_array($errors)) {
                     $this->_errors = array_merge($this->_errors, $errors);
                 }
