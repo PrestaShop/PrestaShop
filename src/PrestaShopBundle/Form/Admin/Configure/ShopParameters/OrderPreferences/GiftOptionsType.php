@@ -61,7 +61,7 @@ class GiftOptionsType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param $defaultCurrencyIsoCode
+     * @param string $defaultCurrencyIsoCode
      * @param array $taxChoices
      * @param RouterInterface $router
      */
