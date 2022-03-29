@@ -24,6 +24,7 @@
  */
 import EntitySearchInput from '@components/entity-search-input';
 import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
+import CurrencySymbolUpdater from '@pages/specific-price/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
 
@@ -31,7 +32,12 @@ const {$} = window;
 
 $(() => {
   new PriceInputToggle();
-  new IncludeTaxFieldToggle(SpecificPriceMap.reductionTypeSelect, SpecificPriceMap.includeTaxInputContainer);
+  new CurrencySymbolUpdater();
+  new IncludeTaxFieldToggle(
+    SpecificPriceMap.reductionTypeSelect,
+    SpecificPriceMap.includeTaxInputContainer,
+    SpecificPriceMap.reductionTypeAmountSymbol,
+  );
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
       if (!response || response.customers.length === 0) {

@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import CurrencySymbolUpdater from '@pages/specific-price/form/currency-symbol-updater';
+
 const {$} = window;
 
 /**
@@ -33,9 +35,12 @@ export default class IncludeTaxFieldToggle {
 
   $taxInclusionInputs: JQuery;
 
-  constructor(reductionTypeSelector: string, taxInclusionInputs: string) {
+  reductionTypeAmountSymbol: string;
+
+  constructor(reductionTypeSelector: string, taxInclusionInputs: string, reductionTypeAmountSymbol:string = '') {
     this.$reductionTypeSelector = $(reductionTypeSelector);
     this.$taxInclusionInputs = $(taxInclusionInputs);
+    this.reductionTypeAmountSymbol = reductionTypeAmountSymbol;
     this.handle();
     this.$reductionTypeSelector.on('change', () => this.handle());
   }
@@ -44,10 +49,14 @@ export default class IncludeTaxFieldToggle {
    * When source value is 'percentage', target field is shown, else hidden
    */
   private handle(): void {
+    const reductionTypeAmountSymbol = document.querySelector(this.reductionTypeAmountSymbol) as HTMLInputElement;
+
     if (this.$reductionTypeSelector.val() === 'percentage') {
       this.$taxInclusionInputs.fadeOut();
+      reductionTypeAmountSymbol.innerHTML = '%';
     } else {
       this.$taxInclusionInputs.fadeIn();
+      reductionTypeAmountSymbol.innerHTML = CurrencySymbolUpdater.getSymbol();
     }
   }
 }

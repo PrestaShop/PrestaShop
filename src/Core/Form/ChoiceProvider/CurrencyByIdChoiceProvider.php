@@ -27,12 +27,13 @@
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 
 /**
  * Class CurrencyByIdChoiceProvider provides currency choices with ID values.
  */
-final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
+final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
     /**
      * @var CurrencyDataProvider
@@ -54,7 +55,7 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
-        $currencies = $this->currencyDataProvider->getCurrencies(false, true, true);
+        $currencies = $this->getCurrencies();
         $choices = [];
 
         foreach ($currencies as $currency) {
@@ -62,5 +63,22 @@ final class CurrencyByIdChoiceProvider implements FormChoiceProviderInterface
         }
 
         return $choices;
+    }
+
+    public function getChoicesAttributes()
+    {
+        $currencies = $this->getCurrencies();
+        $choicesAttributes = [];
+
+        foreach ($currencies as $currency) {
+            $choicesAttributes[sprintf('%s (%s)', $currency['name'], $currency['iso_code'])]['symbol'] = $currency['symbol'];
+        }
+
+        return $choicesAttributes;
+    }
+
+    private function getCurrencies(): array
+    {
+        return $this->currencyDataProvider->getCurrencies(false, true, true);
     }
 }
