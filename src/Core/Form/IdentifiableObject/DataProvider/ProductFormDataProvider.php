@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -81,17 +80,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $queryBus
+     * @param ConfigurationInterface $configuration
      * @param int $contextLangId
      * @param int $defaultShopId
      * @param int|null $contextShopId
-     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         CommandBusInterface $queryBus,
+        ConfigurationInterface $configuration,
         int $contextLangId,
         int $defaultShopId,
-        ?int $contextShopId,
-        ConfigurationInterface $configuration
+        ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
         $this->contextLangId = $contextLangId;

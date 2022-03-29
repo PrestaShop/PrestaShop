@@ -116,10 +116,10 @@ class ProductFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusCheckingShopMock(self::DEFAULT_SHOP_ID);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
+            $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null,
-            $configurationMock
+            null
         );
 
         $formData = $provider->getData(static::PRODUCT_ID);
@@ -129,10 +129,10 @@ class ProductFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
         $provider = new ProductFormDataProvider(
             $queryBusMock,
+            $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId,
-            $configurationMock
+            $contextShopId
         );
 
         $formData = $provider->getData(static::PRODUCT_ID);
@@ -1445,10 +1445,10 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductFormDataProvider(
             $queryBusMock,
+            $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null,
-            $this->getDefaultConfigurationMock()
+            null
         );
     }
 
