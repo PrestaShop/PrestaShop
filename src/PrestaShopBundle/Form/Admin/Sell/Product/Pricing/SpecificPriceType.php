@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
@@ -59,7 +60,7 @@ class SpecificPriceType extends TranslatorAwareType
     private $defaultCurrencyIso;
 
     /**
-     * @var FormChoiceProviderInterface
+     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
      */
     private $currencyByIdChoiceProvider;
 
@@ -102,7 +103,7 @@ class SpecificPriceType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
-     * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
+     * @param FormChoiceProviderInterface|FormChoiceAttributeProviderInterface $currencyByIdChoiceProvider
      * @param FormChoiceProviderInterface $countryByIdChoiceProvider
      * @param FormChoiceProviderInterface $groupByIdChoiceProvider
      * @param FormChoiceProviderInterface $shopByIdChoiceProvider
@@ -115,7 +116,7 @@ class SpecificPriceType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         string $defaultCurrencyIso,
-        FormChoiceProviderInterface $currencyByIdChoiceProvider,
+        $currencyByIdChoiceProvider,
         FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
@@ -143,12 +144,15 @@ class SpecificPriceType extends TranslatorAwareType
             throw new SpecificPriceException('product_id is required to add/edit specific price.');
         }
 
+        dump($this->currencyByIdChoiceProvider->getChoices());
+
         $builder
             ->add('product_id', HiddenType::class)
             ->add('currency_id', ChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),
                 'placeholder' => $this->trans('All currencies', 'Admin.Global'),
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
                 'required' => false,
             ])
             ->add('country_id', ChoiceType::class, [

@@ -24,9 +24,12 @@
  */
 
 export default {
+  currencyId: '#specific_price_currency_id',
   customerSearchContainer: '#specific_price_customer',
   priceInput: '#specific_price_fixed_price',
+  priceSymbol: '#specific_price_fixed_price + .input-group-append > .input-group-text',
   leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
   reductionTypeSelect: '#specific_price_reduction_type',
+  reductionTypeAmountSymbol: '#specific_price_reduction_value + .input-group-append > .input-group-text',
   includeTaxInputContainer: '.js-include-tax-row',
 };
