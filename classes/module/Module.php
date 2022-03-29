@@ -1169,7 +1169,6 @@ abstract class ModuleCore implements ModuleInterface
     public static function getInstanceByName($module_name)
     {
         if (!Validate::isModuleName($module_name)) {
-            /* @phpstan-ignore-next-line */
             if (!_PS_MODE_DEV_) {
                 return false;
             }
@@ -2173,7 +2172,6 @@ abstract class ModuleCore implements ModuleInterface
     public function display($file, $template, $cache_id = null, $compile_id = null)
     {
         if (($overloaded = Module::_isTemplateOverloadedStatic(basename($file, '.php'), $template)) === null) {
-            /* @phpstan-ignore-next-line */
             return Context::getContext()->getTranslator()->trans('No template found for module', [], 'Admin.Modules.Notification') . ' ' . basename($file, '.php') . (_PS_MODE_DEV_ ? ' (' . $template . ')' : '');
         } else {
             $this->smarty->assign([

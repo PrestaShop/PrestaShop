@@ -43,7 +43,6 @@ class CacheMemcachedCore extends Cache
         $this->connect();
         if ($this->isConnected()) {
             $this->memcached->setOption(Memcached::OPT_PREFIX_KEY, _DB_PREFIX_);
-            /* @phpstan-ignore-next-line */
             if (Memcached::HAVE_IGBINARY) {
                 $this->memcached->setOption(Memcached::OPT_SERIALIZER, Memcached::SERIALIZER_IGBINARY);
             }

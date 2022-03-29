@@ -1498,7 +1498,6 @@ class AdminTranslationsControllerCore extends AdminController
         $this->getInformations();
 
         /* PrestaShop demo mode */
-        /* @phpstan-ignore-next-line  */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -3303,7 +3302,6 @@ class AdminTranslationsControllerCore extends AdminController
 
     public static function getEmailHTML($email)
     {
-        /* @phpstan-ignore-next-line */
         if (__PS_BASE_URI__ != '/') {
             $email_file = str_replace(__PS_BASE_URI__, _PS_ROOT_DIR_ . '/', $email);
         } else {

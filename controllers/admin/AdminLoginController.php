@@ -298,7 +298,6 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$email) {
@@ -390,7 +389,6 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$reset_token_value) {

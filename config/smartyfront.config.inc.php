@@ -185,7 +185,6 @@ function smartyTranslate($params, $smarty)
                 $backTrace[0]['args'][1]->template_resource
             );
 
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
             } else {
@@ -202,7 +201,6 @@ function smartyTranslate($params, $smarty)
                 $backTrace[0]['args'][1]->template_resource
             );
 
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 throw new Exception($errorMessage);
             } else {

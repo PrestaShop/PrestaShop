@@ -27,7 +27,6 @@
 require_once 'install_version.php';
 
 // Check PHP version
-/** @phpstan-ignore-next-line */
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSION_ID_) {
     echo 'Your server is running PHP ' . PHP_VERSION . ', but PrestaShop requires PHP ' . _PS_INSTALL_MINIMUM_PHP_VERSION_ . ' or newer.';
     echo PHP_EOL;
@@ -35,7 +34,6 @@ if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < _PS_INSTALL_MINIMUM_PHP_VERSI
     echo PHP_EOL;
     die();
 }
-/** @phpstan-ignore-next-line */
 if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_) {
     echo 'Your server is running PHP ' . PHP_VERSION . ', but PrestaShop requires PHP ' . _PS_INSTALL_MAXIMUM_PHP_VERSION_ . ' or lower.';
     echo PHP_EOL;
