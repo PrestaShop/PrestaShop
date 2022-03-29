@@ -23,9 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+declare(strict_types=1);
+
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
+use PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -33,8 +37,8 @@ class AdminTranslationsControllerCore extends AdminController
     const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
     const TEXTAREA_SIZED = 70;
 
-    /** @var string : Link which list all pack of language */
-    protected $link_lang_pack = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    /** @var string : URL for available language pack list */
+    protected $link_lang_pack;
 
     /** @var int : number of sentence which can be translated */
     protected $total_expression = 0;
@@ -83,7 +87,8 @@ class AdminTranslationsControllerCore extends AdminController
 
         parent::__construct();
 
-        $this->link_lang_pack = str_replace('%ps_version%', _PS_VERSION_, $this->link_lang_pack);
+        $language_pack_loader = RemoteLanguagePackLoader::buildFromEnv();
+        $this->link_lang_pack = $language_pack_loader->getLanguagePackUrl();
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
             ->buildRepository()
@@ -931,7 +936,7 @@ class AdminTranslationsControllerCore extends AdminController
         $isoCode = $languageDetails['iso_code'];
 
         if (Validate::isLangIsoCode($isoCode)) {
-            $success = Language::downloadAndInstallLanguagePack($isoCode, _PS_VERSION_, null, true);
+            $success = Language::downloadAndInstallLanguagePack($isoCode, null, true);
             if ($success === true) {
                 Language::loadLanguages();
                 Tools::clearAllCache();

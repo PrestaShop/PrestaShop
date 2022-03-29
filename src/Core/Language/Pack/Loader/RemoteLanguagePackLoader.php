@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
 
 use PrestaShop\PrestaShop\Core\Foundation\Version;
@@ -34,9 +36,11 @@ use PrestaShop\PrestaShop\Core\Foundation\Version;
 final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
 {
     /**
-     * The link from which available languages are retrieved.
+     * The languages repository base path
+     *
+     * @TODO : add this to {prestashop_repository}/app/config/config.yml
      */
-    public const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    private const LANG_REPOSITORY_BASE_PATH = 'http://i18n.prestashop.com';
 
     /**
      * @var Version
@@ -52,18 +56,40 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     }
 
     /**
+     * @param string $locale if no locale given, return URL for available languages list
+     *
+     * @return string requested URL
+     */
+    public function getLanguagePackUrl(?string $locale = null): string
+    {
+        if ($locale) {
+            return self::LANG_REPOSITORY_BASE_PATH . '/translations/' . $this->version->getSemVersion() . '/' . $locale . '/' . $locale . '.zip';
+        } else {
+            return self::LANG_REPOSITORY_BASE_PATH . '/translations/' . $this->version->getSemVersion() . '/available_languages.json';
+        }
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getLanguagePackList()
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
+        $normalizedLink = $this->getLanguagePackUrl();
         $jsonResponse = file_get_contents($normalizedLink);
-
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
-        }
+        $result = json_decode($jsonResponse, true) ?? [];
 
         return $result;
+    }
+
+    /**
+     * Builds an instance from version defined in environment (`_PS_VERSION_`) _
+     *
+     * @return self
+     */
+    public static function buildFromEnv()
+    {
+        $ps_version = Version::buildFromString(_PS_VERSION_);
+
+        return new self($ps_version);
     }
 }
