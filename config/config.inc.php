@@ -70,7 +70,6 @@ if (is_file(_PS_CUSTOM_CONFIG_FILE_)) {
     include_once _PS_CUSTOM_CONFIG_FILE_;
 }
 
-/* @phpstan-ignore-next-line */
 if (_PS_DEBUG_PROFILING_) {
     include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
     include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';

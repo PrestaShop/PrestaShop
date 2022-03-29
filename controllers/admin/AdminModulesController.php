@@ -453,7 +453,6 @@ class AdminModulesControllerCore extends AdminController
     public function postProcessDownload()
     {
         /* PrestaShop demo mode */
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_ || ($this->context->mode == Context::MODE_HOST)) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -569,7 +568,6 @@ class AdminModulesControllerCore extends AdminController
     public function postProcessDelete()
     {
         /* PrestaShop demo mode */
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -615,7 +613,6 @@ class AdminModulesControllerCore extends AdminController
             }
 
             /* PrestaShop demo mode */
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 

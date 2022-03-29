@@ -110,7 +110,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processPostInstall();
             }
         } catch (\Exception $e) {
-            /** @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 // display stack trace
                 $message = (string) $e;

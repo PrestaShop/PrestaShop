@@ -1121,7 +1121,6 @@ class ToolsCore
                 ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
@@ -2109,7 +2108,6 @@ class ToolsCore
 
             $content = curl_exec($curl);
 
-            /* @phpstan-ignore-next-line */
             if (false === $content && _PS_MODE_DEV_) {
                 $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
@@ -3058,7 +3056,6 @@ exit;
 
     protected static function throwDeprecated($error, $message, $class)
     {
-        /* @phpstan-ignore-next-line */
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
             @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
@@ -3328,7 +3325,6 @@ exit;
      */
     public static function dieOrLog($msg, $die = true)
     {
-        /* @phpstan-ignore-next-line */
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);

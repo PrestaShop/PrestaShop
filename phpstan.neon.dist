@@ -55,4 +55,18 @@ parameters:
     - OrderInvoice
     - Product
   dynamicConstantNames:
+    - _DB_PREFIX_
     - _PS_CREATION_DATE_
+    - _PS_DEBUG_PROFILING_
+    - _PS_DEBUG_SQL_
+    - _PS_DISPLAY_COMPATIBILITY_WARNING_
+    - _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
+    - _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_
+    - _PS_INSTALL_VERSION_
+    - _PS_MODE_DEMO_
+    - _PS_MODE_DEV_
+    - _PS_VERSION_
+    - __PS_BASE_URI__
+    - PHP_VERSION_ID
+    - Memcached::HAVE_IGBINARY
+    - PaymentModuleCore::DEBUG_MODE

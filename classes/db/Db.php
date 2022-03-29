@@ -381,7 +381,6 @@ abstract class DbCore
             $this->result = $this->_query($sql);
         }
 
-        /* @phpstan-ignore-next-line */
         if (_PS_DEBUG_SQL_) {
             $this->displayError($sql);
         }
@@ -605,7 +604,6 @@ abstract class DbCore
 
         // This method must be used only with queries which display results
         if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc|checksum)\s#i', $sql)) {
-            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
             }
@@ -748,7 +746,6 @@ abstract class DbCore
             Cache::getInstance()->deleteQuery($sql);
         }
 
-        /* @phpstan-ignore-next-line */
         if (_PS_DEBUG_SQL_) {
             $this->displayError($sql);
         }
@@ -771,7 +768,7 @@ abstract class DbCore
         if ($webservice_call && $errno) {
             $dbg = debug_backtrace();
             WebserviceRequest::getInstance()->setError(500, '[SQL Error] ' . $this->getMsgError() . '. From ' . (isset($dbg[3]['class']) ? $dbg[3]['class'] : '') . '->' . $dbg[3]['function'] . '() Query was : ' . $sql, 97);
-        } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) { /* @phpstan-ignore-line */
+        } elseif (_PS_DEBUG_SQL_ && $errno && !defined('PS_INSTALLATION_IN_PROGRESS')) {
             if ($sql) {
                 throw new PrestaShopDatabaseException($this->getMsgError() . '<br /><br /><pre>' . $sql . '</pre>');
             }

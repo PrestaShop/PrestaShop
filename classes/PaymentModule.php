@@ -217,7 +217,6 @@ abstract class PaymentModuleCore extends Module
         Shop $shop = null,
         ?string $order_reference = null
     ) {
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -369,7 +368,6 @@ abstract class PaymentModuleCore extends Module
             throw new PrestaShopException('The order address country is not active.');
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -412,7 +410,6 @@ abstract class PaymentModuleCore extends Module
             if (!empty($message)) {
                 $message = strip_tags($message, '<br>');
                 if (Validate::isCleanHtml($message)) {
-                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -546,7 +543,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -566,7 +562,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -622,7 +617,6 @@ abstract class PaymentModuleCore extends Module
                     $file_attachement = null;
                 }
 
-                /* @phpstan-ignore-next-line */
                 if (self::DEBUG_MODE) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                 }
@@ -741,7 +735,6 @@ abstract class PaymentModuleCore extends Module
             $this->currentOrder = (int) $order->id;
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
         }
